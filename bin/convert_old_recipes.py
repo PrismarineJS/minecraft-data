@@ -12,14 +12,17 @@ new_recipes = {}
 for item_str, item_recipes in old_recipes.items():
     new_recipes[int(item_str)] = []
     for old_recipe in item_recipes:
-        new_recipe = {}
+        result = {'amount': old_recipe['count'],
+                  'id': old_recipe['type'],
+                  'meta': old_recipe['metadata']}
+        new_recipe = {'result': result}
         if 'ingredients' in old_recipe:
-            new_recipe['ingredients'] = []
+            new_recipe['ingredients'] = ingredients = []
             for old_ingredient in old_recipe['ingredients']:
                 new_ingredient = {'id': old_ingredient['id']}
                 if 'metadata' in old_ingredient:
                     new_ingredient['meta'] = old_ingredient['metadata']
-                new_recipe['ingredients'].append(new_ingredient)
+                ingredients.append(new_ingredient)
         elif 'inShape' in old_recipe:
             # do not worry about copies, we do not modify the data anywhere
             new_recipe['inShape'] = old_recipe['inShape']
