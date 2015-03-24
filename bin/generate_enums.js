@@ -30,7 +30,7 @@ fs.readFile(burgerJsonPath, 'utf8', function(err, json) {
     var batch = new Batch();
     results.forEach(function(result) {
       batch.push(function(cb) {
-        var filepath = path.join(__dirname, '..', 'lib', 'enums', result.name + '.json');
+        var filepath = path.join(__dirname, '..', 'enums', result.name + '.json');
         var serialised = JSON.stringify(result.json, null, 2);
         fs.writeFile(filepath, serialised, cb);
       });

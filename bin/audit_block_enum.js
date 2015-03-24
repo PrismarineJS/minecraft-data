@@ -1,4 +1,4 @@
-var blocks = require('../lib/enums/blocks');
+var blocks = require('../enums/blocks');
 
 var all = [];
 for (var key in blocks) {
