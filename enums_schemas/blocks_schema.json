@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "blocks",
+  "type": "object",
+  "uniqueItems": true,
+  "additionalProperties" : {
+    "title": "block",
+    "type": "object",
+    "properties": {
+      "id": {
+        "description": "The unique identifier for a block",
+        "type": "integer",
+        "minimum": 0
+      },
+      "displayName": {
+        "description": "The display name of an block",
+        "type": "string"
+      },
+      "name": {
+        "description": "The name of a block",
+        "type": "string"
+      },
+      "hardness": {
+        "description": "Hardness of a block",
+        "type": ["number","null"],
+        "minimum": 0
+      },
+      "stackSize": {
+        "description": "Stack size for a block",
+        "type": "integer",
+        "minimum": 0
+      },
+      "diggable": {
+        "description": "true if a block is diggable",
+        "type": "boolean"
+      },
+      "boundingBox": {
+        "description": "BoundingBox of a block",
+        "type": "string"
+      },
+      "material": {
+        "description": "Material of a block",
+        "type": "string"
+      },
+      "harvestTools": {
+        "description": "Tools that can harvest a block",
+        "type": "object",
+        "patternProperties": {
+          ".{1,}": { "type": "boolean" }
+        }
+      }
+    },
+    "required": ["id", "displayName", "name", "hardness", "stackSize","diggable","boundingBox"]
+  }
+}
