@@ -10,7 +10,6 @@ with open(in_path, 'r') as old_recipes_file:
 
 new_recipes = {}
 for item_str, item_recipes in old_recipes.items():
-    print('Item', item_str, 'has', len(item_recipes), 'recipes')
     new_recipes[item_str] = []
     for old_recipe in item_recipes:
         new_recipe = {}
