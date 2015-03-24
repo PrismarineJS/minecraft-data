@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "recipes",
+  "type": "object",
+  "uniqueItems": true,
+  "additionalProperties" : {
+    "title": "recipes for a given output",
+    "type": "array",
+    "uniqueItems": true,
+    "items":{
+      "title": "recipe",
+      "properties": {
+        "type": {
+          "description": "The id of the output",
+          "type": "integer",
+          "minimum": 0
+        },
+        "count": {
+          "description": "The number of output",
+          "type": "integer",
+          "minimum": 1
+        },
+        "metadata": {
+          "description": "The metadata of output",
+          "type": "integer",
+          "minimum": 0
+        },
+        "ingredients": {
+          "description": "The ingredients of the recipe",
+          "type": "array",
+          "items":{
+            "description":"An ingredient",
+            "type":"object",
+            "properties":{
+              "id": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "metadata":{
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "inShape": {
+          "description": "The shape in input of the recipe",
+          "type":"array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items":{
+            "type":"array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items":{
+              "type":["integer","null"],
+              "description":"The id of an item of the recipe"
+            }
+          }
+
+        },
+        "outShape": {
+          "description": "The shape in output of the recipe",
+          "type":"array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items":{
+            "type":"array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items":{
+              "type":["integer","null"],
+              "description":"The id of an item of the recipe"
+            }
+          }
+
+        }
+      },
+      "required": ["type", "count","metadata"]
+    }
+  }
+}
