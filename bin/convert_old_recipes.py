@@ -10,7 +10,7 @@ with open(in_path, 'r') as old_recipes_file:
 
 new_recipes = {}
 for item_str, item_recipes in old_recipes.items():
-    new_recipes[item_str] = []
+    new_recipes[int(item_str)] = []
     for old_recipe in item_recipes:
         new_recipe = {}
         if 'ingredients' in old_recipe:
@@ -25,7 +25,7 @@ for item_str, item_recipes in old_recipes.items():
             new_recipe['inShape'] = old_recipe['inShape']
             if 'outShape' in old_recipe:
                 new_recipe['outShape'] = old_recipe['outShape']
-        new_recipes[item_str].append(new_recipe)
+        new_recipes[int(item_str)].append(new_recipe)
 
 with open(out_path, 'w') as new_recipes_file:
     json.dump(new_recipes, new_recipes_file, indent=2, sort_keys=True)
