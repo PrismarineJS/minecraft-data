@@ -3,37 +3,48 @@
   "title": "biomes",
   "type": "object",
   "uniqueItems": true,
-  "additionalProperties" : {
-    "title": "biome",
-    "type": "object",
-    "properties": {
-      "id": {
-        "description": "The unique identifier for a biome",
-        "type": "integer",
-        "minimum": 0
+  "patternProperties" : {
+    "^[0-9]+$": {
+      "title": "biome",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The unique identifier for a biome",
+          "type": "integer",
+          "minimum": 0
+        },
+        "color": {
+          "description": "The color in a biome",
+          "type": "integer",
+          "minimum": 0
+        },
+        "name": {
+          "description": "The name of a biome",
+          "type": "string",
+          "pattern": "\\S+"
+        },
+        "rainfall": {
+          "description": "How much rain there is in a biome",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "temperature": {
+          "description": "An indicator for the temperature in a biome",
+          "type": "number",
+          "minimum": -1,
+          "maximum": 2
+        }
       },
-      "color": {
-        "description": "The color in a biome",
-        "type": "integer",
-        "minimum": 0
-      },
-      "name": {
-        "description": "The name of a biome",
-        "type": "string"
-      },
-      "rainfall": {
-        "description": "How much rain there is in a biome",
-        "type": "number",
-        "minimum": 0,
-        "maximum": 1
-      },
-      "temperature": {
-        "description": "An indicator for the temperature in a biome",
-        "type": "number",
-        "minimum": -1,
-        "maximum": 2
-      }
-    },
-    "required": ["id", "color", "name", "rainfall", "temperature"]
-  }
+      "required": [
+        "id",
+        "color",
+        "name",
+        "rainfall",
+        "temperature"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties":false
 }

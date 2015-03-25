@@ -3,29 +3,34 @@
   "title": "items",
   "type": "object",
   "uniqueItems": true,
-  "additionalProperties" : {
-    "title": "item",
-    "type": "object",
-    "properties": {
-      "id": {
-        "description": "The unique identifier for an item",
-        "type": "integer",
-        "minimum": 0
+  "patternProperties" : {
+    "^[0-9]+$": {
+      "title": "item",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The unique identifier for an item",
+          "type": "integer",
+          "minimum": 0
+        },
+        "displayName": {
+          "description": "The display name of an item",
+          "type": "string"
+        },
+        "stackSize": {
+          "description": "Stack size for an item",
+          "type": "integer",
+          "minimum": 0
+        },
+        "name": {
+          "description": "The name of an item",
+          "type": "string",
+          "pattern": "\\S+"
+        }
       },
-      "displayName": {
-        "description": "The display name of an item",
-        "type": "string"
-      },
-      "stackSize": {
-        "description": "Stack size for an item",
-        "type": "integer",
-        "minimum": 0
-      },
-      "name": {
-        "description": "The name of an item",
-        "type": "string"
-      }
-    },
-    "required": ["id", "displayName", "stackSize", "name"]
-  }
+      "required": ["id", "displayName", "stackSize", "name"],
+      "additionalProperties":false
+    }
+  },
+  "additionalProperties":false
 }
