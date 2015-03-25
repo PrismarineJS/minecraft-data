@@ -32,7 +32,7 @@
     require.config({ baseUrl: "docson"});
     require(["docson", "./lib/jquery"], function(docson) {
         $.getJSON("https://api.github.com/repos/"+repo+"/git/refs/heads/", function(data) {
-            var commit=data[0]["object"]["sha"];
+            var commit=data[1]["object"]["sha"];
             console.log(commit);
             enums.forEach(function(json){display(docson,commit,json,json);});
         });
