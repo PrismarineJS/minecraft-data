@@ -11,4 +11,4 @@ Support minecraft 1.8.3.
  * See [doc/api.md](doc/api.md)
  * See [doc/history.md](doc/history.md)
  * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data/)
- * [Textual documentation of the recipe format](https://github.com/PrismarineJS/minecraft-data/wiki/Proposed-new-recipe-format)
+ * [Textual documentation of the recipe format](doc/recipes.md)
