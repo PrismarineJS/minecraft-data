@@ -1,54 +1,71 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "recipes",
+  "description":"A dictionary of quoted numerical item IDs. Each ID maps to a list of recipes. There may be multiple different recipes per item (same ID and meta). The recipes may not be sorted.",
 
   "definitions": {
-    "id": {"type":["integer","null"]},
+    "id": {
+      "type":["integer","null"],
+      "description":"A single numerical ID or null."
+
+    },
     "metadata": {"type":"integer"},
     "amount": {"type":"integer"},
-    "item":{
+    "id_meta_array":{
+      "type":"array",
+      "title":"[id,meta]",
+      "description":"A list of id and meta. This is preferred if there are many items at once, e.g. in a shape.",
+      "items":[
+        {"$ref" : "#/definitions/id"},
+        {"$ref" : "#/definitions/metadata"}
+      ],
+      "additionalItems": false
+    },
+    "id_meta_amount_object":{
+      "type":"object",
+      "title":"{id:1,meta:1,amount:1}",
+      "description":"A dictionary of at least id, optionally meta and amount. This is preferred if there are not many items at once, e.g. result in a recipe.",
+      "properties":{
+        "id":{"$ref" : "#/definitions/id"},
+        "meta":{"$ref" : "#/definitions/metadata"},
+        "amount":{"$ref" : "#/definitions/amount"}
+      },
+      "required": ["id"],
+      "additionalProperties":false
+    },
+    "recipeItem":{
+      "title":"recipe item",
+      "description":"An item can be represented different ways.",
       "oneOf":[
         {"$ref" : "#/definitions/id"},
-        {
-          "type":"array",
-          "items":[
-            {"$ref" : "#/definitions/id"},
-            {"$ref" : "#/definitions/metadata"}
-          ],
-          "additionalItems": false
-        },
-        {
-          "type":"object",
-          "properties":{
-            "id":{"$ref" : "#/definitions/id"},
-            "meta":{"$ref" : "#/definitions/metadata"},
-            "amount":{"$ref" : "#/definitions/amount"}
-          },
-          "required": ["id"],
-          "additionalProperties":false
-        }
+        {"$ref": "#/definitions/id_meta_array"},
+        {"$ref": "#/definitions/id_meta_amount_object"}
       ]
     },
-    "shape": {
+    "shapeRow":{
       "type": "array",
       "minItems": 1,
       "maxItems": 3,
-      "items": {
-        "type": "array",
-        "minItems": 1,
-        "maxItems": 3,
-        "items": {"$ref" : "#/definitions/item"}
-      }
+      "items": {"$ref" : "#/definitions/recipeItem"}
+    },
+    "shape": {
+      "type": "array",
+      "description":"A shape is a list of rows, which are lists of items. There must be at least one row with at least one item in it. All rows must have the same length. Empty rows at the beginning or end of a shape may be omitted. Empty colums at the end may also be omitted. When an item can be crafted in a 2x2 grid, the shape may not be larger than 2x2.",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {"$ref" : "#/definitions/shapeRow"}
     },
     "ingredients": {
       "type": "array",
       "minItems": 1,
-      "items": {"$ref" : "#/definitions/item"}
+      "items": {"$ref" : "#/definitions/recipeItem"}
     },
     "shaped_recipe": {
+      "title":"shaped recipe",
+      "description":"A shaped recipe is a dictionary of result, inShape and optionally outShape",
       "type": "object",
       "properties": {
-        "result":{"$ref" : "#/definitions/item"},
+        "result":{"$ref" : "#/definitions/recipeItem"},
         "inShape":{"$ref" : "#/definitions/shape"},
         "outShape":{"$ref" : "#/definitions/shape"}
       },
@@ -56,9 +73,11 @@
       "additionalProperties":false
     },
     "shapeless_recipe": {
+      "title":"shapeless recipe",
+      "description":"A shapeless recipe is a dictionary of result and ingredients",
       "type": "object",
       "properties": {
-        "result":{"$ref" : "#/definitions/item"},
+        "result":{"$ref" : "#/definitions/recipeItem"},
         "ingredients":{"$ref" : "#/definitions/ingredients"}
       },
       "required":["result","ingredients"],
