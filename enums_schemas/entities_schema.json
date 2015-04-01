@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "entities",
+  "type": "object",
+  "uniqueItems": true,
+  "patternProperties" : {
+    "^[0-9]+$": {
+      "title": "entity",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The unique identifier for an entity",
+          "type": "integer",
+          "minimum": 0
+        },
+        "name": {
+          "description": "The name of an entity",
+          "type": "string",
+          "pattern": "\\S+"
+        },
+        "type": {
+          "description": "The type of an entity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
