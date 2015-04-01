@@ -25,6 +25,17 @@ WikiTextParser.prototype.getArticle=function(title,cb)
   });
 };
 
+// useful ? (see http://minecraft.gamepedia.com/Talk:Crafting#Wiki_source_of_the_recipes)
+WikiTextParser.prototype.dplQuery=function(query,cb)
+{
+  var params = {
+    action: 'parse',
+    text: query};
+
+  this.client.api.call(params, function(err, info, next, data) {
+    cb(info.text["*"]);
+  });
+};
 
 function extractTitle(titleLine) {
   return titleLine.replace(/=|\[|\]/g,"").trim();
