@@ -1,3 +1,8 @@
+## 0.1.1
+ * some new wiki extractors : beginning of work for blocks, entities
+ * fix some recipes
+ * add entities.json file
+
 ## 0.1.0
  * add json schemas to check the enums schemas
  * use circle ci the check the enums schemas automatically
