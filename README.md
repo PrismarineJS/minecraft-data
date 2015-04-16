@@ -1,4 +1,5 @@
-# minecraft-data  [![NPM version](https://badge.fury.io/js/minecraft-data.png)](http://badge.fury.io/js/minecraft-data) [![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data.png?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data)
+# minecraft-data 
+[![NPM version](https://badge.fury.io/js/minecraft-data.png)](http://badge.fury.io/js/minecraft-data) [![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data.png?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data)
 
 Provide minecraft data for minecraft clients, servers and libraries.
 
