@@ -37,6 +37,15 @@ WikiTextParser.prototype.dplQuery=function(query,cb)
   });
 };
 
+WikiTextParser.prototype.getSimplePagesInCategory=function(category,cb)
+{
+  this.client.getPagesInCategory(category,function(err,pages){
+    cb(pages
+      .map(function(item){return item.title;})
+      .filter(function(title){return !title.startsWith("Category:")}));
+  });
+};
+
 function extractTitle(titleLine) {
   return titleLine.replace(/=|\[|\]/g,"").trim();
 }
