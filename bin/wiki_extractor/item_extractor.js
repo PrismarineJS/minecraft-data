@@ -15,7 +15,7 @@ function parseStackable(stackable)
 
 function itemInfobox(page,cb)
 {
-  wikiTextParser.getArticle(page,function(data){
+  wikiTextParser.getArticle(page,function(err,data){
     var sectionObject=wikiTextParser.pageToSectionObject(data);
 
     var infoBox=wikiTextParser.parseInfoBox(sectionObject["content"]);
@@ -90,7 +90,7 @@ function itemsToFullItems(items,cb)
 // nameid is the name in lower case if not defined
 function parseItemDataValues(cb)
 {
-  wikiTextParser.getArticle("Data_values/Item_IDs",function(data){
+  wikiTextParser.getArticle("Data_values/Item_IDs",function(err,data){
     var sectionObject=wikiTextParser.pageToSectionObject(data);
 
     var itemsText=sectionObject["content"];
@@ -125,17 +125,17 @@ function items(cb)
 {
   async.parallel([
     function(cb){
-      wikiTextParser.getSimplePagesInCategory("Items",function(pages){
+      wikiTextParser.getSimplePagesInCategory("Items",function(err,pages){
         cb(null,pages);
       });
     },
     function(cb){
-      wikiTextParser.getSimplePagesInCategory("Pocket Edition‎",function(pages){
+      wikiTextParser.getSimplePagesInCategory("Pocket Edition‎",function(err,pages){
         cb(null,pages);
       });
     },
     function(cb){
-      wikiTextParser.getSimplePagesInCategory("Console Edition‎",function(pages){
+      wikiTextParser.getSimplePagesInCategory("Console Edition‎",function(err,pages){
         cb(null,pages);
       });
     }

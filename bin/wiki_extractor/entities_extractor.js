@@ -3,7 +3,7 @@ var fs = require('fs');
 
 var wikiTextParser = new WikiTextParser();
 
-wikiTextParser.getArticle("Data_values/Entity_IDs",function(data){
+wikiTextParser.getArticle("Data_values/Entity_IDs",function(err,data){
   var sectionObject=wikiTextParser.pageToSectionObject(data);
 
   var entitiesText=sectionObject["content"];

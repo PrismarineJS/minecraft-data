@@ -28,7 +28,7 @@ WikiTextParser.prototype.getArticle=function(title,cb)
       self.getArticle(redirectPage[1],cb);
     }
     else
-      cb(data);
+      cb(null,data);
   });
 };
 
@@ -40,14 +40,14 @@ WikiTextParser.prototype.dplQuery=function(query,cb)
     text: query};
 
   this.client.api.call(params, function(err, info, next, data) {
-    cb(info.text["*"]);
+    cb(null,info.text["*"]);
   });
 };
 
 WikiTextParser.prototype.getSimplePagesInCategory=function(category,cb)
 {
   this.client.getPagesInCategory(category,function(err,pages){
-    cb(pages
+    cb(null,pages
       .map(function(item){return item.title;})
       .filter(function(title){return !title.startsWith("Category:")}));
   });

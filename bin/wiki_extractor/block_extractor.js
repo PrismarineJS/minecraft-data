@@ -11,7 +11,7 @@ function blockInfobox()
 
   // breaking times : http://minecraft.gamepedia.com/Template:Breaking_row http://minecraft.gamepedia.com/Module:Breaking_row
 
-  wikiTextParser.getArticle("Stone",function(data){
+  wikiTextParser.getArticle("Stone",function(err,data){
     var sectionObject=wikiTextParser.pageToSectionObject(data);
 
     var infoBox=wikiTextParser.parseInfoBox(sectionObject["content"]);
@@ -30,7 +30,7 @@ function recipeQuery()
     "|secseparators = ====" +
     "|multisecseparators = ====" +
     "}}",
-    function (info) {
+    function (err,info) {
       console.log(info.split("===="));
     }
   );
@@ -46,10 +46,22 @@ function blockQuery()
     "|secseparators = ====" +
     "|multisecseparators = ====" +
     "}}",
-    function (info) {
+    function (err,info) {
       console.log(info.split("\n")[0].split("===="));
     }
   );
+}
+
+function getBlocks()
+{
+  wikiTextParser.getArticle("Blocks",function(err,data){
+    var sectionObject=wikiTextParser.pageToSectionObject(data);
+
+    var overworldNaturallyGenerated=sectionObject["World-generated blocks"]["The Overworld"]["Naturally generated"]["content"];
+    var table=wikiTextParser.parseTable(overworldNaturallyGenerated);
+    var linkTable=table.map(function(values){return values[2];});
+    console.log(linkTable);
+  });
 }
 
 blockQuery();

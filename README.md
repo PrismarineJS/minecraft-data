@@ -16,5 +16,5 @@ Support minecraft 1.8.3.
 
 Minecraft data provides a few extractors to update the data :
 
- * bin/wiki_extractor/item_parser.js extract items.json from the minecraft wiki
+ * bin/wiki_extractor/item_extractor.js extract items.json from the minecraft wiki
  * bin/wiki_extractor/entities_extractor.js extract entities.json from the minecraft wiki
