@@ -23,6 +23,7 @@ WikiTextParser.prototype.getArticle=function(title,cb)
       console.error(err);
       return;
     }
+    // somehow use ...&redirects=&... to silently follow redirects
     var redirectPage;
     if(redirectPage=data.match(/#REDIRECT \[\[(.+)\]\]/))
     {

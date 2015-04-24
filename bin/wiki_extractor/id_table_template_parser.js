@@ -37,7 +37,7 @@ function objectTableToItems(objectTable)
       "id":id,
       "displayName":object["displayName"],
       "link":"link" in object ? object["link"] : object["displayName"].replace(/ \(.+?\)/g,""),
-      "name":"nameid" in object ? object["nameid"] : object["displayName"].toLowerCase().replace(/ /g,"_")
+      "name":"nameid" in object ? object["nameid"] : object["displayName"].toLowerCase().replace(/ \(.+?\)/g,"").replace(/ /g,"_")
     };
   });
 }
