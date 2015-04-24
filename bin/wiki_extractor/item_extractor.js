@@ -3,15 +3,8 @@ var async=require('async');
 var fs = require('fs');
 
 var wikiTextParser = new WikiTextParser();
-
-function parseStackable(stackable)
-{
-  if(stackable == undefined) return null;
-  if(stackable.indexOf("No")!=-1) return 1;
-  var result=stackable.match(new RegExp("Yes \\(([0-9]+)\\)"));
-  if(result==null) return null;
-  return parseInt(result[1]);
-}
+var id_table_parser=require('./id_table_template_parser.js');
+var infobox_field_parser=require('./infobox_field_parser.js');
 
 function itemInfobox(page,cb)
 {
@@ -24,55 +17,17 @@ function itemInfobox(page,cb)
     var outputData={
       "id":parseInt(values["data"]),
       "displayName":page,
-      "stackSize":parseStackable(values["stackable"]),
+      "stackSize":infobox_field_parser.parseStackable(values["stackable"]),
       "name":page.toLowerCase()
     };
-    cb(outputData);
-  });
-}
-
-function tableToObjectTable(table)
-{
-  return table
-    .filter(function(element){return element[1]!="" && element[1].indexOf("=")==-1;})
-    .map(function(element){
-      var object={};
-      object["displayName"]=element[1];
-      if(element.length>=3 && element[2].indexOf("=")==-1)
-        object["note"]=element[2];
-      for(var i=2;i<element.length;i++)
-      {
-        if(element[i].indexOf("=")!=-1)
-        {
-          var parts=element[i].split("=");
-          object[parts[0]]=parts[1];
-        }
-      }
-      return object;
-    });
-}
-
-function objectTableToItems(objectTable)
-{
-  var id;
-  return objectTable.map(function(object){
-    if("dv" in object)
-      id=parseInt(object["dv"]);
-    else
-      id++;
-    return {
-      "id":id,
-      "displayName":object["displayName"],
-      "link":"link" in object ? object["link"] : object["displayName"],
-      "name":"nameid" in object ? object["nameid"] : object["displayName"].toLowerCase().replace(/ /g,"_")
-    };
+    cb(null,outputData);
   });
 }
 
 function itemsToFullItems(items,cb)
 {
   async.map(items,function(item,cb){
-    itemInfobox(item["link"],function(data){
+    itemInfobox(item["link"],function(err,data){
       cb(null,{
         "id":item["id"],
         "displayName":item["displayName"],
@@ -85,27 +40,10 @@ function itemsToFullItems(items,cb)
   });
 }
 
-// http://minecraft.gamepedia.com/Template:ID_table
-// algo : dv=256 start the counter, +1 for next items, until there's a new dv
-// nameid is the name in lower case if not defined
-function parseItemDataValues(cb)
-{
-  wikiTextParser.getArticle("Data_values/Item_IDs",function(err,data){
-    var sectionObject=wikiTextParser.pageToSectionObject(data);
-
-    var itemsText=sectionObject["content"];
-    var table=wikiTextParser.parseTable(itemsText);
-    var objectTable=tableToObjectTable(table);
-    var items=objectTableToItems(objectTable);
-    console.log(items);
-    cb(null,items);
-  });
-}
-
 function writeAllItems()
 {
   async.waterfall([
-    parseItemDataValues,
+    function(cb){id_table_parser.parseDataValues("Data_values/Item_IDs",cb)},
     itemsToFullItems
   ],
     function(err,fullItems){
@@ -150,20 +88,20 @@ function items(cb)
 }
 function testArrow()
 {
-  itemInfobox("Arrow",function(data){
+  itemInfobox("Arrow",function(err,data){
     console.log(data);
   });
 }
 function testWaitDisc()
 {
-  itemInfobox("Wait Disc",function(data){
+  itemInfobox("Wait Disc",function(err,data){
     console.log(data);
   });
 }
 
 function testGoldenApple()
 {
-  itemInfobox("Golden Apple",function(data){
+  itemInfobox("Golden Apple",function(err,data){
     console.log(data);
   });
 }
@@ -173,7 +111,7 @@ function parseAllItems()
   items(function(pages){
     console.log(pages.length);
     async.map(pages,function(page,cb){
-      itemInfobox(page,function(data){
+      itemInfobox(page,function(err,data){
         cb(null,data);
       });
     },function(err,results){

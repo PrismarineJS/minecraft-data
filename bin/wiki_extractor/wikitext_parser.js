@@ -18,7 +18,8 @@ WikiTextParser.prototype.getArticle=function(title,cb)
 {
   var self=this;
   this.client.getArticle(title, function(err, data) {
-    if (err) {
+    if (err || !data) {
+      console.log("error in page "+title);
       console.error(err);
       return;
     }

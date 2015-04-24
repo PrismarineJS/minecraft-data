@@ -1,8 +1,11 @@
 var WikiTextParser = require('./wikitext_parser');
+var async=require('async');
 
 var wikiTextParser = new WikiTextParser();
+var id_table_parser=require('./id_table_template_parser.js');
+var infobox_field_parser=require('./infobox_field_parser.js');
 
-function blockInfobox()
+function blockInfobox(page,cb)
 {
   // values on infobox present on other pages :
   // http://minecraft.gamepedia.com/Template:Block
@@ -11,16 +14,78 @@ function blockInfobox()
 
   // breaking times : http://minecraft.gamepedia.com/Template:Breaking_row http://minecraft.gamepedia.com/Module:Breaking_row
 
-  wikiTextParser.getArticle("Stone",function(err,data){
+  wikiTextParser.getArticle(page,function(err,data){
     var sectionObject=wikiTextParser.pageToSectionObject(data);
 
     var infoBox=wikiTextParser.parseInfoBox(sectionObject["content"]);
-    console.log(infoBox);
+    var values=infoBox["values"];
 
-    //var break
+    var outputData={
+      "id":parseInt(values["data"]),
+      "displayName":page,
+      "stackSize":infobox_field_parser.parseStackable(values["stackable"]),
+      "name":page.toLowerCase()
+    };
+    cb(null,outputData);
   });
 }
 
+function testStone()
+{
+  blockInfobox("Stone",function(err,data){
+    console.log(data);
+  });
+}
+function testAir()
+{
+  blockInfobox("Air",function(err,data){
+    console.log(data);
+  });
+}
+
+function blocksToFullBlocks(blocks,cb)
+{
+  async.map(blocks,function(block,cb){
+    blockInfobox(block["link"],function(err,data){
+      cb(null,{
+        "id":block["id"],
+        "displayName":block["displayName"],
+        "stackSize":data!=null && "stackSize" in data ? data["stackSize"] : null,
+        "name":block["name"]
+      });
+    });
+  },function(err,results){
+    cb(null,results);
+  });
+}
+
+function writeAllBlocks()
+{
+  async.waterfall([
+      function(cb){id_table_parser.parseDataValues("Data_values/Block_IDs",cb)},
+      //function(blocks,cb){cb(null,blocks.slice(0,10))},
+      blocksToFullBlocks
+    ],
+    function(err,fullBlocks){
+      var blocks={};
+      for(var i in fullBlocks)
+      {
+        blocks[fullBlocks[i]["id"]]=fullBlocks[i];
+      }
+      console.log(blocks);
+      //fs.writeFile("../../enums/blocks.json", JSON.stringify(items,null,2));
+    });
+}
+
+writeAllBlocks();
+//testAir();
+//testStone();
+/*id_table_parser.parseDataValues("Data_values/Block_IDs",function(err,blocks){
+  console.log(blocks);
+});*/
+
+
+// not used after all
 function recipeQuery()
 {
   wikiTextParser.dplQuery(
@@ -63,5 +128,3 @@ function getBlocks()
     console.log(linkTable);
   });
 }
-
-blockQuery();
