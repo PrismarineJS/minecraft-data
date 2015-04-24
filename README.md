@@ -11,3 +11,10 @@ Support minecraft 1.8.3.
  * See [doc/history.md](doc/history.md)
  * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data/)
  * [Textual documentation of the recipe format](doc/recipes.md)
+
+## Extractors
+
+Minecraft data provides a few extractors to update the data :
+
+ * bin/wiki_extractor/item_parser.js extract items.json from the minecraft wiki
+ * bin/wiki_extractor/entities_extractor.js extract entities.json from the minecraft wiki

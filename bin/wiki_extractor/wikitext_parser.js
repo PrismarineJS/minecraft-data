@@ -16,12 +16,19 @@ function WikiTextParser()
 
 WikiTextParser.prototype.getArticle=function(title,cb)
 {
+  var self=this;
   this.client.getArticle(title, function(err, data) {
     if (err) {
       console.error(err);
       return;
     }
-    cb(data);
+    var redirectPage;
+    if(redirectPage=data.match(/#REDIRECT \[\[(.+)\]\]/))
+    {
+      self.getArticle(redirectPage[1],cb);
+    }
+    else
+      cb(data);
   });
 };
 
@@ -126,7 +133,7 @@ WikiTextParser.prototype.parseInfoBox = function(sectionLineArray)
       infoBox["template"] = line.replace(/{|}/g, "");
     if (line.startsWith("|")) {
       var keyAndValue=line.replace(/\|/g,"").split("=");
-      infoBox["values"][keyAndValue[0]]=keyAndValue[1];
+      infoBox["values"][keyAndValue[0].trim()]=keyAndValue[1].trim();
     }
   });
   return infoBox;
