@@ -6,6 +6,7 @@ var wikiTextParser = new WikiTextParser();
 var id_table_parser=require('./id_table_template_parser.js');
 var infobox_field_parser=require('./infobox_field_parser.js');
 
+// http://minecraft.gamepedia.com/Template:Item
 function itemInfobox(page,cb)
 {
   wikiTextParser.getArticle(page,function(err,data){
