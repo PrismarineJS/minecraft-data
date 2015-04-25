@@ -1,6 +1,6 @@
 var WikiTextParser = require('./wikitext_parser');
 var async=require('async');
-
+var fs = require('fs');
 var wikiTextParser = new WikiTextParser();
 var id_table_parser=require('./id_table_template_parser.js');
 var infobox_field_parser=require('./infobox_field_parser.js');
@@ -10,15 +10,48 @@ var infobox_field_parser=require('./infobox_field_parser.js');
 
 // breaking times : http://minecraft.gamepedia.com/Template:Breaking_row http://minecraft.gamepedia.com/Module:Breaking_row : not useful
 
+// http://minecraft.gamepedia.com/Breaking : useful to get the breaking times (materials.json) and the harvestTools field (and the material field)
+// check http://minecraft.gamepedia.com/Breaking#Speed vs https://github.com/andrewrk/mineflayer/blob/master/lib/plugins/digging.js#L88
+// materials.json has redundancies
 
 //getHardnessValues();
 writeAllBlocks();
+//getMaterials(function(err,data){console.log(data);});
 //testAir();
 //testStone();
 //testWheat();
+//testMelon();
 /*id_table_parser.parseDataValues("Data_values/Block_IDs",function(err,blocks){
  console.log(blocks);
  });*/
+
+
+
+function writeAllBlocks()
+{
+  async.waterfall([
+      function(cb){id_table_parser.parseDataValues("Data_values/Block_IDs",cb)},
+      addHardness,
+      addMaterial,
+      //function(blocks,cb){console.log(blocks);cb(null,blocks);},
+      //function(blocks,cb){cb(null,blocks.slice(0,10))},
+      blocksToFullBlocks
+    ]
+    , indexAndWrite
+  );
+}
+
+
+
+function indexAndWrite(err,fullBlocks)
+{
+  var blocks={};
+  fullBlocks.forEach(function(fullBlock){
+    blocks[fullBlock["id"]]=fullBlock;
+  });
+  //console.log(blocks);
+  fs.writeFile("../../enums/blocks.json", JSON.stringify(blocks,null,2));
+}
 
 
 var wikitypeToBoundingBox={
@@ -62,18 +95,38 @@ function blockInfobox(page,cb)
     if(values["type"] && !(values["type"].trim().toLowerCase() in wikitypeToBoundingBox))
       console.log(page+" : "+values["type"]);
 
+    if(!("stackable" in values))
+    {
+      values["stackable"]="N/A";
+    }
+
+    var stackSize=infobox_field_parser.parseStackable(values["stackable"]);
+    if(stackSize==null)
+    {
+      console.log("can't parse stackable of "+page);
+      console.log(values);
+    }
+
     var outputData={
       "id":parseInt(values["data"]),
-      "displayName":page,
-      "stackSize":infobox_field_parser.parseStackable(values["stackable"]),
       "name":page.toLowerCase(),
+      "displayName":page,
+      "stackSize":stackSize,
       //TODO: to fix by properly parsing the tool (break for http://minecraft.gamepedia.com/Water)
       // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
       "liquid":values["type"] && values["type"].trim().toLowerCase() == "fluid",
       "tool":"tool" in values ? values["tool"] : null ,
-      "boundingBox" : values["type"] && values["type"].trim().toLowerCase() in wikitypeToBoundingBox ? wikitypeToBoundingBox[values["type"].trim().toLowerCase()] : null
+      "boundingBox" : values["type"] && values["type"].trim().toLowerCase() in wikitypeToBoundingBox ? wikitypeToBoundingBox[values["type"].trim().toLowerCase()] : "block"
     };
     cb(null,outputData);
+  });
+}
+
+
+function testMelon()
+{
+  blockInfobox("Melon",function(err,data){
+    console.log(data);
   });
 }
 
@@ -100,21 +153,222 @@ function blocksToFullBlocks(blocks,cb)
 {
   async.map(blocks,function(block,cb){
     blockInfobox(block["link"],function(err,data){
+      if(data==null)
+        console.log("can't get infobox of "+block);
+      if(!(data!=null && "stackSize" in data))
+        console.log("stackSize problem in "+block+" "+data);
       cb(null,{
         "id":block["id"],
         "displayName":block["displayName"],
+        "name":block["name"],
         "hardness": block["hardness"],
         "stackSize":data!=null && "stackSize" in data ? data["stackSize"] : null,
-        "name":block["name"],
         // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
-        "diggable": !data["liquid"] && block["hardness"] !== null && (!data["tool"] || data["tool"]!="N/A"),
-        "boundingBox": data["boundingBox"]
+        // or use this http://minecraft.gamepedia.com/Breaking#Best_tools
+        "diggable": block["id"]==59 || (!data["liquid"] && block["hardness"] !== null && (!data["tool"] || data["tool"]!="N/A")),
+        "boundingBox": data["boundingBox"],
+        "material":block["material"]
       });
     });
   },function(err,results){
     cb(null,results);
   });
 }
+/*
+function parseItemLink(text)
+{
+  var inside=text.replace("\{\{.+\}\}","$1");
+  var parts=inside.split("|");
+  var simpleParts=[];
+  var namedParts={};
+  parts.forEach(function(part){
+
+  });
+}*/
+
+// http://minecraft.gamepedia.com/Breaking#Best_tools
+function getMaterials(cb)
+{
+  wikiTextParser.getArticle("Breaking",function(err,data){
+    var sectionObject=wikiTextParser.pageToSectionObject(data);
+    var tableContent=sectionObject["Speed"]["Best tools"]["content"];
+    var blockToMaterial={};
+    var materialToBestTool={};
+    var currentMaterial="";
+    var currentTool="";
+    var prevMaterials=[];
+    var currentBlocks=[];
+    var currentColumn=0;
+    var started=false;
+    //console.log(tableContent);
+    tableContent.forEach(function(line){
+      if(line.startsWith("|rowspan")){
+
+        if(currentTool != "")
+        {
+          prevMaterials.forEach(function(material){
+            materialToBestTool[material]=currentTool;
+          });
+          prevMaterials=[];
+        }
+
+        line=line.replace(/\|rowspan="[0-9]+"\|/,"").trim();
+        line=line.replace(/\{\{ItemLink\|(.+)\}\}/,"$1");
+        if(line.indexOf("all tools")!=-1) line="all tools";
+        if(line.indexOf("instantly breaks")!=-1) line="instantly breaks";
+        if(line.indexOf("unbreakable")!=-1) line="unbreakable";
+        currentTool=line;
+        started=true;
+        return;
+      }
+      if(!started) return;
+      currentColumn++;
+      if(line == "|-")
+      {
+        currentColumn=0;
+        currentBlocks.forEach(function(block){
+          blockToMaterial[block]=currentMaterial;
+        });
+      }
+      else if(currentColumn==1) {
+        currentMaterial = line.replace("|", "").trim();
+        prevMaterials.push(currentMaterial);
+      }
+      else if(currentColumn==2)
+      {
+        line=line.replace("|","").trim();
+        currentBlocks=line=="" ? [] : line
+          .split("<br>")
+          .map(function(row){
+            return parseBlockItemTemplate(row)["text"];
+          });
+      }
+    });
+    currentBlocks.forEach(function(block){
+      blockToMaterial[block]=currentMaterial;
+    });
+    prevMaterials.forEach(function(material){
+      materialToBestTool[material]=currentTool;
+    });
+
+    //console.log(blockToMaterial);
+    //console.log(materialToBestTool);
+    cb(null,{blockToMaterial:blockToMaterial,materialToBestTool:materialToBestTool});
+  });
+}
+
+function parseBlockItemTemplate(text)
+{
+  var inside=text.replace(/^\{\{(?:BlockLink|ItemLink)\|(.+?)\}\}.*$/,"$1");
+  var parts=inside.split("|");
+  var simpleParts=parts.filter(function(part){return part.indexOf("=")==-1;});
+  var namedParts=parts
+    .filter(function(part){return part.indexOf("=")!=-1;})
+    .reduce(function(acc,part){
+      var eparts=part.split("=");
+      acc[eparts[0].trim()]=eparts[1].trim();
+      return acc;
+    },{});
+  return {
+    id:"id" in namedParts ? namedParts["id"] : simpleParts[0],
+    text:"text" in namedParts ? namedParts["text"] : (simpleParts.length==2 ? simpleParts[1] : simpleParts[0]),
+    link:"link" in namedParts ? namedParts["link"] : simpleParts[0]
+  };
+}
+
+function generateMaterials(materialToBestTool,cb)
+{
+
+}
+
+var wikiMaterialToSimpleMaterial={
+  Plants: 'plant',
+  Wood: 'wood',
+  Ice: 'rock',
+  'Metal I': 'rock',
+  'Metal II': 'rock',
+  'Metal III': 'rock',
+  Rail: 'rock',
+  'Rock I': 'rock',
+  'Rock II': 'rock',
+  'Rock III': 'rock',
+  'Rock IV': 'rock',
+  Leaves: 'leaves',
+  Web: 'web',
+  Wool: 'wool',
+  Ground: 'dirt',
+  Snow: 'dirt',
+  Circuits: '',
+  Glass: '',
+  Other: '',
+  Piston: '',
+  Liquid: ''
+};
+
+if (!Array.prototype.find) {
+  Array.prototype.find = function(predicate) {
+    if (this == null) {
+      throw new TypeError('Array.prototype.find called on null or undefined');
+    }
+    if (typeof predicate !== 'function') {
+      throw new TypeError('predicate must be a function');
+    }
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
+
+    for (var i = 0; i < length; i++) {
+      value = list[i];
+      if (predicate.call(thisArg, value, i, list)) {
+        return value;
+      }
+    }
+    return undefined;
+  };
+}
+
+function getWithVariations(object,variations,verbose)
+{
+  var correctVariation=variations.find(function(variation){return variation in object;});
+  if(correctVariation !==undefined)
+    return object[correctVariation];
+  else
+  {
+    if(verbose) console.log("can't find "+variations);
+    return null;
+  }
+}
+
+function addMaterial(blocks,cb)
+{
+  getMaterials(function(err,data){
+    blockToMaterial=data["blockToMaterial"];
+    //console.log(blockToMaterial);
+    cb(null,blocks.map(function(block){
+      var changedDisplayName=block["displayName"]
+        .replace(/Spruce Door|Birch Door|Jungle Door|Acacia Door|Dark Oak Door|Oak Door/,"Wooden Door")
+        .replace(/^Trapdoor$/,"Wooden Trapdoor")
+        .replace(/^Iron Door$/,"Door")
+        .replace(/^Portal$/,"Nether Portal")
+        .replace(/^Grass$/,"Grass Block")
+        .replace(/^Double /,"")
+        .replace(/^Potato$/,"Potatoes");
+      var wikiMaterial=getWithVariations(blockToMaterial,[changedDisplayName,changedDisplayName.replace(/s$/,""),
+          changedDisplayName+"s",
+        block["link"],block["link"].replace(/s$/,""),block["link"]+"s"],
+
+        ["Air","Piston Head","Block moved by Piston",].indexOf(block["displayName"])==-1);
+      if(wikiMaterial!=null)
+      {
+        var material=wikiMaterialToSimpleMaterial[wikiMaterial];
+        if(material!="") block["material"]=material;
+      }
+      return block;
+    }));
+  });
+}
+
 
 
 //http://minecraft.gamepedia.com/Breaking#Blocks_by_hardness
@@ -184,30 +438,6 @@ function addHardness(blocks,cb)
       return block;
     }));
   });
-}
-
-function indexAndWrite(err,fullBlocks)
-{
-  var blocks={};
-  for(var i in fullBlocks)
-  {
-    blocks[fullBlocks[i]["id"]]=fullBlocks[i];
-  }
-  console.log(blocks);
-  //fs.writeFile("../../enums/blocks.json", JSON.stringify(items,null,2));
-}
-
-function writeAllBlocks()
-{
-  async.waterfall([
-      function(cb){id_table_parser.parseDataValues("Data_values/Block_IDs",cb)},
-        addHardness,
-        //function(blocks,cb){console.log(blocks);cb(null,blocks);},
-      //function(blocks,cb){cb(null,blocks.slice(0,10))},
-      blocksToFullBlocks
-    ]
-     , indexAndWrite
-  );
 }
 
 
