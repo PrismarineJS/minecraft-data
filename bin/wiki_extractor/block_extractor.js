@@ -16,6 +16,7 @@ var infobox_field_parser=require('./infobox_field_parser.js');
 
 //getHardnessValues();
 writeAllBlocks();
+//testNetherBrickFence();
 //getMaterials(function(err,data){console.log(data);});
 //testAir();
 //testStone();
@@ -95,10 +96,7 @@ function blockInfobox(page,cb)
     if(values["type"] && !(values["type"].trim().toLowerCase() in wikitypeToBoundingBox))
       console.log(page+" : "+values["type"]);
 
-    if(!("stackable" in values))
-    {
-      values["stackable"]="N/A";
-    }
+    if(!("stackable" in values)) values["stackable"]="N/A";
 
     var stackSize=infobox_field_parser.parseStackable(values["stackable"]);
     if(stackSize==null)
@@ -107,6 +105,11 @@ function blockInfobox(page,cb)
       console.log(values);
     }
 
+    //if("tool2" in values)
+    //  console.log(page);
+
+    //console.log(page);
+    //console.log(page+" "+values["tool"]);
     var outputData={
       "id":parseInt(values["data"]),
       "name":page.toLowerCase(),
@@ -116,12 +119,65 @@ function blockInfobox(page,cb)
       // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
       "liquid":values["type"] && values["type"].trim().toLowerCase() == "fluid",
       "tool":"tool" in values ? values["tool"] : null ,
+      "tool2":"tool2" in values ? values["tool2"] : null ,
+      "harvestTools":toolToHarvestTools(values["tool"],page=="Cobweb"),
+      "harvestTools2":toolToHarvestTools(values["tool2"],page=="Cobweb"),
       "boundingBox" : values["type"] && values["type"].trim().toLowerCase() in wikitypeToBoundingBox ? wikitypeToBoundingBox[values["type"].trim().toLowerCase()] : "block"
     };
     cb(null,outputData);
   });
 }
 
+// see http://minecraft.gamepedia.com/Module:Breaking_row materialGrade
+var toolMaterials=["wooden","golden","stone","iron","diamond"];
+var items=require("../../enums/items.json");
+var itemsByName=Object.keys(items).reduce(function(acc,key){
+  acc[items[key]["name"]]=key;
+  return acc;
+},{});
+
+function toolToHarvestTools(tool,cobweb)
+{
+  if(tool === undefined)
+    return undefined;
+  tool=tool.toLowerCase().trim();
+  if(["any","n/a","all","none","bucket"].indexOf(tool)!=-1) // not sure what to do about bucket (is it digging ?)
+    return undefined;
+  if(["axe","shovel","pickaxe","spade","sword","shears"].indexOf(tool)!=-1 && !cobweb)
+   // : not required tools (the fact that they make digging faster is already handled by materials.json)
+    return undefined;
+  if(["axe","pickaxe","wooden pickaxe","iron pickaxe","stone pickaxe","diamond pickaxe","shovel","shears","spade","bucket","sword","wooden shovel"].indexOf(tool)==-1) {
+    console.log(tool); // this shouldn't happen
+    return undefined;
+  }
+  var harvestTools=[];
+  if(tool=="sword") tool="wooden sword";//for cobweb
+  if(tool=="shears") harvestTools=[itemsByName[tool]];
+  else
+  {
+    var parts=tool.split(" ");
+    var cmaterial=parts[0];
+    var ctool=parts[1];
+    var adding=false;
+    toolMaterials.forEach(function(toolMaterial){
+      if(toolMaterial==cmaterial)
+        adding=true;
+      if(adding) harvestTools.push(itemsByName[toolMaterial+"_"+ctool]);
+    });
+  }
+
+  return harvestTools.reduce(function(acc,harvestTool){
+    acc[harvestTool]=true;
+    return acc;
+  },{});
+}
+
+function testNetherBrickFence()
+{
+  blockInfobox("Nether Brick Fence",function(err,data){
+    console.log(data);
+  });
+}
 
 function testMelon()
 {
@@ -149,6 +205,24 @@ function testWheat()
     });
 }
 
+// useful for pages like http://minecraft.gamepedia.com/Stairs with two tools : one for rock material, one for wood material
+function chooseCorrectHarvestTools(tool,tool2,harvestTools,harvestTools2,material)
+{
+  if(!tool2)
+    return harvestTools;
+  if(material=="web")
+  {
+    // http://minecraft.gamepedia.com/Cobweb : both tools
+    return Object.keys(harvestTools).concat(Object.keys(harvestTools2)).reduce(function(acc,e){acc[e]=true;return acc;},{});
+  }
+  if(material=="rock")
+    return tool.toLowerCase().indexOf("pick")!=-1 ? harvestTools : harvestTools2;
+  if(material=="wood")
+    return tool.toLowerCase().indexOf("pick")!=-1 ? harvestTools2 : harvestTools;
+  console.log("shouldn't happen material:"+material);
+  return harvestTools; // shouldn't happen
+}
+
 function blocksToFullBlocks(blocks,cb)
 {
   async.map(blocks,function(block,cb){
@@ -157,6 +231,8 @@ function blocksToFullBlocks(blocks,cb)
         console.log("can't get infobox of "+block);
       if(!(data!=null && "stackSize" in data))
         console.log("stackSize problem in "+block+" "+data);
+      //if(data["tool2"])
+      //  console.log("ht2 | "+block["displayName"]+" | "+block["material"]+" | "+data["tool"]+" | "+data["tool2"]);
       cb(null,{
         "id":block["id"],
         "displayName":block["displayName"],
@@ -167,7 +243,8 @@ function blocksToFullBlocks(blocks,cb)
         // or use this http://minecraft.gamepedia.com/Breaking#Best_tools
         "diggable": block["id"]==59 || (!data["liquid"] && block["hardness"] !== null && (!data["tool"] || data["tool"]!="N/A")),
         "boundingBox": data["boundingBox"],
-        "material":block["material"]
+        "material":block["material"],
+        "harvestTools":chooseCorrectHarvestTools(data["tool"],data["tool2"],data["harvestTools"],data["harvestTools2"],block["material"])
       });
     });
   },function(err,results){
@@ -353,7 +430,8 @@ function addMaterial(blocks,cb)
         .replace(/^Portal$/,"Nether Portal")
         .replace(/^Grass$/,"Grass Block")
         .replace(/^Double /,"")
-        .replace(/^Potato$/,"Potatoes");
+        .replace(/^Potato$/,"Potatoes")
+        .replace(/^.+Wood Stairs$/,"Wooden Stairs");
       var wikiMaterial=getWithVariations(blockToMaterial,[changedDisplayName,changedDisplayName.replace(/s$/,""),
           changedDisplayName+"s",
         block["link"],block["link"].replace(/s$/,""),block["link"]+"s"],

@@ -25,7 +25,7 @@ WikiTextParser.prototype.getArticle=function(title,cb)
     }
     // somehow use ...&redirects=&... to silently follow redirects
     var redirectPage;
-    if(redirectPage=data.match(/#REDIRECT \[\[(.+)\]\]/))
+    if(redirectPage=data.match(/#REDIRECT \[\[(.+)\]\]/i))
     {
       self.getArticle(redirectPage[1],cb);
     }
