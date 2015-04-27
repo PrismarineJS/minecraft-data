@@ -18,3 +18,4 @@ Minecraft data provides a few extractors to update the data :
 
  * bin/wiki_extractor/item_extractor.js extract items.json from the minecraft wiki
  * bin/wiki_extractor/entities_extractor.js extract entities.json from the minecraft wiki
+ * bin/wiki_extractor/blocks_extractor.js extract blocks.json from the minecraft wiki
