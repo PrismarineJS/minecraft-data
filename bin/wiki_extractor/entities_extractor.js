@@ -3,6 +3,15 @@ var fs = require('fs');
 
 var wikiTextParser = new WikiTextParser();
 
+function getText(rawText)
+{
+  return rawText
+    .replace(/\[\[(?:.+?\|)?(.+?)\]\]/g,"$1") // remove links
+    .replace(/\(.+\)/g,"") // remove text in parenthesis
+    .replace(/^(.+)<br \/>.+$/,"$1") // keep only the first line if two lines
+    .trim();
+}
+
 wikiTextParser.getArticle("Data_values/Entity_IDs",function(err,data){
   var sectionObject=wikiTextParser.pageToSectionObject(data);
 
@@ -19,6 +28,7 @@ wikiTextParser.getArticle("Data_values/Entity_IDs",function(err,data){
         var id=values[0].replace(/\| /g,"").trim();
         entities[id]={
           "id":parseInt(id),
+          "displayName":getText(values[4]),
           "name":values[5].trim(),
           "type":currentType};
       }
