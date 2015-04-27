@@ -4,42 +4,32 @@ var wikiTextParser = new WikiTextParser();
 
 module.exports={parseDataValues:parseDataValues};
 
-function tableToObjectTable(table)
+function tableToItems(table)
 {
-  return table
-    .filter(function(element){return element[1]!="" && element[1].indexOf("=")==-1;})
-    .map(function(element){
-      var object={};
-      object["displayName"]=element[1];
-      if(element.length>=3 && element[2].indexOf("=")==-1)
-        object["note"]=element[2];
-      for(var i=2;i<element.length;i++)
-      {
-        if(element[i].indexOf("=")!=-1)
-        {
-          var parts=element[i].split("=");
-          object[parts[0]]=parts[1];
-        }
-      }
-      return object;
-    });
-}
 
-function objectTableToItems(objectTable)
-{
   var id;
-  return objectTable.map(function(object){
-    if("dv" in object)
-      id=parseInt(object["dv"]);
-    else
-      id++;
-    return {
-      "id":id,
-      "displayName":object["displayName"],
-      "link":"link" in object ? object["link"] : object["displayName"].replace(/ \(.+?\)/g,""),
-      "name":"nameid" in object ? object["nameid"] : object["displayName"].toLowerCase().replace(/ \(.+?\)/g,"").replace(/ /g,"_")
-    };
-  });
+  return table
+    .filter(function(element){return element!="" && element.indexOf("{")!=-1;}) // get rid of the unrelated beginning and ending lines
+    .map(function(element){
+      var r=wikiTextParser.parseTemplate(element);
+      if(r==null || ["id table"].indexOf(r.template)==-1) {
+        console.log(r);
+        console.log("problem with parsing template "+element);
+        return null;
+      }
+      return r;
+    })
+    .filter(function(r){return r!=null && r.simpleParts.length!=0 && r.simpleParts[0]!="";})
+    .map(function(r){
+      id="dv" in r.namedParts ? parseInt(r.namedParts["dv"]) : id+1;
+      return {
+        id:id,
+        displayName: (r.simpleParts.length==3 ? r.simpleParts[2]+" " : "")+r.simpleParts[0],
+        link:"link" in r.namedParts ? r.namedParts["link"] : r.simpleParts[0].replace(/ \(.+?\)/g,""),
+        name:"nameid" in r.namedParts ? r.namedParts["nameid"] : r.simpleParts[0].toLowerCase().replace(/ \(.+?\)/g,"").replace(/ /g,"_"),
+        note:r.simpleParts.length>=2 ? r.simpleParts[1] : undefined
+      };
+    });
 }
 
 // http://minecraft.gamepedia.com/Template:ID_table
@@ -51,9 +41,7 @@ function parseDataValues(page,cb)
     var sectionObject=wikiTextParser.pageToSectionObject(data);
 
     var itemsText=sectionObject["content"];
-    var table=wikiTextParser.parseTable(itemsText);
-    var objectTable=tableToObjectTable(table);
-    var items=objectTableToItems(objectTable);
+    var items=tableToItems(itemsText);
     cb(null,items);
   });
 }

@@ -336,16 +336,15 @@ function getMaterials(cb)
 
 function parseBlockItemTemplate(text)
 {
-  var inside=text.replace(/^\{\{(?:BlockLink|ItemLink)\|(.+?)\}\}.*$/,"$1");
-  var parts=inside.split("|");
-  var simpleParts=parts.filter(function(part){return part.indexOf("=")==-1;});
-  var namedParts=parts
-    .filter(function(part){return part.indexOf("=")!=-1;})
-    .reduce(function(acc,part){
-      var eparts=part.split("=");
-      acc[eparts[0].trim()]=eparts[1].trim();
-      return acc;
-    },{});
+  var results=wikiTextParser.parseTemplate(text);
+  if(results==null || ["BlockLink","ItemLink"].indexOf(results.template)==-1) {
+    console.log(results);
+    console.log("problem with parsing template "+text);
+    return null;
+  }
+  var namedParts=results.namedParts;
+  var simpleParts=results.simpleParts;
+  // might be possible to make a more general version of that for handling defaults
   return {
     id:"id" in namedParts ? namedParts["id"] : simpleParts[0],
     text:"text" in namedParts ? namedParts["text"] : (simpleParts.length==2 ? simpleParts[1] : simpleParts[0]),

@@ -128,15 +128,35 @@ WikiTextParser.prototype.parseTable = function(sectionLineArray)
 
 WikiTextParser.prototype.parseInfoBox = function(sectionLineArray)
 {
-  var infoBox={};
-  infoBox["values"]={};
-  sectionLineArray.forEach(function(line) {
-    if (line.startsWith("{{"))
-      infoBox["template"] = line.replace(/{|}/g, "");
-    if (line.startsWith("|")) {
-      var keyAndValue=line.replace(/\|/g,"").split("=");
-      infoBox["values"][keyAndValue[0].trim()]=keyAndValue[1].trim();
-    }
-  });
-  return infoBox;
+  var text=sectionLineArray.join("");
+  var results=this.parseTemplate(text);
+  if(results==null) {
+    console.log("problem with parsing template "+text);
+    return null;
+  }
+  var namedParts=results.namedParts;
+  var simpleParts=results.simpleParts;
+  return {
+    template:results.template,
+    values:results.namedParts
+  };
+};
+
+WikiTextParser.prototype.parseTemplate = function(text)
+{
+  var matches=text.match(/^.*?\{\{(.+)\}\}.*?$/);
+  if(!matches || matches.length!=2)
+    return null;
+  var inside=matches[1];
+  var parts=inside.split("|");
+  var template=parts.shift();
+  var simpleParts=parts.filter(function(part){return part.indexOf("=")==-1;});
+  var namedParts=parts
+    .filter(function(part){return part.indexOf("=")!=-1;})
+    .reduce(function(acc,part){
+      var eparts=part.split("=");
+      acc[eparts[0].trim()]=eparts[1].trim();
+      return acc;
+    },{});
+  return {template:template,namedParts:namedParts,simpleParts:simpleParts};
 };

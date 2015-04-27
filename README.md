@@ -21,4 +21,13 @@ Minecraft data provides a few extractors to update the data :
  * bin/wiki_extractor/blocks_extractor.js extract blocks.json from the minecraft wiki
  * manual filling of materials.json : this file is very simple, it is there to make it easier to handle some edge cases
  * manual filling of instruments.json : data coming from http://wiki.vg/Block_Actions
+
+## Data quality
+
+Minecraft data provides scripts to audit the data, they can be useful to check the data is correct :
+
+ * bin/audit_block_enum.js audits blocks.json
+ * bin/audit_item_enum.js audits items.json
  
+Minecraft data also provides json schemas in enums_schemas/ that are used in test/test.js to check the json file are valid relative to these schemas.
+These schemas can also be used to understand better how the json files are formatted in order to use it.
