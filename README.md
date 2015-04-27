@@ -20,4 +20,5 @@ Minecraft data provides a few extractors to update the data :
  * bin/wiki_extractor/entities_extractor.js extract entities.json from the minecraft wiki
  * bin/wiki_extractor/blocks_extractor.js extract blocks.json from the minecraft wiki
  * manual filling of materials.json : this file is very simple, it is there to make it easier to handle some edge cases
+ * manual filling of instruments.json : data coming from http://wiki.vg/Block_Actions
  
