@@ -26,8 +26,9 @@ Minecraft data provides a few extractors to update the data :
 
 Minecraft data provides scripts to audit the data, they can be useful to check the data is correct :
 
- * bin/audit_block_enum.js audits blocks.json
- * bin/audit_item_enum.js audits items.json
+ * bin/audit_block_enum.js audits blocks.json : it checks for duplicates names and jumps in ids
+ * bin/audit_item_enum.js audits items.json : it checks for duplicates names and jumps in ids
+ * bin/audit_recipes.js audits recipes.json : it counts the number of recipes with a shape, without one and with an outShape 
  
 Minecraft data also provides json schemas in enums_schemas/ that are used in test/test.js to check the json file are valid relative to these schemas.
 These schemas can also be used to understand better how the json files are formatted in order to use it.
