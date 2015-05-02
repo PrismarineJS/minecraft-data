@@ -10,16 +10,16 @@ A single **numerical ID** or `null`.
 - `1` for any item with ID `1`
 - `null` for empty
 
-A **list** of `id` and `meta`.
+A **list** of `id` and `metadata`.
 This is preferred if there are many items at once, e.g. in a shape.
-**Example:** `[1, 2]` for any amount of Polished Granite
+**Example:** `[1, 2]` for any count of Polished Granite
 
-A **dictionary** of at least `id`, optionally `meta` and `amount`.
+A **dictionary** of at least `id`, optionally `metadata` and `count`.
 This is preferred if there are not many items at once, e.g. `result` in a recipe.
 **Examples:**
 - `{"id": 1}` for any item with ID `1`
-- `{"id": 1, "meta": 3}` for any amount of Diorite
-- `{"id": 1, "meta": 2, "amount": 4}` for 4 Polished Granite
+- `{"id": 1, "metadata": 3}` for any count of Diorite
+- `{"id": 1, "metadata": 2, "count": 4}` for 4 Polished Granite
 
 ### Shapes
 
@@ -59,8 +59,8 @@ Polished Granite:
 	]
 	or
 	[
-		[{"id": 1, "meta": 1}, {"id": 1, "meta": 1}],
-		[{"id": 1, "meta": 1}, {"id": 1, "meta": 1}]
+		[{"id": 1, "metadata": 1}, {"id": 1, "metadata": 1}],
+		[{"id": 1, "metadata": 1}, {"id": 1, "metadata": 1}]
 	]
 
 ### Recipes
@@ -78,7 +78,7 @@ Items may be in any of the representations [above](#Items).
 The file is in JSON format.
 At the top level is a dictionary of quoted numerical item IDs.
 Each ID maps to a list of recipes.
-There may be multiple different recipes per item (same ID and meta).
+There may be multiple different recipes per item (same ID and metadata).
 The recipes may not be sorted.
 
 **Example:**
@@ -87,14 +87,14 @@ The recipes may not be sorted.
 {
 	"1": [
 		{ // Polished Granite
-			"result": {"id": 1, "meta": 2, "amount": 4},
+			"result": {"id": 1, "metadata": 2, "count": 4},
 			"inShape": [
 				[[1,1], [1,1]],
 				[[1,1], [1,1]]
 			]
 		},
 		{ // Polished Diorite
-			"result": {"id": 1, "meta": 4, "amount": 4},
+			"result": {"id": 1, "metadata": 4, "count": 4},
 			"inShape": [
 				[[1,3], [1,3]],
 				[[1,3], [1,3]]
@@ -103,7 +103,7 @@ The recipes may not be sorted.
 	],
 	"5": [
 		{
-			"result": {"id": 5, "meta": -1, "amount": 4},
+			"result": {"id": 5, "metadata": -1, "count": 4},
 			"inShape": [
 				[17]
 			]
@@ -111,7 +111,7 @@ The recipes may not be sorted.
 	],
 	"280": [
 		{
-			"result": {"id": 280, "meta": -1, "amount": 4},
+			"result": {"id": 280, "metadata": -1, "count": 4},
 			"inShape": [
 				[5],
 				[5]

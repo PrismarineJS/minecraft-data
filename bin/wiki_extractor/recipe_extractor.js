@@ -257,7 +257,7 @@ function removeAllTheSame(a)
   if(a.length<=1) return a;
   if(a.every(function(e){
       if(e instanceof Object && a[0] instanceof Object)
-        return e["id"]==a[0]["id"] && e["amount"]==a[0]["amount"] && e["meta"]==a[0]["meta"];
+        return e["id"]==a[0]["id"] && e["count"]==a[0]["count"] && e["metadata"]==a[0]["metadata"];
       else
         return e==a[0];
     }))
@@ -284,10 +284,10 @@ function recipesNameToId(recipes,aliases,cb)
           .map(function(name){
             var parts=name.split(",");
             name=parts[0];
-            var amount=parts.length>1 ? parseInt(parts[1]) : null;
+            var count=parts.length>1 ? parseInt(parts[1]) : null;
             return name in aliases ? aliases[name].split(";").map(function(name){
-              return name+(amount!=null ? ","+amount : "");
-            }) : [name+(amount!=null ? ","+amount : "")]
+              return name+(count!=null ? ","+count : "");
+            }) : [name+(count!=null ? ","+count : "")]
           }));
         newRecipe[key]=/*removeAllTheSame(*/names
           .map(function(name){return name.trim()})
@@ -296,13 +296,13 @@ function recipesNameToId(recipes,aliases,cb)
 
             var parts=name.split(",");
             name=parts[0];
-            var amount=parts.length>1 ? parseInt(parts[1]) : 1;
+            var count=parts.length>1 ? parseInt(parts[1]) : 1;
 
             name=replaceName(name);
             var id=nameToId(name);
             if(typeof id == "undefined")
               unreco[name]=true;
-            return amount!=null && (amount!=1 || key=="Output") && (typeof id != "undefined") ? {"amount":amount,"id":id,"meta":0} : id;
+            return count!=null && (count!=1 || key=="Output") && (typeof id != "undefined") ? {"count":count,"id":id,"metadata":0} : id;
           })/*)*/;
       }
       else

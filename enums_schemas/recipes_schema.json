@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "recipes",
-  "description":"A dictionary of quoted numerical item IDs. Each ID maps to a list of recipes. There may be multiple different recipes per item (same ID and meta). The recipes may not be sorted.",
+  "description":"A dictionary of quoted numerical item IDs. Each ID maps to a list of recipes. There may be multiple different recipes per item (same ID and metadata). The recipes may not be sorted.",
 
   "definitions": {
     "id": {
@@ -10,25 +10,25 @@
 
     },
     "metadata": {"type":"integer"},
-    "amount": {"type":"integer"},
-    "id_meta_array":{
+    "count": {"type":"integer"},
+    "id_metadata_array":{
       "type":"array",
-      "title":"[id,meta]",
-      "description":"A list of id and meta. This is preferred if there are many items at once, e.g. in a shape.",
+      "title":"[id,metadata]",
+      "description":"A list of id and metadata. This is preferred if there are many items at once, e.g. in a shape.",
       "items":[
         {"$ref" : "#/definitions/id"},
         {"$ref" : "#/definitions/metadata"}
       ],
       "additionalItems": false
     },
-    "id_meta_amount_object":{
+    "id_metadata_count_object":{
       "type":"object",
-      "title":"{id:1,meta:1,amount:1}",
-      "description":"A dictionary of at least id, optionally meta and amount. This is preferred if there are not many items at once, e.g. result in a recipe.",
+      "title":"{id:1,metadata:1,count:1}",
+      "description":"A dictionary of at least id, optionally metadata and count. This is preferred if there are not many items at once, e.g. result in a recipe.",
       "properties":{
         "id":{"$ref" : "#/definitions/id"},
-        "meta":{"$ref" : "#/definitions/metadata"},
-        "amount":{"$ref" : "#/definitions/amount"}
+        "metadata":{"$ref" : "#/definitions/metadata"},
+        "count":{"$ref" : "#/definitions/count"}
       },
       "required": ["id"],
       "additionalProperties":false
@@ -38,8 +38,8 @@
       "description":"An item can be represented different ways.",
       "oneOf":[
         {"$ref" : "#/definitions/id"},
-        {"$ref": "#/definitions/id_meta_array"},
-        {"$ref": "#/definitions/id_meta_amount_object"}
+        {"$ref": "#/definitions/id_metadata_array"},
+        {"$ref": "#/definitions/id_metadata_count_object"}
       ]
     },
     "shapeRow":{
