@@ -90,7 +90,10 @@ function recipeQuery(cb)
 function removeConsolePocket(recipes,cb)
 {
   cb(null,recipes.filter(function(recipe){
-    return (recipe["description"].toLowerCase().indexOf("pocket")==-1 && recipe["description"].toLowerCase().indexOf("console")==-1) || recipe["description"].toLowerCase().indexOf("pc")!=-1 ;
+    return !((recipe["description"].toLowerCase().indexOf("pocket")!=-1 ||
+      recipe["description"].toLowerCase().indexOf("console")!=-1)
+      && recipe["description"].toLowerCase().indexOf("only")!=-1) ||
+      recipe["description"].toLowerCase().indexOf("pc")!=-1 ;
   }));
 }
 
