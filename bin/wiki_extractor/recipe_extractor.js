@@ -123,7 +123,7 @@ function nameToId(name)
 var edgeVariations={
   "Ink Sac":"Dye",
   "Bone Meal":"Dye",
-  "Dandelion Yellow":"Dandelion",
+  "Dandelion Yellow":"Dye",
   "Sugar Canes":"Sugar Cane",
   "Lapis Lazuli":"Dye",
   "Cactus Green":"Dye",
