@@ -104,6 +104,14 @@ function nameToId(name)
 {
   if(name == "")
     return null;
+  var p=name.match(/^(.+) \((block|item)\)$/i);
+  if(p!=null && p.length==3)
+  {
+    if(p[2].toLowerCase()=="item" && p[1] in itemsByName)
+      return itemsByName[p[1]];
+    if(p[2].toLowerCase()=="block" && p[1] in blocksByName)
+      return blocksByName[p[1]];
+  }
   if(name in itemsByName)
     return itemsByName[name];
   if(name in blocksByName)
@@ -194,14 +202,6 @@ var edgeVariations={
   "Nether Brick Slab":"Stone Slab",
   "Creeper Head":"Mob head",
   "Wither Skeleton Skull":"Mob head",
-
-  "Melon (block)":"Melon",
-  "Clay (block)":"Clay",
-  "Nether Brick (item)":"Nether Brick"
-
-
-
-
 };
 
 function replaceName(name)
