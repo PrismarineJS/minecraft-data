@@ -335,7 +335,8 @@ function recipesNameToId(recipes,aliases,cb)
     for(var i=0;i<n;i++)
     {
       var nRecipe=rkeys.reduce(function(nRecipe,key){
-        nRecipe[key]=recipe[key]==null ? null : (recipe[key].length>1 ? recipe[key][i] : recipe[key][0]);
+        // recipe[key].length>i instead of recipe[key].length>1 because of http://minecraft.gamepedia.com/Bed#Crafting
+        nRecipe[key]=recipe[key]==null ? null : (recipe[key].length>i ? recipe[key][i] : recipe[key][0]);
         return nRecipe;
       },{});
       splitRecipes.push((nRecipe));
