@@ -317,7 +317,9 @@ function getMaterials(cb)
         currentBlocks=line=="" ? [] : line
           .split("<br>")
           .map(function(row){
-            return parseBlockItemTemplate(row)["text"];
+            var dt=parseBlockItemTemplate(row);
+            return dt["text"].length>dt["link"].length ? dt["text"] : dt["link"];
+            //return dt["text"];
           });
       }
     });
@@ -430,12 +432,14 @@ function addMaterial(blocks,cb)
         .replace(/^Grass$/,"Grass Block")
         .replace(/^Double /,"")
         .replace(/^Potato$/,"Potatoes")
+        .replace(/^Red Mushroom$/,"Mushroom_(block)")
+        .replace(/^Brown Mushroom$/,"Mushroom_(block)")
         .replace(/^.+Wood Stairs$/,"Wooden Stairs");
       var wikiMaterial=getWithVariations(blockToMaterial,[changedDisplayName,changedDisplayName.replace(/s$/,""),
           changedDisplayName+"s",
         block["link"],block["link"].replace(/s$/,""),block["link"]+"s"],
 
-        ["Air","Piston Head","Block moved by Piston",].indexOf(block["displayName"])==-1);
+        ["Air","Piston Head","Block moved by Piston"].indexOf(block["displayName"])==-1);
       if(wikiMaterial!=null)
       {
         var material=wikiMaterialToSimpleMaterial[wikiMaterial];
