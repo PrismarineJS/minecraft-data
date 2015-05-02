@@ -24,7 +24,7 @@ function parseDvt(text)
       dv="dv" in r.namedParts ? parseInt(r.namedParts["dv"]) : dv;
       var r={
         dv:dv,
-        description: r.simpleParts[0],
+        description: r.simpleParts[0].replace(/\[\[(?:.+?\|)?(.+?)\]\]/g,"$1"),
         spritetype:"spritetype" in r.namedParts ? r.namedParts["spritetype"] : "block",
         sprite:"sprite" in r.namedParts ? r.namedParts["sprite"] : "air"
       };

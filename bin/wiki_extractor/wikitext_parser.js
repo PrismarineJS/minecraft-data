@@ -129,6 +129,7 @@ WikiTextParser.prototype.parseTable = function(sectionLineArray)
 
 WikiTextParser.prototype.parseInfoBox = function(sectionLineArray)
 {
+  sectionLineArray=sectionLineArray.filter(function(line){return !line.startsWith("{{about")});
   var text=sectionLineArray.join("");
   var results=this.parseTemplate(text);
   if(results==null) {
@@ -143,13 +144,91 @@ WikiTextParser.prototype.parseInfoBox = function(sectionLineArray)
   };
 };
 
+function splitOutside(text) // don't split links (see history in http://minecraft.gamepedia.com/index.php?title=Wood&action=edit )
+{
+  var parts=[];
+  var currentPart="";
+  var inLink=false;
+  var inTemplate=false;
+  for(var i=0;i<text.length;i++)
+  {
+    if(text[i]=="[" && text[i+1]=="[")
+    {
+      currentPart+="[";
+      inLink=true;
+      i++;
+    }
+    else if(text[i]=="]" && text[i+1]=="]")
+    {
+      currentPart+="]";
+      inLink=false;
+      i++;
+    }
+    if(text[i]=="{" && text[i+1]=="{")
+    {
+      currentPart+="{";
+      inTemplate=true;
+      i++;
+    }
+    else if(text[i]=="}" && text[i+1]=="}")
+    {
+      currentPart+="}";
+      inTemplate=false;
+      i++;
+    }
+    if(text[i]=="|" && !inLink && !inTemplate)
+    {
+      parts.push(currentPart);
+      currentPart="";
+    }
+    else
+    {
+      currentPart+=text[i];
+    }
+  }
+  parts.push(currentPart);
+  return parts;
+}
+
+// might be better to do that with jison (?)
+function findTemplate(text)
+{
+  var templateLevel=0;
+  var inside="";
+  for(var i=0;i<text.length;i++)
+  {
+    if(text[i]=="{" && text[i+1]=="{")
+    {
+      if(templateLevel>=1)
+        inside+="{{";
+      templateLevel++;
+      i++;
+      continue;
+    }
+    if(text[i]=="}" && text[i+1]=="}")
+    {
+      templateLevel--;
+      if(templateLevel>=1)
+        inside+="}}";
+      i++;
+      if(templateLevel==0)
+        break;
+      continue;
+    }
+    if(templateLevel>=1)
+      inside+=text[i];
+  }
+  if(templateLevel!=0)
+    return null;
+  return inside;
+}
+
 WikiTextParser.prototype.parseTemplate = function(text)
 {
-  var matches=text.match(/^.*?\{\{(.+)\}\}.*?$/);
-  if(!matches || matches.length!=2)
+  var inside=findTemplate(text);
+  if(inside==null)
     return null;
-  var inside=matches[1];
-  var parts=inside.split("|");
+  var parts=splitOutside(inside);
   var template=parts.shift();
   var simpleParts=parts.filter(function(part){return part.indexOf("=")==-1;});
   var namedParts=parts

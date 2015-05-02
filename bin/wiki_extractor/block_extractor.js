@@ -4,6 +4,7 @@ var fs = require('fs');
 var wikiTextParser = new WikiTextParser();
 var id_table_parser=require('./id_table_template_parser.js');
 var infobox_field_parser=require('./infobox_field_parser.js');
+var dvt_parser=require('./dvt_template_parser.js');
 
 // values on infobox present on other pages :
 // http://minecraft.gamepedia.com/index.php?title=Module:Blast_resistance_values&action=edit
@@ -21,6 +22,9 @@ writeAllBlocks();
 //testAir();
 //testStone();
 //testWheat();
+//testWood();
+//testPumpkin();
+//testCarrot();
 //testMelon();
 /*id_table_parser.parseDataValues("Data_values/Block_IDs",function(err,blocks){
  console.log(blocks);
@@ -36,6 +40,7 @@ function writeAllBlocks()
       addMaterial,
       //function(blocks,cb){console.log(blocks);cb(null,blocks);},
       //function(blocks,cb){cb(null,blocks.slice(0,10))},
+      addVariations,
       blocksToFullBlocks
     ]
     , indexAndWrite
@@ -80,6 +85,42 @@ var wikitypeToBoundingBox={
   "solid, plants":"block",
   "non-solid; plants":"empty"
 };
+
+
+function getDataValue(page,cb)
+{
+  wikiTextParser.getArticle(page,function(err,data) {
+    if (err) {
+      cb(err);
+      return;
+    }
+    if (data.indexOf("dvt") == -1) {
+      cb(new Error("not a dvt page"));
+      return;
+    }
+    var table=dvt_parser.parseDvt(data);
+    cb(null,table.map(function(fields){
+      return {
+        "metadata":fields["dv"],
+        "displayName":fields["description"]
+      };
+    }));
+  })
+}
+
+function addVariations(blocks,cb)
+{
+  async.map(blocks,function(block,cb){
+    getDataValue(block["link"]+"/DV",function(err,table){
+      if(!err) block["variations"]=table;
+      cb(null,block);
+    });
+  },function(err,results){
+    cb(null,results);
+  });
+}
+
+
 
 // TODO: automatically get the correct section for link like http://minecraft.gamepedia.com/Technical_blocks#Piston_Head
 // check Nether Brick Fence
@@ -204,6 +245,37 @@ function testWheat()
         console.log(data);
     });
 }
+function testWood() {
+  wikiTextParser.getArticle("Wood", function (err, data) {
+    var sectionObject = wikiTextParser.pageToSectionObject(data);
+
+    var infoBox = wikiTextParser.parseInfoBox(sectionObject["content"]);
+    var values = infoBox["values"];
+    console.log(values);
+  });
+}
+// starting with {{about
+function testPumpkin() {
+  wikiTextParser.getArticle("Pumpkin", function (err, data) {
+    var sectionObject = wikiTextParser.pageToSectionObject(data);
+
+    console.log(sectionObject["content"]);
+    var infoBox = wikiTextParser.parseInfoBox(sectionObject["content"]);
+    var values = infoBox["values"];
+    console.log(values);
+  });
+}
+// starting with {{about
+function testCarrot() {
+  wikiTextParser.getArticle("Carrot", function (err, data) {
+    var sectionObject = wikiTextParser.pageToSectionObject(data);
+
+    console.log(sectionObject["content"]);
+    var infoBox = wikiTextParser.parseInfoBox(sectionObject["content"]);
+    var values = infoBox["values"];
+    console.log(values);
+  });
+}
 
 // useful for pages like http://minecraft.gamepedia.com/Stairs with two tools : one for rock material, one for wood material
 function chooseCorrectHarvestTools(tool,tool2,harvestTools,harvestTools2,material)
@@ -244,7 +316,8 @@ function blocksToFullBlocks(blocks,cb)
         "diggable": block["id"]==59 || (!data["liquid"] && block["hardness"] !== null && (!data["tool"] || data["tool"]!="N/A")),
         "boundingBox": data["boundingBox"],
         "material":block["material"],
-        "harvestTools":chooseCorrectHarvestTools(data["tool"],data["tool2"],data["harvestTools"],data["harvestTools2"],block["material"])
+        "harvestTools":chooseCorrectHarvestTools(data["tool"],data["tool2"],data["harvestTools"],data["harvestTools2"],block["material"]),
+        "variations":block["variations"]
       });
     });
   },function(err,results){
