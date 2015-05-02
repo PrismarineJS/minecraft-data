@@ -411,7 +411,7 @@ function formatShapedRecipe(recipe)
 
   return {
     "inShape":removeMostNulls(inShape),
-    "outShape":result["id"]==92 ? cake : undefined,
+    "outShape":result["id"]==354 ? cake : undefined,
     "result":result
   };
 }
