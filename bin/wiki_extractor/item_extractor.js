@@ -4,7 +4,37 @@ var fs = require('fs');
 
 var wikiTextParser = new WikiTextParser();
 var id_table_parser=require('./id_table_template_parser.js');
+var dvt_parser=require('./dvt_template_parser.js');
 var infobox_field_parser=require('./infobox_field_parser.js');
+
+
+writeAllItems();
+//getDataValue("Coal/DV");
+//getDataValue("Stone/DV");
+
+
+
+function writeAllItems()
+{
+  async.waterfall([
+      function(cb){id_table_parser.parseDataValues("Data_values/Item_IDs",cb)},
+      addVariations,
+      //function(items,cb){console.log(JSON.stringify(items,null,2));cb(null,items);}
+      itemsToFullItems
+    ],
+     indexWrite
+  );
+}
+
+function indexWrite(err,fullItems){
+  var items={};
+  for(var i in fullItems)
+  {
+    items[fullItems[i]["id"]]=fullItems[i];
+  }
+  fs.writeFile("../../enums/items.json", JSON.stringify(items,null,2));
+}
+
 
 // http://minecraft.gamepedia.com/Template:Item
 function itemInfobox(page,cb)
@@ -25,6 +55,39 @@ function itemInfobox(page,cb)
   });
 }
 
+function getDataValue(page,cb)
+{
+  wikiTextParser.getArticle(page,function(err,data) {
+    if (err) {
+      cb(err);
+      return;
+    }
+    if (data.indexOf("dvt") == -1) {
+      cb(new Error("not a dvt page"));
+      return;
+    }
+    var table=dvt_parser.parseDvt(data);
+    cb(null,table.map(function(fields){
+      return {
+        "metadata":fields["dv"],
+        "displayName":fields["description"]
+      };
+    }));
+  })
+}
+
+function addVariations(items,cb)
+{
+  async.map(items,function(item,cb){
+    getDataValue(item["link"]+"/DV",function(err,table){
+      if(!err) item["variations"]=table;
+      cb(null,item);
+    });
+  },function(err,results){
+    cb(null,results);
+  });
+}
+
 function itemsToFullItems(items,cb)
 {
   async.map(items,function(item,cb){
@@ -33,7 +96,8 @@ function itemsToFullItems(items,cb)
         "id":item["id"],
         "displayName":item["displayName"],
         "stackSize":data!=null && "stackSize" in data ? data["stackSize"] : null,
-        "name":item["name"]
+        "name":item["name"],
+        "variations":item["variations"]
       });
     });
   },function(err,results){
@@ -41,23 +105,6 @@ function itemsToFullItems(items,cb)
   });
 }
 
-function writeAllItems()
-{
-  async.waterfall([
-    function(cb){id_table_parser.parseDataValues("Data_values/Item_IDs",cb)},
-    itemsToFullItems
-  ],
-    function(err,fullItems){
-      var items={};
-      for(var i in fullItems)
-      {
-        items[fullItems[i]["id"]]=fullItems[i];
-      }
-      fs.writeFile("../../enums/items.json", JSON.stringify(items,null,2));
-    });
-}
-
-writeAllItems();
 
 // functions that aren't used in the end
 function items(cb)

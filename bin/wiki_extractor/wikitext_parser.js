@@ -19,8 +19,9 @@ WikiTextParser.prototype.getArticle=function(title,cb)
   var self=this;
   this.client.getArticle(title, function(err, data) {
     if (err || !data) {
-      console.log("error in page "+title);
-      console.error(err);
+      //console.log("error in page "+title);
+      //console.error(err);
+      cb(err ? err : new Error("can't get the data"));
       return;
     }
     // somehow use ...&redirects=&... to silently follow redirects
