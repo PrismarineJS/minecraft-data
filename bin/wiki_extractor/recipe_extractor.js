@@ -104,10 +104,10 @@ function nameToId(name)
 {
   if(name == "")
     return null;
-  if(name in blocksByName)
-    return blocksByName[name];
   if(name in itemsByName)
     return itemsByName[name];
+  if(name in blocksByName)
+    return blocksByName[name];
   return undefined;
 }
 
