@@ -8,6 +8,7 @@ Error.stackTraceLimit=0;
 var enums=["biomes","instruments","items","materials","blocks","recipes","entities"];
 
 describe("minecraft-data", function() {
+  this.timeout(10 * 1000);
     enums.forEach(function(enumName){
       it(enumName+".json is valid",function(){
         var instance = require('../enums/'+enumName+'.json');
