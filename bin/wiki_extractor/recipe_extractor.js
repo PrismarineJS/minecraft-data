@@ -201,6 +201,7 @@ var edgeVariations={
 
 
 
+
 };
 
 function replaceName(name)
@@ -211,8 +212,10 @@ function replaceName(name)
     .replace(/^.*Dye$/,"Dye")
     .replace(/^.*Sandstone$/,"Sandstone")
     .replace(/^.*Stained Glass$/,"Stained Glass")
+    .replace(/^.*Stained Glass Pane$/,"Stained Glass Pane")
     .replace(/^.*Stained Clay$/,"Stained Clay")
     .replace(/^.*Wool$/,"Wool")
+    .replace(/^.*Wood Slab$/,"Wooden Slab")
     .replace(/^.*Carpet$/,"Carpet")
     .replace(/^.*Wood Planks$/,"Wood Planks")
     .replace(/Damaged /,"")
@@ -272,9 +275,17 @@ function recipesNameToId(recipes,aliases,cb)
       name=name.replace("&#160","").trim();
       if(name!="")
       {
-        Object.keys(aliases).forEach(function(key){name=name.replace(key,aliases[key])});
         var names=name.split(";");
-        //names=names.slice(0,1);// until metadata is properly handled : would be better to just remove the identical recipes
+        names=[].concat.apply([],names
+          .map(function(name){return name.trim()})
+          .map(function(name){
+            var parts=name.split(",");
+            name=parts[0];
+            var amount=parts.length>1 ? parseInt(parts[1]) : null;
+            return name in aliases ? aliases[name].split(";").map(function(name){
+              return name+(amount!=null ? ","+amount : "");
+            }) : [name+(amount!=null ? ","+amount : "")]
+          }));
         newRecipe[key]=/*removeAllTheSame(*/names
           .map(function(name){return name.trim()})
           //.filter(function(name){return name!="";})
