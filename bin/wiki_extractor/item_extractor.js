@@ -1,19 +1,17 @@
-var WikiTextParser = require('./wikitext_parser');
+var WikiTextParser = require('./lib/wikitext_parser');
 var async=require('async');
 var fs = require('fs');
 
 var wikiTextParser = new WikiTextParser();
-var id_table_parser=require('./id_table_template_parser.js');
-var DvtParser=require('./dvt_template_parser.js');
+var id_table_parser=require('./lib/id_table_template_parser.js');
+var DvtParser=require('./lib/dvt_template_parser.js');
 
 var dvtParser=new DvtParser(wikiTextParser);
-var infobox_field_parser=require('./infobox_field_parser.js');
+var infobox_field_parser=require('./lib/infobox_field_parser.js');
 
+module.exports = {itemInfobox:itemInfobox};
 
 writeAllItems();
-//getDataValue("Coal/DV");
-//getDataValue("Stone/DV");
-
 
 
 function writeAllItems()
@@ -87,12 +85,6 @@ function itemsToFullItems(items,cb)
       function(sectionObject,vara,cb) {
         var data=parseItemInfobox(item["link"],sectionObject["content"]);
 
-
-        //var d=dvt_parser.getAllDataValues(sectionObject);
-        //if(d.length>0)
-        //  console.log(item["link"]+" "+d);
-
-
         cb(null,{
           "id":item["id"],
           "displayName":item["displayName"],
@@ -103,74 +95,4 @@ function itemsToFullItems(items,cb)
       }
     ],cb);
   },cb);
-}
-
-
-// functions that aren't used in the end
-function items(cb)
-{
-  async.parallel([
-    function(cb){
-      wikiTextParser.getSimplePagesInCategory("Items",function(err,pages){
-        cb(null,pages);
-      });
-    },
-    function(cb){
-      wikiTextParser.getSimplePagesInCategory("Pocket Edition‎",function(err,pages){
-        cb(null,pages);
-      });
-    },
-    function(cb){
-      wikiTextParser.getSimplePagesInCategory("Console Edition‎",function(err,pages){
-        cb(null,pages);
-      });
-    }
-  ],function(err,results)
-  {
-    cb(results[0]
-        .filter(function(e){return results[1].indexOf(e) == -1;})
-        .filter(function(e){return results[2].indexOf(e) == -1;})
-    )
-  });
-
-}
-function testArrow()
-{
-  itemInfobox("Arrow",function(err,data){
-    console.log(data);
-  });
-}
-function testWaitDisc()
-{
-  itemInfobox("Wait Disc",function(err,data){
-    console.log(data);
-  });
-}
-
-function testGoldenApple()
-{
-  itemInfobox("Golden Apple",function(err,data){
-    console.log(data);
-  });
-}
-
-function parseAllItems()
-{
-  items(function(pages){
-    console.log(pages.length);
-    async.map(pages,function(page,cb){
-      itemInfobox(page,function(err,data){
-        cb(null,data);
-      });
-    },function(err,results){
-      var r=results.filter(function(item){return item!=null;});
-      var items={};
-      for(var i in r)
-      {
-        items[r[i]["id"]]=r[i];
-      }
-      console.log(r.length);
-      console.log(items);
-    });
-  });
 }

@@ -1,4 +1,4 @@
-var WikiTextParser = require('./wikitext_parser');
+var WikiTextParser = require('./lib/wikitext_parser');
 var fs = require('fs');
 
 var wikiTextParser = new WikiTextParser();

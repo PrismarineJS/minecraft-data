@@ -1,12 +1,14 @@
-var WikiTextParser = require('./wikitext_parser');
+var WikiTextParser = require('./lib/wikitext_parser');
 var async=require('async');
 var fs = require('fs');
 var wikiTextParser = new WikiTextParser();
-var id_table_parser=require('./id_table_template_parser.js');
-var infobox_field_parser=require('./infobox_field_parser.js');
-var DvtParser=require('./dvt_template_parser.js');
+var id_table_parser=require('./lib/id_table_template_parser.js');
+var infobox_field_parser=require('./lib/infobox_field_parser.js');
+var DvtParser=require('./lib/dvt_template_parser.js');
 
 var dvtParser=new DvtParser(wikiTextParser);
+
+module.exports={blockInfobox:blockInfobox};
 
 // values on infobox present on other pages :
 // http://minecraft.gamepedia.com/index.php?title=Module:Blast_resistance_values&action=edit
@@ -17,20 +19,8 @@ var dvtParser=new DvtParser(wikiTextParser);
 // check http://minecraft.gamepedia.com/Breaking#Speed vs https://github.com/andrewrk/mineflayer/blob/master/lib/plugins/digging.js#L88
 // materials.json has redundancies
 
-//getHardnessValues();
+
 writeAllBlocks();
-//testNetherBrickFence();
-//getMaterials(function(err,data){console.log(data);});
-//testAir();
-//testStone();
-//testWheat();
-//testWood();
-//testPumpkin();
-//testCarrot();
-//testMelon();
-/*id_table_parser.parseDataValues("Data_values/Block_IDs",function(err,blocks){
- console.log(blocks);
- });*/
 
 
 
@@ -93,8 +83,6 @@ var wikitypeToBoundingBox={
 };
 
 
-// TODO: automatically get the correct section for link like http://minecraft.gamepedia.com/Technical_blocks#Piston_Head
-// check Nether Brick Fence
 
 // http://minecraft.gamepedia.com/Template:Block
 function blockInfobox(page,cb)
@@ -122,17 +110,11 @@ function parseBlockInfobox(page,content)
     console.log(values);
   }
 
-  //if("tool2" in values)
-  //  console.log(page);
-
-  //console.log(page);
-  //console.log(page+" "+values["tool"]);
   return {
     "id":parseInt(values["data"]),
     "name":page.toLowerCase(),
     "displayName":page,
     "stackSize":stackSize,
-    //TODO: to fix by properly parsing the tool (break for http://minecraft.gamepedia.com/Water)
     // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
     "liquid":values["type"] && values["type"].trim().toLowerCase() == "fluid",
     "tool":"tool" in values ? values["tool"] : null ,
@@ -187,69 +169,6 @@ function toolToHarvestTools(tool,cobweb)
   },{});
 }
 
-function testNetherBrickFence()
-{
-  blockInfobox("Nether Brick Fence",function(err,data){
-    console.log(data);
-  });
-}
-
-function testMelon()
-{
-  blockInfobox("Melon",function(err,data){
-    console.log(data);
-  });
-}
-
-function testStone()
-{
-  blockInfobox("Stone",function(err,data){
-    console.log(data);
-  });
-}
-function testAir()
-{
-  blockInfobox("Air",function(err,data){
-    console.log(data);
-  });
-}
-function testWheat()
-{
-    blockInfobox("Wheat",function(err,data){
-        console.log(data);
-    });
-}
-function testWood() {
-  wikiTextParser.getArticle("Wood", function (err, data) {
-    var sectionObject = wikiTextParser.pageToSectionObject(data);
-
-    var infoBox = wikiTextParser.parseInfoBox(sectionObject["content"]);
-    var values = infoBox["values"];
-    console.log(values);
-  });
-}
-// starting with {{about
-function testPumpkin() {
-  wikiTextParser.getArticle("Pumpkin", function (err, data) {
-    var sectionObject = wikiTextParser.pageToSectionObject(data);
-
-    console.log(sectionObject["content"]);
-    var infoBox = wikiTextParser.parseInfoBox(sectionObject["content"]);
-    var values = infoBox["values"];
-    console.log(values);
-  });
-}
-// starting with {{about
-function testCarrot() {
-  wikiTextParser.getArticle("Carrot", function (err, data) {
-    var sectionObject = wikiTextParser.pageToSectionObject(data);
-
-    console.log(sectionObject["content"]);
-    var infoBox = wikiTextParser.parseInfoBox(sectionObject["content"]);
-    var values = infoBox["values"];
-    console.log(values);
-  });
-}
 
 // useful for pages like http://minecraft.gamepedia.com/Stairs with two tools : one for rock material, one for wood material
 function chooseCorrectHarvestTools(tool,tool2,harvestTools,harvestTools2,material)
@@ -319,17 +238,6 @@ function blocksToFullBlocks(blocks,cb)
     ],cb);
   },cb);
 }
-/*
-function parseItemLink(text)
-{
-  var inside=text.replace("\{\{.+\}\}","$1");
-  var parts=inside.split("|");
-  var simpleParts=[];
-  var namedParts={};
-  parts.forEach(function(part){
-
-  });
-}*/
 
 // http://minecraft.gamepedia.com/Breaking#Best_tools
 function getMaterials(cb)
@@ -558,51 +466,5 @@ function addHardness(blocks,cb)
       block["hardness"]=transformHardness(block["hardness"]);
       return block;
     }));
-  });
-}
-
-
-
-// not used after all
-function recipeQuery()
-{
-  wikiTextParser.dplQuery(
-    '{{#dpl:categorymatch=%recipe' +
-    "|include={Crafting}:1:2:3:4:5:6:7:8:9:A1:B1:C1:A2:B2:C2:A3:B3:C3:Output" +
-    "|mode = userformat" +
-    "|secseparators = ====" +
-    "|multisecseparators = ====" +
-    "}}",
-    function (err,info) {
-      console.log(info.split("===="));
-    }
-  );
-}
-
-// doesn't get all the information : limited
-function blockQuery()
-{
-  wikiTextParser.dplQuery(
-    '{{#dpl:category=Natural_blocks' +
-    "|include={Block}:data:nameid:type:tntres" +
-    "|mode = userformat" +
-    "|secseparators = ====" +
-    "|multisecseparators = ====" +
-    "}}",
-    function (err,info) {
-      console.log(info.split("\n")[0].split("===="));
-    }
-  );
-}
-
-function getBlocks()
-{
-  wikiTextParser.getArticle("Blocks",function(err,data){
-    var sectionObject=wikiTextParser.pageToSectionObject(data);
-
-    var overworldNaturallyGenerated=sectionObject["World-generated blocks"]["The Overworld"]["Naturally generated"]["content"];
-    var table=wikiTextParser.parseTable(overworldNaturallyGenerated);
-    var linkTable=table.map(function(values){return values[2];});
-    console.log(linkTable);
   });
 }
