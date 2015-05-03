@@ -15,6 +15,7 @@ var dvtParser=new DvtParser(new WikiTextParser());
 //testStone();
 //testFlower();
 //testDye();
+testCarpet();
 
 // testing : several data value in the page
 function testSlabs()
@@ -95,6 +96,19 @@ function testDye()
     var sectionObject = dvtParser.wikiTextParser.pageToSectionObject(data);
 
     dvtParser.getVariations(title,351,sectionObject,function(err,variation){
+      if(err) console.log("error getting dv page "+err);
+      console.log(variation);
+    });
+  });
+}
+
+
+function testCarpet()
+{
+  dvtParser.wikiTextParser.getArticle("Carpet", function (err, data,title) {
+    if(err) console.log("error getting Carpet page "+err);
+    var sectionObject = dvtParser.wikiTextParser.pageToSectionObject(data);
+    dvtParser.getVariations(title,171,sectionObject,function(err,variation){
       if(err) console.log("error getting dv page "+err);
       console.log(variation);
     });

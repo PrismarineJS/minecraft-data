@@ -37,7 +37,10 @@ DvtParser.prototype.getVariations=function(page,id,sectionObject,cb) {
     else if (id.toString() in linkObject)
       link = linkObject[id.toString()];
     else {
-      if (id == 37) cb(null, null); // dandelion : ok
+      if (id == 37) {
+        cb(null, null); // dandelion : ok
+        return;
+      }
       var msg = "problem getting variations of " + page + ":" + id;
       console.log(msg);
       cb(new Error(msg));
