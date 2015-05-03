@@ -193,7 +193,6 @@ function replaceName(name)
   var firstStep=name
     .replace(/^.*Banner$/,"Banner")
     .replace(/^.*Wool$/,"Wool")
-    .replace(/^.*Carpet$/,"Carpet")
     .replace(/Damaged /,"")
     .trim();
   if(firstStep in edgeVariations)

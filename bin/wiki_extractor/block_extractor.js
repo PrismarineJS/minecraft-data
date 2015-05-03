@@ -194,6 +194,11 @@ function blocksToFullBlocks(blocks,cb)
     async.waterfall([
       function(cb){
         wikiTextParser.getArticle(block["link"],function(err,pageData,title){
+          if(err)
+          {
+            cb(err);
+            return;
+          }
           var sectionObject=wikiTextParser.pageToSectionObject(pageData);
           cb(null,sectionObject,title);
         });
