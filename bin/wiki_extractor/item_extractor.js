@@ -4,7 +4,9 @@ var fs = require('fs');
 
 var wikiTextParser = new WikiTextParser();
 var id_table_parser=require('./id_table_template_parser.js');
-var dvt_parser=require('./dvt_template_parser.js');
+var DvtParser=require('./dvt_template_parser.js');
+
+var dvtParser=new DvtParser(wikiTextParser);
 var infobox_field_parser=require('./infobox_field_parser.js');
 
 
@@ -42,45 +44,28 @@ function itemInfobox(page,cb)
   wikiTextParser.getArticle(page,function(err,data){
     var sectionObject=wikiTextParser.pageToSectionObject(data);
 
-    var infoBox=wikiTextParser.parseInfoBox(sectionObject["content"]);
-    var values=infoBox["values"];
-
-    var outputData={
-      "id":parseInt(values["data"]),
-      "displayName":page,
-      "stackSize":infobox_field_parser.parseStackable(values["stackable"]),
-      "name":page.toLowerCase()
-    };
-    cb(null,outputData);
+    cb(null,parseItemInfobox(sectionObject["content"]))
   });
 }
 
-function getDataValue(page,cb)
+function parseItemInfobox(page,content)
 {
-  wikiTextParser.getArticle(page,function(err,data) {
-    if (err) {
-      cb(err);
-      return;
-    }
-    if (data.indexOf("dvt") == -1) {
-      cb(new Error("not a dvt page"));
-      return;
-    }
-    var table=dvt_parser.parseDvt(data);
-    cb(null,table.map(function(fields){
-      return {
-        "metadata":fields["dv"],
-        "displayName":fields["description"]
-      };
-    }));
-  })
+  var infoBox=wikiTextParser.parseInfoBox(content);
+  var values=infoBox["values"];
+
+  return {
+    "id":parseInt(values["data"]),
+    "displayName":page,
+    "stackSize":infobox_field_parser.parseStackable(values["stackable"]),
+    "name":page.toLowerCase()
+  };
 }
 
 function addVariations(items,cb)
 {
   async.map(items,function(item,cb){
-    getDataValue(item["link"]+"/DV",function(err,table){
-      if(!err) item["variations"]=table;
+    dvtParser.getDataValue(item["link"]+"/DV",function(err,table){
+      if(!err && table!=null) item["variations"]=table;
       cb(null,item);
     });
   },function(err,results){
@@ -91,7 +76,16 @@ function addVariations(items,cb)
 function itemsToFullItems(items,cb)
 {
   async.map(items,function(item,cb){
-    itemInfobox(item["link"],function(err,data){
+    wikiTextParser.getArticle(item["link"],function(err,pageData){
+      var sectionObject=wikiTextParser.pageToSectionObject(pageData);
+      var data=parseItemInfobox(item["link"],sectionObject["content"]);
+
+
+
+      //var d=dvt_parser.getAllDataValues(sectionObject);
+      //if(d.length>0)
+      //  console.log(item["link"]+" "+d);
+
       cb(null,{
         "id":item["id"],
         "displayName":item["displayName"],

@@ -13,25 +13,53 @@ function WikiTextParser()
 }
 
 
+if (!Array.prototype.find) {
+  Array.prototype.find = function(predicate) {
+    if (this == null) {
+      throw new TypeError('Array.prototype.find called on null or undefined');
+    }
+    if (typeof predicate !== 'function') {
+      throw new TypeError('predicate must be a function');
+    }
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
 
-WikiTextParser.prototype.getArticle=function(title,cb)
-{
+    for (var i = 0; i < length; i++) {
+      value = list[i];
+      if (predicate.call(thisArg, value, i, list)) {
+        return value;
+      }
+    }
+    return undefined;
+  };
+}
+
+
+WikiTextParser.prototype.getArticle=function(title,cb) {
+  if (title == "") {
+    cb(new Error("empty title"));
+    return;
+  }
   var self=this;
   this.client.getArticle(title, function(err, data) {
     if (err || !data) {
       //console.log("error in page "+title);
       //console.error(err);
-      cb(err ? err : new Error("can't get the data"));
+      cb(err ? err : new Error("can't get the data of "+title));
       return;
     }
     // somehow use ...&redirects=&... to silently follow redirects
     var redirectPage;
     if(redirectPage=data.match(/#REDIRECT \[\[(.+)\]\]/i))
     {
-      self.getArticle(redirectPage[1],cb);
+      self.getArticle(redirectPage[1],function(err,data){
+        cb(err,data,redirectPage[1]);
+      });
     }
     else
-      cb(null,data);
+      cb(null,data,title);
   });
 };
 
@@ -129,7 +157,7 @@ WikiTextParser.prototype.parseTable = function(sectionLineArray)
 
 WikiTextParser.prototype.parseInfoBox = function(sectionLineArray)
 {
-  sectionLineArray=sectionLineArray.filter(function(line){return !line.startsWith("{{about") && !line.startsWith("{{split")});
+  sectionLineArray=sectionLineArray.filter(function(line){return !line.toLowerCase().startsWith("{{about") && !line.startsWith("{{split")});
   var text=sectionLineArray.join("");
   var results=this.parseTemplate(text);
   if(results==null) {

@@ -4,7 +4,9 @@ var fs = require('fs');
 var wikiTextParser = new WikiTextParser();
 var id_table_parser=require('./id_table_template_parser.js');
 var infobox_field_parser=require('./infobox_field_parser.js');
-var dvt_parser=require('./dvt_template_parser.js');
+var DvtParser=require('./dvt_template_parser.js');
+
+var dvtParser=new DvtParser(wikiTextParser);
 
 // values on infobox present on other pages :
 // http://minecraft.gamepedia.com/index.php?title=Module:Blast_resistance_values&action=edit
@@ -40,7 +42,7 @@ function writeAllBlocks()
       addMaterial,
       //function(blocks,cb){console.log(blocks);cb(null,blocks);},
       //function(blocks,cb){cb(null,blocks.slice(0,10))},
-      addVariations,
+      //addVariations,
       blocksToFullBlocks
     ]
     , indexAndWrite
@@ -51,6 +53,11 @@ function writeAllBlocks()
 
 function indexAndWrite(err,fullBlocks)
 {
+  if(err)
+  {
+    console.log("problem "+err);
+    return;
+  }
   var blocks={};
   fullBlocks.forEach(function(fullBlock){
     blocks[fullBlock["id"]]=fullBlock;
@@ -86,33 +93,11 @@ var wikitypeToBoundingBox={
   "non-solid; plants":"empty"
 };
 
-
-function getDataValue(page,cb)
-{
-  wikiTextParser.getArticle(page,function(err,data) {
-    if (err) {
-      cb(err);
-      return;
-    }
-    if (data.indexOf("dvt") == -1) {
-      cb(new Error("not a dvt page"));
-      return;
-    }
-    var table=dvt_parser.parseDvt(data);
-    cb(null,table.map(function(fields){
-      return {
-        "metadata":fields["dv"],
-        "displayName":fields["description"]
-      };
-    }));
-  })
-}
-
 function addVariations(blocks,cb)
 {
   async.map(blocks,function(block,cb){
-    getDataValue(block["link"]+"/DV"+(block["id"]==162 ? "2" : ""),function(err,table){
-      if(!err) block["variations"]=table;
+    dvtParser.getDataValue(block["link"]+"/DV"+(block["id"]==162 ? "2" : ""),function(err,table){
+      if(!err && table!=null) block["variations"]=table;
       cb(null,block);
     });
   },function(err,results){
@@ -301,36 +286,55 @@ function chooseCorrectHarvestTools(tool,tool2,harvestTools,harvestTools2,materia
 function blocksToFullBlocks(blocks,cb)
 {
   async.map(blocks,function(block,cb){
-    wikiTextParser.getArticle(block["link"],function(err,pageData){
-      var sectionObject=wikiTextParser.pageToSectionObject(pageData);
-      var data=parseBlockInfobox(block["link"],sectionObject["content"]);
+    async.waterfall([
+      function(cb){
+        wikiTextParser.getArticle(block["link"],function(err,pageData,title){
+          var sectionObject=wikiTextParser.pageToSectionObject(pageData);
+          cb(null,sectionObject,title);
+        });
+      },
+      function(sectionObject,title,cb){
+        dvtParser.getVariations(title,block["id"],sectionObject,function(err,vara){
+          cb(err,sectionObject,vara);
+        })},
+      function(sectionObject,vara,cb){
+        var data=parseBlockInfobox(block["link"],sectionObject["content"]);
 
-      //if("Data values" in sectionObject && "Block data" in sectionObject["Data values"])
+        //if("Data values" in sectionObject && "Block data" in sectionObject["Data values"])
         //console.log(sectionObject["Data values"]["Block data"]["content"]);
 
-      if(data==null)
-        console.log("can't get infobox of "+block);
-      if(!(data!=null && "stackSize" in data))
-        console.log("stackSize problem in "+block+" "+data);
-      //if(data["tool2"])
-      //  console.log("ht2 | "+block["displayName"]+" | "+block["material"]+" | "+data["tool"]+" | "+data["tool2"]);
-      cb(null,{
-        "id":block["id"],
-        "displayName":block["displayName"],
-        "name":block["name"],
-        "hardness": block["hardness"],
-        "stackSize":data!=null && "stackSize" in data ? data["stackSize"] : null,
-        // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
-        // or use this http://minecraft.gamepedia.com/Breaking#Best_tools
-        "diggable": block["id"]==59 || (!data["liquid"] && block["hardness"] !== null && (!data["tool"] || data["tool"]!="N/A")),
-        "boundingBox": data["boundingBox"],
-        "material":block["material"],
-        "harvestTools":chooseCorrectHarvestTools(data["tool"],data["tool2"],data["harvestTools"],data["harvestTools2"],block["material"]),
-        "variations":block["variations"]
-      });
+        /*
+         var d=dvt_parser.processDataValues(sectionObject);
+         if(d!=null && Object.keys(d).length>0)
+         console.log(block["link"]+" "+JSON.stringify(d,null,2));*/
+
+        //console.log(vara);
+
+        if(data==null)
+          console.log("can't get infobox of "+block);
+        if(!(data!=null && "stackSize" in data))
+          console.log("stackSize problem in "+block+" "+data);
+
+        cb(null,{
+          "id":block["id"],
+          "displayName":block["displayName"],
+          "name":block["name"],
+          "hardness": block["hardness"],
+          "stackSize":data!=null && "stackSize" in data ? data["stackSize"] : null,
+          // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
+          // or use this http://minecraft.gamepedia.com/Breaking#Best_tools
+          "diggable": block["id"]==59 || (!data["liquid"] && block["hardness"] !== null && (!data["tool"] || data["tool"]!="N/A")),
+          "boundingBox": data["boundingBox"],
+          "material":block["material"],
+          "harvestTools":chooseCorrectHarvestTools(data["tool"],data["tool2"],data["harvestTools"],data["harvestTools2"],block["material"]),
+          "variations":vara!=null ? vara : undefined
+        });
+      }
+    ],function(err,results){
+      cb(err,results);
     });
   },function(err,results){
-    cb(null,results);
+    cb(err,results);
   });
 }
 /*
@@ -436,11 +440,6 @@ function parseBlockItemTemplate(text)
   };
 }
 
-function generateMaterials(materialToBestTool,cb)
-{
-
-}
-
 var wikiMaterialToSimpleMaterial={
   Plants: 'plant',
   Wood: 'wood',
@@ -464,29 +463,6 @@ var wikiMaterialToSimpleMaterial={
   Piston: '',
   Liquid: ''
 };
-
-if (!Array.prototype.find) {
-  Array.prototype.find = function(predicate) {
-    if (this == null) {
-      throw new TypeError('Array.prototype.find called on null or undefined');
-    }
-    if (typeof predicate !== 'function') {
-      throw new TypeError('predicate must be a function');
-    }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
-
-    for (var i = 0; i < length; i++) {
-      value = list[i];
-      if (predicate.call(thisArg, value, i, list)) {
-        return value;
-      }
-    }
-    return undefined;
-  };
-}
 
 function getWithVariations(object,variations,verbose)
 {
