@@ -233,7 +233,7 @@ function recipesNameToId(recipes,aliases,cb)
         if(keepRecipeGeneric && recipe[key]!=null && recipe[key].length>1)
           nRecipe[key]=recipe[key][0] instanceof Object ? recipe[key][0].id : recipe[key][0];
         else
-          nRecipe[key]=recipe[key]==null ? null : (recipe[key].length>1 ? recipe[key][i] : recipe[key][0]);
+          nRecipe[key]=recipe[key]==null ? null : (recipe[key].length>i ? recipe[key][i] : recipe[key][0]);
         return nRecipe;
       },{});
       splitRecipes.push((nRecipe));
