@@ -224,12 +224,17 @@ function recipesNameToId(recipes,aliases,cb)
   var unitRecipes=[].concat.apply([],newRecipes.map(function(recipe){
     var multipleKey=rkeys.find(function(key){return recipe[key]!=null && recipe[key].length>1;});
     var n=multipleKey==null ? 1 : recipe[multipleKey].length;
+    var keepRecipeGeneric=n!=1 && recipe["Output"].length==1; // when the result doesn't change (for example bed : #19)
+    n = keepRecipeGeneric ? 1 : n;
     var splitRecipes=[];
     for(var i=0;i<n;i++)
     {
       var nRecipe=rkeys.reduce(function(nRecipe,key){
         // recipe[key].length>i instead of recipe[key].length>1 because of http://minecraft.gamepedia.com/Bed#Crafting
-        nRecipe[key]=recipe[key]==null ? null : (recipe[key].length>i ? recipe[key][i] : recipe[key][0]);
+        if(keepRecipeGeneric && recipe[key]!=null && recipe[key].length>1)
+          nRecipe[key]=recipe[key][0] instanceof Object ? recipe[key][0].id : recipe[key][0];
+        else
+          nRecipe[key]=recipe[key]==null ? null : (recipe[key].length>i ? recipe[key][i] : recipe[key][0]);
         return nRecipe;
       },{});
       splitRecipes.push((nRecipe));
