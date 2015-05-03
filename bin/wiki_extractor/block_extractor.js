@@ -6,6 +6,9 @@ var id_table_parser=require('./lib/id_table_template_parser.js');
 var infobox_field_parser=require('./lib/infobox_field_parser.js');
 var DvtParser=require('./lib/dvt_template_parser.js');
 
+// this means : you may need to run this script two times
+var nameIndex=require('./lib/find_item_object_by_name.js');
+
 var dvtParser=new DvtParser(wikiTextParser);
 
 module.exports={blockInfobox:blockInfobox};
@@ -93,6 +96,49 @@ function blockInfobox(page,cb)
   });
 }
 
+function parseDrops(text)
+{
+  if(text.toLowerCase()=="nothing" || text.toLowerCase()=="none" || text.toLowerCase()=="n/a")
+    return [];
+  if(text.indexOf("{")==-1)
+    return [{"drop":nameIndex.nameToId(replaceName(text.trim())),"minCount":1,"maxCount":1}];
+  var templates=text.split("}{").join("};{").split(";");
+  return templates.map(function(template){
+    var data=wikiTextParser.parseTemplate(template);
+    var type=data.simpleParts[0];
+    var id=nameIndex.nameToId(replaceName(data.simpleParts[1])+" ("+type+")");
+    var min=data.simpleParts[2].indexOf("%")!=-1 ? parseFloat(data.simpleParts[2].replace("%",""))/100 : parseInt(data.simpleParts[2]);
+    var max=data.simpleParts.length>3 ? parseInt(data.simpleParts[3]) : min;
+    return {
+      "drop":id,
+      "minCount":min,
+      "maxCount":max
+    };
+  });
+}
+
+var rn={
+  "Mushroom":"Red Mushroom",
+  "Flowers":"Dandelion",
+  "Slab":"Stone Slab",
+  "Stairs":"Oak Wood Stairs",
+  "Door":"Oak Door",
+  "Pressure Plate":"Stone Pressure Plate",
+  "Redstone Torch":"Redstone Torch (inactive)",
+  "Button":"Stone Button",
+  "Redstone Lamp":"Redstone Lamp (inactive)",
+  "String#Tripwire":"String",
+  "Weighted Pressure Plate":"Weighted Pressure Plate (Light)"
+};
+
+function replaceName(name)
+{
+  if(name in rn)
+    return rn[name];
+  else return name;
+}
+
+
 function parseBlockInfobox(page,content)
 {
   var infoBox=wikiTextParser.parseInfoBox(content);
@@ -109,6 +155,18 @@ function parseBlockInfobox(page,content)
     console.log("can't parse stackable of "+page);
     console.log(values);
   }
+  var drops="drops" in values && values["drops"].toLowerCase()!="itself" ? values["drops"] : page;
+  if(page.indexOf("Slab")!=-1)
+    drops="Slab";
+  if(page=="Monster Egg" || page.startsWith("Technical blocks"))
+    drops="Nothing";
+  var p=parseDrops(drops);
+  //if("drops" in values && drops!="None") console.log(page+" ;;;; "+drops);
+  //console.log(page+" ;;;; "+p);
+  p.forEach(function(p1){
+    if(!("drop" in p1) || (typeof p1["drop"] == "undefined"))
+      console.log("PB with "+drops);
+  });
 
   return {
     "id":parseInt(values["data"]),
@@ -121,7 +179,8 @@ function parseBlockInfobox(page,content)
     "tool2":"tool2" in values ? values["tool2"] : null ,
     "harvestTools":toolToHarvestTools(values["tool"],page=="Cobweb"),
     "harvestTools2":toolToHarvestTools(values["tool2"],page=="Cobweb"),
-    "boundingBox" : values["type"] && values["type"].trim().toLowerCase() in wikitypeToBoundingBox ? wikitypeToBoundingBox[values["type"].trim().toLowerCase()] : "block"
+    "boundingBox" : values["type"] && values["type"].trim().toLowerCase() in wikitypeToBoundingBox ? wikitypeToBoundingBox[values["type"].trim().toLowerCase()] : "block",
+    "drops":p
   };
 }
 
@@ -227,7 +286,8 @@ function blocksToFullBlocks(blocks,cb)
           "boundingBox": data["boundingBox"],
           "material":block["material"],
           "harvestTools":chooseCorrectHarvestTools(data["tool"],data["tool2"],data["harvestTools"],data["harvestTools2"],block["material"]),
-          "variations":vara!=null ? vara : undefined
+          "variations":vara!=null ? vara : undefined,
+          "drops":data["drops"]
         });
       }
     ],cb);

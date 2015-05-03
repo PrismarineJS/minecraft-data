@@ -263,7 +263,7 @@ WikiTextParser.prototype.parseTemplate = function(text)
     .filter(function(part){return part.indexOf("=")!=-1;})
     .reduce(function(acc,part){
       var eparts=part.split("=");
-      acc[eparts[0].trim()]=eparts[1].trim();
+      acc[eparts[0].trim()]=eparts.slice(1).join("=").trim();
       return acc;
     },{});
   return {template:template,namedParts:namedParts,simpleParts:simpleParts};

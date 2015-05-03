@@ -103,6 +103,20 @@ function test(input, expectedOutput) {
   }
 }
 
-test(testInput, testOutput);
-test(testInput2, testOutput2);
-test(testInput3, testOutput3);
+//test(testInput, testOutput);
+//test(testInput2, testOutput2);
+//test(testInput3, testOutput3);
+
+// {{BlockSprite|id
+function testSlab() {
+  wikiTextParser.getArticle("Slab", function (err, data) {
+    var sectionObject = wikiTextParser.pageToSectionObject(data);
+
+    console.log(sectionObject["content"]);
+    var infoBox = wikiTextParser.parseInfoBox(sectionObject["content"]);
+    var values = infoBox["values"];
+    console.log(values);
+  });
+}
+
+testSlab();

@@ -3,7 +3,7 @@
   "title": "blocks",
   "type": "object",
   "uniqueItems": true,
-  "patternProperties" : {
+  "patternProperties": {
     "^[0-9]+$": {
       "title": "block",
       "type": "object",
@@ -41,7 +41,10 @@
         },
         "boundingBox": {
           "description": "BoundingBox of a block",
-          "enum":["block","empty"]
+          "enum": [
+            "block",
+            "empty"
+          ]
         },
         "material": {
           "description": "Material of a block",
@@ -54,35 +57,89 @@
             "^[0-9]+$": {"type": "boolean"}
           }
         },
-        "variations" : {
-          "type" : "array",
+        "variations": {
+          "type": "array",
           "items": {
-            "type" : "object",
+            "type": "object",
             "properties": {
-              "metadata":{
-                "type":"integer",
+              "metadata": {
+                "type": "integer",
                 "minimum": 0
               },
-              "displayName":{
-                "type":"string"
+              "displayName": {
+                "type": "string"
               }
             },
-            "required": ["metadata", "displayName"],
-            "additionalProperties":false
+            "required": [
+              "metadata",
+              "displayName"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "drops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "minCount": {
+                "type": "number",
+                "mininmum": 0,
+                "description":"minimum number or chance"
+              },
+              "maxCount": {
+                "type": "number",
+                "minimum": 0,
+                "description":"maximum number or chance"
+              },
+              "drop": {
+                "oneOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "metadata": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "metadata"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "minCount",
+              "maxCount",
+              "drop"
+            ],
+            "additionalProperties": false
           }
         }
-      },
-      "required": [
-        "id",
-        "displayName",
-        "name",
-        "hardness",
-        "stackSize",
-        "diggable",
-        "boundingBox"
-      ],
-      "additionalProperties": false
-    }
+      }
+    },
+    "required": [
+      "id",
+      "displayName",
+      "name",
+      "hardness",
+      "stackSize",
+      "diggable",
+      "boundingBox",
+      "drops"
+    ],
+    "additionalProperties": false
   },
   "additionalProperties": false
 }
