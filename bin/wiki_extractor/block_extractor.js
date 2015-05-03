@@ -42,7 +42,6 @@ function writeAllBlocks()
       addMaterial,
       //function(blocks,cb){console.log(blocks);cb(null,blocks);},
       //function(blocks,cb){cb(null,blocks.slice(0,10))},
-      //addVariations,
       blocksToFullBlocks
     ]
     , indexAndWrite
@@ -92,19 +91,6 @@ var wikitypeToBoundingBox={
   "solid, plants":"block",
   "non-solid; plants":"empty"
 };
-
-function addVariations(blocks,cb)
-{
-  async.map(blocks,function(block,cb){
-    dvtParser.getDataValue(block["link"]+"/DV"+(block["id"]==162 ? "2" : ""),function(err,table){
-      if(!err && table!=null) block["variations"]=table;
-      cb(null,block);
-    });
-  },function(err,results){
-    cb(null,results);
-  });
-}
-
 
 
 // TODO: automatically get the correct section for link like http://minecraft.gamepedia.com/Technical_blocks#Piston_Head
@@ -330,12 +316,8 @@ function blocksToFullBlocks(blocks,cb)
           "variations":vara!=null ? vara : undefined
         });
       }
-    ],function(err,results){
-      cb(err,results);
-    });
-  },function(err,results){
-    cb(err,results);
-  });
+    ],cb);
+  },cb);
 }
 /*
 function parseItemLink(text)

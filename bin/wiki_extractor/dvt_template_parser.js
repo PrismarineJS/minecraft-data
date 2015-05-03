@@ -25,30 +25,32 @@ function getAllDataValues(sectionObject)
 }
 
 DvtParser.prototype.getVariations=function(page,id,sectionObject,cb) {
-  var linkObject = processDataValues(sectionObject);
-  if (linkObject == null) {
-    cb(null, null);
-    return;
-  }
-  var link;
-  if("unknown" in linkObject)
-    link=linkObject["unknown"];
-  else if(id.toString() in linkObject)
-    link=linkObject[id.toString()];
-  else
-  {
-    if(id==37) cb(null,null); // dandelion : ok
-    var msg="problem getting variations of "+page+":"+id;
-    console.log(msg);
-    cb(new Error(msg));
-    return;
-  }
-  if(link=="")
-  {
-    console.log("empty link generated bug");
-    console.log(sectionObject);
-    cb(new Error("empty link generated bug"));
-    return;
+  if (page == "Ink Sac")
+    link = "Template:Dyes";
+  else {
+    var linkObject = processDataValues(sectionObject);
+    if (linkObject == null) {
+      cb(null, null);
+      return;
+    }
+    var link;
+    if ("unknown" in linkObject)
+      link = linkObject["unknown"];
+    else if (id.toString() in linkObject)
+      link = linkObject[id.toString()];
+    else {
+      if (id == 37) cb(null, null); // dandelion : ok
+      var msg = "problem getting variations of " + page + ":" + id;
+      console.log(msg);
+      cb(new Error(msg));
+      return;
+    }
+    if (link == "") {
+      console.log("empty link generated bug");
+      console.log(sectionObject);
+      cb(new Error("empty link generated bug"));
+      return;
+    }
   }
   link=link[0]=="/" ? page+link : link;
   this.getDataValue(link,cb);
@@ -62,6 +64,7 @@ var dvtParser=new DvtParser(new WikiTextParser());
 //testSlabs2();
 //testStone();
 //testFlower();
+//testDye();
 
 // testing : several data value in the page
 function testSlabs()
@@ -135,6 +138,20 @@ function testFlower()
 }
 
 
+function testDye()
+{
+  dvtParser.wikiTextParser.getArticle("Ink Sac", function (err, data,title) {
+    if(err) console.log("error getting Dye page "+err);
+    var sectionObject = dvtParser.wikiTextParser.pageToSectionObject(data);
+
+    dvtParser.getVariations(title,351,sectionObject,function(err,variation){
+      if(err) console.log("error getting dv page "+err);
+      console.log(variation);
+    });
+  });
+}
+
+
 function processDataValues(sectionObject)
 {
   var data=getAllDataValues(sectionObject);
@@ -189,7 +206,7 @@ DvtParser.prototype.parseDvt=function(text)
   var dv=0;
   return text
     .split("\n")
-    .filter(function(element){return element!="" && element.indexOf("{")!=-1 && element.indexOf("On ")==-1;}) // get rid of the unrelated beginning and ending lines
+    .filter(function(element){return element!="" && element.indexOf("{")!=-1 && element.indexOf("On ")==-1 && element.indexOf("dvt")!=-1;}) // get rid of the unrelated beginning and ending lines
     .map(function(element){
       var r=self.wikiTextParser.parseTemplate(element);
       if(r==null || ["dvt"].indexOf(r.template)==-1) {

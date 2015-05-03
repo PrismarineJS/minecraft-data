@@ -20,7 +20,6 @@ function writeAllItems()
 {
   async.waterfall([
       function(cb){id_table_parser.parseDataValues("Data_values/Item_IDs",cb)},
-      addVariations,
       //function(items,cb){console.log(JSON.stringify(items,null,2));cb(null,items);}
       itemsToFullItems
     ],
@@ -29,6 +28,11 @@ function writeAllItems()
 }
 
 function indexWrite(err,fullItems){
+  if(err)
+  {
+    console.log("problem "+err);
+    return;
+  }
   var items={};
   for(var i in fullItems)
   {
@@ -61,42 +65,44 @@ function parseItemInfobox(page,content)
   };
 }
 
-function addVariations(items,cb)
-{
-  async.map(items,function(item,cb){
-    dvtParser.getDataValue(item["link"]+"/DV",function(err,table){
-      if(!err && table!=null) item["variations"]=table;
-      cb(null,item);
-    });
-  },function(err,results){
-    cb(null,results);
-  });
-}
-
 function itemsToFullItems(items,cb)
 {
   async.map(items,function(item,cb){
-    wikiTextParser.getArticle(item["link"],function(err,pageData){
-      var sectionObject=wikiTextParser.pageToSectionObject(pageData);
-      var data=parseItemInfobox(item["link"],sectionObject["content"]);
+    async.waterfall([
+      function(cb){
+        wikiTextParser.getArticle(item["link"]=="Dye" ? "Ink Sac" : item["link"],function(err,pageData,title){
+          if(err)
+          {
+            cb(err);
+            return;
+          }
+          var sectionObject=wikiTextParser.pageToSectionObject(pageData);
+          cb(err,sectionObject,title);
+        });
+      },
+      function(sectionObject,title,cb){
+        dvtParser.getVariations(title,item["id"],sectionObject,function(err,vara){
+          cb(err,sectionObject,vara);
+        })},
+      function(sectionObject,vara,cb) {
+        var data=parseItemInfobox(item["link"],sectionObject["content"]);
 
 
+        //var d=dvt_parser.getAllDataValues(sectionObject);
+        //if(d.length>0)
+        //  console.log(item["link"]+" "+d);
 
-      //var d=dvt_parser.getAllDataValues(sectionObject);
-      //if(d.length>0)
-      //  console.log(item["link"]+" "+d);
 
-      cb(null,{
-        "id":item["id"],
-        "displayName":item["displayName"],
-        "stackSize":data!=null && "stackSize" in data ? data["stackSize"] : null,
-        "name":item["name"],
-        "variations":item["variations"]
-      });
-    });
-  },function(err,results){
-    cb(null,results);
-  });
+        cb(null,{
+          "id":item["id"],
+          "displayName":item["displayName"],
+          "stackSize":data!=null && "stackSize" in data ? data["stackSize"] : null,
+          "name":item["name"],
+          "variations":vara!=null ? vara : undefined
+        });
+      }
+    ],cb);
+  },cb);
 }
 
 
