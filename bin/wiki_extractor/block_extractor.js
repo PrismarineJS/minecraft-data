@@ -205,16 +205,6 @@ function blocksToFullBlocks(blocks,cb)
       function(sectionObject,vara,cb){
         var data=parseBlockInfobox(block["link"],sectionObject["content"]);
 
-        //if("Data values" in sectionObject && "Block data" in sectionObject["Data values"])
-        //console.log(sectionObject["Data values"]["Block data"]["content"]);
-
-        /*
-         var d=dvt_parser.processDataValues(sectionObject);
-         if(d!=null && Object.keys(d).length>0)
-         console.log(block["link"]+" "+JSON.stringify(d,null,2));*/
-
-        //console.log(vara);
-
         if(data==null)
           console.log("can't get infobox of "+block);
         if(!(data!=null && "stackSize" in data))
