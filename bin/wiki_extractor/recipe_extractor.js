@@ -175,7 +175,6 @@ var edgeVariations={
   "Button":"Wooden Button",
   "Any Firework Star":"Firework Star",
 
-  "Oak Wood":"Wood",
   "Redstone Lamp":"Redstone Lamp (inactive)",
   "Mossy Stone Bricks":"Mossy Stone Brick",
   "Stone Bricks Slab":"Stone Brick Slab",
