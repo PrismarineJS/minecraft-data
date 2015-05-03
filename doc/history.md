@@ -1,3 +1,12 @@
+## 0.2.0
+ * update blocks, entities, items and recipes enums with new wiki extractors
+ * add entities displayName
+ * add drops in blocks
+ * add metadata variations in blocks and drops
+ * update recipes with variations of blocks and items
+ * amount -> count and meta -> metadata in recipes
+ * reorganize and improve wiki extractors
+
 ## 0.1.1
  * some new wiki extractors : beginning of work for blocks, entities
  * fix some recipes
