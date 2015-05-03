@@ -111,7 +111,7 @@ function getDataValue(page,cb)
 function addVariations(blocks,cb)
 {
   async.map(blocks,function(block,cb){
-    getDataValue(block["link"]+"/DV",function(err,table){
+    getDataValue(block["link"]+"/DV"+(block["id"]==162 ? "2" : ""),function(err,table){
       if(!err) block["variations"]=table;
       cb(null,block);
     });
@@ -130,43 +130,46 @@ function blockInfobox(page,cb)
 {
   wikiTextParser.getArticle(page,function(err,data){
     var sectionObject=wikiTextParser.pageToSectionObject(data);
-
-    var infoBox=wikiTextParser.parseInfoBox(sectionObject["content"]);
-    var values=infoBox["values"];
-
-    if(values["type"] && !(values["type"].trim().toLowerCase() in wikitypeToBoundingBox))
-      console.log(page+" : "+values["type"]);
-
-    if(!("stackable" in values)) values["stackable"]="N/A";
-
-    var stackSize=infobox_field_parser.parseStackable(values["stackable"]);
-    if(stackSize==null)
-    {
-      console.log("can't parse stackable of "+page);
-      console.log(values);
-    }
-
-    //if("tool2" in values)
-    //  console.log(page);
-
-    //console.log(page);
-    //console.log(page+" "+values["tool"]);
-    var outputData={
-      "id":parseInt(values["data"]),
-      "name":page.toLowerCase(),
-      "displayName":page,
-      "stackSize":stackSize,
-      //TODO: to fix by properly parsing the tool (break for http://minecraft.gamepedia.com/Water)
-      // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
-      "liquid":values["type"] && values["type"].trim().toLowerCase() == "fluid",
-      "tool":"tool" in values ? values["tool"] : null ,
-      "tool2":"tool2" in values ? values["tool2"] : null ,
-      "harvestTools":toolToHarvestTools(values["tool"],page=="Cobweb"),
-      "harvestTools2":toolToHarvestTools(values["tool2"],page=="Cobweb"),
-      "boundingBox" : values["type"] && values["type"].trim().toLowerCase() in wikitypeToBoundingBox ? wikitypeToBoundingBox[values["type"].trim().toLowerCase()] : "block"
-    };
-    cb(null,outputData);
+    cb(null,parseBlockInfobox(page,sectionObject["content"]));
   });
+}
+
+function parseBlockInfobox(page,content)
+{
+  var infoBox=wikiTextParser.parseInfoBox(content);
+  var values=infoBox["values"];
+
+  if(values["type"] && !(values["type"].trim().toLowerCase() in wikitypeToBoundingBox))
+    console.log(page+" : "+values["type"]);
+
+  if(!("stackable" in values)) values["stackable"]="N/A";
+
+  var stackSize=infobox_field_parser.parseStackable(values["stackable"]);
+  if(stackSize==null)
+  {
+    console.log("can't parse stackable of "+page);
+    console.log(values);
+  }
+
+  //if("tool2" in values)
+  //  console.log(page);
+
+  //console.log(page);
+  //console.log(page+" "+values["tool"]);
+  return {
+    "id":parseInt(values["data"]),
+    "name":page.toLowerCase(),
+    "displayName":page,
+    "stackSize":stackSize,
+    //TODO: to fix by properly parsing the tool (break for http://minecraft.gamepedia.com/Water)
+    // see http://minecraft.gamepedia.com/Breaking and http://minecraft.gamepedia.com/Module:Breaking_row (unbreakable)
+    "liquid":values["type"] && values["type"].trim().toLowerCase() == "fluid",
+    "tool":"tool" in values ? values["tool"] : null ,
+    "tool2":"tool2" in values ? values["tool2"] : null ,
+    "harvestTools":toolToHarvestTools(values["tool"],page=="Cobweb"),
+    "harvestTools2":toolToHarvestTools(values["tool2"],page=="Cobweb"),
+    "boundingBox" : values["type"] && values["type"].trim().toLowerCase() in wikitypeToBoundingBox ? wikitypeToBoundingBox[values["type"].trim().toLowerCase()] : "block"
+  };
 }
 
 // see http://minecraft.gamepedia.com/Module:Breaking_row materialGrade
@@ -298,7 +301,13 @@ function chooseCorrectHarvestTools(tool,tool2,harvestTools,harvestTools2,materia
 function blocksToFullBlocks(blocks,cb)
 {
   async.map(blocks,function(block,cb){
-    blockInfobox(block["link"],function(err,data){
+    wikiTextParser.getArticle(block["link"],function(err,pageData){
+      var sectionObject=wikiTextParser.pageToSectionObject(pageData);
+      var data=parseBlockInfobox(block["link"],sectionObject["content"]);
+
+      //if("Data values" in sectionObject && "Block data" in sectionObject["Data values"])
+        //console.log(sectionObject["Data values"]["Block data"]["content"]);
+
       if(data==null)
         console.log("can't get infobox of "+block);
       if(!(data!=null && "stackSize" in data))
