@@ -67,11 +67,11 @@ function processDataValues(sectionObject)
   var currentDV=null;
   var linkObject={};
   data.forEach(function(line){
-    var matches=line.match(/^;Block ([0-9]+(?: *\(.+? Edition\))?)$/);
+    var matches=line.match(/Block ([0-9]+(?: *\(.+?\))?)/);
     if(matches!=null)
     {
       if(currentId!=null && currentId.indexOf("Console Edition")==-1 && currentId.indexOf("Pi Edition")==-1 && currentId.indexOf("Pocket Edition")==-1 && currentDV!=null)
-        linkObject[currentId]=currentDV;
+        linkObject[currentId.split(" ")[0]]=currentDV;
       currentId=matches[1];
       currentDV=null;
     }

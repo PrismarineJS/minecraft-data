@@ -97,11 +97,43 @@ function removeConsolePocket(recipes,cb)
   }));
 }
 
+function dnt(dn)
+{
+  return dn.toLowerCase().replace(/ (facing|with).+$/,"");
+}
+
 var items=require("../../enums/items.json");
 var itemsByName=Object.keys(items).reduce(function(acc,key){acc[items[key]["displayName"]]=items[key]["id"];return acc;},{});
 var blocks=require("../../enums/blocks.json");
 var blocksByName=Object.keys(blocks).reduce(function(acc,key){acc[blocks[key]["displayName"]]=blocks[key]["id"];return acc;},{});
+var itemsVariationsByName=Object.keys(items).reduce(function(acc,key){
+  if("variations" in items[key])
+    return items[key]["variations"].reduce(function(acc,variation){
+      acc[dnt(variation["displayName"])]={"id":items[key]["id"],"metadata":variation["metadata"]};
+      return acc;
+    },acc);
+  else return acc;
+},{});
+var blocksVariationsByName=Object.keys(blocks).reduce(function(acc,key){
+  if("variations" in blocks[key])
+    return blocks[key]["variations"].reduce(function(acc,variation){
+      acc[dnt(variation["displayName"])]={"id":blocks[key]["id"],"metadata":variation["metadata"]};
+      return acc;
+    },acc);
+  else return acc;
+},{});
 
+function findItem(name)
+{
+  var itemVariation=itemsVariationsByName[name.toLowerCase()];
+  return typeof itemVariation !== "undefined" ? itemVariation : itemsByName[name];
+}
+
+function findBlock(name)
+{
+  var blockVariation=blocksVariationsByName[name.toLowerCase()];
+  return typeof blockVariation !== "undefined" ? blockVariation : blocksByName[name];
+}
 
 function nameToId(name)
 {
@@ -110,15 +142,19 @@ function nameToId(name)
   var p=name.match(/^(.+) \((block|item)\)$/i);
   if(p!=null && p.length==3)
   {
-    if(p[2].toLowerCase()=="item" && p[1] in itemsByName)
-      return itemsByName[p[1]];
-    if(p[2].toLowerCase()=="block" && p[1] in blocksByName)
-      return blocksByName[p[1]];
+    var itemP=findItem(p[1]);
+    var blockP=findBlock(p[1]);
+    if(p[2].toLowerCase()=="item" && typeof itemP !== 'undefined')
+      return itemP;
+    if(p[2].toLowerCase()=="block" && typeof blockP !== 'undefined')
+      return blockP;
   }
-  if(name in itemsByName)
-    return itemsByName[name];
-  if(name in blocksByName)
-    return blocksByName[name];
+  var item=findItem(name);
+  var block=findBlock(name);
+  if(typeof item !== 'undefined')
+    return item;
+  if(typeof block !== 'undefined')
+    return block;
   return undefined;
 }
 
@@ -132,79 +168,23 @@ function nameToId(name)
 
 // see also : redirections
 var edgeVariations={
-  "Ink Sac":"Dye",
-  "Bone Meal":"Dye",
-  "Dandelion Yellow":"Dye",
   "Sugar Canes":"Sugar Cane",
-  "Lapis Lazuli":"Dye",
-  "Cactus Green":"Dye",
-  "Rose Red":"Dye",
-  "Cocoa Beans":"Dye",
-
-  // + metadata 1
-  "Blue Orchid":"Poppy",
-  "Orange Tulip":"Poppy",
-  "White Tulip":"Poppy",
-  "Pink Tulip":"Poppy",
-  "Oxeye Daisy":"Poppy",
-  "Allium":"Poppy",
-  "Azure Bluet":"Poppy",
-  "Red Tulip":"Poppy",
-  // + metadata 5
-  "Rose Bush":"Large Flowers",
-  "Large Fern":"Large Flowers",
-  "Peony":"Large Flowers",
-  "Sunflower":"Large Flowers",
-  "Lilac":"Large Flowers",
 
   "Mushroom":"Red Mushroom",
-
-  // other
-  "Oak Wood Planks":"Wood Planks",
-  "Charcoal":"Coal",
-  "Diorite":"Stone",
-  "Andesite":"Stone",
-  "Polished Andesite":"Stone",
-  "Polished Diorite":"Stone",
-  "Red Sand":"Sand",
-  "Granite":"Stone",
-  "Polished Granite":"Stone",
-  "Mossy Cobblestone Wall":"Cobblestone Wall",
-  "Quartz Slab":"Stone Slab",
-  "Chiseled Quartz Block":"Block of Quartz",
   "Pillar Quartz Block":"Block of Quartz",
-  "Head":"Mob head",
   "Button":"Wooden Button",
-  "Prismarine Bricks":"Prismarine",
-  "Dark Prismarine":"Prismarine",
   "Any Firework Star":"Firework Star",
 
   "Oak Wood":"Wood",
-  "Dark Oak Wood":"Wood (Acacia/Dark Oak)",
-  "Spruce Wood":"Wood",
-  "Birch Wood": "Wood",
-  "Jungle Wood": "Wood",
-  "Acacia Wood":"Wood (Acacia/Dark Oak)",
-  "Black Stained Glass Pane":"Stained Glass Pane",
-
-  "Sandstone Slab":"Stone Slab",
   "Redstone Lamp":"Redstone Lamp (inactive)",
-  "Coarse Dirt":"Dirt",
-  "Mossy Stone Bricks":"Stone Bricks",
-  "Stone Bricks Slab":"Double Stone Slab",
-  "Chiseled Stone Bricks":"Stone Bricks",
+  "Mossy Stone Bricks":"Mossy Stone Brick",
+  "Stone Bricks Slab":"Stone Brick Slab",
+  "Chiseled Stone Bricks":"Chiseled Stone Brick",
   "Oak Fence Gate":"Fence Gate",
   "Wooden Trapdoor":"Trapdoor",
   "Redstone Torch":"Redstone Torch (inactive)",
-  "Enchanted Golden Apple":"Golden Apple",
   "Oak Fence":"Fence",
-  "Dark Oak Wood Slab":"Wooden Slab",
-  "Cracked Stone Bricks":"Stone Bricks",
-  "Cobblestone Slab":"Stone Slab",
-  "Bricks Slab":"Stone Slab",
-  "Nether Brick Slab":"Stone Slab",
-  "Creeper Head":"Mob head",
-  "Wither Skeleton Skull":"Mob head",
+  "Cracked Stone Bricks":"Cracked Stone Brick"
 };
 
 function replaceName(name)
@@ -212,17 +192,9 @@ function replaceName(name)
   // should be done properly with metadata
   var firstStep=name
     .replace(/^.*Banner$/,"Banner")
-    .replace(/^.*Dye$/,"Dye")
-    .replace(/^.*Sandstone$/,"Sandstone")
-    .replace(/^.*Stained Glass$/,"Stained Glass")
-    .replace(/^.*Stained Glass Pane$/,"Stained Glass Pane")
-    .replace(/^.*Stained Clay$/,"Stained Clay")
     .replace(/^.*Wool$/,"Wool")
-    .replace(/^.*Wood Slab$/,"Wooden Slab")
     .replace(/^.*Carpet$/,"Carpet")
-    .replace(/^.*Wood Planks$/,"Wood Planks")
     .replace(/Damaged /,"")
-    //.replace(/\(.+\)/,"")
     .trim();
   if(firstStep in edgeVariations)
     return edgeVariations[firstStep];
@@ -279,7 +251,9 @@ function recipesNameToId(recipes,aliases,cb)
             var id=nameToId(name);
             if(typeof id == "undefined")
               unreco[name]=true;
-            return count!=null && (count!=1 || key=="Output") && (typeof id != "undefined") ? {"count":count,"id":id,"metadata":0} : id;
+            return count!=null && (count!=1 || key=="Output") && (typeof id != "undefined") ?
+              id instanceof Object ? {"count":count,"id":id["id"],"metadata":id["metadata"]} : {"count":count,"id":id,"metadata":0}
+              : id;
           })/*)*/;
       }
       else
