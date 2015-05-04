@@ -101,17 +101,17 @@ function parseDrops(text)
   if(text.toLowerCase()=="nothing" || text.toLowerCase()=="none" || text.toLowerCase()=="n/a")
     return [];
   if(text.indexOf("{")==-1)
-    return [{"drop":nameIndex.nameToId(replaceName(text.trim())),"minCount":1,"maxCount":1}];
+    return [{"drop":nameIndex.nameToId(replaceName(text.trim()))}];
   var templates=text.split("}{").join("};{").split(";");
   return templates.map(function(template){
     var data=wikiTextParser.parseTemplate(template);
     var type=data.simpleParts[0];
     var id=nameIndex.nameToId(replaceName(data.simpleParts[1])+" ("+type+")");
     var min=data.simpleParts[2].indexOf("%")!=-1 ? parseFloat(data.simpleParts[2].replace("%",""))/100 : parseInt(data.simpleParts[2]);
-    var max=data.simpleParts.length>3 ? parseInt(data.simpleParts[3]) : min;
+    var max=data.simpleParts.length>3 ? parseInt(data.simpleParts[3]) : undefined;
     return {
       "drop":id,
-      "minCount":min,
+      "minCount":min==1 ? undefined : min,
       "maxCount":max
     };
   });
@@ -155,18 +155,25 @@ function parseBlockInfobox(page,content)
     console.log("can't parse stackable of "+page);
     console.log(values);
   }
-  var drops="drops" in values && values["drops"].toLowerCase()!="itself" ? values["drops"] : page;
-  if(page.indexOf("Slab")!=-1)
-    drops="Slab";
-  if(page=="Monster Egg" || page.startsWith("Technical blocks"))
-    drops="Nothing";
-  var p=parseDrops(drops);
-  //if("drops" in values && drops!="None") console.log(page+" ;;;; "+drops);
-  //console.log(page+" ;;;; "+p);
-  p.forEach(function(p1){
-    if(!("drop" in p1) || (typeof p1["drop"] == "undefined"))
-      console.log("PB with "+drops);
-  });
+  var p;
+  if(!("drops" in values) || values["drops"].toLowerCase()=="itself")
+    p="Itself";
+  else
+  {
+    var drops=values["drops"];
+    if(page.indexOf("Slab")!=-1)
+      drops="Slab";
+    if(page=="Monster Egg" || page.startsWith("Technical blocks"))
+      drops="Nothing";
+    p=parseDrops(drops);
+    //if("drops" in values && drops!="None") console.log(page+" ;;;; "+drops);
+    //console.log(page+" ;;;; "+p);
+    p.forEach(function(p1){
+      if(!("drop" in p1) || (typeof p1["drop"] == "undefined"))
+        console.log("PB with "+drops);
+    });
+  }
+
 
   return {
     "id":parseInt(values["data"]),
@@ -287,7 +294,7 @@ function blocksToFullBlocks(blocks,cb)
           "material":block["material"],
           "harvestTools":chooseCorrectHarvestTools(data["tool"],data["tool2"],data["harvestTools"],data["harvestTools2"],block["material"]),
           "variations":vara!=null ? vara : undefined,
-          "drops":data["drops"]
+          "drops":data["drops"]=="Itself" ? [{"drop":block["id"]}] : data["drops"]
         });
       }
     ],cb);
