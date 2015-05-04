@@ -14,3 +14,5 @@ of the tool and the value as the efficiency multiplier.
 ## minecraft-data.instruments
 
 ## minecraft-data.biomes
+
+## minecraft-data.entities
