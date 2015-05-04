@@ -1,3 +1,6 @@
+## 0.2.1
+ * entities is now in the API
+
 ## 0.2.0
  * update blocks, entities, items and recipes enums with new wiki extractors
  * add entities displayName
