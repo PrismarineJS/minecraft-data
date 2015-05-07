@@ -1,129 +1,127 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "blocks",
-  "type": "object",
+  "type": "array",
   "uniqueItems": true,
-  "patternProperties": {
-    "^[0-9]+$": {
-      "title": "block",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "The unique identifier for a block",
-          "type": "integer",
-          "minimum": 0
-        },
-        "displayName": {
-          "description": "The display name of a block",
-          "type": "string"
-        },
-        "name": {
-          "description": "The name of a block",
-          "type": "string",
-          "pattern": "\\S+"
-        },
-        "hardness": {
-          "description": "Hardness of a block",
-          "type": [
-            "number",
-            "null"
-          ],
-          "minimum": 0
-        },
-        "stackSize": {
-          "description": "Stack size for a block",
-          "type": "integer",
-          "minimum": 0
-        },
-        "diggable": {
-          "description": "true if a block is diggable",
-          "type": "boolean"
-        },
-        "boundingBox": {
-          "description": "BoundingBox of a block",
-          "enum": [
-            "block",
-            "empty"
-          ]
-        },
-        "material": {
-          "description": "Material of a block",
-          "type": "string"
-        },
-        "harvestTools": {
-          "description": "Using one of these tools is required to harvest a block, without that you get a 3.33x time penalty.",
+  "items": {
+    "title": "block",
+    "type": "object",
+    "properties": {
+      "id": {
+        "description": "The unique identifier for a block",
+        "type": "integer",
+        "minimum": 0
+      },
+      "displayName": {
+        "description": "The display name of a block",
+        "type": "string"
+      },
+      "name": {
+        "description": "The name of a block",
+        "type": "string",
+        "pattern": "\\S+"
+      },
+      "hardness": {
+        "description": "Hardness of a block",
+        "type": [
+          "number",
+          "null"
+        ],
+        "minimum": 0
+      },
+      "stackSize": {
+        "description": "Stack size for a block",
+        "type": "integer",
+        "minimum": 0
+      },
+      "diggable": {
+        "description": "true if a block is diggable",
+        "type": "boolean"
+      },
+      "boundingBox": {
+        "description": "BoundingBox of a block",
+        "enum": [
+          "block",
+          "empty"
+        ]
+      },
+      "material": {
+        "description": "Material of a block",
+        "type": "string"
+      },
+      "harvestTools": {
+        "description": "Using one of these tools is required to harvest a block, without that you get a 3.33x time penalty.",
+        "type": "object",
+        "patternProperties": {
+          "^[0-9]+$": {"type": "boolean"}
+        }
+      },
+      "variations": {
+        "type": "array",
+        "items": {
           "type": "object",
-          "patternProperties": {
-            "^[0-9]+$": {"type": "boolean"}
-          }
-        },
-        "variations": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "metadata": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "displayName": {
-                "type": "string"
-              }
+          "properties": {
+            "metadata": {
+              "type": "integer",
+              "minimum": 0
             },
-            "required": [
-              "metadata",
-              "displayName"
-            ],
-            "additionalProperties": false
-          }
-        },
-        "drops": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "minCount": {
-                "type": "number",
-                "minimum": 0,
-                "description":"minimum number or chance, default : 1"
-              },
-              "maxCount": {
-                "type": "number",
-                "minimum": 0,
-                "description":"maximum number or chance, default : minCount"
-              },
-              "drop": {
-                "oneOf": [
-                  {
-                    "type": "integer",
-                    "minimum": 0
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "minimum": 0
-                      },
-                      "metadata": {
-                        "type": "integer",
-                        "minimum": 0
-                      }
+            "displayName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "metadata",
+            "displayName"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "drops": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "minCount": {
+              "type": "number",
+              "minimum": 0,
+              "description": "minimum number or chance, default : 1"
+            },
+            "maxCount": {
+              "type": "number",
+              "minimum": 0,
+              "description": "maximum number or chance, default : minCount"
+            },
+            "drop": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "minimum": 0
                     },
-                    "required": [
-                      "id",
-                      "metadata"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
-              }
-            },
-            "required": [
-              "drop"
-            ],
-            "additionalProperties": false
-          }
+                    "metadata": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "metadata"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "drop"
+          ],
+          "additionalProperties": false
         }
       }
     },
@@ -138,6 +136,5 @@
       "drops"
     ],
     "additionalProperties": false
-  },
-  "additionalProperties": false
+  }
 }

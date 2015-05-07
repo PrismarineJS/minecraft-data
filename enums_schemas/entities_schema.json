@@ -1,40 +1,37 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "entities",
-  "type": "object",
+  "type": "array",
   "uniqueItems": true,
-  "patternProperties" : {
-    "^[0-9]+$": {
-      "title": "entity",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "The unique identifier for an entity",
-          "type": "integer",
-          "minimum": 0
-        },
-        "displayName": {
-          "description": "The display name of an entity",
-          "type": "string"
-        },
-        "name": {
-          "description": "The name of an entity",
-          "type": "string",
-          "pattern": "\\S+"
-        },
-        "type": {
-          "description": "The type of an entity",
-          "type": "string"
-        }
+  "items" : {
+    "title": "entity",
+    "type": "object",
+    "properties": {
+      "id": {
+        "description": "The unique identifier for an entity",
+        "type": "integer",
+        "minimum": 0
       },
-      "required": [
-        "id",
-        "displayName",
-        "name",
-        "type"
-      ],
-      "additionalProperties": false
-    }
-  },
-  "additionalProperties": false
+      "displayName": {
+        "description": "The display name of an entity",
+        "type": "string"
+      },
+      "name": {
+        "description": "The name of an entity",
+        "type": "string",
+        "pattern": "\\S+"
+      },
+      "type": {
+        "description": "The type of an entity",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "displayName",
+      "name",
+      "type"
+    ],
+    "additionalProperties": false
+  }
 }

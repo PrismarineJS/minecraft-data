@@ -21,22 +21,17 @@ function writeAllItems()
       //function(items,cb){console.log(JSON.stringify(items,null,2));cb(null,items);}
       itemsToFullItems
     ],
-     indexWrite
+    write
   );
 }
 
-function indexWrite(err,fullItems){
+function write(err,fullItems){
   if(err)
   {
     console.log("problem "+err);
     return;
   }
-  var items={};
-  for(var i in fullItems)
-  {
-    items[fullItems[i]["id"]]=fullItems[i];
-  }
-  fs.writeFile("../../enums/items.json", JSON.stringify(items,null,2));
+  fs.writeFile("../../enums/items.json", JSON.stringify(fullItems,null,2));
 }
 
 

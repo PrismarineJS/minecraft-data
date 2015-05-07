@@ -1,7 +1,7 @@
-var fs = require('fs')
-  , assert = require('assert')
-  , Batch = require('batch')
-  , path = require('path')
+var fs = require('fs');
+var assert = require('assert');
+var Batch = require('batch');
+var path = require('path');
 
 var burgerJsonPath = process.argv[2];
 
@@ -14,7 +14,7 @@ var outputs = [
   items,
   blocks,
   biomes,
-  recipes,
+  recipes
 ];
 
 fs.readFile(burgerJsonPath, 'utf8', function(err, json) {
@@ -44,66 +44,66 @@ fs.readFile(burgerJsonPath, 'utf8', function(err, json) {
 function items(burger, cb) {
   var itemsJson = burger[0].items.item;
   var item;
-  var itemEnum = {};
+  var itemEnum = [];
   for (var id in itemsJson) {
     item = itemsJson[id];
-    itemEnum[item.id] = {
+    itemEnum.push({
       id: item.id,
       displayName: item.display_name,
       name: item.name,
-      stackSize: item.stack_size,
-    };
+      stackSize: item.stack_size
+    });
   }
   cb(null, {
     name: 'items',
-    json: itemEnum,
+    json: itemEnum
   });
 }
 
 function blocks(burger, cb) {
   var blocksJson = burger[0].blocks.block;
   var block;
-  var blockEnum = {
-    "0": {
+  var blockEnum = [
+    {
       id: 0,
       name: "air",
       displayName: "Air",
-      hardness: 0,
-    },
-  };
+      hardness: 0
+    }
+  ];
   for (var id in blocksJson) {
     block = blocksJson[id];
-    blockEnum[block.id] = {
+    blockEnum.push({
       id: block.id,
       displayName: block.display_name,
       name: block.name,
-      hardness: block.hardness,
-    };
+      hardness: block.hardness
+    });
   }
   cb(null, {
     name: 'blocks',
-    json: blockEnum,
+    json: blockEnum
   });
 }
 
 function biomes(burger, cb) {
   var biomesJson = burger[0].biomes;
   var biome;
-  var biomeEnum = {};
+  var biomeEnum = [];
   for (var name in biomesJson) {
     biome = biomesJson[name];
-    biomeEnum[biome.id] = {
+    biomeEnum.push({
       id: biome.id,
       color: biome.color,
       //height: biome.height,
       name: biome.name,
       rainfall: biome.rainfall,
-      temperature: biome.temperature,
-    };
+      temperature: biome.temperature
+    });
   }
   cb(null, {
     name: 'biomes',
-    json: biomeEnum,
+    json: biomeEnum
   });
 }
 
@@ -121,7 +121,7 @@ function recipes(burger, cb) {
         recipeItemList.push({
           count: recipe.amount,
           metadata: recipe.metadata,
-          inShape: shape = [],
+          inShape: shape = []
         });
         for (j = recipe.shape.length - 1; j >= 0; --j) {
           var line = recipe.shape[j];
@@ -134,12 +134,12 @@ function recipes(burger, cb) {
         recipeItemList.push({
           count: recipe.amount,
           metadata: recipe.metadata,
-          ingredients: ingredients = [],
+          ingredients: ingredients = []
         });
         for(j = 0; j < recipe.ingredients.length; ++j) {
           var ingredient = recipe.ingredients[j];
           ingredients.push({
-            id: ingredient.id,
+            id: ingredient.id
           });
         }
       } else {
@@ -149,6 +149,6 @@ function recipes(burger, cb) {
   }
   cb(null, {
     name: "recipes",
-    json: recipeEnum,
+    json: recipeEnum
   });
 }

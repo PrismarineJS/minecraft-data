@@ -1,30 +1,27 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "instruments",
-  "type": "object",
+  "type": "array",
   "uniqueItems": true,
-  "patternProperties" : {
-    "^[0-9]+$": {
-      "title": "instrument",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "The unique identifier for an instrument",
-          "type": "integer",
-          "minimum": 0
-        },
-        "name": {
-          "description": "The name of an instrument",
-          "type": "string",
-          "pattern": "\\S+"
-        }
+  "items" : {
+    "title": "instrument",
+    "type": "object",
+    "properties": {
+      "id": {
+        "description": "The unique identifier for an instrument",
+        "type": "integer",
+        "minimum": 0
       },
-      "required": [
-        "id",
-        "name"
-      ],
-      "additionalProperties": false
-    }
-  },
-  "additionalProperties": false
+      "name": {
+        "description": "The name of an instrument",
+        "type": "string",
+        "pattern": "\\S+"
+      }
+    },
+    "required": [
+      "id",
+      "name"
+    ],
+    "additionalProperties": false
+  }
 }

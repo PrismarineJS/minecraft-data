@@ -6,21 +6,21 @@ function dnt(dn)
 }
 
 var items=require("../../../enums/items.json");
-var itemsByName=Object.keys(items).reduce(function(acc,key){acc[items[key]["displayName"]]=items[key]["id"];return acc;},{});
+var itemsByName=items.reduce(function(acc,item){acc[item["displayName"]]=item["id"];return acc;},{});
 var blocks=require("../../../enums/blocks.json");
-var blocksByName=Object.keys(blocks).reduce(function(acc,key){acc[blocks[key]["displayName"]]=blocks[key]["id"];return acc;},{});
-var itemsVariationsByName=Object.keys(items).reduce(function(acc,key){
-  if("variations" in items[key])
-    return items[key]["variations"].reduce(function(acc,variation){
-      acc[dnt(variation["displayName"])]={"id":items[key]["id"],"metadata":variation["metadata"]};
+var blocksByName=blocks.reduce(function(acc,block){acc[block["displayName"]]=block["id"];return acc;},{});
+var itemsVariationsByName=items.reduce(function(acc,item){
+  if("variations" in item)
+    return item["variations"].reduce(function(acc,variation){
+      acc[dnt(variation["displayName"])]={"id":item["id"],"metadata":variation["metadata"]};
       return acc;
     },acc);
   else return acc;
 },{});
-var blocksVariationsByName=Object.keys(blocks).reduce(function(acc,key){
-  if("variations" in blocks[key])
-    return blocks[key]["variations"].reduce(function(acc,variation){
-      acc[dnt(variation["displayName"])]={"id":blocks[key]["id"],"metadata":variation["metadata"]};
+var blocksVariationsByName=blocks.reduce(function(acc,block){
+  if("variations" in block)
+    return block["variations"].reduce(function(acc,variation){
+      acc[dnt(variation["displayName"])]={"id":block["id"],"metadata":variation["metadata"]};
       return acc;
     },acc);
   else return acc;
