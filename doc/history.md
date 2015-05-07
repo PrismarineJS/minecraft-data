@@ -1,3 +1,6 @@
+## 0.3.0
+ * remove id indexing from biomes, blocks, entities, items and instruments : let users (for examples node-minecraft-data) provide their indexing (by id, name,...)
+
 ## 0.2.1
  * entities is now in the API
 
