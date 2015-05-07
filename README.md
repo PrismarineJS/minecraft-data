@@ -1,9 +1,13 @@
 # minecraft-data 
 [![NPM version](https://badge.fury.io/js/minecraft-data.svg)](http://badge.fury.io/js/minecraft-data) [![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data.svg?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data)
 
-Provide minecraft data for minecraft clients, servers and libraries.
+Language independent module providing minecraft data for minecraft clients, servers and libraries.
 
 Support minecraft 1.8.3.
+
+Minecraft-data is language independent, you can use it with these language specific modules :
+
+* [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) provides indexes and look up functions in node.js
 
 ## Documentation
 
