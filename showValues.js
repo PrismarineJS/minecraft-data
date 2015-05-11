@@ -8,13 +8,18 @@ $j(document).ready(function() {
 function loadBlocks()
 {
   loadData("blocks",
-    function(block){return [block["id"],block["name"],block["displayName"],block["stackSize"]];},
+    function(block){return [block["id"],block["name"],block["displayName"],block["stackSize"],block["hardness"]
+      ,block["diggable"],block["boundingBox"],block["material"] ? block["material"] : null];},
     [
       { "title": "id" },
       { "title": "name" },
       {"title": "displayName"},
-      {"title": "stackSize"}
-    ]
+      {"title": "stackSize"},
+      {"title": "hardness"},
+      {"title": "diggable"},
+      {"title": "boundingBox"},
+      {"title": "material"}
+    ],[6,7]
   );
 }
 
@@ -28,11 +33,11 @@ function loadItems()
       { "title": "name" },
       {"title": "displayName"},
       {"title": "stackSize"}
-    ]
+    ],[]
   );
 }
 
-function loadData(enumName,elementToArray,columns)
+function loadData(enumName,elementToArray,columns,hiddenColumns)
 {
   $j.ajax("https://cdn.rawgit.com/PrismarineJS/minecraft-data/master/enums/"+enumName+".json")
     .done(function(data){
@@ -41,7 +46,13 @@ function loadData(enumName,elementToArray,columns)
       $j('#'+enumName+'ActualTable').dataTable( {
         "data":dataset,
         "paging":false,
-        "columns": columns});
+        "columns": columns,
+        "dom": 'C<"clear">lfrtip',
+          "columnDefs": [
+            { visible: false, targets: hiddenColumns }
+           ]
+        }
+      );
     } );
   $j( "#"+enumName+"Table").hide();
   $j( "#"+enumName+"Toggle" ).click(function() {
