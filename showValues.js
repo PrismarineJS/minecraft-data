@@ -2,6 +2,9 @@ $j(document).ready(function() {
 
   loadItems();
   loadBlocks();
+  loadBiomes();
+  loadEntities();
+  loadInstruments();
 
 } );
 
@@ -33,6 +36,46 @@ function loadItems()
       { "title": "name" },
       {"title": "displayName"},
       {"title": "stackSize"}
+    ],[]
+  );
+}
+
+
+function loadBiomes()
+{
+  loadData("biomes",
+    function(e){return [e["id"],e["name"],e["color"],e["temperature"],e["rainfall"]];},
+    [
+      { "title": "id" },
+      { "title": "name" },
+      {"title": "color"},
+      {"title": "temperature"},
+      {"title": "rainfall"}
+    ],[]
+  );
+}
+
+
+function loadEntities()
+{
+  loadData("entities",
+    function(e){return [e["id"],e["name"],e["displayName"],e["type"]];},
+    [
+      { "title": "id" },
+      { "title": "name" },
+      {"title": "displayName"},
+      {"title": "type"}
+    ],[]
+  );
+}
+
+function loadInstruments()
+{
+  loadData("instruments",
+    function(e){return [e["id"],e["name"]];},
+    [
+      { "title": "id" },
+      { "title": "name" }
     ],[]
   );
 }
