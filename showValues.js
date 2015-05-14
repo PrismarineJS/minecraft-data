@@ -8,21 +8,18 @@ $j(document).ready(function() {
 
 } );
 
+function fieldsToColumns(fields)
+{
+  return fields.map(function(field){return {"title":field};});
+}
+
 function loadBlocks()
 {
   loadData("blocks",
     function(block){return [block["id"],block["name"],block["displayName"],block["stackSize"],block["hardness"]
       ,block["diggable"],block["boundingBox"],block["material"] ? block["material"] : null];},
-    [
-      { "title": "id" },
-      { "title": "name" },
-      {"title": "displayName"},
-      {"title": "stackSize"},
-      {"title": "hardness"},
-      {"title": "diggable"},
-      {"title": "boundingBox"},
-      {"title": "material"}
-    ],[6,7]
+    ["id","name","displayName","stackSize","hardness","diggable","boundingBox","material"],
+    [6,7]
   );
 }
 
@@ -31,12 +28,7 @@ function loadItems()
 {
   loadData("items",
     function(item){return [item["id"],item["name"],item["displayName"],item["stackSize"]];},
-    [
-      { "title": "id" },
-      { "title": "name" },
-      {"title": "displayName"},
-      {"title": "stackSize"}
-    ],[]
+    ["id","name","displayName","stackSize"],[]
   );
 }
 
@@ -45,13 +37,8 @@ function loadBiomes()
 {
   loadData("biomes",
     function(e){return [e["id"],e["name"],e["color"],e["temperature"],e["rainfall"]];},
-    [
-      { "title": "id" },
-      { "title": "name" },
-      {"title": "color"},
-      {"title": "temperature"},
-      {"title": "rainfall"}
-    ],[]
+    ["id","name","color","temperature","rainfall"],
+    []
   );
 }
 
@@ -60,12 +47,8 @@ function loadEntities()
 {
   loadData("entities",
     function(e){return [e["id"],e["name"],e["displayName"],e["type"]];},
-    [
-      { "title": "id" },
-      { "title": "name" },
-      {"title": "displayName"},
-      {"title": "type"}
-    ],[]
+    ["id","name","displayName","type"],
+    []
   );
 }
 
@@ -73,14 +56,12 @@ function loadInstruments()
 {
   loadData("instruments",
     function(e){return [e["id"],e["name"]];},
-    [
-      { "title": "id" },
-      { "title": "name" }
-    ],[]
+    ["id","name"],
+    []
   );
 }
 
-function loadData(enumName,elementToArray,columns,hiddenColumns)
+function loadData(enumName,elementToArray,fields,hiddenColumns)
 {
   $j.ajax("https://cdn.rawgit.com/PrismarineJS/minecraft-data/master/enums/"+enumName+".json")
     .done(function(data){
@@ -89,7 +70,7 @@ function loadData(enumName,elementToArray,columns,hiddenColumns)
       $j('#'+enumName+'ActualTable').dataTable( {
         "data":dataset,
         "paging":false,
-        "columns": columns,
+        "columns": fieldsToColumns(fields),
         "dom": 'C<"clear">lfrtip',
           "columnDefs": [
             { visible: false, targets: hiddenColumns }
