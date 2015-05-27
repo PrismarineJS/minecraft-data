@@ -3,10 +3,10 @@ var _ = require('underscore');
 
 module.exports = WikiTextParser;
 
-function WikiTextParser()
+function WikiTextParser(server)
 {
   this.client= new bot({
-    server: 'minecraft.gamepedia.com',
+    server: server ? server : 'minecraft.gamepedia.com',
     path: '/',
     debug: false
   });
