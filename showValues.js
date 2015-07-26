@@ -62,9 +62,44 @@ function loadInstruments()
   );
 }
 
+function protocolToString(protocol)
+{
+  return '<div id="protocolActualTable">' +
+  Object.keys(protocol)
+    .map(function(directionsName){return "<h1>"+directionsName+"</h1>\n"+directionsToString(protocol[directionsName]);})
+    .join("\n")+
+  '</div>';
+}
+
+function directionsToString(directions)
+{
+  return "<h2>toClient</h2>\n"+directionToString(directions["toClient"])+"\n"
+    + "<h2>toServer</h2>\n"+directionToString(directions["toServer"])+"\n";
+}
+
+function directionToString(direction)
+{
+  return Object.keys(direction).map(function(packetName){
+    return "<h3>"+packetName+" : "+direction[packetName].id+"</h3>\n"+packetToString(direction[packetName])
+  }).join("\n");
+}
+
+function packetToString(packet)
+{
+  return "<ul>"+
+      packet["fields"]
+        .map(function(field){return "<li>"+field["name"]+" : "+field["type"]+"</li>"})
+        .join("\n")
+    +"</ul>"
+}
+
 function loadProtocol()
 {
-
+  $j.ajax("https://cdn.rawgit.com/PrismarineJS/node-minecraft-protocol/master/protocol/protocol.json")
+    .done(function(data){
+      $j('#protocolTable').html(protocolToString(data));
+    });
+  enableToggle("protocol")
 }
 
 function loadData(enumName,elementToArray,fields,hiddenColumns)
@@ -83,7 +118,12 @@ function loadData(enumName,elementToArray,fields,hiddenColumns)
            ]
         }
       );
-    } );
+    });
+  enableToggle(enumName);
+}
+
+function enableToggle(enumName)
+{
   $j( "#"+enumName+"Table").hide();
   $j( "#"+enumName+"Toggle" ).click(function() {
     $j( "#"+enumName+"Table").toggle();
