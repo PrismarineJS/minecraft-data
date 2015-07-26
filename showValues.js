@@ -6,8 +6,13 @@ $j(document).ready(function() {
   loadEntities();
   loadInstruments();
   loadProtocol();
+  toggleAnchor();
+});
 
-} );
+function toggleAnchor()
+{
+  $j(window.location.hash.substr(0,window.location.hash.length-1)).show();
+}
 
 function fieldsToColumns(fields)
 {
@@ -127,6 +132,8 @@ function enableToggle(enumName)
   $j( "#"+enumName+"Table").hide();
   $j( "#"+enumName+"Toggle" ).click(function() {
     $j( "#"+enumName+"Table").toggle();
+    if(!$j("#" + enumName + "Table").is(":visible"))
+      setTimeout(function(){location.hash = '';},0);
   });
 }
 
