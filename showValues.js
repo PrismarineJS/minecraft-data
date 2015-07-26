@@ -5,6 +5,7 @@ $j(document).ready(function() {
   loadBiomes();
   loadEntities();
   loadInstruments();
+  loadProtocol();
 
 } );
 
@@ -59,6 +60,11 @@ function loadInstruments()
     ["id","name"],
     []
   );
+}
+
+function loadProtocol()
+{
+
 }
 
 function loadData(enumName,elementToArray,fields,hiddenColumns)
