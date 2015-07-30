@@ -9,6 +9,8 @@ if(process.argv.length != 3) {
 var decompiledFilesDir=process.argv[2];
 
 getProtocol();
+//getFields("jd");
+//getFields("hp");
 
 function getProtocol()
 {
@@ -31,13 +33,7 @@ function write(err,protocol){
 
 function readPacketsIds(cb)
 {
-  fs.readFile(decompiledFilesDir+'/el.java', "utf8", function (err, data) {
-    if (err){
-      cb(err);
-      return;
-    }
-    cb(null,data);
-  });
+  readClass('el',cb);
 }
 
 function dataToCleanLines(data,cb)
@@ -68,7 +64,7 @@ function linesToProtocol(cleanLines,cb)
       var id=idToHexString(currentId);
       if(protocol[currentState][direction]==undefined)
         protocol[currentState][direction]={};
-      protocol[currentState][direction][theClass]={"id":id};
+      protocol[currentState][direction][theClass]={"id":id,"fields":getFields(theClass)};
       currentId++;
     }
     return protocol;
@@ -96,3 +92,45 @@ var states = {
   "2": "login",
   "-1": "handshaking"
 };
+
+function readClass(className,cb)
+{
+  fs.readFile(decompiledFilesDir+'/'+className+'.java', "utf8", cb);
+}
+
+
+function readClassSync(className)
+{
+  return fs.readFileSync(decompiledFilesDir+'/'+className+'.java', "utf8");
+}
+
+function getFields(className)
+{
+  if(className.indexOf(".")!=-1) return ["error"];
+  var data=readClassSync(className);
+  var fields=processPacketDefinition(data);
+
+  //console.log(fields);
+  return fields;
+}
+
+function processPacketDefinition(data)
+{
+  var fields=data
+    .split("\n")
+    .map(function(s){return s.trim()})
+    .filter(function(s){return s.indexOf("read")!=-1})
+    .map(function(s){
+      var results= s.match(/read(.+?)\(/);
+      return results[1];
+    })
+    .filter(function(type){return type!==undefined})
+    .map(function(type){return transformType(type)});
+  return fields;
+}
+
+function transformType(type)
+{
+  var type=type.toLowerCase();
+  return type.replace("unsigned","u");
+}
