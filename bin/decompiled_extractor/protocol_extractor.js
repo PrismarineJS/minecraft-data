@@ -49,23 +49,26 @@ function dataToCleanLines(data,cb)
 function linesToProtocol(cleanLines,cb)
 {
   var currentState;
-  var currentId;
+  var currentToClientId;
+  var currentToServerId;
   cb(null,cleanLines.reduce(function(protocol,line){
     var results;
     if(results=line.match(/[a-z]\((-?[0-9])\) {/)) {
       currentState = states[results[1]];
-      currentId=0;
+      currentToClientId=0;
+      currentToServerId=0;
       protocol[currentState]={};
     }
     else if(results=line.match(/this\.a\(fg\.(a|b), ([a-z.]+)\.class\);/))
     {
       var direction=results[1]=="b" ? "toClient" : "toServer";
       var theClass=results[2];
-      var id=idToHexString(currentId);
+      var id=idToHexString(direction=="toClient" ? currentToClientId : currentToServerId);
       if(protocol[currentState][direction]==undefined)
         protocol[currentState][direction]={};
       protocol[currentState][direction][theClass]={"id":id,"fields":getFields(theClass)};
-      currentId++;
+      if(direction=="toClient") currentToClientId++;
+      else currentToServerId++;
     }
     return protocol;
   },{}));
@@ -114,6 +117,7 @@ function getFields(className)
   return fields;
 }
 
+// get the whole reading method instead and map the method call to types
 function processPacketDefinition(data)
 {
   var fields=data
