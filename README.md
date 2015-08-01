@@ -3,7 +3,7 @@
 
 Language independent module providing minecraft data for minecraft clients, servers and libraries.
 
-Support minecraft 1.8.3.
+Support minecraft 1.9 snapshots.
 
 Minecraft-data is language independent, you can use it with these language specific modules :
 
