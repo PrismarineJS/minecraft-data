@@ -7,11 +7,10 @@ function display(docson,repo,commit,json,element,enums_schemas_dir)
     });
 }
 var repo="PrismarineJS/minecraft-data";
-var enums=["biomes","instruments","items","materials","blocks","recipes","entities"];
+var enums=["biomes","instruments","items","materials","blocks","recipes","entities","protocol"];
 require.config({ baseUrl: "docson"});
 require(["docson", "./lib/jquery"], function(docson){
   displaySchema(docson,repo,enums,"enums_schemas");
-  displaySchema(docson,"PrismarineJS/node-minecraft-protocol",["protocol"],"protocol");
 });
 
 function displaySchema(docson,repo,enums,enums_schemas_dir) {

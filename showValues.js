@@ -100,7 +100,7 @@ function packetToString(packet)
 
 function loadProtocol()
 {
-  $j.ajax("https://cdn.rawgit.com/PrismarineJS/node-minecraft-protocol/master/protocol/protocol.json")
+  $j.ajax("https://cdn.rawgit.com/PrismarineJS/minecraft-data/master/enums/protocol.json")
     .done(function(data){
       $j('#protocolTable').html(protocolToString(data));
     });
