@@ -5,5 +5,6 @@ module.exports = {
   recipes: require('./enums/recipes'),
   instruments: require('./enums/instruments'),
   materials: require('./enums/materials'),
-  entities: require('./enums/entities')
+  entities: require('./enums/entities'),
+  protocol: require('./enums/protocol')
 };
