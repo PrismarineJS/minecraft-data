@@ -393,6 +393,18 @@ function transformFieldType(fieldType)
 
 // specific
 var newToOldFieldNamesSpecific={
+  "status":{
+    "toClient":{
+      "0x01":{
+        "payload":"time"
+      }
+    },
+    "toServer":{
+      "0x01":{
+        "payload":"time"
+      }
+    }
+  },
   "login": {
     "toServer": {
       "0x00":{
@@ -460,11 +472,12 @@ var newToOldFieldNamesSpecific={
     }
   }
 };
+
+// should probably be converted entirely in the specific format
 // general
 var newToOldFieldNamesGeneral={
   "serverAddress":"serverHost",
   "jsonResponse":"response",
-  "payload":"time",
   "jsonData":"message",
   "worldAge":"age",
   "timeOfDay":"time",
