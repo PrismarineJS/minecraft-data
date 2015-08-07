@@ -42,15 +42,15 @@ var expectedTable=[
 ];
 
 var expectedPacket={
-  "id": "0x0d",
+  "id": "0x0D",
   "fields": [
     {
-      "name": "collectedEntityId",
-      "type": "varint"
+      "name": "Collected Entity ID",
+      "type": "VarInt"
     },
     {
-      "name": "collectorEntityId",
-      "type": "varint"
+      "name": "Collector Entity ID",
+      "type": "VarInt"
     }
   ]
 };
@@ -137,5 +137,89 @@ var testTable3="{| class=\"wikitable\"\n"+
   " |}";
 
 // need special handling
+// not done yet : colspan in th
 
-//console.log(protocol_extractor.parseWikiTable(testTable3.split("\n")));
+//console.log(JSON.stringify(protocol_extractor.parseWikiTable(testTable3.split("\n")),null,2));
+
+
+var testTable4= "{| class=\"wikitable\"\n"+
+  " ! Packet ID\n"+
+  " ! State\n"+
+  " ! Bound To\n"+
+  " ! Field Name\n"+
+  " ! Field Type\n"+
+  " ! Notes\n"+
+  " |-\n"+
+  " |rowspan=\"1\"| 0x00\n"+
+  " | Status\n"+
+  " | Server\n"+
+  " |colspan=\"3\"| ''no fields''\n"+
+  " |}\n";
+
+var expectedTable4=[
+  {
+    "Packet ID":"0x00",
+    "State":"Status",
+    "Bound To":"Server",
+    "Field Name":"''no fields''",
+    "Field Type":"''no fields''",
+    "Notes":"''no fields''"
+  }
+];
+
+// need to handle colspan
+
+var lines4=testTable4.split("\n");
+//console.log(JSON.stringify(protocol_extractor.tableToRows(lines4),null,2));
+
+var actualTable4=protocol_extractor.parseWikiTable(lines4);
+
+//console.log(JSON.stringify(expectedTable4,null,2));
+//console.log(JSON.stringify(actualTable4,null,2));
+
+assert.deepEqual(actualTable4,expectedTable4);
+//console.log(actualTable4);
+//console.log(protocol_extractor.tableToPacket(actualTable4));
+
+//console.log(protocol_extractor.tableToPacket(actualTable4));
+
+
+var testTable5="{| class=\"wikitable\"\n"+
+  " |-\n"+
+  " ! Packet ID\n"+
+  " ! State\n"+
+  " ! Bound To\n"+
+  " ! Field Name\n"+
+  " ! Field Type\n"+
+  " ! Notes\n"+
+  " |-\n"+
+  " |rowspan=\"6\"| 0x08\n"+
+  " |rowspan=\"6\"| Play\n"+
+  " |rowspan=\"6\"| Server\n"+
+  " | Location\n"+
+  " | Position\n"+
+  " | Block position\n"+
+  " |-\n"+
+  " | Face\n"+
+  " | Byte\n"+
+  " | The face on which the block is placed (see above)\n"+
+  " |-\n"+
+  " | Held Item\n"+
+  " | [[Slot Data|Slot]]\n"+
+  " | \n"+
+  " |-\n"+
+  " | Cursor Position X\n"+
+  " | Byte\n"+
+  " | The position of the crosshair on the block\n"+
+  " |-\n"+
+  " | Cursor Position Y \n"+
+  " | Byte\n"+
+  " | \n"+
+  " |-\n"+
+  " | Cursor Position Z\n"+
+  " | Byte\n"+
+  " | \n"+
+  " |}";
+
+//console.log(JSON.stringify(protocol_extractor.tableToRows(testTable5.split("\n")),null,2));
+//console.log(protocol_extractor.parseWikiTable(testTable5.split("\n")));

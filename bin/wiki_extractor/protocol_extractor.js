@@ -114,6 +114,8 @@ function getFirstTable(lines)
 function tableToRows(lines)
 {
   lines=lines.slice(1);
+  if(lines[0].trim()=="|-")
+    lines.shift();
   var rows=[];
   var currentRow=[];
   lines.forEach(function(line){
@@ -127,6 +129,9 @@ function tableToRows(lines)
   return rows;
 }
 
+// output format : one object by line, repetition of the row in case of rowspan>1 (for example repetition of Packet Id)
+// for colspan>1 : [first element,second element] or {colName:first element,...} if ! are given
+// need to implement colspan
 function rowsToSimpleRows(rows)
 {
   // for recursive arrays ( / colspan ) : have a currentCols : no : rec
@@ -140,36 +145,56 @@ function rowsToSimpleRows(rows)
   var values=[];
   return rows.slice(1).map(function(row)
   {
-    var colToAdd=colNames.length-row.length;
-    for(i=0;i<colToAdd;i++) row.unshift("");
-    return row
-      .map(function(col,i){
+    var currentColValue="";
+    var currentColRemaining=0;
 
+    var colToAdd=colNames.length-row.length;
+    var i;
+    for(i=0;i<colToAdd;i++) if(currentValues[i]!==undefined && currentValues[i].n>0) row.unshift("");
+    var fields=[];
+    for(i=0;i<row.length;i++)
+    {
+      var col=row[i];
       col=col.substring(2);
-      if(col.indexOf("rowspan")!=-1)
+      var parts,value,n;
+      if(col.indexOf("colspan")!=-1)
       {
-        var parts=col.split("|");
-        var value=parts[1].trim();
-        var n=parts[0].replace(/^.*rowspan="([0-9])".*/,'$1');
+        parts=col.split("|");
+        value=parts[1].trim();
+        n=parts[0].replace(/^.*colspan="([0-9]+)".*/,'$1');
+        currentColValue=value;
+        currentColRemaining=n;
+      }
+      else if(col.indexOf("rowspan")!=-1)
+      {
+        parts=col.split("|");
+        value=parts[1].trim();
+        n=parts[0].replace(/^.*rowspan="([0-9]+)".*/,'$1');
         currentValues[i]={n:n,value:value};
       }
       if(currentValues[i]!==undefined && currentValues[i].n>0)
       {
         currentValues[i].n--;
-        return currentValues[i].value;
+        fields.push(currentValues[i].value);
       }
-      else return col.trim();
-    })
-      .reduce(function(values,value,i){
-        values[colNames[i]]=value;
-        return values;
-      },{});
+      else if(currentColRemaining!=0)
+      {
+        while(currentColRemaining>0)
+        {
+          fields.push(currentColValue);
+          currentColRemaining--;
+        }
+      }
+      else fields.push(col.trim());
+    }
+    return fields.reduce(function(values,value,i){
+      values[colNames[i]]=value;
+      return values;
+    },{});
   });
 }
 
 
-// output format : one object by line, repetition of the row in case of rowspan>1 (for example repetition of Packet Id)
-// for colspan>1 : [first element,second element] or {colName:first element,...} if ! are given
 function parseWikiTable(lines)
 {
   var rows=tableToRows(lines);
@@ -183,7 +208,11 @@ function tableToPacket(table)
   if(table.length==0 || table[0]["Packet ID"]==undefined)
     return null;
   packet["id"]=table[0]["Packet ID"];
-  packet["fields"]=table.map(function(value){
+  packet["fields"]=table
+    .filter(function(value){
+      return !value["Field Name"] || value["Field Name"]!="''no fields''"
+    })
+    .map(function(value){
     if(value["Field Name"]==undefined || value["Field Type"]==undefined) {
       //console.log(value);
       return null;
@@ -450,6 +479,12 @@ var newToOldFieldNamesSpecific={
     "toServer":{
       "0x02":{
         "type":"mouse"
+      },
+      "0x08":{
+        "face":"direction",
+        "cursorPositionX":"cursorX",
+        "cursorPositionY":"cursorY",
+        "cursorPositionZ":"cursorZ"
       },
       "0x09":{
         "slot":"slotId"
