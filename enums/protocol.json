@@ -90,33 +90,17 @@
             "type": "string"
           },
           {
-            "name": "publicKeyLength",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "publicKey"
-            }
-          },
-          {
             "name": "publicKey",
             "type": "buffer",
             "typeArgs": {
-              "count": "publicKeyLength"
-            }
-          },
-          {
-            "name": "verifyTokenLength",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "verifyToken"
+              "countType": "varint"
             }
           },
           {
             "name": "verifyToken",
             "type": "buffer",
             "typeArgs": {
-              "count": "verifyTokenLength"
+              "countType": "varint"
             }
           }
         ]
@@ -158,33 +142,17 @@
         "id": "0x01",
         "fields": [
           {
-            "name": "sharedSecretLength",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "sharedSecret"
-            }
-          },
-          {
             "name": "sharedSecret",
             "type": "buffer",
             "typeArgs": {
-              "count": "sharedSecretLength"
-            }
-          },
-          {
-            "name": "verifyTokenLength",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "verifyToken"
+              "countType": "varint"
             }
           },
           {
             "name": "verifyToken",
             "type": "buffer",
             "typeArgs": {
-              "count": "verifyTokenLength"
+              "countType": "varint"
             }
           }
         ]
@@ -651,19 +619,11 @@
         "id": "0x13",
         "fields": [
           {
-            "name": "count",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "entityIds"
-            }
-          },
-          {
             "name": "entityIds",
             "type": "array",
             "typeArgs": {
               "type": "varint",
-              "count": "count"
+              "countType": "varint"
             }
           }
         ]
@@ -908,18 +868,10 @@
             "type": "varint"
           },
           {
-            "name": "count",
-            "type": "count",
-            "typeArgs": {
-              "type": "int",
-              "countFor": "properties"
-            }
-          },
-          {
             "name": "properties",
             "type": "array",
             "typeArgs": {
-              "count": "count",
+              "countType": "int",
               "type": "container",
               "typeArgs": {
                 "fields": [
@@ -932,18 +884,10 @@
                     "type": "double"
                   },
                   {
-                    "name": "listLength",
-                    "type": "count",
-                    "typeArgs": {
-                      "type": "varint",
-                      "countFor": "this.modifiers"
-                    }
-                  },
-                  {
                     "name": "modifiers",
                     "type": "array",
                     "typeArgs": {
-                      "count": "this.listLength",
+                      "countType": "varint",
                       "type": "container",
                       "typeArgs": {
                         "fields": [
@@ -989,18 +933,10 @@
             "type": "ushort"
           },
           {
-            "name": "chunkDataLength",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "chunkData"
-            }
-          },
-          {
             "name": "chunkData",
             "type": "buffer",
             "typeArgs": {
-              "count": "chunkDataLength"
+              "countType": "varint"
             }
           }
         ]
@@ -1017,18 +953,10 @@
             "type": "int"
           },
           {
-            "name": "recordCount",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "records"
-            }
-          },
-          {
             "name": "records",
             "type": "array",
             "typeArgs": {
-              "count": "recordCount",
+              "countType": "varint",
               "type": "container",
               "typeArgs": {
                 "fields": [
@@ -1109,18 +1037,10 @@
             "type": "bool"
           },
           {
-            "name": "chunkColumnCount",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "meta"
-            }
-          },
-          {
             "name": "meta",
             "type": "array",
             "typeArgs": {
-              "count": "chunkColumnCount",
+              "countType": "varint",
               "type": "container",
               "typeArgs": {
                 "fields": [
@@ -1166,18 +1086,10 @@
             "type": "float"
           },
           {
-            "name": "count",
-            "type": "count",
-            "typeArgs": {
-              "type": "int",
-              "countFor": "affectedBlockOffsets"
-            }
-          },
-          {
             "name": "affectedBlockOffsets",
             "type": "array",
             "typeArgs": {
-              "count": "count",
+              "countType": "int",
               "type": "container",
               "typeArgs": {
                 "fields": [
@@ -1426,19 +1338,11 @@
             "type": "ubyte"
           },
           {
-            "name": "count",
-            "type": "count",
-            "typeArgs": {
-              "type": "short",
-              "countFor": "items"
-            }
-          },
-          {
             "name": "items",
             "type": "array",
             "typeArgs": {
               "type": "slot",
-              "count": "count"
+              "countType": "short"
             }
           }
         ]
@@ -1514,18 +1418,10 @@
             "type": "byte"
           },
           {
-            "name": "iconLength",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "icons"
-            }
-          },
-          {
             "name": "icons",
             "type": "array",
             "typeArgs": {
-              "count": "iconLength",
+              "countType": "varint",
               "type": "container",
               "typeArgs": {
                 "fields": [
@@ -1586,28 +1482,12 @@
             }
           },
           {
-            "name": "dataLength",
-            "type": "condition",
-            "typeArgs": {
-              "type": "count",
-              "typeArgs": {
-                "countFor": "data",
-                "type": "varint"
-              },
-              "field": "columns",
-              "values": [
-                0
-              ],
-              "different": true
-            }
-          },
-          {
             "name": "data",
             "type": "condition",
             "typeArgs": {
               "type": "buffer",
               "typeArgs": {
-                "count": "dataLength"
+                "countType": "varint"
               },
               "field": "columns",
               "values": [
@@ -1648,18 +1528,10 @@
         "id": "0x37",
         "fields": [
           {
-            "name": "count",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "entries"
-            }
-          },
-          {
             "name": "entries",
             "type": "array",
             "typeArgs": {
-              "count": "count",
+              "countType": "varint",
               "type": "container",
               "typeArgs": {
                 "fields": [
@@ -1685,18 +1557,10 @@
             "type": "varint"
           },
           {
-            "name": "length",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "data"
-            }
-          },
-          {
             "name": "data",
             "type": "array",
             "typeArgs": {
-              "count": "length",
+              "countType": "varint",
               "type": "container",
               "typeArgs": {
                 "fields": [
@@ -1716,21 +1580,6 @@
                     }
                   },
                   {
-                    "name": "propertiesLength",
-                    "type": "condition",
-                    "typeArgs": {
-                      "type": "count",
-                      "field": "action",
-                      "values": [
-                        0
-                      ],
-                      "typeArgs": {
-                        "countFor": "this.properties",
-                        "type": "varint"
-                      }
-                    }
-                  },
-                  {
                     "name": "properties",
                     "type": "condition",
                     "typeArgs": {
@@ -1740,7 +1589,7 @@
                         0
                       ],
                       "typeArgs": {
-                        "count": "this.propertiesLength",
+                        "countType": "varint",
                         "type": "container",
                         "typeArgs": {
                           "fields": [
@@ -1848,19 +1697,11 @@
         "id": "0x3a",
         "fields": [
           {
-            "name": "count",
-            "type": "count",
-            "typeArgs": {
-              "type": "varint",
-              "countFor": "matches"
-            }
-          },
-          {
             "name": "matches",
             "type": "array",
             "typeArgs": {
               "type": "string",
-              "count": "count"
+              "countType": "varint"
             }
           }
         ]
@@ -2028,23 +1869,6 @@
             }
           },
           {
-            "name": "playerCount",
-            "type": "condition",
-            "typeArgs": {
-              "type": "count",
-              "field": "mode",
-              "values": [
-                0,
-                3,
-                4
-              ],
-              "typeArgs": {
-                "type": "varint",
-                "countFor": "players"
-              }
-            }
-          },
-          {
             "name": "players",
             "type": "condition",
             "typeArgs": {
@@ -2057,7 +1881,7 @@
               ],
               "typeArgs": {
                 "type": "string",
-                "count": "playerCount"
+                "countType": "varint"
               }
             }
           }
