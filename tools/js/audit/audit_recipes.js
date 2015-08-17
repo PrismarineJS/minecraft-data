@@ -1,4 +1,4 @@
-var recipes = require('../enums/recipes');
+var recipes = require('../../../enums/recipes');
 
 var shapeCount = 0, shapelessCount = 0;
 var outShapeCount = 0;

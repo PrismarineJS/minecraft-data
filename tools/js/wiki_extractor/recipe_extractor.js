@@ -50,7 +50,7 @@ function write(err,recipes)
 {
   //console.log(recipes);
   //console.log(JSON.stringify(recipes,null,2));
-  fs.writeFile("../../enums/recipes.json", JSON.stringify(recipes,null,2));
+  fs.writeFile("../../..enums/recipes.json", JSON.stringify(recipes,null,2));
 }
 
 

@@ -34,5 +34,5 @@ wikiTextParser.getArticle("Data_values/Entity_IDs",function(err,data){
       }
     }
   });
-  fs.writeFile("../../enums/entities.json", JSON.stringify(Object.keys(entities).map(function(key){return entities[key];}),null,2));
+  fs.writeFile("../../../enums/entities.json", JSON.stringify(Object.keys(entities).map(function(key){return entities[key];}),null,2));
 });

@@ -50,7 +50,7 @@ function write(err,protocol){
     return;
   }
   //console.log(JSON.stringify(protocol,null,2));
-  fs.writeFile("../../enums/protocol.json", JSON.stringify(protocol,null,2));
+  fs.writeFile("../../../enums/protocol.json", JSON.stringify(protocol,null,2));
 }
 
 function extractProtocol(sectionObject,cb)
