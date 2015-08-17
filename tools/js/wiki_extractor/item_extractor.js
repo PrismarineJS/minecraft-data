@@ -31,7 +31,7 @@ function write(err,fullItems){
     console.log("problem "+err);
     return;
   }
-  fs.writeFile("../../enums/items.json", JSON.stringify(fullItems,null,2));
+  fs.writeFile("../../../enums/items.json", JSON.stringify(fullItems,null,2));
 }
 
 

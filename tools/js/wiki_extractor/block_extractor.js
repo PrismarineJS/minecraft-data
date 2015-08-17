@@ -50,7 +50,7 @@ function write(err,fullBlocks)
     console.log("problem "+err);
     return;
   }
-  fs.writeFile("../../enums/blocks.json", JSON.stringify(fullBlocks,null,2));
+  fs.writeFile("../../../enums/blocks.json", JSON.stringify(fullBlocks,null,2));
 }
 
 
@@ -188,7 +188,7 @@ function parseBlockInfobox(page,content)
 
 // see http://minecraft.gamepedia.com/Module:Breaking_row materialGrade
 var toolMaterials=["wooden","golden","stone","iron","diamond"];
-var items=require("../../enums/items.json");
+var items=require("../../../enums/items.json");
 var itemsByName=items.reduce(function(acc,item){
   acc[item.name]=item.id;
   return acc;

@@ -1,4 +1,4 @@
-var items = require('../enums/items');
+var items = require('../../../enums/items');
 
 var displayNames = {};
 var names = {};
