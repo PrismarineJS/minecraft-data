@@ -1,3 +1,7 @@
+## 1.8-0.1.0
+ * first version after the versions split
+ * move js files to tools/js
+
 ## 0.4.0
  * add some basic (to be used for manual updating) protocol extractors
  * import protocol.json from node-minecraft-protocol for version 1.8 of minecraft
