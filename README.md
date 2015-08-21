@@ -1,5 +1,5 @@
 # minecraft-data 
-[![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data.svg?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data)
+[![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/1.8.svg?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/1.8)
 
 Language independent module providing minecraft data for minecraft clients, servers and libraries.
 
