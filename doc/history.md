@@ -1,3 +1,8 @@
+## 1.9-0.1.0
+ * first version after the versions split
+ * move js files to tools/js
+ * use countType in protocol.json
+
 ## 0.3.0
  * remove id indexing from biomes, blocks, entities, items and instruments : let users (for examples node-minecraft-data) provide their indexing (by id, name,...)
 
