@@ -12,7 +12,7 @@ Minecraft-data is language independent, you can use it with these language speci
 ## Documentation
 
  * See [doc/history.md](doc/history.md)
- * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data/)
+ * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data/?v=1.8)
  * [Textual documentation of the recipe format](doc/recipes.md)
 
 ## Extractors
