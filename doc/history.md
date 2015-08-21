@@ -1,6 +1,7 @@
 ## 1.8-0.1.0
  * first version after the versions split
  * move js files to tools/js
+ * use countType in protocol.json
 
 ## 0.4.0
  * add some basic (to be used for manual updating) protocol extractors
