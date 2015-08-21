@@ -98,9 +98,11 @@ function packetToString(packet)
     +"</ul>"
 }
 
+var repo="PrismarineJS/minecraft-data";
+
 function loadProtocol()
 {
-  $j.ajax("https://cdn.rawgit.com/PrismarineJS/minecraft-data/master/enums/protocol.json")
+  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+version+"/enums/protocol.json")
     .done(function(data){
       $j('#protocolTable').html(protocolToString(data));
     });
@@ -109,7 +111,7 @@ function loadProtocol()
 
 function loadData(enumName,elementToArray,fields,hiddenColumns)
 {
-  $j.ajax("https://cdn.rawgit.com/PrismarineJS/minecraft-data/master/enums/"+enumName+".json")
+  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+version+"/enums/"+enumName+".json")
     .done(function(data){
       var dataset=data.map(elementToArray);
       $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="'+enumName+'ActualTable"></table>' );
