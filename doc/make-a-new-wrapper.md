@@ -17,3 +17,6 @@ Here is a simple way to do it :
 * add a basic example
 * add files to package your module (for example in js it's a package.json, in python a setup.py)
 * publish it
+
+If it makes sense to generate files of your language from the data instead of dynamically reading the .json,
+ feel free to do it (example of that in [ProtocolGen](https://github.com/Johni0702/ProtocolGen) for java)

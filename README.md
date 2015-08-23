@@ -5,12 +5,19 @@ Language independent module providing minecraft data for minecraft clients, serv
 
 Support minecraft 1.8.3.
 
+## Wrappers
+
 Minecraft-data is language independent, you can use it with these language specific modules :
 
 * [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) provides indexes and look up functions in node.js
 * [python-minecraft-data](https://github.com/rom1504/python-minecraft-data) provides indexes and look up functions in python
 
 If you want to use minecraft-data in a new language, we advise you to [create a new wrapper](doc/make-a-new-wrapper.md)
+
+There are also some projects that wrap parts of minecraft-data in other ways :
+
+* [ProtocolGen](https://github.com/Johni0702/ProtocolGen) that generate java files reading and writing the protocol
+ from minecraft-data protocol.json file
 
 ## Documentation
 
