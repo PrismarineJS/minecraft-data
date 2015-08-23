@@ -10,6 +10,8 @@ Minecraft-data is language independent, you can use it with these language speci
 * [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) provides indexes and look up functions in node.js
 * [python-minecraft-data](https://github.com/rom1504/python-minecraft-data) provides indexes and look up functions in python
 
+If you want to use minecraft-data in a new language, we advise you to [create a new wrapper](doc/make-a-new-wrapper.md)
+
 ## Documentation
 
  * See [doc/history.md](doc/history.md)
