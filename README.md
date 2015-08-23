@@ -8,6 +8,7 @@ Support minecraft 1.8.3.
 Minecraft-data is language independent, you can use it with these language specific modules :
 
 * [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) provides indexes and look up functions in node.js
+* [python-minecraft-data](https://github.com/rom1504/python-minecraft-data) provides indexes and look up functions in python
 
 ## Documentation
 
