@@ -454,45 +454,39 @@
                 {
                   "name": "velocityX",
                   "type": [
-                    "condition",
+                    "switch",
                     {
-                      "type": "short",
-                      "field": "intField",
-                      "values": [
-                        0
-                      ],
-                      "different": true,
-                      "this": true
+                      "compareTo": "this.intField",
+                      "fields": {
+                        "0": "void"
+                      },
+                      "default": "short"
                     }
                   ]
                 },
                 {
                   "name": "velocityY",
                   "type": [
-                    "condition",
+                    "switch",
                     {
-                      "type": "short",
-                      "field": "intField",
-                      "values": [
-                        0
-                      ],
-                      "different": true,
-                      "this": true
+                      "compareTo": "this.intField",
+                      "fields": {
+                        "0": "void"
+                      },
+                      "default": "short"
                     }
                   ]
                 },
                 {
                   "name": "velocityZ",
                   "type": [
-                    "condition",
+                    "switch",
                     {
-                      "type": "short",
-                      "field": "intField",
-                      "values": [
-                        0
-                      ],
-                      "different": true,
-                      "this": true
+                      "compareTo": "this.intField",
+                      "fields": {
+                        "0": "void"
+                      },
+                      "default": "short"
                     }
                   ]
                 }
@@ -1314,13 +1308,13 @@
           {
             "name": "entityId",
             "type": [
-              "condition",
+              "switch",
               {
-                "field": "inventoryType",
-                "values": [
-                  "EntityHorse"
-                ],
-                "type": "int"
+                "compareTo": "inventoryType",
+                "fields": {
+                  "EntityHorse": "int"
+                },
+                "default": "void"
               }
             ]
           }
@@ -1474,59 +1468,57 @@
           {
             "name": "rows",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "byte",
-                "field": "columns",
-                "values": [
-                  0
-                ],
-                "different": true
+                "compareTo": "columns",
+                "fields": {
+                  "0": "void"
+                },
+                "default": "byte"
               }
             ]
           },
           {
             "name": "x",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "byte",
-                "field": "columns",
-                "values": [
-                  0
-                ],
-                "different": true
+                "compareTo": "columns",
+                "fields": {
+                  "0": "void"
+                },
+                "default": "byte"
               }
             ]
           },
           {
             "name": "y",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "byte",
-                "field": "columns",
-                "values": [
-                  0
-                ],
-                "different": true
+                "compareTo": "columns",
+                "fields": {
+                  "0": "void"
+                },
+                "default": "byte"
               }
             ]
           },
           {
             "name": "data",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": [
+                "compareTo": "columns",
+                "fields": {
+                  "0": "void"
+                },
+                "default": [
                   "buffer",
-                  { "countType": "varint" }
-                ],
-                "field": "columns",
-                "values": [
-                  0
-                ],
-                "different": true
+                  {
+                    "countType": "varint"
+                  }
+                ]
               }
             ]
           }
@@ -1608,118 +1600,116 @@
                     {
                       "name": "name",
                       "type": [
-                        "condition",
+                        "switch",
                         {
-                          "type": "string",
-                          "field": "action",
-                          "values": [
-                            0
-                          ]
+                          "compareTo": "action",
+                          "fields": {
+                            "0": "string"
+                          },
+                          "default": "void"
                         }
                       ]
                     },
                     {
                       "name": "properties",
                       "type": [
-                        "condition",
+                        "switch",
                         {
-                          "field": "action",
-                          "values": [
-                            0
-                          ],
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": [
-                                "container",
-                                [
-                                  {
-                                    "name": "name",
-                                    "type": "string"
-                                  },
-                                  {
-                                    "name": "value",
-                                    "type": "string"
-                                  },
-                                  {
-                                    "name": "isSigned",
-                                    "type": "bool"
-                                  },
-                                  {
-                                    "name": "signature",
-                                    "type": [
-                                      "condition",
-                                      {
-                                        "type": "string",
-                                        "field": "isSigned",
-                                        "values": [
-                                          true
-                                        ],
-                                        "this": true
-                                      }
-                                    ]
-                                  }
+                          "compareTo": "action",
+                          "fields": {
+                            "0": [
+                              "array",
+                              {
+                                "countType": "varint",
+                                "type": [
+                                  "container",
+                                  [
+                                    {
+                                      "name": "name",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "name": "value",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "name": "isSigned",
+                                      "type": "bool"
+                                    },
+                                    {
+                                      "name": "signature",
+                                      "type": [
+                                        "switch",
+                                        {
+                                          "compareTo": "this.isSigned",
+                                          "fields": {
+                                            "true": "string"
+                                          },
+                                          "default": "void"
+                                        }
+                                      ]
+                                    }
+                                  ]
                                 ]
-                              ]
-                            }
-                          ]
+                              }
+                            ]
+                          },
+                          "default": "void"
                         }
                       ]
                     },
                     {
                       "name": "gamemode",
                       "type": [
-                        "condition",
+                        "switch",
                         {
-                          "type": "varint",
-                          "field": "action",
-                          "values": [
-                            0,
-                            1
-                          ]
+                          "compareTo": "action",
+                          "fields": {
+                            "0": "varint",
+                            "1": "varint"
+                          },
+                          "default": "void"
                         }
                       ]
                     },
                     {
                       "name": "ping",
                       "type": [
-                        "condition",
+                        "switch",
                         {
-                          "type": "varint",
-                          "field": "action",
-                          "values": [
-                            0,
-                            2
-                          ]
+                          "compareTo": "action",
+                          "fields": {
+                            "0": "varint",
+                            "2": "varint"
+                          },
+                          "default": "void"
                         }
                       ]
                     },
                     {
                       "name": "hasDisplayName",
                       "type": [
-                        "condition",
+                        "switch",
                         {
-                          "type": "bool",
-                          "field": "action",
-                          "values": [
-                            0,
-                            3
-                          ]
+                          "compareTo": "action",
+                          "fields": {
+                            "0": "bool",
+                            "3": "bool"
+                          },
+                          "default": "void"
                         }
                       ]
                     },
                     {
                       "name": "displayName",
                       "type": [
-                        "condition",
+                        "switch",
                         {
-                          "type": "string",
-                          "field": "hasDisplayName",
-                          "this": true,
-                          "values": [
-                            true
-                          ]
+                          "compareTo": "this.hasDisplayName",
+                          "fields": {
+                            "true": "string"
+                          },
+                          "default": "void"
                         }
                       ]
                     }
@@ -1776,28 +1766,28 @@
           {
             "name": "displayText",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "action",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "0": "string",
+                  "2": "string"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "type",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "action",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "0": "string",
+                  "2": "string"
+                },
+                "default": "void"
               }
             ]
           }
@@ -1821,14 +1811,13 @@
           {
             "name": "value",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "varint",
-                "field": "action",
-                "values": [
-                  1
-                ],
-                "different": true
+                "compareTo": "action",
+                "fields": {
+                  "1": "void"
+                },
+                "default": "varint"
               }
             ]
           }
@@ -1861,105 +1850,117 @@
           {
             "name": "name",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "mode",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "mode",
+                "fields": {
+                  "0": "string",
+                  "2": "string"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "prefix",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "mode",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "mode",
+                "fields": {
+                  "0": "string",
+                  "2": "string"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "suffix",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "mode",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "mode",
+                "fields": {
+                  "0": "string",
+                  "2": "string"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "friendlyFire",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "byte",
-                "field": "mode",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "mode",
+                "fields": {
+                  "0": "byte",
+                  "2": "byte"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "nameTagVisibility",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "mode",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "mode",
+                "fields": {
+                  "0": "string",
+                  "2": "string"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "color",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "byte",
-                "field": "mode",
-                "values": [
-                  0,
-                  2
-                ]
+                "compareTo": "mode",
+                "fields": {
+                  "0": "byte",
+                  "2": "byte"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "players",
             "type": [
-              "condition",
+              "switch",
               {
-                "field": "mode",
-                "values": [
-                  0,
-                  3,
-                  4
-                ],
-                "type": [
-                  "array",
-                  {
-                    "type": "string",
-                    "countType": "varint"
-                  }
-                ]
+                "compareTo": "mode",
+                "fields": {
+                  "0": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "string"
+                    }
+                  ],
+                  "3": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "string"
+                    }
+                  ],
+                  "4": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "default": "void"
               }
             ]
           }
@@ -2006,53 +2007,53 @@
           {
             "name": "duration",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "varint",
-                "field": "event",
-                "values": [
-                  1
-                ]
+                "compareTo": "event",
+                "fields": {
+                  "1": "varint"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "playerId",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "varint",
-                "field": "event",
-                "values": [
-                  2
-                ]
+                "compareTo": "event",
+                "fields": {
+                  "2": "varint"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "entityId",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "int",
-                "field": "event",
-                "values": [
-                  1,
-                  2
-                ]
+                "compareTo": "event",
+                "fields": {
+                  "1": "int",
+                  "2": "int"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "message",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "event",
-                "values": [
-                  2
-                ]
+                "compareTo": "event",
+                "fields": {
+                  "2": "string"
+                },
+                "default": "void"
               }
             ]
           }
@@ -2077,124 +2078,124 @@
           {
             "name": "radius",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "double",
-                "field": "action",
-                "values": [
-                  0
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "0": "double"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "x",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "double",
-                "field": "action",
-                "values": [
-                  2,
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "2": "double",
+                  "3": "double"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "z",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "double",
-                "field": "action",
-                "values": [
-                  2,
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "2": "double",
+                  "3": "double"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "old_radius",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "double",
-                "field": "action",
-                "values": [
-                  1,
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "1": "double",
+                  "3": "double"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "new_radius",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "double",
-                "field": "action",
-                "values": [
-                  1,
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "1": "double",
+                  "3": "double"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "speed",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "varint",
-                "field": "action",
-                "values": [
-                  1,
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "1": "varint",
+                  "3": "varint"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "portalBoundary",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "varint",
-                "field": "action",
-                "values": [
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "3": "varint"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "warning_time",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "varint",
-                "field": "action",
-                "values": [
-                  4,
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "3": "varint",
+                  "4": "varint"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "warning_blocks",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "varint",
-                "field": "action",
-                "values": [
-                  5,
-                  3
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "3": "varint",
+                  "5": "varint"
+                },
+                "default": "void"
               }
             ]
           }
@@ -2210,53 +2211,53 @@
           {
             "name": "text",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "string",
-                "field": "action",
-                "values": [
-                  0,
-                  1
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "0": "string",
+                  "1": "string"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "fadeIn",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "int",
-                "field": "action",
-                "values": [
-                  2
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "2": "int"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "stay",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "int",
-                "field": "action",
-                "values": [
-                  2
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "2": "int"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "fadeOut",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "int",
-                "field": "action",
-                "values": [
-                  2
-                ]
+                "compareTo": "action",
+                "fields": {
+                  "2": "int"
+                },
+                "default": "void"
               }
             ]
           }
@@ -2344,39 +2345,39 @@
           {
             "name": "x",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "float",
-                "field": "mouse",
-                "values": [
-                  2
-                ]
+                "compareTo": "mouse",
+                "fields": {
+                  "2": "float"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "y",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "float",
-                "field": "mouse",
-                "values": [
-                  2
-                ]
+                "compareTo": "mouse",
+                "fields": {
+                  "2": "float"
+                },
+                "default": "void"
               }
             ]
           },
           {
             "name": "z",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "float",
-                "field": "mouse",
-                "values": [
-                  2
-                ]
+                "compareTo": "mouse",
+                "fields": {
+                  "2": "float"
+                },
+                "default": "void"
               }
             ]
           }
@@ -2688,13 +2689,13 @@
           {
             "name": "block",
             "type": [
-              "condition",
+              "switch",
               {
-                "type": "position",
-                "field": "hasPosition",
-                "values": [
-                  true
-                ]
+                "compareTo": "hasPosition",
+                "fields": {
+                  "true": "position"
+                },
+                "default": "void"
               }
             ]
           }
