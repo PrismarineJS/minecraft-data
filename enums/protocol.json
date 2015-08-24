@@ -91,17 +91,17 @@
           },
           {
             "name": "publicKey",
-            "type": "buffer",
-            "typeArgs": {
-              "countType": "varint"
-            }
+            "type": [
+              "buffer",
+              { "countType": "varint" }
+            ]
           },
           {
             "name": "verifyToken",
-            "type": "buffer",
-            "typeArgs": {
-              "countType": "varint"
-            }
+            "type": [
+              "buffer",
+              { "countType": "varint" }
+            ]
           }
         ]
       },
@@ -143,17 +143,17 @@
         "fields": [
           {
             "name": "sharedSecret",
-            "type": "buffer",
-            "typeArgs": {
-              "countType": "varint"
-            }
+            "type": [
+              "buffer",
+              { "countType": "varint" }
+            ]
           },
           {
             "name": "verifyToken",
-            "type": "buffer",
-            "typeArgs": {
-              "countType": "varint"
-            }
+            "type": [
+              "buffer",
+              { "countType": "varint" }
+            ]
           }
         ]
       }
@@ -444,54 +444,60 @@
           },
           {
             "name": "objectData",
-            "type": "container",
-            "typeArgs": {
-              "fields": [
+            "type": [
+              "container",
+              [
                 {
                   "name": "intField",
                   "type": "int"
                 },
                 {
                   "name": "velocityX",
-                  "type": "condition",
-                  "typeArgs": {
-                    "type": "short",
-                    "field": "intField",
-                    "values": [
-                      0
-                    ],
-                    "different": true,
-                    "this": true
-                  }
+                  "type": [
+                    "condition",
+                    {
+                      "type": "short",
+                      "field": "intField",
+                      "values": [
+                        0
+                      ],
+                      "different": true,
+                      "this": true
+                    }
+                  ]
                 },
                 {
                   "name": "velocityY",
-                  "type": "condition",
-                  "typeArgs": {
-                    "type": "short",
-                    "field": "intField",
-                    "values": [
-                      0
-                    ],
-                    "different": true,
-                    "this": true
-                  }
+                  "type": [
+                    "condition",
+                    {
+                      "type": "short",
+                      "field": "intField",
+                      "values": [
+                        0
+                      ],
+                      "different": true,
+                      "this": true
+                    }
+                  ]
                 },
                 {
                   "name": "velocityZ",
-                  "type": "condition",
-                  "typeArgs": {
-                    "type": "short",
-                    "field": "intField",
-                    "values": [
-                      0
-                    ],
-                    "different": true,
-                    "this": true
-                  }
+                  "type": [
+                    "condition",
+                    {
+                      "type": "short",
+                      "field": "intField",
+                      "values": [
+                        0
+                      ],
+                      "different": true,
+                      "this": true
+                    }
+                  ]
                 }
               ]
-            }
+            ]
           }
         ]
       },
@@ -620,11 +626,13 @@
         "fields": [
           {
             "name": "entityIds",
-            "type": "array",
-            "typeArgs": {
-              "type": "varint",
-              "countType": "varint"
-            }
+            "type": [
+              "array",
+              {
+                "type": "varint",
+                "countType": "varint"
+              }
+            ]
           }
         ]
       },
@@ -869,47 +877,51 @@
           },
           {
             "name": "properties",
-            "type": "array",
-            "typeArgs": {
-              "countType": "int",
-              "type": "container",
-              "typeArgs": {
-                "fields": [
-                  {
-                    "name": "key",
-                    "type": "string"
-                  },
-                  {
-                    "name": "value",
-                    "type": "double"
-                  },
-                  {
-                    "name": "modifiers",
-                    "type": "array",
-                    "typeArgs": {
-                      "countType": "varint",
-                      "type": "container",
-                      "typeArgs": {
-                        "fields": [
-                          {
-                            "name": "UUID",
-                            "type": "UUID"
-                          },
-                          {
-                            "name": "amount",
-                            "type": "double"
-                          },
-                          {
-                            "name": "operation",
-                            "type": "byte"
-                          }
-                        ]
-                      }
+            "type": [
+              "array",
+              {
+                "countType": "int",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "key",
+                      "type": "string"
+                    },
+                    {
+                      "name": "value",
+                      "type": "double"
+                    },
+                    {
+                      "name": "modifiers",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": [
+                            "container",
+                            [
+                              {
+                                "name": "UUID",
+                                "type": "UUID"
+                              },
+                              {
+                                "name": "amount",
+                                "type": "double"
+                              },
+                              {
+                                "name": "operation",
+                                "type": "byte"
+                              }
+                            ]
+                          ]
+                        }
+                      ]
                     }
-                  }
+                  ]
                 ]
               }
-            }
+            ]
           }
         ]
       },
@@ -934,10 +946,10 @@
           },
           {
             "name": "chunkData",
-            "type": "buffer",
-            "typeArgs": {
-              "countType": "varint"
-            }
+            "type": [
+              "buffer",
+              { "countType": "varint" }
+            ]
           }
         ]
       },
@@ -954,27 +966,29 @@
           },
           {
             "name": "records",
-            "type": "array",
-            "typeArgs": {
-              "countType": "varint",
-              "type": "container",
-              "typeArgs": {
-                "fields": [
-                  {
-                    "name": "horizontalPos",
-                    "type": "ubyte"
-                  },
-                  {
-                    "name": "y",
-                    "type": "ubyte"
-                  },
-                  {
-                    "name": "blockId",
-                    "type": "varint"
-                  }
+            "type": [
+              "array",
+              {
+                "countType": "varint",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "horizontalPos",
+                      "type": "ubyte"
+                    },
+                    {
+                      "name": "y",
+                      "type": "ubyte"
+                    },
+                    {
+                      "name": "blockId",
+                      "type": "varint"
+                    }
+                  ]
                 ]
               }
-            }
+            ]
           }
         ]
       },
@@ -1038,27 +1052,29 @@
           },
           {
             "name": "meta",
-            "type": "array",
-            "typeArgs": {
-              "countType": "varint",
-              "type": "container",
-              "typeArgs": {
-                "fields": [
-                  {
-                    "name": "x",
-                    "type": "int"
-                  },
-                  {
-                    "name": "z",
-                    "type": "int"
-                  },
-                  {
-                    "name": "bitMap",
-                    "type": "ushort"
-                  }
+            "type": [
+              "array",
+              {
+                "countType": "varint",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "x",
+                      "type": "int"
+                    },
+                    {
+                      "name": "z",
+                      "type": "int"
+                    },
+                    {
+                      "name": "bitMap",
+                      "type": "ushort"
+                    }
+                  ]
                 ]
               }
-            }
+            ]
           },
           {
             "name": "data",
@@ -1087,27 +1103,29 @@
           },
           {
             "name": "affectedBlockOffsets",
-            "type": "array",
-            "typeArgs": {
-              "countType": "int",
-              "type": "container",
-              "typeArgs": {
-                "fields": [
-                  {
-                    "name": "x",
-                    "type": "byte"
-                  },
-                  {
-                    "name": "y",
-                    "type": "byte"
-                  },
-                  {
-                    "name": "z",
-                    "type": "byte"
-                  }
+            "type": [
+              "array",
+              {
+                "countType": "int",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "x",
+                      "type": "byte"
+                    },
+                    {
+                      "name": "y",
+                      "type": "byte"
+                    },
+                    {
+                      "name": "z",
+                      "type": "byte"
+                    }
+                  ]
                 ]
               }
-            }
+            ]
           },
           {
             "name": "playerMotionX",
@@ -1218,19 +1236,21 @@
           },
           {
             "name": "data",
-            "type": "array",
-            "typeArgs": {
-              "count": {
-                "field": "particleId",
-                "map": {
-                  "36": 2,
-                  "37": 1,
-                  "38": 1
+            "type": [
+              "array",
+              {
+                "count": {
+                  "field": "particleId",
+                  "map": {
+                    "36": 2,
+                    "37": 1,
+                    "38": 1
+                  },
+                  "default": 0
                 },
-                "default": 0
-              },
-              "type": "varint"
-            }
+                "type": "varint"
+              }
+            ]
           }
         ]
       },
@@ -1293,14 +1313,16 @@
           },
           {
             "name": "entityId",
-            "type": "condition",
-            "typeArgs": {
-              "field": "inventoryType",
-              "values": [
-                "EntityHorse"
-              ],
-              "type": "int"
-            }
+            "type": [
+              "condition",
+              {
+                "field": "inventoryType",
+                "values": [
+                  "EntityHorse"
+                ],
+                "type": "int"
+              }
+            ]
           }
         ]
       },
@@ -1339,11 +1361,13 @@
           },
           {
             "name": "items",
-            "type": "array",
-            "typeArgs": {
-              "type": "slot",
-              "countType": "short"
-            }
+            "type": [
+              "array",
+              {
+                "type": "slot",
+                "countType": "short"
+              }
+            ]
           }
         ]
       },
@@ -1419,27 +1443,29 @@
           },
           {
             "name": "icons",
-            "type": "array",
-            "typeArgs": {
-              "countType": "varint",
-              "type": "container",
-              "typeArgs": {
-                "fields": [
-                  {
-                    "name": "directionAndType",
-                    "type": "byte"
-                  },
-                  {
-                    "name": "x",
-                    "type": "byte"
-                  },
-                  {
-                    "name": "y",
-                    "type": "byte"
-                  }
+            "type": [
+              "array",
+              {
+                "countType": "varint",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "directionAndType",
+                      "type": "byte"
+                    },
+                    {
+                      "name": "x",
+                      "type": "byte"
+                    },
+                    {
+                      "name": "y",
+                      "type": "byte"
+                    }
+                  ]
                 ]
               }
-            }
+            ]
           },
           {
             "name": "columns",
@@ -1447,54 +1473,62 @@
           },
           {
             "name": "rows",
-            "type": "condition",
-            "typeArgs": {
-              "type": "byte",
-              "field": "columns",
-              "values": [
-                0
-              ],
-              "different": true
-            }
+            "type": [
+              "condition",
+              {
+                "type": "byte",
+                "field": "columns",
+                "values": [
+                  0
+                ],
+                "different": true
+              }
+            ]
           },
           {
             "name": "x",
-            "type": "condition",
-            "typeArgs": {
-              "type": "byte",
-              "field": "columns",
-              "values": [
-                0
-              ],
-              "different": true
-            }
+            "type": [
+              "condition",
+              {
+                "type": "byte",
+                "field": "columns",
+                "values": [
+                  0
+                ],
+                "different": true
+              }
+            ]
           },
           {
             "name": "y",
-            "type": "condition",
-            "typeArgs": {
-              "type": "byte",
-              "field": "columns",
-              "values": [
-                0
-              ],
-              "different": true
-            }
+            "type": [
+              "condition",
+              {
+                "type": "byte",
+                "field": "columns",
+                "values": [
+                  0
+                ],
+                "different": true
+              }
+            ]
           },
           {
             "name": "data",
-            "type": "condition",
-            "typeArgs": {
-              "type": "buffer",
-              "typeArgs": {
-                "countType": "varint"
-              },
-              "field": "columns",
-              "values": [
-                0
-              ],
-              "different": true
-            }
+            "type": [
+              "condition",
+              {
+                "type": [
+                  "buffer",
+                  { "countType": "varint" }
+                ],
+                "field": "columns",
+                "values": [
+                  0
+                ],
+                "different": true
+              }
+            ]
           }
         ]
       },
@@ -1529,23 +1563,25 @@
         "fields": [
           {
             "name": "entries",
-            "type": "array",
-            "typeArgs": {
-              "countType": "varint",
-              "type": "container",
-              "typeArgs": {
-                "fields": [
-                  {
-                    "name": "name",
-                    "type": "string"
-                  },
-                  {
-                    "name": "value",
-                    "type": "varint"
-                  }
+            "type": [
+              "array",
+              {
+                "countType": "varint",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "value",
+                      "type": "varint"
+                    }
+                  ]
                 ]
               }
-            }
+            ]
           }
         ]
       },
@@ -1558,121 +1594,139 @@
           },
           {
             "name": "data",
-            "type": "array",
-            "typeArgs": {
-              "countType": "varint",
-              "type": "container",
-              "typeArgs": {
-                "fields": [
-                  {
-                    "name": "UUID",
-                    "type": "UUID"
-                  },
-                  {
-                    "name": "name",
-                    "type": "condition",
-                    "typeArgs": {
-                      "type": "string",
-                      "field": "action",
-                      "values": [
-                        0
+            "type": [
+              "array",
+              {
+                "countType": "varint",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "UUID",
+                      "type": "UUID"
+                    },
+                    {
+                      "name": "name",
+                      "type": [
+                        "condition",
+                        {
+                          "type": "string",
+                          "field": "action",
+                          "values": [
+                            0
+                          ]
+                        }
                       ]
-                    }
-                  },
-                  {
-                    "name": "properties",
-                    "type": "condition",
-                    "typeArgs": {
-                      "type": "array",
-                      "field": "action",
-                      "values": [
-                        0
-                      ],
-                      "typeArgs": {
-                        "countType": "varint",
-                        "type": "container",
-                        "typeArgs": {
-                          "fields": [
+                    },
+                    {
+                      "name": "properties",
+                      "type": [
+                        "condition",
+                        {
+                          "field": "action",
+                          "values": [
+                            0
+                          ],
+                          "type": [
+                            "array",
                             {
-                              "name": "name",
-                              "type": "string"
-                            },
-                            {
-                              "name": "value",
-                              "type": "string"
-                            },
-                            {
-                              "name": "isSigned",
-                              "type": "bool"
-                            },
-                            {
-                              "name": "signature",
-                              "type": "condition",
-                              "typeArgs": {
-                                "type": "string",
-                                "field": "isSigned",
-                                "values": [
-                                  true
-                                ],
-                                "this": true
-                              }
+                              "countType": "varint",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "name",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "value",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "isSigned",
+                                    "type": "bool"
+                                  },
+                                  {
+                                    "name": "signature",
+                                    "type": [
+                                      "condition",
+                                      {
+                                        "type": "string",
+                                        "field": "isSigned",
+                                        "values": [
+                                          true
+                                        ],
+                                        "this": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              ]
                             }
                           ]
                         }
-                      }
-                    }
-                  },
-                  {
-                    "name": "gamemode",
-                    "type": "condition",
-                    "typeArgs": {
-                      "type": "varint",
-                      "field": "action",
-                      "values": [
-                        0,
-                        1
+                      ]
+                    },
+                    {
+                      "name": "gamemode",
+                      "type": [
+                        "condition",
+                        {
+                          "type": "varint",
+                          "field": "action",
+                          "values": [
+                            0,
+                            1
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "ping",
+                      "type": [
+                        "condition",
+                        {
+                          "type": "varint",
+                          "field": "action",
+                          "values": [
+                            0,
+                            2
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "hasDisplayName",
+                      "type": [
+                        "condition",
+                        {
+                          "type": "bool",
+                          "field": "action",
+                          "values": [
+                            0,
+                            3
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "displayName",
+                      "type": [
+                        "condition",
+                        {
+                          "type": "string",
+                          "field": "hasDisplayName",
+                          "this": true,
+                          "values": [
+                            true
+                          ]
+                        }
                       ]
                     }
-                  },
-                  {
-                    "name": "ping",
-                    "type": "condition",
-                    "typeArgs": {
-                      "type": "varint",
-                      "field": "action",
-                      "values": [
-                        0,
-                        2
-                      ]
-                    }
-                  },
-                  {
-                    "name": "hasDisplayName",
-                    "type": "condition",
-                    "typeArgs": {
-                      "type": "bool",
-                      "field": "action",
-                      "values": [
-                        0,
-                        3
-                      ]
-                    }
-                  },
-                  {
-                    "name": "displayName",
-                    "type": "condition",
-                    "typeArgs": {
-                      "type": "string",
-                      "field": "hasDisplayName",
-                      "this": true,
-                      "values": [
-                        true
-                      ]
-                    }
-                  }
+                  ]
                 ]
               }
-            }
+            ]
           }
         ]
       },
@@ -1698,11 +1752,13 @@
         "fields": [
           {
             "name": "matches",
-            "type": "array",
-            "typeArgs": {
-              "type": "string",
-              "countType": "varint"
-            }
+            "type": [
+              "array",
+              {
+                "type": "string",
+                "countType": "varint"
+              }
+            ]
           }
         ]
       },
@@ -1719,27 +1775,31 @@
           },
           {
             "name": "displayText",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "action",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "action",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "type",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "action",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "action",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           }
         ]
       },
@@ -1760,15 +1820,17 @@
           },
           {
             "name": "value",
-            "type": "condition",
-            "typeArgs": {
-              "type": "varint",
-              "field": "action",
-              "values": [
-                1
-              ],
-              "different": true
-            }
+            "type": [
+              "condition",
+              {
+                "type": "varint",
+                "field": "action",
+                "values": [
+                  1
+                ],
+                "different": true
+              }
+            ]
           }
         ]
       },
@@ -1798,92 +1860,108 @@
           },
           {
             "name": "name",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "mode",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "mode",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "prefix",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "mode",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "mode",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "suffix",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "mode",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "mode",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "friendlyFire",
-            "type": "condition",
-            "typeArgs": {
-              "type": "byte",
-              "field": "mode",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "byte",
+                "field": "mode",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "nameTagVisibility",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "mode",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "mode",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "color",
-            "type": "condition",
-            "typeArgs": {
-              "type": "byte",
-              "field": "mode",
-              "values": [
-                0,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "byte",
+                "field": "mode",
+                "values": [
+                  0,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "players",
-            "type": "condition",
-            "typeArgs": {
-              "type": "array",
-              "field": "mode",
-              "values": [
-                0,
-                3,
-                4
-              ],
-              "typeArgs": {
-                "type": "string",
-                "countType": "varint"
+            "type": [
+              "condition",
+              {
+                "field": "mode",
+                "values": [
+                  0,
+                  3,
+                  4
+                ],
+                "type": [
+                  "array",
+                  {
+                    "type": "string",
+                    "countType": "varint"
+                  }
+                ]
               }
-            }
+            ]
           }
         ]
       },
@@ -1927,48 +2005,56 @@
           },
           {
             "name": "duration",
-            "type": "condition",
-            "typeArgs": {
-              "type": "varint",
-              "field": "event",
-              "values": [
-                1
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "varint",
+                "field": "event",
+                "values": [
+                  1
+                ]
+              }
+            ]
           },
           {
             "name": "playerId",
-            "type": "condition",
-            "typeArgs": {
-              "type": "varint",
-              "field": "event",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "varint",
+                "field": "event",
+                "values": [
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "entityId",
-            "type": "condition",
-            "typeArgs": {
-              "type": "int",
-              "field": "event",
-              "values": [
-                1,
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "int",
+                "field": "event",
+                "values": [
+                  1,
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "message",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "event",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "event",
+                "values": [
+                  2
+                ]
+              }
+            ]
           }
         ]
       },
@@ -1990,109 +2076,127 @@
           },
           {
             "name": "radius",
-            "type": "condition",
-            "typeArgs": {
-              "type": "double",
-              "field": "action",
-              "values": [
-                0
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "double",
+                "field": "action",
+                "values": [
+                  0
+                ]
+              }
+            ]
           },
           {
             "name": "x",
-            "type": "condition",
-            "typeArgs": {
-              "type": "double",
-              "field": "action",
-              "values": [
-                2,
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "double",
+                "field": "action",
+                "values": [
+                  2,
+                  3
+                ]
+              }
+            ]
           },
           {
             "name": "z",
-            "type": "condition",
-            "typeArgs": {
-              "type": "double",
-              "field": "action",
-              "values": [
-                2,
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "double",
+                "field": "action",
+                "values": [
+                  2,
+                  3
+                ]
+              }
+            ]
           },
           {
             "name": "old_radius",
-            "type": "condition",
-            "typeArgs": {
-              "type": "double",
-              "field": "action",
-              "values": [
-                1,
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "double",
+                "field": "action",
+                "values": [
+                  1,
+                  3
+                ]
+              }
+            ]
           },
           {
             "name": "new_radius",
-            "type": "condition",
-            "typeArgs": {
-              "type": "double",
-              "field": "action",
-              "values": [
-                1,
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "double",
+                "field": "action",
+                "values": [
+                  1,
+                  3
+                ]
+              }
+            ]
           },
           {
             "name": "speed",
-            "type": "condition",
-            "typeArgs": {
-              "type": "varint",
-              "field": "action",
-              "values": [
-                1,
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "varint",
+                "field": "action",
+                "values": [
+                  1,
+                  3
+                ]
+              }
+            ]
           },
           {
             "name": "portalBoundary",
-            "type": "condition",
-            "typeArgs": {
-              "type": "varint",
-              "field": "action",
-              "values": [
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "varint",
+                "field": "action",
+                "values": [
+                  3
+                ]
+              }
+            ]
           },
           {
             "name": "warning_time",
-            "type": "condition",
-            "typeArgs": {
-              "type": "varint",
-              "field": "action",
-              "values": [
-                4,
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "varint",
+                "field": "action",
+                "values": [
+                  4,
+                  3
+                ]
+              }
+            ]
           },
           {
             "name": "warning_blocks",
-            "type": "condition",
-            "typeArgs": {
-              "type": "varint",
-              "field": "action",
-              "values": [
-                5,
-                3
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "varint",
+                "field": "action",
+                "values": [
+                  5,
+                  3
+                ]
+              }
+            ]
           }
         ]
       },
@@ -2105,48 +2209,56 @@
           },
           {
             "name": "text",
-            "type": "condition",
-            "typeArgs": {
-              "type": "string",
-              "field": "action",
-              "values": [
-                0,
-                1
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "string",
+                "field": "action",
+                "values": [
+                  0,
+                  1
+                ]
+              }
+            ]
           },
           {
             "name": "fadeIn",
-            "type": "condition",
-            "typeArgs": {
-              "type": "int",
-              "field": "action",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "int",
+                "field": "action",
+                "values": [
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "stay",
-            "type": "condition",
-            "typeArgs": {
-              "type": "int",
-              "field": "action",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "int",
+                "field": "action",
+                "values": [
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "fadeOut",
-            "type": "condition",
-            "typeArgs": {
-              "type": "int",
-              "field": "action",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "int",
+                "field": "action",
+                "values": [
+                  2
+                ]
+              }
+            ]
           }
         ]
       },
@@ -2231,36 +2343,42 @@
           },
           {
             "name": "x",
-            "type": "condition",
-            "typeArgs": {
-              "type": "float",
-              "field": "mouse",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "float",
+                "field": "mouse",
+                "values": [
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "y",
-            "type": "condition",
-            "typeArgs": {
-              "type": "float",
-              "field": "mouse",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "float",
+                "field": "mouse",
+                "values": [
+                  2
+                ]
+              }
+            ]
           },
           {
             "name": "z",
-            "type": "condition",
-            "typeArgs": {
-              "type": "float",
-              "field": "mouse",
-              "values": [
-                2
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "float",
+                "field": "mouse",
+                "values": [
+                  2
+                ]
+              }
+            ]
           }
         ]
       },
@@ -2569,14 +2687,16 @@
           },
           {
             "name": "block",
-            "type": "condition",
-            "typeArgs": {
-              "type": "position",
-              "field": "hasPosition",
-              "values": [
-                true
-              ]
-            }
+            "type": [
+              "condition",
+              {
+                "type": "position",
+                "field": "hasPosition",
+                "values": [
+                  true
+                ]
+              }
+            ]
           }
         ]
       },
