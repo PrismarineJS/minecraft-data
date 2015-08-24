@@ -62,7 +62,7 @@
       "oneOf":[
         {"$ref": "#/definitions/simpleFieldType"},
         {"$ref": "#/definitions/container"},
-        {"$ref": "#/definitions/condition"},
+        {"$ref": "#/definitions/switch"},
         {"$ref": "#/definitions/array"},
         {"$ref": "#/definitions/buffer"}
       ]
@@ -79,35 +79,24 @@
       ],
       "additionalItems": false
     },
-    "condition": {
+    "switch":{
       "type": "array",
       "items":[
-        {"enum":["condition"]},
+        {"enum":["switch"]},
         {
           "type":"object",
           "properties": {
-            "type": {"$ref": "#/definitions/fieldType"},
-            "field": {"$ref": "#/definitions/fieldName"},
-            "values": {
-              "type": "array",
-              "items": {
-                "type": [
-                  "integer",
-                  "boolean",
-                  "string"
-                ]
+            "compareTo":{"$ref": "#/definitions/contextualizedFieldName"},
+            "fields":{
+              "type":"object",
+              "patternProperties" : {
+                "^[a-zA-Z0-9 _]+$":{"$ref": "#/definitions/fieldType"}
               },
-              "additionalItems": false,
-              "minItems": 1
+              "additionalProperties": false
             },
-            "different": {
-              "type": "boolean"
-            },
-            "this": {
-              "type": "boolean"
-            }
+            "default":{"$ref": "#/definitions/fieldType"}
           },
-          "required":["type","field","values"],
+          "required":["compareTo","fields"],
           "additionalProperties": false
         }
       ],
@@ -158,13 +147,13 @@
         }
       ]
     },
-    "fieldTypeArgsCountFor": {
+    "contextualizedFieldName": {
       "type": "string",
       "pattern": "^(this\\.)?[a-zA-Z0-9_]+$"
     },
     "fieldTypeArgsCount": {
       "oneOf": [
-        {"$ref": "#/definitions/fieldTypeArgsCountFor"},
+        {"$ref": "#/definitions/contextualizedFieldName"},
         {
           "type": "object",
           "properties": {
