@@ -46,8 +46,7 @@
       "type": "object",
       "properties": {
         "name": {"$ref": "#/definitions/fieldName"},
-        "type": {"$ref": "#/definitions/fieldType"},
-        "typeArgs": {"$ref": "#/definitions/fieldTypeArgs"}
+        "type": {"$ref": "#/definitions/fieldType"}
       },
       "required": [
         "name",
@@ -60,8 +59,31 @@
       "pattern": "^[a-zA-Z0-9_]+$"
     },
     "fieldType": {
+      "oneOf":[
+        {"$ref": "#/definitions/simpleFieldType"},
+        {"$ref": "#/definitions/complexFieldType"},
+        {"$ref": "#/definitions/container"}
+      ]
+    },
+    "simpleFieldType": {
       "type": "string",
       "pattern": "^[a-zA-Z]+$"
+    },
+    "complexFieldType": {
+      "type": "array",
+      "items":[
+        {"$ref": "#/definitions/simpleFieldType"},
+        {"$ref": "#/definitions/fieldTypeArgs"}
+      ],
+      "additionalItems": false
+    },
+    "container": {
+      "type": "array",
+      "items":[
+        {"enum":["container"]},
+        {"$ref": "#/definitions/fields"}
+      ],
+      "additionalItems": false
     },
     "fieldTypeArgs": {
       "type": "object",
@@ -70,8 +92,6 @@
         "countType": {"$ref": "#/definitions/fieldType"},
         "countFor": {"$ref": "#/definitions/fieldTypeArgsCountFor"},
         "count": {"$ref": "#/definitions/fieldTypeArgsCount"},
-        "fields": {"$ref": "#/definitions/fields"},
-        "typeArgs": {"$ref": "#/definitions/fieldTypeArgs"},
         "field": {"$ref": "#/definitions/fieldName"},
         "values": {
           "type": "array",
