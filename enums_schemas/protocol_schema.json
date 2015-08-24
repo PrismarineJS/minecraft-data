@@ -61,21 +61,15 @@
     "fieldType": {
       "oneOf":[
         {"$ref": "#/definitions/simpleFieldType"},
-        {"$ref": "#/definitions/complexFieldType"},
-        {"$ref": "#/definitions/container"}
+        {"$ref": "#/definitions/container"},
+        {"$ref": "#/definitions/condition"},
+        {"$ref": "#/definitions/array"},
+        {"$ref": "#/definitions/buffer"}
       ]
     },
     "simpleFieldType": {
       "type": "string",
       "pattern": "^[a-zA-Z]+$"
-    },
-    "complexFieldType": {
-      "type": "array",
-      "items":[
-        {"$ref": "#/definitions/simpleFieldType"},
-        {"$ref": "#/definitions/fieldTypeArgs"}
-      ],
-      "additionalItems": false
     },
     "container": {
       "type": "array",
@@ -85,34 +79,84 @@
       ],
       "additionalItems": false
     },
-    "fieldTypeArgs": {
-      "type": "object",
-      "properties": {
-        "type": {"$ref": "#/definitions/fieldType"},
-        "countType": {"$ref": "#/definitions/fieldType"},
-        "countFor": {"$ref": "#/definitions/fieldTypeArgsCountFor"},
-        "count": {"$ref": "#/definitions/fieldTypeArgsCount"},
-        "field": {"$ref": "#/definitions/fieldName"},
-        "values": {
-          "type": "array",
-          "items": {
-            "type": [
-              "integer",
-              "boolean",
-              "string"
-            ]
+    "condition": {
+      "type": "array",
+      "items":[
+        {"enum":["condition"]},
+        {
+          "type":"object",
+          "properties": {
+            "type": {"$ref": "#/definitions/fieldType"},
+            "field": {"$ref": "#/definitions/fieldName"},
+            "values": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "integer",
+                  "boolean",
+                  "string"
+                ]
+              },
+              "additionalItems": false,
+              "minItems": 1
+            },
+            "different": {
+              "type": "boolean"
+            },
+            "this": {
+              "type": "boolean"
+            }
           },
-          "additionalItems": false,
-          "minItems": 1
-        },
-        "different": {
-          "type": "boolean"
-        },
-        "this": {
-          "type": "boolean"
+          "required":["type","field","values"],
+          "additionalProperties": false
         }
-      },
-      "additionalProperties": false
+      ],
+      "additionalItems": false
+    },
+    "array":{
+      "type":"array",
+      "items":[
+        {"enum":["array"]},
+        {
+          "oneOf":[
+            {
+              "type":"object",
+              "properties":{
+                "type": {"$ref": "#/definitions/fieldType"},
+                "countType": {"$ref": "#/definitions/fieldType"}
+              },
+              "additionalProperties": false,
+              "required":["type","countType"]
+            },
+            {
+              "type":"object",
+              "properties":{
+                "type": {"$ref": "#/definitions/fieldType"},
+                "count": {"$ref": "#/definitions/fieldTypeArgsCount"}
+              },
+              "additionalProperties": false,
+              "required":["type","count"]
+            }
+          ]
+        }
+      ],
+      "additionalItems": false
+    },
+    "buffer":{
+      "type":"array",
+      "items":[
+        {"enum":["buffer"]},
+        {
+          "type": "object",
+          "properties": {
+            "countType": {"$ref": "#/definitions/fieldType"}
+          },
+          "additionalProperties": false,
+          "required": [
+            "countType"
+          ]
+        }
+      ]
     },
     "fieldTypeArgsCountFor": {
       "type": "string",
