@@ -46,7 +46,8 @@
             "name",
             "index"
           ]
-        }
+        },
+        "additionalItems":false
       },
       "properties": {
         "description": "Names of the properties of the window",
@@ -54,7 +55,8 @@
         "minItems": 1,
         "items": {
           "type": "string"
-        }
+        },
+        "additionalItems":false
       },
       "buttons": {
         "description": "Names of the buttons of the window",
@@ -62,6 +64,19 @@
         "minItems": 1,
         "items": {
           "type": "string"
+        },
+        "additionalItems":false
+      },
+      "openedWith" : {
+        "type":"array",
+        "items":{
+          "type":"object",
+          "properties":{
+            "type":{"enum":["item","entity","block"]},
+            "id":{"type":"integer"}
+          },
+          "required":["type","id"],
+          "additionalProperties":false
         }
       }
     },
