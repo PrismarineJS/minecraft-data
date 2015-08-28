@@ -15,6 +15,7 @@
     "float": "native",
     "double": "native",
     "UUID": "native",
+    "option": "native",
     "entityMetadata": "native",
     "entityMetadataItem": [
       "switch",
@@ -1718,27 +1719,14 @@
                         ]
                       },
                       {
-                        "name": "hasDisplayName",
+                        "name": "displayName",
                         "type": [
                           "switch",
                           {
                             "compareTo": "action",
                             "fields": {
-                              "0": "bool",
-                              "3": "bool"
-                            },
-                            "default": "void"
-                          }
-                        ]
-                      },
-                      {
-                        "name": "displayName",
-                        "type": [
-                          "switch",
-                          {
-                            "compareTo": "this.hasDisplayName",
-                            "fields": {
-                              "true": "string"
+                              "0": ["option", "string"],
+                              "3": ["option", "string"]
                             },
                             "default": "void"
                           }
@@ -2812,21 +2800,8 @@
               "type": "string"
             },
             {
-              "name": "hasPosition",
-              "type": "bool"
-            },
-            {
               "name": "block",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "hasPosition",
-                  "fields": {
-                    "true": "position"
-                  },
-                  "default": "void"
-                }
-              ]
+              "type": ["option", "position"]
             }
           ]
         },
