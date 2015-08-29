@@ -18,6 +18,14 @@ There are also some projects that wrap parts of minecraft-data in other ways :
 
 * [ProtocolGen](https://github.com/Johni0702/ProtocolGen) that generate java files reading and writing the protocol
  from minecraft-data protocol.json file
+ 
+## Projects using minecraft-data
+
+These are the projects that use minecraft-data (through the wrappers) :
+
+* [mineflayer](https://github.com/andrewrk/mineflayer)
+* [node-minecraft-protocol](https://github.com/PrismarineJS/node-minecraft-protocol)
+
 
 ## Documentation
 
