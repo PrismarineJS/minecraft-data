@@ -119,8 +119,24 @@ function directionToString(state, direction, packets)
   })
 }
 
-function countRows(packet) {
-  return packet.fields.length;
+function countRows(fields) {
+  return fields.reduce(function(acc, item) {
+    var fieldType = getFieldInfo(item.type);
+    if (fieldType.type === 'container')
+      return acc + countRows(fieldType.typeArgs);
+    else
+      return acc + 1;
+  }, 0);
+}
+
+function countCols(fields) {
+  return fields.reduce(function(acc, item) {
+    var fieldType = getFieldInfo(item.type);
+    if (fieldType.type === 'container')
+      return acc + 1;
+    else
+      return acc;
+  }, 1);
 }
 
 function getFieldInfo(type) {
@@ -134,34 +150,83 @@ function getFieldInfo(type) {
 
 function packetToString(state, direction, packet)
 {
-  var rows = countRows(packet);
+  var rows = countRows(packet.fields);
+  var totalCols = countCols(packet.fields);
   if (rows == 0)
     rows = 1;
-  function fieldLine(field) {
+
+  function genNameLine(field, depth) {
+    function td(opts) {
+      opts = opts || {};
+      opts.colspan = totalCols - depth;
+      return _('td', opts);
+    }
     var fieldType = getFieldInfo(field.type);
-    if (fieldType.type === 'array') {
-      return [_('td').T(field.name), _('td').T("array<" + fieldType.typeArgs.countType + "," + fieldType.typeArgs.type + ">")];
-    } else {
-      return [_('td').T(field.name), _('td').T(field.type)];
+    switch (fieldType.type) {
+      case 'container':
+        var lines = fieldType.typeArgs.reduce(function(acc, item) {
+          return acc.concat(genNameLine(item, depth + 1));
+        }, []);
+        if (lines.length > 0)
+          lines[0].unshift(
+            _('td', { rowspan: countRows(fieldType.typeArgs) }).T(field.name)
+          );
+        else
+          lines.push([
+            _('td', { rowspan: countRows(fieldType.typeArgs) }).T(field.name)
+          ]);
+        return lines;
+      default:
+        return [[td().T(field.name)]];
     }
   }
-  function generateFirstLine() {
-    var rslt = [
-      _('td', { rowspan: rows }).T(packet.id),
-      _('td', { rowspan: rows }).T(state),
-      _('td', { rowspan: rows }).T(direction)
-    ];
-    if (packet.fields.length > 0)
-      rslt = rslt.concat(fieldLine(packet.fields[0]));
-    else
-      rslt = rslt.concat([_('td', { colspan: 2 })._([_('i').T('no fields')])]);
-    return rslt;
+  
+  function genTypeLine(field, depth) {
+    function td(opts) {
+      opts = opts || {};
+      opts.colspan = totalCols - depth;
+      return _('td', opts);
+    }
+    var fieldType = getFieldInfo(field.type);
+    switch (fieldType.type) {
+      case 'container':
+        var lines = fieldType.typeArgs.reduce(function(acc, item) {
+          return acc.concat(genTypeLine(item, depth + 1));
+        }, []);
+        if (lines.length > 0)
+          lines[0].unshift(
+            _('td', { rowspan: countRows(fieldType.typeArgs) }).T('container')
+          );
+        else
+          lines.push([
+            _('td', { rowspan: countRows(fieldType.typeArgs) }).T('container')
+          ]);
+        return lines;
+      default:
+        return [[td().T(fieldType.type)]];
+    }
   }
+  
   function generateLines() {
-    return packet.fields.slice(1).reduce(function (acc, field) {
-      acc.push(_('tr')._(fieldLine(field)));
+    var first = 0;
+    return packet.fields.reduce(function (acc, field) {
+      var name = genNameLine(field, 0);
+      var type = genTypeLine(field, 0);
+      if (name.length !== type.length) {
+        throw new Error("GAAH");
+      }
+      for (var i = 0; i < name.length; i++) {
+        acc.push(name[i].concat(type[i]));
+      }
       return acc;
-    }, [_('tr')._(generateFirstLine())]);
+    }, []).map(function(field) {
+      if (first++ === 0)
+        field.unshift(
+          _('td', { rowspan: rows }).T(packet.id),
+          _('td', { rowspan: rows }).T(state),
+          _('td', { rowspan: rows }).T(direction));
+      return _('tr')._(field);
+    });
   }
   return _('table.packet')
     ._([
@@ -170,8 +235,8 @@ function packetToString(state, direction, packet)
           _('th').T('Packet ID'),
           _('th').T('State'),
           _('th').T('Bound To'),
-          _('th').T('Field Name'),
-          _('th').T('Field Type')
+          _('th', { colspan: totalCols }).T('Field Name'),
+          _('th', { colspan: totalCols }).T('Field Type')
         ])
       ]),
       _('tbody')._(generateLines())
