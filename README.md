@@ -25,7 +25,7 @@ These are the projects that use minecraft-data (through the wrappers) :
 
 * [mineflayer](https://github.com/andrewrk/mineflayer)
 * [node-minecraft-protocol](https://github.com/PrismarineJS/node-minecraft-protocol)
-
+* [craftyjs](https://github.com/mhsjlw/craftyjs)
 
 ## Documentation
 
