@@ -131,10 +131,10 @@ function loadData(enumName,elementToArray,fields,hiddenColumns)
 
 function enableToggle(enumName)
 {
-  $j( "#"+enumName+"Table").hide();
+  //$j( "#"+enumName+"Table").hide();
   $j( "#"+enumName+"Toggle" ).click(function() {
     var h=window.location.hash.substr(0,window.location.hash.length-1);
-    if(h!== "#"+enumName+"Table") $j(h).hide();
+    //if(h!== "#"+enumName+"Table") $j(h).hide();
     $j( "#"+enumName+"Table").toggle();
     if(!$j("#" + enumName + "Table").is(":visible"))
       setTimeout(function(){location.hash = '';},0);
