@@ -124,7 +124,15 @@ function countRows(fields) {
     var fieldType = getFieldInfo(item.type);
     if (fieldType.type === 'container')
       return acc + countRows(fieldType.typeArgs);
-    else
+    else if (fieldType.type === 'array') {
+      if (fieldType.typeArgs.countType)
+        return acc + countRows([
+            { type: fieldType.typeArgs.countType },
+            { type: fieldType.typeArgs.type }
+        ]);
+      else
+        return acc + countRows([{ type: fieldType.typeArgs.type }]);
+    } else
       return acc + 1;
   }, 0);
 }
@@ -132,8 +140,16 @@ function countRows(fields) {
 function countCols(fields) {
   return fields.reduce(function(acc, item) {
     var fieldType = getFieldInfo(item.type);
+    console.log(item);
     if (fieldType.type === 'container')
-      return acc + 1;
+      return Math.max(acc, 1 + countCols(fieldType.typeArgs));
+    else if (fieldType.type === 'array') {
+      if (fieldType.typeArgs.countType)
+        return Math.max(acc, 1 + countCols([{ type: fieldType.typeArgs.countType },
+                                            { type: fieldType.typeArgs.type }]));
+      else
+        return Math.max(acc, 1 + countCols([{ type: fieldType.typeArgs.type }]));
+    }
     else
       return acc;
   }, 1);
@@ -154,64 +170,67 @@ function packetToString(state, direction, packet)
   var totalCols = countCols(packet.fields);
   if (rows == 0)
     rows = 1;
+  if (packet.id === '0x20') console.log(totalCols);
+  function genNameLine(field, depth, getVal) {
+    function td(opts) {
+      opts = opts || {};
+      opts.colspan = totalCols - depth;
+      return _('td', opts);
+    }
+    var fieldType = getFieldInfo(field.type);
+    switch (fieldType.type) {
+      case 'array':
+        var countLine;
+        if (fieldType.typeArgs.countType)
+          countLine = genNameLine({
+            name: '$countType',
+            type: fieldType.typeArgs.countType
+          }, depth + 1, getVal);
+        else
+          countLine = [];
+        var contentLine = genNameLine({
+          name: '$content',
+          type: fieldType.typeArgs.type
+        }, depth + 1, getVal);
+        countLine = countLine.concat(contentLine);
+        if (fieldType.typeArgs.countType)
+          countLine[0].unshift(_('td', {
+            rowspan: countRows([{ type: fieldType.typeArgs.countType },
+                                { type: fieldType.typeArgs.type }])
+          }).T(getVal(field, fieldType)));
+        else
+          countLine[0].unshift(_('td', {
+            rowspan: countRows([{ type: fieldType.typeArgs.type }])
+          }).T(getVal(field, fieldType)));
+        return countLine;
+      case 'container':
+        var lines = fieldType.typeArgs.reduce(function(acc, item) {
+          return acc.concat(genNameLine(item, depth + 1, getVal));
+        }, []);
+        if (lines.length > 0)
+          lines[0].unshift(
+            _('td', { rowspan: countRows(fieldType.typeArgs) })
+            .T(getVal(field, fieldType)));
+        else
+          lines.push([
+            _('td', { rowspan: countRows(fieldType.typeArgs) })
+            .T(getVal(field, fieldType))
+          ]);
+        return lines;
+      default:
+        return [[td().T(getVal(field, fieldType))]];
+    }
+  }
 
-  function genNameLine(field, depth) {
-    function td(opts) {
-      opts = opts || {};
-      opts.colspan = totalCols - depth;
-      return _('td', opts);
-    }
-    var fieldType = getFieldInfo(field.type);
-    switch (fieldType.type) {
-      case 'container':
-        var lines = fieldType.typeArgs.reduce(function(acc, item) {
-          return acc.concat(genNameLine(item, depth + 1));
-        }, []);
-        if (lines.length > 0)
-          lines[0].unshift(
-            _('td', { rowspan: countRows(fieldType.typeArgs) }).T(field.name)
-          );
-        else
-          lines.push([
-            _('td', { rowspan: countRows(fieldType.typeArgs) }).T(field.name)
-          ]);
-        return lines;
-      default:
-        return [[td().T(field.name)]];
-    }
-  }
-  
-  function genTypeLine(field, depth) {
-    function td(opts) {
-      opts = opts || {};
-      opts.colspan = totalCols - depth;
-      return _('td', opts);
-    }
-    var fieldType = getFieldInfo(field.type);
-    switch (fieldType.type) {
-      case 'container':
-        var lines = fieldType.typeArgs.reduce(function(acc, item) {
-          return acc.concat(genTypeLine(item, depth + 1));
-        }, []);
-        if (lines.length > 0)
-          lines[0].unshift(
-            _('td', { rowspan: countRows(fieldType.typeArgs) }).T('container')
-          );
-        else
-          lines.push([
-            _('td', { rowspan: countRows(fieldType.typeArgs) }).T('container')
-          ]);
-        return lines;
-      default:
-        return [[td().T(fieldType.type)]];
-    }
-  }
-  
   function generateLines() {
     var first = 0;
     return packet.fields.reduce(function (acc, field) {
-      var name = genNameLine(field, 0);
-      var type = genTypeLine(field, 0);
+      var name = genNameLine(field, 0, function(field, fieldInfo) {
+        return field.name;
+      });
+      var type = genNameLine(field, 0, function(field, fieldInfo) {
+        return fieldInfo.type;
+      });
       if (name.length !== type.length) {
         throw new Error("GAAH");
       }
