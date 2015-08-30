@@ -50,7 +50,9 @@
     <script>
         function scroll()
         {
-            $j(window).scrollTop($j('a[href="'+window.location.hash+'"]').offset().top);
+            if(window.location.hash=="") return;
+            var anchor=$j('a[href="'+window.location.hash+'"]');
+            if(anchor) $j(window).scrollTop(anchor.offset().top);
         }
         function done(){
             scroll();
