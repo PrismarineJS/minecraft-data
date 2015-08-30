@@ -22,6 +22,6 @@ $j("#tabContent").html(tabContent);
 enums.forEach(function(e){
   var raw=getUrlParameter("v");
   $j( 'a[href="'+'#'+e+'Tab'+'"]').click(function() {
-    window.history.pushState('', '', '/?'+(raw ? 'v='+raw+'&' : '')+'d='+e);
+    window.history.pushState('', '', '?'+(raw ? 'v='+raw+'&' : '')+'d='+e);
   });
 });
