@@ -13,6 +13,6 @@ enums.forEach(function(e){
 var enumsValues=["biomes","items","blocks","entities","protocol"];
 var valSet=enumsValues.reduce(function(acc,e){acc[e]=1;return acc;},{});
 enums.forEach(function(e){
-  console.log('<div role="tabpanel" class="tab-pane active" id="'+e+'Tab"><div id="'+e+'">' +
+  console.log('<div role="tabpanel" class="tab-pane'+(active==e ? ' active' : '')+'" id="'+e+'Tab"><div id="'+e+'">' +
     '</div>'+(valSet[e] ? '<div id="'+e+'Table"></div>' : '')+'</div>')
 });
