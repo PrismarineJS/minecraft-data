@@ -48,10 +48,13 @@
     </div>
     <script src="./tabs.js"></script>
     <script>
+        function scroll()
+        {
+            $j(window).scrollTop($j('a[href="'+window.location.hash+'"]').offset().top);
+        }
         function done(){
-            $j('html, body').animate({
-                scrollTop: $j('a[href="'+window.location.hash+'"]').offset().top
-            }, 0);
+            scroll();
+            $j("a").click(function(){setTimeout(scroll,0);});
         }
     </script>
     <script src="./docson.js"></script>
