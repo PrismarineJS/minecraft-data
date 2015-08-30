@@ -114,8 +114,12 @@ function directionsToString(state, directions)
 function directionToString(state, direction, packets)
 {
   return Object.keys(packets).map(function(packetName){
-    return [_('h3').text(packetName + ' : ' + packets[packetName].id),
-            packetToString(state, direction, packets[packetName])];
+    return [
+      _('h3#' + direction + '_' + packetName)._([
+          _('a.glyphicon.glyphicon-link', { href: '#' + direction + '_' + packetName })
+      ]).T(' ' + packetName),
+      packetToString(state, direction, packets[packetName])
+    ];
   })
 }
 
@@ -247,7 +251,7 @@ function packetToString(state, direction, packet)
       return _('tr')._(field);
     });
   }
-  return _('table.packet')
+  return _('table.packet.table.table-striped.table-bordered')
     ._([
       _('thead')._([
         _('tr')._([
