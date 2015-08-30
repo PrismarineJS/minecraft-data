@@ -22,7 +22,8 @@ function fieldsToColumns(fields)
 function loadBlocks()
 {
   loadData("blocks",
-    function(block){return [block["id"],block["name"],block["displayName"],block["stackSize"],block["hardness"]
+    function(block){return [block["id"],'<a href="#'+block["name"]+'">'+block["name"]+'</a>',
+      block["displayName"],block["stackSize"],block["hardness"]
       ,block["diggable"],block["boundingBox"],block["material"] ? block["material"] : null];},
     ["id","name","displayName","stackSize","hardness","diggable","boundingBox","material"],
     [6,7]
@@ -33,7 +34,8 @@ function loadBlocks()
 function loadItems()
 {
   loadData("items",
-    function(item){return [item["id"],item["name"],item["displayName"],item["stackSize"]];},
+    function(item){return [item["id"],'<a href="#'+item["name"]+'">'+item["name"]+'</a>',
+      item["displayName"],item["stackSize"]];},
     ["id","name","displayName","stackSize"],[]
   );
 }
@@ -42,7 +44,8 @@ function loadItems()
 function loadBiomes()
 {
   loadData("biomes",
-    function(e){return [e["id"],e["name"],e["color"],e["temperature"],e["rainfall"]];},
+    function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'
+      ,e["color"],e["temperature"],e["rainfall"]];},
     ["id","name","color","temperature","rainfall"],
     []
   );
@@ -52,7 +55,8 @@ function loadBiomes()
 function loadEntities()
 {
   loadData("entities",
-    function(e){return [e["id"],e["name"],e["displayName"],e["type"]];},
+    function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'
+      ,e["displayName"],e["type"]];},
     ["id","name","displayName","type"],
     []
   );
@@ -61,7 +65,7 @@ function loadEntities()
 function loadInstruments()
 {
   loadData("instruments",
-    function(e){return [e["id"],e["name"]];},
+    function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'];},
     ["id","name"],
     []
   );
