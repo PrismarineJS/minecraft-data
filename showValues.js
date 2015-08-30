@@ -98,15 +98,12 @@ function packetToString(packet)
     +"</ul>"
 }
 
-var repo="PrismarineJS/minecraft-data";
-
 function loadProtocol()
 {
   $j.ajax("https://cdn.rawgit.com/"+repo+"/"+version+"/enums/protocol.json")
     .done(function(data){
       $j('#protocolTable').html(protocolToString(data));
     });
-  enableToggle("protocol")
 }
 
 function loadData(enumName,elementToArray,fields,hiddenColumns)
@@ -114,7 +111,8 @@ function loadData(enumName,elementToArray,fields,hiddenColumns)
   $j.ajax("https://cdn.rawgit.com/"+repo+"/"+version+"/enums/"+enumName+".json")
     .done(function(data){
       var dataset=data.map(elementToArray);
-      $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="'+enumName+'ActualTable"></table>' );
+      $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0"' +
+        ' class="display" id="'+enumName+'ActualTable"></table>' );
       $j('#'+enumName+'ActualTable').dataTable( {
         "data":dataset,
         "paging":false,
@@ -126,18 +124,4 @@ function loadData(enumName,elementToArray,fields,hiddenColumns)
         }
       );
     });
-  enableToggle(enumName);
 }
-
-function enableToggle(enumName)
-{
-  //$j( "#"+enumName+"Table").hide();
-  $j( "#"+enumName+"Toggle" ).click(function() {
-    var h=window.location.hash.substr(0,window.location.hash.length-1);
-    //if(h!== "#"+enumName+"Table") $j(h).hide();
-    $j( "#"+enumName+"Table").toggle();
-    if(!$j("#" + enumName + "Table").is(":visible"))
-      setTimeout(function(){location.hash = '';},0);
-  });
-}
-

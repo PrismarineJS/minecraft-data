@@ -6,8 +6,6 @@ function display(docson,repo,commit,json,element,enums_schemas_dir)
       docson.doc(element, schema);
     });
 }
-var repo="PrismarineJS/minecraft-data";
-var enums=["biomes","instruments","items","materials","blocks","recipes","entities","protocol","windows"];
 require.config({ baseUrl: "docson"});
 require(["docson", "./lib/jquery"], function(docson){
   displaySchema(docson,repo,version,enums,"enums_schemas");
