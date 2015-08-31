@@ -123,6 +123,13 @@ function directionToString(state, direction, packets)
   })
 }
 
+function uniq(a) {
+  var seen = {};
+  return a.filter(function (item) {
+    return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+  });
+}
+
 function countRows(fields) {
   return fields.reduce(function(acc, item) {
     var fieldType = getFieldInfo(item.type);
@@ -136,6 +143,14 @@ function countRows(fields) {
         ]);
       else
         return acc + countRows([{ type: fieldType.typeArgs.type }]);
+    } else if (fieldType.type === 'switch') {
+      var x = uniq(objValues(fieldType.typeArgs.fields)
+                .map(JSON.stable.stringify))
+                .map(JSON.parse.bind(JSON))
+                .map(function(item) { return { type: item }; });
+      if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void')
+        x.push({ type: fieldType.typeArgs.default });
+      return acc + countRows(x);
     } else
       return acc + 1;
   }, 0);
@@ -144,7 +159,6 @@ function countRows(fields) {
 function countCols(fields) {
   return fields.reduce(function(acc, item) {
     var fieldType = getFieldInfo(item.type);
-    console.log(item);
     if (fieldType.type === 'container')
       return Math.max(acc, 1 + countCols(fieldType.typeArgs));
     else if (fieldType.type === 'array') {
@@ -153,6 +167,12 @@ function countCols(fields) {
                                             { type: fieldType.typeArgs.type }]));
       else
         return Math.max(acc, 1 + countCols([{ type: fieldType.typeArgs.type }]));
+    } else if (fieldType.type === 'switch') {
+      var x = objValues(fieldType.typeArgs.fields)
+        .map(function(item) { return { type: item } });
+      if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void')
+        x.push({ type: fieldType.typeArgs.default });
+      return Math.max(acc, 1 + countCols(x));
     }
     else
       return acc;
@@ -168,13 +188,25 @@ function getFieldInfo(type) {
     return type;
 }
 
+function objValues(obj) {
+  var x = Object.keys(obj).map(function(key) {
+    return obj[key];
+  });
+  return x;
+}
+
+function eqs(compareTo, k) {
+  return k.slice(1).reduce(function(acc, elem) {
+    return acc + ' || ' + compareTo + ' == ' + elem;
+  }, compareTo + ' == ' + k[0]);
+}
+
 function packetToString(state, direction, packet)
 {
-  var rows = countRows(packet.fields);
+  var rows = countRows(packet.fields, packet.id === '0x0e');
   var totalCols = countCols(packet.fields);
   if (rows == 0)
     rows = 1;
-  if (packet.id === '0x20') console.log(totalCols);
   function genNameLine(field, depth, getVal) {
     function td(opts) {
       opts = opts || {};
@@ -183,6 +215,40 @@ function packetToString(state, direction, packet)
     }
     var fieldType = getFieldInfo(field.type);
     switch (fieldType.type) {
+      case 'switch':
+        var firstLine = true;
+        // First, group together lines
+        var elems = Object.keys(fieldType.typeArgs.fields).reduce(function(acc, key) {
+          var k = JSON.stable.stringify(fieldType.typeArgs.fields[key]);
+          if (acc.hasOwnProperty(k))
+            acc[k].push(key);
+          else
+            acc[k] = [key];
+          return acc;
+        }, {});
+        var lines = Object.keys(elems).reduce(function(acc, key) {
+          acc = acc.concat(genNameLine({ "name": (firstLine ? '' : 'else ') + 'if (' + eqs(fieldType.typeArgs.compareTo, elems[key]) + ')', "type": JSON.parse(key) }, depth + 1, getVal));
+          firstLine = false;
+          return acc;
+        }, []);
+        var x = uniq(objValues(fieldType.typeArgs.fields)
+                .map(JSON.stable.stringify))
+                .map(JSON.parse.bind(JSON))
+                .map(function(item) { return { type: item }; });
+        if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void') {
+          lines = lines.concat(genNameLine({ "name": "else", "type": fieldType.typeArgs.default }, depth + 1, getVal));
+          x.push({ type: fieldType.typeArgs.default });
+        }
+        if (lines.length > 0)
+          lines[0].unshift(
+            _('td', { rowspan: countRows(x) })
+            .T(getVal(field, fieldType)));
+        else
+          lines.push([
+            _('td', { rowspan: countRows(x) })
+            .T(getVal(field, fieldType))
+          ]);
+        return lines;
       case 'array':
         var countLine;
         if (fieldType.typeArgs.countType)
@@ -251,7 +317,7 @@ function packetToString(state, direction, packet)
       return _('tr')._(field);
     });
   }
-  return _('table.packet.table.table-striped.table-bordered')
+  return _('table#packets.table.table-striped.table-bordered')
     ._([
       _('thead')._([
         _('tr')._([
@@ -259,7 +325,7 @@ function packetToString(state, direction, packet)
           _('th').T('State'),
           _('th').T('Bound To'),
           _('th', { colspan: totalCols }).T('Field Name'),
-          _('th', { colspan: totalCols }).T('Field Type')
+          _('th', { colspan: totalCols }).T('Field Type'),
         ])
       ]),
       _('tbody')._(generateLines())
