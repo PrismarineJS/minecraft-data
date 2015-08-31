@@ -257,6 +257,7 @@ function transformProtocol(protocol,cb)
             .reduce(function(packetsO, packetName) {
               var transformedPacket=transformPacket(protocol[state][direction][packetName],transformedState,transformedDirection);
               var transformedPacketName=transformPacketName(packetName,transformedState,transformedDirection,transformedPacket ? transformedPacket["id"] : null);
+              console.log(transformedPacket.id, transformedPacketName);
               delete transformedPacket.id;
               packetsO[transformedPacketName] = transformedPacket;
               return packetsO;
@@ -416,7 +417,7 @@ function toOldNames(name,state,direction,id)
 
 function transformPacketName(packetName,state,direction,id)
 {
-  return toOldNames(toSnakeCase(packetName),state,direction,id);
+  return toOldNames(toSnakeCase(packetName),state,direction,id.toLowerCase());
 }
 
 function transformFieldType(fieldType)
