@@ -89,8 +89,8 @@ function extractProtocol(sectionObject,cb)
 
 function parsePacket(packetText)
 {
-  console.log(filterOutTable(packetText).join(" "));
-  return { "mainContent": filterOutTable(packetText) };
+  var table = tableToPacket(parseWikiTable(getFirstTable(packetText)));
+  return { id: table.id, mainContent: filterOutTable(packetText) };
 }
 
 function filterOutTable(lines) {
@@ -257,6 +257,7 @@ function transformProtocol(protocol,cb)
             .reduce(function(packetsO, packetName) {
               var transformedPacket=transformPacket(protocol[state][direction][packetName],transformedState,transformedDirection);
               var transformedPacketName=transformPacketName(packetName,transformedState,transformedDirection,transformedPacket ? transformedPacket["id"] : null);
+              delete transformedPacket.id;
               packetsO[transformedPacketName] = transformedPacket;
               return packetsO;
             }, {});

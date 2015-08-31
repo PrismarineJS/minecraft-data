@@ -2,7 +2,7 @@
   "handshaking": {
     "toClient": {},
     "toServer": {
-      "handshake": {
+      "set_protocol": {
         "mainContent": [
           "",
           "This causes the server to switch into the target state.",
@@ -24,13 +24,13 @@
   },
   "status": {
     "toClient": {
-      "response": {
+      "server_info": {
         "mainContent": [
           "",
           ""
         ]
       },
-      "pong": {
+      "ping": {
         "mainContent": [
           "",
           ""
@@ -38,7 +38,7 @@
       }
     },
     "toServer": {
-      "request": {
+      "ping_start": {
         "mainContent": [
           "",
           ""
@@ -60,7 +60,7 @@
           ""
         ]
       },
-      "encryption_request": {
+      "encryption_begin": {
         "mainContent": [
           "",
           "",
@@ -68,7 +68,7 @@
           ""
         ]
       },
-      "login_success": {
+      "success": {
         "mainContent": [
           "",
           "",
@@ -76,7 +76,7 @@
           ""
         ]
       },
-      "set_compression": {
+      "compress": {
         "mainContent": [
           "",
           ""
@@ -90,7 +90,7 @@
           ""
         ]
       },
-      "encryption_response": {
+      "encryption_begin": {
         "mainContent": [
           "",
           "",
@@ -112,7 +112,7 @@
           ""
         ]
       },
-      "join_game": {
+      "login": {
         "mainContent": [
           "",
           "See [[Protocol Encryption]] for information on logging in.",
@@ -122,7 +122,7 @@
           ""
         ]
       },
-      "chat_message": {
+      "chat": {
         "mainContent": [
           "",
           "Identifying the difference between Chat/System Message is important as it helps respect the user's chat visibility options. While Position 2 accepts json formatting it will not display, old style formatting works",
@@ -132,7 +132,7 @@
           ""
         ]
       },
-      "time_update": {
+      "update_time": {
         "mainContent": [
           "",
           "Time is based on ticks, where 20 ticks happen every second. There are 24000 ticks in a day, making Minecraft days exactly 20 minutes long.",
@@ -180,7 +180,7 @@
           ""
         ]
       },
-      "player_position_and_look": {
+      "position": {
         "mainContent": [
           "",
           "Updates the player's position on the server.",
@@ -219,7 +219,7 @@
           ""
         ]
       },
-      "held_item_change": {
+      "held_item_slot": {
         "mainContent": [
           "",
           "Sent to change the player's slot selection.",
@@ -298,7 +298,7 @@
           ""
         ]
       },
-      "spawn_painting": {
+      "spawn_entity_painting": {
         "mainContent": [
           "",
           "This packet shows location, name, and type of painting.",
@@ -311,7 +311,7 @@
           ""
         ]
       },
-      "spawn_experience_orb": {
+      "spawn_entity_experience_orb": {
         "mainContent": [
           "",
           "Spawns one or more experience orbs.",
@@ -327,7 +327,7 @@
           ""
         ]
       },
-      "destroy_entities": {
+      "entity_destroy": {
         "mainContent": [
           "",
           "Sent by the server when a list of entities is to be destroyed on the client.",
@@ -345,7 +345,7 @@
           ""
         ]
       },
-      "entity_relative_move": {
+      "rel_entity_move": {
         "mainContent": [
           "",
           "This packet is sent by the server when an entity moves less then 4 blocks; if an entity moves more than 4 blocks [[#Entity Teleport|Entity Teleport]] should be sent instead.",
@@ -363,7 +363,7 @@
           ""
         ]
       },
-      "entity_look_and_relative_move": {
+      "entity_move_look": {
         "mainContent": [
           "",
           "This packet is sent by the server when an entity rotates and moves. Since a byte range is limited from -128 to 127, and movement is offset of fixed-point numbers, this packet allows at most four blocks movement in any direction. (-128/32 == -4)",
@@ -379,7 +379,7 @@
           ""
         ]
       },
-      "entity_head_look": {
+      "entity_head_rotation": {
         "mainContent": [
           "",
           "Changes the direction an entity's head is facing.",
@@ -428,7 +428,7 @@
           ""
         ]
       },
-      "entity_properties": {
+      "update_attributes": {
         "mainContent": [
           "",
           "",
@@ -440,7 +440,7 @@
           ""
         ]
       },
-      "chunk_data": {
+      "map_chunk": {
         "mainContent": [
           "",
           "Chunks are not unloaded by the client automatically. To unload chunks, send this packet with Ground-Up Continuous=true and no 16^3 chunks (eg. Primary Bit Mask=0). The server does not send skylight information for nether-chunks, it's up to the client to know if the player is currently in the nether. You can also infer this information from the primary bitmask and the amount of uncompressed bytes sent.",
@@ -518,7 +518,7 @@
           ""
         ]
       },
-      "effect": {
+      "world_event": {
         "mainContent": [
           "",
           "Sent when a client is to play a sound or particle effect.",
@@ -534,7 +534,7 @@
           ""
         ]
       },
-      "sound_effect": {
+      "named_sound_effect": {
         "mainContent": [
           "",
           "Used to play a sound effect on the client.",
@@ -614,7 +614,7 @@
           ""
         ]
       },
-      "window_property": {
+      "craft_progress_bar": {
         "mainContent": [
           "",
           "This packet is used to inform the client that part of a GUI window should be updated.",
@@ -625,7 +625,7 @@
           ""
         ]
       },
-      "confirm_transaction": {
+      "transaction": {
         "mainContent": [
           "",
           "A packet from the server indicating whether a request from the client was accepted, or whether there was a conflict (due to lag).",
@@ -641,7 +641,7 @@
           ""
         ]
       },
-      "maps": {
+      "map": {
         "mainContent": [
           "",
           "Updates a rectangular area on a map.",
@@ -649,7 +649,7 @@
           ""
         ]
       },
-      "update_block_entity": {
+      "tile_entity_data": {
         "mainContent": [
           "",
           "Essentially a block update on a block entity.",
@@ -666,7 +666,7 @@
           ""
         ]
       },
-      "sign_editor_open": {
+      "open_sign_entity": {
         "mainContent": [
           "",
           "Sent on placement of sign.",
@@ -680,7 +680,7 @@
           ""
         ]
       },
-      "player_list_item": {
+      "player_info": {
         "mainContent": [
           "",
           "Sent by the notchian server to update the user list (<tab> in the client).",
@@ -688,7 +688,7 @@
           ""
         ]
       },
-      "player_abilities": {
+      "abilities": {
         "mainContent": [
           "",
           "The latter 2 floats are used to indicate the walking and flying speeds respectively, while the first byte is used to determine the value of 4 booleans.",
@@ -750,7 +750,7 @@
           ""
         ]
       },
-      "disconnect": {
+      "kick_disconnect": {
         "mainContent": [
           "",
           "Sent by the server before it disconnects a client. The server assumes that the sender has already closed the connection by the time the packet arrives.",
@@ -758,7 +758,7 @@
           ""
         ]
       },
-      "server_difficulty": {
+      "difficulty": {
         "mainContent": [
           "",
           "Changes the difficulty setting in the client's option menu",
@@ -798,7 +798,7 @@
           ""
         ]
       },
-      "player_list_header/footer": {
+      "playerlist_header": {
         "mainContent": [
           "",
           ""
@@ -826,7 +826,7 @@
           ""
         ]
       },
-      "chat_message": {
+      "chat": {
         "mainContent": [
           "",
           "The default server will check the message to see if it begins with a '/'. If it doesn't, the username of the sender is prepended and sent to all other clients (including the original sender). If it does, the server assumes it to be a command and attempts to process it. A message longer than 100 characters will cause the server to kick the client. This change was initially done by allowing the client to not slice the message up to 119 (the previous limit), without changes to the server. For this reason, the vanilla server kept the code to cut messages at 119, but this isn't a protocol limitation and can be ignored.",
@@ -846,7 +846,7 @@
           ""
         ]
       },
-      "player": {
+      "flying": {
         "mainContent": [
           "",
           "This packet is used to indicate whether the player is on ground (walking/swimming), or airborne (jumping/falling).",
@@ -856,7 +856,7 @@
           ""
         ]
       },
-      "player_position": {
+      "position": {
         "mainContent": [
           "",
           "Updates the player's XYZ position on the server.",
@@ -870,7 +870,7 @@
           ""
         ]
       },
-      "player_look": {
+      "look": {
         "mainContent": [
           "[[File:Minecraft-trig-yaw.png|thumb|The unit circle for yaw]]",
           "[[File:Yaw.png|thumb|The unit circle of yaw, redrawn]]",
@@ -902,7 +902,7 @@
           ""
         ]
       },
-      "player_position_and_look": {
+      "position_look": {
         "mainContent": [
           "",
           "A combination of [[#Player Look|Player Look]] and [[#Player Position|Player Position]].",
@@ -910,7 +910,7 @@
           ""
         ]
       },
-      "player_digging": {
+      "block_dig": {
         "mainContent": [
           "",
           "Sent when the player mines a block. A Notchian server only accepts digging packets with coordinates within a 6-unit radius of the player's position.",
@@ -930,7 +930,7 @@
           ""
         ]
       },
-      "player_block_placement": {
+      "block_place": {
         "mainContent": [
           "",
           "",
@@ -944,7 +944,7 @@
           ""
         ]
       },
-      "held_item_change": {
+      "held_item_slot": {
         "mainContent": [
           "",
           "Sent when the player changes the slot selection",
@@ -1021,7 +1021,7 @@
           ""
         ]
       },
-      "creative_inventory_action": {
+      "set_creative_slot": {
         "mainContent": [
           "",
           "While the user is in the standard inventory (i.e., not a crafting bench) in Creative mode, the player will send this packet.",
@@ -1047,7 +1047,7 @@
           ""
         ]
       },
-      "player_abilities": {
+      "abilities": {
         "mainContent": [
           "",
           "The latter 2 bytes are used to indicate the walking and flying speeds respectively, while the first byte is used to determine the value of 4 booleans.",
@@ -1057,7 +1057,7 @@
           ""
         ]
       },
-      "tab-complete": {
+      "tab_complete": {
         "mainContent": [
           "",
           "Sent when the user presses ''tab'' while writing text.",
@@ -1065,7 +1065,7 @@
           ""
         ]
       },
-      "client_settings": {
+      "settings": {
         "mainContent": [
           "",
           "Sent when the player connects, or when settings are changed.",
@@ -1085,7 +1085,7 @@
           ""
         ]
       },
-      "client_status": {
+      "client_command": {
         "mainContent": [
           "",
           "Sent when the client is ready to complete login and when the client is ready to respawn after death.",
@@ -1096,7 +1096,7 @@
           ""
         ]
       },
-      "plugin_message": {
+      "custom_payload": {
         "mainContent": [
           "",
           "Mods and plugins can use this to send their data. Minecraft itself uses a number of [[plugin channel]]s. These internal channels are prefixed with <code>MC|</code>.",
@@ -1114,7 +1114,7 @@
           ""
         ]
       },
-      "resource_pack_status": {
+      "resource_pack_receive": {
         "mainContent": [
           "",
           ""
