@@ -1,12 +1,15 @@
 $j(document).ready(function() {
-
-  loadItems();
-  loadBlocks();
-  loadBiomes();
-  loadEntities();
-  loadInstruments();
-  loadProtocol();
-  toggleAnchor();
+  $j.getJSON("https://api.github.com/repos/"+repo+"/git/refs/heads/"+version)
+    .done(function(data) {
+      version = data.object.sha;
+      loadItems();
+      loadBlocks();
+      loadBiomes();
+      loadEntities();
+      loadInstruments();
+      loadProtocol();
+      toggleAnchor();
+    });
 });
 
 function toggleAnchor()
@@ -69,45 +72,6 @@ function loadInstruments()
     ["id","name"],
     []
   );
-}
-
-function protocolToString(protocol)
-{
-  return '<div id="protocolActualTable">' +
-  Object.keys(protocol)
-    .map(function(directionsName){return "<h1>"+directionsName+"</h1>\n"+directionsToString(protocol[directionsName]);})
-    .join("\n")+
-  '</div>';
-}
-
-function directionsToString(directions)
-{
-  return "<h2>toClient</h2>\n"+directionToString(directions["toClient"])+"\n"
-    + "<h2>toServer</h2>\n"+directionToString(directions["toServer"])+"\n";
-}
-
-function directionToString(direction)
-{
-  return Object.keys(direction).map(function(packetName){
-    return "<h3>"+packetName+" : "+direction[packetName].id+"</h3>\n"+packetToString(direction[packetName])
-  }).join("\n");
-}
-
-function packetToString(packet)
-{
-  return "<ul>"+
-      packet["fields"]
-        .map(function(field){return "<li>"+field["name"]+" : "+field["type"]+"</li>"})
-        .join("\n")
-    +"</ul>"
-}
-
-function loadProtocol()
-{
-  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+version+"/enums/protocol.json")
-    .done(function(data){
-      $j('#protocolTable').html(protocolToString(data));
-    });
 }
 
 function loadData(enumName,elementToArray,fields,hiddenColumns)
