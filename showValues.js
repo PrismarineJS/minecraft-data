@@ -296,8 +296,7 @@ function packetToString(state, direction, packet)
   }
 
   function generateLines() {
-    var first = 0;
-    return packet.fields.reduce(function (acc, field) {
+    var packets = packet.fields.reduce(function (acc, field) {
       var name = genNameLine(field, 0, function(field, fieldInfo) {
         return field.name;
       });
@@ -311,12 +310,20 @@ function packetToString(state, direction, packet)
         acc.push(name[i].concat(type[i]));
       }
       return acc;
-    }, []).map(function(field) {
-      if (first++ === 0)
-        field.unshift(
-          _('td', { rowspan: rows }).T(packet.id),
-          _('td', { rowspan: rows }).T(state),
-          _('td', { rowspan: rows }).T(direction));
+    }, []);
+    if (packets.length > 0) {
+      packets[0].unshift(
+        _('td', { rowspan: rows }).T(packet.id),
+        _('td', { rowspan: rows }).T(state),
+        _('td', { rowspan: rows }).T(direction));
+    } else
+      packets = [[
+        _('td', { rowspan: rows }).T(packet.id),
+        _('td', { rowspan: rows }).T(state),
+        _('td', { rowspan: rows }).T(direction),
+        _('td', { colspan: 2 })._([_('i').T('no fields')])
+      ]];
+    return packets.map(function(field) {
       return _('tr')._(field);
     });
   }
