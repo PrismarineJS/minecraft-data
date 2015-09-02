@@ -25,9 +25,9 @@ function flatten(array, mutable) {
 function protocolToString(protocol)
 {
   return _('div#protocolActualTable')._(
-    flatten(Object.keys(protocol).map(function (state) {
+    flatten(Object.keys(protocol.states).map(function (state) {
       return [_('h1').text(state),
-        directionsToString(state, protocol[state])];
+        directionsToString(state, protocol.states[state])];
     }))
   ).H();
 }
