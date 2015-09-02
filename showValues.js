@@ -1,14 +1,17 @@
 var _ = DOMBuilder;
 
 $j(document).ready(function() {
-
-  loadItems();
-  loadBlocks();
-  loadBiomes();
-  loadEntities();
-  loadInstruments();
-  loadProtocol();
-  toggleAnchor();
+  $j.getJSON("https://api.github.com/repos/"+repo+"/git/refs/heads/"+version)
+    .done(function(data) {
+      version = data.object.sha;
+      loadItems();
+      loadBlocks();
+      loadBiomes();
+      loadEntities();
+      loadInstruments();
+      loadProtocol();
+      toggleAnchor();
+    });
 });
 
 function toggleAnchor()
