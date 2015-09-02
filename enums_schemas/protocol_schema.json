@@ -2,6 +2,29 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "protocol",
   "definitions": {
+    "protocol":{
+      "type": "object",
+      "properties":{
+        "types":{"$ref": "#/definitions/types"},
+        "states":{"$ref": "#/definitions/states"}
+      },
+      "required":["types","states"],
+      "additionalProperties": false
+    },
+    "types":{
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]+$": {"$ref": "#/definitions/fieldType"}
+      },
+      "additionalProperties": false
+    },
+    "states":{
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]+$": {"$ref": "#/definitions/directions"}
+      },
+      "additionalProperties": false
+    },
     "directions": {
       "type": "object",
       "properties": {
@@ -64,7 +87,8 @@
         {"$ref": "#/definitions/container"},
         {"$ref": "#/definitions/switch"},
         {"$ref": "#/definitions/array"},
-        {"$ref": "#/definitions/buffer"}
+        {"$ref": "#/definitions/buffer"},
+        {"$ref": "#/definitions/option"}
       ]
     },
     "simpleFieldType": {
@@ -76,6 +100,14 @@
       "items":[
         {"enum":["container"]},
         {"$ref": "#/definitions/fields"}
+      ],
+      "additionalItems": false
+    },
+    "option": {
+      "type": "array",
+      "items":[
+        {"enum":["option"]},
+        {"$ref": "#/definitions/fieldType"}
       ],
       "additionalItems": false
     },
@@ -149,7 +181,7 @@
     },
     "contextualizedFieldName": {
       "type": "string",
-      "pattern": "^(this\\.)?[a-zA-Z0-9_]+$"
+      "pattern": "^(this\\.)?.+$"
     },
     "fieldTypeArgsCount": {
       "oneOf": [
@@ -181,9 +213,5 @@
       ]
     }
   },
-  "type": "object",
-  "patternProperties": {
-    "^[a-z]+$": {"$ref": "#/definitions/directions"}
-  },
-  "additionalProperties": false
+  "type": {"$ref": "#/definitions/protocol"}
 }
