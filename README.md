@@ -30,7 +30,7 @@ These are the projects that use minecraft-data (through the wrappers) :
 | [mineflayer](https://github.com/andrewrk/mineflayer) | Node.js | bot library | biomes, blocks, entities, instruments, items, materials, recipes |
 | [node-minecraft-protocol](https://github.com/PrismarineJS/node-minecraft-protocol) | Node.js | protocol serialization | protocol |
 | [flying-squid](https://github.com/mhsjlw/flying-squid) | Node.js | server library | biomes, blocks, materials |
-| [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | windows |
+| [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | windows, recipes |
 
 ## Documentation
 
