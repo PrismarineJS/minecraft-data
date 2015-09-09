@@ -59,11 +59,20 @@
     "field": {
       "type": "object",
       "properties": {
+        "anon": { "type": "boolean" },
         "name": {"$ref": "#/definitions/fieldName"},
         "type": {"$ref": "#/definitions/fieldType"}
       },
+      "not": {
+        "anyOf": [
+          { "required": ["anon", "name"] }
+        ]
+      },
+      "anyOf": [
+        { "required": ["anon"] },
+        { "required": ["name"] }
+      ],
       "required": [
-        "name",
         "type"
       ],
       "additionalProperties": false
@@ -79,7 +88,10 @@
         {"$ref": "#/definitions/switch"},
         {"$ref": "#/definitions/array"},
         {"$ref": "#/definitions/buffer"},
-        {"$ref": "#/definitions/option"}
+        {"$ref": "#/definitions/option"},
+        {"$ref": "#/definitions/bitfield"},
+        {"$ref": "#/definitions/entityMetadataLoop"},
+        {"$ref": "#/definitions/entityMetadataItem"}
       ]
     },
     "simpleFieldType": {
@@ -167,6 +179,60 @@
           "required": [
             "countType"
           ]
+        }
+      ]
+    },
+    "bitfield":{
+      "type": "array",
+      "items": [
+        { "enum": ["bitfield"] },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"$ref": "#/definitions/fieldName"},
+              "size": {"type": "number"},
+              "signed": {"type": "boolean"}
+            },
+            "required": [
+              "name",
+              "size",
+              "signed"
+            ],
+            "additionalProperties": false
+          },
+          "additionalItems": false
+        }
+      ],
+      "additionalItems": false
+    },
+    "entityMetadataLoop":{
+      "type": "array",
+      "items": [
+        { "enum": ["entityMetadataLoop"] },
+        {
+          "type": "object",
+          "properties": {
+            "endVal": { "type": "number" },
+            "type": {"$ref": "#/definitions/fieldType"}
+          },
+          "required": ["endVal", "type"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "entityMetadataItem":{
+      "type": "array",
+      "items": [
+        { "enum": ["entityMetadataItem"] },
+        {
+          "type": "object",
+          "properties": {
+            "compareTo":{"$ref": "#/definitions/contextualizedFieldName"}
+          },
+          "required": ["compareTo"],
+          "additionalProperties": false
         }
       ]
     },
