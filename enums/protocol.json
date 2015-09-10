@@ -16,7 +16,7 @@
     "double": "native",
     "UUID": "native",
     "option": "native",
-    "entityMetadata": "native",
+    "entityMetadataLoop": "native",
     "entityMetadataItem": [
       "switch",
       {
@@ -59,6 +59,16 @@
         }
       }
     ],
+    "entityMetadata": ["entityMetadataLoop", {
+      "endVal": 255,
+      "type": ["container", [
+        { "anon": true, "type": ["container", [
+          { "name": "key", "type": "ubyte" },
+          { "name": "type", "type": "byte" }
+        ]]},
+        { "name": "value", "type": ["entityMetadataItem", { "compareTo": "this.type" }]}
+      ]]
+    }],
     "container": "native",
     "switch": "native",
     "void": "native",
