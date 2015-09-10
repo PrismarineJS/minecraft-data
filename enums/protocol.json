@@ -980,7 +980,7 @@
             },
             {
               "name": "bitMap",
-              "type": "ushort"
+              "type": "varint"
             },
             {
               "name": "chunkData",
@@ -1080,45 +1080,6 @@
             {
               "name": "destroyStage",
               "type": "byte"
-            }
-          ]
-        },
-        "map_chunk_bulk": {
-          "id": "0x26",
-          "fields": [
-            {
-              "name": "skyLightSent",
-              "type": "bool"
-            },
-            {
-              "name": "meta",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "x",
-                        "type": "int"
-                      },
-                      {
-                        "name": "z",
-                        "type": "int"
-                      },
-                      {
-                        "name": "bitMap",
-                        "type": "ushort"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "data",
-              "type": "restBuffer"
             }
           ]
         },
@@ -1961,6 +1922,20 @@
               ]
             },
             {
+              "name": "collisionRule",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
               "name": "color",
               "type": [
                 "switch",
@@ -2342,7 +2317,7 @@
           ]
         },
         "boss_bar": {
-          "id": "0x49",
+          "id": "0x0c",
           "fields": [
             {
               "name": "entityUUID",
@@ -2424,14 +2399,19 @@
             }
           ]
         },
-        "unnamed_0": {
-          "id": "0x0c"
+        "set_cooldown": {
+          "id": "0x17",
+          "fields": [
+            { "name": "itemID", "type": "varint" },
+            { "name": "cooldownTicks", "type": "varint" }
+          ]
         },
-        "unnamed_1": {
-          "id": "0x17"
-        },
-        "unnamed_2": {
-          "id": "0x1c"
+        "unload_chunk": {
+          "id": "0x1c",
+          "fields": [
+            { "name": "chunkX", "type": "int" },
+            { "name": "chunkZ", "type": "int" }
+          ]
         }
       },
       "toServer": {
@@ -2845,7 +2825,7 @@
             },
             {
               "name": "chatFlags",
-              "type": "byte"
+              "type": "varint"
             },
             {
               "name": "chatColors",
@@ -2905,8 +2885,11 @@
             }
           ]
         },
-        "unnamed_3": {
-          "id": "0x1a"
+        "use_item": {
+          "id": "0x1a",
+          "fields": [
+            { "name": "hand", "type": "varint" }
+          ]
         }
       }
     }
