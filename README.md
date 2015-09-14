@@ -38,7 +38,7 @@ These are the projects that use minecraft-data (through the wrappers) :
  * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data/?v=1.9)
  * [Textual documentation of the recipe format](doc/recipes.md)
 
-## Extractors
+## Data and extraction
 
 Minecraft data provides a few extractors to update the data :
 
@@ -54,6 +54,7 @@ Minecraft data provides a few extractors to update the data :
 | [biomes](enums/biomes.json) | | manual : see https://github.com/andrewrk/mineflayer/pull/197 for more detail |
 | [protocol](enums/protocol.json) | | manual but [protocol_extractor](tools/js/wiki_extractor/protocol_extractor.js) and [protocol_extractor](tools/js/decompiled_extractor/protocol_extractor.json) can be useful for updating it |
 | [windows](enums/windows.json) | | manual using [wiki.vg Inventory page](http://wiki.vg/Inventory) |
+| [version](enums/version.json) | | manual |
 
 ## Data quality
 

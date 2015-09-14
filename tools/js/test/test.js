@@ -5,7 +5,7 @@ var v = new Validator();
 
 Error.stackTraceLimit=0;
 
-var enums=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol"];
+var enums=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version"];
 
 describe("minecraft-data", function() {
   this.timeout(60 * 1000);
