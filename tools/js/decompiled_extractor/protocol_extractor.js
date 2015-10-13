@@ -42,8 +42,7 @@ function dataToCleanLines(data,cb)
   var lines=data.split("\n");
   cb(null,lines
     .map(function(s){return s.trim()})
-    .filter(function(s){return s.indexOf("import")==-1 && s.indexOf("public")==-1 && s!="}" && s!="{" && s!="}," && s!=""})
-    .filter(function(s){if(s=="};") c=false; return c;}));
+    .filter(function(s){return s.indexOf("import")==-1 && s.indexOf("public")==-1 && s!="}" && s!="{" && s!="}," && s!=""}));
 }
 
 function linesToProtocol(cleanLines,cb)
