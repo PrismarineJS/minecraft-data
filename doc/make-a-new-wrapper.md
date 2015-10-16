@@ -6,10 +6,8 @@ If you want to use minecraft-data in a new language, you might want to create a 
 Here is a simple way to do it :
 
 * create a git repo
-* add the branches submodules in your repo :
-  * mkdir minecraft-data
-  * git submodule add -b 1.8 https://github.com/PrismarineJS/minecraft-data.git minecraft-data/1.8
-  * git submodule add -b 1.9 https://github.com/PrismarineJS/minecraft-data.git minecraft-data/1.9
+* add minecraft-data as a submodule : 
+  `git submodule add https://github.com/PrismarineJS/minecraft-data.git`
 * add code in your language to read the json files
 * add some code to index the data by name, by id to provide an api like 
 [api.md](https://github.com/PrismarineJS/node-minecraft-data/blob/master/doc/api.md)
