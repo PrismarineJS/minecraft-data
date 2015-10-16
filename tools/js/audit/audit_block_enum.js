@@ -1,4 +1,4 @@
-var blocks = require('../../../enums/blocks');
+var blocks = require('../.././1.8/blocks');
 
 var all = [];
 for (var key in blocks) {
