@@ -1,7 +1,7 @@
 $j(document).ready(function() {
-  $j.getJSON("https://api.github.com/repos/"+repo+"/git/refs/heads/"+version)
+  $j.getJSON("https://api.github.com/repos/"+repo+"/git/refs/heads/master")
     .done(function(data) {
-      version = data.object.sha;
+      commit = data.object.sha;
       loadItems();
       loadBlocks();
       loadBiomes();
@@ -76,7 +76,7 @@ function loadInstruments()
 
 function loadData(enumName,elementToArray,fields,hiddenColumns)
 {
-  $j.ajax("https://cdn.rawgit.com/"+repo+"/master/data/"+version+"/"+enumName+".json")
+  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+commit+"/data/"+version+"/"+enumName+".json")
     .done(function(data){
       var dataset=data.map(elementToArray);
       $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0"' +
