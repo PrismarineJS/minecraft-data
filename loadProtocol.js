@@ -290,7 +290,7 @@ function eqs(compareTo, k) {
 
 function loadProtocol()
 {
-  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+version+"/enums/protocol.json")
+  $j.ajax("https://cdn.rawgit.com/"+repo+"/data/"+version+"/protocol.json")
     .done(function(data){
       $j('#protocolTable').html(protocolToString(data));
     });

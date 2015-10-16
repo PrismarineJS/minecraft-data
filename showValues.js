@@ -76,7 +76,7 @@ function loadInstruments()
 
 function loadData(enumName,elementToArray,fields,hiddenColumns)
 {
-  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+version+"/enums/"+enumName+".json")
+  $j.ajax("https://cdn.rawgit.com/"+repo+"/data/"+version+"/"+enumName+".json")
     .done(function(data){
       var dataset=data.map(elementToArray);
       $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0"' +

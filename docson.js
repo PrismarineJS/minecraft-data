@@ -8,7 +8,7 @@ function display(docson,repo,commit,json,element,enums_schemas_dir)
 }
 require.config({ baseUrl: "docson"});
 require(["docson", "./lib/jquery"], function(docson){
-  displaySchema(docson,repo,version,enums,"enums_schemas").done(function(){
+  displaySchema(docson,repo,"master",enums,"schemas").done(function(){
     done();
   })
 });
