@@ -18,24 +18,6 @@ Minecraft-data is language independent, you can use it with these language speci
 | [ProtocolGen](https://github.com/Johni0702/ProtocolGen) | java | generated java files from protocol.json to read and write minecraft packets |
 
 If you want to use minecraft-data in a new language, we advise you to [create a new wrapper](doc/make-a-new-wrapper.md)
- 
-## Projects using minecraft-data
-
-These are the projects that use minecraft-data (through the wrappers) :
-
-| Project name | Language | Project type | Data used |
-| --- | --- | --- | --- |
-| [mineflayer](https://github.com/andrewrk/mineflayer) | Node.js | bot library | biomes, blocks, entities, instruments, items, materials, recipes |
-| [node-minecraft-protocol](https://github.com/PrismarineJS/node-minecraft-protocol) | Node.js | protocol serialization | protocol |
-| [flying-squid](https://github.com/mhsjlw/flying-squid) | Node.js | server library | biomes, blocks, materials |
-| [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | biomes, blocks, items, materials, windows, recipes |
-| [PhaseBot](https://github.com/phase/PhaseBot) | Java | bot | blocks, items |
-
-## Documentation
-
- * See [doc/history.md](doc/history.md)
- * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data)
- * [Textual documentation of the recipe format](doc/recipes.md)
 
 ## Data
 
@@ -56,6 +38,24 @@ Data provided:
 | Versions | all the versions supported in minecraft-data |
 
 See more information about this data in the [documentation](http://prismarinejs.github.io/minecraft-data/)
+
+## Documentation
+
+ * See [doc/history.md](doc/history.md)
+ * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data)
+ * [Textual documentation of the recipe format](doc/recipes.md)
+  
+## Projects using minecraft-data
+
+These are the projects that use minecraft-data (through the wrappers) :
+
+| Project name | Language | Project type | Data used |
+| --- | --- | --- | --- |
+| [mineflayer](https://github.com/andrewrk/mineflayer) | Node.js | bot library | biomes, blocks, entities, instruments, items, materials, recipes |
+| [node-minecraft-protocol](https://github.com/PrismarineJS/node-minecraft-protocol) | Node.js | protocol serialization | protocol |
+| [flying-squid](https://github.com/mhsjlw/flying-squid) | Node.js | server library | biomes, blocks, materials |
+| [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | biomes, blocks, items, materials, windows, recipes |
+| [PhaseBot](https://github.com/phase/PhaseBot) | Java | bot | blocks, items |
 
 ## Extraction
 
