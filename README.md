@@ -11,15 +11,13 @@ Support minecraft 1.8 and 1.9.
 
 Minecraft-data is language independent, you can use it with these language specific modules :
 
-* [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) provides indexes and look up functions in node.js
-* [python-minecraft-data](https://github.com/rom1504/python-minecraft-data) provides indexes and look up functions in python
+| Wrapper name | Language | Data provided |
+| --- | --- | --- |
+| [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) | Node.js | everything |
+| [python-minecraft-data](https://github.com/rom1504/python-minecraft-data) | python | everything |
+| [ProtocolGen](https://github.com/Johni0702/ProtocolGen) | java | generated java files from protocol.json to read and write minecraft packets |
 
 If you want to use minecraft-data in a new language, we advise you to [create a new wrapper](doc/make-a-new-wrapper.md)
-
-There are also some projects that wrap parts of minecraft-data in other ways :
-
-* [ProtocolGen](https://github.com/Johni0702/ProtocolGen) that generate java files reading and writing the protocol
- from minecraft-data protocol.json file
  
 ## Projects using minecraft-data
 
