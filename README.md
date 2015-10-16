@@ -56,14 +56,16 @@ Minecraft data provides a few extractors to update the data :
 | [protocol](enums/protocol.json) | | manual but [protocol_extractor](https://github.com/PrismarineJS/mcdevs-wiki-extractor) and [protocol_extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) can be useful for updating it |
 | [windows](enums/windows.json) | | manual using [wiki.vg Inventory page](http://wiki.vg/Inventory) |
 | [version](enums/version.json) | | manual |
+| [versions](data/versions.json) | | manual |
 
 ## Data quality
 
 Minecraft data provides scripts to audit the data, they can be useful to check the data is correct :
 
- * tools/js/audit/audit_block_enum.js audits blocks.json : it checks for duplicates names and jumps in ids
- * tools/js/audit/audit_item_enum.js audits items.json : it checks for duplicates names and jumps in ids
- * tools/js/audit/audit_recipes.js audits recipes.json : it counts the number of recipes with a shape, without one and with an outShape 
- 
-Minecraft data also provides json schemas in enums_schemas/ that are used in test/test.js to check the json file are valid relative to these schemas.
-These schemas can also be used to understand better how the json files are formatted in order to use it.
+ * [audit_blocks](tools/js/test/audit_blocks.js)
+ * [audit_items](tools/js/test/audit_items.js)
+ * [audit_recipes](tools/js/test/audit_recipes.js)
+Minecraft data also provides json schemas in enums_schemas/ that are used in 
+test/test.js to check the json file are valid relative to these schemas.
+These schemas can also be used to understand better how the json files are
+formatted in order to use it.

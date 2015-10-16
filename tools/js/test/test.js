@@ -5,16 +5,20 @@ var v = new Validator();
 
 Error.stackTraceLimit=0;
 
-var enums=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version"];
+var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version"];
 
-describe("minecraft-data", function() {
-  this.timeout(60 * 1000);
-    enums.forEach(function(enumName){
-      it(enumName+".json is valid",function(){
-        var instance = require('../../../enums/'+enumName+'.json');
-        var schema = require('../../../enums_schemas/'+enumName+'_schema.json');
+var versions=require("../../../data/common/versions");
+
+versions.forEach(function(version){
+  describe("minecraft-data schemas "+version, function() {
+    this.timeout(60 * 1000);
+    data.forEach(function(dataName){
+      it(dataName+".json is valid",function(){
+        var instance = require('../../../data/'+version+'/'+dataName+'.json');
+        var schema = require('../../../schemas/'+dataName+'_schema.json');
         var result = v.validate(instance, schema);
         assert.strictEqual(result.errors.length,0,require('util').inspect(result.errors,{'depth':null}));
       })
     });
+  });
 });
