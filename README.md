@@ -27,6 +27,7 @@ Data provided:
 | --- | --- |
 | Biomes | |
 | Blocks |  |
+| Effect | Status/Potion effects |
 | Entities | |
 | Instruments | sounds emitted by blocks |
 | Items |  |
@@ -76,6 +77,7 @@ Pages interesting to manually update the data if necessary:
 | [wiki.vg Inventory page](http://wiki.vg/Inventory) | windows |
 | [wiki.vg](http://wiki.vg/Block_Actions) | instruments |
 | [a mineflayer PR](https://github.com/andrewrk/mineflayer/pull/197) | biomes |
+| [mcwiki effects page](http://minecraft.gamepedia.com/Status_effect) | effects |
 
 ## Data quality
 

@@ -5,7 +5,7 @@ var v = new Validator();
 
 Error.stackTraceLimit=0;
 
-var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version"];
+var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version","effects"];
 
 var versions=require("../../../data/common/versions");
 
