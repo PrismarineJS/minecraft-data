@@ -33,6 +33,7 @@ Data provided:
 | Items |  |
 | Materials | to be used with blocks data |
 | Protocol | a complete description of the protocol, can be used to automatically implement the protocol |
+| Protocol Versions | the whole list of minecraft protocol versions |
 | Recipes |to be used with blocks and items data |
 | Windows | the different kind of windows and their characteristics |
 | Version | |
@@ -79,6 +80,7 @@ Pages interesting to manually update the data if necessary:
 | [wiki.vg](http://wiki.vg/Block_Actions) | instruments |
 | [a mineflayer PR](https://github.com/andrewrk/mineflayer/pull/197) | biomes |
 | [mcwiki effects page](http://minecraft.gamepedia.com/Status_effect) | effects |
+| [wiki.vg protocol version numbers](http://wiki.vg/Protocol_version_numbers) | protocolVersions |
 
 ## Data quality
 

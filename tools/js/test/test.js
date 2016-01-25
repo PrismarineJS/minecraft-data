@@ -22,3 +22,17 @@ versions.forEach(function(version){
     });
   });
 });
+
+var commonData=["protocolVersions"];
+
+describe("minecraft-data schemas of common data",function() {
+  this.timeout(60 * 1000);
+  commonData.forEach(function(dataName){
+    it(dataName+".json is valid",function(){
+      var instance = require('../../../data/common/'+dataName+'.json');
+      var schema = require('../../../schemas/'+dataName+'_schema.json');
+      var result = v.validate(instance, schema);
+      assert.strictEqual(result.errors.length,0,require('util').inspect(result.errors,{'depth':null}));
+    })
+  });
+});
