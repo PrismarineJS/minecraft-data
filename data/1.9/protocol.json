@@ -295,8 +295,8 @@
             }
           ]
         },
-        "login": {
-          "id": "0x24",
+        "join_game": {
+          "id": "0x23",
           "fields": [
             {
               "name": "entityId",
@@ -328,7 +328,7 @@
             }
           ]
         },
-        "chat": {
+        "chat_message": {
           "id": "0x0f",
           "fields": [
             {
@@ -341,8 +341,8 @@
             }
           ]
         },
-        "update_time": {
-          "id": "0x43",
+        "time_update": {
+          "id": "0x44",
           "fields": [
             {
               "name": "age",
@@ -418,7 +418,7 @@
             }
           ]
         },
-        "position": {
+        "player_position_and_look": {
           "id": "0x2e",
           "fields": [
             {
@@ -444,10 +444,14 @@
             {
               "name": "flags",
               "type": "byte"
+            },
+            {
+              "name": "teleportId",
+              "type": "varint"
             }
           ]
         },
-        "held_item_slot": {
+        "held_item_change": {
           "id": "0x37",
           "fields": [
             {
@@ -456,7 +460,7 @@
             }
           ]
         },
-        "bed": {
+        "use_bed": {
           "id": "0x2f",
           "fields": [
             {
@@ -473,16 +477,12 @@
           "id": "0x06",
           "fields": [
             {
-              "name": "entityId",
+              "name": "hand",
               "type": "varint"
-            },
-            {
-              "name": "animation",
-              "type": "ubyte"
             }
           ]
         },
-        "named_entity_spawn": {
+        "spawn_player": {
           "id": "0x05",
           "fields": [
             {
@@ -519,8 +519,8 @@
             }
           ]
         },
-        "collect": {
-          "id": "0x47",
+        "collect_item": {
+          "id": "0x49",
           "fields": [
             {
               "name": "collectedEntityId",
@@ -532,7 +532,7 @@
             }
           ]
         },
-        "spawn_entity": {
+        "spawn_object": {
           "id": "0x00",
           "fields": [
             {
@@ -540,7 +540,7 @@
               "type": "varint"
             },
             {
-              "name": "entityUUID",
+              "name": "objectUUID",
               "type": "UUID"
             },
             {
@@ -585,7 +585,7 @@
             }
           ]
         },
-        "spawn_entity_living": {
+        "spawn_mob": {
           "id": "0x03",
           "fields": [
             {
@@ -642,7 +642,7 @@
             }
           ]
         },
-        "spawn_entity_painting": {
+        "spawn_painting": {
           "id": "0x04",
           "fields": [
             {
@@ -663,7 +663,7 @@
             }
           ]
         },
-        "spawn_entity_experience_orb": {
+        "spawn_experience_orb": {
           "id": "0x01",
           "fields": [
             {
@@ -709,7 +709,7 @@
             }
           ]
         },
-        "entity_destroy": {
+        "destroy_entities": {
           "id": "0x30",
           "fields": [
             {
@@ -725,7 +725,7 @@
           ]
         },
         "entity": {
-          "id": "0x29",
+          "id": "0x28",
           "fields": [
             {
               "name": "entityId",
@@ -733,8 +733,33 @@
             }
           ]
         },
-        "rel_entity_move": {
-          "id": "0x26",
+        "vehicle_move": {
+          "id": "0x29",
+          "fields": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            },
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            }
+          ]
+        },
+        "entity_relative_move": {
+          "id": "0x25",
           "fields": [
             {
               "name": "entityId",
@@ -759,7 +784,7 @@
           ]
         },
         "entity_look": {
-          "id": "0x28",
+          "id": "0x27",
           "fields": [
             {
               "name": "entityId",
@@ -779,8 +804,8 @@
             }
           ]
         },
-        "entity_move_look": {
-          "id": "0x27",
+        "entity_look_and_relative_move": {
+          "id": "0x26",
           "fields": [
             {
               "name": "entityId",
@@ -813,7 +838,7 @@
           ]
         },
         "entity_teleport": {
-          "id": "0x48",
+          "id": "0x4a",
           "fields": [
             {
               "name": "entityId",
@@ -845,7 +870,7 @@
             }
           ]
         },
-        "entity_head_rotation": {
+        "entity_head_look": {
           "id": "0x34",
           "fields": [
             {
@@ -859,7 +884,7 @@
           ]
         },
         "entity_status": {
-          "id": "0x1a",
+          "id": "0x1b",
           "fields": [
             {
               "name": "entityId",
@@ -902,7 +927,7 @@
           ]
         },
         "entity_effect": {
-          "id": "0x4a",
+          "id": "0x4c",
           "fields": [
             {
               "name": "entityId",
@@ -939,7 +964,7 @@
             }
           ]
         },
-        "experience": {
+        "set_experience": {
           "id": "0x3d",
           "fields": [
             {
@@ -956,64 +981,7 @@
             }
           ]
         },
-        "update_attributes": {
-          "id": "0x49",
-          "fields": [
-            {
-              "name": "entityId",
-              "type": "varint"
-            },
-            {
-              "name": "properties",
-              "type": [
-                "array",
-                {
-                  "countType": "int",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "key",
-                        "type": "string"
-                      },
-                      {
-                        "name": "value",
-                        "type": "double"
-                      },
-                      {
-                        "name": "modifiers",
-                        "type": [
-                          "array",
-                          {
-                            "countType": "varint",
-                            "type": [
-                              "container",
-                              [
-                                {
-                                  "name": "UUID",
-                                  "type": "UUID"
-                                },
-                                {
-                                  "name": "amount",
-                                  "type": "double"
-                                },
-                                {
-                                  "name": "operation",
-                                  "type": "byte"
-                                }
-                              ]
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "map_chunk": {
+        "chunk_data": {
           "id": "0x20",
           "fields": [
             {
@@ -1134,7 +1102,7 @@
           ]
         },
         "explosion": {
-          "id": "0x1b",
+          "id": "0x1c",
           "fields": [
             {
               "name": "x",
@@ -1192,7 +1160,7 @@
             }
           ]
         },
-        "world_event": {
+        "effect": {
           "id": "0x21",
           "fields": [
             {
@@ -1214,11 +1182,15 @@
           ]
         },
         "named_sound_effect": {
-          "id": "0x23",
+          "id": "0x19",
           "fields": [
             {
               "name": "soundName",
               "type": "string"
+            },
+            {
+              "name": "soundCategory",
+              "type": "varint"
             },
             {
               "name": "x",
@@ -1242,7 +1214,7 @@
             }
           ]
         },
-        "world_particles": {
+        "particle": {
           "id": "0x22",
           "fields": [
             {
@@ -1305,7 +1277,7 @@
             }
           ]
         },
-        "game_state_change": {
+        "change_game_state": {
           "id": "0x1e",
           "fields": [
             {
@@ -1318,7 +1290,7 @@
             }
           ]
         },
-        "spawn_entity_weather": {
+        "spawn_global_entity": {
           "id": "0x02",
           "fields": [
             {
@@ -1422,7 +1394,7 @@
             }
           ]
         },
-        "craft_progress_bar": {
+        "window_property": {
           "id": "0x15",
           "fields": [
             {
@@ -1439,7 +1411,7 @@
             }
           ]
         },
-        "transaction": {
+        "confirm_transaction": {
           "id": "0x11",
           "fields": [
             {
@@ -1457,7 +1429,7 @@
           ]
         },
         "update_sign": {
-          "id": "0x45",
+          "id": "0x46",
           "fields": [
             {
               "name": "location",
@@ -1482,7 +1454,7 @@
           ]
         },
         "map": {
-          "id": "0x25",
+          "id": "0x24",
           "fields": [
             {
               "name": "itemDamage",
@@ -1585,7 +1557,7 @@
             }
           ]
         },
-        "tile_entity_data": {
+        "update_block_entity": {
           "id": "0x09",
           "fields": [
             {
@@ -1602,7 +1574,7 @@
             }
           ]
         },
-        "open_sign_entity": {
+        "open_sign_editor": {
           "id": "0x2a",
           "fields": [
             {
@@ -1638,7 +1610,7 @@
             }
           ]
         },
-        "player_info": {
+        "player_list_item": {
           "id": "0x2d",
           "fields": [
             {
@@ -1764,7 +1736,7 @@
             }
           ]
         },
-        "abilities": {
+        "player_abilities": {
           "id": "0x2b",
           "fields": [
             {
@@ -1837,8 +1809,8 @@
             }
           ]
         },
-        "scoreboard_score": {
-          "id": "0x41",
+        "update_score": {
+          "id": "0x42",
           "fields": [
             {
               "name": "itemName",
@@ -1867,7 +1839,7 @@
             }
           ]
         },
-        "scoreboard_display_objective": {
+        "display_scoreboard": {
           "id": "0x38",
           "fields": [
             {
@@ -1880,8 +1852,8 @@
             }
           ]
         },
-        "scoreboard_team": {
-          "id": "0x40",
+        "teams": {
+          "id": "0x41",
           "fields": [
             {
               "name": "team",
@@ -2024,7 +1996,7 @@
             }
           ]
         },
-        "custom_payload": {
+        "plugin_message": {
           "id": "0x18",
           "fields": [
             {
@@ -2037,8 +2009,8 @@
             }
           ]
         },
-        "kick_disconnect": {
-          "id": "0x19",
+        "disconnect": {
+          "id": "0x1a",
           "fields": [
             {
               "name": "reason",
@@ -2260,7 +2232,7 @@
           ]
         },
         "title": {
-          "id": "0x44",
+          "id": "0x45",
           "fields": [
             {
               "name": "action",
@@ -2321,17 +2293,8 @@
             }
           ]
         },
-        "set_compression": {
-          "id": "0x1d",
-          "fields": [
-            {
-              "name": "threshold",
-              "type": "varint"
-            }
-          ]
-        },
-        "playerlist_header": {
-          "id": "0x46",
+        "player_list_header_and_footer": {
+          "id": "0x48",
           "fields": [
             {
               "name": "header",
@@ -2453,7 +2416,7 @@
           ]
         },
         "unload_chunk": {
-          "id": "0x1c",
+          "id": "0x1d",
           "fields": [
             {
               "name": "chunkX",
