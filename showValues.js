@@ -8,6 +8,8 @@ $j(document).ready(function() {
       loadEntities();
       loadInstruments();
       loadProtocol();
+      loadWindows();
+      loadEffects();
       toggleAnchor();
     });
 });
@@ -27,9 +29,10 @@ function loadBlocks()
   loadData("blocks",
     function(block){return [block["id"],'<a href="#'+block["name"]+'">'+block["name"]+'</a>',
       block["displayName"],block["stackSize"],block["hardness"]
-      ,block["diggable"],block["boundingBox"],block["material"] ? block["material"] : null];},
-    ["id","name","displayName","stackSize","hardness","diggable","boundingBox","material"],
-    [6,7]
+      ,block["diggable"],block["boundingBox"],block["material"] ? block["material"] : null,
+    block["transparent"],block["emitLight"],block["filterLight"]];},
+    ["id","name","displayName","stackSize","hardness","diggable","boundingBox","material","transparent","emitLight","filterLight"],
+    [6,7,8,9,10]
   );
 }
 
@@ -59,8 +62,8 @@ function loadEntities()
 {
   loadData("entities",
     function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'
-      ,e["displayName"],e["type"]];},
-    ["id","name","displayName","type"],
+      ,e["displayName"],e["type"],e["internalId"] ? e["internalId"] : "",e["width"],e["height"],e["category"] ? e["category"] : ""];},
+    ["id","name","displayName","type","internalId","width","height","category"],
     []
   );
 }
@@ -70,6 +73,24 @@ function loadInstruments()
   loadData("instruments",
     function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'];},
     ["id","name"],
+    []
+  );
+}
+
+function loadWindows()
+{
+  loadData("windows",
+    function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'];},
+    ["id","name"],
+    []
+  );
+}
+
+function loadEffects()
+{
+  loadData("effects",
+    function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>',e["displayName"],e["type"]];},
+    ["id","name","displayName","type"],
     []
   );
 }
