@@ -4,7 +4,11 @@ var versions=require("../../../data/common/versions");
 
 versions.forEach(function(version) {
   describe("audit items " + version, function() {
-    var items = require('../../../data/' + version + '/items');
+    try {
+      var items = require('../../../data/' + version + '/items');
+    } catch (e) {
+      console.log("No items for version " + version);
+    }
     it("audit items", function() {
 
       var displayNames = {};
