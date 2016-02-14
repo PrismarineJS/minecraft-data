@@ -4,7 +4,11 @@ var versions=require("../../../data/common/versions");
 
 versions.forEach(function(version) {
   describe("audit blocks " + version, function() {
-    var blocks = require('../../../data/' + version + '/blocks');
+    try {
+      var blocks = require('../../../data/' + version + '/blocks');
+    } catch (e) {
+      console.log("No blocks for version " + version);
+    }
     it("audit blocks", function() {
 
       var all = [];
