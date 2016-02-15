@@ -372,7 +372,7 @@
           ]
         },
         "spawn_position": {
-          "id": "0x42",
+          "id": "0x43",
           "fields": [
             {
               "name": "location",
@@ -867,6 +867,63 @@
             {
               "name": "onGround",
               "type": "bool"
+            }
+          ]
+        },
+        "entity_properties": {
+          "id": "0x4b",
+          "fields": [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "properties",
+              "type": [
+                "array",
+                {
+                  "countType": "int",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "key",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": "double"
+                      },
+                      {
+                        "name": "modifiers",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": [
+                              "container",
+                              [
+                                {
+                                  "name": "uuid",
+                                  "type": "UUID"
+                                },
+                                {
+                                  "name": "amount",
+                                  "type": "double"
+                                },
+                                {
+                                  "name": "operation",
+                                  "type": "byte"
+                                }
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -1453,6 +1510,39 @@
             }
           ]
         },
+        "sound_effect": {
+          "id": "0x47",
+          "fields": [
+            {
+              "name": "soundId",
+              "type": "varint"
+            },
+            {
+              "name": "soundCatagory",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            },
+            {
+              "name": "volume",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "ubyte"
+            }
+          ]
+        },
         "map": {
           "id": "0x24",
           "fields": [
@@ -1852,6 +1942,25 @@
             }
           ]
         },
+        "set_passengers": {
+          "id": "0x40",
+          "fields": [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "passengers",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "varint"
+                }
+              ]
+            }
+          ]
+        },
         "teams": {
           "id": "0x41",
           "fields": [
@@ -2018,7 +2127,7 @@
             }
           ]
         },
-        "difficulty": {
+        "server_difficulty": {
           "id": "0x0d",
           "fields": [
             {
@@ -2430,8 +2539,17 @@
         }
       },
       "toServer": {
+        "teleport_confirm": {
+          "id": "0x00",
+          "fields": [
+            {
+              "name": "teleportId",
+              "type": "varint"
+            }
+          ]
+        },
         "keep_alive": {
-          "id": "0x0a",
+          "id": "0x0b",
           "fields": [
             {
               "name": "keepAliveId",
@@ -2439,8 +2557,8 @@
             }
           ]
         },
-        "chat": {
-          "id": "0x01",
+        "chat_message": {
+          "id": "0x02",
           "fields": [
             {
               "name": "message",
@@ -2449,7 +2567,7 @@
           ]
         },
         "use_entity": {
-          "id": "0x09",
+          "id": "0x0a",
           "fields": [
             {
               "name": "target",
@@ -2514,8 +2632,8 @@
             }
           ]
         },
-        "flying": {
-          "id": "0x0e",
+        "player": {
+          "id": "0x0f",
           "fields": [
             {
               "name": "onGround",
@@ -2523,45 +2641,7 @@
             }
           ]
         },
-        "position": {
-          "id": "0x0b",
-          "fields": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            },
-            {
-              "name": "onGround",
-              "type": "bool"
-            }
-          ]
-        },
-        "look": {
-          "id": "0x0d",
-          "fields": [
-            {
-              "name": "yaw",
-              "type": "float"
-            },
-            {
-              "name": "pitch",
-              "type": "float"
-            },
-            {
-              "name": "onGround",
-              "type": "bool"
-            }
-          ]
-        },
-        "position_look": {
+        "player_position": {
           "id": "0x0c",
           "fields": [
             {
@@ -2577,6 +2657,15 @@
               "type": "double"
             },
             {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        },
+        "player_look": {
+          "id": "0x0e",
+          "fields": [
+            {
               "name": "yaw",
               "type": "float"
             },
@@ -2590,8 +2679,37 @@
             }
           ]
         },
-        "block_dig": {
-          "id": "0x10",
+        "player_position_look": {
+          "id": "0x0d",
+          "fields": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            },
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        },
+        "player_digging": {
+          "id": "0x13",
           "fields": [
             {
               "name": "status",
@@ -2607,8 +2725,8 @@
             }
           ]
         },
-        "block_place": {
-          "id": "0x19",
+        "player_block_placement": {
+          "id": "0x1c",
           "fields": [
             {
               "name": "location",
@@ -2636,7 +2754,7 @@
             }
           ]
         },
-        "held_item_slot": {
+        "held_item_change": {
           "id": "0x14",
           "fields": [
             {
@@ -2645,8 +2763,8 @@
             }
           ]
         },
-        "arm_animation": {
-          "id": "0x17",
+        "animation": {
+          "id": "0x1a",
           "fields": [
             {
               "name": "hand",
@@ -2655,7 +2773,7 @@
           ]
         },
         "entity_action": {
-          "id": "0x11",
+          "id": "0x14",
           "fields": [
             {
               "name": "entityId",
@@ -2672,7 +2790,7 @@
           ]
         },
         "steer_vehicle": {
-          "id": "0x12",
+          "id": "0x15",
           "fields": [
             {
               "name": "sideways",
@@ -2689,7 +2807,7 @@
           ]
         },
         "close_window": {
-          "id": "0x07",
+          "id": "0x08",
           "fields": [
             {
               "name": "windowId",
@@ -2697,8 +2815,8 @@
             }
           ]
         },
-        "window_click": {
-          "id": "0x06",
+        "click_window": {
+          "id": "0x07",
           "fields": [
             {
               "name": "windowId",
@@ -2726,8 +2844,8 @@
             }
           ]
         },
-        "transaction": {
-          "id": "0x04",
+        "confirm_transaction": {
+          "id": "0x05",
           "fields": [
             {
               "name": "windowId",
@@ -2743,8 +2861,8 @@
             }
           ]
         },
-        "set_creative_slot": {
-          "id": "0x15",
+        "creative_inventory_action": {
+          "id": "0x18",
           "fields": [
             {
               "name": "slot",
@@ -2757,7 +2875,7 @@
           ]
         },
         "enchant_item": {
-          "id": "0x05",
+          "id": "0x06",
           "fields": [
             {
               "name": "windowId",
@@ -2769,33 +2887,8 @@
             }
           ]
         },
-        "update_sign": {
-          "id": "0x16",
-          "fields": [
-            {
-              "name": "location",
-              "type": "position"
-            },
-            {
-              "name": "text1",
-              "type": "string"
-            },
-            {
-              "name": "text2",
-              "type": "string"
-            },
-            {
-              "name": "text3",
-              "type": "string"
-            },
-            {
-              "name": "text4",
-              "type": "string"
-            }
-          ]
-        },
-        "abilities": {
-          "id": "0x0f",
+        "player_abilities": {
+          "id": "0x12",
           "fields": [
             {
               "name": "flags",
@@ -2812,14 +2905,22 @@
           ]
         },
         "tab_complete": {
-          "id": "0x00",
+          "id": "0x01",
           "fields": [
             {
               "name": "text",
               "type": "string"
             },
             {
-              "name": "block",
+              "name": "assumeCommand",
+              "type": "bool"
+            },
+            {
+              "name": "hasPosition",
+              "type": "bool"
+            },
+            {
+              "name": "lookedAtBlock",
               "type": [
                 "option",
                 "position"
@@ -2827,8 +2928,8 @@
             }
           ]
         },
-        "settings": {
-          "id": "0x03",
+        "client_settings": {
+          "id": "0x04",
           "fields": [
             {
               "name": "locale",
@@ -2856,17 +2957,17 @@
             }
           ]
         },
-        "client_command": {
-          "id": "0x02",
+        "client_status": {
+          "id": "0x03",
           "fields": [
             {
-              "name": "payload",
+              "name": "actionId",
               "type": "varint"
             }
           ]
         },
-        "custom_payload": {
-          "id": "0x08",
+        "plugin_message": {
+          "id": "0x09",
           "fields": [
             {
               "name": "channel",
@@ -2879,7 +2980,7 @@
           ]
         },
         "spectate": {
-          "id": "0x18",
+          "id": "0x1b",
           "fields": [
             {
               "name": "target",
@@ -2887,8 +2988,8 @@
             }
           ]
         },
-        "resource_pack_receive": {
-          "id": "0x13",
+        "resource_pack_status": {
+          "id": "0x16",
           "fields": [
             {
               "name": "hash",
@@ -2900,8 +3001,33 @@
             }
           ]
         },
+        "update_sign": {
+          "id": "0x19",
+          "fields": [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "text1",
+              "type": "string"
+            },
+            {
+              "name": "text2",
+              "type": "string"
+            },
+            {
+              "name": "text3",
+              "type": "string"
+            },
+            {
+              "name": "text4",
+              "type": "string"
+            }
+          ]
+        },
         "use_item": {
-          "id": "0x1a",
+          "id": "0x1d",
           "fields": [
             {
               "name": "hand",
