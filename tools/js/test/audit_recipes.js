@@ -4,7 +4,11 @@ var versions=require("../../../data/common/versions");
 
 versions.forEach(function(version) {
   describe("audit recipes "+version,function(){
-    var recipes = require('../../../data/'+version+'/recipes');
+    try {
+      var recipes = require('../../../data/'+version+'/recipes');
+    } catch (e) {
+      console.log("No recipes for version " + version);
+    }
     it("audit recipes",function(){
       var shapeCount = 0, shapelessCount = 0;
       var outShapeCount = 0;

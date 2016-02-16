@@ -14,7 +14,11 @@ versions.forEach(function(version){
     this.timeout(60 * 1000);
     data.forEach(function(dataName){
       it(dataName+".json is valid",function(){
-        var instance = require('../../../data/'+version+'/'+dataName+'.json');
+        try {
+          var instance = require('../../../data/'+version+'/'+dataName+'.json');
+        } catch (e) {
+          console.log("No " + dataName + " data for version " + version);
+        }
         var schema = require('../../../schemas/'+dataName+'_schema.json');
         var result = v.validate(instance, schema);
         assert.strictEqual(result.errors.length,0,require('util').inspect(result.errors,{'depth':null}));
