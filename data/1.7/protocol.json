@@ -454,8 +454,8 @@
               "type": "float"
             },
             {
-              "name": "flags",
-              "type": "byte"
+              "name": "onGround",
+              "type": "bool"
             }
           ]
         },
@@ -503,7 +503,37 @@
             },
             {
               "name": "playerUUID",
-              "type": "UUID"
+              "type": "string"
+            },
+            {
+              "name": "playerName",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": "string"
+                      },
+                      {
+                        "name": "signature",
+                        "type": "string"
+                      }
+                    ]
+                  ]
+                }
+              ]
             },
             {
               "name": "x",
@@ -1056,11 +1086,15 @@
               "type": "ushort"
             },
             {
-              "name": "chunkData",
+              "name": "addBitMap",
+              "type": "ushort"
+            },
+            {
+              "name": "compressedChunkData",
               "type": [
                 "buffer",
                 {
-                  "countType": "varint"
+                  "countType": "int"
                 }
               ]
             }
@@ -1082,7 +1116,7 @@
               "type": [
                 "array",
                 {
-                  "countType": "varint",
+                  "countType": "short",
                   "type": [
                     "container",
                     [
@@ -1170,37 +1204,19 @@
           "id": "0x26",
           "fields": [
             {
+              "name": "chunkColumnCount",
+              "type": "short"
+            },
+            {
+              "name": "dataLength",
+              "type": "int"
+            },
+            {
               "name": "skyLightSent",
               "type": "bool"
             },
             {
-              "name": "meta",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "x",
-                        "type": "int"
-                      },
-                      {
-                        "name": "z",
-                        "type": "int"
-                      },
-                      {
-                        "name": "bitMap",
-                        "type": "ushort"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "data",
+              "name": "compressedChunkData",
               "type": "restBuffer"
             }
           ]
@@ -1318,12 +1334,8 @@
           "id": "0x2a",
           "fields": [
             {
-              "name": "particleId",
-              "type": "int"
-            },
-            {
-              "name": "longDistance",
-              "type": "bool"
+              "name": "particleName",
+              "type": "string"
             },
             {
               "name": "x",
@@ -1356,24 +1368,6 @@
             {
               "name": "particles",
               "type": "int"
-            },
-            {
-              "name": "data",
-              "type": [
-                "array",
-                {
-                  "count": {
-                    "field": "particleId",
-                    "map": {
-                      "36": 2,
-                      "37": 1,
-                      "38": 1
-                    },
-                    "default": 0
-                  },
-                  "type": "varint"
-                }
-              ]
             }
           ]
         },
@@ -1424,7 +1418,7 @@
             },
             {
               "name": "inventoryType",
-              "type": "string"
+              "type": "ubyte"
             },
             {
               "name": "windowTitle",
@@ -1433,6 +1427,10 @@
             {
               "name": "slotCount",
               "type": "ubyte"
+            },
+            {
+              "name": "useProvidedTitle",
+              "type": "bool"
             },
             {
               "name": "entityId",
@@ -1516,7 +1514,7 @@
           "fields": [
             {
               "name": "windowId",
-              "type": "byte"
+              "type": "ubyte"
             },
             {
               "name": "action",
@@ -1533,7 +1531,7 @@
           "fields": [
             {
               "name": "location",
-              "type": "position"
+              "type": "position_isi"
             },
             {
               "name": "text1",
@@ -1561,93 +1559,11 @@
               "type": "varint"
             },
             {
-              "name": "scale",
-              "type": "byte"
-            },
-            {
-              "name": "icons",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "directionAndType",
-                        "type": "byte"
-                      },
-                      {
-                        "name": "x",
-                        "type": "byte"
-                      },
-                      {
-                        "name": "y",
-                        "type": "byte"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "columns",
-              "type": "byte"
-            },
-            {
-              "name": "rows",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "columns",
-                  "fields": {
-                    "0": "void"
-                  },
-                  "default": "byte"
-                }
-              ]
-            },
-            {
-              "name": "x",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "columns",
-                  "fields": {
-                    "0": "void"
-                  },
-                  "default": "byte"
-                }
-              ]
-            },
-            {
-              "name": "y",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "columns",
-                  "fields": {
-                    "0": "void"
-                  },
-                  "default": "byte"
-                }
-              ]
-            },
-            {
               "name": "data",
               "type": [
-                "switch",
+                "buffer",
                 {
-                  "compareTo": "columns",
-                  "fields": {
-                    "0": "void"
-                  },
-                  "default": [
-                    "buffer",
-                    {
-                      "countType": "varint"
-                    }
-                  ]
+                  "countType": "short"
                 }
               ]
             }
@@ -1675,7 +1591,7 @@
           "fields": [
             {
               "name": "location",
-              "type": "position"
+              "type": "position_iii"
             }
           ]
         },
@@ -1763,36 +1679,12 @@
               "type": "string"
             },
             {
+              "name": "displayText",
+              "type": "string"
+            },
+            {
               "name": "action",
               "type": "byte"
-            },
-            {
-              "name": "displayText",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "0": "string",
-                    "2": "string"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "type",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "0": "string",
-                    "2": "string"
-                  },
-                  "default": "void"
-                }
-              ]
             }
           ]
         },
@@ -2492,7 +2384,7 @@
           "fields": [
             {
               "name": "location",
-              "type": "position"
+              "type": "position_ibi"
             },
             {
               "name": "direction",
@@ -2533,7 +2425,7 @@
               "type": "int"
             },
             {
-              "type": "animation",
+              "name": "animation",
               "type": "byte"
             }
           ]
@@ -2568,7 +2460,11 @@
             },
             {
               "name": "jump",
-              "type": "ubyte"
+              "type": "bool"
+            },
+            {
+              "name": "jump",
+              "type": "unmount"
             }
           ]
         },
@@ -2586,7 +2482,7 @@
           "fields": [
             {
               "name": "windowId",
-              "type": "ubyte"
+              "type": "byte"
             },
             {
               "name": "slot",
@@ -2658,7 +2554,7 @@
           "fields": [
             {
               "name": "location",
-              "type": "position"
+              "type": "position_isi"
             },
             {
               "name": "text1",
@@ -2701,13 +2597,6 @@
             {
               "name": "text",
               "type": "string"
-            },
-            {
-              "name": "block",
-              "type": [
-                "option",
-                "position"
-              ]
             }
           ]
         },
