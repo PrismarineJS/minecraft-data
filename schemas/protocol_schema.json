@@ -83,6 +83,7 @@
         {"$ref": "#/definitions/switch"},
         {"$ref": "#/definitions/array"},
         {"$ref": "#/definitions/buffer"},
+        {"$ref": "#/definitions/count"},
         {"$ref": "#/definitions/option"},
         {"$ref": "#/definitions/bitfield"},
         {"$ref": "#/definitions/entityMetadataLoop"},
@@ -98,6 +99,22 @@
       "items":[
         {"enum":["container"]},
         {"$ref": "#/definitions/fields"}
+      ],
+      "additionalItems": false
+    },
+    "count": {
+      "type": "array",
+      "items":[
+        {"enum":["count"]},
+        {
+          "type": "object",
+          "properties": {
+            "countFor": {"$ref":"#/definitions/contextualizedFieldName"},
+            "type": {"$ref": "#/definitions/fieldType"}
+          },
+          "required": ["countFor", "type"],
+          "additionalProperties": false
+        }
       ],
       "additionalItems": false
     },
