@@ -1218,11 +1218,21 @@
           "fields": [
             {
               "name": "chunkColumnCount",
-              "type": "short"
+              "type": ["count",
+                {
+                  "type": "short",
+                  "countFor": "meta"
+                }
+              ]
             },
             {
               "name": "dataLength",
-              "type": "int"
+              "type": ["count",
+                {
+                  "type": "int",
+                  "countFor": "compressedChunkData"
+                }
+              ]
             },
             {
               "name": "skyLightSent",
@@ -1230,7 +1240,41 @@
             },
             {
               "name": "compressedChunkData",
-              "type": "restBuffer"
+              "type": ["buffer",
+                {
+                  "count": "dataLength"
+                }
+              ]
+            },
+            {
+              "name": "meta",
+              "type": [
+                "array",
+                {
+                  "count": "chunkColumnCount",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "x",
+                        "type": "int"
+                      },
+                      {
+                        "name": "z",
+                        "type": "int"
+                      },
+                      {
+                        "name": "bitMap",
+                        "type": "ushort"
+                      },
+                      {
+                        "name": "addBitMap",
+                        "type": "ushort"
+                      }
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         },
