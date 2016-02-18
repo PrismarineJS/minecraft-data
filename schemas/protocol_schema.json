@@ -5,14 +5,14 @@
     "types":{
       "type": "object",
       "patternProperties": {
-        "^[a-zA-Z]+$": {"$ref": "#/definitions/fieldType"}
+        "^[a-zA-Z_]+$": {"$ref": "#/definitions/fieldType"}
       },
       "additionalProperties": false
     },
     "states":{
       "type": "object",
       "patternProperties": {
-        "^[a-z]+$": {"$ref": "#/definitions/directions"}
+        "^[a-z_]+$": {"$ref": "#/definitions/directions"}
       },
       "additionalProperties": false
     },
@@ -83,6 +83,7 @@
         {"$ref": "#/definitions/switch"},
         {"$ref": "#/definitions/array"},
         {"$ref": "#/definitions/buffer"},
+        {"$ref": "#/definitions/count"},
         {"$ref": "#/definitions/option"},
         {"$ref": "#/definitions/bitfield"},
         {"$ref": "#/definitions/entityMetadataLoop"},
@@ -91,13 +92,29 @@
     },
     "simpleFieldType": {
       "type": "string",
-      "pattern": "^[a-zA-Z]+$"
+      "pattern": "^[a-zA-Z_]+$"
     },
     "container": {
       "type": "array",
       "items":[
         {"enum":["container"]},
         {"$ref": "#/definitions/fields"}
+      ],
+      "additionalItems": false
+    },
+    "count": {
+      "type": "array",
+      "items":[
+        {"enum":["count"]},
+        {
+          "type": "object",
+          "properties": {
+            "countFor": {"$ref":"#/definitions/contextualizedFieldName"},
+            "type": {"$ref": "#/definitions/fieldType"}
+          },
+          "required": ["countFor", "type"],
+          "additionalProperties": false
+        }
       ],
       "additionalItems": false
     },
@@ -166,13 +183,27 @@
       "items":[
         {"enum":["buffer"]},
         {
-          "type": "object",
-          "properties": {
-            "countType": {"$ref": "#/definitions/fieldType"}
-          },
-          "additionalProperties": false,
-          "required": [
-            "countType"
+          "oneOf":[
+            {
+              "type": "object",
+              "properties": {
+                "countType": {"$ref": "#/definitions/fieldType"}
+              },
+              "additionalProperties": false,
+              "required": [
+                "countType"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "count": {"$ref": "#/definitions/contextualizedFieldName"}
+              },
+              "additionalProperties": false,
+              "required": [
+                "count"
+              ]
+            }
           ]
         }
       ]
