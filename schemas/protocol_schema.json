@@ -183,13 +183,27 @@
       "items":[
         {"enum":["buffer"]},
         {
-          "type": "object",
-          "properties": {
-            "countType": {"$ref": "#/definitions/fieldType"}
-          },
-          "additionalProperties": false,
-          "required": [
-            "countType"
+          "oneOf":[
+            {
+              "type": "object",
+              "properties": {
+                "countType": {"$ref": "#/definitions/fieldType"}
+              },
+              "additionalProperties": false,
+              "required": [
+                "countType"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "count": {"$ref": "#/definitions/contextualizedFieldName"}
+              },
+              "additionalProperties": false,
+              "required": [
+                "count"
+              ]
+            }
           ]
         }
       ]
