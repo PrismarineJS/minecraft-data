@@ -21,56 +21,97 @@
     "void": "native",
     "array": "native",
     "restBuffer": "native",
-    "nbt":"native",
-    "compressedNbt":"native",
-    "slot": ["container",[
-      {
-        "name":"blockId",
-        "type":"i16"
-      },
-      {
-        "anon":true,
-        "type":["switch",
-          {
-            "compareTo":"blockId",
-            "fields": {
-              "-1": "void"
-            },
-            "default":[
-              "container",[
-                {
-                  "name":"itemCount",
-                  "type":"i8"
-                },
-                {
-                  "name":"itemDamage",
-                  "type":"i16"
-                },
-                {
-                  "name":"nbtData",
-                  "type":"compressedNbt"
-                }
+    "nbt": "native",
+    "compressedNbt": "native",
+    "slot": [
+      "container",
+      [
+        {
+          "name": "blockId",
+          "type": "i16"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "blockId",
+              "fields": {
+                "-1": "void"
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "itemCount",
+                    "type": "i8"
+                  },
+                  {
+                    "name": "itemDamage",
+                    "type": "i16"
+                  },
+                  {
+                    "name": "nbtData",
+                    "type": "compressedNbt"
+                  }
+                ]
               ]
-            ]
-          }
-        ]
-      }
-    ]],
-    "position_iii": ["container", [
-      { "name": "x", "type": "i32" },
-      { "name": "y", "type": "i32" },
-      { "name": "z", "type": "i32" }
-    ]],
-    "position_isi": ["container", [
-      { "name": "x", "type": "i32" },
-      { "name": "y", "type": "i16" },
-      { "name": "z", "type": "i32" }
-    ]],
-    "position_ibi": ["container", [
-      { "name": "x", "type": "i32" },
-      { "name": "y", "type": "u8" },
-      { "name": "z", "type": "i32" }
-    ]],
+            }
+          ]
+        }
+      ]
+    ],
+    "position_iii": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i32"
+        },
+        {
+          "name": "y",
+          "type": "i32"
+        },
+        {
+          "name": "z",
+          "type": "i32"
+        }
+      ]
+    ],
+    "position_isi": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i32"
+        },
+        {
+          "name": "y",
+          "type": "i16"
+        },
+        {
+          "name": "z",
+          "type": "i32"
+        }
+      ]
+    ],
+    "position_ibi": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i32"
+        },
+        {
+          "name": "y",
+          "type": "u8"
+        },
+        {
+          "name": "z",
+          "type": "i32"
+        }
+      ]
+    ],
     "entityMetadataItem": [
       "switch",
       {
@@ -119,24 +160,78 @@
         }
       }
     ],
-    "entityMetadata": ["entityMetadataLoop", {
-      "endVal": 127,
-      "type": ["container", [
-        { "anon": true, "type": ["bitfield", [
-          { "name": "type", "size": 3, "signed": false },
-          { "name": "key", "size": 5, "signed": false }
-        ]]},
-        { "name": "value", "type": ["entityMetadataItem", { "compareTo": "type" }]}
-      ]]
-    }]
+    "entityMetadata": [
+      "entityMetadataLoop",
+      {
+        "endVal": 127,
+        "type": [
+          "container",
+          [
+            {
+              "anon": true,
+              "type": [
+                "bitfield",
+                [
+                  {
+                    "name": "type",
+                    "size": 3,
+                    "signed": false
+                  },
+                  {
+                    "name": "key",
+                    "size": 5,
+                    "signed": false
+                  }
+                ]
+              ]
+            },
+            {
+              "name": "value",
+              "type": [
+                "entityMetadataItem",
+                {
+                  "compareTo": "type"
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    ]
   },
   "states": {
     "handshaking": {
-      "toClient": {},
+      "toClient": {
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {}
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {}
+                }
+              ]
+            }
+          ]
+        ]
+      },
       "toServer": {
-        "set_protocol": {
-          "id": "0x00",
-          "fields": [
+        "packet_set_protocol": [
+          "container",
+          [
             {
               "name": "protocolVersion",
               "type": "varint"
@@ -154,69 +249,162 @@
               "type": "varint"
             }
           ]
-        },
-        "legacy_server_list_ping": {
-          "id": "0xfe",
-          "fields": [
+        ],
+        "packet_legacy_server_list_ping": [
+          "container",
+          [
             {
               "name": "payload",
               "type": "u8"
             }
           ]
-        }
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "set_protocol",
+                    "0xfe": "legacy_server_list_ping"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "set_protocol": "packet_set_protocol",
+                    "legacy_server_list_ping": "packet_legacy_server_list_ping"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
       }
     },
     "status": {
       "toClient": {
-        "server_info": {
-          "id": "0x00",
-          "fields": [
+        "packet_server_info": [
+          "container",
+          [
             {
               "name": "response",
               "type": "string"
             }
           ]
-        },
-        "ping": {
-          "id": "0x01",
-          "fields": [
+        ],
+        "packet_ping": [
+          "container",
+          [
             {
               "name": "time",
               "type": "i64"
             }
           ]
-        }
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "server_info",
+                    "0x01": "ping"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "server_info": "packet_server_info",
+                    "ping": "packet_ping"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
       },
       "toServer": {
-        "ping_start": {
-          "id": "0x00",
-          "fields": []
-        },
-        "ping": {
-          "id": "0x01",
-          "fields": [
+        "packet_ping_start": [
+          "container",
+          []
+        ],
+        "packet_ping": [
+          "container",
+          [
             {
               "name": "time",
               "type": "i64"
             }
           ]
-        }
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "ping_start",
+                    "0x01": "ping"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "ping_start": "packet_ping_start",
+                    "ping": "packet_ping"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
       }
     },
     "login": {
       "toClient": {
-        "disconnect": {
-          "id": "0x00",
-          "fields": [
+        "packet_disconnect": [
+          "container",
+          [
             {
               "name": "reason",
               "type": "string"
             }
           ]
-        },
-        "encryption_begin": {
-          "id": "0x01",
-          "fields": [
+        ],
+        "packet_encryption_begin": [
+          "container",
+          [
             {
               "name": "serverId",
               "type": "string"
@@ -240,10 +428,10 @@
               ]
             }
           ]
-        },
-        "success": {
-          "id": "0x02",
-          "fields": [
+        ],
+        "packet_success": [
+          "container",
+          [
             {
               "name": "uuid",
               "type": "string"
@@ -253,21 +441,54 @@
               "type": "string"
             }
           ]
-        }
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "disconnect",
+                    "0x01": "encryption_begin",
+                    "0x02": "success"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "disconnect": "packet_disconnect",
+                    "encryption_begin": "packet_encryption_begin",
+                    "success": "packet_success"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
       },
       "toServer": {
-        "login_start": {
-          "id": "0x00",
-          "fields": [
+        "packet_login_start": [
+          "container",
+          [
             {
               "name": "username",
               "type": "string"
             }
           ]
-        },
-        "encryption_begin": {
-          "id": "0x01",
-          "fields": [
+        ],
+        "packet_encryption_begin": [
+          "container",
+          [
             {
               "name": "sharedSecret",
               "type": [
@@ -287,23 +508,54 @@
               ]
             }
           ]
-        }
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "login_start",
+                    "0x01": "encryption_begin"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "login_start": "packet_login_start",
+                    "encryption_begin": "packet_encryption_begin"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
       }
     },
     "play": {
       "toClient": {
-        "keep_alive": {
-          "id": "0x00",
-          "fields": [
+        "packet_keep_alive": [
+          "container",
+          [
             {
               "name": "keepAliveId",
               "type": "i32"
             }
           ]
-        },
-        "login": {
-          "id": "0x01",
-          "fields": [
+        ],
+        "packet_login": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -329,19 +581,19 @@
               "type": "string"
             }
           ]
-        },
-        "chat": {
-          "id": "0x02",
-          "fields": [
+        ],
+        "packet_chat": [
+          "container",
+          [
             {
               "name": "message",
               "type": "string"
             }
           ]
-        },
-        "update_time": {
-          "id": "0x03",
-          "fields": [
+        ],
+        "packet_update_time": [
+          "container",
+          [
             {
               "name": "age",
               "type": "i64"
@@ -351,10 +603,10 @@
               "type": "i64"
             }
           ]
-        },
-        "entity_equipment": {
-          "id": "0x04",
-          "fields": [
+        ],
+        "packet_entity_equipment": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -368,19 +620,19 @@
               "type": "slot"
             }
           ]
-        },
-        "spawn_position": {
-          "id": "0x05",
-          "fields": [
+        ],
+        "packet_spawn_position": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_iii"
             }
           ]
-        },
-        "update_health": {
-          "id": "0x06",
-          "fields": [
+        ],
+        "packet_update_health": [
+          "container",
+          [
             {
               "name": "health",
               "type": "f32"
@@ -394,10 +646,10 @@
               "type": "f32"
             }
           ]
-        },
-        "respawn": {
-          "id": "0x07",
-          "fields": [
+        ],
+        "packet_respawn": [
+          "container",
+          [
             {
               "name": "dimension",
               "type": "i32"
@@ -415,10 +667,10 @@
               "type": "string"
             }
           ]
-        },
-        "position": {
-          "id": "0x08",
-          "fields": [
+        ],
+        "packet_position": [
+          "container",
+          [
             {
               "name": "x",
               "type": "f64"
@@ -444,19 +696,19 @@
               "type": "bool"
             }
           ]
-        },
-        "held_item_slot": {
-          "id": "0x09",
-          "fields": [
+        ],
+        "packet_held_item_slot": [
+          "container",
+          [
             {
               "name": "slot",
               "type": "i8"
             }
           ]
-        },
-        "bed": {
-          "id": "0x0a",
-          "fields": [
+        ],
+        "packet_bed": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -466,10 +718,10 @@
               "type": "position_ibi"
             }
           ]
-        },
-        "animation": {
-          "id": "0x0b",
-          "fields": [
+        ],
+        "packet_animation": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -479,10 +731,10 @@
               "type": "u8"
             }
           ]
-        },
-        "named_entity_spawn": {
-          "id": "0x0c",
-          "fields": [
+        ],
+        "packet_named_entity_spawn": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -550,10 +802,10 @@
               "type": "entityMetadata"
             }
           ]
-        },
-        "collect": {
-          "id": "0x0d",
-          "fields": [
+        ],
+        "packet_collect": [
+          "container",
+          [
             {
               "name": "collectedEntityId",
               "type": "i32"
@@ -563,10 +815,10 @@
               "type": "i32"
             }
           ]
-        },
-        "spawn_entity": {
-          "id": "0x0e",
-          "fields": [
+        ],
+        "packet_spawn_entity": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -647,10 +899,10 @@
               ]
             }
           ]
-        },
-        "spawn_entity_living": {
-          "id": "0x0f",
-          "fields": [
+        ],
+        "packet_spawn_entity_living": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -700,10 +952,10 @@
               "type": "entityMetadata"
             }
           ]
-        },
-        "spawn_entity_painting": {
-          "id": "0x10",
-          "fields": [
+        ],
+        "packet_spawn_entity_painting": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -721,10 +973,10 @@
               "type": "u8"
             }
           ]
-        },
-        "spawn_entity_experience_orb": {
-          "id": "0x11",
-          "fields": [
+        ],
+        "packet_spawn_entity_experience_orb": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -746,10 +998,10 @@
               "type": "i16"
             }
           ]
-        },
-        "entity_velocity": {
-          "id": "0x12",
-          "fields": [
+        ],
+        "packet_entity_velocity": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -767,10 +1019,10 @@
               "type": "i16"
             }
           ]
-        },
-        "entity_destroy": {
-          "id": "0x13",
-          "fields": [
+        ],
+        "packet_entity_destroy": [
+          "container",
+          [
             {
               "name": "entityIds",
               "type": [
@@ -782,57 +1034,19 @@
               ]
             }
           ]
-        },
-        "entity": {
-          "id": "0x14",
-          "fields": [
+        ],
+        "packet_entity": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
             }
           ]
-        },
-        "rel_entity_move": {
-          "id": "0x15",
-          "fields": [
-            {
-              "name": "entityId",
-              "type": "i32"
-            },
-            {
-              "name": "dX",
-              "type": "i8"
-            },
-            {
-              "name": "dY",
-              "type": "i8"
-            },
-            {
-              "name": "dZ",
-              "type": "i8"
-            }
-          ]
-        },
-        "entity_look": {
-          "id": "0x16",
-          "fields": [
-            {
-              "name": "entityId",
-              "type": "i32"
-            },
-            {
-              "name": "yaw",
-              "type": "i8"
-            },
-            {
-              "name": "pitch",
-              "type": "i8"
-            }
-          ]
-        },
-        "entity_move_look": {
-          "id": "0x17",
-          "fields": [
+        ],
+        "packet_rel_entity_move": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -848,6 +1062,15 @@
             {
               "name": "dZ",
               "type": "i8"
+            }
+          ]
+        ],
+        "packet_entity_look": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "i32"
             },
             {
               "name": "yaw",
@@ -858,10 +1081,39 @@
               "type": "i8"
             }
           ]
-        },
-        "entity_teleport": {
-          "id": "0x18",
-          "fields": [
+        ],
+        "packet_entity_move_look": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "i32"
+            },
+            {
+              "name": "dX",
+              "type": "i8"
+            },
+            {
+              "name": "dY",
+              "type": "i8"
+            },
+            {
+              "name": "dZ",
+              "type": "i8"
+            },
+            {
+              "name": "yaw",
+              "type": "i8"
+            },
+            {
+              "name": "pitch",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_entity_teleport": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -887,10 +1139,10 @@
               "type": "i8"
             }
           ]
-        },
-        "entity_head_rotation": {
-          "id": "0x19",
-          "fields": [
+        ],
+        "packet_entity_head_rotation": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -900,10 +1152,10 @@
               "type": "i8"
             }
           ]
-        },
-        "entity_status": {
-          "id": "0x1a",
-          "fields": [
+        ],
+        "packet_entity_status": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -913,10 +1165,10 @@
               "type": "i8"
             }
           ]
-        },
-        "attach_entity": {
-          "id": "0x1b",
-          "fields": [
+        ],
+        "packet_attach_entity": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -930,10 +1182,10 @@
               "type": "bool"
             }
           ]
-        },
-        "entity_metadata": {
-          "id": "0x1c",
-          "fields": [
+        ],
+        "packet_entity_metadata": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -943,10 +1195,10 @@
               "type": "entityMetadata"
             }
           ]
-        },
-        "entity_effect": {
-          "id": "0x1d",
-          "fields": [
+        ],
+        "packet_entity_effect": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -964,10 +1216,10 @@
               "type": "i16"
             }
           ]
-        },
-        "remove_entity_effect": {
-          "id": "0x1e",
-          "fields": [
+        ],
+        "packet_remove_entity_effect": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -977,10 +1229,10 @@
               "type": "i8"
             }
           ]
-        },
-        "experience": {
-          "id": "0x1f",
-          "fields": [
+        ],
+        "packet_experience": [
+          "container",
+          [
             {
               "name": "experienceBar",
               "type": "f32"
@@ -994,10 +1246,10 @@
               "type": "i16"
             }
           ]
-        },
-        "update_attributes": {
-          "id": "0x20",
-          "fields": [
+        ],
+        "packet_update_attributes": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -1051,10 +1303,10 @@
               ]
             }
           ]
-        },
-        "map_chunk": {
-          "id": "0x21",
-          "fields": [
+        ],
+        "packet_map_chunk": [
+          "container",
+          [
             {
               "name": "x",
               "type": "i32"
@@ -1085,10 +1337,10 @@
               ]
             }
           ]
-        },
-        "multi_block_change": {
-          "id": "0x22",
-          "fields": [
+        ],
+        "packet_multi_block_change": [
+          "container",
+          [
             {
               "name": "chunkX",
               "type": "i32"
@@ -1099,7 +1351,8 @@
             },
             {
               "name": "recordCount",
-              "type": ["count",
+              "type": [
+                "count",
                 {
                   "type": "i16",
                   "countFor": "records"
@@ -1121,10 +1374,21 @@
                     [
                       {
                         "anon": true,
-                        "type": ["bitfield", [
-                          { "name": "metadata", "size": 4, "signed": false },
-                          { "name": "blockId", "size": 12, "signed": false }
-                        ]]
+                        "type": [
+                          "bitfield",
+                          [
+                            {
+                              "name": "metadata",
+                              "size": 4,
+                              "signed": false
+                            },
+                            {
+                              "name": "blockId",
+                              "size": 12,
+                              "signed": false
+                            }
+                          ]
+                        ]
                       },
                       {
                         "name": "y",
@@ -1132,10 +1396,21 @@
                       },
                       {
                         "anon": true,
-                        "type": ["bitfield", [
-                          { "name": "z", "size": 4, "signed": false },
-                          { "name": "x", "size": 4, "signed": false }
-                        ]]
+                        "type": [
+                          "bitfield",
+                          [
+                            {
+                              "name": "z",
+                              "size": 4,
+                              "signed": false
+                            },
+                            {
+                              "name": "x",
+                              "size": 4,
+                              "signed": false
+                            }
+                          ]
+                        ]
                       }
                     ]
                   ]
@@ -1143,10 +1418,10 @@
               ]
             }
           ]
-        },
-        "block_change": {
-          "id": "0x23",
-          "fields": [
+        ],
+        "packet_block_change": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_ibi"
@@ -1160,10 +1435,10 @@
               "type": "u8"
             }
           ]
-        },
-        "block_action": {
-          "id": "0x24",
-          "fields": [
+        ],
+        "packet_block_action": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_isi"
@@ -1181,10 +1456,10 @@
               "type": "varint"
             }
           ]
-        },
-        "block_break_animation": {
-          "id": "0x25",
-          "fields": [
+        ],
+        "packet_block_break_animation": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -1198,13 +1473,14 @@
               "type": "i8"
             }
           ]
-        },
-        "map_chunk_bulk": {
-          "id": "0x26",
-          "fields": [
+        ],
+        "packet_map_chunk_bulk": [
+          "container",
+          [
             {
               "name": "chunkColumnCount",
-              "type": ["count",
+              "type": [
+                "count",
                 {
                   "type": "i16",
                   "countFor": "meta"
@@ -1213,7 +1489,8 @@
             },
             {
               "name": "dataLength",
-              "type": ["count",
+              "type": [
+                "count",
                 {
                   "type": "i32",
                   "countFor": "compressedChunkData"
@@ -1226,7 +1503,8 @@
             },
             {
               "name": "compressedChunkData",
-              "type": ["buffer",
+              "type": [
+                "buffer",
                 {
                   "count": "dataLength"
                 }
@@ -1263,10 +1541,10 @@
               ]
             }
           ]
-        },
-        "explosion": {
-          "id": "0x27",
-          "fields": [
+        ],
+        "packet_explosion": [
+          "container",
+          [
             {
               "name": "x",
               "type": "f32"
@@ -1322,10 +1600,10 @@
               "type": "f32"
             }
           ]
-        },
-        "world_event": {
-          "id": "0x28",
-          "fields": [
+        ],
+        "packet_world_event": [
+          "container",
+          [
             {
               "name": "effectId",
               "type": "i32"
@@ -1343,10 +1621,10 @@
               "type": "bool"
             }
           ]
-        },
-        "named_sound_effect": {
-          "id": "0x29",
-          "fields": [
+        ],
+        "packet_named_sound_effect": [
+          "container",
+          [
             {
               "name": "soundName",
               "type": "string"
@@ -1372,10 +1650,10 @@
               "type": "u8"
             }
           ]
-        },
-        "world_particles": {
-          "id": "0x2a",
-          "fields": [
+        ],
+        "packet_world_particles": [
+          "container",
+          [
             {
               "name": "particleName",
               "type": "string"
@@ -1413,10 +1691,10 @@
               "type": "i32"
             }
           ]
-        },
-        "game_state_change": {
-          "id": "0x2b",
-          "fields": [
+        ],
+        "packet_game_state_change": [
+          "container",
+          [
             {
               "name": "reason",
               "type": "u8"
@@ -1426,10 +1704,10 @@
               "type": "f32"
             }
           ]
-        },
-        "spawn_entity_weather": {
-          "id": "0x2c",
-          "fields": [
+        ],
+        "packet_spawn_entity_weather": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "varint"
@@ -1451,10 +1729,10 @@
               "type": "i32"
             }
           ]
-        },
-        "open_window": {
-          "id": "0x2d",
-          "fields": [
+        ],
+        "packet_open_window": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "u8"
@@ -1489,19 +1767,19 @@
               ]
             }
           ]
-        },
-        "close_window": {
-          "id": "0x2e",
-          "fields": [
+        ],
+        "packet_close_window": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "u8"
             }
           ]
-        },
-        "set_slot": {
-          "id": "0x2f",
-          "fields": [
+        ],
+        "packet_set_slot": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "i8"
@@ -1515,10 +1793,10 @@
               "type": "slot"
             }
           ]
-        },
-        "window_items": {
-          "id": "0x30",
-          "fields": [
+        ],
+        "packet_window_items": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "u8"
@@ -1534,10 +1812,10 @@
               ]
             }
           ]
-        },
-        "craft_progress_bar": {
-          "id": "0x31",
-          "fields": [
+        ],
+        "packet_craft_progress_bar": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "u8"
@@ -1551,10 +1829,10 @@
               "type": "i16"
             }
           ]
-        },
-        "transaction": {
-          "id": "0x32",
-          "fields": [
+        ],
+        "packet_transaction": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "u8"
@@ -1568,10 +1846,10 @@
               "type": "bool"
             }
           ]
-        },
-        "update_sign": {
-          "id": "0x33",
-          "fields": [
+        ],
+        "packet_update_sign": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_isi"
@@ -1593,10 +1871,10 @@
               "type": "string"
             }
           ]
-        },
-        "map": {
-          "id": "0x34",
-          "fields": [
+        ],
+        "packet_map": [
+          "container",
+          [
             {
               "name": "itemDamage",
               "type": "varint"
@@ -1611,10 +1889,10 @@
               ]
             }
           ]
-        },
-        "tile_entity_data": {
-          "id": "0x35",
-          "fields": [
+        ],
+        "packet_tile_entity_data": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_isi"
@@ -1628,19 +1906,19 @@
               "type": "compressedNbt"
             }
           ]
-        },
-        "open_sign_entity": {
-          "id": "0x36",
-          "fields": [
+        ],
+        "packet_open_sign_entity": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_iii"
             }
           ]
-        },
-        "statistics": {
-          "id": "0x37",
-          "fields": [
+        ],
+        "packet_statistics": [
+          "container",
+          [
             {
               "name": "entries",
               "type": [
@@ -1664,10 +1942,10 @@
               ]
             }
           ]
-        },
-        "player_info": {
-          "id": "0x38",
-          "fields": [
+        ],
+        "packet_player_info": [
+          "container",
+          [
             {
               "name": "playerName",
               "type": "string"
@@ -1681,10 +1959,10 @@
               "type": "i16"
             }
           ]
-        },
-        "abilities": {
-          "id": "0x39",
-          "fields": [
+        ],
+        "packet_abilities": [
+          "container",
+          [
             {
               "name": "flags",
               "type": "i8"
@@ -1698,10 +1976,10 @@
               "type": "f32"
             }
           ]
-        },
-        "tab_complete": {
-          "id": "0x3a",
-          "fields": [
+        ],
+        "packet_tab_complete": [
+          "container",
+          [
             {
               "name": "matches",
               "type": [
@@ -1713,10 +1991,10 @@
               ]
             }
           ]
-        },
-        "scoreboard_objective": {
-          "id": "0x3b",
-          "fields": [
+        ],
+        "packet_scoreboard_objective": [
+          "container",
+          [
             {
               "name": "name",
               "type": "string"
@@ -1730,10 +2008,10 @@
               "type": "i8"
             }
           ]
-        },
-        "scoreboard_score": {
-          "id": "0x3c",
-          "fields": [
+        ],
+        "packet_scoreboard_score": [
+          "container",
+          [
             {
               "name": "itemName",
               "type": "string"
@@ -1760,10 +2038,10 @@
               ]
             }
           ]
-        },
-        "scoreboard_display_objective": {
-          "id": "0x3d",
-          "fields": [
+        ],
+        "packet_scoreboard_display_objective": [
+          "container",
+          [
             {
               "name": "position",
               "type": "i8"
@@ -1773,10 +2051,10 @@
               "type": "string"
             }
           ]
-        },
-        "scoreboard_team": {
-          "id": "0x3e",
-          "fields": [
+        ],
+        "packet_scoreboard_team": [
+          "container",
+          [
             {
               "name": "team",
               "type": "string"
@@ -1903,10 +2181,10 @@
               ]
             }
           ]
-        },
-        "custom_payload": {
-          "id": "0x3f",
-          "fields": [
+        ],
+        "packet_custom_payload": [
+          "container",
+          [
             {
               "name": "channel",
               "type": "string"
@@ -1921,39 +2199,196 @@
               ]
             }
           ]
-        },
-        "kick_disconnect": {
-          "id": "0x40",
-          "fields": [
+        ],
+        "packet_kick_disconnect": [
+          "container",
+          [
             {
               "name": "reason",
               "type": "string"
             }
           ]
-        }
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "keep_alive",
+                    "0x01": "login",
+                    "0x02": "chat",
+                    "0x03": "update_time",
+                    "0x04": "entity_equipment",
+                    "0x05": "spawn_position",
+                    "0x06": "update_health",
+                    "0x07": "respawn",
+                    "0x08": "position",
+                    "0x09": "held_item_slot",
+                    "0x0a": "bed",
+                    "0x0b": "animation",
+                    "0x0c": "named_entity_spawn",
+                    "0x0d": "collect",
+                    "0x0e": "spawn_entity",
+                    "0x0f": "spawn_entity_living",
+                    "0x10": "spawn_entity_painting",
+                    "0x11": "spawn_entity_experience_orb",
+                    "0x12": "entity_velocity",
+                    "0x13": "entity_destroy",
+                    "0x14": "entity",
+                    "0x15": "rel_entity_move",
+                    "0x16": "entity_look",
+                    "0x17": "entity_move_look",
+                    "0x18": "entity_teleport",
+                    "0x19": "entity_head_rotation",
+                    "0x1a": "entity_status",
+                    "0x1b": "attach_entity",
+                    "0x1c": "entity_metadata",
+                    "0x1d": "entity_effect",
+                    "0x1e": "remove_entity_effect",
+                    "0x1f": "experience",
+                    "0x20": "update_attributes",
+                    "0x21": "map_chunk",
+                    "0x22": "multi_block_change",
+                    "0x23": "block_change",
+                    "0x24": "block_action",
+                    "0x25": "block_break_animation",
+                    "0x26": "map_chunk_bulk",
+                    "0x27": "explosion",
+                    "0x28": "world_event",
+                    "0x29": "named_sound_effect",
+                    "0x2a": "world_particles",
+                    "0x2b": "game_state_change",
+                    "0x2c": "spawn_entity_weather",
+                    "0x2d": "open_window",
+                    "0x2e": "close_window",
+                    "0x2f": "set_slot",
+                    "0x30": "window_items",
+                    "0x31": "craft_progress_bar",
+                    "0x32": "transaction",
+                    "0x33": "update_sign",
+                    "0x34": "map",
+                    "0x35": "tile_entity_data",
+                    "0x36": "open_sign_entity",
+                    "0x37": "statistics",
+                    "0x38": "player_info",
+                    "0x39": "abilities",
+                    "0x3a": "tab_complete",
+                    "0x3b": "scoreboard_objective",
+                    "0x3c": "scoreboard_score",
+                    "0x3d": "scoreboard_display_objective",
+                    "0x3e": "scoreboard_team",
+                    "0x3f": "custom_payload",
+                    "0x40": "kick_disconnect"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "keep_alive": "packet_keep_alive",
+                    "login": "packet_login",
+                    "chat": "packet_chat",
+                    "update_time": "packet_update_time",
+                    "entity_equipment": "packet_entity_equipment",
+                    "spawn_position": "packet_spawn_position",
+                    "update_health": "packet_update_health",
+                    "respawn": "packet_respawn",
+                    "position": "packet_position",
+                    "held_item_slot": "packet_held_item_slot",
+                    "bed": "packet_bed",
+                    "animation": "packet_animation",
+                    "named_entity_spawn": "packet_named_entity_spawn",
+                    "collect": "packet_collect",
+                    "spawn_entity": "packet_spawn_entity",
+                    "spawn_entity_living": "packet_spawn_entity_living",
+                    "spawn_entity_painting": "packet_spawn_entity_painting",
+                    "spawn_entity_experience_orb": "packet_spawn_entity_experience_orb",
+                    "entity_velocity": "packet_entity_velocity",
+                    "entity_destroy": "packet_entity_destroy",
+                    "entity": "packet_entity",
+                    "rel_entity_move": "packet_rel_entity_move",
+                    "entity_look": "packet_entity_look",
+                    "entity_move_look": "packet_entity_move_look",
+                    "entity_teleport": "packet_entity_teleport",
+                    "entity_head_rotation": "packet_entity_head_rotation",
+                    "entity_status": "packet_entity_status",
+                    "attach_entity": "packet_attach_entity",
+                    "entity_metadata": "packet_entity_metadata",
+                    "entity_effect": "packet_entity_effect",
+                    "remove_entity_effect": "packet_remove_entity_effect",
+                    "experience": "packet_experience",
+                    "update_attributes": "packet_update_attributes",
+                    "map_chunk": "packet_map_chunk",
+                    "multi_block_change": "packet_multi_block_change",
+                    "block_change": "packet_block_change",
+                    "block_action": "packet_block_action",
+                    "block_break_animation": "packet_block_break_animation",
+                    "map_chunk_bulk": "packet_map_chunk_bulk",
+                    "explosion": "packet_explosion",
+                    "world_event": "packet_world_event",
+                    "named_sound_effect": "packet_named_sound_effect",
+                    "world_particles": "packet_world_particles",
+                    "game_state_change": "packet_game_state_change",
+                    "spawn_entity_weather": "packet_spawn_entity_weather",
+                    "open_window": "packet_open_window",
+                    "close_window": "packet_close_window",
+                    "set_slot": "packet_set_slot",
+                    "window_items": "packet_window_items",
+                    "craft_progress_bar": "packet_craft_progress_bar",
+                    "transaction": "packet_transaction",
+                    "update_sign": "packet_update_sign",
+                    "map": "packet_map",
+                    "tile_entity_data": "packet_tile_entity_data",
+                    "open_sign_entity": "packet_open_sign_entity",
+                    "statistics": "packet_statistics",
+                    "player_info": "packet_player_info",
+                    "abilities": "packet_abilities",
+                    "tab_complete": "packet_tab_complete",
+                    "scoreboard_objective": "packet_scoreboard_objective",
+                    "scoreboard_score": "packet_scoreboard_score",
+                    "scoreboard_display_objective": "packet_scoreboard_display_objective",
+                    "scoreboard_team": "packet_scoreboard_team",
+                    "custom_payload": "packet_custom_payload",
+                    "kick_disconnect": "packet_kick_disconnect"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
       },
       "toServer": {
-        "keep_alive": {
-          "id": "0x00",
-          "fields": [
+        "packet_keep_alive": [
+          "container",
+          [
             {
               "name": "keepAliveId",
               "type": "i32"
             }
           ]
-        },
-        "chat": {
-          "id": "0x01",
-          "fields": [
+        ],
+        "packet_chat": [
+          "container",
+          [
             {
               "name": "message",
               "type": "string"
             }
           ]
-        },
-        "use_entity": {
-          "id": "0x02",
-          "fields": [
+        ],
+        "packet_use_entity": [
+          "container",
+          [
             {
               "name": "target",
               "type": "i32"
@@ -2002,19 +2437,19 @@
               ]
             }
           ]
-        },
-        "flying": {
-          "id": "0x03",
-          "fields": [
+        ],
+        "packet_flying": [
+          "container",
+          [
             {
               "name": "onGround",
               "type": "bool"
             }
           ]
-        },
-        "position": {
-          "id": "0x04",
-          "fields": [
+        ],
+        "packet_position": [
+          "container",
+          [
             {
               "name": "x",
               "type": "f64"
@@ -2036,10 +2471,10 @@
               "type": "bool"
             }
           ]
-        },
-        "look": {
-          "id": "0x05",
-          "fields": [
+        ],
+        "packet_look": [
+          "container",
+          [
             {
               "name": "yaw",
               "type": "f32"
@@ -2053,10 +2488,10 @@
               "type": "bool"
             }
           ]
-        },
-        "position_look": {
-          "id": "0x06",
-          "fields": [
+        ],
+        "packet_position_look": [
+          "container",
+          [
             {
               "name": "x",
               "type": "f64"
@@ -2086,10 +2521,10 @@
               "type": "bool"
             }
           ]
-        },
-        "block_dig": {
-          "id": "0x07",
-          "fields": [
+        ],
+        "packet_block_dig": [
+          "container",
+          [
             {
               "name": "status",
               "type": "i8"
@@ -2103,10 +2538,10 @@
               "type": "i8"
             }
           ]
-        },
-        "block_place": {
-          "id": "0x08",
-          "fields": [
+        ],
+        "packet_block_place": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_ibi"
@@ -2132,19 +2567,19 @@
               "type": "i8"
             }
           ]
-        },
-        "held_item_slot": {
-          "id": "0x09",
-          "fields": [
+        ],
+        "packet_held_item_slot": [
+          "container",
+          [
             {
               "name": "slotId",
               "type": "i16"
             }
           ]
-        },
-        "arm_animation": {
-          "id": "0x0a",
-          "fields": [
+        ],
+        "packet_arm_animation": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -2154,10 +2589,10 @@
               "type": "i8"
             }
           ]
-        },
-        "entity_action": {
-          "id": "0x0b",
-          "fields": [
+        ],
+        "packet_entity_action": [
+          "container",
+          [
             {
               "name": "entityId",
               "type": "i32"
@@ -2171,10 +2606,10 @@
               "type": "i32"
             }
           ]
-        },
-        "steer_vehicle": {
-          "id": "0x0c",
-          "fields": [
+        ],
+        "packet_steer_vehicle": [
+          "container",
+          [
             {
               "name": "sideways",
               "type": "f32"
@@ -2192,19 +2627,19 @@
               "type": "bool"
             }
           ]
-        },
-        "close_window": {
-          "id": "0x0d",
-          "fields": [
+        ],
+        "packet_close_window": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "u8"
             }
           ]
-        },
-        "window_click": {
-          "id": "0x0e",
-          "fields": [
+        ],
+        "packet_window_click": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "i8"
@@ -2230,10 +2665,10 @@
               "type": "slot"
             }
           ]
-        },
-        "transaction": {
-          "id": "0x0f",
-          "fields": [
+        ],
+        "packet_transaction": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "i8"
@@ -2247,10 +2682,10 @@
               "type": "bool"
             }
           ]
-        },
-        "set_creative_slot": {
-          "id": "0x10",
-          "fields": [
+        ],
+        "packet_set_creative_slot": [
+          "container",
+          [
             {
               "name": "slot",
               "type": "i16"
@@ -2260,10 +2695,10 @@
               "type": "slot"
             }
           ]
-        },
-        "enchant_item": {
-          "id": "0x11",
-          "fields": [
+        ],
+        "packet_enchant_item": [
+          "container",
+          [
             {
               "name": "windowId",
               "type": "i8"
@@ -2273,10 +2708,10 @@
               "type": "i8"
             }
           ]
-        },
-        "update_sign": {
-          "id": "0x12",
-          "fields": [
+        ],
+        "packet_update_sign": [
+          "container",
+          [
             {
               "name": "location",
               "type": "position_isi"
@@ -2298,10 +2733,10 @@
               "type": "string"
             }
           ]
-        },
-        "abilities": {
-          "id": "0x13",
-          "fields": [
+        ],
+        "packet_abilities": [
+          "container",
+          [
             {
               "name": "flags",
               "type": "i8"
@@ -2315,19 +2750,19 @@
               "type": "f32"
             }
           ]
-        },
-        "tab_complete": {
-          "id": "0x14",
-          "fields": [
+        ],
+        "packet_tab_complete": [
+          "container",
+          [
             {
               "name": "text",
               "type": "string"
             }
           ]
-        },
-        "settings": {
-          "id": "0x15",
-          "fields": [
+        ],
+        "packet_settings": [
+          "container",
+          [
             {
               "name": "locale",
               "type": "string"
@@ -2353,19 +2788,19 @@
               "type": "bool"
             }
           ]
-        },
-        "client_command": {
-          "id": "0x16",
-          "fields": [
+        ],
+        "packet_client_command": [
+          "container",
+          [
             {
               "name": "payload",
               "type": "i8"
             }
           ]
-        },
-        "custom_payload": {
-          "id": "0x17",
-          "fields": [
+        ],
+        "packet_custom_payload": [
+          "container",
+          [
             {
               "name": "channel",
               "type": "string"
@@ -2380,7 +2815,82 @@
               ]
             }
           ]
-        }
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "keep_alive",
+                    "0x01": "chat",
+                    "0x02": "use_entity",
+                    "0x03": "flying",
+                    "0x04": "position",
+                    "0x05": "look",
+                    "0x06": "position_look",
+                    "0x07": "block_dig",
+                    "0x08": "block_place",
+                    "0x09": "held_item_slot",
+                    "0x0a": "arm_animation",
+                    "0x0b": "entity_action",
+                    "0x0c": "steer_vehicle",
+                    "0x0d": "close_window",
+                    "0x0e": "window_click",
+                    "0x0f": "transaction",
+                    "0x10": "set_creative_slot",
+                    "0x11": "enchant_item",
+                    "0x12": "update_sign",
+                    "0x13": "abilities",
+                    "0x14": "tab_complete",
+                    "0x15": "settings",
+                    "0x16": "client_command",
+                    "0x17": "custom_payload"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "keep_alive": "packet_keep_alive",
+                    "chat": "packet_chat",
+                    "use_entity": "packet_use_entity",
+                    "flying": "packet_flying",
+                    "position": "packet_position",
+                    "look": "packet_look",
+                    "position_look": "packet_position_look",
+                    "block_dig": "packet_block_dig",
+                    "block_place": "packet_block_place",
+                    "held_item_slot": "packet_held_item_slot",
+                    "arm_animation": "packet_arm_animation",
+                    "entity_action": "packet_entity_action",
+                    "steer_vehicle": "packet_steer_vehicle",
+                    "close_window": "packet_close_window",
+                    "window_click": "packet_window_click",
+                    "transaction": "packet_transaction",
+                    "set_creative_slot": "packet_set_creative_slot",
+                    "enchant_item": "packet_enchant_item",
+                    "update_sign": "packet_update_sign",
+                    "abilities": "packet_abilities",
+                    "tab_complete": "packet_tab_complete",
+                    "settings": "packet_settings",
+                    "client_command": "packet_client_command",
+                    "custom_payload": "packet_custom_payload"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
       }
     }
   }
