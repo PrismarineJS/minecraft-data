@@ -44,7 +44,8 @@
         {"$ref": "#/definitions/bitfield"},
         {"$ref": "#/definitions/entityMetadataLoop"},
         {"$ref": "#/definitions/entityMetadataItem"},
-        {"$ref": "#/definitions/mapper"}
+        {"$ref": "#/definitions/mapper"},
+        {"$ref": "#/definitions/pstring"}
       ]
     },
     "simpleFieldType": {
@@ -99,6 +100,21 @@
       "items":[
         {"enum":["option"]},
         {"$ref": "#/definitions/dataType"}
+      ],
+      "additionalItems": false
+    },
+    "pstring": {
+      "type": "array",
+      "items":[
+        {"enum":["pstring"]},
+        {
+          "type":"object",
+          "properties":{
+            "countType": {"$ref": "#/definitions/dataType"}
+          },
+          "additionalProperties": false,
+          "required":["countType"]
+        }
       ],
       "additionalItems": false
     },
