@@ -3,12 +3,12 @@
 var versions=require("../../../data/common/versions");
 
 versions.forEach(function(version) {
-  describe("audit blocks " + version, function() {
-    try {
-      var blocks = require('../../../data/' + version + '/blocks');
-    } catch (e) {
-      console.log("No blocks for version " + version);
-    }
+  try {
+    var blocks = require('../../../data/' + version + '/blocks');
+  } catch (e) {
+    console.log("No blocks for version " + version);
+  }
+  if(blocks) describe("audit blocks " + version, function() {
     it("audit blocks", function() {
 
       var all = [];

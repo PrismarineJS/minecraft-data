@@ -2,36 +2,6 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "protocol",
   "definitions": {
-    "dataTypes":{
-      "type": "object",
-      "patternProperties": {
-        "^[0-9a-zA-Z_]+$": {"$ref": "#/definitions/dataType"}
-      },
-      "additionalProperties": false
-    },
-    "states":{
-      "type": "object",
-      "patternProperties": {
-        "^[a-z_]+$": {"$ref": "#/definitions/directions"}
-      },
-      "additionalProperties": false
-    },
-    "directions": {
-      "type": "object",
-      "properties": {
-        "toClient": {"$ref": "#/definitions/dataTypes"},
-        "toServer": {"$ref": "#/definitions/dataTypes"}
-      },
-      "required": [
-        "toClient",
-        "toServer"
-      ],
-      "additionalProperties": false
-    },
-    "fieldName": {
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9_]+$"
-    },
     "dataType": {
       "oneOf":[
         {"$ref": "#/definitions/simpleFieldType"},
@@ -308,13 +278,24 @@
           "additionalProperties": false
         }
       ]
+    },
+    "fieldName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_]+$"
     }
   },
   "type": "object",
   "properties":{
-    "types":{"$ref": "#/definitions/dataTypes"},
-    "states":{"$ref": "#/definitions/states"}
+    "types":{
+      "type": "object",
+      "patternProperties": {
+        "^[0-9a-zA-Z_]+$": {"$ref": "#/definitions/dataType"}
+      },
+      "additionalProperties": false
+    }
   },
-  "required":["types","states"],
+  "patternProperties": {
+    "^(?!types)[a-zA-Z_]+$": {"$ref": "#"}
+  },
   "additionalProperties": false
 }

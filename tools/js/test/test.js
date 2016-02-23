@@ -13,12 +13,12 @@ versions.forEach(function(version){
   describe("minecraft-data schemas "+version, function() {
     this.timeout(60 * 1000);
     data.forEach(function(dataName){
-      it(dataName+".json is valid",function(){
-        try {
-          var instance = require('../../../data/'+version+'/'+dataName+'.json');
-        } catch (e) {
-          console.log("No " + dataName + " data for version " + version);
-        }
+      try {
+        var instance = require('../../../data/'+version+'/'+dataName+'.json');
+      } catch (e) {
+        console.log("No " + dataName + " data for version " + version);
+      }
+      if(instance) it(dataName+".json is valid",function(){
         var schema = require('../../../schemas/'+dataName+'_schema.json');
         var result = v.validate(instance, schema);
         assert.strictEqual(result.errors.length,0,require('util').inspect(result.errors,{'depth':null}));
