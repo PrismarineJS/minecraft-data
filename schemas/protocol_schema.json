@@ -2,81 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "protocol",
   "definitions": {
-    "types":{
-      "type": "object",
-      "patternProperties": {
-        "^[0-9a-zA-Z_]+$": {"$ref": "#/definitions/fieldType"}
-      },
-      "additionalProperties": false
-    },
-    "states":{
-      "type": "object",
-      "patternProperties": {
-        "^[a-z_]+$": {"$ref": "#/definitions/directions"}
-      },
-      "additionalProperties": false
-    },
-    "directions": {
-      "type": "object",
-      "properties": {
-        "toClient": {"$ref": "#/definitions/packets"},
-        "toServer": {"$ref": "#/definitions/packets"}
-      },
-      "required": [
-        "toClient",
-        "toServer"
-      ],
-      "additionalProperties": false
-    },
-    "packets": {
-      "type": "object",
-      "patternProperties": {
-        "^[a-z_]+$": {"$ref": "#/definitions/packet"}
-      },
-      "additionalProperties": false
-    },
-    "packet": {
-      "type": "object",
-      "properties": {
-        "id": {"$ref": "#/definitions/id"},
-        "fields": {"$ref": "#/definitions/fields"}
-      },
-      "required": [
-        "id",
-        "fields"
-      ],
-      "additionalProperties": false
-    },
-    "id": {
-      "type": "string",
-      "pattern": "^0x[0-9a-f]{2}$"
-    },
-    "fields": {
-      "type": "array",
-      "items": {"$ref": "#/definitions/field"},
-      "additionalItems": false
-    },
-    "field": {
-      "type": "object",
-      "properties": {
-        "anon": { "type": "boolean" },
-        "name": {"$ref": "#/definitions/fieldName"},
-        "type": {"$ref": "#/definitions/fieldType"}
-      },
-      "oneOf": [
-        { "required": ["anon"] },
-        { "required": ["name"] }
-      ],
-      "required": [
-        "type"
-      ],
-      "additionalProperties": false
-    },
-    "fieldName": {
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9_]+$"
-    },
-    "fieldType": {
+    "dataType": {
       "oneOf":[
         {"$ref": "#/definitions/simpleFieldType"},
         {"$ref": "#/definitions/container"},
@@ -87,7 +13,9 @@
         {"$ref": "#/definitions/option"},
         {"$ref": "#/definitions/bitfield"},
         {"$ref": "#/definitions/entityMetadataLoop"},
-        {"$ref": "#/definitions/entityMetadataItem"}
+        {"$ref": "#/definitions/entityMetadataItem"},
+        {"$ref": "#/definitions/mapper"},
+        {"$ref": "#/definitions/pstring"}
       ]
     },
     "simpleFieldType": {
@@ -98,7 +26,26 @@
       "type": "array",
       "items":[
         {"enum":["container"]},
-        {"$ref": "#/definitions/fields"}
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "anon": { "type": "boolean" },
+              "name": {"$ref": "#/definitions/fieldName"},
+              "type": {"$ref": "#/definitions/dataType"}
+            },
+            "oneOf": [
+              { "required": ["anon"] },
+              { "required": ["name"] }
+            ],
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          "additionalItems": false
+        }
       ],
       "additionalItems": false
     },
@@ -110,7 +57,7 @@
           "type": "object",
           "properties": {
             "countFor": {"$ref":"#/definitions/contextualizedFieldName"},
-            "type": {"$ref": "#/definitions/fieldType"}
+            "type": {"$ref": "#/definitions/dataType"}
           },
           "required": ["countFor", "type"],
           "additionalProperties": false
@@ -122,7 +69,22 @@
       "type": "array",
       "items":[
         {"enum":["option"]},
-        {"$ref": "#/definitions/fieldType"}
+        {"$ref": "#/definitions/dataType"}
+      ],
+      "additionalItems": false
+    },
+    "pstring": {
+      "type": "array",
+      "items":[
+        {"enum":["pstring"]},
+        {
+          "type":"object",
+          "properties":{
+            "countType": {"$ref": "#/definitions/dataType"}
+          },
+          "additionalProperties": false,
+          "required":["countType"]
+        }
       ],
       "additionalItems": false
     },
@@ -137,13 +99,35 @@
             "fields":{
               "type":"object",
               "patternProperties" : {
-                "^[-a-zA-Z0-9 _]+$":{"$ref": "#/definitions/fieldType"}
+                "^[-a-zA-Z0-9 _]+$":{"$ref": "#/definitions/dataType"}
               },
               "additionalProperties": false
             },
-            "default":{"$ref": "#/definitions/fieldType"}
+            "default":{"$ref": "#/definitions/dataType"}
           },
           "required":["compareTo","fields"],
+          "additionalProperties": false
+        }
+      ],
+      "additionalItems": false
+    },
+    "mapper":{
+      "type": "array",
+      "items":[
+        {"enum":["mapper"]},
+        {
+          "type":"object",
+          "properties": {
+            "type":{"$ref": "#/definitions/dataType"},
+            "mappings":{
+              "type":"object",
+              "patternProperties" : {
+                "^[-a-zA-Z0-9 _]+$":{"$ref": "#/definitions/dataType"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "required":["type","mappings"],
           "additionalProperties": false
         }
       ],
@@ -158,8 +142,8 @@
             {
               "type":"object",
               "properties":{
-                "type": {"$ref": "#/definitions/fieldType"},
-                "countType": {"$ref": "#/definitions/fieldType"}
+                "type": {"$ref": "#/definitions/dataType"},
+                "countType": {"$ref": "#/definitions/dataType"}
               },
               "additionalProperties": false,
               "required":["type","countType"]
@@ -167,8 +151,8 @@
             {
               "type":"object",
               "properties":{
-                "type": {"$ref": "#/definitions/fieldType"},
-                "count": {"$ref": "#/definitions/fieldTypeArgsCount"}
+                "type": {"$ref": "#/definitions/dataType"},
+                "count": {"$ref": "#/definitions/dataTypeArgsCount"}
               },
               "additionalProperties": false,
               "required":["type","count"]
@@ -187,7 +171,7 @@
             {
               "type": "object",
               "properties": {
-                "countType": {"$ref": "#/definitions/fieldType"}
+                "countType": {"$ref": "#/definitions/dataType"}
               },
               "additionalProperties": false,
               "required": [
@@ -241,7 +225,7 @@
           "type": "object",
           "properties": {
             "endVal": { "type": "number" },
-            "type": {"$ref": "#/definitions/fieldType"}
+            "type": {"$ref": "#/definitions/dataType"}
           },
           "required": ["endVal", "type"],
           "additionalProperties": false
@@ -266,7 +250,7 @@
       "type": "string",
       "pattern": "^(this\\.)?.+$"
     },
-    "fieldTypeArgsCount": {
+    "dataTypeArgsCount": {
       "oneOf": [
         {"$ref": "#/definitions/contextualizedFieldName"},
         {
@@ -294,13 +278,24 @@
           "additionalProperties": false
         }
       ]
+    },
+    "fieldName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_]+$"
     }
   },
   "type": "object",
   "properties":{
-    "types":{"$ref": "#/definitions/types"},
-    "states":{"$ref": "#/definitions/states"}
+    "types":{
+      "type": "object",
+      "patternProperties": {
+        "^[0-9a-zA-Z_]+$": {"$ref": "#/definitions/dataType"}
+      },
+      "additionalProperties": false
+    }
   },
-  "required":["types","states"],
+  "patternProperties": {
+    "^(?!types)[a-zA-Z_]+$": {"$ref": "#"}
+  },
   "additionalProperties": false
 }

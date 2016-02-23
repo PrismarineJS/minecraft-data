@@ -3,12 +3,12 @@
 var versions=require("../../../data/common/versions");
 
 versions.forEach(function(version) {
-  describe("audit recipes "+version,function(){
-    try {
-      var recipes = require('../../../data/'+version+'/recipes');
-    } catch (e) {
-      console.log("No recipes for version " + version);
-    }
+  try {
+    var recipes = require('../../../data/'+version+'/recipes');
+  } catch (e) {
+    console.log("No recipes for version " + version);
+  }
+  if(recipes) describe("audit recipes "+version,function(){
     it("audit recipes",function(){
       var shapeCount = 0, shapelessCount = 0;
       var outShapeCount = 0;

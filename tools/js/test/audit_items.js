@@ -3,12 +3,12 @@
 var versions=require("../../../data/common/versions");
 
 versions.forEach(function(version) {
-  describe("audit items " + version, function() {
-    try {
-      var items = require('../../../data/' + version + '/items');
-    } catch (e) {
-      console.log("No items for version " + version);
-    }
+  try {
+    var items = require('../../../data/' + version + '/items');
+  } catch (e) {
+    console.log("No items for version " + version);
+  }
+  if(items) describe("audit items " + version, function() {
     it("audit items", function() {
 
       var displayNames = {};
