@@ -25,41 +25,58 @@ function flatten(array, mutable) {
 function protocolToString(protocol)
 {
   return _('div#protocolActualTable')._(
-    flatten(Object.keys(protocol.states).map(function (state) {
+    flatten(protocol["toClient"] ? directionsToLines("",protocol) : Object.keys(protocol).filter(function(state){return state!="types"}).map(function (state) {
       return [_('h1').text(state),
-        directionsToLines(state, protocol.states[state])];
+        directionsToLines(state, protocol[state])];
     }))
   ).H();
 }
 
 function directionsToLines(state, directions)
 {
-  return [_('h2').text('toClient'), directionToLines(state, "toClient", directions["toClient"]),
-          _('h2').text('toServer'), directionToLines(state, "toServer", directions["toServer"])];
+  return [_('h2').text('toClient'), directionToLines(state, "toClient", directions["toClient"].types),
+          _('h2').text('toServer'), directionToLines(state, "toServer", directions["toServer"].types)];
+}
+
+function reverseObject(o)
+{
+  return Object.keys(o).reduce(function(acc,k){acc[o[k]]=k;return acc;},{});
 }
 
 function directionToLines(state, direction, packets)
 {
-  return Object.keys(packets).map(function(packetName){
+  var typesToNames=reverseObject(packets["packet"][1][1]["type"][1]["fields"]);
+  var namesToIds=reverseObject(packets["packet"][1][0]["type"][1]["mappings"]);
+  return Object.keys(packets).filter(function(packetName){return packetName!="packet"}).map(function(packetType){
+    var packetName=typesToNames[packetType];
+    var packetId=namesToIds[packetName];
     return [
       _('h3#' + direction + '_' + packetName)._([
           _('a.glyphicon.glyphicon-link', { href: '#' + direction + '_' + packetName })
       ]).T(' ' + packetName),
-      packetToString(state, direction, packets[packetName])
+      packetToString(state, direction, packets[packetType],packetId)
     ];
   })
 }
 
 
-function packetToString(state, direction, packet)
+function packetToString(state, direction, packet, packetId)
 {
-  var rows = countRows(packet.fields, packet.id === '0x0e');
-  var totalCols = countCols(packet.fields);
+  var rows = countRows(packet[1], packetId === '0x0e');
+  var totalCols = countCols(packet[1]);
   if (rows == 0)
     rows = 1;
 
+  function ini() {
+    var arr=[];
+    for (var i = 0; i < arguments.length; i++) {
+      if(arguments[i]!==undefined) arr.push(arguments[i]);
+    }
+    return arr;
+  }
+
   function generateLines() {
-    var packets = packet.fields.reduce(function (acc, field) {
+    var packets = packet[1].reduce(function (acc, field) {
       var name = fieldToLines(totalCols,field, 0, function(field, fieldInfo) {
         return field.name;
       });
@@ -75,17 +92,16 @@ function packetToString(state, direction, packet)
       return acc;
     }, []);
     if (packets.length > 0) {
-      packets[0].unshift(
-        _('td', { rowspan: rows }).T(packet.id),
-        _('td', { rowspan: rows }).T(state),
-        _('td', { rowspan: rows }).T(direction));
+      packets[0].unshift(_('td', { rowspan: rows }).T(direction));
+      if(state!="") packets[0].unshift(_('td', { rowspan: rows }).T(state));
+      packets[0].unshift(_('td', { rowspan: rows }).T(packetId));
     } else
-      packets = [[
-        _('td', { rowspan: rows }).T(packet.id),
-        _('td', { rowspan: rows }).T(state),
+      packets = [ini(
+        _('td', { rowspan: rows }).T(packetId),
+        state=="" ? undefined : _('td', { rowspan: rows }).T(state),
         _('td', { rowspan: rows }).T(direction),
         _('td', { colspan: 2 })._([_('i').T('no fields')])
-      ]];
+      )];
     return packets.map(function(field) {
       return _('tr')._(field);
     });
@@ -93,13 +109,13 @@ function packetToString(state, direction, packet)
   return _('table#packets.table.table-striped.table-bordered')
     ._([
       _('thead')._([
-        _('tr')._([
+        _('tr')._(ini(
           _('th').T('Packet ID'),
-          _('th').T('State'),
+          state=="" ? undefined : _('th').T('State'),
           _('th').T('Bound To'),
           _('th', { colspan: totalCols }).T('Field Name'),
-          _('th', { colspan: totalCols }).T('Field Type'),
-        ])
+          _('th', { colspan: totalCols }).T('Field Type')
+        ))
       ]),
       _('tbody')._(generateLines())
     ]);
