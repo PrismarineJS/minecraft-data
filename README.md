@@ -14,7 +14,7 @@ Minecraft-data is language independent, you can use it with these language speci
 | Wrapper name | Language | Data provided |
 | --- | --- | --- |
 | [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) | Node.js | everything |
-| [python-minecraft-data](https://github.com/rom1504/python-minecraft-data) | python | everything |
+| [python-minecraft-data](https://github.com/SpockBotMC/python-minecraft-data) | python | everything |
 | [ProtocolGen](https://github.com/Johni0702/ProtocolGen) | java | generated java files from protocol.json to read and write minecraft packets |
 
 If you want to use minecraft-data in a new language, we advise you to [create a new wrapper](doc/make-a-new-wrapper.md)
@@ -53,9 +53,9 @@ These are the projects that use minecraft-data (through the wrappers) :
 
 | Project name | Language | Project type | Data used |
 | --- | --- | --- | --- |
-| [mineflayer](https://github.com/andrewrk/mineflayer) | Node.js | bot library | biomes, blocks, entities, instruments, items, materials, recipes |
+| [mineflayer](https://github.com/PrismarineJS/mineflayer) | Node.js | bot library | biomes, blocks, entities, instruments, items, materials, recipes |
 | [node-minecraft-protocol](https://github.com/PrismarineJS/node-minecraft-protocol) | Node.js | protocol serialization | protocol |
-| [flying-squid](https://github.com/mhsjlw/flying-squid) | Node.js | server library | biomes, blocks, materials |
+| [flying-squid](https://github.com/PrismarineJS/flying-squid) | Node.js | server library | biomes, blocks, materials |
 | [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | biomes, blocks, items, materials, windows, recipes |
 | [PhaseBot](https://github.com/phase/PhaseBot) | Java | bot | blocks, items, materials |
 | [McEx](https://github.com/hansihe/McEx) | Elixir | server | blocks |
@@ -66,7 +66,7 @@ Projects that provide data:
 
 | Project name | Language | Source | Data provided |
 | --- | --- | --- | --- |
-| [minecraft-wiki-extractor](https://github.com/PrismarineJS/minecraft-wiki-extractor) | Node.js | [minecraft wiki](http://minecraft.gamepedia.com) | blocks, items, entities, recipes |
+| [minecraft-wiki-extractor](https://github.com/PrismarineJS/minecraft-wiki-extractor) | Node.js | [minecraft wiki](http://minecraft.gamepedia.com/Minecraft_Wiki) | blocks, items, entities, recipes |
 | [mcdevs-wiki-extractor](https://github.com/PrismarineJS/mcdevs-wiki-extractor) | Node.js | [wiki.vg](http://wiki.vg/Protocol) | a partial protocol, entities |
 | [node-minecraft-extractor](https://github.com/PrismarineJS/node-minecraft-extractor) | Node.js | merge between wiki.vg and mcwiki | a complete entities file |
 | [minecraft-jar-extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) | Node.js | minecraft server jar | a very partial but completely up to date protocol |
@@ -79,7 +79,7 @@ Pages interesting to manually update the data if necessary:
 | ---- | ---- |
 | [wiki.vg Inventory page](http://wiki.vg/Inventory) | windows |
 | [wiki.vg](http://wiki.vg/Block_Actions) | instruments |
-| [a mineflayer PR](https://github.com/andrewrk/mineflayer/pull/197) | biomes |
+| [a mineflayer PR](https://github.com/PrismarineJS/mineflayer/pull/197) | biomes |
 | [mcwiki effects page](http://minecraft.gamepedia.com/Status_effect) | effects |
 | [wiki.vg protocol version numbers](http://wiki.vg/Protocol_version_numbers) | protocolVersions |
 
