@@ -1,7 +1,7 @@
 var assert = require('assert');
 
-var Validator = require('jsonschema').Validator;
-var v = new Validator();
+var Ajv = require('ajv');
+var v = Ajv();
 
 Error.stackTraceLimit=0;
 
@@ -20,8 +20,8 @@ versions.forEach(function(version){
       }
       if(instance) it(dataName+".json is valid",function(){
         var schema = require('../../../schemas/'+dataName+'_schema.json');
-        var result = v.validate(instance, schema);
-        assert.strictEqual(result.errors.length,0,require('util').inspect(result.errors,{'depth':null}));
+        var valid = v.validate(schema,instance);
+        assert.ok(valid, v.errors);
       })
     });
   });
@@ -35,8 +35,8 @@ describe("minecraft-data schemas of common data",function() {
     it(dataName+".json is valid",function(){
       var instance = require('../../../data/common/'+dataName+'.json');
       var schema = require('../../../schemas/'+dataName+'_schema.json');
-      var result = v.validate(instance, schema);
-      assert.strictEqual(result.errors.length,0,require('util').inspect(result.errors,{'depth':null}));
+      var valid = v.validate(schema,instance);
+      assert.ok(valid, v.errors);
     })
   });
 });
