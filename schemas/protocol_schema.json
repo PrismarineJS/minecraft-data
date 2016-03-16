@@ -181,7 +181,7 @@
             {
               "type": "object",
               "properties": {
-                "count": {"$ref": "#/definitions/contextualizedFieldName"}
+                "count": {"$ref": "#/definitions/dataTypeArgsCount"}
               },
               "additionalProperties": false,
               "required": [
@@ -253,30 +253,7 @@
     "dataTypeArgsCount": {
       "oneOf": [
         {"$ref": "#/definitions/contextualizedFieldName"},
-        {
-          "type": "object",
-          "properties": {
-            "field": {"$ref": "#/definitions/fieldName"},
-            "map": {
-              "type": "object",
-              "patternProperties": {
-                "^[0-9]+$": {
-                  "type": "integer"
-                }
-              },
-              "additionalProperties": false
-            },
-            "default": {
-              "type": "integer"
-            }
-          },
-          "required": [
-            "field",
-            "map",
-            "default"
-          ],
-          "additionalProperties": false
-        }
+        {"type":"number"}
       ]
     },
     "fieldName": {

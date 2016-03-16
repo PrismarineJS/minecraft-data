@@ -21,7 +21,7 @@ versions.forEach(function(version){
       if(instance) it(dataName+".json is valid",function(){
         var schema = require('../../../schemas/'+dataName+'_schema.json');
         var valid = v.validate(schema,instance);
-        assert.ok(valid, v.errors);
+        assert.ok(valid, JSON.stringify(v.errors,null,2));
       })
     });
   });
@@ -36,7 +36,7 @@ describe("minecraft-data schemas of common data",function() {
       var instance = require('../../../data/common/'+dataName+'.json');
       var schema = require('../../../schemas/'+dataName+'_schema.json');
       var valid = v.validate(schema,instance);
-      assert.ok(valid, v.errors);
+      assert.ok(valid, JSON.stringify(v.errors,null,2));
     })
   });
 });

@@ -1613,19 +1613,14 @@
             },
             {
               "name": "data",
-              "type": [
-                "array",
-                {
-                  "count": {
-                    "field": "particleId",
-                    "map": {
-                      "36": 2,
-                      "37": 1,
-                      "38": 1
-                    },
-                    "default": 0
+              "type": ["switch",{
+                  "compareTo":"particleId",
+                  "fields":{
+                    "36":["array",{"count":2,"type":"varint"}],
+                    "37":["array",{"count":1,"type":"varint"}],
+                    "38":["array",{"count":1,"type":"varint"}]
                   },
-                  "type": "varint"
+                  "default":"void"
                 }
               ]
             }
