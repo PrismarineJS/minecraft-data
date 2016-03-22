@@ -8,3 +8,5 @@ function done(){
   scroll();
   $j("a").click(function(){setTimeout(scroll,0);setTimeout(scroll,50)});
 }
+
+module.exports=done;

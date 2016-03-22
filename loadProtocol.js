@@ -1,3 +1,5 @@
+var stringify = require('json-stable-stringify');
+
 var _ = DOMBuilder;
 
 function flatten(array, mutable) {
@@ -146,7 +148,7 @@ function switchToLines(totalCols,field,fieldType,depth, getVal)
   var firstLine = true;
   // First, group together lines
   var elems = Object.keys(fieldType.typeArgs.fields).reduce(function(acc, key) {
-    var k = JSON.stable.stringify(fieldType.typeArgs.fields[key]);
+    var k = stringify(fieldType.typeArgs.fields[key]);
     if (acc.hasOwnProperty(k))
       acc[k].push(key);
     else
@@ -160,7 +162,7 @@ function switchToLines(totalCols,field,fieldType,depth, getVal)
     return acc;
   }, []);
   var x = uniq(objValues(fieldType.typeArgs.fields)
-    .map(JSON.stable.stringify))
+    .map(stringify))
     .map(JSON.parse.bind(JSON))
     .map(function(item) { return { type: item }; });
   if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void') {
@@ -247,7 +249,7 @@ function countRows(fields) {
         return acc + countRows([{ type: fieldType.typeArgs.type }]);
     } else if (fieldType.type === 'switch') {
       var x = uniq(objValues(fieldType.typeArgs.fields)
-        .map(JSON.stable.stringify))
+        .map(stringify))
         .map(JSON.parse.bind(JSON))
         .map(function(item) { return { type: item }; });
       if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void')
@@ -304,10 +306,11 @@ function eqs(compareTo, k) {
 }
 
 
-function loadProtocol()
+function loadProtocol(version)
 {
-  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+commit+"/data/"+version+"/protocol.json")
-    .done(function(data){
-      $j('#protocolTable').html(protocolToString(data));
-    });
+  var data=require("minecraft-data")(version).protocol;
+  $j('#protocolTable').html(protocolToString(data));
 }
+
+
+module.exports=loadProtocol;

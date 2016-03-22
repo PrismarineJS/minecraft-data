@@ -1,18 +1,16 @@
-$j(document).ready(function() {
-  $j.getJSON("https://api.github.com/repos/"+repo+"/git/refs/heads/master")
-    .done(function(data) {
-      commit = data.object.sha;
-      loadItems();
-      loadBlocks();
-      loadBiomes();
-      loadEntities();
-      loadInstruments();
-      loadProtocol();
-      loadWindows();
-      loadEffects();
-      toggleAnchor();
-    });
-});
+var loadProtocol=require("./loadProtocol");
+
+module.exports=function(version) {
+    loadItems(version);
+    loadBlocks(version);
+    loadBiomes(version);
+    loadEntities(version);
+    loadInstruments(version);
+    loadProtocol(version);
+    loadWindows(version);
+    loadEffects(version);
+    toggleAnchor();
+};
 
 function toggleAnchor()
 {
@@ -24,9 +22,9 @@ function fieldsToColumns(fields)
   return fields.map(function(field){return {"title":field};});
 }
 
-function loadBlocks()
+function loadBlocks(version)
 {
-  loadData("blocks",
+  loadData(version,"blocks",
     function(block){return [block["id"],'<a href="#'+block["name"]+'">'+block["name"]+'</a>',
       block["displayName"],block["stackSize"],block["hardness"]
       ,block["diggable"],block["boundingBox"],block["material"] ? block["material"] : null,
@@ -37,9 +35,9 @@ function loadBlocks()
 }
 
 
-function loadItems()
+function loadItems(version)
 {
-  loadData("items",
+  loadData(version,"items",
     function(item){return [item["id"],'<a href="#'+item["name"]+'">'+item["name"]+'</a>',
       item["displayName"],item["stackSize"]];},
     ["id","name","displayName","stackSize"],[]
@@ -47,9 +45,9 @@ function loadItems()
 }
 
 
-function loadBiomes()
+function loadBiomes(version)
 {
-  loadData("biomes",
+  loadData(version,"biomes",
     function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'
       ,e["color"],e["temperature"],e["rainfall"]];},
     ["id","name","color","temperature","rainfall"],
@@ -58,9 +56,9 @@ function loadBiomes()
 }
 
 
-function loadEntities()
+function loadEntities(version)
 {
-  loadData("entities",
+  loadData(version,"entities",
     function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'
       ,e["displayName"],e["type"],e["internalId"] ? e["internalId"] : "",e["width"],e["height"],e["category"] ? e["category"] : ""];},
     ["id","name","displayName","type","internalId","width","height","category"],
@@ -68,49 +66,47 @@ function loadEntities()
   );
 }
 
-function loadInstruments()
+function loadInstruments(version)
 {
-  loadData("instruments",
+  loadData(version,"instruments",
     function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'];},
     ["id","name"],
     []
   );
 }
 
-function loadWindows()
+function loadWindows(version)
 {
-  loadData("windows",
+  loadData(version,"windows",
     function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>'];},
     ["id","name"],
     []
   );
 }
 
-function loadEffects()
+function loadEffects(version)
 {
-  loadData("effects",
+  loadData(version,"effects",
     function(e){return [e["id"],'<a href="#'+e["name"]+'">'+e["name"]+'</a>',e["displayName"],e["type"]];},
     ["id","name","displayName","type"],
     []
   );
 }
 
-function loadData(enumName,elementToArray,fields,hiddenColumns)
+function loadData(version,enumName,elementToArray,fields,hiddenColumns)
 {
-  $j.ajax("https://cdn.rawgit.com/"+repo+"/"+commit+"/data/"+version+"/"+enumName+".json")
-    .done(function(data){
-      var dataset=data.map(elementToArray);
-      $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0"' +
-        ' class="display" id="'+enumName+'ActualTable"></table>' );
-      $j('#'+enumName+'ActualTable').dataTable( {
-        "data":dataset,
-        "paging":false,
-        "columns": fieldsToColumns(fields),
-        "dom": 'C<"clear">lfrtip',
-          "columnDefs": [
-            { visible: false, targets: hiddenColumns }
-           ]
-        }
-      );
-    });
+  var data=require("minecraft-data")(version)[enumName+"Array"];
+  var dataset=data.map(elementToArray);
+  $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0"' +
+    ' class="display" id="'+enumName+'ActualTable"></table>' );
+  $j('#'+enumName+'ActualTable').dataTable( {
+    "data":dataset,
+    "paging":false,
+    "columns": fieldsToColumns(fields),
+    "dom": 'C<"clear">lfrtip',
+      "columnDefs": [
+        { visible: false, targets: hiddenColumns }
+       ]
+    }
+  );
 }
