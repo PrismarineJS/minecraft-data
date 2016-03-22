@@ -22,25 +22,44 @@ function fieldsToColumns(fields)
   return fields.map(function(field){return {"title":field};});
 }
 
+
+function nameToImage(version,name) {
+  var assetsVersion;
+  if(version=="1.9")
+    assetsVersion="1.9";
+  else if(version=="1.8")
+    assetsVersion="1.8.8";
+  else
+    assetsVersion="1.9";
+
+  var mcAssets=require("minecraft-assets")(assetsVersion);
+  if(!mcAssets.textureContent[name])
+    return '';
+  var texture=mcAssets.textureContent[name].texture;
+  return texture ? '<img style="width:16px;height:16px;" src="'+texture+'" />' : '';
+}
+
 function loadBlocks(version)
 {
   loadData(version,"blocks",
-    function(block){return [block["id"],'<a href="#'+block["name"]+'">'+block["name"]+'</a>',
+    function(block){
+      return [nameToImage(version,block['name']),block["id"],'<a href="#'+block["name"]+'">'+block["name"]+'</a>',
       block["displayName"],block["stackSize"],block["hardness"]
       ,block["diggable"],block["boundingBox"],block["material"] ? block["material"] : null,
-    block["transparent"],block["emitLight"],block["filterLight"]];},
-    ["id","name","displayName","stackSize","hardness","diggable","boundingBox","material","transparent","emitLight","filterLight"],
-    [6,7,8,9,10]
+    block["transparent"],block["emitLight"],block["filterLight"]];
+    },
+    ["texture","id","name","displayName","stackSize","hardness","diggable","boundingBox","material","transparent","emitLight","filterLight"],
+    [7,8,9,10,11],
+    1
   );
 }
-
 
 function loadItems(version)
 {
   loadData(version,"items",
-    function(item){return [item["id"],'<a href="#'+item["name"]+'">'+item["name"]+'</a>',
+    function(item){return [nameToImage(version,item['name']),item["id"],'<a href="#'+item["name"]+'">'+item["name"]+'</a>',
       item["displayName"],item["stackSize"]];},
-    ["id","name","displayName","stackSize"],[]
+    ["id","name","displayName","stackSize"],[],1
   );
 }
 
@@ -93,7 +112,7 @@ function loadEffects(version)
   );
 }
 
-function loadData(version,enumName,elementToArray,fields,hiddenColumns)
+function loadData(version,enumName,elementToArray,fields,hiddenColumns,orderColumn)
 {
   var data=require("minecraft-data")(version)[enumName+"Array"];
   if(!data) return;
@@ -107,7 +126,8 @@ function loadData(version,enumName,elementToArray,fields,hiddenColumns)
     "dom": 'C<"clear">lfrtip',
       "columnDefs": [
         { visible: false, targets: hiddenColumns }
-       ]
+       ],
+    "order": [[ orderColumn ? orderColumn : 0, "asc" ]]
     }
   );
 }
