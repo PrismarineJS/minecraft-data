@@ -117263,6 +117263,7 @@ function loadEffects(version)
 function loadData(version,enumName,elementToArray,fields,hiddenColumns)
 {
   var data=require("minecraft-data")(version)[enumName+"Array"];
+  if(!data) return;
   var dataset=data.map(elementToArray);
   $j('#'+enumName+'Table').html( '<table cellpadding="0" cellspacing="0" border="0"' +
     ' class="display" id="'+enumName+'ActualTable"></table>' );
