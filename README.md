@@ -71,7 +71,7 @@ Projects that provide data:
 | [node-minecraft-extractor](https://github.com/PrismarineJS/node-minecraft-extractor) | Node.js | merge between wiki.vg and mcwiki | a complete entities file |
 | [minecraft-jar-extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) | Node.js | minecraft server jar | a very partial but completely up to date protocol |
 | [minecraft-jar-extractor in python](https://github.com/pangeacake/minecraft-jar-extractor) | Python | minecraft server jar | about the same protocol information as minecraft-jar-extractor in node.js |
-| [burger](https://github.com/mcdevs/Burger) with [generate_enums](tools/js/burger_extractor/generate_enums.js) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
+| [burger](https://github.com/mcdevs/Burger) with [burger-extractor](https://github.com/PrismarineJS/burger-extractor) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
 
 Pages interesting to manually update the data if necessary:
 
