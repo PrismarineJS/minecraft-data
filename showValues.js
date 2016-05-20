@@ -25,7 +25,7 @@ function fieldsToColumns(fields)
 
 function nameToImage(version,name) {
   var assetsVersion;
-  if(version=="1.9")
+  if(version.substr(0,3)=="1.9")
     assetsVersion="1.9";
   else if(version=="1.8")
     assetsVersion="1.8.8";
