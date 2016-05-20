@@ -18,7 +18,7 @@ module.exports={
   enums:enums,
   enumsValues:enumsValues
 };
-},{"query-string":124}],2:[function(require,module,exports){
+},{"query-string":128}],2:[function(require,module,exports){
 var docson=require("docson");
 
 function displaySchema(enums) {
@@ -38,7 +38,7 @@ var tabs=require("./tabs");
 tabs(data.active,data.enums,data.enumsValues);
 displaySchema(data.enums).then(scrollToAnchor);
 showValues(data.version);
-},{"./data":1,"./display_schema":2,"./scroll":127,"./showValues":128,"./tabs":129}],4:[function(require,module,exports){
+},{"./data":1,"./display_schema":2,"./scroll":131,"./showValues":132,"./tabs":133}],4:[function(require,module,exports){
 var stringify = require('json-stable-stringify');
 
 var _ = DOMBuilder;
@@ -660,7 +660,7 @@ function amdefine(module, requireFn) {
 module.exports = amdefine;
 
 }).call(this,require('_process'),"/node_modules/amdefine/amdefine.js")
-},{"_process":123,"path":122}],6:[function(require,module,exports){
+},{"_process":127,"path":126}],6:[function(require,module,exports){
 
 },{}],7:[function(require,module,exports){
 /*
@@ -1178,7 +1178,7 @@ docson.doc = function(element, schema, ref, baseUrl) {
 }
 
 module.exports=docson;
-},{"./lib/highlight":8,"handlebars":38,"jquery":50,"jsonpointer.js":55,"marked":56,"traverse":126}],8:[function(require,module,exports){
+},{"./lib/highlight":8,"handlebars":38,"jquery":50,"jsonpointer.js":55,"marked":56,"traverse":130}],8:[function(require,module,exports){
 
 /*
  * Copyright 2013 Geraint Luff <http://geraintluff.github.io/tv4/>
@@ -9087,7 +9087,7 @@ define(function (require, exports, module) {
 
 },{"amdefine":5}],50:[function(require,module,exports){
 /*!
- * jQuery JavaScript Library v2.2.2
+ * jQuery JavaScript Library v2.2.4
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -9097,7 +9097,7 @@ define(function (require, exports, module) {
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2016-03-17T17:51Z
+ * Date: 2016-05-20T17:23Z
  */
 
 (function( global, factory ) {
@@ -9153,7 +9153,7 @@ var support = {};
 
 
 var
-	version = "2.2.2",
+	version = "2.2.4",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -14094,13 +14094,14 @@ jQuery.Event.prototype = {
 	isDefaultPrevented: returnFalse,
 	isPropagationStopped: returnFalse,
 	isImmediatePropagationStopped: returnFalse,
+	isSimulated: false,
 
 	preventDefault: function() {
 		var e = this.originalEvent;
 
 		this.isDefaultPrevented = returnTrue;
 
-		if ( e ) {
+		if ( e && !this.isSimulated ) {
 			e.preventDefault();
 		}
 	},
@@ -14109,7 +14110,7 @@ jQuery.Event.prototype = {
 
 		this.isPropagationStopped = returnTrue;
 
-		if ( e ) {
+		if ( e && !this.isSimulated ) {
 			e.stopPropagation();
 		}
 	},
@@ -14118,7 +14119,7 @@ jQuery.Event.prototype = {
 
 		this.isImmediatePropagationStopped = returnTrue;
 
-		if ( e ) {
+		if ( e && !this.isSimulated ) {
 			e.stopImmediatePropagation();
 		}
 
@@ -15048,19 +15049,6 @@ function getWidthOrHeight( elem, name, extra ) {
 		val = name === "width" ? elem.offsetWidth : elem.offsetHeight,
 		styles = getStyles( elem ),
 		isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
-
-	// Support: IE11 only
-	// In IE 11 fullscreen elements inside of an iframe have
-	// 100x too small dimensions (gh-1764).
-	if ( document.msFullscreenElement && window.top !== window ) {
-
-		// Support: IE11 only
-		// Running getBoundingClientRect on a disconnected node
-		// in IE throws an error.
-		if ( elem.getClientRects().length ) {
-			val = Math.round( elem.getBoundingClientRect()[ name ] * 100 );
-		}
-	}
 
 	// Some non-html elements return undefined for offsetWidth, so check for null/undefined
 	// svg - https://bugzilla.mozilla.org/show_bug.cgi?id=649285
@@ -16952,6 +16940,7 @@ jQuery.extend( jQuery.event, {
 	},
 
 	// Piggyback on a donor event to simulate a different one
+	// Used only for `focus(in | out)` events
 	simulate: function( type, elem, event ) {
 		var e = jQuery.extend(
 			new jQuery.Event(),
@@ -16959,27 +16948,10 @@ jQuery.extend( jQuery.event, {
 			{
 				type: type,
 				isSimulated: true
-
-				// Previously, `originalEvent: {}` was set here, so stopPropagation call
-				// would not be triggered on donor event, since in our own
-				// jQuery.event.stopPropagation function we had a check for existence of
-				// originalEvent.stopPropagation method, so, consequently it would be a noop.
-				//
-				// But now, this "simulate" function is used only for events
-				// for which stopPropagation() is noop, so there is no need for that anymore.
-				//
-				// For the 1.x branch though, guard for "click" and "submit"
-				// events is still used, but was moved to jQuery.event.stopPropagation function
-				// because `originalEvent` should point to the original event for the constancy
-				// with other events and for more focused logic
 			}
 		);
 
 		jQuery.event.trigger( e, null, elem );
-
-		if ( e.isDefaultPrevented() ) {
-			event.preventDefault();
-		}
 	}
 
 } );
@@ -18563,7 +18535,7 @@ jQuery.fn.load = function( url, params, callback ) {
 		// If it fails, this function gets "jqXHR", "status", "error"
 		} ).always( callback && function( jqXHR, status ) {
 			self.each( function() {
-				callback.apply( self, response || [ jqXHR.responseText, status, jqXHR ] );
+				callback.apply( this, response || [ jqXHR.responseText, status, jqXHR ] );
 			} );
 		} );
 	}
@@ -28648,9 +28620,35 @@ var data={
     protocol: require('./minecraft-data/data/1.9.1-pre2/protocol'),
     windows: require('./minecraft-data/data/1.9/windows'),
     version: require('./minecraft-data/data/1.9.1-pre2/version')
+  },
+  "1.9.2":{
+    blocks:require('./minecraft-data/data/1.9/blocks'),
+    biomes: require('./minecraft-data/data/1.9/biomes'),
+    effects: require('./minecraft-data/data/1.9/effects'),
+    items: require('./minecraft-data/data/1.9/items'),
+    recipes: require('./minecraft-data/data/1.9/recipes'),
+    instruments: require('./minecraft-data/data/1.9/instruments'),
+    materials: require('./minecraft-data/data/1.9/materials'),
+    entities: require('./minecraft-data/data/1.9/entities'),
+    protocol: require('./minecraft-data/data/1.9.2/protocol'),
+    windows: require('./minecraft-data/data/1.9/windows'),
+    version: require('./minecraft-data/data/1.9.2/version')
+  },
+  "1.9.4":{
+    blocks:require('./minecraft-data/data/1.9/blocks'),
+    biomes: require('./minecraft-data/data/1.9/biomes'),
+    effects: require('./minecraft-data/data/1.9/effects'),
+    items: require('./minecraft-data/data/1.9/items'),
+    recipes: require('./minecraft-data/data/1.9/recipes'),
+    instruments: require('./minecraft-data/data/1.9/instruments'),
+    materials: require('./minecraft-data/data/1.9/materials'),
+    entities: require('./minecraft-data/data/1.9/entities'),
+    protocol: require('./minecraft-data/data/1.9.4/protocol'),
+    windows: require('./minecraft-data/data/1.9/windows'),
+    version: require('./minecraft-data/data/1.9.4/version')
   }
 };
-},{"./lib/indexer.js":68,"./lib/loader":70,"./minecraft-data/data/0.30c/protocol":71,"./minecraft-data/data/0.30c/version":72,"./minecraft-data/data/1.7/biomes":73,"./minecraft-data/data/1.7/blocks":74,"./minecraft-data/data/1.7/effects":75,"./minecraft-data/data/1.7/entities":76,"./minecraft-data/data/1.7/instruments":77,"./minecraft-data/data/1.7/items":78,"./minecraft-data/data/1.7/materials":79,"./minecraft-data/data/1.7/protocol":80,"./minecraft-data/data/1.7/version":81,"./minecraft-data/data/1.7/windows":82,"./minecraft-data/data/1.8/biomes":83,"./minecraft-data/data/1.8/blocks":84,"./minecraft-data/data/1.8/effects":85,"./minecraft-data/data/1.8/entities":86,"./minecraft-data/data/1.8/instruments":87,"./minecraft-data/data/1.8/items":88,"./minecraft-data/data/1.8/materials":89,"./minecraft-data/data/1.8/protocol":90,"./minecraft-data/data/1.8/recipes":91,"./minecraft-data/data/1.8/version":92,"./minecraft-data/data/1.8/windows":93,"./minecraft-data/data/1.9.1-pre2/protocol":94,"./minecraft-data/data/1.9.1-pre2/version":95,"./minecraft-data/data/1.9/biomes":96,"./minecraft-data/data/1.9/blocks":97,"./minecraft-data/data/1.9/effects":98,"./minecraft-data/data/1.9/entities":99,"./minecraft-data/data/1.9/instruments":100,"./minecraft-data/data/1.9/items":101,"./minecraft-data/data/1.9/materials":102,"./minecraft-data/data/1.9/protocol":103,"./minecraft-data/data/1.9/recipes":104,"./minecraft-data/data/1.9/version":105,"./minecraft-data/data/1.9/windows":106,"./minecraft-data/data/15w40b/protocol":107,"./minecraft-data/data/15w40b/version":108,"./minecraft-data/data/common/protocolVersions":109,"./minecraft-data/schemas/biomes_schema":110,"./minecraft-data/schemas/blocks_schema":111,"./minecraft-data/schemas/effects_schema":112,"./minecraft-data/schemas/entities_schema":113,"./minecraft-data/schemas/instruments_schema":114,"./minecraft-data/schemas/items_schema":115,"./minecraft-data/schemas/materials_schema":116,"./minecraft-data/schemas/protocolVersions_schema":117,"./minecraft-data/schemas/protocol_schema":118,"./minecraft-data/schemas/recipes_schema":119,"./minecraft-data/schemas/version_schema":120,"./minecraft-data/schemas/windows_schema":121}],68:[function(require,module,exports){
+},{"./lib/indexer.js":68,"./lib/loader":70,"./minecraft-data/data/0.30c/protocol":71,"./minecraft-data/data/0.30c/version":72,"./minecraft-data/data/1.7/biomes":73,"./minecraft-data/data/1.7/blocks":74,"./minecraft-data/data/1.7/effects":75,"./minecraft-data/data/1.7/entities":76,"./minecraft-data/data/1.7/instruments":77,"./minecraft-data/data/1.7/items":78,"./minecraft-data/data/1.7/materials":79,"./minecraft-data/data/1.7/protocol":80,"./minecraft-data/data/1.7/version":81,"./minecraft-data/data/1.7/windows":82,"./minecraft-data/data/1.8/biomes":83,"./minecraft-data/data/1.8/blocks":84,"./minecraft-data/data/1.8/effects":85,"./minecraft-data/data/1.8/entities":86,"./minecraft-data/data/1.8/instruments":87,"./minecraft-data/data/1.8/items":88,"./minecraft-data/data/1.8/materials":89,"./minecraft-data/data/1.8/protocol":90,"./minecraft-data/data/1.8/recipes":91,"./minecraft-data/data/1.8/version":92,"./minecraft-data/data/1.8/windows":93,"./minecraft-data/data/1.9.1-pre2/protocol":94,"./minecraft-data/data/1.9.1-pre2/version":95,"./minecraft-data/data/1.9.2/protocol":96,"./minecraft-data/data/1.9.2/version":97,"./minecraft-data/data/1.9.4/protocol":98,"./minecraft-data/data/1.9.4/version":99,"./minecraft-data/data/1.9/biomes":100,"./minecraft-data/data/1.9/blocks":101,"./minecraft-data/data/1.9/effects":102,"./minecraft-data/data/1.9/entities":103,"./minecraft-data/data/1.9/instruments":104,"./minecraft-data/data/1.9/items":105,"./minecraft-data/data/1.9/materials":106,"./minecraft-data/data/1.9/protocol":107,"./minecraft-data/data/1.9/recipes":108,"./minecraft-data/data/1.9/version":109,"./minecraft-data/data/1.9/windows":110,"./minecraft-data/data/15w40b/protocol":111,"./minecraft-data/data/15w40b/version":112,"./minecraft-data/data/common/protocolVersions":113,"./minecraft-data/schemas/biomes_schema":114,"./minecraft-data/schemas/blocks_schema":115,"./minecraft-data/schemas/effects_schema":116,"./minecraft-data/schemas/entities_schema":117,"./minecraft-data/schemas/instruments_schema":118,"./minecraft-data/schemas/items_schema":119,"./minecraft-data/schemas/materials_schema":120,"./minecraft-data/schemas/protocolVersions_schema":121,"./minecraft-data/schemas/protocol_schema":122,"./minecraft-data/schemas/recipes_schema":123,"./minecraft-data/schemas/version_schema":124,"./minecraft-data/schemas/windows_schema":125}],68:[function(require,module,exports){
 module.exports={
   buildIndexFromObject:
     function(object,fieldToIndex) {
@@ -46915,19 +46913,14 @@ module.exports={
             },
             {
               "name": "data",
-              "type": [
-                "array",
-                {
-                  "count": {
-                    "field": "particleId",
-                    "map": {
-                      "36": 2,
-                      "37": 1,
-                      "38": 1
-                    },
-                    "default": 0
+              "type": ["switch",{
+                  "compareTo":"particleId",
+                  "fields":{
+                    "36":["array",{"count":2,"type":"varint"}],
+                    "37":["array",{"count":1,"type":"varint"}],
+                    "38":["array",{"count":1,"type":"varint"}]
                   },
-                  "type": "varint"
+                  "default":"void"
                 }
               ]
             }
@@ -76979,20 +76972,15 @@ module.exports={
             },
             {
               "name": "data",
-              "type": [
-                "array",
-                {
-                  "count": {
-                    "field": "particleId",
-                    "map": {
-                      "36": 2,
-                      "37": 1,
-                      "38": 1
-                    },
-                    "default": 0
-                  },
-                  "type": "varint"
-                }
+              "type": ["switch",{
+                "compareTo":"particleId",
+                "fields":{
+                  "36":["array",{"count":2,"type":"varint"}],
+                  "37":["array",{"count":1,"type":"varint"}],
+                  "38":["array",{"count":1,"type":"varint"}]
+                },
+                "default":"void"
+              }
               ]
             }
           ]
@@ -77569,7 +77557,7 @@ module.exports={
             }
           ]
         ],
-        "packet_entity_head_look": [
+        "packet_entity_head_rotation": [
           "container",
           [
             {
@@ -78279,7 +78267,7 @@ module.exports={
             }
           ]
         ],
-        "packet_entity_head_rotation": [
+        "packet_entity_update_attributes": [
           "container",
           [
             {
@@ -78423,7 +78411,7 @@ module.exports={
                     "0x31": "remove_entity_effect",
                     "0x32": "resource_pack_send",
                     "0x33": "respawn",
-                    "0x34": "entity_head_look",
+                    "0x34": "entity_head_rotation",
                     "0x35": "world_border",
                     "0x36": "camera",
                     "0x37": "held_item_slot",
@@ -78446,7 +78434,7 @@ module.exports={
                     "0x48": "playerlist_header",
                     "0x49": "collect",
                     "0x4a": "entity_teleport",
-                    "0x4b": "entity_head_rotation",
+                    "0x4b": "entity_update_attributes",
                     "0x4c": "entity_effect"
                   }
                 }
@@ -78511,7 +78499,7 @@ module.exports={
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "resource_pack_send": "packet_resource_pack_send",
                     "respawn": "packet_respawn",
-                    "entity_head_look": "packet_entity_head_look",
+                    "entity_update_attributes": "packet_entity_update_attributes",
                     "world_border": "packet_world_border",
                     "camera": "packet_camera",
                     "held_item_slot": "packet_held_item_slot",
@@ -79174,8 +79162,3600 @@ module.exports={
   "majorVersion":"1.9"
 }
 },{}],96:[function(require,module,exports){
+arguments[4][94][0].apply(exports,arguments)
+},{"dup":94}],97:[function(require,module,exports){
+module.exports={
+  "version":109,
+  "minecraftVersion":"1.9.2",
+  "majorVersion":"1.9"
+}
+
+},{}],98:[function(require,module,exports){
+module.exports={
+  "types": {
+    "varint": "native",
+    "pstring": "native",
+    "u16": "native",
+    "u8": "native",
+    "i64": "native",
+    "buffer": "native",
+    "i32": "native",
+    "i8": "native",
+    "bool": "native",
+    "i16": "native",
+    "f32": "native",
+    "f64": "native",
+    "UUID": "native",
+    "option": "native",
+    "entityMetadataLoop": "native",
+    "bitfield": "native",
+    "container": "native",
+    "switch": "native",
+    "void": "native",
+    "array": "native",
+    "restBuffer": "native",
+    "nbt": "native",
+    "optionalNbt": "native",
+    "string": [
+      "pstring",
+      {
+        "countType": "varint"
+      }
+    ],
+    "slot": [
+      "container",
+      [
+        {
+          "name": "blockId",
+          "type": "i16"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "blockId",
+              "fields": {
+                "-1": "void"
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "itemCount",
+                    "type": "i8"
+                  },
+                  {
+                    "name": "itemDamage",
+                    "type": "i16"
+                  },
+                  {
+                    "name": "nbtData",
+                    "type": "optionalNbt"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "position": [
+      "bitfield",
+      [
+        {
+          "name": "x",
+          "size": 26,
+          "signed": true
+        },
+        {
+          "name": "y",
+          "size": 12,
+          "signed": true
+        },
+        {
+          "name": "z",
+          "size": 26,
+          "signed": true
+        }
+      ]
+    ],
+    "entityMetadataItem": [
+      "switch",
+      {
+        "compareTo": "$compareTo",
+        "fields": {
+          "0": "i8",
+          "1": "varint",
+          "2": "f32",
+          "3": "string",
+          "4": "string",
+          "5": "slot",
+          "6": "bool",
+          "7": [
+            "container",
+            [
+              {
+                "name": "pitch",
+                "type": "f32"
+              },
+              {
+                "name": "yaw",
+                "type": "f32"
+              },
+              {
+                "name": "roll",
+                "type": "f32"
+              }
+            ]
+          ],
+          "8": "position",
+          "9": [
+            "option",
+            "position"
+          ],
+          "10": "varint",
+          "11": [
+            "option",
+            "UUID"
+          ],
+          "12": "varint"
+        }
+      }
+    ],
+    "entityMetadata": [
+      "entityMetadataLoop",
+      {
+        "endVal": 255,
+        "type": [
+          "container",
+          [
+            {
+              "anon": true,
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "key",
+                    "type": "u8"
+                  },
+                  {
+                    "name": "type",
+                    "type": "i8"
+                  }
+                ]
+              ]
+            },
+            {
+              "name": "value",
+              "type": [
+                "entityMetadataItem",
+                {
+                  "compareTo": "type"
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "handshaking": {
+    "toClient": {
+      "types": {
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {}
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {}
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "toServer": {
+      "types": {
+        "packet_set_protocol": [
+          "container",
+          [
+            {
+              "name": "protocolVersion",
+              "type": "varint"
+            },
+            {
+              "name": "serverHost",
+              "type": "string"
+            },
+            {
+              "name": "serverPort",
+              "type": "u16"
+            },
+            {
+              "name": "nextState",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_legacy_server_list_ping": [
+          "container",
+          [
+            {
+              "name": "payload",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "set_protocol",
+                    "0xfe": "legacy_server_list_ping"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "set_protocol": "packet_set_protocol",
+                    "legacy_server_list_ping": "packet_legacy_server_list_ping"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "status": {
+    "toClient": {
+      "types": {
+        "packet_server_info": [
+          "container",
+          [
+            {
+              "name": "response",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_ping": [
+          "container",
+          [
+            {
+              "name": "time",
+              "type": "i64"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "server_info",
+                    "0x01": "ping"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "server_info": "packet_server_info",
+                    "ping": "packet_ping"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "toServer": {
+      "types": {
+        "packet_ping_start": [
+          "container",
+          []
+        ],
+        "packet_ping": [
+          "container",
+          [
+            {
+              "name": "time",
+              "type": "i64"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "ping_start",
+                    "0x01": "ping"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "ping_start": "packet_ping_start",
+                    "ping": "packet_ping"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "login": {
+    "toClient": {
+      "types": {
+        "packet_disconnect": [
+          "container",
+          [
+            {
+              "name": "reason",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_encryption_begin": [
+          "container",
+          [
+            {
+              "name": "serverId",
+              "type": "string"
+            },
+            {
+              "name": "publicKey",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            },
+            {
+              "name": "verifyToken",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_success": [
+          "container",
+          [
+            {
+              "name": "uuid",
+              "type": "string"
+            },
+            {
+              "name": "username",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_compress": [
+          "container",
+          [
+            {
+              "name": "threshold",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "disconnect",
+                    "0x01": "encryption_begin",
+                    "0x02": "success",
+                    "0x03": "compress"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "disconnect": "packet_disconnect",
+                    "encryption_begin": "packet_encryption_begin",
+                    "success": "packet_success",
+                    "compress": "packet_compress"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "toServer": {
+      "types": {
+        "packet_login_start": [
+          "container",
+          [
+            {
+              "name": "username",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_encryption_begin": [
+          "container",
+          [
+            {
+              "name": "sharedSecret",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            },
+            {
+              "name": "verifyToken",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "login_start",
+                    "0x01": "encryption_begin"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "login_start": "packet_login_start",
+                    "encryption_begin": "packet_encryption_begin"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "play": {
+    "toClient": {
+      "types": {
+        "packet_spawn_entity": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "objectUUID",
+              "type": "UUID"
+            },
+            {
+              "name": "type",
+              "type": "i8"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "pitch",
+              "type": "i8"
+            },
+            {
+              "name": "yaw",
+              "type": "i8"
+            },
+            {
+              "name": "intField",
+              "type": "i32"
+            },
+            {
+              "name": "velocityX",
+              "type": "i16"
+            },
+            {
+              "name": "velocityY",
+              "type": "i16"
+            },
+            {
+              "name": "velocityZ",
+              "type": "i16"
+            }
+          ]
+        ],
+        "packet_spawn_entity_experience_orb": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "count",
+              "type": "i16"
+            }
+          ]
+        ],
+        "packet_spawn_entity_weather": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "type",
+              "type": "i8"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            }
+          ]
+        ],
+        "packet_spawn_entity_living": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "entityUUID",
+              "type": "UUID"
+            },
+            {
+              "name": "type",
+              "type": "u8"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "i8"
+            },
+            {
+              "name": "pitch",
+              "type": "i8"
+            },
+            {
+              "name": "headPitch",
+              "type": "i8"
+            },
+            {
+              "name": "velocityX",
+              "type": "i16"
+            },
+            {
+              "name": "velocityY",
+              "type": "i16"
+            },
+            {
+              "name": "velocityZ",
+              "type": "i16"
+            },
+            {
+              "name": "metadata",
+              "type": "entityMetadata"
+            }
+          ]
+        ],
+        "packet_spawn_entity_painting": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "entityUUID",
+              "type": "UUID"
+            },
+            {
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "direction",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_named_entity_spawn": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "playerUUID",
+              "type": "UUID"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "i8"
+            },
+            {
+              "name": "pitch",
+              "type": "i8"
+            },
+            {
+              "name": "metadata",
+              "type": "entityMetadata"
+            }
+          ]
+        ],
+        "packet_animation": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "animation",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_statistics": [
+          "container",
+          [
+            {
+              "name": "entries",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": "varint"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_block_break_animation": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "destroyStage",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_tile_entity_data": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "action",
+              "type": "u8"
+            },
+            {
+              "name": "nbtData",
+              "type": "optionalNbt"
+            }
+          ]
+        ],
+        "packet_block_action": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "byte1",
+              "type": "u8"
+            },
+            {
+              "name": "byte2",
+              "type": "u8"
+            },
+            {
+              "name": "blockId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_block_change": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "type",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_boss_bar": [
+          "container",
+          [
+            {
+              "name": "entityUUID",
+              "type": "UUID"
+            },
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "title",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "string",
+                    "3": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "health",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "f32",
+                    "2": "f32"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "color",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "varint",
+                    "4": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "dividers",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "varint",
+                    "4": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "flags",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "u8",
+                    "5": "u8"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_difficulty": [
+          "container",
+          [
+            {
+              "name": "difficulty",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_tab_complete": [
+          "container",
+          [
+            {
+              "name": "matches",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_chat": [
+          "container",
+          [
+            {
+              "name": "message",
+              "type": "string"
+            },
+            {
+              "name": "position",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_multi_block_change": [
+          "container",
+          [
+            {
+              "name": "chunkX",
+              "type": "i32"
+            },
+            {
+              "name": "chunkZ",
+              "type": "i32"
+            },
+            {
+              "name": "records",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "horizontalPos",
+                        "type": "u8"
+                      },
+                      {
+                        "name": "y",
+                        "type": "u8"
+                      },
+                      {
+                        "name": "blockId",
+                        "type": "varint"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_transaction": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "i8"
+            },
+            {
+              "name": "action",
+              "type": "i16"
+            },
+            {
+              "name": "accepted",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_close_window": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_open_window": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            },
+            {
+              "name": "inventoryType",
+              "type": "string"
+            },
+            {
+              "name": "windowTitle",
+              "type": "string"
+            },
+            {
+              "name": "slotCount",
+              "type": "u8"
+            },
+            {
+              "name": "entityId",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "inventoryType",
+                  "fields": {
+                    "EntityHorse": "i32"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_window_items": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            },
+            {
+              "name": "items",
+              "type": [
+                "array",
+                {
+                  "countType": "i16",
+                  "type": "slot"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_craft_progress_bar": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            },
+            {
+              "name": "property",
+              "type": "i16"
+            },
+            {
+              "name": "value",
+              "type": "i16"
+            }
+          ]
+        ],
+        "packet_set_slot": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "i8"
+            },
+            {
+              "name": "slot",
+              "type": "i16"
+            },
+            {
+              "name": "item",
+              "type": "slot"
+            }
+          ]
+        ],
+        "packet_set_cooldown": [
+          "container",
+          [
+            {
+              "name": "itemID",
+              "type": "varint"
+            },
+            {
+              "name": "cooldownTicks",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_custom_payload": [
+          "container",
+          [
+            {
+              "name": "channel",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "type": "restBuffer"
+            }
+          ]
+        ],
+        "packet_named_sound_effect": [
+          "container",
+          [
+            {
+              "name": "soundName",
+              "type": "string"
+            },
+            {
+              "name": "soundCategory",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": "i32"
+            },
+            {
+              "name": "y",
+              "type": "i32"
+            },
+            {
+              "name": "z",
+              "type": "i32"
+            },
+            {
+              "name": "volume",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_kick_disconnect": [
+          "container",
+          [
+            {
+              "name": "reason",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_entity_status": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "i32"
+            },
+            {
+              "name": "entityStatus",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_explosion": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f32"
+            },
+            {
+              "name": "y",
+              "type": "f32"
+            },
+            {
+              "name": "z",
+              "type": "f32"
+            },
+            {
+              "name": "radius",
+              "type": "f32"
+            },
+            {
+              "name": "affectedBlockOffsets",
+              "type": [
+                "array",
+                {
+                  "countType": "i32",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "x",
+                        "type": "i8"
+                      },
+                      {
+                        "name": "y",
+                        "type": "i8"
+                      },
+                      {
+                        "name": "z",
+                        "type": "i8"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "playerMotionX",
+              "type": "f32"
+            },
+            {
+              "name": "playerMotionY",
+              "type": "f32"
+            },
+            {
+              "name": "playerMotionZ",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_unload_chunk": [
+          "container",
+          [
+            {
+              "name": "chunkX",
+              "type": "i32"
+            },
+            {
+              "name": "chunkZ",
+              "type": "i32"
+            }
+          ]
+        ],
+        "packet_game_state_change": [
+          "container",
+          [
+            {
+              "name": "reason",
+              "type": "u8"
+            },
+            {
+              "name": "gameMode",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_keep_alive": [
+          "container",
+          [
+            {
+              "name": "keepAliveId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_map_chunk": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "i32"
+            },
+            {
+              "name": "z",
+              "type": "i32"
+            },
+            {
+              "name": "groundUp",
+              "type": "bool"
+            },
+            {
+              "name": "bitMap",
+              "type": "varint"
+            },
+            {
+              "name": "chunkData",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            },
+            {
+              "name": "blockEntities",
+              "type": [
+                "array",{
+                  "countType":"varint",
+                  "type":"nbt"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_world_event": [
+          "container",
+          [
+            {
+              "name": "effectId",
+              "type": "i32"
+            },
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "data",
+              "type": "i32"
+            },
+            {
+              "name": "global",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_world_particles": [
+          "container",
+          [
+            {
+              "name": "particleId",
+              "type": "i32"
+            },
+            {
+              "name": "longDistance",
+              "type": "bool"
+            },
+            {
+              "name": "x",
+              "type": "f32"
+            },
+            {
+              "name": "y",
+              "type": "f32"
+            },
+            {
+              "name": "z",
+              "type": "f32"
+            },
+            {
+              "name": "offsetX",
+              "type": "f32"
+            },
+            {
+              "name": "offsetY",
+              "type": "f32"
+            },
+            {
+              "name": "offsetZ",
+              "type": "f32"
+            },
+            {
+              "name": "particleData",
+              "type": "f32"
+            },
+            {
+              "name": "particles",
+              "type": "i32"
+            },
+            {
+              "name": "data",
+              "type": ["switch",{
+                "compareTo":"particleId",
+                "fields":{
+                  "36":["array",{"count":2,"type":"varint"}],
+                  "37":["array",{"count":1,"type":"varint"}],
+                  "38":["array",{"count":1,"type":"varint"}]
+                },
+                "default":"void"
+              }
+              ]
+            }
+          ]
+        ],
+        "packet_login": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "i32"
+            },
+            {
+              "name": "gameMode",
+              "type": "u8"
+            },
+            {
+              "name": "dimension",
+              "type": "i32"
+            },
+            {
+              "name": "difficulty",
+              "type": "u8"
+            },
+            {
+              "name": "maxPlayers",
+              "type": "u8"
+            },
+            {
+              "name": "levelType",
+              "type": "string"
+            },
+            {
+              "name": "reducedDebugInfo",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_map": [
+          "container",
+          [
+            {
+              "name": "itemDamage",
+              "type": "varint"
+            },
+            {
+              "name": "scale",
+              "type": "i8"
+            },
+            {
+              "name": "trackingPosition",
+              "type": "bool"
+            },
+            {
+              "name": "icons",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "directionAndType",
+                        "type": "i8"
+                      },
+                      {
+                        "name": "x",
+                        "type": "i8"
+                      },
+                      {
+                        "name": "y",
+                        "type": "i8"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "columns",
+              "type": "i8"
+            },
+            {
+              "name": "rows",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "columns",
+                  "fields": {
+                    "0": "void"
+                  },
+                  "default": "i8"
+                }
+              ]
+            },
+            {
+              "name": "x",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "columns",
+                  "fields": {
+                    "0": "void"
+                  },
+                  "default": "i8"
+                }
+              ]
+            },
+            {
+              "name": "y",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "columns",
+                  "fields": {
+                    "0": "void"
+                  },
+                  "default": "i8"
+                }
+              ]
+            },
+            {
+              "name": "data",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "columns",
+                  "fields": {
+                    "0": "void"
+                  },
+                  "default": [
+                    "buffer",
+                    {
+                      "countType": "varint"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_rel_entity_move": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "dX",
+              "type": "i16"
+            },
+            {
+              "name": "dY",
+              "type": "i16"
+            },
+            {
+              "name": "dZ",
+              "type": "i16"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_entity_move_look": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "dX",
+              "type": "i16"
+            },
+            {
+              "name": "dY",
+              "type": "i16"
+            },
+            {
+              "name": "dZ",
+              "type": "i16"
+            },
+            {
+              "name": "yaw",
+              "type": "i8"
+            },
+            {
+              "name": "pitch",
+              "type": "i8"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_entity_look": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "yaw",
+              "type": "i8"
+            },
+            {
+              "name": "pitch",
+              "type": "i8"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_entity": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_vehicle_move": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_open_sign_entity": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            }
+          ]
+        ],
+        "packet_abilities": [
+          "container",
+          [
+            {
+              "name": "flags",
+              "type": "i8"
+            },
+            {
+              "name": "flyingSpeed",
+              "type": "f32"
+            },
+            {
+              "name": "walkingSpeed",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_combat_event": [
+          "container",
+          [
+            {
+              "name": "event",
+              "type": "varint"
+            },
+            {
+              "name": "duration",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "event",
+                  "fields": {
+                    "1": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "playerId",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "event",
+                  "fields": {
+                    "2": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "entityId",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "event",
+                  "fields": {
+                    "1": "i32",
+                    "2": "i32"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "message",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "event",
+                  "fields": {
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_player_info": [
+          "container",
+          [
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "data",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "UUID",
+                        "type": "UUID"
+                      },
+                      {
+                        "name": "name",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action",
+                            "fields": {
+                              "0": "string"
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "properties",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action",
+                            "fields": {
+                              "0": [
+                                "array",
+                                {
+                                  "countType": "varint",
+                                  "type": [
+                                    "container",
+                                    [
+                                      {
+                                        "name": "name",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "value",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "signature",
+                                        "type": [
+                                          "option",
+                                          "string"
+                                        ]
+                                      }
+                                    ]
+                                  ]
+                                }
+                              ]
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "gamemode",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action",
+                            "fields": {
+                              "0": "varint",
+                              "1": "varint"
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "ping",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action",
+                            "fields": {
+                              "0": "varint",
+                              "2": "varint"
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "displayName",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action",
+                            "fields": {
+                              "0": [
+                                "option",
+                                "string"
+                              ],
+                              "3": [
+                                "option",
+                                "string"
+                              ]
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_position": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            },
+            {
+              "name": "flags",
+              "type": "i8"
+            },
+            {
+              "name": "teleportId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_bed": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "location",
+              "type": "position"
+            }
+          ]
+        ],
+        "packet_entity_destroy": [
+          "container",
+          [
+            {
+              "name": "entityIds",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "varint"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_remove_entity_effect": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "effectId",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_resource_pack_send": [
+          "container",
+          [
+            {
+              "name": "url",
+              "type": "string"
+            },
+            {
+              "name": "hash",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_respawn": [
+          "container",
+          [
+            {
+              "name": "dimension",
+              "type": "i32"
+            },
+            {
+              "name": "difficulty",
+              "type": "u8"
+            },
+            {
+              "name": "gamemode",
+              "type": "u8"
+            },
+            {
+              "name": "levelType",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_entity_head_rotation": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "headYaw",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_world_border": [
+          "container",
+          [
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "radius",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "f64"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "x",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "2": "f64",
+                    "3": "f64"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "z",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "2": "f64",
+                    "3": "f64"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "old_radius",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "1": "f64",
+                    "3": "f64"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "new_radius",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "1": "f64",
+                    "3": "f64"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "speed",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "1": "varint",
+                    "3": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "portalBoundary",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "3": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "warning_time",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "3": "varint",
+                    "4": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "warning_blocks",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "3": "varint",
+                    "5": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_camera": [
+          "container",
+          [
+            {
+              "name": "cameraId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_held_item_slot": [
+          "container",
+          [
+            {
+              "name": "slot",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_scoreboard_display_objective": [
+          "container",
+          [
+            {
+              "name": "position",
+              "type": "i8"
+            },
+            {
+              "name": "name",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_entity_metadata": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "metadata",
+              "type": "entityMetadata"
+            }
+          ]
+        ],
+        "packet_attach_entity": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "i32"
+            },
+            {
+              "name": "vehicleId",
+              "type": "i32"
+            }
+          ]
+        ],
+        "packet_entity_velocity": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "velocityX",
+              "type": "i16"
+            },
+            {
+              "name": "velocityY",
+              "type": "i16"
+            },
+            {
+              "name": "velocityZ",
+              "type": "i16"
+            }
+          ]
+        ],
+        "packet_entity_equipment": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "slot",
+              "type": "varint"
+            },
+            {
+              "name": "item",
+              "type": "slot"
+            }
+          ]
+        ],
+        "packet_experience": [
+          "container",
+          [
+            {
+              "name": "experienceBar",
+              "type": "f32"
+            },
+            {
+              "name": "level",
+              "type": "varint"
+            },
+            {
+              "name": "totalExperience",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_update_health": [
+          "container",
+          [
+            {
+              "name": "health",
+              "type": "f32"
+            },
+            {
+              "name": "food",
+              "type": "varint"
+            },
+            {
+              "name": "foodSaturation",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_scoreboard_objective": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "action",
+              "type": "i8"
+            },
+            {
+              "name": "displayText",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "type",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_set_passengers": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "passengers",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "varint"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_teams": [
+          "container",
+          [
+            {
+              "name": "team",
+              "type": "string"
+            },
+            {
+              "name": "mode",
+              "type": "i8"
+            },
+            {
+              "name": "name",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "prefix",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "suffix",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "friendlyFire",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "i8",
+                    "2": "i8"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "nameTagVisibility",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "collisionRule",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "color",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "i8",
+                    "2": "i8"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "players",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "string"
+                      }
+                    ],
+                    "3": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "string"
+                      }
+                    ],
+                    "4": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_scoreboard_score": [
+          "container",
+          [
+            {
+              "name": "itemName",
+              "type": "string"
+            },
+            {
+              "name": "action",
+              "type": "i8"
+            },
+            {
+              "name": "scoreName",
+              "type": "string"
+            },
+            {
+              "name": "value",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "1": "void"
+                  },
+                  "default": "varint"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_spawn_position": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            }
+          ]
+        ],
+        "packet_update_time": [
+          "container",
+          [
+            {
+              "name": "age",
+              "type": "i64"
+            },
+            {
+              "name": "time",
+              "type": "i64"
+            }
+          ]
+        ],
+        "packet_title": [
+          "container",
+          [
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "text",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": "string",
+                    "1": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "fadeIn",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "2": "i32"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "stay",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "2": "i32"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "fadeOut",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "2": "i32"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_sound_effect": [
+          "container",
+          [
+            {
+              "name": "soundId",
+              "type": "varint"
+            },
+            {
+              "name": "soundCatagory",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": "i32"
+            },
+            {
+              "name": "y",
+              "type": "i32"
+            },
+            {
+              "name": "z",
+              "type": "i32"
+            },
+            {
+              "name": "volume",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_playerlist_header": [
+          "container",
+          [
+            {
+              "name": "header",
+              "type": "string"
+            },
+            {
+              "name": "footer",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_collect": [
+          "container",
+          [
+            {
+              "name": "collectedEntityId",
+              "type": "varint"
+            },
+            {
+              "name": "collectorEntityId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_entity_teleport": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "i8"
+            },
+            {
+              "name": "pitch",
+              "type": "i8"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_entity_update_attributes": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "properties",
+              "type": [
+                "array",
+                {
+                  "countType": "i32",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "key",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": "f64"
+                      },
+                      {
+                        "name": "modifiers",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": [
+                              "container",
+                              [
+                                {
+                                  "name": "uuid",
+                                  "type": "UUID"
+                                },
+                                {
+                                  "name": "amount",
+                                  "type": "f64"
+                                },
+                                {
+                                  "name": "operation",
+                                  "type": "i8"
+                                }
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_entity_effect": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "effectId",
+              "type": "i8"
+            },
+            {
+              "name": "amplifier",
+              "type": "i8"
+            },
+            {
+              "name": "duration",
+              "type": "varint"
+            },
+            {
+              "name": "hideParticles",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "spawn_entity",
+                    "0x01": "spawn_entity_experience_orb",
+                    "0x02": "spawn_entity_weather",
+                    "0x03": "spawn_entity_living",
+                    "0x04": "spawn_entity_painting",
+                    "0x05": "named_entity_spawn",
+                    "0x06": "animation",
+                    "0x07": "statistics",
+                    "0x08": "block_break_animation",
+                    "0x09": "tile_entity_data",
+                    "0x0a": "block_action",
+                    "0x0b": "block_change",
+                    "0x0c": "boss_bar",
+                    "0x0d": "difficulty",
+                    "0x0e": "tab_complete",
+                    "0x0f": "chat",
+                    "0x10": "multi_block_change",
+                    "0x11": "transaction",
+                    "0x12": "close_window",
+                    "0x13": "open_window",
+                    "0x14": "window_items",
+                    "0x15": "craft_progress_bar",
+                    "0x16": "set_slot",
+                    "0x17": "set_cooldown",
+                    "0x18": "custom_payload",
+                    "0x19": "named_sound_effect",
+                    "0x1a": "kick_disconnect",
+                    "0x1b": "entity_status",
+                    "0x1c": "explosion",
+                    "0x1d": "unload_chunk",
+                    "0x1e": "game_state_change",
+                    "0x1f": "keep_alive",
+                    "0x20": "map_chunk",
+                    "0x21": "world_event",
+                    "0x22": "world_particles",
+                    "0x23": "login",
+                    "0x24": "map",
+                    "0x25": "rel_entity_move",
+                    "0x26": "entity_move_look",
+                    "0x27": "entity_look",
+                    "0x28": "entity",
+                    "0x29": "vehicle_move",
+                    "0x2a": "open_sign_entity",
+                    "0x2b": "abilities",
+                    "0x2c": "combat_event",
+                    "0x2d": "player_info",
+                    "0x2e": "position",
+                    "0x2f": "bed",
+                    "0x30": "entity_destroy",
+                    "0x31": "remove_entity_effect",
+                    "0x32": "resource_pack_send",
+                    "0x33": "respawn",
+                    "0x34": "entity_head_rotation",
+                    "0x35": "world_border",
+                    "0x36": "camera",
+                    "0x37": "held_item_slot",
+                    "0x38": "scoreboard_display_objective",
+                    "0x39": "entity_metadata",
+                    "0x3a": "attach_entity",
+                    "0x3b": "entity_velocity",
+                    "0x3c": "entity_equipment",
+                    "0x3d": "experience",
+                    "0x3e": "update_health",
+                    "0x3f": "scoreboard_objective",
+                    "0x40": "set_passengers",
+                    "0x41": "teams",
+                    "0x42": "scoreboard_score",
+                    "0x43": "spawn_position",
+                    "0x44": "update_time",
+                    "0x45": "title",
+                    "0x46": "sound_effect",
+                    "0x47": "playerlist_header",
+                    "0x48": "collect",
+                    "0x49": "entity_teleport",
+                    "0x4a": "entity_update_attributes",
+                    "0x4b": "entity_effect"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "spawn_entity": "packet_spawn_entity",
+                    "spawn_entity_experience_orb": "packet_spawn_entity_experience_orb",
+                    "spawn_entity_weather": "packet_spawn_entity_weather",
+                    "spawn_entity_living": "packet_spawn_entity_living",
+                    "spawn_entity_painting": "packet_spawn_entity_painting",
+                    "named_entity_spawn": "packet_named_entity_spawn",
+                    "animation": "packet_animation",
+                    "statistics": "packet_statistics",
+                    "block_break_animation": "packet_block_break_animation",
+                    "tile_entity_data": "packet_tile_entity_data",
+                    "block_action": "packet_block_action",
+                    "block_change": "packet_block_change",
+                    "boss_bar": "packet_boss_bar",
+                    "difficulty": "packet_difficulty",
+                    "tab_complete": "packet_tab_complete",
+                    "chat": "packet_chat",
+                    "multi_block_change": "packet_multi_block_change",
+                    "transaction": "packet_transaction",
+                    "close_window": "packet_close_window",
+                    "open_window": "packet_open_window",
+                    "window_items": "packet_window_items",
+                    "craft_progress_bar": "packet_craft_progress_bar",
+                    "set_slot": "packet_set_slot",
+                    "set_cooldown": "packet_set_cooldown",
+                    "custom_payload": "packet_custom_payload",
+                    "named_sound_effect": "packet_named_sound_effect",
+                    "kick_disconnect": "packet_kick_disconnect",
+                    "entity_status": "packet_entity_status",
+                    "explosion": "packet_explosion",
+                    "unload_chunk": "packet_unload_chunk",
+                    "game_state_change": "packet_game_state_change",
+                    "keep_alive": "packet_keep_alive",
+                    "map_chunk": "packet_map_chunk",
+                    "world_event": "packet_world_event",
+                    "world_particles": "packet_world_particles",
+                    "login": "packet_login",
+                    "map": "packet_map",
+                    "rel_entity_move": "packet_rel_entity_move",
+                    "entity_move_look": "packet_entity_move_look",
+                    "entity_look": "packet_entity_look",
+                    "entity": "packet_entity",
+                    "vehicle_move": "packet_vehicle_move",
+                    "open_sign_entity": "packet_open_sign_entity",
+                    "abilities": "packet_abilities",
+                    "combat_event": "packet_combat_event",
+                    "player_info": "packet_player_info",
+                    "position": "packet_position",
+                    "bed": "packet_bed",
+                    "entity_destroy": "packet_entity_destroy",
+                    "remove_entity_effect": "packet_remove_entity_effect",
+                    "resource_pack_send": "packet_resource_pack_send",
+                    "respawn": "packet_respawn",
+                    "entity_update_attributes": "packet_entity_update_attributes",
+                    "world_border": "packet_world_border",
+                    "camera": "packet_camera",
+                    "held_item_slot": "packet_held_item_slot",
+                    "scoreboard_display_objective": "packet_scoreboard_display_objective",
+                    "entity_metadata": "packet_entity_metadata",
+                    "attach_entity": "packet_attach_entity",
+                    "entity_velocity": "packet_entity_velocity",
+                    "entity_equipment": "packet_entity_equipment",
+                    "experience": "packet_experience",
+                    "update_health": "packet_update_health",
+                    "scoreboard_objective": "packet_scoreboard_objective",
+                    "set_passengers": "packet_set_passengers",
+                    "teams": "packet_teams",
+                    "scoreboard_score": "packet_scoreboard_score",
+                    "spawn_position": "packet_spawn_position",
+                    "update_time": "packet_update_time",
+                    "title": "packet_title",
+                    "sound_effect": "packet_sound_effect",
+                    "playerlist_header": "packet_playerlist_header",
+                    "collect": "packet_collect",
+                    "entity_teleport": "packet_entity_teleport",
+                    "entity_head_rotation": "packet_entity_head_rotation",
+                    "entity_effect": "packet_entity_effect"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "toServer": {
+      "types": {
+        "packet_teleport_confirm": [
+          "container",
+          [
+            {
+              "name": "teleportId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_tab_complete": [
+          "container",
+          [
+            {
+              "name": "text",
+              "type": "string"
+            },
+            {
+              "name": "assumeCommand",
+              "type": "bool"
+            },
+            {
+              "name": "lookedAtBlock",
+              "type": [
+                "option",
+                "position"
+              ]
+            }
+          ]
+        ],
+        "packet_chat": [
+          "container",
+          [
+            {
+              "name": "message",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_client_command": [
+          "container",
+          [
+            {
+              "name": "actionId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_settings": [
+          "container",
+          [
+            {
+              "name": "locale",
+              "type": "string"
+            },
+            {
+              "name": "viewDistance",
+              "type": "i8"
+            },
+            {
+              "name": "chatFlags",
+              "type": "varint"
+            },
+            {
+              "name": "chatColors",
+              "type": "bool"
+            },
+            {
+              "name": "skinParts",
+              "type": "u8"
+            },
+            {
+              "name": "mainHand",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_transaction": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "i8"
+            },
+            {
+              "name": "action",
+              "type": "i16"
+            },
+            {
+              "name": "accepted",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_enchant_item": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "i8"
+            },
+            {
+              "name": "enchantment",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_window_click": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            },
+            {
+              "name": "slot",
+              "type": "i16"
+            },
+            {
+              "name": "mouseButton",
+              "type": "i8"
+            },
+            {
+              "name": "action",
+              "type": "i16"
+            },
+            {
+              "name": "mode",
+              "type": "i8"
+            },
+            {
+              "name": "item",
+              "type": "slot"
+            }
+          ]
+        ],
+        "packet_close_window": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_custom_payload": [
+          "container",
+          [
+            {
+              "name": "channel",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "type": "restBuffer"
+            }
+          ]
+        ],
+        "packet_use_entity": [
+          "container",
+          [
+            {
+              "name": "target",
+              "type": "varint"
+            },
+            {
+              "name": "mouse",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mouse",
+                  "fields": {
+                    "2": "f32"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "y",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mouse",
+                  "fields": {
+                    "2": "f32"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "z",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mouse",
+                  "fields": {
+                    "2": "f32"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "hand",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mouse",
+                  "fields": {
+                    "0": "varint",
+                    "2": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_keep_alive": [
+          "container",
+          [
+            {
+              "name": "keepAliveId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_position": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_position_look": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_look": [
+          "container",
+          [
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_flying": [
+          "container",
+          [
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_vehicle_move": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_steer_boat": [
+          "container",
+          [
+            {
+              "name": "unknown1",
+              "type": "bool"
+            },
+            {
+              "name": "unknown2",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_abilities": [
+          "container",
+          [
+            {
+              "name": "flags",
+              "type": "i8"
+            },
+            {
+              "name": "flyingSpeed",
+              "type": "f32"
+            },
+            {
+              "name": "walkingSpeed",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_block_dig": [
+          "container",
+          [
+            {
+              "name": "status",
+              "type": "i8"
+            },
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "face",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_entity_action": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "actionId",
+              "type": "varint"
+            },
+            {
+              "name": "jumpBoost",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_steer_vehicle": [
+          "container",
+          [
+            {
+              "name": "sideways",
+              "type": "f32"
+            },
+            {
+              "name": "forward",
+              "type": "f32"
+            },
+            {
+              "name": "jump",
+              "type": "u8"
+            }
+          ]
+        ],
+        "packet_resource_pack_receive": [
+          "container",
+          [
+            {
+              "name": "hash",
+              "type": "string"
+            },
+            {
+              "name": "result",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_held_item_slot": [
+          "container",
+          [
+            {
+              "name": "slotId",
+              "type": "i16"
+            }
+          ]
+        ],
+        "packet_set_creative_slot": [
+          "container",
+          [
+            {
+              "name": "slot",
+              "type": "i16"
+            },
+            {
+              "name": "item",
+              "type": "slot"
+            }
+          ]
+        ],
+        "packet_update_sign": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "text1",
+              "type": "string"
+            },
+            {
+              "name": "text2",
+              "type": "string"
+            },
+            {
+              "name": "text3",
+              "type": "string"
+            },
+            {
+              "name": "text4",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_arm_animation": [
+          "container",
+          [
+            {
+              "name": "hand",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_spectate": [
+          "container",
+          [
+            {
+              "name": "target",
+              "type": "UUID"
+            }
+          ]
+        ],
+        "packet_block_place": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "direction",
+              "type": "varint"
+            },
+            {
+              "name": "hand",
+              "type": "varint"
+            },
+            {
+              "name": "cursorX",
+              "type": "i8"
+            },
+            {
+              "name": "cursorY",
+              "type": "i8"
+            },
+            {
+              "name": "cursorZ",
+              "type": "i8"
+            }
+          ]
+        ],
+        "packet_use_item": [
+          "container",
+          [
+            {
+              "name": "hand",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "teleport_confirm",
+                    "0x01": "tab_complete",
+                    "0x02": "chat",
+                    "0x03": "client_command",
+                    "0x04": "settings",
+                    "0x05": "transaction",
+                    "0x06": "enchant_item",
+                    "0x07": "window_click",
+                    "0x08": "close_window",
+                    "0x09": "custom_payload",
+                    "0x0a": "use_entity",
+                    "0x0b": "keep_alive",
+                    "0x0c": "position",
+                    "0x0d": "position_look",
+                    "0x0e": "look",
+                    "0x0f": "flying",
+                    "0x10": "vehicle_move",
+                    "0x11": "steer_boat",
+                    "0x12": "abilities",
+                    "0x13": "block_dig",
+                    "0x14": "entity_action",
+                    "0x15": "steer_vehicle",
+                    "0x16": "resource_pack_receive",
+                    "0x17": "held_item_slot",
+                    "0x18": "set_creative_slot",
+                    "0x19": "update_sign",
+                    "0x1a": "arm_animation",
+                    "0x1b": "spectate",
+                    "0x1c": "block_place",
+                    "0x1d": "use_item"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "teleport_confirm": "packet_teleport_confirm",
+                    "tab_complete": "packet_tab_complete",
+                    "chat": "packet_chat",
+                    "client_command": "packet_client_command",
+                    "settings": "packet_settings",
+                    "transaction": "packet_transaction",
+                    "enchant_item": "packet_enchant_item",
+                    "window_click": "packet_window_click",
+                    "close_window": "packet_close_window",
+                    "custom_payload": "packet_custom_payload",
+                    "use_entity": "packet_use_entity",
+                    "keep_alive": "packet_keep_alive",
+                    "position": "packet_position",
+                    "position_look": "packet_position_look",
+                    "look": "packet_look",
+                    "flying": "packet_flying",
+                    "vehicle_move": "packet_vehicle_move",
+                    "steer_boat": "packet_steer_boat",
+                    "abilities": "packet_abilities",
+                    "block_dig": "packet_block_dig",
+                    "entity_action": "packet_entity_action",
+                    "steer_vehicle": "packet_steer_vehicle",
+                    "resource_pack_receive": "packet_resource_pack_receive",
+                    "held_item_slot": "packet_held_item_slot",
+                    "set_creative_slot": "packet_set_creative_slot",
+                    "update_sign": "packet_update_sign",
+                    "arm_animation": "packet_arm_animation",
+                    "spectate": "packet_spectate",
+                    "block_place": "packet_block_place",
+                    "use_item": "packet_use_item"
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  }
+}
+},{}],99:[function(require,module,exports){
+module.exports={
+  "version":110,
+  "minecraftVersion":"1.9.4",
+  "majorVersion":"1.9"
+}
+
+},{}],100:[function(require,module,exports){
 arguments[4][73][0].apply(exports,arguments)
-},{"dup":73}],97:[function(require,module,exports){
+},{"dup":73}],101:[function(require,module,exports){
 module.exports=[
   {
     "id": 0,
@@ -80060,7 +83640,8 @@ module.exports=[
     "drops": [
       {
         "drop": 280,
-        "minCount": 0
+        "minCount": 0,
+        "maxCount": 2
       }
     ],
     "transparent": true,
@@ -83533,6 +87114,40 @@ module.exports=[
     "diggable": true,
     "boundingBox": "block",
     "material": "leaves",
+    "variations": [
+      {
+        "metadata": 0,
+        "displayName": "Acacia Leaves"
+      },
+      {
+        "metadata": 1,
+        "displayName": "Dark Oak Leaves"
+      },
+      {
+        "metadata": 4,
+        "displayName": "Acacia Leaves (no decay)"
+      },
+      {
+        "metadata": 5,
+        "displayName": "Dark Oak Leaves (no decay)"
+      },
+      {
+        "metadata": 8,
+        "displayName": "Acacia Leaves (check decay)"
+      },
+      {
+        "metadata": 9,
+        "displayName": "Dark Oak Leaves (check decay)"
+      },
+      {
+        "metadata": 12,
+        "displayName": "Acacia Leaves (no decay and check decay)"
+      },
+      {
+        "metadata": 13,
+        "displayName": "Dark Oak Leaves (no decay and check decay)"
+      }
+    ],
     "drops": [
       {
         "drop": 6,
@@ -84463,7 +88078,7 @@ module.exports=[
     "displayName": "End Rod",
     "name": "end_rod",
     "hardness": 0,
-    "stackSize": 0,
+    "stackSize": 64,
     "diggable": true,
     "boundingBox": "block",
     "variations": [
@@ -84498,7 +88113,7 @@ module.exports=[
       }
     ],
     "transparent": false,
-    "emitLight": 0,
+    "emitLight": 14,
     "filterLight": 15
   },
   {
@@ -84542,9 +88157,16 @@ module.exports=[
     "displayName": "Purpur Block",
     "name": "purpur_block",
     "hardness": 1.5,
-    "stackSize": 0,
+    "stackSize": 64,
     "diggable": true,
     "boundingBox": "block",
+    "harvestTools": {
+      "257": true,
+      "270": true,
+      "274": true,
+      "278": true,
+      "285": true
+    },
     "drops": [
       {
         "drop": 201
@@ -84559,9 +88181,16 @@ module.exports=[
     "displayName": "Purpur Pillar",
     "name": "purpur_pillar",
     "hardness": 1.5,
-    "stackSize": 0,
+    "stackSize": 64,
     "diggable": true,
     "boundingBox": "block",
+    "harvestTools": {
+      "257": true,
+      "270": true,
+      "274": true,
+      "278": true,
+      "285": true
+    },
     "drops": [
       {
         "drop": 202
@@ -84657,9 +88286,16 @@ module.exports=[
     "displayName": "End Stone Bricks",
     "name": "end_bricks",
     "hardness": 0.8,
-    "stackSize": 0,
+    "stackSize": 64,
     "diggable": true,
     "boundingBox": "block",
+    "harvestTools": {
+      "257": true,
+      "270": true,
+      "274": true,
+      "278": true,
+      "285": true
+    },
     "drops": [
       {
         "drop": 206
@@ -84674,17 +88310,13 @@ module.exports=[
     "displayName": "Beetroot Seeds",
     "name": "beetroots",
     "hardness": 0,
-    "stackSize": 0,
+    "stackSize": 64,
     "diggable": true,
-    "boundingBox": "block",
-    "drops": [
-      {
-        "drop": 207
-      }
-    ],
-    "transparent": false,
+    "boundingBox": "empty",
+    "drops": [],
+    "transparent": true,
     "emitLight": 0,
-    "filterLight": 15
+    "filterLight": 0
   },
   {
     "id": 208,
@@ -84789,17 +88421,13 @@ module.exports=[
         "displayName": "Data"
       }
     ],
-    "drops": [
-      {
-        "drop": 255
-      }
-    ],
+    "drops": [],
     "transparent": false,
-    "emitLight": 0,
+    "emitLight": 15,
     "filterLight": 15
   }
 ]
-},{}],98:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 module.exports=[
   {
     "id": 1,
@@ -84965,7 +88593,7 @@ module.exports=[
   }
 ]
 
-},{}],99:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 module.exports=[
   {
     "id": 48,
@@ -85604,9 +89232,9 @@ module.exports=[
     "height": 0.3125
   }
 ]
-},{}],100:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 arguments[4][77][0].apply(exports,arguments)
-},{"dup":77}],101:[function(require,module,exports){
+},{"dup":77}],105:[function(require,module,exports){
 module.exports=[
   {
     "id": 256,
@@ -86858,7 +90486,7 @@ module.exports=[
     "id": 433,
     "displayName": "Popped Chorus Fruit",
     "stackSize": 64,
-    "name": "popped_chorus_fruit"
+    "name": "chorus_fruit_popped"
   },
   {
     "id": 434,
@@ -87023,9 +90651,10 @@ module.exports=[
     "name": "record_wait"
   }
 ]
-},{}],102:[function(require,module,exports){
+
+},{}],106:[function(require,module,exports){
 arguments[4][79][0].apply(exports,arguments)
-},{"dup":79}],103:[function(require,module,exports){
+},{"dup":79}],107:[function(require,module,exports){
 module.exports={
   "types": {
     "varint": "native",
@@ -88436,20 +92065,15 @@ module.exports={
             },
             {
               "name": "data",
-              "type": [
-                "array",
-                {
-                  "count": {
-                    "field": "particleId",
-                    "map": {
-                      "36": 2,
-                      "37": 1,
-                      "38": 1
-                    },
-                    "default": 0
-                  },
-                  "type": "varint"
-                }
+              "type": ["switch",{
+                "compareTo":"particleId",
+                "fields":{
+                  "36":["array",{"count":2,"type":"varint"}],
+                  "37":["array",{"count":1,"type":"varint"}],
+                  "38":["array",{"count":1,"type":"varint"}]
+                },
+                "default":"void"
+              }
               ]
             }
           ]
@@ -89026,7 +92650,7 @@ module.exports={
             }
           ]
         ],
-        "packet_entity_head_look": [
+        "packet_entity_head_rotation": [
           "container",
           [
             {
@@ -89736,7 +93360,7 @@ module.exports={
             }
           ]
         ],
-        "packet_entity_head_rotation": [
+        "packet_entity_update_attributes": [
           "container",
           [
             {
@@ -89880,7 +93504,7 @@ module.exports={
                     "0x31": "remove_entity_effect",
                     "0x32": "resource_pack_send",
                     "0x33": "respawn",
-                    "0x34": "entity_head_look",
+                    "0x34": "entity_head_rotation",
                     "0x35": "world_border",
                     "0x36": "camera",
                     "0x37": "held_item_slot",
@@ -89903,7 +93527,7 @@ module.exports={
                     "0x48": "playerlist_header",
                     "0x49": "collect",
                     "0x4a": "entity_teleport",
-                    "0x4b": "entity_head_rotation",
+                    "0x4b": "entity_update_attributes",
                     "0x4c": "entity_effect"
                   }
                 }
@@ -89968,7 +93592,7 @@ module.exports={
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "resource_pack_send": "packet_resource_pack_send",
                     "respawn": "packet_respawn",
-                    "entity_head_look": "packet_entity_head_look",
+                    "entity_update_attributes": "packet_entity_update_attributes",
                     "world_border": "packet_world_border",
                     "camera": "packet_camera",
                     "held_item_slot": "packet_held_item_slot",
@@ -90624,7 +94248,7 @@ module.exports={
     }
   }
 }
-},{}],104:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 module.exports={
   "1": [
     {
@@ -93372,19 +96996,6 @@ module.exports={
     }
   ],
   "146": [
-    {
-      "inShape": [
-        [
-          131,
-          54
-        ]
-      ],
-      "result": {
-        "count": 1,
-        "id": 146,
-        "metadata": 0
-      }
-    },
     {
       "ingredients": [
         131,
@@ -96940,30 +100551,6 @@ module.exports={
           266,
           266,
           266
-        ]
-      ],
-      "result": {
-        "count": 1,
-        "id": 322,
-        "metadata": 0
-      }
-    },
-    {
-      "inShape": [
-        [
-          41,
-          41,
-          41
-        ],
-        [
-          41,
-          260,
-          41
-        ],
-        [
-          41,
-          41,
-          41
         ]
       ],
       "result": {
@@ -118077,14 +121664,14 @@ module.exports={
     }
   ]
 }
-},{}],105:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 module.exports={
   "version":107,
   "minecraftVersion":"1.9",
   "majorVersion":"1.9"
 }
 
-},{}],106:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 module.exports=[
   {
     "id": "",
@@ -118315,7 +121902,7 @@ module.exports=[
   }
 ]
 
-},{}],107:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 module.exports={
   "types": {
     "varint": "native",
@@ -119854,20 +123441,15 @@ module.exports={
             },
             {
               "name": "data",
-              "type": [
-                "array",
-                {
-                  "count": {
-                    "field": "particleId",
-                    "map": {
-                      "36": 2,
-                      "37": 1,
-                      "38": 1
-                    },
-                    "default": 0
-                  },
-                  "type": "varint"
-                }
+              "type": ["switch",{
+                "compareTo":"particleId",
+                "fields":{
+                  "36":["array",{"count":2,"type":"varint"}],
+                  "37":["array",{"count":1,"type":"varint"}],
+                  "38":["array",{"count":1,"type":"varint"}]
+                },
+                "default":"void"
+              }
               ]
             }
           ]
@@ -121777,15 +125359,75 @@ module.exports={
     }
   }
 }
-},{}],108:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 module.exports={
   "version":76,
   "minecraftVersion":"15w40b",
   "majorVersion":"1.9"
 }
 
-},{}],109:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 module.exports=[
+  {
+    "minecraftVersion":"16w20a",
+    "version":201,
+    "usesNetty": true,
+    "majorVersion":"1.10"
+  },
+  {
+    "minecraftVersion":"1.9.4",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"1.9.3",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"1.9.3-pre3",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"1.9.3-pre2",
+    "version":110,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"1.9.3-pre1",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"16w15b",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"16w15a",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"16w14a",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
+  {
+    "minecraftVersion":"1.9.2",
+    "version":109,
+    "usesNetty": true,
+    "majorVersion":"1.9"
+  },
   {
     "minecraftVersion":"1.9.1-pre2",
     "version":108,
@@ -122934,7 +126576,7 @@ module.exports=[
   }
 ]
 
-},{}],110:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "biomes",
@@ -122982,7 +126624,7 @@ module.exports={
     "additionalProperties": false
   }
 }
-},{}],111:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "blocks",
@@ -123142,7 +126784,7 @@ module.exports={
     "additionalProperties": false
   }
 }
-},{}],112:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "effects",
@@ -123175,7 +126817,7 @@ module.exports={
     "additionalProperties":false
   }
 }
-},{}],113:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "entities",
@@ -123238,7 +126880,7 @@ module.exports={
     "additionalProperties": false
   }
 }
-},{}],114:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "instruments",
@@ -123266,7 +126908,7 @@ module.exports={
     "additionalProperties": false
   }
 }
-},{}],115:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "items",
@@ -123317,7 +126959,7 @@ module.exports={
     "additionalProperties":false
   }
 }
-},{}],116:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "materials",
@@ -123335,7 +126977,7 @@ module.exports={
   },
   "additionalProperties": false
 }
-},{}],117:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "protocolVersions",
@@ -123367,7 +127009,7 @@ module.exports={
     "additionalProperties": false
   }
 }
-},{}],118:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "protocol",
@@ -123551,7 +127193,7 @@ module.exports={
             {
               "type": "object",
               "properties": {
-                "count": {"$ref": "#/definitions/contextualizedFieldName"}
+                "count": {"$ref": "#/definitions/dataTypeArgsCount"}
               },
               "additionalProperties": false,
               "required": [
@@ -123623,30 +127265,7 @@ module.exports={
     "dataTypeArgsCount": {
       "oneOf": [
         {"$ref": "#/definitions/contextualizedFieldName"},
-        {
-          "type": "object",
-          "properties": {
-            "field": {"$ref": "#/definitions/fieldName"},
-            "map": {
-              "type": "object",
-              "patternProperties": {
-                "^[0-9]+$": {
-                  "type": "integer"
-                }
-              },
-              "additionalProperties": false
-            },
-            "default": {
-              "type": "integer"
-            }
-          },
-          "required": [
-            "field",
-            "map",
-            "default"
-          ],
-          "additionalProperties": false
-        }
+        {"type":"number"}
       ]
     },
     "fieldName": {
@@ -123670,7 +127289,7 @@ module.exports={
   "additionalProperties": false
 }
 
-},{}],119:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "recipes",
@@ -123774,7 +127393,7 @@ module.exports={
   },
   "additionalProperties": false
 }
-},{}],120:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "version",
@@ -123787,7 +127406,7 @@ module.exports={
   },
   "additionalProperties": false
 }
-},{}],121:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 module.exports={
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "windows",
@@ -123868,7 +127487,7 @@ module.exports={
   }
 }
 
-},{}],122:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -124096,7 +127715,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":123}],123:[function(require,module,exports){
+},{"_process":127}],127:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -124106,6 +127725,9 @@ var currentQueue;
 var queueIndex = -1;
 
 function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
     draining = false;
     if (currentQueue.length) {
         queue = currentQueue.concat(queue);
@@ -124189,7 +127811,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],124:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 'use strict';
 var strictUriEncode = require('strict-uri-encode');
 
@@ -124257,7 +127879,7 @@ exports.stringify = function (obj) {
 	}).join('&') : '';
 };
 
-},{"strict-uri-encode":125}],125:[function(require,module,exports){
+},{"strict-uri-encode":129}],129:[function(require,module,exports){
 'use strict';
 module.exports = function (str) {
 	return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
@@ -124265,7 +127887,7 @@ module.exports = function (str) {
 	});
 };
 
-},{}],126:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 var traverse = module.exports = function (obj) {
     return new Traverse(obj);
 };
@@ -124581,7 +128203,7 @@ var hasOwnProperty = Object.hasOwnProperty || function (obj, key) {
     return key in obj;
 };
 
-},{}],127:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 function scroll()
 {
   if(window.location.hash=="") return;
@@ -124594,7 +128216,7 @@ function done(){
 }
 
 module.exports=done;
-},{}],128:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 var loadProtocol=require("./loadProtocol");
 
 module.exports=function(version) {
@@ -124622,7 +128244,7 @@ function fieldsToColumns(fields)
 
 function nameToImage(version,name) {
   var assetsVersion;
-  if(version=="1.9")
+  if(version.substr(0,3)=="1.9")
     assetsVersion="1.9";
   else if(version=="1.8")
     assetsVersion="1.8.8";
@@ -124729,7 +128351,7 @@ function loadData(version,enumName,elementToArray,fields,hiddenColumns,orderColu
   );
 }
 
-},{"./loadProtocol":4,"minecraft-assets":57,"minecraft-data":67}],129:[function(require,module,exports){
+},{"./loadProtocol":4,"minecraft-assets":57,"minecraft-data":67}],133:[function(require,module,exports){
 var queryString=require("query-string");
 var parameters=queryString.parse(location.search);
 
@@ -124762,4 +128384,4 @@ module.exports=function(active,enums,enumsValues) {
   });
 };
 
-},{"query-string":124}]},{},[3]);
+},{"query-string":128}]},{},[3]);
