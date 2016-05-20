@@ -1,3 +1,10 @@
+## 1.0.0
+
+ * lot of minecraft version added
+ * improve entities.json
+ * add windows.json
+ * other improvements : see commits log
+
 ## 1.8-0.1.0
  * first version after the versions split
  * move js files to tools/js
