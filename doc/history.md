@@ -1,3 +1,7 @@
+## 1.1.0
+
+* add 1.10 support (16w20a)
+
 ## 1.0.0
 
  * lot of minecraft version added
