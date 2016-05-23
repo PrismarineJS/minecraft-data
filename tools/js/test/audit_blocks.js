@@ -1,14 +1,12 @@
 // checks for duplicates names and jumps in ids
 
-var versions=require("../../../data/common/versions");
-
-versions.forEach(function(version) {
+require("./version_iterator")(function(path,versionString){
   try {
-    var blocks = require('../../../data/' + version + '/blocks');
+    var blocks = require(path + '/blocks');
   } catch (e) {
-    console.log("No blocks for version " + version);
+    console.log("No blocks for version " + versionString);
   }
-  if(blocks) describe("audit blocks " + version, function() {
+  if(blocks) describe("audit blocks " + versionString, function() {
     it("audit blocks", function() {
 
       var all = [];

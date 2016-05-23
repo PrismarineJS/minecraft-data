@@ -1,14 +1,12 @@
 //counts the number of recipes with a shape, without one and with an outShape
 
-var versions=require("../../../data/common/versions");
-
-versions.forEach(function(version) {
+require("./version_iterator")(function(path,versionString){
   try {
-    var recipes = require('../../../data/'+version+'/recipes');
+    var recipes = require(path+'/recipes');
   } catch (e) {
-    console.log("No recipes for version " + version);
+    console.log("No recipes for version " + versionString);
   }
-  if(recipes) describe("audit recipes "+version,function(){
+  if(recipes) describe("audit recipes "+versionString,function(){
     it("audit recipes",function(){
       var shapeCount = 0, shapelessCount = 0;
       var outShapeCount = 0;

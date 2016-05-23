@@ -1,22 +1,20 @@
 var assert = require('assert');
 
 var Ajv = require('ajv');
-var v = Ajv();
+var v = Ajv({verbose:true});
 
 Error.stackTraceLimit=0;
 
 var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version","effects"];
 
-var versions=require("../../../data/common/versions");
-
-versions.forEach(function(version){
-  describe("minecraft-data schemas "+version, function() {
+require("./version_iterator")(function(path,versionString){
+  describe("minecraft-data schemas "+versionString, function() {
     this.timeout(60 * 1000);
     data.forEach(function(dataName){
       try {
-        var instance = require('../../../data/'+version+'/'+dataName+'.json');
+        var instance = require(path+'/'+dataName+'.json');
       } catch (e) {
-        console.log("No " + dataName + " data for version " + version);
+        console.log("No " + dataName + " data for version " + versionString);
       }
       if(instance) it(dataName+".json is valid",function(){
         var schema = require('../../../schemas/'+dataName+'_schema.json');
