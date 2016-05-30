@@ -1,3 +1,10 @@
+## 2.0.0
+
+* fix minecraftVersion in 16w20a
+* add a regex to validate the version strings
+* add pe blocks.json and items.json
+* BREAKING : move all pc data to pc dir
+
 ## 1.1.0
 
 * add 1.10 support (16w20a)
