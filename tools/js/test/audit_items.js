@@ -1,14 +1,12 @@
 // checks for duplicates names and jumps in ids
 
-var versions=require("../../../data/common/versions");
-
-versions.forEach(function(version) {
+require("./version_iterator")(function(path,versionString){
   try {
-    var items = require('../../../data/' + version + '/items');
+    var items = require(path+ '/items');
   } catch (e) {
-    console.log("No items for version " + version);
+    console.log("No items for version " + versionString);
   }
-  if(items) describe("audit items " + version, function() {
+  if(items) describe("audit items " + versionString, function() {
     it("audit items", function() {
 
       var displayNames = {};
