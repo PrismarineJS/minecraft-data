@@ -1,6 +1,6 @@
 module.exports=forEach;
 
-var minecraftTypes=[".","pe"];
+var minecraftTypes=["pc","pe"];
 
 function forEach(f)
 {

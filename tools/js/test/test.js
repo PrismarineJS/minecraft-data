@@ -26,15 +26,18 @@ require("./version_iterator")(function(path,versionString){
 });
 
 var commonData=["protocolVersions"];
+var minecraftTypes=["pc","pe"];
 
-describe("minecraft-data schemas of common data",function() {
-  this.timeout(60 * 1000);
-  commonData.forEach(function(dataName){
-    it(dataName+".json is valid",function(){
-      var instance = require('../../../data/common/'+dataName+'.json');
-      var schema = require('../../../schemas/'+dataName+'_schema.json');
-      var valid = v.validate(schema,instance);
-      assert.ok(valid, JSON.stringify(v.errors,null,2));
-    })
+minecraftTypes.forEach(function(type){
+  describe("minecraft-data schemas of common data of "+type,function() {
+    this.timeout(60 * 1000);
+    commonData.forEach(function(dataName){
+      it(dataName+".json is valid",function(){
+        var instance = require('../../../data/'+type+'/common/'+dataName+'.json');
+        var schema = require('../../../schemas/'+dataName+'_schema.json');
+        var valid = v.validate(schema,instance);
+        assert.ok(valid, JSON.stringify(v.errors,null,2));
+      })
+    });
   });
 });
