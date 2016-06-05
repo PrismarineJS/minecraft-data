@@ -1,3 +1,7 @@
+## 2.1.0
+
+* add 1.10-pre1
+
 ## 2.0.0
 
 * fix minecraftVersion in 16w20a
