@@ -1,17 +1,22 @@
+## 2.2.0
+
+ * add license
+ * add pe protocol
+
 ## 2.1.0
 
-* add 1.10-pre1
+ * add 1.10-pre1
 
 ## 2.0.0
 
-* fix minecraftVersion in 16w20a
-* add a regex to validate the version strings
-* add pe blocks.json and items.json
-* BREAKING : move all pc data to pc dir
+ * fix minecraftVersion in 16w20a
+ * add a regex to validate the version strings
+ * add pe blocks.json and items.json
+ * BREAKING : move all pc data to pc dir
 
 ## 1.1.0
 
-* add 1.10 support (16w20a)
+ * add 1.10 support (16w20a)
 
 ## 1.0.0
 
