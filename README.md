@@ -99,3 +99,10 @@ Minecraft data also provides json schemas in enums_schemas/ that are used in
 test/test.js to check the json file are valid relative to these schemas.
 These schemas can also be used to understand better how the json files are
 formatted in order to use it.
+
+## License
+
+MIT
+
+Some of the data was extracted manually or automatically from wiki.vg and minecraft.gamepedia.com.
+If required by one of the sources the license might change to something more appropriate.
