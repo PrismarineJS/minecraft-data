@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "mapper",
+  "type": "array",
+  "items":[
+    {"enum":["mapper"]},
+    {
+      "type":"object",
+      "properties": {
+        "type":{"$ref": "dataType"},
+        "mappings":{
+          "type":"object",
+          "patternProperties" : {
+            "^[-a-zA-Z0-9 _]+$":{"$ref": "dataType"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "required":["type","mappings"],
+      "additionalProperties": false
+    }
+  ],
+  "additionalItems": false
+}

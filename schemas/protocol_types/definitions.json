@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "definitions",
+  "definitions": {
+    "simpleFieldType": {
+      "type": "string",
+      "pattern": "^[0-9a-zA-Z_]+$"
+    },
+    "contextualizedFieldName": {
+      "type": "string",
+      "pattern": "^(this\\.)?.+$"
+    },
+    "dataTypeArgsCount": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/contextualizedFieldName"
+        },
+        {
+          "type": "number"
+        }
+      ]
+    },
+    "fieldName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_]+$"
+    }
+  },
+  "type":"object"
+}

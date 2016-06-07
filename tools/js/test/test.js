@@ -1,7 +1,20 @@
 var assert = require('assert');
 
 var Ajv = require('ajv');
-var v = Ajv({verbose:true});
+var v = new Ajv({verbose:true});
+v.addSchema(require("../../../schemas/protocol_types/array.json"),"array");
+v.addSchema(require("../../../schemas/protocol_types/bitfield.json"),"bitfield");
+v.addSchema(require("../../../schemas/protocol_types/buffer.json"),"buffer");
+v.addSchema(require("../../../schemas/protocol_types/container.json"),"container");
+v.addSchema(require("../../../schemas/protocol_types/count.json"),"count");
+v.addSchema(require("../../../schemas/protocol_types/datatype.json"),"dataType");
+v.addSchema(require("../../../schemas/protocol_types/definitions.json"),"definitions");
+v.addSchema(require("../../../schemas/protocol_types/entity_metadata_item.json"),"entityMetadataItem");
+v.addSchema(require("../../../schemas/protocol_types/entity_metadata_loop.json"),"entityMetadataLoop");
+v.addSchema(require("../../../schemas/protocol_types/mapper.json"),"mapper");
+v.addSchema(require("../../../schemas/protocol_types/option.json"),"option");
+v.addSchema(require("../../../schemas/protocol_types/pstring.json"),"pstring");
+v.addSchema(require("../../../schemas/protocol_types/switch.json"),"switch");
 
 Error.stackTraceLimit=0;
 

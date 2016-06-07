@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "switch",
+  "type": "array",
+  "items":[
+    {"enum":["switch"]},
+    {
+      "type":"object",
+      "properties": {
+        "compareTo":{"$ref": "definitions#/definitions/contextualizedFieldName"},
+        "fields":{
+          "type":"object",
+          "patternProperties" : {
+            "^[-a-zA-Z0-9 _]+$":{"$ref": "dataType"}
+          },
+          "additionalProperties": false
+        },
+        "default":{"$ref": "dataType"}
+      },
+      "required":["compareTo","fields"],
+      "additionalProperties": false
+    }
+  ],
+  "additionalItems": false
+}
