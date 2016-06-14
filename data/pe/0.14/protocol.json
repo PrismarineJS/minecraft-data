@@ -132,38 +132,34 @@
         "countType": "i8",
         "type": [
           "container",
-          [
-            {
-              "name": "cost",
-              "type": "i32"
-            },
-            {
-              "name": "enchantments",
-              "type": [
-                "array",
-                {
-                  "countType": "i8",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "id",
-                        "type": "i32"
-                      },
-                      {
-                        "name": "level",
-                        "type": "i32"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "name",
-              "type": "string"
-            }
-          ]
+          {
+            "name": "cost",
+            "type": "i32"
+          },
+          {
+            "name": "enchantments",
+            "type": [
+              "array",
+              {
+                "countType": "i8",
+                "type": [
+                  "container",
+                  {
+                    "name": "id",
+                    "type": "i32"
+                  },
+                  {
+                    "name": "level",
+                    "id": "i32"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
         ]
       }
     ],
@@ -349,7 +345,7 @@
     "blockrecords": [
       "array",
       {
-        "countType": "i16",
+        "countType": "i32",
         "type": [
           "container",
           [
@@ -358,11 +354,15 @@
               "type": "i32"
             },
             {
-              "name": "y",
+              "name": "z",
               "type": "i32"
             },
             {
-              "name": "z",
+              "name": "y",
+              "type": "i8"
+            },
+            {
+              "name": "blockId",
               "type": "i8"
             },
             {
@@ -741,19 +741,19 @@
           "type": "i32"
         },
         {
-          "name": "client_id",
+          "name": "clientId",
           "type": "i64"
         },
         {
-          "name": "client_uuid",
+          "name": "clientUuid",
           "type": "uuid"
         },
         {
-          "name": "server_address",
+          "name": "serverAddress",
           "type": "string"
         },
         {
-          "name": "client_secret",
+          "name": "clientSecret",
           "type": [
             "buffer",
             {
@@ -891,19 +891,19 @@
           "type": "i32"
         },
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
-          "name": "spawn_x",
+          "name": "spawnX",
           "type": "i32"
         },
         {
-          "name": "spawn_y",
+          "name": "spawnY",
           "type": "i32"
         },
         {
-          "name": "spawn_z",
+          "name": "spawnZ",
           "type": "i32"
         },
         {
@@ -919,8 +919,20 @@
           "type": "f32"
         },
         {
-          "name": "unknown",
+          "name": "isLoadedInCreative",
+          "type": "bool"
+        },
+        {
+          "name": "dayCycleStopTime",
           "type": "i8"
+        },
+        {
+          "name": "eduMode",
+          "type": "bool"
+        },
+        {
+          "name": "unknown",
+          "type": "string"
         }
       ]
     ],
@@ -936,7 +948,7 @@
           "type": "string"
         },
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -952,15 +964,15 @@
           "type": "f32"
         },
         {
-          "name": "speed_x",
+          "name": "speedX",
           "type": "f32"
         },
         {
-          "name": "speed_y",
+          "name": "speedY",
           "type": "f32"
         },
         {
-          "name": "speed_z",
+          "name": "speedZ",
           "type": "f32"
         },
         {
@@ -968,7 +980,7 @@
           "type": "f32"
         },
         {
-          "name": "head_yaw",
+          "name": "headYaw",
           "type": "f32"
         },
         {
@@ -989,11 +1001,11 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
-          "name": "client_uuid",
+          "name": "clientUuid",
           "type": "uuid"
         }
       ]
@@ -1002,11 +1014,11 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
-          "name": "entity_type",
+          "name": "entityType",
           "type": "i32"
         },
         {
@@ -1022,15 +1034,15 @@
           "type": "f32"
         },
         {
-          "name": "speed_x",
+          "name": "speedX",
           "type": "f32"
         },
         {
-          "name": "speed_y",
+          "name": "speedY",
           "type": "f32"
         },
         {
-          "name": "speed_z",
+          "name": "speedZ",
           "type": "f32"
         },
         {
@@ -1055,7 +1067,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         }
       ]
@@ -1064,7 +1076,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1084,15 +1096,15 @@
           "type": "f32"
         },
         {
-          "name": "speed_x",
+          "name": "speedX",
           "type": "f32"
         },
         {
-          "name": "speed_y",
+          "name": "speedY",
           "type": "f32"
         },
         {
-          "name": "speed_z",
+          "name": "speedZ",
           "type": "f32"
         }
       ]
@@ -1105,7 +1117,7 @@
           "type": "i64"
         },
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         }
       ]
@@ -1123,7 +1135,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1143,7 +1155,7 @@
           "type": "f32"
         },
         {
-          "name": "head_yaw",
+          "name": "headYaw",
           "type": "f32"
         },
         {
@@ -1155,7 +1167,7 @@
           "type": "i8"
         },
         {
-          "name": "on_ground",
+          "name": "onGround",
           "type": "i8"
         }
       ]
@@ -1164,7 +1176,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1194,7 +1206,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1248,7 +1260,7 @@
       "container",
       [
         {
-          "name": "event_id",
+          "name": "eventId",
           "type": "i16"
         },
         {
@@ -1285,11 +1297,11 @@
           "type": "i32"
         },
         {
-          "name": "case_1",
+          "name": "case1",
           "type": "i32"
         },
         {
-          "name": "case_2",
+          "name": "case2",
           "type": "i32"
         }
       ]
@@ -1298,11 +1310,11 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
-          "name": "event_id",
+          "name": "eventId",
           "type": "i8"
         }
       ]
@@ -1311,15 +1323,15 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
-          "name": "event_id",
+          "name": "eventId",
           "type": "i8"
         },
         {
-          "name": "effect_id",
+          "name": "effectId",
           "type": "i8"
         },
         {
@@ -1340,7 +1352,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1353,7 +1365,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1365,7 +1377,7 @@
           "type": "i8"
         },
         {
-          "name": "selected_slot",
+          "name": "selectedSlot",
           "type": "i8"
         }
       ]
@@ -1374,7 +1386,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1399,11 +1411,11 @@
       "container",
       [
         {
-          "name": "action_id",
+          "name": "actionId",
           "type": "i8"
         },
         {
-          "name": "target_entity_id",
+          "name": "targetEntityId",
           "type": "i64"
         }
       ]
@@ -1428,6 +1440,10 @@
           "type": "vector3"
         },
         {
+          "name": "slot",
+          "type": "i32"
+        },
+        {
           "name": "item",
           "type": "slot"
         }
@@ -1437,11 +1453,11 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
-          "name": "action_id",
+          "name": "actionId",
           "type": "i32"
         },
         {
@@ -1475,7 +1491,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
@@ -1497,15 +1513,15 @@
       "container",
       [
         {
-          "name": "rider_id",
+          "name": "riderId",
           "type": "i64"
         },
         {
-          "name": "ridden_id",
+          "name": "riddenId",
           "type": "i64"
         },
         {
-          "name": "link_type",
+          "name": "linkType",
           "type": "i8"
         }
       ]
@@ -1540,11 +1556,11 @@
       "container",
       [
         {
-          "name": "action_id",
+          "name": "actionId",
           "type": "i8"
         },
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         }
       ]
@@ -1583,7 +1599,7 @@
       "container",
       [
         {
-          "name": "window_id",
+          "name": "windowId",
           "type": "i8"
         },
         {
@@ -1591,7 +1607,7 @@
           "type": "i8"
         },
         {
-          "name": "slot_count",
+          "name": "slotCount",
           "type": "i16"
         },
         {
@@ -1612,7 +1628,7 @@
       "container",
       [
         {
-          "name": "window_id",
+          "name": "windowId",
           "type": "i8"
         }
       ]
@@ -1621,7 +1637,7 @@
       "container",
       [
         {
-          "name": "window_id",
+          "name": "windowId",
           "type": "i8"
         },
         {
@@ -1642,7 +1658,7 @@
       "container",
       [
         {
-          "name": "window_id",
+          "name": "windowId",
           "type": "i8"
         },
         {
@@ -1659,19 +1675,19 @@
       "container",
       [
         {
-          "name": "window_id",
+          "name": "windowId",
           "type": "i8"
         },
         {
-          "name": "slot_data",
+          "name": "slotData",
           "type": "itemstacks"
         },
         {
-          "name": "hotbar_data",
+          "name": "hotbarData",
           "type": [
             "switch",
             {
-              "compareTo": "window_id",
+              "compareTo": "windowId",
               "fields": {
                 "0": [
                   "array",
@@ -1718,11 +1734,11 @@
                       {
                         "compareTo": "entryType",
                         "fields": {
-                          "0": "shapeless_recipe",
-                          "1": "shaped_recipe",
-                          "2": "furnace_recipe",
-                          "3": "furnace_recipe_data",
-                          "4": "enchant_list"
+                          "0": "shapelessRecipe",
+                          "1": "shapedRecipe",
+                          "2": "furnaceRecipe",
+                          "3": "furnaceRecipeData",
+                          "4": "enchantList"
                         },
                         "default": "void"
                       }
@@ -1743,15 +1759,15 @@
       "container",
       [
         {
-          "name": "window_id",
+          "name": "windowId",
           "type": "i8"
         },
         {
-          "name": "recipe_type",
+          "name": "recipeType",
           "type": "i32"
         },
         {
-          "name": "recipe_id",
+          "name": "recipeId",
           "type": "uuid"
         },
         {
@@ -1769,6 +1785,14 @@
       [
         {
           "name": "flags",
+          "type": "i32"
+        },
+        {
+          "name": "userPermission",
+          "type": "i32"
+        },
+        {
+          "name": "globalPermission",
           "type": "i32"
         }
       ]
@@ -1798,11 +1822,11 @@
       "container",
       [
         {
-          "name": "chunk_x",
+          "name": "chunkX",
           "type": "i32"
         },
         {
-          "name": "chunk_z",
+          "name": "chunkZ",
           "type": "i32"
         },
         {
@@ -1810,7 +1834,7 @@
           "type": "i8"
         },
         {
-          "name": "chunk_data",
+          "name": "chunkData",
           "type": [
             "buffer",
             {
@@ -1889,7 +1913,7 @@
       "container",
       [
         {
-          "name": "chunk_radius",
+          "name": "chunkRadius",
           "type": "i32"
         }
       ]
@@ -1898,7 +1922,7 @@
       "container",
       [
         {
-          "name": "chunk_radius",
+          "name": "chunkRadius",
           "type": "i32"
         }
       ]
@@ -1916,7 +1940,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entityId",
           "type": "i64"
         },
         {
