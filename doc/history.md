@@ -1,3 +1,7 @@
+## 2.3.0
+
+* add 1.10 data
+
 ## 2.2.0
 
  * add license
