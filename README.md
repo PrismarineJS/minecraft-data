@@ -6,7 +6,7 @@
 Language independent module providing minecraft data for minecraft clients, servers and libraries.
 
 Supports 
-* Minecraft PC version 0.30c (classic), 1.7.10, 1.8.8, 1.9 (15w40b, 1.9, 1.9.1-pre2, 1.9.2, 1.9.4) and 1.10 (16w20a, 1.10-pre1)
+* Minecraft PC version 0.30c (classic), 1.7.10, 1.8.8, 1.9 (15w40b, 1.9, 1.9.1-pre2, 1.9.2, 1.9.4) and 1.10 (16w20a, 1.10-pre1, 1.10)
 * Minecraft PE version 0.14
 
 ## Wrappers
