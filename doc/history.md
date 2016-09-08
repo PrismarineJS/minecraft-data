@@ -1,3 +1,9 @@
+## 2.4.0
+
+* fix spelling error in protocol.json (catagory)
+* add mcpe 0.15 protocol, blocks and items and update mcpe versions file
+* add mcpc 1.10.1 and 1.10.2 and update mcpc versions file
+
 ## 2.3.1
 
 * fix 1.10 version
