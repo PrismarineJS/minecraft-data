@@ -31,6 +31,7 @@ Data provided:
 | --- | --- |
 | Biomes | |
 | Blocks |  |
+| Enchantment | |
 | Effect | Status/Potion effects |
 | Entities | |
 | Instruments | sounds emitted by blocks |

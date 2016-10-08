@@ -5,7 +5,7 @@ var v = Ajv({verbose:true});
 
 Error.stackTraceLimit=0;
 
-var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version","effects"];
+var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version","effects", "enchantments"];
 
 require("./version_iterator")(function(path,versionString){
   describe("minecraft-data schemas "+versionString, function() {
