@@ -1,3 +1,8 @@
+## 2.5.0
+
+* add 16w35a
+* add enchantments data
+
 ## 2.4.0
 
 * fix spelling error in protocol.json (catagory)
