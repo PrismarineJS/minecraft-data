@@ -1,3 +1,7 @@
+## 2.6.0
+
+* add classic blocks (thanks @mhsjlw)
+
 ## 2.5.0
 
 * add 16w35a
