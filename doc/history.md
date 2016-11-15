@@ -1,3 +1,7 @@
+## 2.7.0
+
+* 1.11 support (only the protocol)
+
 ## 2.6.0
 
 * add classic blocks (thanks @mhsjlw)
