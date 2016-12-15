@@ -1,3 +1,7 @@
+## 2.8.0
+
+* mcpe 1.0 support (except the protocol)
+
 ## 2.7.0
 
 * 1.11 support (only the protocol)
