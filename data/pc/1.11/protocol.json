@@ -651,7 +651,7 @@
             },
             {
               "name": "type",
-              "type": "u8"
+              "type": "varint"
             },
             {
               "name": "x",
@@ -1192,7 +1192,7 @@
             },
             {
               "name": "pitch",
-              "type": "u8"
+              "type": "f32"
             }
           ]
         ],
@@ -1337,6 +1337,15 @@
                 "buffer",
                 {
                   "countType": "varint"
+                }
+              ]
+            },
+            {
+              "name": "blockEntities",
+              "type": [
+                "array",{
+                  "countType":"varint",
+                  "type":"nbt"
                 }
               ]
             }
@@ -2586,31 +2595,6 @@
             }
           ]
         ],
-        "packet_update_sign": [
-          "container",
-          [
-            {
-              "name": "location",
-              "type": "position"
-            },
-            {
-              "name": "text1",
-              "type": "string"
-            },
-            {
-              "name": "text2",
-              "type": "string"
-            },
-            {
-              "name": "text3",
-              "type": "string"
-            },
-            {
-              "name": "text4",
-              "type": "string"
-            }
-          ]
-        ],
         "packet_sound_effect": [
           "container",
           [
@@ -2640,7 +2624,7 @@
             },
             {
               "name": "pitch",
-              "type": "u8"
+              "type": "f32"
             }
           ]
         ],
@@ -2666,6 +2650,10 @@
             },
             {
               "name": "collectorEntityId",
+              "type": "varint"
+            },
+            {
+              "name": "pickupItemCount",
               "type": "varint"
             }
           ]
@@ -2865,13 +2853,12 @@
                     "0x43": "spawn_position",
                     "0x44": "update_time",
                     "0x45": "title",
-                    "0x46": "update_sign",
-                    "0x47": "sound_effect",
-                    "0x48": "playerlist_header",
-                    "0x49": "collect",
-                    "0x4a": "entity_teleport",
-                    "0x4b": "entity_update_attributes",
-                    "0x4c": "entity_effect"
+                    "0x46": "sound_effect",
+                    "0x47": "playerlist_header",
+                    "0x48": "collect",
+                    "0x49": "entity_teleport",
+                    "0x4a": "entity_update_attributes",
+                    "0x4b": "entity_effect"
                   }
                 }
               ]
@@ -2953,7 +2940,6 @@
                     "spawn_position": "packet_spawn_position",
                     "update_time": "packet_update_time",
                     "title": "packet_title",
-                    "update_sign": "packet_update_sign",
                     "sound_effect": "packet_sound_effect",
                     "playerlist_header": "packet_playerlist_header",
                     "collect": "packet_collect",
@@ -3388,10 +3374,6 @@
           "container",
           [
             {
-              "name": "hash",
-              "type": "string"
-            },
-            {
               "name": "result",
               "type": "varint"
             }
@@ -3479,15 +3461,15 @@
             },
             {
               "name": "cursorX",
-              "type": "i8"
+              "type": "f32"
             },
             {
               "name": "cursorY",
-              "type": "i8"
+              "type": "f32"
             },
             {
               "name": "cursorZ",
-              "type": "i8"
+              "type": "f32"
             }
           ]
         ],

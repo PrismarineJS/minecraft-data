@@ -5,11 +5,9 @@ const v = new Ajv({verbose:true});
 
 const Validator = require('protodef-validator');
 
-
-
 Error.stackTraceLimit=0;
 
-var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","version","effects","protocol"];
+var data=["biomes","instruments","items","materials","blocks","recipes","windows","entities","protocol","version","effects", "enchantments"];
 
 require("./version_iterator")(function(path,versionString){
   describe("minecraft-data schemas "+versionString, function() {
