@@ -25,6 +25,14 @@ require("./version_iterator")(function(path,versionString){
 
           validator.addType("entityMetadataItem", require("../../../schemas/protocol_types/entity_metadata_item.json"));
           validator.addType("entityMetadataLoop", require("../../../schemas/protocol_types/entity_metadata_loop.json"));
+          validator.addType("ipAddress", {'enum':['ipAddress']});
+          validator.addType("restBuffer", {'enum':['restBuffer']});
+          validator.addType("uuid", {'enum':['uuid']});
+          validator.addType("shapelessRecipe", {'enum':['shapelessRecipe']});
+          validator.addType("shapedRecipe", {'enum':['shapedRecipe']});
+          validator.addType("furnaceRecipe", {'enum':['furnaceRecipe']});
+          validator.addType("furnaceRecipeData", {'enum':['furnaceRecipeData']});
+          validator.addType("enchantList", {'enum':['enchantList']});
           validator.validateProtocol(instance);
         }
         else {
