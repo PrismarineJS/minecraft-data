@@ -1,3 +1,7 @@
+## 2.11.0
+
+* add dataPaths file
+
 ## 2.10.0
 
 * complete 1.11 data
