@@ -64,6 +64,7 @@ These are the projects that use minecraft-data (through the wrappers) :
 | [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | biomes, blocks, items, materials, windows, recipes |
 | [PhaseBot](https://github.com/phase/PhaseBot) | Java | bot | blocks, items, materials |
 | [McEx](https://github.com/hansihe/McEx) | Elixir | server | blocks |
+| [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server lib | blocks, items | 
 
 ## Extraction
 
