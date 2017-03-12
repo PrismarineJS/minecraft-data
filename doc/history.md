@@ -1,3 +1,7 @@
+## 2.13.0
+
+* protocol_comments -> protocolComments
+
 ## 2.12.0
 
 * add protocol comments
