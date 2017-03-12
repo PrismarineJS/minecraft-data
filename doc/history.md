@@ -1,3 +1,7 @@
+## 2.12.0
+
+* add protocol comments
+
 ## 2.11.0
 
 * add dataPaths file
