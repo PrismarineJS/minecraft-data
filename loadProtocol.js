@@ -74,7 +74,7 @@ function directionToLines(state, direction, packets, comments)
 
 function packetToString(state, direction, packet, packetId, comments)
 {
-  var rows = countRows(packet[1], packetId === '0x0e');
+  var rows = countRows(packet[1]);
   var totalCols = countCols(packet[1]);
   if (rows == 0)
     rows = 1;
@@ -119,7 +119,7 @@ function packetToString(state, direction, packet, packetId, comments)
     });
   }
   return _('div')._([
-    _('div').H(comments && marked(comments.before.join("\n"))),
+    _('div').H(comments ? marked(comments.before.join("\n")) : ""),
     _('table.packets.table.table-striped.table-bordered')._([
       _('thead')._([
         _('tr')._(ini(
@@ -132,7 +132,7 @@ function packetToString(state, direction, packet, packetId, comments)
       ]),
       _('tbody')._(generateLines())
     ]),
-    _('div').H(comments && marked(comments.after.join("\n")))
+    _('div').H(comments ? marked(comments.after.join("\n")) : "")
   ]);
 }
 
