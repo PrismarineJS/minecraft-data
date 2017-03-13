@@ -1,3 +1,7 @@
+## 2.13.1
+
+* fix id for custom_payload in 1.11.2
+
 ## 2.13.0
 
 * protocol_comments -> protocolComments
