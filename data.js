@@ -3,7 +3,7 @@ var queryString=require("query-string");
 var parameters=queryString.parse(location.search);
 
 var rawVersion=parameters["v"];
-var version=rawVersion ?  rawVersion : "1.8";
+var version=rawVersion ?  rawVersion : "1.11.2";
 var rawActive=parameters["d"];
 var active=rawActive ?  rawActive : "items";
 
