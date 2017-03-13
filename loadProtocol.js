@@ -1,4 +1,14 @@
 var stringify = require('json-stable-stringify');
+var marked = require('marked');
+var renderer = new marked.Renderer();
+renderer.table = function(header, body) {
+  return "<table class='packets table table-striped table-bordered'><thead>" + header + "</thead><tbody>" + body + "</tbody></table>";
+}
+marked.setOptions({
+  gfm: true,
+  tables: true,
+  renderer: renderer
+});
 
 var _ = DOMBuilder;
 
@@ -24,20 +34,20 @@ function flatten(array, mutable) {
     return result;
 }
 
-function protocolToString(protocol)
+function protocolToString(protocol, comments)
 {
   return _('div#protocolActualTable')._(
-    flatten(protocol["toClient"] ? directionsToLines("",protocol) : Object.keys(protocol).filter(function(state){return state!="types"}).map(function (state) {
+    flatten(protocol["toClient"] ? directionsToLines("",protocol,comments) : Object.keys(protocol).filter(function(state){return state!="types"}).map(function (state) {
       return [_('h1').text(state),
-        directionsToLines(state, protocol[state])];
+        directionsToLines(state, protocol[state], comments && comments[state])];
     }))
   ).H();
 }
 
-function directionsToLines(state, directions)
+function directionsToLines(state, directions, comments)
 {
-  return [_('h2').text('toClient'), directionToLines(state, "toClient", directions["toClient"].types),
-          _('h2').text('toServer'), directionToLines(state, "toServer", directions["toServer"].types)];
+  return [_('h2').text('toClient'), directionToLines(state, "toClient", directions["toClient"].types, comments && comments["toClient"]),
+          _('h2').text('toServer'), directionToLines(state, "toServer", directions["toServer"].types, comments && comments["toServer"])];
 }
 
 function reverseObject(o)
@@ -45,7 +55,7 @@ function reverseObject(o)
   return Object.keys(o).reduce(function(acc,k){acc[o[k]]=k;return acc;},{});
 }
 
-function directionToLines(state, direction, packets)
+function directionToLines(state, direction, packets, comments)
 {
   var typesToNames=reverseObject(packets["packet"][1][1]["type"][1]["fields"]);
   var namesToIds=reverseObject(packets["packet"][1][0]["type"][1]["mappings"]);
@@ -56,15 +66,15 @@ function directionToLines(state, direction, packets)
       _('h3#' + direction + '_' + packetName)._([
           _('a.glyphicon.glyphicon-link', { href: '#' + direction + '_' + packetName })
       ]).T(' ' + packetName),
-      packetToString(state, direction, packets[packetType],packetId)
+      packetToString(state, direction, packets[packetType],packetId, comments && comments[packetName])
     ];
   })
 }
 
 
-function packetToString(state, direction, packet, packetId)
+function packetToString(state, direction, packet, packetId, comments)
 {
-  var rows = countRows(packet[1], packetId === '0x0e');
+  var rows = countRows(packet[1]);
   var totalCols = countCols(packet[1]);
   if (rows == 0)
     rows = 1;
@@ -108,8 +118,9 @@ function packetToString(state, direction, packet, packetId)
       return _('tr')._(field);
     });
   }
-  return _('table#packets.table.table-striped.table-bordered')
-    ._([
+  return _('div')._([
+    _('div').H(comments ? marked(comments.before.join("\n")) : ""),
+    _('table.packets.table.table-striped.table-bordered')._([
       _('thead')._([
         _('tr')._(ini(
           _('th').T('Packet ID'),
@@ -120,7 +131,9 @@ function packetToString(state, direction, packet, packetId)
         ))
       ]),
       _('tbody')._(generateLines())
-    ]);
+    ]),
+    _('div').H(comments ? marked(comments.after.join("\n")) : "")
+  ]);
 }
 
 
@@ -305,11 +318,11 @@ function eqs(compareTo, k) {
   }, compareTo + ' == ' + k[0]);
 }
 
-
 function loadProtocol(version)
 {
   var data=require("minecraft-data")(version).protocol;
-  $j('#protocolTable').html(protocolToString(data));
+  var comments=require("minecraft-data")(version).protocolComments;
+  $j('#protocolTable').html(protocolToString(data, comments));
 }
 
 
