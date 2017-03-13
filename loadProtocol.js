@@ -321,7 +321,7 @@ function eqs(compareTo, k) {
 function loadProtocol(version)
 {
   var data=require("minecraft-data")(version).protocol;
-  var comments=require("minecraft-data")(version).protocol_comments;
+  var comments=require("minecraft-data")(version).protocolComments;
   $j('#protocolTable').html(protocolToString(data, comments));
 }
 
