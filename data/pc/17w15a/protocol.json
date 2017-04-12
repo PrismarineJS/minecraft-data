@@ -3015,6 +3015,71 @@
             }
           ]
         ],
+        "packet_prepare_crafting_grid": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            },
+            {
+              "name": "actionNumber",
+              "type": "u16"
+            },
+            {
+              "name": "returnEntry",
+              "type": [
+                "array",
+                {
+                  "countType":"u8",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "item",
+                        "type": "slot"
+                      },
+                      {
+                        "name": "craftingSlot",
+                        "type": "u8"
+                      },
+                      {
+                        "name": "playerSlot",
+                        "type": "u8"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "prepareEntry",
+              "type": [
+                "array",
+                {
+                  "countType":"u8",
+                  "type":[
+                    "container",
+                    [
+                      {
+                        "name": "item",
+                        "type": "slot"
+                      },
+                      {
+                        "name": "craftingSlot",
+                        "type": "u8"
+                      },
+                      {
+                        "name": "playerSlot",
+                        "type": "u8"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
         "packet_tab_complete": [
           "container",
           [
@@ -3543,6 +3608,7 @@
                   "type": "varint",
                   "mappings": {
                     "0x00": "teleport_confirm",
+                    "0x01": "prepare_crafting_grid",
                     "0x02": "tab_complete",
                     "0x03": "chat",
                     "0x04": "client_command",
@@ -3584,6 +3650,7 @@
                   "compareTo": "name",
                   "fields": {
                     "teleport_confirm": "packet_teleport_confirm",
+                    "prepare_crafting_grid": "packet_prepare_crafting_grid",
                     "tab_complete": "packet_tab_complete",
                     "chat": "packet_chat",
                     "client_command": "packet_client_command",
