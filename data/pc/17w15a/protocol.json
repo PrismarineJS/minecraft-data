@@ -1941,6 +1941,49 @@
             }
           ]
         ],
+        "packet_unlock_recipes": [
+          "container",
+          [
+            {
+              "name": "notification",
+              "type": "bool"
+            },
+            {
+              "name": "craftingBookOpen",
+              "type": "bool"
+            },
+            {
+              "name": "filteringCraftable",
+              "type": "bool"
+            },
+            {
+              "name": "recipes",
+              "type": [
+                "array",
+                {
+                  "countType":"varint",
+                  "type":[
+                    "container",
+                    [
+                      {
+                        "name": "identifier",
+                        "type": "string"
+                      },
+                      {
+                        "name": "isUnlocked",
+                        "type": "bool"
+                      },
+                      {
+                        "name": "hasBeenDisplayed",
+                        "type": "bool"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
         "packet_entity_destroy": [
           "container",
           [
@@ -2836,6 +2879,7 @@
                     "0x2e": "player_info",
                     "0x2f": "position",
                     "0x30": "bed",
+                    "0x31": "unlock_recipes",
                     "0x32": "entity_destroy",
                     "0x33": "remove_entity_effect",
                     "0x34": "resource_pack_send",
@@ -2923,6 +2967,7 @@
                     "player_info": "packet_player_info",
                     "position": "packet_position",
                     "bed": "packet_bed",
+                    "unlock_recipes": "packet_unlock_recipes",
                     "entity_destroy": "packet_entity_destroy",
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "resource_pack_send": "packet_resource_pack_send",
