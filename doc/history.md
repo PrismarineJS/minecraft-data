@@ -1,3 +1,6 @@
+## 2.14.0
+* supports 17w15a
+
 ## 2.13.2
 * correct file names
 
