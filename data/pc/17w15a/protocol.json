@@ -798,6 +798,181 @@
             }
           ]
         ],
+        "packet_advancements": [
+          "container",
+          [
+            {
+              "name": "reset",
+              "type": "bool"
+            },
+            {
+              "name": "advancementMapping",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "key",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "parentId",
+                              "type": [
+                                "option",
+                                "string"
+                              ]
+                            },
+                            {
+                              "name": "displayData",
+                              "type": [
+                                "option",
+                                [
+                                  "container",
+                                  [
+                                    {
+                                      "name": "title",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "name": "description",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "name": "icon",
+                                      "type": "varint"
+                                    },
+                                    {
+                                      "name": "frameType",
+                                      "type": "varint"
+                                    },
+                                    {
+                                      "name": "backgroundTexture",
+                                      "type": [
+                                        "option",
+                                        "string"
+                                      ]
+                                    },
+                                    {
+                                      "name": "xCord",
+                                      "type": "varint"
+                                    },
+                                    {
+                                      "name": "yCord",
+                                      "type": "varint"
+                                    }
+                                  ]
+                                ]
+                              ]
+                            },
+                            {
+                              "name": "criteria",
+                              "type": [
+                                "array",
+                                {
+                                  "countType": "varint",
+                                  "type": [
+                                    "container",
+                                    [
+                                      {
+                                        "name": "key",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "value",
+                                        "type": "void"
+                                      }
+                                    ]
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "requirements",
+                              "type": [
+                                "array",
+                                {
+                                  "countType": "varint",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "string"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "identifiers",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            },
+            {
+              "name": "progressMapping",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "key",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": [
+                              "container",
+                              [
+                                {
+                                  "name": "criterionIdentifier",
+                                  "type": "string"
+                                },
+                                {
+                                  "name": "criterionProgress",
+                                  "type": [
+                                    "option",
+                                    "u64"
+                                  ]
+                                }
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
         "packet_block_break_animation": [
           "container",
           [
@@ -2839,6 +3014,7 @@
                     "0x05": "named_entity_spawn",
                     "0x06": "animation",
                     "0x07": "statistics",
+                    "0x08": "advancements",
                     "0x09": "block_break_animation",
                     "0x0a": "tile_entity_data",
                     "0x0b": "block_action",
@@ -2927,6 +3103,7 @@
                     "named_entity_spawn": "packet_named_entity_spawn",
                     "animation": "packet_animation",
                     "statistics": "packet_statistics",
+                    "advancements": "packet_advancements",
                     "block_break_animation": "packet_block_break_animation",
                     "tile_entity_data": "packet_tile_entity_data",
                     "block_action": "packet_block_action",
