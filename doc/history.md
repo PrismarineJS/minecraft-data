@@ -1,3 +1,6 @@
+## 2.15.0
+* supports 17w18b
+
 ## 2.14.0
 * supports 17w15a
 
