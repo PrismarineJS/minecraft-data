@@ -2990,6 +2990,18 @@
             }
           ]
         ],
+        "packet_advancement_progress": [
+          "container",
+          [
+            {
+              "name": "id",
+              "type": [
+                "option",
+                "string"
+              ]
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -3077,7 +3089,8 @@
                     "0x4a": "collect",
                     "0x4b": "entity_teleport",
                     "0x4c": "entity_update_attributes",
-                    "0x4d": "entity_effect"
+                    "0x4d": "entity_effect",
+                    "0x4e": "advancement_progress"
                   }
                 }
               ]
@@ -3166,7 +3179,8 @@
                     "collect": "packet_collect",
                     "entity_teleport": "packet_entity_teleport",
                     "entity_head_rotation": "packet_entity_head_rotation",
-                    "entity_effect": "packet_entity_effect"
+                    "entity_effect": "packet_entity_effect",
+                    "advancement_progress": "packet_advancement_progress"
                   }
                 }
               ]
@@ -3810,6 +3824,28 @@
             }
           ]
         ],
+        "packet_advancement_tab": [
+          "container",
+          [
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "tabId",
+              "type": [
+                "switch",
+                {
+                  "compareTo":"action",
+                  "fields": {
+                    "0": "string",
+                    "1": "void"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -3851,7 +3887,8 @@
                     "0x1c": "arm_animation",
                     "0x1d": "spectate",
                     "0x1e": "block_place",
-                    "0x1f": "use_item"
+                    "0x1f": "use_item",
+                    "0x20": "advancement_tab"
                   }
                 }
               ]
@@ -3894,7 +3931,8 @@
                     "arm_animation": "packet_arm_animation",
                     "spectate": "packet_spectate",
                     "block_place": "packet_block_place",
-                    "use_item": "packet_use_item"
+                    "use_item": "packet_use_item",
+                    "advancement_tab": "packet_advancement_tab"
                   }
                 }
               ]
