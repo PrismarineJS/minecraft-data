@@ -855,13 +855,27 @@
                                     },
                                     {
                                       "name": "flags",
-                                      "type": "i32"
+                                      "type": [
+                                        "bitfield",
+                                        [
+                                          { "name": "_unused", "size": 29, "signed": false },
+                                          { "name": "hidden", "size": 1, "signed": false },
+                                          { "name": "show_toast", "size": 1, "signed": false },
+                                          { "name": "has_background_texture", "size": 1, "signed": false }
+                                        ]
+                                      ]
                                     },
                                     {
                                       "name": "backgroundTexture",
                                       "type": [
-                                        "option",
-                                        "string"
+                                        "switch",
+                                        {
+                                          "compareTo": "flags/has_background_texture",
+                                          "fields": {
+                                            "1": "string"
+                                          },
+                                          "default": "void"
+                                        }
                                       ]
                                     },
                                     {
