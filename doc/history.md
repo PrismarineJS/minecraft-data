@@ -1,3 +1,6 @@
+## NEXT
+* mcpc 1.12 support
+
 ## 2.16.0
 * supports 1.12-pre4
 
