@@ -1,3 +1,6 @@
+## 2.18.0
+* mcpc 1.12 : add all the data (in addition to protocol)
+
 ## 2.17.0
 * mcpc 1.12 support
 
