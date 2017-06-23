@@ -35,6 +35,7 @@ Data provided:
 | Enchantment | |
 | Effect | Status/Potion effects |
 | Entities | |
+| En_us | language |
 | Instruments | sounds emitted by blocks |
 | Items |  |
 | Materials | to be used with blocks data |
