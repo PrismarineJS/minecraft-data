@@ -1,3 +1,6 @@
+## 2.19.0
+* add language data
+
 ## 2.18.0
 * mcpc 1.12 : add all the data (in addition to protocol)
 
