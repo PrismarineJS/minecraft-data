@@ -1883,6 +1883,19 @@
             }
           ]
         ],
+        "packet_craft_recipe_response": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "i8"
+            },
+            {
+              "name": "recipe",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet_abilities": [
           "container",
           [
@@ -3078,6 +3091,7 @@
                     "0x28": "entity_look",
                     "0x29": "vehicle_move",
                     "0x2a": "open_sign_entity",
+                    "0x2b": "craft_recipe_response",
                     "0x2c": "abilities",
                     "0x2d": "combat_event",
                     "0x2e": "player_info",
@@ -3169,6 +3183,7 @@
                     "entity": "packet_entity",
                     "vehicle_move": "packet_vehicle_move",
                     "open_sign_entity": "packet_open_sign_entity",
+                    "craft_recipe_response": "packet_craft_recipe_response",
                     "abilities": "packet_abilities",
                     "combat_event": "packet_combat_event",
                     "player_info": "packet_player_info",
@@ -3220,71 +3235,6 @@
             {
               "name": "teleportId",
               "type": "varint"
-            }
-          ]
-        ],
-        "packet_prepare_crafting_grid": [
-          "container",
-          [
-            {
-              "name": "windowId",
-              "type": "u8"
-            },
-            {
-              "name": "actionNumber",
-              "type": "u16"
-            },
-            {
-              "name": "returnEntry",
-              "type": [
-                "array",
-                {
-                  "countType":"u16",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "item",
-                        "type": "slot"
-                      },
-                      {
-                        "name": "craftingSlot",
-                        "type": "u8"
-                      },
-                      {
-                        "name": "playerSlot",
-                        "type": "u8"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "prepareEntry",
-              "type": [
-                "array",
-                {
-                  "countType":"u16",
-                  "type":[
-                    "container",
-                    [
-                      {
-                        "name": "item",
-                        "type": "slot"
-                      },
-                      {
-                        "name": "craftingSlot",
-                        "type": "u8"
-                      },
-                      {
-                        "name": "playerSlot",
-                        "type": "u8"
-                      }
-                    ]
-                  ]
-                }
-              ]
             }
           ]
         ],
@@ -3625,6 +3575,23 @@
             }
           ]
         ],
+        "packet_craft_recipe_request": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "i8"
+            },
+            {
+              "name": "recipe",
+              "type": "varint"
+            },
+            {
+              "name": "makeAll",
+              "type": "bool"
+            }
+          ]
+        ],
         "packet_abilities": [
           "container",
           [
@@ -3894,9 +3861,10 @@
                     "0x0c": "flying",
                     "0x0d": "position",
                     "0x0e": "position_look",
-                    "0x1f": "look",
+                    "0x0f": "look",
                     "0x10": "vehicle_move",
                     "0x11": "steer_boat",
+                    "0x12": "craft_recipe_request",
                     "0x13": "abilities",
                     "0x14": "block_dig",
                     "0x15": "entity_action",
@@ -3923,7 +3891,6 @@
                   "compareTo": "name",
                   "fields": {
                     "teleport_confirm": "packet_teleport_confirm",
-                    "prepare_crafting_grid": "packet_prepare_crafting_grid",
                     "tab_complete": "packet_tab_complete",
                     "chat": "packet_chat",
                     "client_command": "packet_client_command",
@@ -3941,6 +3908,7 @@
                     "flying": "packet_flying",
                     "vehicle_move": "packet_vehicle_move",
                     "steer_boat": "packet_steer_boat",
+                    "craft_recipe_request": "packet_craft_recipe_request",
                     "abilities": "packet_abilities",
                     "block_dig": "packet_block_dig",
                     "entity_action": "packet_entity_action",
