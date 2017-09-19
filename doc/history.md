@@ -1,3 +1,6 @@
+## 2.21.0
+* mcpc 1.12.2 support
+
 ## 2.20.0
 * mcpc 1.12.1 support
 
