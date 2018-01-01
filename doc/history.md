@@ -1,3 +1,6 @@
+## 2.23.0
+* some fixes for 17w50a protocol
+
 ## 2.22.0
 * mcpc 17w50a support (first supported 1.13 snapshot)
 
