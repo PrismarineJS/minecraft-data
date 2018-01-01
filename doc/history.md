@@ -1,3 +1,6 @@
+## 2.22.0
+* mcpc 17w50a support (first supported 1.13 snapshot)
+
 ## 2.21.0
 * mcpc 1.12.2 support
 
