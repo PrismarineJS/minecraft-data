@@ -53,10 +53,6 @@
                     "type": "i8"
                   },
                   {
-                    "name": "itemDamage",
-                    "type": "i16"
-                  },
-                  {
                     "name": "nbtData",
                     "type": "optionalNbt"
                   }
@@ -1354,7 +1350,7 @@
                             {
                               "name": "suggests",
                               "type": ["switch", {
-                                "compareTo": "flags/has_custom_suggestions",
+                                "compareTo": "../flags/has_custom_suggestions",
                                 "fields": {
                                   "1": "string"
                                 },
@@ -3308,7 +3304,10 @@
                             "name": "ingredients",
                             "type": ["array",{
                               "countType": "varint",
-                              "type": "slot"
+                              "type": ["array",{
+                                "countType":"varint",
+                                "type": "slot"
+                              }]
                             }]
                           },
                           {
@@ -3335,7 +3334,10 @@
                               "count": "width",
                               "type": ["array",{
                                 "count": "height",
-                                "type": "slot"
+                                "type": ["array",{
+                                  "countType":"varint",
+                                  "type": "slot"
+                                }]
                               }]
                             }]
                           },
@@ -3345,7 +3347,7 @@
                           }
                         ]],
                         "crafting_special_armordye": "void",
-                        "crafting_special_bookingclone": "void",
+                        "crafting_special_bookcloning": "void",
                         "crafting_special_mapcloning": "void",
                         "crafting_special_mapextending": "void",
                         "crafting_special_firework_rocket": "void",
