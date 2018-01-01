@@ -1,3 +1,6 @@
+## 2.24.0
+* fix brigadier:string parser properties
+
 ## 2.23.0
 * some fixes for 17w50a protocol
 
