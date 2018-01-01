@@ -3089,7 +3089,88 @@
         "packet_declare_recipes": [
           "container",
           [
-
+            {
+              "name": "recipes",
+              "type": ["array",{
+                "countType": "varint",
+                "type":["container",[
+                  {
+                    "name": "recipeId",
+                    "type": "string"
+                  },
+                  {
+                    "name": "type",
+                    "type": "string"
+                  },
+                  {
+                    "name": "data",
+                    "type": ["switch", {
+                      "compareTo": "type",
+                      "fields": {
+                        "crafting_shapeless": ["container",[
+                          {
+                            "name": "group",
+                            "type": "string"
+                          },
+                          {
+                            "name": "ingredients",
+                            "type": ["array",{
+                              "countType": "varint",
+                              "type": "slot"
+                            }]
+                          },
+                          {
+                            "name": "result",
+                            "type": "slot"
+                          }
+                        ]],
+                        "crafting_shaped": ["container",[
+                          {
+                            "name": "width",
+                            "type": "varint"
+                          },
+                          {
+                            "name": "height",
+                            "type": "varint"
+                          },
+                          {
+                            "name": "group",
+                            "type": "string"
+                          },
+                          {
+                            "name": "ingredients",
+                            "type": ["array",{
+                              "count": "width",
+                              "type": ["array",{
+                                "count": "height",
+                                "type": "slot"
+                              }]
+                            }]
+                          },
+                          {
+                            "name": "result",
+                            "type": "slot"
+                          }
+                        ]],
+                        "crafting_special_armordye": "void",
+                        "crafting_special_bookingclone": "void",
+                        "crafting_special_mapcloning": "void",
+                        "crafting_special_mapextending": "void",
+                        "crafting_special_firework_rocket": "void",
+                        "crafting_special_firework_star": "void",
+                        "crafting_special_firework_star_fade": "void",
+                        "crafting_special_repairitem": "void",
+                        "crafting_special_tippedarrow": "void",
+                        "crafting_special_bannerduplicate": "void",
+                        "crafting_special_banneraddpattern": "void",
+                        "crafting_special_shielddecoration": "void",
+                        "crafting_special_shulkerboxcoloring": "void"
+                      }
+                    }]
+                  }
+                ]]
+              }]
+            }
           ]
         ],
         "tags":["array",{
