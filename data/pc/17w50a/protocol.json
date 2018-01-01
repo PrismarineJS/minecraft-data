@@ -1182,6 +1182,198 @@
             }
           ]
         ],
+        "packet_declare_commands": [
+          "container",
+          [
+            {
+              "name": "nodes",
+              "type": ["array", {
+                "countType": "varint",
+                "type": ["container",[
+                  {
+                    "name": "flags",
+                    "type": [
+                      "bitfield",
+                      [
+                        { "name": "unused", "size": 3, "signed": false },
+                        { "name": "has_custom_suggestions", "size": 1, "signed": false },
+                        { "name": "has_redirect_node", "size": 1, "signed": false },
+                        { "name": "has_command", "size": 1, "signed": false },
+                        { "name": "command_node_type", "size": 2, "signed": false }
+                      ]
+                    ]
+                  },
+                  {
+                    "name": "children",
+                    "type": ["array",
+                      {
+                        "countType": "varint",
+                        "type": "varint"
+                      }]
+                  },
+                  {
+                    "name": "redirectNode",
+                    "type": ["switch",
+                      {
+                        "compareTo": "has_redirect_node",
+                        "fields": {
+                          "1":"varint"
+                        },
+                        "default": "void"
+                      }]
+                  },
+                  {
+                    "name": "extraNodeData",
+                    "type": ["switch",
+                      {
+                        "compareTo": "command_node_type",
+                        "fields": {
+                          "0": "void",
+                          "1": "string",
+                          "2": ["container", [
+                            {
+                              "name": "name",
+                              "type": "string"
+                            },
+                            {
+                              "name": "parser",
+                              "type": "string"
+                            },
+                            {
+                              "name": "properties",
+                              "type": ["switch",{
+                                "compareTo": "parser",
+                                "fields": {
+                                  "brigadier:bool": "void",
+                                  "brigadier:double": ["container", [
+                                    {
+                                      "name": "flags",
+                                      "type": [
+                                        "bitfield",
+                                        [
+                                          { "name": "unused", "size": 6, "signed": false },
+                                          { "name": "max_present", "size": 1, "signed": false },
+                                          { "name": "min_present", "size": 1, "signed": false }
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "name": "min",
+                                      "type":["switch",{
+                                        "compareTo":"min_present",
+                                        "fields":{
+                                          "1":"f64"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    },
+                                    {
+                                      "name": "max",
+                                      "type":["switch",{
+                                        "compareTo":"max_present",
+                                        "fields":{
+                                          "1":"f64"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    }
+                                  ]],
+                                  "brigadier:float": ["container", [
+                                    {
+                                      "name": "flags",
+                                      "type": [
+                                        "bitfield",
+                                        [
+                                          { "name": "unused", "size": 6, "signed": false },
+                                          { "name": "max_present", "size": 1, "signed": false },
+                                          { "name": "min_present", "size": 1, "signed": false }
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "name": "min",
+                                      "type":["switch",{
+                                        "compareTo":"min_present",
+                                        "fields":{
+                                          "1":"f32"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    },
+                                    {
+                                      "name": "max",
+                                      "type":["switch",{
+                                        "compareTo":"max_present",
+                                        "fields":{
+                                          "1":"f32"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    }
+                                  ]],
+                                  "brigadier:integer": ["container", [
+                                    {
+                                      "name": "flags",
+                                      "type": [
+                                        "bitfield",
+                                        [
+                                          { "name": "unused", "size": 6, "signed": false },
+                                          { "name": "max_present", "size": 1, "signed": false },
+                                          { "name": "min_present", "size": 1, "signed": false }
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "name": "min",
+                                      "type":["switch",{
+                                        "compareTo":"min_present",
+                                        "fields":{
+                                          "1":"i32"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    },
+                                    {
+                                      "name": "max",
+                                      "type":["switch",{
+                                        "compareTo":"max_present",
+                                        "fields":{
+                                          "1":"i32"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    }
+                                  ]],
+                                  "brigadier:string": "string",
+                                  "minecraft:entity": "i8",
+                                  "minecraft:score_holder": "i8"
+                                },
+                                "default": "void"
+                              }]
+                            },
+                            {
+                              "name": "suggests",
+                              "type": ["switch", {
+                                "compareTo": "has_custom_suggestions",
+                                "fields": {
+                                  "1": "string"
+                                },
+                                "default": "void"
+                              }]
+                            }
+                          ]]
+                        }
+                      }]
+                  }
+                ]]
+              }]
+            },
+            {
+              "name": "rootIndex",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet_chat": [
           "container",
           [
@@ -3421,12 +3613,6 @@
               "name": "text",
               "type": "string"
             }
-          ]
-        ],
-        "packet_declare_commands": [
-          "container",
-          [
-
           ]
         ],
         "packet_chat": [
