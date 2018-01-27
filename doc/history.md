@@ -1,3 +1,6 @@
+## 2.25.0
+* fix packet_title starting from 1.11 (see http://wiki.vg/index.php?title=Protocol&oldid=8543#Title)
+
 ## 2.24.0
 * fix brigadier:string parser properties
 
