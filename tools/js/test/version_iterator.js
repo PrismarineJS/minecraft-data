@@ -1,13 +1,12 @@
-module.exports=forEach;
+module.exports = forEach
 
-var minecraftTypes=["pc","pe"];
+const minecraftTypes = ['pc', 'pe']
 
-function forEach(f)
-{
-  minecraftTypes.forEach(function(type) {
-    var versions = require('../../../data/' + type + '/common/versions');
-    versions.forEach(function(version) {
-      f('../../../data/' + type + '/' + version, type + " " + version);
-    });
-  });
+function forEach (f) {
+  minecraftTypes.forEach(function (type) {
+    const versions = require('../../../data/' + type + '/common/versions')
+    versions.forEach(function (version) {
+      f('../../../data/' + type + '/' + version, type + ' ' + version)
+    })
+  })
 }
