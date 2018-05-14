@@ -1,11 +1,11 @@
-# minecraft-data 
+# minecraft-data
 
 [![Join the chat at https://gitter.im/PrismarineJS/minecraft-data](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/PrismarineJS/minecraft-data?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/master.svg?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/master)
 
 Language independent module providing minecraft data for minecraft clients, servers and libraries.
 
-Supports 
+Supports
 * Minecraft PC version 0.30c (classic), 1.7.10, 1.8.8, 1.9 (15w40b, 1.9, 1.9.1-pre2, 1.9.2, 1.9.4),
  1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), and 1.13(17w50a)
 * Minecraft PE version 0.14, 0.15 and 1.0
@@ -53,7 +53,7 @@ See more information about this data in the [documentation](http://prismarinejs.
  * See [doc/history.md](doc/history.md)
  * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data)
  * [Textual documentation of the recipe format](doc/recipes.md)
-  
+
 ## Projects using minecraft-data
 
 These are the projects that use minecraft-data (through the wrappers) :
@@ -66,7 +66,7 @@ These are the projects that use minecraft-data (through the wrappers) :
 | [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | biomes, blocks, items, materials, windows, recipes |
 | [PhaseBot](https://github.com/phase/PhaseBot) | Java | bot | blocks, items, materials |
 | [McEx](https://github.com/hansihe/McEx) | Elixir | server | blocks |
-| [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server lib | blocks, items | 
+| [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server lib | blocks, items |
 
 ## Extraction
 
@@ -80,6 +80,8 @@ Projects that provide data:
 | [minecraft-jar-extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) | Node.js | minecraft server jar | a very partial but completely up to date protocol |
 | [minecraft-jar-extractor in python](https://github.com/pangeacake/minecraft-jar-extractor) | Python | minecraft server jar | about the same protocol information as minecraft-jar-extractor in node.js |
 | [burger](https://github.com/mcdevs/Burger) with [burger-extractor](https://github.com/PrismarineJS/burger-extractor) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
+| [minecraft-bedrock-data](https://github.com/mhsjlw/minecraft-bedrock-data) | D | handwritten files | everything
+
 
 Pages interesting to manually update the data if necessary:
 
@@ -98,8 +100,8 @@ Minecraft data provides scripts to audit the data, they can be useful to check t
  * [audit_blocks](tools/js/test/audit_blocks.js)
  * [audit_items](tools/js/test/audit_items.js)
  * [audit_recipes](tools/js/test/audit_recipes.js)
- 
-Minecraft data also provides json schemas in enums_schemas/ that are used in 
+
+Minecraft data also provides json schemas in enums_schemas/ that are used in
 test/test.js to check the json file are valid relative to these schemas.
 These schemas can also be used to understand better how the json files are
 formatted in order to use it.
