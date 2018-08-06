@@ -424,6 +424,28 @@
             }
           ]
         ],
+        "packet_login_plugin_request": [
+          "container",
+          [
+            {
+              "name": "messageId",
+              "type": "varint"
+            },
+            {
+              "name": "channel",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -453,7 +475,8 @@
                     "disconnect": "packet_disconnect",
                     "encryption_begin": "packet_encryption_begin",
                     "success": "packet_success",
-                    "compress": "packet_compress"
+                    "compress": "packet_compress",
+                    "login_plugin_request": "packet_login_plugin_request"
                   }
                 }
               ]
@@ -496,6 +519,28 @@
             }
           ]
         ],
+        "packet_login_plugin_response": [
+            "container",
+            [
+              {
+                "name": "messageId",
+                "type": "varint"
+              },
+              {
+                "name": "success",
+                "type": "bool"
+              },
+              {
+                "name": "data",
+                "type": [
+                    "buffer",
+                    {
+                      "countType": "varint"
+                    }
+                  ]
+              }
+            ]
+          ],
         "packet": [
           "container",
           [
@@ -521,7 +566,8 @@
                   "compareTo": "name",
                   "fields": {
                     "login_start": "packet_login_start",
-                    "encryption_begin": "packet_encryption_begin"
+                    "encryption_begin": "packet_encryption_begin",
+                    "login_plugin_response": "packet_login_plugin_response"
                   }
                 }
               ]
