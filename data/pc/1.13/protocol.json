@@ -1371,7 +1371,58 @@
               "type": "varint"
             }
           ]
-        ],
+		],
+		"packet_face_player": [
+			"container",
+			[
+			  {
+				"name": "feet_eyes",
+				"type": "string"
+			  },
+			  {
+				"name": "x",
+				"type": "i32"
+			  },
+			  {
+				"name": "y",
+				"type": "i32"
+			  },
+			  {
+                "name": "x",
+				"type": "i32"
+			  },
+			  {
+				"name": "isEntity",
+				"type": "bool"
+			  },
+			  {
+				"name": "entityId",
+				"type": [
+				  "switch",
+				  {
+					"compareTo": "isEntity",
+					"fields": {
+					  "true": "varint"
+					},
+					"default": "void"
+				  }
+				]
+			  },
+			  {
+				"name": "entity_feet_eyes",
+				"type": [
+				  "switch",
+				  {
+					"compareTo": "isEntity",
+					"fields": {
+					  "true": "string"
+					},
+					"default": "void"
+				  }
+				]
+			  }
+			]
+		  ],
         "packet_chat": [
           "container",
           [
@@ -3522,7 +3573,8 @@
                     "boss_bar": "packet_boss_bar",
                     "difficulty": "packet_difficulty",
                     "tab_complete": "packet_tab_complete",
-                    "declare_commands": "packet_declare_commands",
+					"declare_commands": "packet_declare_commands",
+					"face_player": "packet_face_player",
                     "chat": "packet_chat",
                     "multi_block_change": "packet_multi_block_change",
                     "transaction": "packet_transaction",
