@@ -63,6 +63,72 @@
         }
       ]
     ],
+    "particle": [
+        "container", [
+            {
+                "particleId": "varint",
+                "data": [
+                    "particleData",
+                    {
+                        "compareTo": "particleId"
+                    }
+                ]
+            }
+        ]
+    ],
+    "particleData": [
+        "switch",
+        {
+          "compareTo": "$compareTo",
+          "fields": {
+            "3": [
+                "container", [
+                    {
+                        "name": "blockState",
+                        "type": "varint"
+                    }
+                ]
+            ],
+            "11": [
+                "container", [
+                    {
+                        "name": "red",
+                        "type": "f32"
+                    },
+                    {
+                        "name": "green",
+                        "type": "f32"
+                    },
+                    {
+                        "name": "blue",
+                        "type": "f32"
+                    }, 
+                    {
+                        "name": "scale",
+                        "type": "f32"
+                    }
+                ]
+            ],
+            "20": [
+                "container", [
+                    {
+                        "name": "blockState",
+                        "type": "varint"
+                    }
+                ]
+            ],
+            "27":  [
+                "container", [
+                    {
+                        "name": "item",
+                        "type": "slot"
+                    }
+                ]
+            ]
+          },
+          "default": "void"
+        }
+      ],
     "ingredient": [
       "array",
       {
@@ -100,9 +166,10 @@
           "2": "f32",
           "3": "string",
           "4": "string",
-          "5": "slot",
-          "6": "bool",
-          "7": [
+          "5": "string",
+          "6": "slot",
+          "7": "bool",
+          "8": [
             "container",
             [
               {
@@ -119,18 +186,19 @@
               }
             ]
           ],
-          "8": "position",
-          "9": [
+          "9": "position",
+          "10": [
             "option",
             "position"
           ],
-          "10": "varint",
-          "11": [
+          "11": "varint",
+          "12": [
             "option",
             "UUID"
           ],
-          "12": "varint",
-          "13": "nbt"
+          "13": "varint",
+          "14": "nbt",
+          "15": "particle"
         }
       }
     ],
@@ -1934,16 +2002,11 @@
             },
             {
               "name": "data",
-              "type": ["switch",{
-                "compareTo":"particleId",
-                "fields":{
-                  "36":"slot",
-                  "37":"varint",
-                  "38":"varint",
-                  "46":"varint"
-                },
-                "default":"void"
-              }
+              "type": [
+                  "particleData",
+                  {
+                      "compareTo": "particleId"
+                  }
               ]
             }
           ]
@@ -2016,11 +2079,11 @@
                       {
                         "name": "y",
                         "type": "i8"
-					  },
+                      },
                       {
                         "name": "direction",
                         "type": "i8"
-					  },
+                      },
                       {
                         "name": "hasDisplayName",
                         "type": "bool"
