@@ -1,3 +1,6 @@
+## 2.27.0
+* support of 1.13 protocol
+
 ## 2.26.0
 * move js tests to standard
 
