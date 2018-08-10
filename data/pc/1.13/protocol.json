@@ -171,7 +171,10 @@
           "2": "f32",
           "3": "string",
           "4": "string",
-          "5": "string",
+          "5": [
+            "option",
+            "string"
+          ],
           "6": "slot",
           "7": "bool",
           "8": [
@@ -1300,7 +1303,19 @@
                 "array",
                 {
                   "countType": "varint",
-                  "type": "string"
+                  "type": ["container",[
+                    {
+                      "name": "match",
+                      "type": "string"
+                    },
+                    {
+                      "name": "tooltip",
+                      "type": [
+                        "option",
+                        "string"
+                      ]
+                    }
+                  ]]
                 }
               ]
             }
@@ -1507,15 +1522,15 @@
               },
               {
                 "name": "x",
-                "type": "i32"
+                "type": "f64"
               },
               {
                 "name": "y",
-                "type": "i32"
+                "type": "f64"
               },
               {
                 "name": "x",
-                "type": "i32"
+                "type": "f64"
               },
               {
                 "name": "isEntity",
@@ -2087,7 +2102,7 @@
                       },
                       {
                         "name": "direction",
-                        "type": "i8"
+                        "type": "u8"
                       },
                       {
                         "name": "displayName",
@@ -2970,8 +2985,8 @@
                 {
                   "compareTo": "action",
                   "fields": {
-                    "0": "string",
-                    "2": "string"
+                    "0": "varint",
+                    "2": "varint"
                   },
                   "default": "void"
                 }
@@ -3011,34 +3026,6 @@
             },
             {
               "name": "name",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "mode",
-                  "fields": {
-                    "0": "string",
-                    "2": "string"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "prefix",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "mode",
-                  "fields": {
-                    "0": "string",
-                    "2": "string"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "suffix",
               "type": [
                 "switch",
                 {
@@ -3094,14 +3081,14 @@
               ]
             },
             {
-              "name": "color",
+              "name": "formatting",
               "type": [
                 "switch",
                 {
                   "compareTo": "mode",
                   "fields": {
-                    "0": "i8",
-                    "2": "i8"
+                    "0": "varint",
+                    "2": "varint"
                   },
                   "default": "void"
                 }
@@ -3135,6 +3122,34 @@
                         "type": "string"
                       }
                     ]
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "prefix",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "suffix",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "mode",
+                  "fields": {
+                    "0": "string",
+                    "2": "string"
                   },
                   "default": "void"
                 }
@@ -3855,10 +3870,6 @@
               {
                 "name": "signing",
                 "type": "bool"
-              },
-              {
-                "name": "hand",
-                "type": "string"
               }
             ]
         ],
@@ -3928,7 +3939,7 @@
                 },
                 {
                     "name": "mode",
-                    "type": "string"
+                    "type": "varint"
                 },
                 {
                     "name": "flags",
@@ -3963,11 +3974,11 @@
                 },
                 {
                     "name": "action",
-                    "type": "string"
+                    "type": "varint"
                 },
                 {
                     "name": "mode",
-                    "type": "string"
+                    "type": "varint"
                 },
                 {
                     "name": "name",
@@ -3999,11 +4010,11 @@
                 },
                 {
                     "name": "mirror",
-                    "type": "string"
+                    "type": "varint"
                 },
                 {
                     "name": "rotation",
-                    "type": "string"
+                    "type": "varint"
                 },
                 {
                     "name": "metadata",
@@ -4457,7 +4468,7 @@
                       [
                         {
                           "name": "displayedRecipe",
-                          "type": "i32"
+                          "type": "string"
                         }
                       ]
                     ],
@@ -4470,6 +4481,14 @@
                         },
                         {
                           "name": "craftingFilter",
+                          "type": "bool"
+                        },
+                        {
+                          "name": "smeltingBookOpen",
+                          "type": "bool"
+                        },
+                        {
+                          "name": "smeltingFilter",
                           "type": "bool"
                         }
                       ]
