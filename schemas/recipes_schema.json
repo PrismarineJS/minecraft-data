@@ -2,11 +2,10 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "recipes",
   "description":"A dictionary of quoted numerical item IDs. Each ID maps to a list of recipes. There may be multiple different recipes per item (same ID and metadata). The recipes may not be sorted.",
-
   "definitions": {
     "id": {
-      "type":["integer","null"],
-      "description":"A single numerical ID or null."
+      "type":["string", "integer","null"],
+      "description":"A single numerical ID, text id or null."
     },
     "metadata": {"type":"integer"},
     "count": {"type":"integer"},
@@ -31,14 +30,26 @@
       },
       "required": ["id"],
       "additionalProperties":false
-    },
+	},
+	"textId_count":{
+		"type":"object",
+		"title":"{textId:1,count:1}",
+		"description":"The item textId and count",
+		"properties":{
+		  "textId":{"$ref" : "#/definitions/id"},
+		  "count":{"$ref" : "#/definitions/count"}
+		},
+		"required": ["textId"],
+		"additionalProperties":false
+	},
     "recipeItem":{
       "title":"recipe item",
       "description":"An item can be represented different ways.",
       "oneOf":[
-        {"$ref" : "#/definitions/id"},
+        {"$ref": "#/definitions/id"},
         {"$ref": "#/definitions/id_metadata_array"},
-        {"$ref": "#/definitions/id_metadata_count_object"}
+		{"$ref": "#/definitions/id_metadata_count_object"},
+		{"$ref": "#/definitions/textId_count"}
       ]
     },
     "shapeRow":{
@@ -89,11 +100,10 @@
       ]
     }
   },
-
   "type": "object",
   "uniqueItems": true,
   "patternProperties" : {
-    "^[0-9]+$": {
+    "^[0-9 A-z]+$": {
       "type": "array",
       "uniqueItems": true,
       "items": {"$ref" : "#/definitions/recipe"}

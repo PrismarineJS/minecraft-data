@@ -12,6 +12,10 @@
         "type": "integer",
         "minimum": 0
       },
+      "textId": {
+        "description": "The minecraft text id for the block",
+        "type": "string"
+      },
       "displayName": {
         "description": "The display name of a block",
         "type": "string"
@@ -75,6 +79,38 @@
           ],
           "additionalProperties": false
         }
+      },
+      "states": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "The name of the property",
+                "type": "string"
+              },
+              "type": {
+                "description": "The type of the property",
+                "type": "string"
+              },
+              "values": {
+                "description": "The possible values of the property",
+                "type": "array"
+              },
+              "num_values": {
+                "description": "The number of possible values",
+                "type": "number",
+                "minimum": 1
+              }
+              
+            },
+            "required": [
+              "name",
+              "type",
+              "num_values"
+            ],
+            "additionalProperties": false
+          }
       },
       "drops": {
         "type": "array",
@@ -146,7 +182,6 @@
       "displayName",
       "name",
       "hardness",
-      "stackSize",
       "diggable",
       "boundingBox",
       "drops",
