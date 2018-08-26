@@ -1,3 +1,6 @@
+## 2.28.0
+* support of 1.13.1 protocol
+
 ## 2.27.0
 * support of 1.13 protocol
 
