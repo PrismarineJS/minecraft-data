@@ -104,6 +104,10 @@ test/test.js to check the json file are valid relative to these schemas.
 These schemas can also be used to understand better how the json files are
 formatted in order to use it.
 
+## Contribute
+
+Please read https://github.com/PrismarineJS/prismarine-contribute
+
 ## License
 
 MIT
