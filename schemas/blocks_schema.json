@@ -12,10 +12,6 @@
         "type": "integer",
         "minimum": 0
       },
-      "textId": {
-        "description": "The minecraft text id for the block",
-        "type": "string"
-      },
       "displayName": {
         "description": "The display name of a block",
         "type": "string"
@@ -83,88 +79,87 @@
       "states": {
         "type": "array",
         "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "description": "The name of the property",
-                "type": "string"
-              },
-              "type": {
-                "description": "The type of the property",
-                "type": "string"
-              },
-              "values": {
-                "description": "The possible values of the property",
-                "type": "array"
-              },
-              "num_values": {
-                "description": "The number of possible values",
-                "type": "number",
-                "minimum": 1
-              }
-              
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "The name of the property",
+              "type": "string"
             },
-            "required": [
-              "name",
-              "type",
-              "num_values"
-            ],
-            "additionalProperties": false
-          }
+             "type": {
+              "description": "The type of the property",
+              "type": "string"
+            },
+            "values": {
+              "description": "The possible values of the property",
+              "type": "array"
+            },
+            "num_values": {
+              "description": "The number of possible values",
+              "type": "number",
+             "minimum": 1
+            }
+          },
+          "required": [
+            "name",
+            "type",
+            "num_values"
+          ],
+          "additionalProperties": false
+        }
       },
       "drops": {
         "type": "array",
         "items": {
-			"oneOf" : [
-				{
-					"type": ["string", "integer"]
-				},
-				{
-					"type": "object",
-					"properties": {
-					  "minCount": {
-						"type": "number",
-						"minimum": 0,
-						"description": "minimum number or chance, default : 1"
-					  },
-					  "maxCount": {
-						"type": "number",
-						"minimum": 0,
-						"description": "maximum number or chance, default : minCount"
-					  },
-					  "drop": {
-						"oneOf": [
-						  {
-							"type": ["string", "integer"]
-						  },
-						  {
-							"type": "object",
-							"properties": {
-							  "id": {
-								"type": "integer",
-								"minimum": 0
-							  },
-							  "metadata": {
-								"type": "integer",
-								"minimum": 0
-							  }
-							},
-							"required": [
-							  "id",
-							  "metadata"
-							],
-							"additionalProperties": false
-						  }
-						]
-					  }
-					},
-					"required": [
-					  "drop"
-					],
-					"additionalProperties": false
-				  }
-			]
-		}
+          "oneOf" : [
+            {
+              "type": ["string", "integer"]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "minCount": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "minimum number or chance, default : 1"
+                },
+                "maxCount": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "maximum number or chance, default : minCount"
+                },
+                "drop": {
+                  "oneOf": [
+                    {
+                      "type": ["string", "integer"]
+                    },
+                    {
+                      "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "metadata": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "metadata"
+                        ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "drop"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
       },
       "transparent": {
         "description": "true if a block is transparent",
@@ -188,6 +183,7 @@
       "displayName",
       "name",
       "hardness",
+      "stackSize",
       "diggable",
       "boundingBox",
       "drops",
