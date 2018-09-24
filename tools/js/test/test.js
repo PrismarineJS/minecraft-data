@@ -3,7 +3,7 @@
 const assert = require('assert')
 
 const Ajv = require('ajv')
-const v = new Ajv({verbose: true})
+const v = new Ajv({ verbose: true })
 
 const Validator = require('protodef-validator')
 
