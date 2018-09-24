@@ -1,3 +1,6 @@
+## 2.30.0
+* update ajv, mocha and standard
+
 ## 2.29.0
 * full 1.13 and 1.13.1 support (thanks @lluiscab for doing this)
 
