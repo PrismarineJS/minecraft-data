@@ -1,3 +1,6 @@
+## 2.29.0
+* full 1.13 and 1.13.1 support (thanks @lluiscab for doing this)
+
 ## 2.28.0
 * support of 1.13.1 protocol
 
