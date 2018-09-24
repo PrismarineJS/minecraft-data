@@ -76,52 +76,89 @@
           "additionalProperties": false
         }
       },
-      "drops": {
+      "states": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
-            "minCount": {
-              "type": "number",
-              "minimum": 0,
-              "description": "minimum number or chance, default : 1"
+            "name": {
+              "description": "The name of the property",
+              "type": "string"
             },
-            "maxCount": {
-              "type": "number",
-              "minimum": 0,
-              "description": "maximum number or chance, default : minCount"
+             "type": {
+              "description": "The type of the property",
+              "type": "string"
             },
-            "drop": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "minimum": 0
-                    },
-                    "metadata": {
-                      "type": "integer",
-                      "minimum": 0
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "metadata"
-                  ],
-                  "additionalProperties": false
-                }
-              ]
+            "values": {
+              "description": "The possible values of the property",
+              "type": "array"
+            },
+            "num_values": {
+              "description": "The number of possible values",
+              "type": "number",
+             "minimum": 1
             }
           },
           "required": [
-            "drop"
+            "name",
+            "type",
+            "num_values"
           ],
           "additionalProperties": false
+        }
+      },
+      "drops": {
+        "type": "array",
+        "items": {
+          "oneOf" : [
+            {
+              "type": ["integer"]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "minCount": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "minimum number or chance, default : 1"
+                },
+                "maxCount": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "maximum number or chance, default : minCount"
+                },
+                "drop": {
+                  "oneOf": [
+                    {
+                      "type": ["integer"]
+                    },
+                    {
+                      "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "metadata": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "metadata"
+                        ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "drop"
+              ],
+              "additionalProperties": false
+            }
+          ]
         }
       },
       "transparent": {
