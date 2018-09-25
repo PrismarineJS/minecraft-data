@@ -1,3 +1,6 @@
+## 2.31.0
+* fix 1.13.1 datapath
+
 ## 2.30.0
 * update ajv, mocha and standard
 
