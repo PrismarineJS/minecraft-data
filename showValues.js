@@ -19,7 +19,7 @@ function toggleAnchor () {
 }
 
 function fieldsToColumns (fields) {
-  return fields.map(function (field) { return {'title': field} })
+  return fields.map(function (field) { return { 'title': field } })
 }
 
 function nameToImage (version, name) {
