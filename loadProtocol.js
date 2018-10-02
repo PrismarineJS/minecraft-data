@@ -67,6 +67,9 @@ function directionToLines (state, direction, packets, comments) {
 }
 
 function packetToString (state, direction, packet, packetId, comments) {
+  if (packet[0] !== 'container') {
+    return _('div')
+  }
   let rows = countRows(packet[1])
   const totalCols = countCols(packet[1])
   if (rows === 0) { rows = 1 }

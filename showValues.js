@@ -66,7 +66,7 @@ function loadBiomes (version) {
   loadData(version, 'biomes',
     function (e) {
       return [e['id'], '<a href="#' + e['name'] + '">' + e['name'] + '</a>',
-        e['color'], e['temperature'], e['rainfall']]
+        e['color'] === undefined ? '' : e['color'], e['temperature'], e['rainfall']]
     },
     ['id', 'name', 'color', 'temperature', 'rainfall'],
     []
