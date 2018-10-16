@@ -33,31 +33,36 @@
       "container",
       [
         {
-          "name": "itemId",
-          "type": "i16"
+          "name": "present",
+          "type": "bool"
         },
         {
           "anon": true,
           "type": [
             "switch",
             {
-              "compareTo": "itemId",
+              "compareTo": "present",
               "fields": {
-                "-1": "void"
-              },
-              "default": [
-                "container",
-                [
-                  {
-                    "name": "itemCount",
-                    "type": "i8"
-                  },
-                  {
-                    "name": "nbtData",
-                    "type": "optionalNbt"
-                  }
+                "false": "void",
+                "true": [
+                  "container",
+                  [
+
+                    {
+                      "name": "itemId",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "itemCount",
+                      "type": "i8"
+                    },
+                    {
+                      "name": "nbtData",
+                      "type": "optionalNbt"
+                    }
+                  ]
                 ]
-              ]
+              }
             }
           ]
         }
@@ -82,58 +87,58 @@
       ]
     ],
     "particleData": [
-        "switch",
-        {
-          "compareTo": "$compareTo",
-          "fields": {
-            "3": [
-                "container", [
-                    {
-                        "name": "blockState",
-                        "type": "varint"
-                    }
-                ]
-            ],
-            "11": [
-                "container", [
-                    {
-                        "name": "red",
-                        "type": "f32"
-                    },
-                    {
-                        "name": "green",
-                        "type": "f32"
-                    },
-                    {
-                        "name": "blue",
-                        "type": "f32"
-                    },
-                    {
-                        "name": "scale",
-                        "type": "f32"
-                    }
-                ]
-            ],
-            "20": [
-                "container", [
-                    {
-                        "name": "blockState",
-                        "type": "varint"
-                    }
-                ]
-            ],
-            "27":  [
-                "container", [
-                    {
-                        "name": "item",
-                        "type": "slot"
-                    }
-                ]
+      "switch",
+      {
+        "compareTo": "$compareTo",
+        "fields": {
+          "3": [
+            "container", [
+              {
+                "name": "blockState",
+                "type": "varint"
+              }
             ]
-          },
-          "default": "void"
-        }
-      ],
+          ],
+          "11": [
+            "container", [
+              {
+                "name": "red",
+                "type": "f32"
+              },
+              {
+                "name": "green",
+                "type": "f32"
+              },
+              {
+                "name": "blue",
+                "type": "f32"
+              },
+              {
+                "name": "scale",
+                "type": "f32"
+              }
+            ]
+          ],
+          "20": [
+            "container", [
+              {
+                "name": "blockState",
+                "type": "varint"
+              }
+            ]
+          ],
+          "27":  [
+            "container", [
+              {
+                "name": "item",
+                "type": "slot"
+              }
+            ]
+          ]
+        },
+        "default": "void"
+      }
+    ],
     "ingredient": [
       "array",
       {
@@ -603,27 +608,27 @@
           ]
         ],
         "packet_login_plugin_response": [
-            "container",
-            [
-              {
-                "name": "messageId",
-                "type": "varint"
-              },
-              {
-                "name": "success",
-                "type": "bool"
-              },
-              {
-                "name": "data",
-                "type": [
-                    "buffer",
-                    {
-                      "countType": "varint"
-                    }
-                  ]
-              }
-            ]
-          ],
+          "container",
+          [
+            {
+              "name": "messageId",
+              "type": "varint"
+            },
+            {
+              "name": "success",
+              "type": "bool"
+            },
+            {
+              "name": "data",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -1514,68 +1519,68 @@
           ]
         ],
         "packet_face_player": [
-            "container",
-            [
-              {
-                "name": "feet_eyes",
-                "type": "string"
-              },
-              {
-                "name": "x",
-                "type": "f64"
-              },
-              {
-                "name": "y",
-                "type": "f64"
-              },
-              {
-                "name": "z",
-                "type": "f64"
-              },
-              {
-                "name": "isEntity",
-                "type": "bool"
-              },
-              {
-                "name": "entityId",
-                "type": [
-                  "switch",
-                  {
-                    "compareTo": "isEntity",
-                    "fields": {
-                      "true": "varint"
-                    },
-                    "default": "void"
-                  }
-                ]
-              },
-              {
-                "name": "entity_feet_eyes",
-                "type": [
-                  "switch",
-                  {
-                    "compareTo": "isEntity",
-                    "fields": {
-                      "true": "string"
-                    },
-                    "default": "void"
-                  }
-                ]
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "feet_eyes",
+              "type": "string"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "isEntity",
+              "type": "bool"
+            },
+            {
+              "name": "entityId",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "isEntity",
+                  "fields": {
+                    "true": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "entity_feet_eyes",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "isEntity",
+                  "fields": {
+                    "true": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
         ],
         "packet_nbt_query_response": [
-            "container",
-            [
-              {
-                "name": "transactionId",
-                "type": "varint"
-              },
-              {
-                "name": "nbt",
-                "type": "nbt"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "transactionId",
+              "type": "varint"
+            },
+            {
+              "name": "nbt",
+              "type": "nbt"
+            }
+          ]
         ],
         "packet_chat": [
           "container",
@@ -2023,10 +2028,10 @@
             {
               "name": "data",
               "type": [
-                  "particleData",
-                  {
-                      "compareTo": "particleId"
-                  }
+                "particleData",
+                {
+                  "compareTo": "particleId"
+                }
               ]
             }
           ]
@@ -3573,26 +3578,26 @@
                         "crafting_special_shielddecoration": "void",
                         "crafting_special_shulkerboxcoloring": "void",
                         "smelting": ["container",[
-                            {
-                              "name": "group",
-                              "type": "string"
-                            },
-                            {
-                              "name": "ingredient",
-                              "type": "ingredient"
-                            },
-                            {
-                              "name": "result",
-                              "type": "slot"
-                            },
-                            {
-                              "name": "experience",
-                              "type": "f32"
-                            },
-                            {
-                              "name": "cookTime",
-                              "type": "varint"
-                            }
+                          {
+                            "name": "group",
+                            "type": "string"
+                          },
+                          {
+                            "name": "ingredient",
+                            "type": "ingredient"
+                          },
+                          {
+                            "name": "result",
+                            "type": "slot"
+                          },
+                          {
+                            "name": "experience",
+                            "type": "f32"
+                          },
+                          {
+                            "name": "cookTime",
+                            "type": "varint"
+                          }
                         ]]
                       }
                     }]
@@ -3848,195 +3853,195 @@
           ]
         ],
         "packet_query_block_nbt": [
-            "container",
-            [
-              {
-                "name": "transactionId",
-                "type": "varint"
-              },
-              {
-                "name": "location",
-                "type": "position"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "transactionId",
+              "type": "varint"
+            },
+            {
+              "name": "location",
+              "type": "position"
+            }
+          ]
         ],
         "packet_edit_book": [
-            "container",
-            [
-              {
-                "name": "new_book",
-                "type": "slot"
-              },
-              {
-                "name": "signing",
-                "type": "bool"
-              },
-              {
-                "name": "hand",
-                "type": "varint"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "new_book",
+              "type": "slot"
+            },
+            {
+              "name": "signing",
+              "type": "bool"
+            },
+            {
+              "name": "hand",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_query_entity_nbt": [
-            "container",
-            [
-              {
-                "name": "transactionId",
-                "type": "varint"
-              },
-              {
-                "name": "entityId",
-                "type": "varint"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "transactionId",
+              "type": "varint"
+            },
+            {
+              "name": "entityId",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_pick_item": [
-            "container",
-            [
-                {
-                    "name": "slot",
-                    "type": "varint"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "slot",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_name_item": [
-            "container",
-            [
-                {
-                    "name": "name",
-                    "type": "string"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "name",
+              "type": "string"
+            }
+          ]
         ],
         "packet_select_trade": [
-            "container",
-            [
-                {
-                    "name": "slot",
-                    "type": "varint"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "slot",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_set_beacon_effect": [
-            "container",
-            [
-                {
-                    "name": "primary_effect",
-                    "type": "varint"
-                },
-                {
-                    "name": "secondary_effect",
-                    "type": "varint"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "primary_effect",
+              "type": "varint"
+            },
+            {
+              "name": "secondary_effect",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_update_command_block": [
-            "container",
-            [
-                {
-                    "name": "location",
-                    "type": "position"
-                },
-                {
-                    "name": "command",
-                    "type": "string"
-                },
-                {
-                    "name": "mode",
-                    "type": "varint"
-                },
-                {
-                    "name": "flags",
-                    "type": "u8"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "command",
+              "type": "string"
+            },
+            {
+              "name": "mode",
+              "type": "varint"
+            },
+            {
+              "name": "flags",
+              "type": "u8"
+            }
+          ]
         ],
         "packet_update_command_block_minecart": [
-            "container",
-            [
-                {
-                    "name": "entityId",
-                    "type": "varint"
-                },
-                {
-                    "name": "command",
-                    "type": "string"
-                }
-                ,
-                {
-                    "name": "track_output",
-                    "type": "bool"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "command",
+              "type": "string"
+            }
+          ,
+            {
+              "name": "track_output",
+              "type": "bool"
+            }
+          ]
         ],
         "packet_update_structure_block": [
-            "container",
-            [
-                {
-                    "name": "location",
-                    "type": "position"
-                },
-                {
-                    "name": "action",
-                    "type": "varint"
-                },
-                {
-                    "name": "mode",
-                    "type": "varint"
-                },
-                {
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "name": "offset_x",
-                    "type": "u8"
-                },
-                {
-                    "name": "offset_y",
-                    "type": "u8"
-                },
-                {
-                    "name": "offset_z",
-                    "type": "u8"
-                },
-                {
-                    "name": "size_x",
-                    "type": "u8"
-                },
-                {
-                    "name": "size_y",
-                    "type": "u8"
-                },
-                {
-                    "name": "size_z",
-                    "type": "u8"
-                },
-                {
-                    "name": "mirror",
-                    "type": "varint"
-                },
-                {
-                    "name": "rotation",
-                    "type": "varint"
-                },
-                {
-                    "name": "metadata",
-                    "type": "string"
-                },
-                {
-                    "name": "integrity",
-                    "type": "f32"
-                },
-                {
-                    "name": "seed",
-                    "type": "varint"
-                },
-                {
-                    "name": "flags",
-                    "type": "u8"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "mode",
+              "type": "varint"
+            },
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "offset_x",
+              "type": "u8"
+            },
+            {
+              "name": "offset_y",
+              "type": "u8"
+            },
+            {
+              "name": "offset_z",
+              "type": "u8"
+            },
+            {
+              "name": "size_x",
+              "type": "u8"
+            },
+            {
+              "name": "size_y",
+              "type": "u8"
+            },
+            {
+              "name": "size_z",
+              "type": "u8"
+            },
+            {
+              "name": "mirror",
+              "type": "varint"
+            },
+            {
+              "name": "rotation",
+              "type": "varint"
+            },
+            {
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "name": "integrity",
+              "type": "f32"
+            },
+            {
+              "name": "seed",
+              "type": "varint"
+            },
+            {
+              "name": "flags",
+              "type": "u8"
+            }
+          ]
         ],
         "packet_tab_complete": [
           "container",
