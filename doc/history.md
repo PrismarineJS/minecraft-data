@@ -1,3 +1,6 @@
+## 2.33.0
+* fix version definition for 1.13.2-pre1
+
 ## 2.32.0
 * support 1.13.2-pre1
 
