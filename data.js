@@ -3,7 +3,7 @@ const queryString = require('query-string')
 const parameters = queryString.parse(window.location.search)
 
 const rawVersion = parameters['v']
-const version = rawVersion || '1.13.1'
+const version = rawVersion || '1.13.2'
 const rawActive = parameters['d']
 const active = rawActive || 'items'
 

@@ -24,12 +24,20 @@ function fieldsToColumns (fields) {
 
 function nameToImage (version, name) {
   let assetsVersion
-  if (version.substr(0, 3) === '1.9') {
-    assetsVersion = '1.9'
-  } else if (version === '1.8') {
+  if (version.substr(0, 3) === '1.8') {
     assetsVersion = '1.8.8'
-  } else {
+  } if (version.substr(0, 3) === '1.9') {
     assetsVersion = '1.9'
+  } if (version.substr(0, 4) === '1.10') {
+    assetsVersion = '1.10'
+  } if (version.substr(0, 4) === '1.11') {
+    assetsVersion = '1.11'
+  } if (version.substr(0, 4) === '1.12') {
+    assetsVersion = '1.12'
+  } if (version.substr(0, 4) === '1.13') {
+    assetsVersion = '1.13'
+  } else {
+    assetsVersion = '1.13'
   }
 
   const mcAssets = require('minecraft-assets')(assetsVersion)
