@@ -1,6 +1,8 @@
 # minecraft-data 
 
-[![Join the chat at https://gitter.im/PrismarineJS/minecraft-data](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/PrismarineJS/minecraft-data?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Discord](https://img.shields.io/badge/chat-on%20discord-brightgreen.svg)](https://discord.gg/GsEFRM8)
+[![Gitter](https://img.shields.io/badge/chat-on%20gitter-brightgreen.svg)](https://gitter.im/PrismarineJS/general)
+[![Irc](https://img.shields.io/badge/chat-on%20irc-brightgreen.svg)](https://irc.gitter.im/)
 [![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/master.svg?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/master)
 
 Language independent module providing minecraft data for minecraft clients, servers and libraries.
