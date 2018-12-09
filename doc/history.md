@@ -1,3 +1,6 @@
+## 2.35.0
+* add block state data for 1.13 and 1.13.2
+
 ## 2.34.0
 * support 1.13.2-pre2 and 1.13.2
 
