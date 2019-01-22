@@ -1,3 +1,6 @@
+## 2.36.0
+* fix team prefix and suffix in 1.13
+
 ## 2.35.0
 * add block state data for 1.13 and 1.13.2
 
