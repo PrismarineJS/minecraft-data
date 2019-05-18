@@ -1913,6 +1913,23 @@
             }
           ]
         ],
+        "packet_open_horse_window": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "u8"
+            },
+            {
+              "name": "nbSlots",
+              "type": "varint"
+            },
+            {
+              "name": "entityId",
+              "type": "u32"
+            }
+          ]
+        ],
         "packet_keep_alive": [
           "container",
           [
@@ -2033,6 +2050,39 @@
                   "compareTo": "particleId"
                 }
               ]
+            }
+          ]
+        ],
+        "packet_update_light": [
+          "container",
+          [
+            {
+              "name": "chunkX",
+              "type": "varint"
+            },
+            {
+              "name": "chunkZ",
+              "type": "varint"
+            },
+            {
+              "name": "skyLightMask",
+              "type": "varint"
+            },
+            {
+              "name": "blockLightMask",
+              "type": "varint"
+            },
+            {
+              "name": "emptySkyLightMask",
+              "type": "varint"
+            },
+            {
+              "name": "emptyBlockLightMask",
+              "type": "varint"
+            },
+            {
+              "name": "data",
+              "type": "restBuffer"
             }
           ]
         ],
@@ -2181,6 +2231,74 @@
             }
           ]
         ],
+        "packet_trade_list": [
+          "container",
+          [
+            {
+              "name": "windowId",
+              "type": "varint"
+            },
+            {
+              "name": "trades",
+              "type": [
+                "array",
+                {
+                  "countType": "u8",
+                  "type": ["container", [
+                    {
+                      "name": "inputItem1",
+                      "type": "slot"
+                    },
+                    {
+                      "name": "outputItem",
+                      "type": "slot"
+                    },
+                    {
+                      "name": "inputItem2",
+                      "type": ["option", "slot"]
+                    },
+                    {
+                      "name": "tradeDisabled",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "nbTradeUses",
+                      "type": "u32"
+                    },
+                    {
+                      "name": "maximumNbTradeUses",
+                      "type": "u32"
+                    },
+                    {
+                      "name": "xp",
+                      "type": "u32"
+                    },
+                    {
+                      "name": "specialPrice",
+                      "type": "u32"
+                    },
+                    {
+                      "name": "priceMultiplier",
+                      "type": "f32"
+                    }
+                  ]]
+                }
+              ]
+            },
+            {
+              "name": "villagerLevel",
+              "type": "varint"
+            },
+            {
+              "name": "experience",
+              "type": "varint"
+            },
+            {
+              "name": "isRegularVillager",
+              "type": "bool"
+            }
+          ]
+        ],
         "packet_rel_entity_move": [
           "container",
           [
@@ -2291,6 +2409,15 @@
             {
               "name": "pitch",
               "type": "f32"
+            }
+          ]
+        ],
+        "packet_open_book": [
+          "container",
+          [
+            {
+              "name": "hand",
+              "type": "varint"
             }
           ]
         ],
@@ -2551,19 +2678,6 @@
             {
               "name": "teleportId",
               "type": "varint"
-            }
-          ]
-        ],
-        "packet_bed": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": "varint"
-            },
-            {
-              "name": "location",
-              "type": "position"
             }
           ]
         ],
@@ -2844,6 +2958,28 @@
             {
               "name": "slot",
               "type": "i8"
+            }
+          ]
+        ],
+        "packet_update_view_position": [
+          "container",
+          [
+            {
+              "name": "chunkX",
+              "type": "varint"
+            },
+            {
+              "name": "chunkZ",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_update_view_distance": [
+          "container",
+          [
+            {
+              "name": "viewDistance",
+              "type": "varint"
             }
           ]
         ],
@@ -3274,6 +3410,31 @@
                   "default": "void"
                 }
               ]
+            }
+          ]
+        ],
+        "packet_entity_sound_effect": [
+          "container",
+          [
+            {
+              "name": "soundId",
+              "type": "varint"
+            },
+            {
+              "name": "soundCategory",
+              "type": "varint"
+            },
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "volume",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
             }
           ]
         ],
@@ -4271,6 +4432,15 @@
             }
           ]
         ],
+        "packet_lock_difficulty": [
+          "container",
+          [
+            {
+              "name": "locked",
+              "type": "bool"
+            }
+          ]
+        ],
         "packet_position": [
           "container",
           [
@@ -4548,6 +4718,27 @@
             {
               "name": "item",
               "type": "slot"
+            }
+          ]
+        ],
+        "packet_update_jigsaw_block": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "attachmentType",
+              "type": "string"
+            },
+            {
+              "name": "targetPool",
+              "type": "string"
+            },
+            {
+              "name": "finalState",
+              "type": "string"
             }
           ]
         ],
