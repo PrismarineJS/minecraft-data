@@ -3694,11 +3694,11 @@
                 "countType": "varint",
                 "type":["container",[
                   {
-                    "name": "recipeId",
+                    "name": "type",
                     "type": "string"
                   },
                   {
-                    "name": "type",
+                    "name": "recipeId",
                     "type": "string"
                   },
                   {
@@ -3706,7 +3706,7 @@
                     "type": ["switch", {
                       "compareTo": "type",
                       "fields": {
-                        "crafting_shapeless": ["container",[
+                        "minecraft:crafting_shapeless": ["container",[
                           {
                             "name": "group",
                             "type": "string"
@@ -3723,7 +3723,7 @@
                             "type": "slot"
                           }
                         ]],
-                        "crafting_shaped": ["container",[
+                        "minecraft:crafting_shaped": ["container",[
                           {
                             "name": "width",
                             "type": "varint"
@@ -3751,39 +3751,40 @@
                             "type": "slot"
                           }
                         ]],
-                        "crafting_special_armordye": "void",
-                        "crafting_special_bookcloning": "void",
-                        "crafting_special_mapcloning": "void",
-                        "crafting_special_mapextending": "void",
-                        "crafting_special_firework_rocket": "void",
-                        "crafting_special_firework_star": "void",
-                        "crafting_special_firework_star_fade": "void",
-                        "crafting_special_repairitem": "void",
-                        "crafting_special_tippedarrow": "void",
-                        "crafting_special_bannerduplicate": "void",
-                        "crafting_special_banneraddpattern": "void",
-                        "crafting_special_shielddecoration": "void",
-                        "crafting_special_shulkerboxcoloring": "void",
-                        "smelting": ["container",[
+                        "minecraft:crafting_special_armordye": "void",
+                        "minecraft:crafting_special_bookcloning": "void",
+                        "minecraft:crafting_special_mapcloning": "void",
+                        "minecraft:crafting_special_mapextending": "void",
+                        "minecraft:crafting_special_firework_rocket": "void",
+                        "minecraft:crafting_special_firework_star": "void",
+                        "minecraft:crafting_special_firework_star_fade": "void",
+                        "minecraft:crafting_special_repairitem": "void",
+                        "minecraft:crafting_special_tippedarrow": "void",
+                        "minecraft:crafting_special_bannerduplicate": "void",
+                        "minecraft:crafting_special_banneraddpattern": "void",
+                        "minecraft:crafting_special_shielddecoration": "void",
+                        "minecraft:crafting_special_shulkerboxcoloring": "void",
+                        "minecraft:crafting_special_suspiciousstew": "void",
+                        "minecraft:smelting": "minecraft_smelting_format",
+                        "minecraft:blasting": "minecraft_smelting_format",
+                        "minecraft:smoking": "minecraft_smelting_format",
+                        "minecraft:campfire_cooking": "minecraft_smelting_format",
+                        "minecraft:stonecutting": ["container",[
                           {
                             "name": "group",
                             "type": "string"
                           },
                           {
-                            "name": "ingredient",
-                            "type": "ingredient"
+                            "name": "ingredients",
+                            "type": ["array",
+                              {
+                                "countType": "varint",
+                                "type": "ingredient"
+                              }]
                           },
                           {
                             "name": "result",
                             "type": "slot"
-                          },
-                          {
-                            "name": "experience",
-                            "type": "f32"
-                          },
-                          {
-                            "name": "cookTime",
-                            "type": "varint"
                           }
                         ]]
                       }
@@ -3794,6 +3795,28 @@
             }
           ]
         ],
+        "minecraft_smelting_format": ["container",[
+          {
+            "name": "group",
+            "type": "string"
+          },
+          {
+            "name": "ingredient",
+            "type": "ingredient"
+          },
+          {
+            "name": "result",
+            "type": "slot"
+          },
+          {
+            "name": "experience",
+            "type": "f32"
+          },
+          {
+            "name": "cookTime",
+            "type": "varint"
+          }
+        ]],
         "tags":["array",{
           "countType": "varint",
           "type": ["container", [
@@ -3823,6 +3846,10 @@
             },
             {
               "name": "fluidTags",
+              "type": "tags"
+            },
+            {
+              "name": "entityTags",
               "type": "tags"
             }
           ]
