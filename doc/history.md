@@ -1,3 +1,6 @@
+## 2.37.3
+* fix stonecutting in declare_recipes 1.14.1 : only one ingredient
+
 ## 2.37.2
 * u32 -> i32 in 1.14
 
