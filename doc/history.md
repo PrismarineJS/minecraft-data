@@ -1,3 +1,8 @@
+## 2.37.0
+* fix redstone
+* fix some block properties
+* 1.14 support : protocol.json and some of the data : not everything is there yet
+
 ## 2.36.0
 * fix team prefix and suffix in 1.13
 
