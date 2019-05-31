@@ -1,3 +1,6 @@
+## 2.37.5
+* fix intfield -> objectData in spawn_entity in all versions > 1.8
+
 ## 2.37.4
 * add protocol to 1.14
 
