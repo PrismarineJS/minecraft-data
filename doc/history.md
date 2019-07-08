@@ -1,3 +1,6 @@
+## 2.38.0
+* 1.14.3 support
+
 ## 2.37.5
 * fix intfield -> objectData in spawn_entity in all versions > 1.8
 
