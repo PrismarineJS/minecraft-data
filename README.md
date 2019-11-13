@@ -58,7 +58,7 @@ See more information about this data in the [documentation](http://prismarinejs.
   
 ## Projects using minecraft-data
 
-These are the projects that use minecraft-data (through the wrappers) :
+These are the projects that use minecraft-data:
 
 | Project name | Language | Project type | Data used |
 | --- | --- | --- | --- |
@@ -68,7 +68,8 @@ These are the projects that use minecraft-data (through the wrappers) :
 | [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | biomes, blocks, items, materials, windows, recipes |
 | [PhaseBot](https://github.com/phase/PhaseBot) | Java | bot | blocks, items, materials |
 | [McEx](https://github.com/hansihe/McEx) | Elixir | server | blocks |
-| [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server lib | blocks, items | 
+| [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server library | blocks, items | 
+| [Phpcraft](https://github.com/Phpcraft/core) | PHP | all-around library | blocks, items, entities, protocol | 
 
 ## Extraction
 
