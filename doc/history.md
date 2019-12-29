@@ -1,3 +1,6 @@
+## 2.41.0
+* 1.15 protocol support
+
 ## 2.40.0
 * 1.15.1 protocol support
 * various data corrections for blocks (thanks @kemesa7)
