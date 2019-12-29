@@ -1,3 +1,9 @@
+## 2.40.0
+* 1.15.1 protocol support
+* various data corrections for blocks (thanks @kemesa7)
+* fix stack sizes (thanks @timmyRS)
+* add item durability (thanks @timmyRS)
+
 ## 2.39.0
 * 1.14.4 support
 
