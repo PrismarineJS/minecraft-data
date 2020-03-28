@@ -1,3 +1,7 @@
+## 2.42.0
+* Fix mushrooms' bounding boxes (thanks @IdanHo)
+* 1.15.2 protocol support
+
 ## 2.41.0
 * 1.15 protocol support
 
