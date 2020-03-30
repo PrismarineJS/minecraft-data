@@ -9,7 +9,7 @@ Language independent module providing minecraft data for minecraft clients, serv
 
 Supports 
 * Minecraft PC version 0.30c (classic), 1.7.10, 1.8.8, 1.9 (15w40b, 1.9, 1.9.1-pre2, 1.9.2, 1.9.4),
- 1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), 1.13(17w50a, 1.13, 1.13.1, 1.13.2-pre1, 1.13.2-pre2, 1.13.2), 1.14(1.14, 1.14.1, 1.14.3, 1.14.4) and 1.15(1.15, 1.15.1, 1.15.2)
+ 1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), 1.13 (17w50a, 1.13, 1.13.1, 1.13.2-pre1, 1.13.2-pre2, 1.13.2), 1.14 (1.14, 1.14.1, 1.14.3, 1.14.4), 1.15(1.15, 1.15.1, 1.15.2) and 1.16 (20w13b)
 * Minecraft PE version 0.14, 0.15 and 1.0
 
 ## Wrappers
@@ -47,6 +47,7 @@ Data provided:
 | Windows | the different kind of windows and their characteristics |
 | Version | |
 | Versions | all the versions supported in minecraft-data |
+| Block collison shapes | |
 
 See more information about this data in the [documentation](http://prismarinejs.github.io/minecraft-data/)
 
