@@ -9,7 +9,7 @@ const Validator = require('protodef-validator')
 
 Error.stackTraceLimit = 0
 
-const data = ['biomes', 'instruments', 'items', 'materials', 'blocks', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language']
+const data = ['biomes', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language']
 
 require('./version_iterator')(function (path, versionString) {
   describe('minecraft-data schemas ' + versionString, function () {
