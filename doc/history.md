@@ -1,3 +1,7 @@
+## 2.43.0
+* Provide block collision shapes (thanks @Gjum)
+* support snapshot 20w13b of 1.16 (thanks @sbh1311)
+
 ## 2.42.0
 * Fix mushrooms' bounding boxes (thanks @IdanHo)
 * 1.15.2 protocol support
