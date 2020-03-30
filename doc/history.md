@@ -1,3 +1,6 @@
+## 2.44.0
+* small fix to success packet for 20w13b
+
 ## 2.43.0
 * Provide block collision shapes (thanks @Gjum)
 * support snapshot 20w13b of 1.16 (thanks @sbh1311)
