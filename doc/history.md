@@ -1,3 +1,6 @@
+## 2.46.0
+* fix entities for 1.13
+
 ## 2.45.0
 * fix grass bounding box for 1.13
 * last 1.16 snapshots support
