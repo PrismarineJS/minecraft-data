@@ -1,3 +1,7 @@
+## 2.45.0
+* fix grass bounding box for 1.13
+* last 1.16 snapshots support
+
 ## 2.44.0
 * small fix to success packet for 20w13b
 
