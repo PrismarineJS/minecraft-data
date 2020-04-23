@@ -513,7 +513,7 @@
           [
             {
               "name": "uuid",
-              "type": "string"
+              "type": "UUID"
             },
             {
               "name": "username",
@@ -3959,18 +3959,18 @@
                     "0x40": "held_item_slot",
                     "0x41": "update_view_position",
                     "0x42": "update_view_distance",
-                    "0x43": "scoreboard_display_objective",
-                    "0x44": "entity_metadata",
-                    "0x45": "attach_entity",
-                    "0x46": "entity_velocity",
-                    "0x47": "entity_equipment",
-                    "0x48": "experience",
-                    "0x49": "update_health",
-                    "0x4a": "scoreboard_objective",
-                    "0x4b": "set_passengers",
-                    "0x4c": "teams",
-                    "0x4d": "scoreboard_score",
-                    "0x4e": "spawn_position",
+                    "0x43": "spawn_position",
+                    "0x44": "scoreboard_display_objective",
+                    "0x45": "entity_metadata",
+                    "0x46": "attach_entity",
+                    "0x47": "entity_velocity",
+                    "0x48": "entity_equipment",
+                    "0x49": "experience",
+                    "0x4a": "update_health",
+                    "0x4b": "scoreboard_objective",
+                    "0x4c": "set_passengers",
+                    "0x4d": "teams",
+                    "0x4e": "scoreboard_score",
                     "0x4f": "update_time",
                     "0x50": "title",
                     "0x51": "entity_sound_effect",
@@ -4837,15 +4837,23 @@
               "type": "position"
             },
             {
-              "name": "attachmentType",
+              "name": "name",
+              "type": "string"
+            },            
+            {
+              "name": "target",
               "type": "string"
             },
             {
-              "name": "targetPool",
+              "name": "pool",
               "type": "string"
             },
             {
               "name": "finalState",
+              "type": "string"
+            },
+            {
+              "name": "jointType",
               "type": "string"
             }
           ]
@@ -4957,6 +4965,19 @@
             }
           ]
         ],
+        "packet_generate_structure": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "levels",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -4982,37 +5003,39 @@
                     "0x0c": "edit_book",
                     "0x0d": "query_entity_nbt",
                     "0x0e": "use_entity",
-                    "0x0f": "keep_alive",
-                    "0x10": "lock_difficulty",
-                    "0x11": "position",
-                    "0x12": "position_look",
-                    "0x13": "look",
-                    "0x14": "flying",
-                    "0x15": "vehicle_move",
-                    "0x16": "steer_boat",
-                    "0x17": "pick_item",
-                    "0x18": "craft_recipe_request",
-                    "0x19": "abilities",
-                    "0x1a": "block_dig",
-                    "0x1b": "entity_action",
-                    "0x1c": "steer_vehicle",
-                    "0x1d": "crafting_book_data",
-                    "0x1e": "name_item",
-                    "0x1f": "resource_pack_receive",
-                    "0x20": "advancement_tab",
-                    "0x21": "select_trade",
-                    "0x22": "set_beacon_effect",
-                    "0x23": "held_item_slot",
-                    "0x24": "update_command_block",
-                    "0x25": "update_command_block_minecart",
-                    "0x26": "set_creative_slot",
-                    "0x27": "update_jigsaw_block",
-                    "0x28": "update_structure_block",
-                    "0x29": "update_sign",
-                    "0x2a": "arm_animation",
-                    "0x2b": "spectate",
-                    "0x2c": "block_place",
-                    "0x2d": "use_item"
+                    "0x0f": "generate_structure",
+                    "0x10": "keep_alive",
+                    "0x11": "lock_difficulty",
+                    "0x12": "position",
+                    "0x13": "position_look",
+                    "0x14": "look",
+                    "0x15": "flying",
+                    "0x16": "vehicle_move",
+                    "0x17": "steer_boat",
+                    "0x18": "pick_item",
+                    "0x19": "craft_recipe_request",
+                    "0x1a": "abilities",
+                    "0x1b": "block_dig",
+                    "0x1c": "entity_action",
+                    "0x1d": "steer_vehicle",
+                    "0x1e": "crafting_book_data",
+                    "0x1f": "name_item",
+                    "0x20": "resource_pack_receive",
+                    "0x21": "advancement_tab",
+                    "0x22": "select_trade",
+                    "0x23": "set_beacon_effect",
+                    "0x24": "held_item_slot",
+                    "0x25": "update_command_block",
+                    "0x26": "update_command_block_minecart",
+                    "0x27": "set_creative_slot",
+                    "0x28": "update_jigsaw_block",
+                    "0x29": "update_structure_block",
+                    "0x2a": "update_sign",
+                    "0x2b": "arm_animation",
+                    "0x2c": "spectate",
+                    "0x2d": "block_place",
+                    "0x2e": "use_item",
+                    "0x2f": "generate_structure"
                   }
                 }
               ]
