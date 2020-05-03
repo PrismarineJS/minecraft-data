@@ -1,12 +1,16 @@
 /* eslint-env mocha */
 
+const fs = require('fs')
+const path = require('path')
+
 // counts the number of recipes with a shape, without one and with an outShape
 
-require('./version_iterator')(function (path, versionString) {
+require('./version_iterator')(function (p, versionString) {
   let recipes
-  try {
-    recipes = require(path + '/recipes')
-  } catch (e) {
+  const pFile = path.join(p, 'recipes.json')
+  if (fs.existsSync(pFile)) {
+    recipes = require(pFile)
+  } else {
     console.log('No recipes for version ' + versionString)
   }
   if (recipes) {
