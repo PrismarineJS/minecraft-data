@@ -1,3 +1,7 @@
+## 2.48.0
+* fix bounding boxes (@Karang)
+* fix some categories (@ImHarvol)
+
 ## 2.47.0
 * add biomes, blocks, entities, items and recipes for 1.14.4
 
