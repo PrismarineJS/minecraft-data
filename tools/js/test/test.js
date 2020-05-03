@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 
 const assert = require('assert')
+const fs = require('fs')
+const path = require('path')
 
 const Ajv = require('ajv')
 const v = new Ajv({ verbose: true })
@@ -11,15 +13,14 @@ Error.stackTraceLimit = 0
 
 const data = ['biomes', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language']
 
-require('./version_iterator')(function (path, versionString) {
+require('./version_iterator')(function (p, versionString) {
   describe('minecraft-data schemas ' + versionString, function () {
     this.timeout(60 * 1000)
     data.forEach(function (dataName) {
       let instance
-      try {
-        instance = require(path + '/' + dataName + '.json')
-      } catch (e) {
-        console.log('No ' + dataName + ' data for version ' + versionString)
+      const pFile = path.join(p, dataName + '.json')
+      if (fs.existsSync(pFile)) {
+        instance = require(pFile)
       }
       if (instance) {
         it(dataName + '.json is valid', function () {

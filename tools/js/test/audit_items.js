@@ -1,12 +1,16 @@
 /* eslint-env mocha */
 
+const fs = require('fs')
+const path = require('path')
+
 // checks for duplicates names and jumps in ids
 
-require('./version_iterator')(function (path, versionString) {
+require('./version_iterator')(function (p, versionString) {
   let items
-  try {
-    items = require(path + '/items')
-  } catch (e) {
+  const pFile = path.join(p, 'items.json')
+  if (fs.existsSync(pFile)) {
+    items = require(pFile)
+  } else {
     console.log('No items for version ' + versionString)
   }
   if (items) {
