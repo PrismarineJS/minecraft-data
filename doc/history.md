@@ -1,3 +1,6 @@
+## 2.49.0
+* fix 1.14.4 blocks (and tests)
+
 ## 2.48.0
 * fix bounding boxes (@Karang)
 * fix some categories (@ImHarvol)
