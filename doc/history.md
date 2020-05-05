@@ -1,3 +1,7 @@
+## 2.50.0
+* fix for elyctra (thanks @Mstrodl)
+* more 1.14.4 data
+
 ## 2.49.0
 * fix 1.14.4 blocks (and tests)
 
