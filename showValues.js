@@ -36,6 +36,10 @@ function nameToImage (version, name) {
     assetsVersion = '1.12'
   } if (version.substr(0, 4) === '1.13') {
     assetsVersion = '1.13'
+  } if (version.substr(0, 4) === '1.14') {
+    assetsVersion = '1.14.4'
+  } if (version.substr(0, 4) === '1.15') {
+    assetsVersion = '1.15.2'
   } else {
     assetsVersion = '1.13'
   }
