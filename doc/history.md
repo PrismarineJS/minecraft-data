@@ -1,3 +1,6 @@
+## 2.51.0
+* more 1.15.2 data (thanks @uncovery)
+
 ## 2.50.0
 * fix for elyctra (thanks @Mstrodl)
 * more 1.14.4 data
