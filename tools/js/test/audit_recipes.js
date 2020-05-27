@@ -6,16 +6,16 @@ const path = require('path')
 // counts the number of recipes with a shape, without one and with an outShape
 
 require('./version_iterator')(function (p, versionString) {
-  let recipes
-  const pFile = path.join(p, 'recipes.json')
-  if (fs.existsSync(pFile)) {
-    recipes = require(pFile)
-  } else {
-    console.log('No recipes for version ' + versionString)
-  }
-  if (recipes) {
-    describe('audit recipes ' + versionString, function () {
-      it('audit recipes', function () {
+  describe('audit recipes ' + versionString, function () {
+    it('audit recipes', function () {
+      let recipes
+      const pFile = path.join(p, 'recipes.json')
+      if (fs.existsSync(pFile)) {
+        recipes = require(pFile)
+      } else {
+        console.log('No recipes for version ' + versionString)
+      }
+      if (recipes) {
         let shapeCount = 0
         let shapelessCount = 0
         let outShapeCount = 0
@@ -37,7 +37,7 @@ require('./version_iterator')(function (p, versionString) {
         console.log('normal recipes:', shapeCount)
         console.log('shapeless recipes:', shapelessCount)
         console.log('how many have an outShape:', outShapeCount)
-      })
+      }
     })
-  }
+  })
 })
