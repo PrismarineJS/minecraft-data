@@ -60,6 +60,25 @@ require('./version_iterator')(function (p, versionString) {
           console.log('unused shape: ' + key)
         }
       }
+
+      // Check block bounding box is consistent with shape
+      blocks.forEach(block => {
+        blockByName[block.name] = block
+        const shape = shapes.blocks[block.name]
+        if (shape !== undefined) {
+          if (block.boundingBox === 'empty') {
+            if (shape !== 0) {
+              console.log('Inconsistent BB for block ' + block.name + ' (expected empty got ' + shape + ')')
+            }
+          } else if (block.boundingBox === 'block') {
+            if (shape === 0) {
+              console.log('Inconsistent BB for block ' + block.name + ' (expected block got ' + shape + ')')
+            }
+          } else {
+            console.log('Unknown BB: ' + block.boundingBox + ' for block ' + block.name)
+          }
+        }
+      })
     })
   })
 })
