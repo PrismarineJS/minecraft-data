@@ -6,16 +6,16 @@ const path = require('path')
 // checks for duplicates names and jumps in ids
 
 require('./version_iterator')(function (p, versionString) {
-  let blocks
-  const pFile = path.join(p, 'blocks.json')
-  if (fs.existsSync(pFile)) {
-    blocks = require(pFile)
-  } else {
-    console.log('No blocks for version ' + versionString)
-  }
-  if (blocks) {
-    describe('audit blocks ' + versionString, function () {
-      it('audit blocks', function () {
+  describe('audit blocks ' + versionString, function () {
+    it('audit blocks', function () {
+      let blocks
+      const pFile = path.join(p, 'blocks.json')
+      if (fs.existsSync(pFile)) {
+        blocks = require(pFile)
+      } else {
+        console.log('No blocks for version ' + versionString)
+      }
+      if (blocks) {
         const all = []
         blocks.forEach(block => {
           all[block.id] = block
@@ -52,7 +52,7 @@ require('./version_iterator')(function (p, versionString) {
             console.log('Missing:', i)
           }
         }
-      })
+      }
     })
-  }
+  })
 })

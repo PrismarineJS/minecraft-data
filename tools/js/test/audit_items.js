@@ -6,16 +6,16 @@ const path = require('path')
 // checks for duplicates names and jumps in ids
 
 require('./version_iterator')(function (p, versionString) {
-  let items
-  const pFile = path.join(p, 'items.json')
-  if (fs.existsSync(pFile)) {
-    items = require(pFile)
-  } else {
-    console.log('No items for version ' + versionString)
-  }
-  if (items) {
-    describe('audit items ' + versionString, function () {
-      it('audit items', function () {
+  describe('audit items ' + versionString, function () {
+    it('audit items', function () {
+      let items
+      const pFile = path.join(p, 'items.json')
+      if (fs.existsSync(pFile)) {
+        items = require(pFile)
+      } else {
+        console.log('No items for version ' + versionString)
+      }
+      if (items) {
         const displayNames = {}
         const names = {}
         let lastItemId = 0
@@ -48,7 +48,7 @@ require('./version_iterator')(function (p, versionString) {
           }
           lastItemId = item.id
         })
-      })
+      }
     })
-  }
+  })
 })

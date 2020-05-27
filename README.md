@@ -102,6 +102,7 @@ Minecraft data provides scripts to audit the data, they can be useful to check t
  * [audit_blocks](tools/js/test/audit_blocks.js)
  * [audit_items](tools/js/test/audit_items.js)
  * [audit_recipes](tools/js/test/audit_recipes.js)
+ * [audit_shapes](tools/js/test/audit_shapes.js)
  
 Minecraft data also provides json schemas in enums_schemas/ that are used in 
 test/test.js to check the json file are valid relative to these schemas.
