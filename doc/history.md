@@ -1,3 +1,6 @@
+## 2.52.0
+* fix and add block shapes for more versions (thanks @Karang)
+
 ## 2.51.0
 * more 1.15.2 data (thanks @uncovery)
 
