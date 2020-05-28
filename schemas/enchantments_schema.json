@@ -19,7 +19,47 @@
       "displayName": {
         "description": "The display name of an enchantment",
         "type": "string"
-      }
+      },
+      "maxLevel": {
+        "description": "The maximum level of an enchantment",
+        "type": "integer",
+        "minimum": 1
+      },
+      "proability": {
+        "description": "Relative probability of the enchantment being offered",
+        "type": "integer",
+        "minimum": 1
+      },    
+      "exclusions": {
+        "description": "Other enchantments that are excluded on the same item by this enchantment",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "title": "exclusion",
+          "type": "string",
+          "pattern": "minecraft:\\S+"
+        }
+      },
+      "primaries": {
+        "description": "The items that can receive the enchantment legitimately in Survival mode by using an enchanting table.",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "title": "primary",
+          "type": "string",
+          "pattern": "minecraft:\\S+"
+        }
+      }, 
+      "secondaries": {
+        "description": " Items that, in Survival mode, cannot receive the enchantment from an enchanting table but can from an enchanted book with an anvil.",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "title": "secondary",
+          "type": "string",
+          "pattern": "minecraft:\\S+"
+        }
+      }       
     },
     "required": [
       "id",
