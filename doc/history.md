@@ -1,3 +1,6 @@
+## 2.53.0
+* point to other version files for 1.15, 1.15.1, 1.14 and 1.14.1
+
 ## 2.52.0
 * fix and add block shapes for more versions (thanks @Karang)
 
