@@ -1,3 +1,6 @@
+## 2.54.0
+* complete items.json files all version (thanks @Karang)
+
 ## 2.53.0
 * point to other version files for 1.15, 1.15.1, 1.14 and 1.14.1
 
