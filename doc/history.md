@@ -1,3 +1,6 @@
+## 2.55.0
+* entity metadata type is a varint since 1.13
+
 ## 2.54.0
 * complete items.json files all version (thanks @Karang)
 
