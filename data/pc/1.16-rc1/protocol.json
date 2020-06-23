@@ -16,6 +16,7 @@
     "UUID": "native",
     "option": "native",
     "entityMetadataLoop": "native",
+    "topBitSetTerminatedArray": "native",
     "bitfield": "native",
     "container": "native",
     "switch": "native",
@@ -3107,12 +3108,19 @@
               "type": "varint"
             },
             {
-              "name": "slot",
-              "type": "varint"
-            },
-            {
-              "name": "item",
-              "type": "slot"
+              "name": "equipments",
+              "type": ["topBitSetTerminatedArray", {
+                "type": ["container", [
+                  {
+                    "name": "slot",
+                    "type": "i8"
+                  },
+                  {
+                    "name": "item",
+                    "type": "slot"
+                  }
+                ]]
+              }]
             }
           ]
         ],
