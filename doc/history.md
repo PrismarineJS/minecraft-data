@@ -1,3 +1,6 @@
+## 2.60.0
+* Added biomes, blocks, entities, items and recipes for 1.16.1
+
 ## 2.59.0
 * 1.16.1 protocol support (thanks @Health123)
 
