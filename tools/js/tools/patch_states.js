@@ -25,7 +25,7 @@ require('../test/version_iterator')((p, versionString) => {
   }
   const blocks = require(blockFile)
   const version = versionString.split(' ')[1]
-  
+
   getJSON(`https://apimon.de/mcdata/${version}/blocks.json`, (data) => {
     if (!data) {
       console.log('No api for ' + version)
