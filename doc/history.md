@@ -1,3 +1,6 @@
+## 2.60.0
+* full 1.16 support (thanks @AppDevMichael)
+
 ## 2.59.0
 * 1.16.1 protocol support (thanks @Health123)
 
