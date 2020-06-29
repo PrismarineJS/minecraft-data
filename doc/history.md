@@ -1,3 +1,6 @@
+## 2.61.0
+* extract proper states + default state from minecraft generator (thanks @Karang)
+
 ## 2.60.0
 * full 1.16 support (thanks @AppDevMichael)
 
