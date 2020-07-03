@@ -43,11 +43,12 @@ Data provided:
 | Materials | to be used with blocks data. Provides tool speed multipliers against material types. |
 | Protocol | a complete description of the protocol, can be used to automatically implement the protocol |
 | Protocol Versions | the whole list of minecraft protocol versions |
-| Recipes |to be used with blocks and items data |
+| Recipes | to be used with blocks and items data |
 | Windows | the different kind of windows and their characteristics |
 | Version | |
 | Versions | all the versions supported in minecraft-data |
 | Block collison shapes | |
+| Foods | list of foods each with there id, saturation, foodpoints and more |
 
 See more information about this data in the [documentation](http://prismarinejs.github.io/minecraft-data/)
 
