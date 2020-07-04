@@ -1,3 +1,6 @@
+## 2.62.0
+* add foods data (thanks @AppDevMichael)
+
 ## 2.61.0
 * extract proper states + default state from minecraft generator (thanks @Karang)
 
