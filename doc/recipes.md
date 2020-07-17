@@ -29,6 +29,7 @@ All rows must have the same length.
 Empty rows at the beginning or end of a shape may be omitted.
 Empty colums at the end may also be omitted.
 When an item can be crafted in a 2x2 grid, the shape may not be larger than 2x2.
+Rows are designed assuming bottom to top, meaning the first row in the array is the bottom row in the crafting table.
 
 **Examples:**
 
