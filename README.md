@@ -1,6 +1,8 @@
 # Minecraft-data github pages
+[![Build Status](https://github.com/PrismarineJS/minecraft-data/workflows/Web_CI/badge.svg)](https://github.com/PrismarineJS/minecraft-data/actions?query=workflow%3A%22Web_CI%22)
 
-This is the gh-pages branch of minecraft-data !
+
+This is the web branch of minecraft-data !
 
 It is online on [http://prismarinejs.github.io/minecraft-data/](http://prismarinejs.github.io/minecraft-data/)
 
