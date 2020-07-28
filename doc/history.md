@@ -1,3 +1,8 @@
+## 2.63.0
+* update instruments.json from 1.13 onward (thanks @Naomi)
+* add correct drops for 1.13 onward (thanks @TheDudeFromCI)
+* various protocol fix (thanks @nickelpro)
+
 ## 2.62.1
 * fix items 1.16.1
 
