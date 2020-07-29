@@ -1,3 +1,6 @@
+## 2.64.0
+* add particles (thanks @nickelpro)
+
 ## 2.63.0
 * update instruments.json from 1.13 onward (thanks @Naomi)
 * add correct drops for 1.13 onward (thanks @TheDudeFromCI)
