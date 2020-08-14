@@ -1,4 +1,4 @@
-# minecraft-data 
+# minecraft-data
 
 [![Discord](https://img.shields.io/badge/chat-on%20discord-brightgreen.svg)](https://discord.gg/GsEFRM8)
 [![Gitter](https://img.shields.io/badge/chat-on%20gitter-brightgreen.svg)](https://gitter.im/PrismarineJS/general)
@@ -7,9 +7,9 @@
 
 Language independent module providing minecraft data for minecraft clients, servers and libraries.
 
-Supports 
+Supports
 * Minecraft PC version 0.30c (classic), 1.7.10, 1.8.8, 1.9 (15w40b, 1.9, 1.9.1-pre2, 1.9.2, 1.9.4),
- 1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), 1.13 (17w50a, 1.13, 1.13.1, 1.13.2-pre1, 1.13.2-pre2, 1.13.2), 1.14 (1.14, 1.14.1, 1.14.3, 1.14.4), 1.15 (1.15, 1.15.1, 1.15.2) and 1.16 (20w13b, 20w14a, 1.16-rc1, 1.16, 1.16.1)
+ 1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), 1.13 (17w50a, 1.13, 1.13.1, 1.13.2-pre1, 1.13.2-pre2, 1.13.2), 1.14 (1.14, 1.14.1, 1.14.3, 1.14.4), 1.15 (1.15, 1.15.1, 1.15.2) and 1.16 (20w13b, 20w14a, 1.16-rc1, 1.16, 1.16.1, 1.16.2)
 * Minecraft PE version 0.14, 0.15 and 1.0
 
 ## Wrappers
@@ -57,7 +57,7 @@ See more information about this data in the [documentation](http://prismarinejs.
  * See [doc/history.md](doc/history.md)
  * [Documentation generated using the json schemas and docson](http://prismarinejs.github.io/minecraft-data)
  * [Textual documentation of the recipe format](doc/recipes.md)
-  
+
 ## Projects using minecraft-data
 
 These are the projects that use minecraft-data:
@@ -70,8 +70,8 @@ These are the projects that use minecraft-data:
 | [SpockBot](https://github.com/SpockBotMC/SpockBot) | Python | bot library | biomes, blocks, items, materials, windows, recipes |
 | [PhaseBot](https://github.com/phase/PhaseBot) | Java | bot | blocks, items, materials |
 | [McEx](https://github.com/hansihe/McEx) | Elixir | server | blocks |
-| [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server library | blocks, items | 
-| [Phpcraft](https://github.com/Phpcraft/core) | PHP | all-around library | blocks, items, entities, protocol | 
+| [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server library | blocks, items |
+| [Phpcraft](https://github.com/Phpcraft/core) | PHP | all-around library | blocks, items, entities, protocol |
 
 ## Extraction
 
@@ -105,8 +105,8 @@ Minecraft data provides scripts to audit the data, they can be useful to check t
  * [audit_items](tools/js/test/audit_items.js)
  * [audit_recipes](tools/js/test/audit_recipes.js)
  * [audit_shapes](tools/js/test/audit_shapes.js)
- 
-Minecraft data also provides json schemas in enums_schemas/ that are used in 
+
+Minecraft data also provides json schemas in enums_schemas/ that are used in
 test/test.js to check the json file are valid relative to these schemas.
 These schemas can also be used to understand better how the json files are
 formatted in order to use it.
