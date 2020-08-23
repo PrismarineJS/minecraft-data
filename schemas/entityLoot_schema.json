@@ -1,0 +1,54 @@
+{
+  "title": "entityLoot",
+  "type": "array",
+  "uniqueItems": true,
+  "items": {
+    "title": "entityLootEntry",
+    "type": "object",
+    "properties": {
+      "entity": {
+        "description": "The name of the entity",
+        "type": "string",
+        "pattern": "\\S+"
+      },
+      "drops": {
+        "description": "The list of item drops",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "title": "itemDrop",
+          "type": "object",
+          "properties": {
+            "item": {
+              "description": "The name of the item being dropped",
+              "type": "string"
+            },
+            "dropChance": {
+              "description": "The percent chance of the item drop to occur",
+              "type": "number"
+            },
+            "stackSize": {
+              "description": "The number of items in this item drop stack",
+              "type": "number"
+            },
+            "playerKill": {
+              "description": "If a player killer is required",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "item",
+            "dropChance",
+            "stackSize"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "entity",
+      "drops"
+    ],
+    "additionalProperties": false
+  }
+}
