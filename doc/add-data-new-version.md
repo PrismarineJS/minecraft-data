@@ -12,6 +12,10 @@ use https://github.com/PrismarineJS/burger-extractor
 
 https://github.com/PrismarineJS/minecraft-data/blob/master/doc/blockCollisionShapes.md#data-source
 
+## Loot table
+
+https://github.com/PrismarineJS/minecraft-jar-extractor#block-loot-table-extractor
+
 ## WIP
 
 This guide is WIP, more information will be added here
