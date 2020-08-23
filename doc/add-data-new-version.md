@@ -15,3 +15,6 @@ https://github.com/PrismarineJS/minecraft-data/blob/master/doc/blockCollisionSha
 ## WIP
 
 This guide is WIP, more information will be added here
+
+
+If something doesn't work, look at the list of extractors for ideas https://github.com/PrismarineJS/minecraft-data#extraction
