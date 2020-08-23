@@ -1,0 +1,63 @@
+{
+  "title": "blockLoot",
+  "type": "array",
+  "uniqueItems": true,
+  "items": {
+    "title": "blockLootEntry",
+    "type": "object",
+    "properties": {
+      "block": {
+        "description": "The name of the block",
+        "type": "string",
+        "pattern": "\\S+"
+      },
+      "drops": {
+        "description": "The list of item drops",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "title": "itemDrop",
+          "type": "object",
+          "properties": {
+            "item": {
+              "description": "The name of the item being dropped",
+              "type": "string"
+            },
+            "dropChance": {
+              "description": "The percent chance of the item drop to occur",
+              "type": "number"
+            },
+            "stackSize": {
+              "description": "The number of items in this item drop stack",
+              "type": ["number", "array"],
+              "uniqueItems": true
+            },
+            "blockAge": {
+              "description": "The required age of the block for the item drop to occur",
+              "type": "number"
+            },
+            "silkTouch": {
+              "description": "If silk touch is required",
+              "type": "boolean"
+            },
+            "noSilkTouch": {
+              "description": "If not having silk touch is required",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "item",
+            "dropChance",
+            "stackSize"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "block",
+      "drops"
+    ],
+    "additionalProperties": false
+  }
+}
