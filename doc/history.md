@@ -1,3 +1,7 @@
+## 2.66.0
+* add loottable information (thanks @TheDudeFromCI)
+* add more 1.16.2 data (thanks @DrakoTrogdor)
+
 ## 2.65.0
 * fix particle type (thanks @nickelpro)
 * 1.16.2 (thanks @nickelpro)
