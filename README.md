@@ -49,6 +49,8 @@ Data provided:
 | Versions | all the versions supported in minecraft-data |
 | Block collison shapes | |
 | Foods | list of foods each with there id, saturation, foodpoints and more |
+| Commands | a tree structure for vanilla minecraft server commands, and some info needed to implement sub-parsers.
+
 
 See more information about this data in the [documentation](http://prismarinejs.github.io/minecraft-data/)
 
