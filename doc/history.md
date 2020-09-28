@@ -1,3 +1,7 @@
+## 2.68.0
+* 1.16.3 support (same as 1.16.2)
+* command entries
+
 ## 2.67.0
 * use stack size range property in loots
 * fix enchantments in recent versions
