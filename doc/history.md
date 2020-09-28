@@ -1,3 +1,6 @@
+## 2.68.1
+* add command to datapath file
+
 ## 2.68.0
 * 1.16.3 support (same as 1.16.2)
 * command entries
