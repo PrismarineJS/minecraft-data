@@ -1,3 +1,6 @@
+## 2.69.0
+* add example login packet (required in new versions) (thanks @GroobleDierne)
+
 ## 2.68.1
 * add command to datapath file
 
