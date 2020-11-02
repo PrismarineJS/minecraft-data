@@ -1,3 +1,6 @@
+## 2.70.0
+* 1.16.4 support
+
 ## 2.69.0
 * add example login packet (required in new versions) (thanks @GroobleDierne)
 
