@@ -1,3 +1,6 @@
+## 2.70.1
+* fix 1.16.2 block.json file (thanks @DeltaEvo)
+
 ## 2.70.0
 * 1.16.4 support
 
