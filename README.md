@@ -3,7 +3,7 @@
 [![Discord](https://img.shields.io/badge/chat-on%20discord-brightgreen.svg)](https://discord.gg/GsEFRM8)
 [![Gitter](https://img.shields.io/badge/chat-on%20gitter-brightgreen.svg)](https://gitter.im/PrismarineJS/general)
 [![Irc](https://img.shields.io/badge/chat-on%20irc-brightgreen.svg)](https://irc.gitter.im/)
-[![Build Status](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/master.svg?style=shield)](https://circleci.com/gh/PrismarineJS/minecraft-data/tree/master)
+[![Build Status](https://github.com/PrismarineJS/minecraft-data/workflows/CI/badge.svg)](https://github.com/PrismarineJS/minecraft-data/actions?query=workflow%3A%22CI%22)
 
 Language independent module providing minecraft data for minecraft clients, servers and libraries.
 
