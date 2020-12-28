@@ -1,3 +1,6 @@
+## 2.71.0
+* Added map icons (@FalcoG)
+
 ## 2.70.1
 * fix 1.16.2 block.json file (thanks @DeltaEvo)
 
