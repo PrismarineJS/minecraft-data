@@ -39,6 +39,7 @@ Data provided:
 | Language | language code and their english strings |
 | Instruments | sounds emitted by blocks |
 | Items |  |
+| Map icons | Provides all available map icons as used by (crafted) maps |
 | Materials | to be used with blocks data. Provides tool speed multipliers against material types. |
 | Particles | Id and names of minecraft particles |
 | Protocol | a complete description of the protocol, can be used to automatically implement the protocol |
@@ -47,7 +48,7 @@ Data provided:
 | Windows | the different kind of windows and their characteristics |
 | Version | |
 | Versions | all the versions supported in minecraft-data |
-| Block collison shapes | |
+| Block collision shapes | |
 | Foods | list of foods each with there id, saturation, foodpoints and more |
 | Commands | a tree structure for vanilla minecraft server commands, and some info needed to implement sub-parsers.
 
