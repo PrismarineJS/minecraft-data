@@ -2,8 +2,17 @@
 
 const fs = require('fs')
 const path = require('path')
+const assert = require('assert')
 
 // counts the number of recipes with a shape, without one and with an outShape
+
+function getIfExist (path) {
+  if (fs.existsSync(path)) {
+    return require(path)
+  } else {
+    return null
+  }
+}
 
 require('./version_iterator')(function (p, versionString) {
   describe('audit recipes ' + versionString, function () {
@@ -37,6 +46,45 @@ require('./version_iterator')(function (p, versionString) {
         console.log('normal recipes:', shapeCount)
         console.log('shapeless recipes:', shapelessCount)
         console.log('how many have an outShape:', outShapeCount)
+      }
+    })
+    it('pickaxe not upside-down', () => {
+      const recipes = getIfExist(path.join(p, 'recipes.json'))
+      const items = getIfExist(path.join(p, 'items.json'))
+      if (recipes && items) {
+        const pickaxe = items.find(x => x.name === 'diamond_pickaxe')
+        const stick = items.find(x => x.name === 'stick')
+        const diamond = items.find(x => x.name === 'diamond')
+
+        const recipe = recipes[pickaxe.id]
+
+        // Uncomment to fix upside-down recipes
+        /* if (recipe[0].inShape[0][0] !== diamond.id) {
+          for (const item of Object.values(recipes)) {
+            for (const rep of item) {
+              if (rep.inShape) rep.inShape.reverse()
+            }
+          }
+          fs.writeFileSync(path.join(p, 'recipes.json'), JSON.stringify(recipes, null, 2))
+        } */
+
+        assert.deepStrictEqual(recipe[0].inShape, [
+          [
+            diamond.id,
+            diamond.id,
+            diamond.id
+          ],
+          [
+            null,
+            stick.id,
+            null
+          ],
+          [
+            null,
+            stick.id,
+            null
+          ]
+        ])
       }
     })
   })
