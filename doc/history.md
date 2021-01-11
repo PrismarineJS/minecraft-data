@@ -1,3 +1,6 @@
+## 2.72.0
+* Fix upside-down recipes in 1.11-1.16 and improve recipe audit (thanks @Karang)
+
 ## 2.71.0
 * Added map icons (@FalcoG)
 
