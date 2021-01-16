@@ -19,13 +19,70 @@
       "displayName": {
         "description": "The display name of an enchantment",
         "type": "string"
+      },
+      "maxLevel": {
+        "description": "The maximum level of an enchantment",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "minCost": {
+        "description": "Min cost equation's coefficients a * level + b",
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "integer"
+          },
+          "b": {
+            "type": "integer"
+          }
+        }
+      },
+      "maxCost": {
+        "description": "Max cost equation's coefficients a * level + b",
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "integer"
+          },
+          "b": {
+            "type": "integer"
+          }
+        }
+      },
+      "treasureOnly": {
+        "description": "Can only be found in a treasure, not created",
+        "type": "boolean"
+      },
+      "curse": {
+        "description": "Is a curse, not an enchantment",
+        "type": "boolean"
+      },
+      "exclude": {
+        "description": "List of enchantment not compatibles",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        }
+      },
+      "category": {
+        "description": "The category of enchantable items",
+        "type": "string"
+      },
+      "tradeable": {
+        "description": "Can this enchantment be traded",
+        "type": "boolean"
+      },
+      "discoverable": {
+        "description": "Can this enchantment be discovered",
+        "type": "boolean"
       }
     },
     "required": [
       "id",
       "name",
       "displayName"
-    ],
-    "additionalProperties": false
+    ]
   }
 }
