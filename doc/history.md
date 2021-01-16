@@ -1,3 +1,6 @@
+## 2.73.0
+* Add 1.16.4 and 1.13 enchantments data
+
 ## 2.72.0
 * Fix upside-down recipes in 1.11-1.16 and improve recipe audit (thanks @Karang)
 
