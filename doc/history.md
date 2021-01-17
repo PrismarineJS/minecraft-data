@@ -1,3 +1,6 @@
+## 2.73.1
+* Add 1.16.5 to datapaths
+
 ## 2.73.0
 * Add 1.16.4 and 1.13 enchantments data
 
