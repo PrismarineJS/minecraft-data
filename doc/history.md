@@ -1,3 +1,6 @@
+## 2.74.0
+* Add more biome data
+
 ## 2.73.1
 * Add 1.16.5 to datapaths
 
