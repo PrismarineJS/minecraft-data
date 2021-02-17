@@ -1,3 +1,6 @@
+## 2.75.0
+* Fix 1.16 collision shapes
+
 ## 2.74.0
 * Add more biome data
 
