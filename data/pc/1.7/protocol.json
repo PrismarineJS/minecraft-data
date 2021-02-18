@@ -2040,7 +2040,16 @@
             },
             {
               "name": "scoreName",
-              "type": "string"
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "1": "void"
+                  },
+                  "default": "string"
+                }
+              ]
             },
             {
               "name": "value",
@@ -2138,34 +2147,6 @@
               ]
             },
             {
-              "name": "nameTagVisibility",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "mode",
-                  "fields": {
-                    "0": "string",
-                    "2": "string"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "color",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "mode",
-                  "fields": {
-                    "0": "i8",
-                    "2": "i8"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
               "name": "players",
               "type": [
                 "switch",
@@ -2182,14 +2163,14 @@
                     "3": [
                       "array",
                       {
-                        "countType": "varint",
+                        "countType": "i16",
                         "type": "string"
                       }
                     ],
                     "4": [
                       "array",
                       {
-                        "countType": "varint",
+                        "countType": "i16",
                         "type": "string"
                       }
                     ]
