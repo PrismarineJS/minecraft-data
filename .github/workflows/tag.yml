@@ -17,3 +17,10 @@ jobs:
       if: ${{ steps.regex-match.outputs.match != '' }}
       with:
         tag: ${{ steps.regex-match.outputs.group1 }}
+    - uses: peter-evans/repository-dispatch@v1
+      if: ${{ steps.regex-match.outputs.match != '' }}
+      with:
+        token: ${{ secrets.PAT_PASSWORD }}
+        repository: PrismarineJS/node-minecraft-data
+        event-type: mcData-release
+        client-payload: '{"tag": "${{ steps.regex-match.outputs.group1 }}"}'
