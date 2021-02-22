@@ -1,3 +1,6 @@
+## 2.76.0
+* Add enchantment multipliers
+
 ## 2.75.0
 * Fix 1.16 collision shapes
 
