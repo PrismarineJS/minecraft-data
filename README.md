@@ -92,6 +92,7 @@ Projects that provide data:
 | [burger](https://github.com/mcdevs/Burger) with [burger-extractor](https://github.com/PrismarineJS/burger-extractor) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
 | [burger 1.16](https://github.com/Pokechu22/Burger/tree/1.16-dev)  | --//-- | --// -- | --//-- | 
 | [command-generator](https://github.com/Miro-Andrin/mc-data-command-generator) | Python | [Minecraft data generator](https://wiki.vg/Data_Generators) | Data used for parsing all vanilla server commands. |
+| [enchant-multiplier-injector](https://github.com/u9g/enchant-multiplier-injector/tree/main) | Node.js | propogates `ItemMultiplier` and `BookMultiplier` to the enchantments.json
 
 
 
