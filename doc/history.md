@@ -1,3 +1,6 @@
+## 2.77.0
+* Propogate enchant categories & max levels of enchants to all old enchantments.json files
+
 ## 2.76.0
 * Add enchantment multipliers
 
