@@ -21,7 +21,11 @@ Icons can be found in the Minecraft jar file where they are added as a single sp
 
 The file location is `/assets/minecraft/textures/map/map_icons.png`.
 
-Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki](https://minecraft.gamepedia.com/Map#Map_icons) or from [wiki.vg](https://wiki.vg/Protocol#Map_Data). 
+Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki](https://minecraft.gamepedia.com/Map#Map_icons) or from [wiki.vg](https://wiki.vg/Protocol#Map_Data).
+
+## Enchantments
+
+Duplicate enchantments.json from the latest version and add manually the missing enchantments. Enchantments data could be found by looking into the deobfuscated classe files of each enchantments, as well as in the Enchantments registry.
 
 ## WIP
 
