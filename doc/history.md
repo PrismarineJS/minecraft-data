@@ -1,3 +1,6 @@
+## 2.78.0
+* Finish propogating all new properties to old enchantment.json files & remove enchant multipliers
+
 ## 2.77.0
 * Propogate enchant categories & max levels of enchants to all old enchantments.json files
 
