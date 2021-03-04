@@ -1,3 +1,6 @@
+## 2.79.0
+* Add properties to items.json (maxDurability, fixedWith, enchantCategories) 
+
 ## 2.78.0
 * Finish propogating all new properties to old enchantment.json files & remove enchant multipliers
 
