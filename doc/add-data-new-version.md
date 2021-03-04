@@ -8,6 +8,8 @@ Follow https://wiki.vg/Pre-release_protocol
 
 use https://github.com/PrismarineJS/burger-extractor
 
+then use https://github.com/u9g/turbo-invention to add some more properties to the items.json
+
 ## Block collision shape 
 
 https://github.com/PrismarineJS/minecraft-data/blob/master/doc/blockCollisionShapes.md#data-source
