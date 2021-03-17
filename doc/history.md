@@ -1,3 +1,6 @@
+## 2.80.0
+* Add tints.json (thanks @Moondarker)
+
 ## 2.79.0
 * Add properties to items.json (maxDurability, fixedWith, enchantCategories) 
 
