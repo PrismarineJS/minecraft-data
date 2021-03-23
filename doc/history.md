@@ -1,3 +1,6 @@
+## 2.81.0
+* Add blast resistance (thanks @Moondarker)
+
 ## 2.80.0
 * Add tints.json (thanks @Moondarker)
 
