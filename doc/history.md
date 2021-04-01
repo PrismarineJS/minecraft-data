@@ -1,3 +1,6 @@
+## 2.82.1
+* fix datapath
+
 ## 2.82.0
 * 21w07a protocol (@U9G)
 * Fixed spawn painting for 1.7 (@SiebeDW)
