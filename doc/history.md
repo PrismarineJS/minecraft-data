@@ -1,3 +1,7 @@
+## 2.82.0
+* 21w07a protocol (@U9G)
+* Fixed spawn painting for 1.7 (@SiebeDW)
+
 ## 2.81.0
 * Add blast resistance (thanks @Moondarker)
 
