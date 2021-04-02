@@ -1,3 +1,6 @@
+## 2.82.2
+* fix 21w07a protocol (@U9G)
+
 ## 2.82.1
 * fix datapath
 
