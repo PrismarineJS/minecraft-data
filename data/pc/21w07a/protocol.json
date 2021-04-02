@@ -1918,10 +1918,6 @@
               "type": "i32"
             },
             {
-              "name": "bitMaskLength",
-              "type": "varint"
-            },
-            {
               "name": "primaryBitMask",
               "type": ["array", {
                 "countType": "varint",
@@ -1929,28 +1925,15 @@
                 }]
             },
             {
-              "name": "bitMap",
-              "type": "varint"
-            },
-            {
               "name": "heightmaps",
               "type": "nbt"
             },
             {
               "name": "biomes",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "groundUp",
-                  "fields": {
-                    "false": "void",
-                    "true": ["array", {
-                      "count": 1024,
-                      "type": "i32"
-                    }]
-                  }
-                }
-              ]
+              "type": ["array", {
+                    "count": "varint",
+                    "type": "varint"
+                  }]
             },
             {
               "name": "chunkData",
