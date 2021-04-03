@@ -1583,12 +1583,30 @@
           "container",
           [
             {
-              "name": "chunkX",
-              "type": "i32"
+              "name": "chunkCoordinates",
+              "type": ["bitfield",
+                [
+                  {
+                    "name": "x",
+                    "size": 22,
+                    "signed": true
+                  },
+                  {
+                    "name": "z",
+                    "size": 22,
+                    "signed": true
+                  },
+                  {
+                    "name": "y",
+                    "size": 20,
+                    "signed": false
+                  }
+                ]
+              ]
             },
             {
-              "name": "chunkZ",
-              "type": "i32"
+              "name": "notTrustEdges",
+              "type": "bool"
             },
             {
               "name": "records",
@@ -1596,23 +1614,7 @@
                 "array",
                 {
                   "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "horizontalPos",
-                        "type": "u8"
-                      },
-                      {
-                        "name": "y",
-                        "type": "u8"
-                      },
-                      {
-                        "name": "blockId",
-                        "type": "varint"
-                      }
-                    ]
-                  ]
+                  "type": "varint"
                 }
               ]
             }
@@ -1918,11 +1920,12 @@
               "type": "i32"
             },
             {
-              "name": "primaryBitMask",
-              "type": ["array", {
-                "countType": "varint",
-                "type": "i64"
-                }]
+              "name": "groundUp",
+              "type": "bool"
+            },
+            {
+              "name": "bitMap",
+              "type": "varint"
             },
             {
               "name": "heightmaps",
@@ -1930,10 +1933,19 @@
             },
             {
               "name": "biomes",
-              "type": ["array", {
-                    "count": "varint",
-                    "type": "varint"
-                  }]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "groundUp",
+                  "fields": {
+                    "false": "void",
+                    "true": ["array", {
+                      "countType": "varint",
+                      "type": "varint"
+                    }]
+                  }
+                }
+              ]
             },
             {
               "name": "chunkData",
@@ -2047,31 +2059,19 @@
             },
             {
               "name": "skyLightMask",
-              "type": ["array", {
-                "countType": "varint",
-                "type": "i64"
-                }]
+              "type": "varint"
             },
             {
               "name": "blockLightMask",
-              "type": ["array", {
-                "countType": "varint",
-                "type": "i64"
-                }]
+              "type": "varint"
             },
             {
               "name": "emptySkyLightMask",
-              "type": ["array", {
-                "countType": "varint",
-                "type": "i64"
-                }]
+              "type": "varint"
             },
             {
               "name": "emptyBlockLightMask",
-              "type": ["array", {
-                "countType": "varint",
-                "type": "i64"
-                }]
+              "type": "varint"
             },
             {
               "name": "data",
@@ -2085,6 +2085,10 @@
             {
               "name": "entityId",
               "type": "i32"
+            },
+            {
+              "name": "isHardcore",
+              "type": "bool"
             },
             {
               "name": "gameMode",
@@ -2107,7 +2111,7 @@
             },
             {
               "name": "dimension",
-              "type": "string"
+              "type": "nbt"
             },
             {
               "name": "worldName",
@@ -2119,7 +2123,7 @@
             },
             {
               "name": "maxPlayers",
-              "type": "u8"
+              "type": "varint"
             },
             {
               "name": "viewDistance",
@@ -2155,11 +2159,11 @@
               "type": "i8"
             },
             {
-              "name": "locked",
+              "name": "trackingPosition",
               "type": "bool"
             },
             {
-              "name": "trackingPosition",
+              "name": "locked",
               "type": "bool"
             },
             {
@@ -2714,10 +2718,6 @@
             {
               "name": "teleportId",
               "type": "varint"
-            },
-            {
-              "name": "dismountVehicle",
-              "type": "bool"
             }
           ]
         ],
@@ -2742,6 +2742,22 @@
             },
             {
               "name": "filteringSmeltable",
+              "type": "bool"
+            },
+            {
+              "name": "blastFurnaceOpen",
+              "type": "bool"
+            },
+            {
+              "name": "filteringBlastFurnace",
+              "type": "bool"
+            },
+            {
+              "name": "smokerBookOpen",
+              "type": "bool"
+            },
+            {
+              "name": "filteringSmoker",
               "type": "bool"
             },
             {
@@ -2813,10 +2829,6 @@
             {
               "name": "hash",
               "type": "string"
-            },
-            {
-              "name": "forced",
-              "type": "bool"
             }
           ]
         ],
@@ -2825,7 +2837,7 @@
           [
             {
               "name": "dimension",
-              "type": "string"
+              "type": "nbt"
             },
             {
               "name": "worldName",
@@ -3888,21 +3900,20 @@
           "container",
           [
             {
-            "name": "tags",
-            "type": ["array", {
-              "countType": "varint",
-              "type": ["container",
-              [
-                {
-                  "name": "tagType",
-                  "type": "string"
-                },
-                {
-                  "name": "tags",
-                  "type": "tags"
-                }
-              ]]
-            }]
+              "name": "blockTags",
+              "type": "tags"
+            },
+            {
+              "name": "itemTags",
+              "type": "tags"
+            },
+            {
+              "name": "fluidTags",
+              "type": "tags"
+            },
+            {
+              "name": "entityTags",
+              "type": "tags"
             }
           ]
         ],
@@ -3927,37 +3938,6 @@
             }
           ]
         ],
-        "packet_sculk_vibration_signal": [
-          "container",
-          [
-            {
-              "name": "sourcePosition",
-              "type": "position"
-            },
-            {
-              "name": "destinationIdentifier",
-              "type": "string"
-            },
-            {
-              "name": "destination",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "destinationIdentifier",
-                  "fields": {
-                    "block": "i64",
-                    "entityId": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "arrivalTicks",
-              "type": "varint"
-            }
-          ]
-        ],
         "packet": [
           "container",
           [
@@ -3973,94 +3953,93 @@
                     "0x02": "spawn_entity_living",
                     "0x03": "spawn_entity_painting",
                     "0x04": "named_entity_spawn",
-                    "0x05": "sculk_vibration_signal",
-                    "0x06": "animation",
-                    "0x07": "statistics",
-                    "0x08": "acknowledge_player_digging",
-                    "0x09": "block_break_animation",
-                    "0x0a": "tile_entity_data",
-                    "0x0b": "block_action",
-                    "0x0c": "block_change",
-                    "0x0d": "boss_bar",
-                    "0x0e": "difficulty",
-                    "0x0f": "chat",
-                    "0x10": "tab_complete",
-                    "0x11": "declare_commands",
-                    "0x12": "transaction",
-                    "0x13": "close_window",
-                    "0x14": "window_items",
-                    "0x15": "craft_progress_bar",
-                    "0x16": "set_slot",
-                    "0x17": "set_cooldown",
-                    "0x18": "custom_payload",
-                    "0x19": "named_sound_effect",
-                    "0x1a": "kick_disconnect",
-                    "0x1b": "entity_status",
-                    "0x1c": "explosion",
-                    "0x1d": "unload_chunk",
-                    "0x1e": "game_state_change",
-                    "0x1f": "open_horse_window",
-                    "0x20": "keep_alive",
-                    "0x21": "map_chunk",
-                    "0x22": "world_event",
-                    "0x23": "world_particles",
-                    "0x24": "update_light",
-                    "0x25": "login",
-                    "0x26": "map",
-                    "0x27": "trade_list",
-                    "0x28": "rel_entity_move",
-                    "0x29": "entity_move_look",
-                    "0x2a": "entity_look",
-                    "0x2b": "entity",
-                    "0x2c": "vehicle_move",
-                    "0x2d": "open_book",
-                    "0x2e": "open_window",
-                    "0x2f": "open_sign_entity",
-                    "0x30": "craft_recipe_response",
-                    "0x31": "abilities",
-                    "0x32": "combat_event",
-                    "0x33": "player_info",
-                    "0x34": "face_player",
-                    "0x35": "position",
-                    "0x36": "unlock_recipes",
-                    "0x37": "entity_destroy",
-                    "0x38": "remove_entity_effect",
-                    "0x39": "resource_pack_send",
-                    "0x3a": "respawn",
-                    "0x3b": "entity_head_rotation",
-                    "0x3c": "multi_block_change",
-                    "0x3d": "select_advancement_tab",
-                    "0x3e": "world_border",
-                    "0x3f": "camera",
-                    "0x40": "held_item_slot",
-                    "0x41": "update_view_position",
-                    "0x42": "update_view_distance",
-                    "0x43": "spawn_position",
-                    "0x44": "scoreboard_display_objective",
-                    "0x45": "entity_metadata",
-                    "0x46": "attach_entity",
-                    "0x47": "entity_velocity",
-                    "0x48": "entity_equipment",
-                    "0x49": "experience",
-                    "0x4a": "update_health",
-                    "0x4b": "scoreboard_objective",
-                    "0x4c": "set_passengers",
-                    "0x4d": "teams",
-                    "0x4e": "scoreboard_score",
-                    "0x4f": "update_time",
-                    "0x50": "title",
-                    "0x51": "entity_sound_effect",
-                    "0x52": "sound_effect",
-                    "0x53": "stop_sound",
-                    "0x54": "playerlist_header",
-                    "0x55": "nbt_query_response",
-                    "0x56": "collect",
-                    "0x57": "entity_teleport",
-                    "0x58": "advancements",
-                    "0x59": "entity_update_attributes",
-                    "0x5a": "entity_effect",
-                    "0x5b": "declare_recipes",
-                    "0x5c": "tags"
+                    "0x05": "animation",
+                    "0x06": "statistics",
+                    "0x07": "acknowledge_player_digging",
+                    "0x08": "block_break_animation",
+                    "0x09": "tile_entity_data",
+                    "0x0a": "block_action",
+                    "0x0b": "block_change",
+                    "0x0c": "boss_bar",
+                    "0x0d": "difficulty",
+                    "0x0e": "chat",
+                    "0x0f": "tab_complete",
+                    "0x10": "declare_commands",
+                    "0x11": "transaction",
+                    "0x12": "close_window",
+                    "0x13": "window_items",
+                    "0x14": "craft_progress_bar",
+                    "0x15": "set_slot",
+                    "0x16": "set_cooldown",
+                    "0x17": "custom_payload",
+                    "0x18": "named_sound_effect",
+                    "0x19": "kick_disconnect",
+                    "0x1a": "entity_status",
+                    "0x1b": "explosion",
+                    "0x1c": "unload_chunk",
+                    "0x1d": "game_state_change",
+                    "0x1e": "open_horse_window",
+                    "0x1f": "keep_alive",
+                    "0x20": "map_chunk",
+                    "0x21": "world_event",
+                    "0x22": "world_particles",
+                    "0x23": "update_light",
+                    "0x24": "login",
+                    "0x25": "map",
+                    "0x26": "trade_list",
+                    "0x27": "rel_entity_move",
+                    "0x28": "entity_move_look",
+                    "0x29": "entity_look",
+                    "0x2a": "entity",
+                    "0x2b": "vehicle_move",
+                    "0x2c": "open_book",
+                    "0x2d": "open_window",
+                    "0x2e": "open_sign_entity",
+                    "0x2f": "craft_recipe_response",
+                    "0x30": "abilities",
+                    "0x31": "combat_event",
+                    "0x32": "player_info",
+                    "0x33": "face_player",
+                    "0x34": "position",
+                    "0x35": "unlock_recipes",
+                    "0x36": "entity_destroy",
+                    "0x37": "remove_entity_effect",
+                    "0x38": "resource_pack_send",
+                    "0x39": "respawn",
+                    "0x3a": "entity_head_rotation",
+                    "0x3b": "multi_block_change",
+                    "0x3c": "select_advancement_tab",
+                    "0x3d": "world_border",
+                    "0x3e": "camera",
+                    "0x3f": "held_item_slot",
+                    "0x40": "update_view_position",
+                    "0x41": "update_view_distance",
+                    "0x42": "spawn_position",
+                    "0x43": "scoreboard_display_objective",
+                    "0x44": "entity_metadata",
+                    "0x45": "attach_entity",
+                    "0x46": "entity_velocity",
+                    "0x47": "entity_equipment",
+                    "0x48": "experience",
+                    "0x49": "update_health",
+                    "0x4a": "scoreboard_objective",
+                    "0x4b": "set_passengers",
+                    "0x4c": "teams",
+                    "0x4d": "scoreboard_score",
+                    "0x4e": "update_time",
+                    "0x4f": "title",
+                    "0x50": "entity_sound_effect",
+                    "0x51": "sound_effect",
+                    "0x52": "stop_sound",
+                    "0x53": "playerlist_header",
+                    "0x54": "nbt_query_response",
+                    "0x55": "collect",
+                    "0x56": "entity_teleport",
+                    "0x57": "advancements",
+                    "0x58": "entity_update_attributes",
+                    "0x59": "entity_effect",
+                    "0x5a": "declare_recipes",
+                    "0x5b": "tags"
                   }
                 }
               ]
@@ -4163,8 +4142,7 @@
                     "select_advancement_tab": "packet_select_advancement_tab",
                     "declare_recipes": "packet_declare_recipes",
                     "tags": "packet_tags",
-                    "acknowledge_player_digging": "packet_acknowledge_player_digging",
-                    "sculk_vibration_signal": "packet_sculk_vibration_signal"
+                    "acknowledge_player_digging": "packet_acknowledge_player_digging"
                   }
                 }
               ]
@@ -4441,10 +4419,6 @@
             {
               "name": "mainHand",
               "type": "varint"
-            },
-            {
-              "name": "disableTextFiltering",
-              "type": "bool"
             }
           ]
         ],
@@ -4825,69 +4799,29 @@
             }
           ]
         ],
-        "packet_crafting_book_data": [
+        "packet_displayed_recipe": [
           "container",
           [
             {
-              "name": "type",
+              "name": "recipeId",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_recipe_book": [
+          "container",
+          [
+            {
+              "name": "bookId",
               "type": "varint"
             },
             {
-              "anon":true,
-              "type":[
-                "switch",
-                {
-                  "compareTo":"type",
-                  "fields":{
-                    "0":[
-                      "container",
-                      [
-                        {
-                          "name": "displayedRecipe",
-                          "type": "string"
-                        }
-                      ]
-                    ],
-                    "1": [
-                      "container",
-                      [
-                        {
-                          "name": "craftingBookOpen",
-                          "type": "bool"
-                        },
-                        {
-                          "name": "craftingFilter",
-                          "type": "bool"
-                        },
-                        {
-                          "name": "smeltingBookOpen",
-                          "type": "bool"
-                        },
-                        {
-                          "name": "smeltingFilter",
-                          "type": "bool"
-                        },
-                        {
-                          "name": "blastingBookOpen",
-                          "type": "bool"
-                        },
-                        {
-                          "name": "blastingFilter",
-                          "type": "bool"
-                        },
-                        {
-                          "name": "smokingBookOpen",
-                          "type": "bool"
-                        },
-                        {
-                          "name": "smokingFilter",
-                          "type": "bool"
-                        }
-                      ]
-                    ]
-                  }
-                }
-              ]
+              "name": "bookOpen",
+              "type": "bool"
+            },
+            {
+              "name": "filterActive",
+              "type": "bool"
             }
           ]
         ],
@@ -5098,23 +5032,24 @@
                     "0x1b": "block_dig",
                     "0x1c": "entity_action",
                     "0x1d": "steer_vehicle",
-                    "0x1e": "crafting_book_data",
-                    "0x1f": "name_item",
-                    "0x20": "resource_pack_receive",
-                    "0x21": "advancement_tab",
-                    "0x22": "select_trade",
-                    "0x23": "set_beacon_effect",
-                    "0x24": "held_item_slot",
-                    "0x25": "update_command_block",
-                    "0x26": "update_command_block_minecart",
-                    "0x27": "set_creative_slot",
-                    "0x28": "update_jigsaw_block",
-                    "0x29": "update_structure_block",
-                    "0x2a": "update_sign",
-                    "0x2b": "arm_animation",
-                    "0x2c": "spectate",
-                    "0x2d": "block_place",
-                    "0x2e": "use_item"
+                    "0x1e": "displayed_recipe",
+                    "0x1f": "recipe_book",
+                    "0x20": "name_item",
+                    "0x21": "resource_pack_receive",
+                    "0x22": "advancement_tab",
+                    "0x23": "select_trade",
+                    "0x24": "set_beacon_effect",
+                    "0x25": "held_item_slot",
+                    "0x26": "update_command_block",
+                    "0x27": "update_command_block_minecart",
+                    "0x28": "set_creative_slot",
+                    "0x29": "update_jigsaw_block",
+                    "0x2a": "update_structure_block",
+                    "0x2b": "update_sign",
+                    "0x2c": "arm_animation",
+                    "0x2d": "spectate",
+                    "0x2e": "block_place",
+                    "0x2f": "use_item"
                   }
                 }
               ]
@@ -5162,7 +5097,8 @@
                     "block_dig": "packet_block_dig",
                     "entity_action": "packet_entity_action",
                     "steer_vehicle": "packet_steer_vehicle",
-                    "crafting_book_data": "packet_crafting_book_data",
+                    "displayed_recipe": "packet_displayed_recipe",
+                    "recipe_book": "packet_recipe_book",
                     "resource_pack_receive": "packet_resource_pack_receive",
                     "held_item_slot": "packet_held_item_slot",
                     "set_creative_slot": "packet_set_creative_slot",
