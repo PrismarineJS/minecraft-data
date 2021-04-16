@@ -1,3 +1,6 @@
+## 2.83.1
+* Fix 21w07a protocol (@U9G)
+
 ## 2.83.0
 * Fix biomes (@IceTank)
 
