@@ -1,3 +1,6 @@
+## 2.84.0
+* Add legacy.json 1.12 -> 1.13 mappings
+
 ## 2.83.1
 * Fix 21w07a protocol (@U9G)
 
