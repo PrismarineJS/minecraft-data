@@ -116,11 +116,43 @@ jobs:
         with:
           name: data
           path: code/turbo-invention/items.json
+    minecraft-jar-extractor:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+      - name: Clone Repos
+        run: | # git clone https://github.com/PrismarineJS/minecraft-jar-extractor
+            mkdir out && mkdir code && cd code
+            git clone https://github.com/u9g/minecraft-jar-extractor/
+            cd minecraft-jar-extractor
+            git switch -f patch-1
+      - name: Make language.json
+        run: |
+            cd code/minecraft-jar-extractor
+            npm i
+            node lang.js 1.16.5 out-lang temp-lang
+            mv out-lang/1.16.5/en_us.json ../../out/language.json
+      - name: Make blockLoot.json & entityLoot.json
+        run: |
+            cd code/minecraft-jar-extractor
+            node extract_datafolder.js 1.16.5 out-data temp-data
+            node extract_lootTables.js 1.16.5 out-data temp-loottables
+            mv temp-loottables/data/pc/1.16.5/blockLoot.json ../../out/blockLoot.json
+            mv temp-loottables/data/pc/1.16.5/entityLoot.json ../../out/entityLoot.json
+      - name: Save to Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: data
+          path: out
     make-pr:
       runs-on: ubuntu-latest
       needs: 
         - dump-shapes
         - turbo-invention
+        - minecraft-jar-extractor
       steps:
       - name: Checkout
         uses: actions/checkout@v2
