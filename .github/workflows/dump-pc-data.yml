@@ -77,18 +77,12 @@ jobs:
             npm i
             cd src
             node . ../burger.json ${{ github.event.inputs.minecraft-version }}
-      - name: Move items.json to temp artifact
-        run: mkdir code/burger-extractor/out-temp/ && mv code/burger-extractor/out/items.json code/burger-extractor/out-temp/items.json
       - name: Save to Artifact
         uses: actions/upload-artifact@v2
         with:
           name: data
           path: code/burger-extractor/out/
-      - name: Save to Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: temp
-          path: code/burger-extractor/out-temp/
+          
     turbo-invention: # adds data to items.json from burger
       runs-on: ubuntu-latest
       needs:
@@ -105,7 +99,7 @@ jobs:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.0.9
         with:
-          name: temp
+          name: data
           path: code/turbo-invention/
       - name: Run turbo-invention
         run: |
@@ -147,12 +141,46 @@ jobs:
         with:
           name: data
           path: out
+    patch-jar-output:
+      runs-on: ubuntu-latest
+      needs:
+      - minecraft-jar-extractor
+      
+      steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+      - name: Clone Repos
+        run: |
+            mkdir code && cd code
+            git clone https://github.com/u9g/minecraft-jar-extractor/
+            cd minecraft-jar-extractor
+            git switch -f codespace-ca5d
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.9
+        with:
+          name: data
+          path: code/minecraft-jar-extractor/in_place/
+      - name: Run minecraft-jar-extractor
+        run: |
+            cd code/minecraft-jar-extractor
+            npm i
+            node extract_datafolder.js ${{ github.event.inputs.minecraft-version }} out temp
+            cd in_place
+            node patch_states.js ${{ github.event.inputs.minecraft-version }} blocks.json
+            node extract_block_lootTables.js . ../out/${{ github.event.inputs.minecraft-version }}/
+      - name: Save to Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: data
+          path: code/minecraft-jar-extractor/in_place/blocks.json
     make-pr:
       runs-on: ubuntu-latest
       needs: 
         - dump-shapes
         - turbo-invention
-        - minecraft-jar-extractor
+        - patch-jar-output
       steps:
       - name: Checkout
         uses: actions/checkout@v2
