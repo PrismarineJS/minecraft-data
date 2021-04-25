@@ -22,6 +22,8 @@
 | entityLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
 
+* All files that say Yes for auto can be gotten from [minecraft-data-auto-updater][17]
+
 [1]: https://github.com/Pokechu22/Burger
 [2]: https://github.com/PrismarineJS/burger-extractor
 [3]: https://wiki.vg/Pre-release_protocol
@@ -38,3 +40,4 @@
 [14]: https://github.com/PrismarineJS/minecraft-data/pull/348#issue-545841883
 [15]: https://minecraft.gamepedia.com/Map#Map_icons
 [16]: https://wiki.vg/Protocol#Map_Data
+[17]: https://github.com/PrismarineJS/minecraft-data-auto-updater
