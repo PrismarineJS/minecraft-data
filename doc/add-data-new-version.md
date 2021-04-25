@@ -15,12 +15,12 @@
 | windows.json | No | Look at [wiki.vg inventories][7] |
 | version.json | No | Look at [Protocol Versions][9] | [wiki.vg protocol numbers][8] |
 | effects.json | No | Look at [minecraft wiki effects][12] |
-| enchantments.json | No | ? |
+| enchantments.json | No | Duplicate enchantments.json from the latest version and add manually the missing enchantments. Enchantments data could be found by looking into the deobfuscated classe files of each enchantments, as well as in the Enchantments registry. |
 | language.json | Yes | Use [minecraft-jar-extractor][10] |
 | particles.json | No | ? |
 | blockLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | entityLoot.json | Yes | Use [minecraft-jar-extractor][10] |
-| mapIcons.json | No | [minecraft-data pr mapIcons][14] |
+  | mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
 
 [1]: https://github.com/Pokechu22/Burger
 [2]: https://github.com/PrismarineJS/burger-extractor
@@ -36,3 +36,5 @@
 [12]: http://minecraft.gamepedia.com/Status_effect
 [13]: https://github.com/PrismarineJS/mineflayer/pull/197
 [14]: https://github.com/PrismarineJS/minecraft-data/pull/348#issue-545841883
+[15]: https://minecraft.gamepedia.com/Map#Map_icons
+[16]: https://wiki.vg/Protocol#Map_Data
