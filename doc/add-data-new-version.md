@@ -10,7 +10,7 @@
 | blockCollisionShapes.json | Yes | Use [McDataExtracting][4] |
 | commands.json | No? |Use [mc-data-command-generator][5] | link to jar files have to be manually added |
 | biomes.json | Yes | Use [Burger][1], then use [burger-extractor][2] | [extra info][13] |
-| instruments | No | [wiki.vg block actions][12] |
+| instruments | No | [wiki.vg block actions][11] |
 | materials.json | No | ? |
 | windows.json | No | Look at [wiki.vg inventories][7] |
 | version.json | No | Look at [Protocol Versions][9] | [wiki.vg protocol numbers][8] |
@@ -20,7 +20,7 @@
 | particles.json | No | ? |
 | blockLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | entityLoot.json | Yes | Use [minecraft-jar-extractor][10] |
-  | mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
+| mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
 
 [1]: https://github.com/Pokechu22/Burger
 [2]: https://github.com/PrismarineJS/burger-extractor
