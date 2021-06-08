@@ -2,7 +2,7 @@
 
 | file name | auto? | how to get it | notes |
 | -- | -- | -- | -- |
-| protocol.json | Yes | Follow [Pre-release Protocol][3] |
+| protocol.json | No | Follow [Pre-release Protocol][3] |
 | blocks.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
 | items.json | Yes | Use [Burger][1], then use [burger-extractor][2], then use [turbo-invention][6] |
 | entities.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
