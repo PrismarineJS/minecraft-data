@@ -9,7 +9,7 @@ Language independent module providing minecraft data for minecraft clients, serv
 
 Supports
 * Minecraft PC version 0.30c (classic), 1.7.10, 1.8.8, 1.9 (15w40b, 1.9, 1.9.1-pre2, 1.9.2, 1.9.4),
- 1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), 1.13 (17w50a, 1.13, 1.13.1, 1.13.2-pre1, 1.13.2-pre2, 1.13.2), 1.14 (1.14, 1.14.1, 1.14.3, 1.14.4), 1.15 (1.15, 1.15.1, 1.15.2) and 1.16 (20w13b, 20w14a, 1.16-rc1, 1.16, 1.16.1, 1.16.2, 1.16.3, 1.16.4, 1.16.5)
+ 1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), 1.13 (17w50a, 1.13, 1.13.1, 1.13.2-pre1, 1.13.2-pre2, 1.13.2), 1.14 (1.14, 1.14.1, 1.14.3, 1.14.4), 1.15 (1.15, 1.15.1, 1.15.2), 1.16 (20w13b, 20w14a, 1.16-rc1, 1.16, 1.16.1, 1.16.2, 1.16.3, 1.16.4, 1.16.5), and 1.17
 * Minecraft PE version 0.14, 0.15 and 1.0
 
 ## Wrappers
@@ -91,7 +91,7 @@ Projects that provide data:
 | [minecraft-jar-extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) | Node.js | minecraft server jar | a very partial but completely up to date protocol |
 | [minecraft-jar-extractor in python](https://github.com/pangeacake/minecraft-jar-extractor) | Python | minecraft server jar | about the same protocol information as minecraft-jar-extractor in node.js |
 | [burger](https://github.com/mcdevs/Burger) with [burger-extractor](https://github.com/PrismarineJS/burger-extractor) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
-| [burger 1.16](https://github.com/Pokechu22/Burger/tree/1.16-dev)  | --//-- | --// -- | --//-- | 
+| [burger 1.16](https://github.com/Pokechu22/Burger/tree/1.16-dev)  | --//-- | --// -- | --//-- |
 | [command-generator](https://github.com/Miro-Andrin/mc-data-command-generator) | Python | [Minecraft data generator](https://wiki.vg/Data_Generators) | Data used for parsing all vanilla server commands. |
 
 
