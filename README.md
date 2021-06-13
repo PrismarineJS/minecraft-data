@@ -93,7 +93,7 @@ Projects that provide data:
 | [burger](https://github.com/mcdevs/Burger) with [burger-extractor](https://github.com/PrismarineJS/burger-extractor) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
 | [burger 1.16](https://github.com/Pokechu22/Burger/tree/1.16-dev)  | --//-- | --// -- | --//-- |
 | [command-generator](https://github.com/Miro-Andrin/mc-data-command-generator) | Python | [Minecraft data generator](https://wiki.vg/Data_Generators) | Data used for parsing all vanilla server commands. |
-
+| [minecraft-data-generator](https://github.com/Archengius/minecraft-data-generator) | Java | minecraft client | biomes, block collision shapes, blocks, effects, enchantments, entities, foods, items, particles, tints. Required Fabric updated to the provided minecraft version. |
 
 
 Pages interesting to manually update the data if necessary:
