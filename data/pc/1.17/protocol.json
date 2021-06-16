@@ -1748,23 +1748,6 @@
             }
           ]
         ],
-        "packet_transaction": [
-          "container",
-          [
-            {
-              "name": "windowId",
-              "type": "i8"
-            },
-            {
-              "name": "action",
-              "type": "i16"
-            },
-            {
-              "name": "accepted",
-              "type": "bool"
-            }
-          ]
-        ],
         "packet_close_window": [
           "container",
           [
@@ -1949,7 +1932,7 @@
               "type": [
                 "array",
                 {
-                  "countType": "i32",
+                  "countType": "varint",
                   "type": [
                     "container",
                     [
@@ -2223,8 +2206,36 @@
               ]
             },
             {
-              "name": "data",
-              "type": "restBuffer"
+              "name": "skyLight",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "u8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "blockLight",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "u8"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         ],
@@ -2245,7 +2256,7 @@
             },
             {
               "name": "previousGameMode",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "worldNames",
@@ -2311,53 +2322,52 @@
               "type": "i8"
             },
             {
-              "name": "trackingPosition",
-              "type": "bool"
-            },
-            {
               "name": "locked",
               "type": "bool"
             },
             {
               "name": "icons",
               "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "type",
-                        "type": "varint"
-                      },
-                      {
-                        "name": "x",
-                        "type": "i8"
-                      },
-                      {
-                        "name": "y",
-                        "type": "i8"
-                      },
-                      {
-                        "name": "direction",
-                        "type": "u8"
-                      },
-                      {
-                        "name": "displayName",
-                        "type": [
-                          "option",
-                          "string"
-                        ]
-                      }
+                "option",
+                [
+                  "array",
+                  {
+                    "countType": "varint",
+                    "type": [
+                      "container",
+                      [
+                        {
+                          "name": "type",
+                          "type": "varint"
+                        },
+                        {
+                          "name": "x",
+                          "type": "i8"
+                        },
+                        {
+                          "name": "y",
+                          "type": "i8"
+                        },
+                        {
+                          "name": "direction",
+                          "type": "u8"
+                        },
+                        {
+                          "name": "displayName",
+                          "type": [
+                            "option",
+                            "string"
+                          ]
+                        }
+                      ]
                     ]
-                  ]
-                }
+                  }
+                ]
               ]
             },
             {
               "name": "columns",
-              "type": "i8"
+              "type": "u8"
             },
             {
               "name": "rows",
@@ -2368,7 +2378,7 @@
                   "fields": {
                     "0": "void"
                   },
-                  "default": "i8"
+                  "default": "u8"
                 }
               ]
             },
@@ -2381,7 +2391,7 @@
                   "fields": {
                     "0": "void"
                   },
-                  "default": "i8"
+                  "default": "u8"
                 }
               ]
             },
@@ -2394,7 +2404,7 @@
                   "fields": {
                     "0": "void"
                   },
-                  "default": "i8"
+                  "default": "u8"
                 }
               ]
             },
@@ -2579,15 +2589,6 @@
             }
           ]
         ],
-        "packet_entity": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": "varint"
-            }
-          ]
-        ],
         "packet_vehicle_move": [
           "container",
           [
@@ -2661,65 +2662,37 @@
             }
           ]
         ],
-        "packet_combat_event": [
+        "packet_end_combat_event": [
           "container",
           [
             {
-              "name": "event",
+              "name": "duration",
               "type": "varint"
             },
             {
-              "name": "duration",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "event",
-                  "fields": {
-                    "1": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
+              "name": "entityId",
+              "type": "i32"
+            }
+          ]
+        ],
+        "packet_enter_combat_event": [
+          "container",
+          []
+        ],
+        "packet_death_combat_event": [
+          "container",
+          [
             {
               "name": "playerId",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "event",
-                  "fields": {
-                    "2": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
+              "type": "varint"
             },
             {
               "name": "entityId",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "event",
-                  "fields": {
-                    "1": "i32",
-                    "2": "i32"
-                  },
-                  "default": "void"
-                }
-              ]
+              "type": "i32"
             },
             {
               "name": "message",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "event",
-                  "fields": {
-                    "2": "string"
-                  },
-                  "default": "void"
-                }
-              ]
+              "type": "string"
             }
           ]
         ],
@@ -2956,18 +2929,12 @@
             }
           ]
         ],
-        "packet_entity_destroy": [
+        "packet_destroy_entity": [
           "container",
           [
             {
               "name": "entityIds",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": "varint"
-                }
-              ]
+              "type": "varint"
             }
           ]
         ],
@@ -3048,139 +3015,6 @@
             {
               "name": "headYaw",
               "type": "i8"
-            }
-          ]
-        ],
-        "packet_world_border": [
-          "container",
-          [
-            {
-              "name": "action",
-              "type": "varint"
-            },
-            {
-              "name": "radius",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "0": "f64"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "x",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "2": "f64",
-                    "3": "f64"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "z",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "2": "f64",
-                    "3": "f64"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "old_radius",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "1": "f64",
-                    "3": "f64"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "new_radius",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "1": "f64",
-                    "3": "f64"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "speed",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "1": "varint",
-                    "3": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "portalBoundary",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "3": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "warning_time",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "3": "varint",
-                    "4": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "warning_blocks",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "3": "varint",
-                    "5": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
             }
           ]
         ],
@@ -3588,6 +3422,10 @@
             {
               "name": "location",
               "type": "position"
+            },
+            {
+              "name": "angle",
+              "type": "f32"
             }
           ]
         ],
@@ -3601,69 +3439,6 @@
             {
               "name": "time",
               "type": "i64"
-            }
-          ]
-        ],
-        "packet_title": [
-          "container",
-          [
-            {
-              "name": "action",
-              "type": "varint"
-            },
-            {
-              "name": "text",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "0": "string",
-                    "1": "string",
-                    "2": "string"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "fadeIn",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "3": "i32"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "stay",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "3": "i32"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "fadeOut",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "3": "i32"
-                  },
-                  "default": "void"
-                }
-              ]
             }
           ]
         ],
@@ -3837,7 +3612,7 @@
               "type": [
                 "array",
                 {
-                  "countType": "i32",
+                  "countType": "varint",
                   "type": [
                     "container",
                     [
@@ -4198,6 +3973,162 @@
             }
           ]
         ],
+        "packet_clear_titles": [
+          "container",
+          [
+            {
+              "name": "reset",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_initialize_world_border": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "oldDiameter",
+              "type": "f64"
+            },
+            {
+              "name": "newDiameter",
+              "type": "f64"
+            },
+            {
+              "name": "speed",
+              "type": "varint"
+            },
+            {
+              "name": "portalTeleportBoundary",
+              "type": "varint"
+            },
+            {
+              "name": "warningBlocks",
+              "type": "varint"
+            },
+            {
+              "name": "warningTime",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_action_bar": [
+          "container",
+          [
+            {
+              "name": "text",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_world_border_center": [
+          "container",
+          [
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            }
+          ]
+        ],
+        "packet_world_border_lerp_size": [
+          "container",
+          [
+            {
+              "name": "oldDiameter",
+              "type": "f64"
+            },
+            {
+              "name": "newDiameter",
+              "type": "f64"
+            },
+            {
+              "name": "speed",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_world_border_size": [
+          "container",
+          [
+            {
+              "name": "diameter",
+              "type": "f64"
+            }
+          ]
+        ],
+        "packet_world_border_warning_delay": [
+          "container",
+          [
+            {
+              "name": "warningTime",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_world_border_warning_reach": [
+          "container",
+          [
+            {
+              "name": "warningBlocks",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_ping": [
+          "container",
+          [
+            {
+              "name": "id",
+              "type": "i32"
+            }
+          ]
+        ],
+        "packet_set_title_subtitle": [
+          "container",
+          [
+            {
+              "name": "text",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_set_title_text": [
+          "container",
+          [
+            {
+              "name": "text",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_set_title_time": [
+          "container",
+          [
+            {
+              "name": "fadeIn",
+              "type": "i32"
+            },
+            {
+              "name": "stay",
+              "type": "i32"
+            },
+            {
+              "name": "fadeOut",
+              "type": "i32"
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -4224,9 +4155,9 @@
                     "0x0d": "boss_bar",
                     "0x0e": "difficulty",
                     "0x0f": "chat",
-                    "0x10": "tab_complete",
-                    "0x11": "declare_commands",
-                    "0x12": "transaction",
+                    "0x10": "clear_titles",
+                    "0x11": "tab_complete",
+                    "0x12": "declare_commands",
                     "0x13": "close_window",
                     "0x14": "window_items",
                     "0x15": "craft_progress_bar",
@@ -4240,67 +4171,77 @@
                     "0x1d": "unload_chunk",
                     "0x1e": "game_state_change",
                     "0x1f": "open_horse_window",
-                    "0x20": "keep_alive",
-                    "0x21": "map_chunk",
-                    "0x22": "world_event",
-                    "0x23": "world_particles",
-                    "0x24": "update_light",
-                    "0x25": "login",
-                    "0x26": "map",
-                    "0x27": "trade_list",
-                    "0x28": "rel_entity_move",
-                    "0x29": "entity_move_look",
-                    "0x2a": "entity_look",
-                    "0x2b": "entity",
+                    "0x20": "initialize_world_border",
+                    "0x21": "keep_alive",
+                    "0x22": "map_chunk",
+                    "0x23": "world_event",
+                    "0x24": "world_particles",
+                    "0x25": "update_light",
+                    "0x26": "login",
+                    "0x27": "map",
+                    "0x28": "trade_list",
+                    "0x29": "rel_entity_move",
+                    "0x2a": "entity_move_look",
+                    "0x2b": "entity_look",
                     "0x2c": "vehicle_move",
                     "0x2d": "open_book",
                     "0x2e": "open_window",
                     "0x2f": "open_sign_entity",
-                    "0x30": "craft_recipe_response",
-                    "0x31": "abilities",
-                    "0x32": "combat_event",
-                    "0x33": "player_info",
-                    "0x34": "face_player",
-                    "0x35": "position",
-                    "0x36": "unlock_recipes",
-                    "0x37": "entity_destroy",
-                    "0x38": "remove_entity_effect",
-                    "0x39": "resource_pack_send",
-                    "0x3a": "respawn",
-                    "0x3b": "entity_head_rotation",
-                    "0x3c": "multi_block_change",
-                    "0x3d": "select_advancement_tab",
-                    "0x3e": "world_border",
-                    "0x3f": "camera",
-                    "0x40": "held_item_slot",
-                    "0x41": "update_view_position",
-                    "0x42": "update_view_distance",
-                    "0x43": "spawn_position",
-                    "0x44": "scoreboard_display_objective",
-                    "0x45": "entity_metadata",
-                    "0x46": "attach_entity",
-                    "0x47": "entity_velocity",
-                    "0x48": "entity_equipment",
-                    "0x49": "experience",
-                    "0x4a": "update_health",
-                    "0x4b": "scoreboard_objective",
-                    "0x4c": "set_passengers",
-                    "0x4d": "teams",
-                    "0x4e": "scoreboard_score",
-                    "0x4f": "update_time",
-                    "0x50": "title",
-                    "0x51": "entity_sound_effect",
-                    "0x52": "sound_effect",
-                    "0x53": "stop_sound",
-                    "0x54": "playerlist_header",
-                    "0x55": "nbt_query_response",
-                    "0x56": "collect",
-                    "0x57": "entity_teleport",
-                    "0x58": "advancements",
-                    "0x59": "entity_update_attributes",
-                    "0x5a": "entity_effect",
-                    "0x5b": "declare_recipes",
-                    "0x5c": "tags"
+                    "0x30": "ping",
+                    "0x31": "craft_recipe_response",
+                    "0x32": "abilities",
+                    "0x33": "end_combat_event",
+                    "0x34": "enter_combat_event",
+                    "0x35": "death_combat_event",
+                    "0x36": "player_info",
+                    "0x37": "face_player",
+                    "0x38": "position",
+                    "0x39": "unlock_recipes",
+                    "0x3a": "destroy_entity",
+                    "0x3b": "remove_entity_effect",
+                    "0x3c": "resource_pack_send",
+                    "0x3d": "respawn",
+                    "0x3e": "entity_head_rotation",
+                    "0x3f": "multi_block_change",
+                    "0x40": "select_advancement_tab",
+                    "0x41": "action_bar",
+                    "0x42": "world_border_center",
+                    "0x43": "world_border_lerp_size",
+                    "0x44": "world_border_size",
+                    "0x45": "world_border_warning_delay",
+                    "0x46": "world_border_warning_reach",
+                    "0x47": "camera",
+                    "0x48": "held_item_slot",
+                    "0x49": "update_view_position",
+                    "0x4a": "update_view_distance",
+                    "0x4b": "spawn_position",
+                    "0x4c": "scoreboard_display_objective",
+                    "0x4d": "entity_metadata",
+                    "0x4e": "attach_entity",
+                    "0x4f": "entity_velocity",
+                    "0x50": "entity_equipment",
+                    "0x51": "experience",
+                    "0x52": "update_health",
+                    "0x53": "scoreboard_objective",
+                    "0x54": "set_passengers",
+                    "0x55": "teams",
+                    "0x56": "scoreboard_score",
+                    "0x57": "set_title_subtitle",
+                    "0x58": "update_time",
+                    "0x59": "set_title_text",
+                    "0x5a": "set_title_time",
+                    "0x5b": "entity_sound_effect",
+                    "0x5c": "sound_effect",
+                    "0x5d": "stop_sound",
+                    "0x5e": "playerlist_header",
+                    "0x5f": "nbt_query_response",
+                    "0x60": "collect",
+                    "0x61": "entity_teleport",
+                    "0x62": "advancements",
+                    "0x63": "entity_update_attributes",
+                    "0x64": "entity_effect",
+                    "0x65": "declare_recipes",
+                    "0x66": "tags"
                   }
                 }
               ]
@@ -4332,7 +4273,6 @@
                     "nbt_query_response": "packet_nbt_query_response",
                     "chat": "packet_chat",
                     "multi_block_change": "packet_multi_block_change",
-                    "transaction": "packet_transaction",
                     "close_window": "packet_close_window",
                     "open_window": "packet_open_window",
                     "window_items": "packet_window_items",
@@ -4358,22 +4298,22 @@
                     "rel_entity_move": "packet_rel_entity_move",
                     "entity_move_look": "packet_entity_move_look",
                     "entity_look": "packet_entity_look",
-                    "entity": "packet_entity",
                     "vehicle_move": "packet_vehicle_move",
                     "open_book": "packet_open_book",
                     "open_sign_entity": "packet_open_sign_entity",
                     "craft_recipe_response": "packet_craft_recipe_response",
                     "abilities": "packet_abilities",
-                    "combat_event": "packet_combat_event",
+                    "end_combat_event": "packet_end_combat_event",
+                    "enter_combat_event": "packet_enter_combat_event",
+                    "death_combat_event": "packet_death_combat_event",
                     "player_info": "packet_player_info",
                     "position": "packet_position",
                     "unlock_recipes": "packet_unlock_recipes",
-                    "entity_destroy": "packet_entity_destroy",
+                    "destroy_entity": "packet_destroy_entity",
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "resource_pack_send": "packet_resource_pack_send",
                     "respawn": "packet_respawn",
                     "entity_update_attributes": "packet_entity_update_attributes",
-                    "world_border": "packet_world_border",
                     "camera": "packet_camera",
                     "held_item_slot": "packet_held_item_slot",
                     "update_view_position": "packet_update_view_position",
@@ -4391,7 +4331,6 @@
                     "scoreboard_score": "packet_scoreboard_score",
                     "spawn_position": "packet_spawn_position",
                     "update_time": "packet_update_time",
-                    "title": "packet_title",
                     "entity_sound_effect": "packet_entity_sound_effect",
                     "stop_sound": "packet_stop_sound",
                     "sound_effect": "packet_sound_effect",
@@ -4404,7 +4343,19 @@
                     "declare_recipes": "packet_declare_recipes",
                     "tags": "packet_tags",
                     "acknowledge_player_digging": "packet_acknowledge_player_digging",
-                    "sculk_vibration_signal": "packet_sculk_vibration_signal"
+                    "sculk_vibration_signal": "packet_sculk_vibration_signal",
+                    "clear_titles": "packet_clear_titles",
+                    "initialize_world_border": "packet_initialize_world_border",
+                    "action_bar": "packet_action_bar",
+                    "world_border_center": "packet_world_border_center",
+                    "world_border_lerp_size": "packet_world_border_lerp_size",
+                    "world_border_size": "packet_world_border_size",
+                    "world_border_warning_delay": "packet_world_border_warning_delay",
+                    "world_border_warning_reach": "packet_world_border_warning_reach",
+                    "ping": "packet_ping",
+                    "set_title_subtitle": "packet_set_title_subtitle",
+                    "set_title_text": "packet_set_title_text",
+                    "set_title_time": "packet_set_title_time"
                   }
                 }
               ]
@@ -4687,23 +4638,6 @@
             }
           ]
         ],
-        "packet_transaction": [
-          "container",
-          [
-            {
-              "name": "windowId",
-              "type": "i8"
-            },
-            {
-              "name": "action",
-              "type": "i16"
-            },
-            {
-              "name": "accepted",
-              "type": "bool"
-            }
-          ]
-        ],
         "packet_enchant_item": [
           "container",
           [
@@ -4733,15 +4667,33 @@
               "type": "i8"
             },
             {
-              "name": "action",
-              "type": "i16"
-            },
-            {
               "name": "mode",
               "type": "i8"
             },
             {
-              "name": "item",
+              "name": "changedSlots",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "location",
+                        "type": "i16"
+                      },
+                      {
+                        "name": "item",
+                        "type": "slot"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "clicked_item",
               "type": "slot"
             }
           ]
@@ -5257,6 +5209,15 @@
             }
           ]
         ],
+        "packet_pong": [
+          "container",
+          [
+            {
+              "name": "id",
+              "type": "i32"
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -5274,29 +5235,29 @@
                     "0x04": "client_command",
                     "0x05": "settings",
                     "0x06": "tab_complete",
-                    "0x07": "transaction",
-                    "0x08": "enchant_item",
-                    "0x09": "window_click",
-                    "0x0a": "close_window",
-                    "0x0b": "custom_payload",
-                    "0x0c": "edit_book",
-                    "0x0d": "query_entity_nbt",
-                    "0x0e": "use_entity",
-                    "0x0f": "generate_structure",
-                    "0x10": "keep_alive",
-                    "0x11": "lock_difficulty",
-                    "0x12": "position",
-                    "0x13": "position_look",
-                    "0x14": "look",
-                    "0x15": "flying",
-                    "0x16": "vehicle_move",
-                    "0x17": "steer_boat",
-                    "0x18": "pick_item",
-                    "0x19": "craft_recipe_request",
-                    "0x1a": "abilities",
-                    "0x1b": "block_dig",
-                    "0x1c": "entity_action",
-                    "0x1d": "steer_vehicle",
+                    "0x07": "enchant_item",
+                    "0x08": "window_click",
+                    "0x09": "close_window",
+                    "0x0a": "custom_payload",
+                    "0x0b": "edit_book",
+                    "0x0c": "query_entity_nbt",
+                    "0x0d": "use_entity",
+                    "0x0e": "generate_structure",
+                    "0x0f": "keep_alive",
+                    "0x10": "lock_difficulty",
+                    "0x11": "position",
+                    "0x12": "position_look",
+                    "0x13": "look",
+                    "0x14": "flying",
+                    "0x15": "vehicle_move",
+                    "0x16": "steer_boat",
+                    "0x17": "pick_item",
+                    "0x18": "craft_recipe_request",
+                    "0x19": "abilities",
+                    "0x1a": "block_dig",
+                    "0x1b": "entity_action",
+                    "0x1c": "steer_vehicle",
+                    "0x1d": "pong",
                     "0x1e": "displayed_recipe",
                     "0x1f": "recipe_book",
                     "0x20": "name_item",
@@ -5342,7 +5303,6 @@
                     "chat": "packet_chat",
                     "client_command": "packet_client_command",
                     "settings": "packet_settings",
-                    "transaction": "packet_transaction",
                     "enchant_item": "packet_enchant_item",
                     "window_click": "packet_window_click",
                     "close_window": "packet_close_window",
@@ -5373,7 +5333,8 @@
                     "spectate": "packet_spectate",
                     "block_place": "packet_block_place",
                     "use_item": "packet_use_item",
-                    "advancement_tab": "packet_advancement_tab"
+                    "advancement_tab": "packet_advancement_tab",
+                    "pong": "packet_pong"
                   }
                 }
               ]
