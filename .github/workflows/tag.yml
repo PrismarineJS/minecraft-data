@@ -17,11 +17,6 @@ jobs:
       if: ${{ steps.regex-match.outputs.match != '' }}
       with:
         tag: ${{ steps.regex-match.outputs.group1 }}
-    - name: Repository Dispatch
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: ${{ secrets.PAT_PASSWORD }}
-        event-type: mcData-release
     - uses: peter-evans/repository-dispatch@v1
       if: ${{ steps.regex-match.outputs.match != '' }}
       with:
