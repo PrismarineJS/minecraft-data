@@ -1,3 +1,6 @@
+## 2.85.1
+* small 1.17 protocol fix (@nickelpro)
+
 ## 2.85.0
 * 1.17.0 support (@Archengius and @nickelpro)
 * Add netherite tools to harvestTools (@timoreo22)
