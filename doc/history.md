@@ -1,3 +1,8 @@
+## 2.85.0
+* 1.17.0 support (@Archengius and @nickelpro)
+* Add netherite tools to harvestTools (@timoreo22)
+* fix recipe shape (x/z flipped) in 1.16.2 protocol declare_recipes (@Gjum)
+
 ## 2.84.0
 * Add legacy.json 1.12 -> 1.13 mappings
 
