@@ -22,10 +22,3 @@ jobs:
       with:
         token: ${{ secrets.PAT_PASSWORD }}
         event-type: mcData-release
-    - uses: peter-evans/repository-dispatch@v1
-      if: ${{ steps.regex-match.outputs.match != '' }}
-      with:
-        token: ${{ secrets.PAT_PASSWORD }}
-        repository: PrismarineJS/node-minecraft-data
-        event-type: mcData-release
-        client-payload: '{"tag": "${{ steps.regex-match.outputs.group1 }}"}'
