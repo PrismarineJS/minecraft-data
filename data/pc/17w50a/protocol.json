@@ -1240,7 +1240,6 @@
                               "type": ["switch",{
                                 "compareTo": "parser",
                                 "fields": {
-                                  "brigadier:bool": "void",
                                   "brigadier:double": ["container", [
                                     {
                                       "name": "flags",
@@ -1340,9 +1339,43 @@
                                       }]
                                     }
                                   ]],
+                                  "brigadier:long": ["container", [
+                                    {
+                                      "name": "flags",
+                                      "type": [
+                                        "bitfield",
+                                        [
+                                          { "name": "unused", "size": 6, "signed": false },
+                                          { "name": "max_present", "size": 1, "signed": false },
+                                          { "name": "min_present", "size": 1, "signed": false }
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "name": "min",
+                                      "type": ["switch",{
+                                        "compareTo": "flags/min_present",
+                                        "fields": {
+                                          "1": "i64"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    },
+                                    {
+                                      "name": "max",
+                                      "type": ["switch",{
+                                        "compareTo": "flags/max_present",
+                                        "fields": {
+                                          "1": "i64"
+                                        },
+                                        "default": "void"
+                                      }]
+                                    }
+                                  ]],
                                   "brigadier:string": "varint",
                                   "minecraft:entity": "i8",
-                                  "minecraft:score_holder": "i8"
+                                  "minecraft:score_holder": "i8",
+                                  "minecraft:range": "bool"
                                 },
                                 "default": "void"
                               }]
