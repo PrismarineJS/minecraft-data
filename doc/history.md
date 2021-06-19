@@ -1,3 +1,7 @@
+## 2.85.2
+* Remove additional s in 1.17 protocol
+* Brigadier fix (@nickelpro)
+
 ## 2.85.1
 * small 1.17 protocol fix (@nickelpro)
 
