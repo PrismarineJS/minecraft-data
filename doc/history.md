@@ -1,3 +1,6 @@
+## 2.86
+* add 1.17 login packet (@u9g)
+
 ## 2.85.3
 * fix warningBlocks
 
