@@ -8,12 +8,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           ref: web
-      - run: npm install
-      - run: npm run gh-publish
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          title: Build GH Pages
-          body: Automatic changes by Github Actions
-          commit-message: add data
+      - name: Run tool
+        run: |
+            npm install
+            git config user.name 'rom1504bot'
+            git config user.email 'rom1504bot@users.noreply.github.com'
+            npm run gh-publish
