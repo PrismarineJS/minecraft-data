@@ -1902,14 +1902,22 @@
               "type": "u8"
             },
             {
+              "name": "stateId",
+              "type": "varint"
+            },
+            {
               "name": "items",
               "type": [
                 "array",
                 {
-                  "countType": "i16",
+                  "countType": "varint",
                   "type": "slot"
                 }
               ]
+            },
+            {
+              "name": "carriedItem",
+              "type": "slot"
             }
           ]
         ],
@@ -1936,6 +1944,10 @@
             {
               "name": "windowId",
               "type": "i8"
+            },
+            {
+              "name": "stateId",
+              "type": "varint"
             },
             {
               "name": "slot",
@@ -3053,8 +3065,14 @@
           "container",
           [
             {
-              "name": "entityId",
-              "type": "varint"
+              "name": "entityIds",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "varint"
+                }
+              ]
             }
           ]
         ],
@@ -4521,16 +4539,25 @@
           "container",
           [
             {
-              "name": "new_book",
-              "type": "slot"
-            },
-            {
-              "name": "signing",
-              "type": "bool"
-            },
-            {
               "name": "hand",
               "type": "varint"
+            },
+            {
+              "name": "pages",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            },
+            {
+              "name": "title",
+              "type": [
+                "option",
+                "string"
+              ]
             }
           ]
         ],
@@ -4779,6 +4806,10 @@
               "type": "u8"
             },
             {
+              "name": "stateId",
+              "type": "varint"
+            },
+            {
               "name": "slot",
               "type": "i16"
             },
@@ -4788,7 +4819,7 @@
             },
             {
               "name": "mode",
-              "type": "i8"
+              "type": "varint"
             },
             {
               "name": "changedSlots",
