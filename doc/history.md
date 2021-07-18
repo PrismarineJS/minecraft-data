@@ -1,6 +1,9 @@
+## 2.87.0
+* add 1.17.1 protocol support (@u9g)
+* add promptMessage arg to 1.17 (@u9g)
+
 ## 2.86.0
 * add 1.17 login packet (@u9g)
-
 
 ## 2.85.3
 * fix warningBlocks
