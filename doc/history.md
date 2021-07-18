@@ -1,5 +1,4 @@
 ## 2.88.0
-
 * change primaryBitMask to bitMap in 1.17.x protocol.jsons (@Karang)
 
 ## 2.87.0
