@@ -1,6 +1,6 @@
 ## minecraft bedrock edition data
 
-#### Obtaining data
+### Obtaining data
 
 | file name | info | how to get | schema |
 |-|-|-|-|
@@ -9,6 +9,32 @@
 | skinGeometry.json | Skin geometry data for clients connecting to BE servers (merge with steve.json) | [bedrock-protocol][2] (capture with proxy) |  |
 | steveSkin.bin | Skin image data | [bedrock-protocol][2] (capture with proxy) |  |
 
+### Status of data
+
+<!--StartFragment-->
+file name | status | how to get it | notes
+-- | -- | -- | --
+protocol.json | 🔵 | manual updated | wip
+blocks.json | ✔ | bedrock-extractor | &nbsp;
+items.json | ✔ | bedrock-extractor | &nbsp;
+entities.json | ❌ |   | &nbsp;
+recipes.json | ✔ |  bedrock-protocol dumper | new schema: adds furnace and other special recipes. <br/> Some recipes can have multiple outputs, also allow for recipe ingredients with damage values and specific counts.
+blockCollisionShapes.json | ✔ | (from pc data) | New schema: block IDs map to an array of block state indexes, to get the block stateID, minStateId + index of array. This way different copies of the block with different state IDs can have unique collisions. 
+commands.json | ❌ | bedrock-protocol + dumper | must be custom schema, current JE schema too low level
+biomes.json | ✔ | bedrock-extractor (via Amulet) | 
+instruments | ✔ | manual | &nbsp;
+materials.json | ❌ | (from pc data) | &nbsp;
+windows.json | ✔ | manual obtained via proxy | &nbsp;
+version.json | ✔ | from bedrock-protocol | 
+effects.json | ❌ | (from pc data) | &nbsp;
+enchantments.json | ❌ | (from pc data) | &nbsp;
+language.json | ❌ | (extract from game) | &nbsp;
+particles.json | 🔵 | bedrock-protocol docs | IDs not needed, handled in protocol
+blockLoot.json | ❌ | (from pc data) | &nbsp;
+entityLoot.json | ❌ | (from pc data) | &nbsp;
+mapIcons.json | 🔵 | ? | ?
+
+<!--EndFragment-->
 
 [1]: https://github.com/extremeheat/minecraft-data-extractor/tree/master/bedrock
 [2]: https://github.com/PrismarineJS/bedrock-protocol
