@@ -69,7 +69,7 @@ require('./version_iterator')(function (p, versionString) {
         } */
 
         // Those 2 versions doesnt contain diamond pickaxe recipe, to be fixed...
-        if (versionString === 'pc 1.9' || versionString === 'pc 1.10') return
+        if (versionString === 'pc 1.9' || versionString === 'pc 1.10' || !recipe[0]) return
 
         assert.deepStrictEqual(recipe[0].inShape, [
           [

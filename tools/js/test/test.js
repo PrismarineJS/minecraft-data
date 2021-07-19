@@ -42,7 +42,7 @@ require('./version_iterator')(function (p, versionString) {
 })
 
 const commonData = ['protocolVersions']
-const minecraftTypes = ['pc', 'pe']
+const minecraftTypes = ['pc', 'bedrock']
 
 minecraftTypes.forEach(function (type) {
   describe('minecraft-data schemas of common data of ' + type, function () {

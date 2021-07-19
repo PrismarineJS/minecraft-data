@@ -46,7 +46,7 @@ require('./version_iterator')(function (p, versionString) {
       const usedShapes = {}
       for (let value of Object.values(shapes.blocks)) {
         if (!(value instanceof Array)) value = [value]
-        for (let shape of value) {
+        for (const shape of value) {
           if (shapes.shapes[shape] === undefined) {
             console.log('missing shape: ' + shape)
           }
