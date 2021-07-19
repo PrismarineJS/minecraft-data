@@ -1,0 +1,18 @@
+name: Repository Dispatch
+on:
+  repository_dispatch:
+    types: [node-mcData-release]
+jobs:
+  myEvent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: web
+      - name: Run tool
+        run: |
+            npm install
+            git config user.name 'rom1504bot'
+            git config user.email 'rom1504bot@users.noreply.github.com'
+            npm run gh-publish

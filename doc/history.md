@@ -1,3 +1,28 @@
+## 2.88.0
+* change primaryBitMask to bitMap in 1.17.x protocol.jsons (@Karang)
+
+## 2.87.0
+* add 1.17.1 protocol support (@u9g)
+* add promptMessage arg to 1.17 (@u9g)
+
+## 2.86.0
+* add 1.17 login packet (@u9g)
+
+## 2.85.3
+* fix warningBlocks
+
+## 2.85.2
+* Remove additional s in 1.17 protocol
+* Brigadier fix (@nickelpro)
+
+## 2.85.1
+* small 1.17 protocol fix (@nickelpro)
+
+## 2.85.0
+* 1.17.0 support (@Archengius and @nickelpro)
+* Add netherite tools to harvestTools (@timoreo22)
+* fix recipe shape (x/z flipped) in 1.16.2 protocol declare_recipes (@Gjum)
+
 ## 2.84.0
 * Add legacy.json 1.12 -> 1.13 mappings
 

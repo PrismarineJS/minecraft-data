@@ -2,7 +2,7 @@
 
 | file name | auto? | how to get it | notes |
 | -- | -- | -- | -- |
-| protocol.json | Yes | Follow [Pre-release Protocol][3] |
+| protocol.json | No | Follow [Pre-release Protocol][3] |
 | blocks.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
 | items.json | Yes | Use [Burger][1], then use [burger-extractor][2], then use [turbo-invention][6] |
 | entities.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
@@ -17,7 +17,7 @@
 | effects.json | No | Look at [minecraft wiki effects][12] |
 | enchantments.json | No | Duplicate enchantments.json from the latest version and add manually the missing enchantments. Enchantments data could be found by looking into the deobfuscated classe files of each enchantments, as well as in the Enchantments registry. |
 | language.json | Yes | Use [minecraft-jar-extractor][10] |
-| particles.json | No | ? |
+| particles.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
 | blockLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | entityLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
