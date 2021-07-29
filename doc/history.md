@@ -1,3 +1,6 @@
+## 2.89.1
+* fix some remaining occurences of pe
+
 ## 2.89.0
 * Relocate smelting_format and tags to types map (@nickelpro)
 * Rework and extract all items.json (@nickelpro)
