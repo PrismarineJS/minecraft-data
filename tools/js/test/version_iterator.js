@@ -2,7 +2,7 @@ module.exports = forEach
 
 const path = require('path')
 
-const minecraftTypes = ['pc', 'pe']
+const minecraftTypes = ['pc', 'bedrock']
 
 function forEach (f) {
   minecraftTypes.forEach(function (type) {
