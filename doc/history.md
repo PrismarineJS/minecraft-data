@@ -1,3 +1,6 @@
+## 2.89.2
+* fixes to bedrock paths
+
 ## 2.89.1
 * fix some remaining occurences of pe
 
