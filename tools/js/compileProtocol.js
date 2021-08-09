@@ -53,10 +53,12 @@ function convert (ver) {
 }
 
 // If no argument, build everything
-if (!process.argv[2]) {
-  convert('latest')
-} else { // build the specified version
-  convert(process.argv[2])
+if (!module.parent) {
+  if (!process.argv[2]) {
+    convert('latest')
+  } else { // build the specified version
+    convert(process.argv[2])
+  }
 }
 
 module.exports = { convert }
