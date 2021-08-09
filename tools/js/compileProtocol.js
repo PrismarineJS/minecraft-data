@@ -58,3 +58,5 @@ if (!process.argv[2]) {
 } else { // build the specified version
   convert(process.argv[2])
 }
+
+module.exports = { convert }
