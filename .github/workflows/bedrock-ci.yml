@@ -1,0 +1,41 @@
+name: bedrock-ci
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - uses: actions/checkout@v2
+      with:
+        repository: PrismarineJS/node-minecraft-data
+        submodules: recursive
+        path: node-mcdata
+    - run: rm -rf minecraft-data
+    - uses: actions/checkout@v2
+      with:
+        path: node-mcdata/minecraft-data
+    - uses: actions/checkout@v2
+      with:
+        repository: PrismarineJS/bedrock-protocol
+        path: bedrock-protocol
+    - run: ls -R .
+    - run: |
+        cd bedrock-protocol
+        npm uninstall minecraft-data
+        npm install ../node-mcdata
+        npm i
+        cd ../node-mcdata
+        npm run generate:data
+    - run: npm test
+      working-directory: bedrock-protocol
