@@ -1,3 +1,8 @@
+## 2.90.0
+* Add 1.17 recipes (@nickelpro)
+* Rename 1.17.1 entity_destroy (@u9g)
+* 1.7 protocol fix (thanks @Beaness)
+
 ## 2.89.2
 * fixes to bedrock paths
 
@@ -60,7 +65,7 @@
 * Add tints.json (thanks @Moondarker)
 
 ## 2.79.0
-* Add properties to items.json (maxDurability, fixedWith, enchantCategories) 
+* Add properties to items.json (maxDurability, fixedWith, enchantCategories)
 
 ## 2.78.0
 * Finish propogating all new properties to old enchantment.json files & remove enchant multipliers
