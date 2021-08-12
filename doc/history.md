@@ -1,3 +1,7 @@
+# 2.91.0
+
+* Rename `clicked_item` to `cursorItem` in 1.17+ window_click packet (@nickelpro)
+
 ## 2.90.0
 * Add 1.17 recipes (@nickelpro)
 * Rename 1.17.1 entity_destroy (@u9g)
