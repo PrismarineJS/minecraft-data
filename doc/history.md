@@ -1,5 +1,4 @@
 # 2.91.0
-
 * Rename `clicked_item` to `cursorItem` in 1.17+ window_click packet (@nickelpro)
 
 ## 2.90.0
