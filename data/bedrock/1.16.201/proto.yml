@@ -8,14 +8,19 @@ string: ["pstring",{"countType":"varint"}]
 ByteArray: ["buffer",{"countType":"varint"}]
 SignedByteArray: ["buffer",{"countType":"zigzag32"}]
 LittleString: ["pstring",{"countType":"li32"}]
-varint32: varint
-bool: native
+varint64: native                                      # Some primitives
 zigzag32: native
 zigzag64: native
 uuid: native
 byterot: native
+bitflags: native
+restBuffer: native
+encapsulated: native
+nbt: native                                           # NBT
+lnbt: native
+nbtLoop: native
+enum_size_based_on_values_len: native                 # Packet-specific custom logic  
 MapInfo: native
-nbt: native
 
 # load the packet map file
 !import: packet_map.yml
@@ -50,13 +55,14 @@ packet_login:
    !bound: server
    # Protocol version (Big Endian!)
    protocol_version: i32
-   # The combined size of the `chain` and `client_data`
-   payload_size: varint
+   tokens: '["encapsulated", { "lengthType": "varint", "type": "LoginTokens" }]'
+
+LoginTokens:
    # JSON array of JWT data: contains the display name, UUID and XUID
    # It should be signed by the Mojang public key
-   chain: LittleString
+   identity: LittleString
    # Skin related data
-   client_data: LittleString
+   client: LittleString
 
 packet_play_status:
    !id: 0x02
@@ -881,7 +887,7 @@ packet_container_open:
    !bound: client
    # WindowID is the ID representing the window that is being opened. It may be used later to close the
    # container using a ContainerClose packet.
-   window_id: u8
+   window_id: WindowID
    # ContainerType is the type ID of the container that is being opened when opening the container at the
    # position of the packet. It depends on the block/entity, and could, for example, be the window type of
    # a chest or a hopper, but also a horse inventory.
@@ -902,7 +908,7 @@ packet_container_close:
    !bound: both
    # WindowID is the ID representing the window of the container that should be closed. It must be equal to
    # the one sent in the ContainerOpen packet to close the designated window.
-   window_id: u8
+   window_id: WindowID
    # ServerSide determines whether or not the container was force-closed by the server. If this value is
    # not set correctly, the client may ignore the packet and respond with a PacketViolationWarning.
    server: bool
@@ -926,7 +932,7 @@ packet_inventory_content:
    !bound: both
    # WindowID is the ID that identifies one of the windows that the client currently has opened, or one of
    # the consistent windows such as the main inventory.
-   inventory_id: varint
+   inventory_id: WindowIDVarint
    # Content is the new content of the inventory. The length of this slice must be equal to the full size of
    # the inventory window updated.
    input: ItemStacks
@@ -939,7 +945,7 @@ packet_inventory_slot:
    !bound: both
    # WindowID is the ID of the window that the packet modifies. It must point to one of the windows that the
    # client currently has opened.
-   window_id: varint
+   window_id: WindowIDVarint
    # Slot is the index of the slot that the packet modifies. The new item will be set to the slot at this
    # index.
    slot: varint
@@ -1011,7 +1017,7 @@ packet_adventure_settings:
    flags: AdventureFlags
    # CommandPermissionLevel is a permission level that specifies the kind of commands that the player is
    # allowed to use.
-   command_permission: varint32 =>
+   command_permission: varint =>
       0: normal
       1: operator
       2: host
@@ -1418,7 +1424,7 @@ packet_update_trade:
    !id: 0x50
    !bound: client
    # WindowID is the ID that identifies the trading window that the client currently has opened.
-   window_id: u8
+   window_id: WindowID
    # WindowType is an identifier specifying the type of the window opened. In vanilla, it appears this is
    # always filled out with 15.
    window_type: WindowType
@@ -1456,7 +1462,7 @@ packet_update_equipment:
    !bound: client
    # WindowID is the identifier associated with the window that the UpdateEquip packet concerns. It is the
    # ID sent for the horse inventory that was opened before this packet was sent.
-   window_id: u8
+   window_id: WindowID
    # WindowType is the type of the window that was opened. Generally, this is the type of a horse inventory,
    # as the packet is specifically made for that.
    window_type: WindowType

@@ -881,7 +881,7 @@ ItemStackRequest:
          if craft_creative:
             # The stack ID of the creative item that is being created. This is one of the
             # creative item stack IDs sent in the CreativeContent packet.
-            item_id: varint32
+            item_id: varint
          if optional:
             # For the cartography table, if a certain MULTI recipe is being called, this points to the network ID that was assigned.
             recipe_network_id: varint
@@ -907,7 +907,7 @@ ItemStackResponses: []varint
       1: error
    # RequestID is the unique ID of the request that this response is in reaction to. If rejected, the client
    # will undo the actions from the request with this ID.
-   request_id: varint32
+   request_id: varint
    _: status ?
       if ok:
          # ContainerInfo holds information on the containers that had their contents changed as a result of the
@@ -928,7 +928,7 @@ ItemStackResponses: []varint
                # sent to the client.
                count: u8
                # StackNetworkID is the network ID of the new stack at a specific slot.
-               item_stack_id: varint32
+               item_stack_id: varint
                # CustomName is the custom name of the item stack. It is used in relation to text filtering.
                custom_name: string
                # DurabilityCorrection is the current durability of the item stack. This durability will be shown

@@ -8,14 +8,19 @@ string: ["pstring",{"countType":"varint"}]
 ByteArray: ["buffer",{"countType":"varint"}]
 SignedByteArray: ["buffer",{"countType":"zigzag32"}]
 LittleString: ["pstring",{"countType":"li32"}]
-varint32: varint
-bool: native
+varint64: native                                      # Some primitives
 zigzag32: native
 zigzag64: native
 uuid: native
 byterot: native
+bitflags: native
+restBuffer: native
+encapsulated: native
+nbt: native                                           # NBT
+lnbt: native
+nbtLoop: native
+enum_size_based_on_values_len: native                 # Packet-specific custom logic  
 MapInfo: native
-nbt: native
 
 # load the packet map file
 !import: packet_map.yml
@@ -50,13 +55,14 @@ packet_login:
    !bound: server
    # Protocol version (Big Endian!)
    protocol_version: i32
-   # The combined size of the `chain` and `client_data`
-   payload_size: varint
+   tokens: '["encapsulated", { "lengthType": "varint", "type": "LoginTokens" }]'
+
+LoginTokens:
    # JSON array of JWT data: contains the display name, UUID and XUID
    # It should be signed by the Mojang public key
-   chain: LittleString
+   identity: LittleString
    # Skin related data
-   client_data: LittleString
+   client: LittleString
 
 packet_play_status:
    !id: 0x02
@@ -1041,7 +1047,7 @@ packet_adventure_settings:
    flags: AdventureFlags
    # CommandPermissionLevel is a permission level that specifies the kind of commands that the player is
    # allowed to use.
-   command_permission: varint32 =>
+   command_permission: varint =>
       0: normal
       1: operator
       2: host

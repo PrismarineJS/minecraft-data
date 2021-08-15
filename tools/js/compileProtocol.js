@@ -42,8 +42,8 @@ function genProtoSchema () {
   return version
 }
 
-function convert (ver) {
-  process.chdir(join(__dirname, '../../data/bedrock/' + ver))
+function convert (ver, path) {
+  process.chdir(path || join(__dirname, '../../data/bedrock/' + ver))
   const version = genProtoSchema()
   try { fs.mkdirSync(`../${version}`) } catch {}
   fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: getJSON('./proto.json') }, null, 2))
@@ -55,7 +55,14 @@ function convert (ver) {
 // If no argument, build everything
 if (!module.parent) {
   if (!process.argv[2]) {
-    convert('latest')
+    const versions = require('../../data/dataPaths.json').bedrock
+    for (const versionId in versions) {
+      console.log('Compiling bedrock protocol', versionId)
+      const ver = versions[versionId]
+      if (ver.protocolYml) {
+        convert(ver.protocolYml.includes('latest') ? 'latest' : versionId)
+      }
+    }
   } else { // build the specified version
     convert(process.argv[2])
   }

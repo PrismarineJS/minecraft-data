@@ -695,7 +695,7 @@ ItemStackRequests: []varint
          if craft_creative:
             # CreativeItemNetworkID is the network ID of the creative item that is being created. This is one of the
             # creative item network IDs sent in the CreativeContent packet.
-            creative_item_network_id: varint32
+            creative_item_network_id: varint
          if optional:
             # For the cartography table, if a certain MULTI recipe is being called, this points to the network ID that was assigned.
             recipe_network_id: varint
@@ -712,14 +712,14 @@ ItemStackRequests: []varint
 
 ItemStackResponses: []varint
    result: u8
-   request_id: varint32
+   request_id: varint
    containers: []varint
       container_id: u8
       slots: []varint
          slot: u8
          hotbar_slot: u8
          count: u8
-         item_stack_id: varint32
+         item_stack_id: varint
          custom_name: string
 
 ItemComponentList: []varint
@@ -763,6 +763,35 @@ CommandOrigin:
 # Some arbitrary definitions from CBMC, Window IDs are normally
 # unique + sequential
 WindowID: i8 =>
+   -100: drop_contents
+   -24: beacon
+   -23: trading_output
+   -22: trading_use_inputs
+   -21: trading_input_2
+   -20: trading_input_1
+   -17: enchant_output
+   -16: enchant_material
+   -15: enchant_input
+   -13: anvil_output
+   -12: anvil_result
+   -11: anvil_material
+   -10: container_input
+   -5: crafting_use_ingredient
+   -4: crafting_result
+   -3: crafting_remove_ingredient
+   -2: crafting_add_ingredient
+   -1: none
+   0: inventory
+   1: first
+   100: last
+   119: offhand
+   120: armor
+   121: creative
+   122: hotbar
+   123: fixed_inventory
+   124: ui
+
+WindowIDVarint: varint =>
    -100: drop_contents
    -24: beacon
    -23: trading_output
