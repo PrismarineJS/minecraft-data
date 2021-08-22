@@ -1,4 +1,10 @@
-# 2.91.0
+## 2.92.0
+* protocol packet field type mismatch fix (@Gnog3)
+* Add bedrock protocol data (@extremeheat)
+* remap u32 to varint in protocol.json (@kvoli)
+* bedrock: remove minecraft: prefix from blockstates (@extremeheat)
+
+## 2.91.0
 * Rename `clicked_item` to `cursorItem` in 1.17+ window_click packet (@nickelpro)
 
 ## 2.90.0
