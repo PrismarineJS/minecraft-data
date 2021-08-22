@@ -47,7 +47,7 @@ const makeHp = list => `
 </html>
 `
 let out = []
-for (const version of mcData.supportedVersions.bedrock) {
+for (const version of [...mcData.supportedVersions.bedrock, 'latest']) {
   console.log(version)
   let ret = main(dataPath + 'bedrock/', version)
 
