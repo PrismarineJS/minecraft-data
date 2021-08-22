@@ -1,6 +1,5 @@
 {
   "types": {
-    "varint32": "varint",
     "varint64": "native",
     "zigzag32": "native",
     "zigzag64": "native",
@@ -2204,7 +2203,7 @@
                                 [
                                   {
                                     "name": "creative_item_network_id",
-                                    "type": "varint32"
+                                    "type": "varint"
                                   }
                                 ]
                               ],
@@ -2278,7 +2277,7 @@
             },
             {
               "name": "request_id",
-              "type": "varint32"
+              "type": "varint"
             },
             {
               "name": "containers",
@@ -2316,7 +2315,7 @@
                                 },
                                 {
                                   "name": "item_stack_id",
-                                  "type": "varint32"
+                                  "type": "varint"
                                 },
                                 {
                                   "name": "custom_name",
@@ -2425,6 +2424,41 @@
       "mapper",
       {
         "type": "i8",
+        "mappings": {
+          "0": "inventory",
+          "1": "first",
+          "100": "last",
+          "119": "offhand",
+          "120": "armor",
+          "121": "creative",
+          "122": "hotbar",
+          "123": "fixed_inventory",
+          "124": "ui",
+          "-100": "drop_contents",
+          "-24": "beacon",
+          "-23": "trading_output",
+          "-22": "trading_use_inputs",
+          "-21": "trading_input_2",
+          "-20": "trading_input_1",
+          "-17": "enchant_output",
+          "-16": "enchant_material",
+          "-15": "enchant_input",
+          "-13": "anvil_output",
+          "-12": "anvil_result",
+          "-11": "anvil_material",
+          "-10": "container_input",
+          "-5": "crafting_use_ingredient",
+          "-4": "crafting_result",
+          "-3": "crafting_remove_ingredient",
+          "-2": "crafting_add_ingredient",
+          "-1": "none"
+        }
+      }
+    ],
+    "WindowIDVarint": [
+      "mapper",
+      {
+        "type": "varint",
         "mappings": {
           "0": "inventory",
           "1": "first",
@@ -4599,7 +4633,7 @@
       [
         {
           "name": "inventory_id",
-          "type": "varint"
+          "type": "WindowIDVarint"
         },
         {
           "name": "input",
@@ -4612,7 +4646,7 @@
       [
         {
           "name": "window_id",
-          "type": "WindowID"
+          "type": "WindowIDVarint"
         },
         {
           "name": "slot",
@@ -4725,7 +4759,7 @@
           "type": [
             "mapper",
             {
-              "type": "varint32",
+              "type": "varint",
               "mappings": {
                 "0": "normal",
                 "1": "operator",
