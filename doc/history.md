@@ -1,3 +1,6 @@
+## 2.93.0
+* Fix enchantment.json saying that thorns goes on chestplate (@u9g)
+
 ## 2.92.0
 * protocol packet field type mismatch fix (@Gnog3)
 * Add bedrock protocol data (@extremeheat)
