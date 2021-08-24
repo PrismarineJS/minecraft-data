@@ -293,9 +293,14 @@ function eqs (compareTo, k) {
 }
 
 function loadProtocol (version) {
-  const data = require('minecraft-data')(version).protocol
-  const comments = require('minecraft-data')(version).protocolComments
-  $j('#protocolTable').html(protocolToString(data, comments))
+  if (version.startsWith('bedrock')) {
+    const [, v] = version.split('_')
+    $j('#protocolTable').html(`<html-view src="protocol/bedrock/${v}"><a href="protocol/bedrock/${v}">Click here</a></html-view>`)
+  } else {
+    const data = require('minecraft-data')(version).protocol
+    const comments = require('minecraft-data')(version).protocolComments
+    $j('#protocolTable').html(protocolToString(data, comments))
+  }
 }
 
 module.exports = loadProtocol
