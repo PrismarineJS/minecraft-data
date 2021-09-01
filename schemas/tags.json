@@ -1,0 +1,36 @@
+{
+  "title": "tags",
+  "type": "object",
+  "properties": {
+    "blocks": {
+      "title": "blockTags",
+      "description": "Block name to tags",
+      "$ref": "#/$defs/tagCollection",
+      "additionalProperties": { "title": "Block tags" }
+    },
+    "items": {
+      "title": "itemTags",
+      "description": "Item name to tags",
+      "$ref": "#/$defs/tagCollection",
+      "additionalProperties": { "title": "Item tags" }
+    },
+    "entities": {
+      "title": "entityTags",
+      "description": "Entity name to tags",
+      "$ref": "#/$defs/tagCollection",
+      "additionalProperties": { "title": "Entity tags" }
+    }
+  },
+  "required": [ "blocks", "items", "entities" ],
+  "$defs": {
+    "tagCollection": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "uniqueItems": true,
+        "minItems": 1,
+        "items": { "type": "string" }
+      }
+    }
+  }
+}
