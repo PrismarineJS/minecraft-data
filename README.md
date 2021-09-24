@@ -53,7 +53,7 @@ Data provided:
 | Foods | list of foods each with there id, saturation, foodpoints and more |
 | Commands | a tree structure for vanilla minecraft server commands, and some info needed to implement sub-parsers.
 | Legacy | mappings between legacy (1.12) and post-flattening (1.13+) blocks and items ids
-
+| Skin data | (bedrock edition) Skin geometry and texture data for steve skin
 
 See more information about this data in the [documentation](http://prismarinejs.github.io/minecraft-data/)
 
