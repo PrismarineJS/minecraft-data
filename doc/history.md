@@ -1,3 +1,6 @@
+## 2.94.0
+* bedrock: Add skin data paths for older versions
+
 ## 2.93.0
 * Fix enchantment.json saying that thorns goes on chestplate (@u9g)
 
