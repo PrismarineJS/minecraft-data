@@ -678,9 +678,10 @@ Skin:
       expression_type: lf32
    cape_data: SkinImage
    geometry_data: string
-   geometry_data_version: string
    animation_data: string
-
+   premium: bool
+   persona: bool
+   cape_on_classic: bool
    cape_id: string
    full_skin_id: string
    arm_size: string
@@ -694,12 +695,6 @@ Skin:
    piece_tint_colors: []li32
       piece_type: string
       colors: string[]li32
-   premium: bool
-   persona: bool
-   # PersonaCapeOnClassicSkin specifies if the skin had a Persona cape (in-game skin creator cape) equipped
-   # on a classic skin.
-   cape_on_classic: bool
-   primary_user: bool
 
 PlayerRecords:
    type: u8 =>
@@ -1076,47 +1071,6 @@ StructureBlockSettings:
    seed: lu32
    # Pivot is the pivot around which the structure may be rotated.
    pivot: vec3f
-
-# EducationSharedResourceURI is an education edition feature that is used for transmitting
-# education resource settings to clients. It contains a button name and a link URL.
-EducationSharedResourceURI:
-   # ButtonName is the button name of the resource URI.
-   button_name: string
-   # LinkURI is the link URI for the resource URI.
-   link_uri: string
-
-EducationExternalLinkSettings:
-   # URL is the external link URL.
-   url: string
-   # DisplayName is the display name in game.
-   display_name: string
-
-BlockUpdate:
-   position: BlockCoordinates
-   runtime_id: varint
-   flags: varint
-   # EntityUniqueID is the unique ID of the falling block entity that the block transitions to or that the
-   # entity transitions from.
-   # Note that for both possible values for TransitionType, the EntityUniqueID should point to the falling
-   # block entity involved.
-   entity_unique_id: zigzag64
-   # TransitionType is the type of the transition that happened. It is either BlockToEntityTransition, when
-   # a block placed becomes a falling entity, or EntityToBlockTransition, when a falling entity hits the
-   # ground and becomes a solid block again.
-   transition_type: varint => TransitionType
-
-TransitionType: =>
-   # For falling sand, when a sand turns to an entity
-   0: entity
-   # When sand turns back to a new block
-   1: create
-   2: destroy
-
-MaterialReducer:
-   mix: varint
-   items:
-      network_id: varint
-      count: varint
 
 # List of Window IDs. When a new container is opened (container_open), a new sequential Window ID is created.
 # Below window IDs are hard-coded and created when the game starts and the server does not 

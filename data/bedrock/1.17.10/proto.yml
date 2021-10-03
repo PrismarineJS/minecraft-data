@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.17.30
+!version: 1.17.10
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -330,7 +330,6 @@ packet_start_game:
    limited_world_width: li32
    limited_world_length: li32
    is_new_nether: bool
-   edu_resource_uri: EducationSharedResourceURI
    experimental_gameplay_override: bool
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
@@ -934,8 +933,6 @@ packet_entity_pick_request:
    !bound: server
    runtime_entity_id: lu64
    selected_slot: u8
-   # WithData is true if the pick request requests the entity metadata.
-   with_data: bool
 
 # PlayerAction is sent by the client when it executes any action, for example starting to sprint, swim,
 # starting the breaking of a block, dropping an item, etc.
@@ -958,9 +955,7 @@ packet_player_action:
 packet_hurt_armor:
    !id: 0x26
    !bound: client
-   cause: zigzag32
-   damage: zigzag32
-   armor_slots: zigzag64
+   health: zigzag32
 
 packet_set_entity_data:
    !id: 0x27
@@ -1127,16 +1122,9 @@ packet_crafting_data:
    !id: 0x34
    !bound: client
    recipes: Recipes
-   # PotionContainerChangeRecipes is a list of all recipes to convert a potion from one type to another,
-   # such as from a drinkable potion to a splash potion, or from a splash potion to a lingering potion.
    potion_type_recipes: PotionTypeRecipes
-   # MaterialReducers is a list of all material reducers which is used in education edition chemistry.
-   material_reducers: MaterialReducer[]varint
    potion_container_recipes: PotionContainerChangeRecipes
-   # ClearRecipes indicates if all recipes currently active on the client should be cleaned. Doing this
-   # means that the client will have no recipes active by itself: Any CraftingData packets previously sent
-   # will also be discarded, and only the recipes in this CraftingData packet will be used.
-   clear_recipes: bool
+   is_clean: bool
 
 # CraftingEvent is sent by the client when it crafts a particular item. Note that this packet may be fully
 # ignored, as the InventoryTransaction packet provides all the information required.
@@ -1637,10 +1625,9 @@ packet_available_commands:
 # with enums that have a big amount of options. To illustrate, it can make
 # <false|true|yes|no> <$Name: bool>.
 CommandFlags: [ "bitfield", [
-   { "name": "unused", "size": 1, "signed": false }, # 6 unused upper bits
-   { "name": "collapse_enum", "size": 1, "signed": false },
+   { "name": "unused", "size": 6, "signed": false }, # 6 unused upper bits
    { "name": "has_semantic_constraint", "size": 1, "signed": false },
-   { "name": "as_chained_command", "size": 1, "signed": false },
+   { "name": "collapse_enum", "size": 1, "signed": false }
 ]]
 
 # enum_size_based_on_values_len: native
@@ -2113,14 +2100,6 @@ packet_photo_transfer:
    # is set to PhotoName, it will display the photo (provided Education Edition is used).
    # The photo image is downloaded to a sub-folder with this book ID.
    book_id: string
-   # PhotoType is one of the three photo types above.
-   photo_type: u8
-   # SourceType is the source photo type. It is one of the three photo types above.
-   source_type: u8
-   # OwnerEntityUniqueID is the entity unique ID of the photo's owner.
-   owner_entity_unique_id: i64
-   # NewPhotoName is the new name of the photo.
-   new_photo_name: string
 
 # ModalFormRequest is sent by the server to make the client open a form. This form may be either a modal form
 # which has two options, a menu form for a selection of options and a custom form for properties.
@@ -2288,7 +2267,12 @@ packet_update_block_synced:
    # TransitionType is the type of the transition that happened. It is either BlockToEntityTransition, when
    # a block placed becomes a falling entity, or EntityToBlockTransition, when a falling entity hits the
    # ground and becomes a solid block again.
-   transition_type: varint => TransitionType
+   transition_type: varint64 =>
+      # For falling sand, when a sand turns to an entity
+      0: entity
+      # When sand turns back to a new block
+      1: create
+      2: destroy
 
 
 # MoveActorDelta is sent by the server to move an entity. The packet is specifically optimised to save as
@@ -2661,24 +2645,11 @@ packet_education_settings:
    # CanResizeCodeBuilder specifies if clients connected to the world should be able to resize the code
    # builder when it is opened.
    CanResizeCodeBuilder: bool
-   disable_legacy_title_bar: bool
-   post_process_filter: string
-   screenshot_border_path: string
-   has_agent_capabilities: bool
-   agent_capabilities: has_agent_capabilities ?
-      if true:
-         has: bool
-         can_modify_blocks: bool
    HasOverrideURI: bool
    OverrideURI: HasOverrideURI?
       if true: string
    # HasQuiz specifies if the world has a quiz connected to it.
    HasQuiz: bool
-   has_external_link_settings: bool
-   external_link_settings: has_external_link_settings ?
-      has: bool
-      url: string
-      display_name: string
 
 # MultiPlayerSettings is sent by the client to update multi-player related settings server-side and sent back
 # to online players by the server.
@@ -3052,8 +3023,6 @@ packet_animate_entity:
    next_state: string
    # StopCondition is a MoLang expression that specifies when the animation should be stopped.
    stop_condition: string
-   # StopConditionVersion is the MoLang stop condition version.
-   stop_condition_version: li64
    # Controller is the animation controller that is used to manage animations. These controllers decide when
    # to play which animation.
    controller: string
@@ -3165,7 +3134,6 @@ packet_add_volume_entity:
    # The Runtime Entity ID
    entity_id: varint64
    nbt: nbt
-   engine_version: string
 
 # RemoveVolumeEntity indicates a volume entity to be removed from server to client.
 packet_remove_volume_entity:
@@ -3201,34 +3169,3 @@ packet_npc_dialogue:
    npc_name: string
    # ActionJSON is the JSON string of the buttons/actions the server can perform.
    action_json: string
-
-packet_edu_uri_resource_packet:
-   !id: 0xaa
-   resource: EducationSharedResourceURI
-   
-# CreatePhoto is a packet that allows players to export photos from their portfolios into items in their inventory.
-# This packet only works on the Education Edition version of Minecraft.
-packet_create_photo:
-   !id: 0xab
-   # EntityUniqueID is the unique ID of the entity.
-   entity_unique_id: i64
-   # PhotoName is the name of the photo.
-   photo_name: string
-   # ItemName is the name of the photo as an item.
-   item_name: string
-
-# UpdateSubChunkBlocks is essentially just UpdateBlock packet, however for a set of blocks in a sub chunk.
-packet_update_subchunk_blocks:
-   !id: 0xac
-   # SubChunkX, SubChunkY, and SubChunkZ help identify the sub chunk.
-   x: varint
-   y: varint
-   z: varint
-   # Blocks contains each updated block change entry.
-   blocks: BlockUpdate[]varint
-   # Extra contains each updated block change entry for the second layer, usually for waterlogged blocks.
-   extra: BlockUpdate[]varint
-
-packet_photo_info_request_packet:
-   !id: 0xad
-   photo_id: zigzag64
