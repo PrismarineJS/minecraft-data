@@ -59,8 +59,8 @@ if (!module.parent) {
     for (const versionId in versions) {
       console.log('Compiling bedrock protocol', versionId)
       const ver = versions[versionId]
-      if (ver.protocolYml) {
-        convert(ver.protocolYml.includes('latest') ? 'latest' : versionId)
+      if (ver.proto) {
+        convert(ver.proto.includes('latest') ? 'latest' : versionId)
       }
     }
   } else { // build the specified version
