@@ -1,3 +1,6 @@
+## 2.95.0
+* bedrock: Add 1.17.30 protocol data
+
 ## 2.94.0
 * bedrock: Add skin data paths for older versions
 
