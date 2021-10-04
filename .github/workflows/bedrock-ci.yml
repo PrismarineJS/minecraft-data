@@ -21,8 +21,7 @@ jobs:
         repository: PrismarineJS/node-minecraft-data
         submodules: recursive
         path: node-mcdata
-#     - run: rm -rf minecraft-data
-    - run: cmd.exe rmdir /s /q minecraft-data
+    - run: rm -rf minecraft-data
     - uses: actions/checkout@v2
       with:
         path: node-mcdata/minecraft-data
@@ -30,7 +29,7 @@ jobs:
       with:
         repository: PrismarineJS/bedrock-protocol
         path: bedrock-protocol
-#     - run: ls -R .
+    - run: ls -R .
     - run: |
         cd bedrock-protocol
         npm uninstall minecraft-data
@@ -38,7 +37,5 @@ jobs:
         npm i
         cd ../node-mcdata
         npm run generate:data
-    - run: cd test && node -e "var i = require('./internal.js');i.startTest('1.16.201', console.log)"
-      working-directory: bedrock-protocol
     - run: npm test
       working-directory: bedrock-protocol
