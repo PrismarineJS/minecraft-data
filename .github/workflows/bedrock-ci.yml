@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 10
 
     steps:
@@ -21,7 +21,8 @@ jobs:
         repository: PrismarineJS/node-minecraft-data
         submodules: recursive
         path: node-mcdata
-    - run: rm -rf minecraft-data
+#     - run: rm -rf minecraft-data
+    - run: rmdir /s /q minecraft-data
     - uses: actions/checkout@v2
       with:
         path: node-mcdata/minecraft-data
@@ -29,7 +30,7 @@ jobs:
       with:
         repository: PrismarineJS/bedrock-protocol
         path: bedrock-protocol
-    - run: ls -R .
+#     - run: ls -R .
     - run: |
         cd bedrock-protocol
         npm uninstall minecraft-data
