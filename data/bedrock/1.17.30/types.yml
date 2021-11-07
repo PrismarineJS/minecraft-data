@@ -792,68 +792,62 @@ ItemStackRequest:
       type_id: u8 =>
          # TakeStackRequestAction is sent by the client to the server to take x amount of items from one slot in a
          # container to the cursor.
-         - take
+         0: take
          # PlaceStackRequestAction is sent by the client to the server to place x amount of items from one slot into
          # another slot, such as when shift clicking an item in the inventory to move it around or when moving an item
          # in the cursor into a slot.
-         - place
+         1: place
          # SwapStackRequestAction is sent by the client to swap the item in its cursor with an item present in another
          # container. The two item stacks swap places. 
-         - swap
+         2: swap
          # DropStackRequestAction is sent by the client when it drops an item out of the inventory when it has its
          # inventory opened. This action is not sent when a player drops an item out of the hotbar using the Q button
          # (or the equivalent on mobile). The InventoryTransaction packet is still used for that action, regardless of
          # whether the item stack network IDs are used or not.
-         - drop
+         3: drop
          # DestroyStackRequestAction is sent by the client when it destroys an item in creative mode by moving it
          # back into the creative inventory.
-         - destroy
+         4: destroy
          # ConsumeStackRequestAction is sent by the client when it uses an item to craft another item. The original
          # item is 'consumed'.
-         - consume
+         5: consume
          # CreateStackRequestAction is sent by the client when an item is created through being used as part of a
          # recipe. For example, when milk is used to craft a cake, the buckets are leftover. The buckets are moved to
          # the slot sent by the client here.
          # Note that before this is sent, an action for consuming all items in the crafting table/grid is sent. Items
          # that are not fully consumed when used for a recipe should not be destroyed there, but instead, should be
          # turned into their respective resulting items. 
-         - create
+         6: create 
          # LabTableCombineStackRequestAction is sent by the client when it uses a lab table to combine item stacks.
-         - lab_table_combine
+         7: lab_table_combine
          # BeaconPaymentStackRequestAction is sent by the client when it submits an item to enable effects from a
          # beacon. These items will have been moved into the beacon item slot in advance. 
-         - beacon_payment
+         8: beacon_payment
          # MineBlockStackRequestAction is sent by the client when it breaks a block.
-         - mine_block
+         9: mine_block
          # CraftRecipeStackRequestAction is sent by the client the moment it begins crafting an item. This is the
          # first action sent, before the Consume and Create item stack request actions.
          # This action is also sent when an item is enchanted. Enchanting should be treated mostly the same way as
          # crafting, where the old item is consumed.
-         - craft_recipe
+         10: craft_recipe
          # AutoCraftRecipeStackRequestAction is sent by the client similarly to the CraftRecipeStackRequestAction. The
          # only difference is that the recipe is automatically created and crafted by shift clicking the recipe book.
-         - craft_recipe_auto  #recipe book?
+         11: craft_recipe_auto  #recipe book?
          # CraftCreativeStackRequestAction is sent by the client when it takes an item out fo the creative inventory.
          # The item is thus not really crafted, but instantly created.
-         - craft_creative
+         12: craft_creative
          # CraftRecipeOptionalStackRequestAction is sent when using an anvil. When this action is sent, the
          # CustomNames field in the respective stack request is non-empty and contains the name of the item created
          # using the anvil.
-         - optional
-         # CraftGrindstoneRecipeStackRequestAction is sent when a grindstone recipe is crafted. It contains the RecipeNetworkID
-         # to identify the recipe crafted, and the cost for crafting the recipe.
-         - craft_grindstone_request
-         # CraftLoomRecipeStackRequestAction is sent when a loom recipe is crafted. It simply contains the
-         # pattern identifier to figure out what pattern is meant to be applied to the item.
-         - craft_loom_request
+         13: optional
          # CraftNonImplementedStackRequestAction is an action sent for inventory actions that aren't yet implemented
          # in the new system. These include, for example, anvils.
-         - non_implemented  # anvils aren't fully implemented yet
+         14: non_implemented  #anvils aren't fully implemented yet
          # CraftResultsDeprecatedStackRequestAction is an additional, deprecated packet sent by the client after
          # crafting. It holds the final results and the amount of times the recipe was crafted. It shouldn't be used.
          # This action is also sent when an item is enchanted. Enchanting should be treated mostly the same way as
          # crafting, where the old item is consumed.
-         - results_deprecated
+         15: results_deprecated
       _: type_id ?
          if take or place:
             count: u8
@@ -909,15 +903,6 @@ ItemStackRequest:
             recipe_network_id: varint
             # Most likely the index in the request's filter strings that this action is using
             filtered_string_index: li32
-         if craft_grindstone_request:
-            # RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
-            # one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
-            recipe_network_id: varint
-            # Cost is the cost of the recipe that was crafted.
-            cost: varint
-         if craft_loom_request:
-            # Pattern is the pattern identifier for the loom recipe.
-            pattern: string
          if non_implemented: void
          if results_deprecated:
             result_items: ItemLegacy[]varint
