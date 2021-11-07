@@ -1,3 +1,6 @@
+## 2.96.0
+* Add bedrock 1.17.40 protocol data (@extremeheat)
+
 ## 2.95.0
 * bedrock: Add 1.17.30 protocol data
 
