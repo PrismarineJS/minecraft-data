@@ -2107,8 +2107,10 @@
                           "11": "craft_recipe_auto",
                           "12": "craft_creative",
                           "13": "optional",
-                          "14": "non_implemented",
-                          "15": "results_deprecated"
+                          "14": "craft_grindstone_request",
+                          "15": "craft_loom_request",
+                          "16": "non_implemented",
+                          "17": "results_deprecated"
                         }
                       }
                     ]
@@ -2286,6 +2288,28 @@
                               {
                                 "name": "filtered_string_index",
                                 "type": "li32"
+                              }
+                            ]
+                          ],
+                          "craft_grindstone_request": [
+                            "container",
+                            [
+                              {
+                                "name": "recipe_network_id",
+                                "type": "varint"
+                              },
+                              {
+                                "name": "cost",
+                                "type": "varint"
+                              }
+                            ]
+                          ],
+                          "craft_loom_request": [
+                            "container",
+                            [
+                              {
+                                "name": "pattern",
+                                "type": "string"
                               }
                             ]
                           ],
@@ -3604,7 +3628,9 @@
                 "170": "edu_uri_resource_packet",
                 "171": "create_photo",
                 "172": "update_subchunk_blocks",
-                "173": "photo_info_request"
+                "173": "photo_info_request",
+                "174": "subchunk",
+                "175": "subchunk_request"
               }
             }
           ]
@@ -3781,7 +3807,9 @@
                 "edu_uri_resource_packet": "packet_edu_uri_resource_packet",
                 "create_photo": "packet_create_photo",
                 "update_subchunk_blocks": "packet_update_subchunk_blocks",
-                "photo_info_request": "packet_photo_info_request"
+                "photo_info_request": "packet_photo_info_request",
+                "subchunk": "packet_subchunk",
+                "subchunk_request": "packet_subchunk_request"
               },
               "default": "void"
             }
@@ -4886,6 +4914,9 @@
                 "2031": "particle_wax_off",
                 "2032": "particle_scrape",
                 "2033": "particle_electric_spark",
+                "2034": "particle_turtle_egg",
+                "2035": "particle_sculk_shriek",
+                "2036": "sculk_catalyst_bloom",
                 "3001": "start_rain",
                 "3002": "start_thunder",
                 "3003": "stop_rain",
@@ -9055,6 +9086,102 @@
         {
           "name": "photo_id",
           "type": "zigzag64"
+        }
+      ]
+    ],
+    "packet_subchunk": [
+      "container",
+      [
+        {
+          "name": "dimension",
+          "type": "varint"
+        },
+        {
+          "name": "x",
+          "type": "varint"
+        },
+        {
+          "name": "y",
+          "type": "varint"
+        },
+        {
+          "name": "z",
+          "type": "varint"
+        },
+        {
+          "name": "data",
+          "type": "ByteArray"
+        },
+        {
+          "name": "request_result",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "undefined",
+                "1": "success",
+                "2": "chunk_not_found",
+                "3": "invalid_dimension",
+                "4": "player_not_found",
+                "5": "y_index_out_of_bounds"
+              }
+            }
+          ]
+        },
+        {
+          "name": "heightmap_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "no_data",
+                "1": "has_data",
+                "2": "too_high",
+                "3": "too_low"
+              }
+            }
+          ]
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "heightmap_type",
+              "fields": {
+                "has_data": [
+                  "buffer",
+                  {
+                    "count": 256
+                  }
+                ]
+              },
+              "default": "void"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_subchunk_request": [
+      "container",
+      [
+        {
+          "name": "dimension",
+          "type": "varint"
+        },
+        {
+          "name": "x",
+          "type": "varint"
+        },
+        {
+          "name": "y",
+          "type": "varint"
+        },
+        {
+          "name": "z",
+          "type": "varint"
         }
       ]
     ],

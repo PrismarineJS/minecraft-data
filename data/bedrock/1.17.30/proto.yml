@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.17.40
+!version: 1.17.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -671,9 +671,6 @@ packet_level_event:
       2031: particle_wax_off
       2032: particle_scrape
       2033: particle_electric_spark
-      2034: particle_turtle_egg
-      2035: particle_sculk_shriek
-      2036: sculk_catalyst_bloom
 
       3001: start_rain  
       3002: start_thunder  
@@ -694,7 +691,7 @@ packet_level_event:
       3509: cauldron_clean_banner  
       3600: block_start_break  
       3601: block_stop_break  
-      4000: set_data
+      4000: set_data  
       9800: players_sleeping
       0x4000: add_particle_mask
       # 0x4000 | + particle ID
@@ -3235,33 +3232,3 @@ packet_update_subchunk_blocks:
 packet_photo_info_request:
    !id: 0xad
    photo_id: zigzag64
-
-packet_subchunk:
-   !id: 0xae
-   dimension: varint
-   x: varint
-   y: varint
-   z: varint
-   # Data is the actual sub chunk data, such as the blocks.
-   data: ByteArray
-   request_result: varint =>
-      0: undefined
-      1: success
-      2: chunk_not_found
-      3: invalid_dimension
-      4: player_not_found
-      5: y_index_out_of_bounds
-   heightmap_type: u8 =>
-      0: no_data
-      1: has_data
-      2: too_high
-      3: too_low
-   _: heightmap_type ?
-      if has_data: '["buffer", { "count": 256 }]'
-
-packet_subchunk_request:
-   !id: 0xaf
-   dimension: varint
-   x: varint
-   y: varint
-   z: varint
