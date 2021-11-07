@@ -3236,8 +3236,6 @@ packet_photo_info_request:
    !id: 0xad
    photo_id: zigzag64
 
-SubChunkHeightData: ["array", { "count": 256 }]
-
 packet_subchunk:
    !id: 0xae
    dimension: varint
@@ -3259,7 +3257,7 @@ packet_subchunk:
       2: too_high
       3: too_low
    _: heightmap_type ?
-      if has_data: SubChunkHeightData
+      if has_data: '["array", { "count": 256 }]'
 
 packet_subchunk_request:
    !id: 0xaf
