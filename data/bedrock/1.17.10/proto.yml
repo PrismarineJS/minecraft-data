@@ -187,7 +187,7 @@ packet_text:
          message: string
       if translation or popup or jukebox_popup:
          message: string
-         paramaters: string[]varint
+         parameters: string[]varint
    # The XUID of the player who sent this message.
    xuid: string
    # PlatformChatID is an identifier only set for particular platforms when chatting (presumably only for
@@ -1542,7 +1542,7 @@ packet_show_credits:
 packet_available_commands:
    !id: 0x4c
    !bound: client
-   # The length of the enums for all the command paramaters in this packet
+   # The length of the enums for all the command parameters in this packet
    values_len: varint
    # Not read from stream: instead calculated from the `values_len` field
    #
@@ -1552,7 +1552,7 @@ packet_available_commands:
    _enum_type: '["enum_size_based_on_values_len"]'
    # Here all the enum values for all of the possible commands are stored to one array palette
    enum_values: string[]$values_len
-   # Integer paramaters may sometimes have a prefix, such as the XP command:
+   # Integer parameters may sometimes have a prefix, such as the XP command:
    # /xp <amount: int> [player: target] <- here, the xp command gives experience points
    # /xp <amount: int>L [player: target] <- here, the xp command gives experience levels
    # This is the palette of suffixes
@@ -1574,12 +1574,12 @@ packet_available_commands:
       flags: lu16
       permission_level: u8
       alias: li32
-      # The list of overload paramaters for this command
+      # The list of overload parameters for this command
       overloads: []varint
-         # Each of the paramaters gets an array of posible overloads
+         # Each of the parameters gets an array of posible overloads
          _: []varint
-            # The name of the paramater shown to the user (the `amount` in `/xp <amount: int>`)
-            paramater_name: string
+            # The name of the parameter shown to the user (the `amount` in `/xp <amount: int>`)
+            parameter_name: string
             value_type: lu16 =>
                1: int
                2: float
@@ -1600,7 +1600,7 @@ packet_available_commands:
                0x20: enum
                0x100: suffixed
                0x400: soft_enum
-            # Is this paramater required?
+            # Is this parameter required?
             optional: bool
             # Additinal options for this command (thanks macroshaft...)
             options: CommandFlags
@@ -1729,7 +1729,7 @@ packet_command_output:
       # Parameters is a list of parameters that serve to supply the message sent with additional information,
       # such as the position that a player was teleported to or the effect that was applied to an entity.
       # These parameters only apply for the Minecraft built-in command output.
-      paramaters: string[]varint
+      parameters: string[]varint
    data_set: output_type ?
       if data_set: string
       default: void
