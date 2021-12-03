@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.18.0
+!version: 1.17.40
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -389,8 +389,6 @@ packet_start_game:
    server_authoritative_inventory: bool
    # The server's engine version, used for telemetry
    engine: string
-   # A checksum to ensure block types between the server and client match
-   block_pallete_checksum: lu64
 
 packet_add_player:
    !id: 0x0c
@@ -698,7 +696,6 @@ packet_level_event:
       3601: block_stop_break  
       4000: set_data
       9800: players_sleeping
-      9801: sleeping_players
       0x4000: add_particle_mask
       # 0x4000 | + particle ID
       16385: particle_bubble   # 1
@@ -3261,9 +3258,6 @@ packet_subchunk:
       3: too_low
    _: heightmap_type ?
       if has_data: '["buffer", { "count": 256 }]'
-   cache_enabled: bool
-   blob_id: cache_enabled ?
-      if true: u64
 
 packet_subchunk_request:
    !id: 0xaf

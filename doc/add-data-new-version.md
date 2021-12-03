@@ -1,5 +1,7 @@
 # How to add data for a new version ?
 
+For bedrock edition see [bedrock.md](bedrock.md)
+
 | file name | auto? | how to get it | notes |
 | -- | -- | -- | -- |
 | protocol.json | No | Follow [Pre-release Protocol][3] |
