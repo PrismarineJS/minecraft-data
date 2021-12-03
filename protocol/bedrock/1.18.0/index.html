@@ -159,6 +159,13 @@ a { text-decoration: none; }
 <tr><td><a href="#StructureBlockSettings">Type</a><td class='name'><a href="#StructureBlockSettings">StructureBlockSettings</a></td></tr>
 
 
+<tr><td><a href="#EducationSharedResourceURI">Type</a><td class='name'><a href="#EducationSharedResourceURI">EducationSharedResourceURI</a></td></tr>
+<tr><td><a href="#EducationExternalLinkSettings">Type</a><td class='name'><a href="#EducationExternalLinkSettings">EducationExternalLinkSettings</a></td></tr>
+<tr><td><a href="#BlockUpdate">Type</a><td class='name'><a href="#BlockUpdate">BlockUpdate</a></td></tr>
+<tr><td><a href="#TransitionType">Type</a><td class='name'><a href="#TransitionType">TransitionType</a></td></tr>
+<tr><td><a href="#MaterialReducer">Type</a><td class='name'><a href="#MaterialReducer">MaterialReducer</a></td></tr>
+
+
 
 <tr><td><a href="#WindowID">Type</a><td class='name'><a href="#WindowID">WindowID</a></td></tr>
 <tr><td><a href="#WindowIDVarint">Type</a><td class='name'><a href="#WindowIDVarint">WindowIDVarint</a></td></tr>
@@ -681,6 +688,15 @@ a { text-decoration: none; }
 <tr><td><a href="#packet_simulation_type">0xa8</a></td><td><a href="#packet_simulation_type">packet_simulation_type</a></td></tr>
 
 <tr><td><a href="#packet_npc_dialogue">0xa9</a></td><td><a href="#packet_npc_dialogue">packet_npc_dialogue</a></td></tr>
+<tr><td><a href="#packet_edu_uri_resource_packet">0xaa</a></td><td><a href="#packet_edu_uri_resource_packet">packet_edu_uri_resource_packet</a></td></tr>
+
+
+<tr><td><a href="#packet_create_photo">0xab</a></td><td><a href="#packet_create_photo">packet_create_photo</a></td></tr>
+
+<tr><td><a href="#packet_update_subchunk_blocks">0xac</a></td><td><a href="#packet_update_subchunk_blocks">packet_update_subchunk_blocks</a></td></tr>
+<tr><td><a href="#packet_photo_info_request">0xad</a></td><td><a href="#packet_photo_info_request">packet_photo_info_request</a></td></tr>
+<tr><td><a href="#packet_subchunk">0xae</a></td><td><a href="#packet_subchunk">packet_subchunk</a></td></tr>
+<tr><td><a href="#packet_subchunk_request">0xaf</a></td><td><a href="#packet_subchunk_request">packet_subchunk_request</a></td></tr>
   </tbody>
   </table><br/><hr/>
     <div class="packet-header" id="BehaviourPackInfos">
@@ -1486,10 +1502,8 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
 </table></td></tr>
 <tr><td class='field-name name'>cape data</td><td><a href="#SkinImage">SkinImage</a></td><td></td></tr>
 <tr><td class='field-name name'>geometry data</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>geometry data version</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>animation data</td><td>string</td><td></td></tr>
-<tr><td class='field-name name'>premium</td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'>persona</td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'>cape on classic</td><td>bool</td><td></td></tr>
 <tr><td class='field-name name'>cape id</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>full skin id</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>arm size</td><td>string</td><td></td></tr>
@@ -1508,6 +1522,11 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
 <tr><td class='field-name'><span class='name'>colors</span> length</td><td>li32</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>colors</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
 </table></td></tr>
+<tr><td class='field-name name'>premium</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>persona</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>cape on classic</td><td>bool</td><td><p>PersonaCapeOnClassicSkin specifies if the skin had a Persona cape (in-game skin creator cape) equipped
+on a classic skin.</p></td></tr>
+<tr><td class='field-name name'>primary user</td><td>bool</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="PlayerRecords">
     <a href="#PlayerRecords"><div class='packet-id datatype'>Type</div><div class='packet-name name'>PlayerRecords</div></a>
@@ -1676,9 +1695,13 @@ The item is thus not really crafted, but instantly created.</p></td></tr>
   <tr><td class='name'>13</td><td class='name'>optional</td><td><p>CraftRecipeOptionalStackRequestAction is sent when using an anvil. When this action is sent, the
 CustomNames field in the respective stack request is non-empty and contains the name of the item created
 using the anvil.</p></td></tr>
-  <tr><td class='name'>14</td><td class='name'>non implemented</td><td><p>CraftNonImplementedStackRequestAction is an action sent for inventory actions that aren't yet implemented
+  <tr><td class='name'>14</td><td class='name'>craft grindstone request</td><td><p>CraftGrindstoneRecipeStackRequestAction is sent when a grindstone recipe is crafted. It contains the RecipeNetworkID
+to identify the recipe crafted, and the cost for crafting the recipe.</p></td></tr>
+  <tr><td class='name'>15</td><td class='name'>craft loom request</td><td><p>CraftLoomRecipeStackRequestAction is sent when a loom recipe is crafted. It simply contains the
+pattern identifier to figure out what pattern is meant to be applied to the item.</p></td></tr>
+  <tr><td class='name'>16</td><td class='name'>non implemented</td><td><p>CraftNonImplementedStackRequestAction is an action sent for inventory actions that aren't yet implemented
 in the new system. These include, for example, anvils.</p></td></tr>
-  <tr><td class='name'>15</td><td class='name'>results deprecated</td><td><p>CraftResultsDeprecatedStackRequestAction is an additional, deprecated packet sent by the client after
+  <tr><td class='name'>17</td><td class='name'>results deprecated</td><td><p>CraftResultsDeprecatedStackRequestAction is an additional, deprecated packet sent by the client after
 crafting. It holds the final results and the amount of times the recipe was crafted. It shouldn't be used.
 This action is also sent when an item is enchanted. Enchanting should be treated mostly the same way as
 crafting, where the old item is consumed.</p></td></tr>
@@ -1732,6 +1755,14 @@ creative item stack IDs sent in the CreativeContent packet.</p></td></tr>
 <tr><td class='name'><span class='fake'>is optional</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>recipe network id</td><td>varint</td><td><p>For the cartography table, if a certain MULTI recipe is being called, this points to the network ID that was assigned.</p></td></tr>
 <tr><td class='field-name name'>filtered string index</td><td>li32</td><td><p>Most likely the index in the request's filter strings that this action is using</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is craft grindstone request</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>recipe network id</td><td>varint</td><td><p>RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
+one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as</p></td></tr>
+<tr><td class='field-name name'>cost</td><td>varint</td><td><p>Cost is the cost of the recipe that was crafted.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is craft loom request</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>pattern</td><td>string</td><td><p>Pattern is the pattern identifier for the loom recipe.</p></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'><span class='fake'>is non implemented</span></td><td>void</td><td></td></tr>
 <tr><td class='name'><span class='fake'>is results deprecated</span> </td><td colspan=2 class='bordered'><table>
@@ -1930,6 +1961,72 @@ the Seed that follows.</p></td></tr>
 <tr><td class='field-name name'>seed</td><td>lu32</td><td><p>Seed is the seed used to omit blocks if Integrity is not equal to one. If the Seed is 0, a random
 seed is selected to omit blocks.</p></td></tr>
 <tr><td class='field-name name'>pivot</td><td><a href="#vec3f">vec3f</a></td><td><p>Pivot is the pivot around which the structure may be rotated.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="EducationSharedResourceURI">
+    <a href="#EducationSharedResourceURI"><div class='packet-id datatype'>Type</div><div class='packet-name name'>EducationSharedResourceURI</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>EducationSharedResourceURI is an education edition feature that is used for transmitting
+education resource settings to clients. It contains a button name and a link URL.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>button name</td><td>string</td><td><p>ButtonName is the button name of the resource URI.</p></td></tr>
+<tr><td class='field-name name'>link uri</td><td>string</td><td><p>LinkURI is the link URI for the resource URI.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="EducationExternalLinkSettings">
+    <a href="#EducationExternalLinkSettings"><div class='packet-id datatype'>Type</div><div class='packet-name name'>EducationExternalLinkSettings</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>url</td><td>string</td><td><p>URL is the external link URL.</p></td></tr>
+<tr><td class='field-name name'>display name</td><td>string</td><td><p>DisplayName is the display name in game.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="BlockUpdate">
+    <a href="#BlockUpdate"><div class='packet-id datatype'>Type</div><div class='packet-name name'>BlockUpdate</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td></td></tr>
+<tr><td class='field-name name'>runtime id</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>flags</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>entity unique id</td><td>zigzag64</td><td><p>EntityUniqueID is the unique ID of the falling block entity that the block transitions to or that the
+entity transitions from.
+Note that for both possible values for TransitionType, the EntityUniqueID should point to the falling
+block entity involved.</p></td></tr>
+<tr><td class='name field-name'>transition type</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="TransitionType">
+    <a href="#TransitionType"><div class='packet-id datatype'>Type</div><div class='packet-name name'>TransitionType</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>TransitionType is the type of the transition that happened. It is either BlockToEntityTransition, when
+a block placed becomes a falling entity, or EntityToBlockTransition, when a falling entity hits the
+ground and becomes a solid block again.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='name field-name'>TransitionType</td><td colspan=2> <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>entity</td><td><p>For falling sand, when a sand turns to an entity</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>create</td><td><p>When sand turns back to a new block</p></td></tr>
+  <tr><td class='name'>2</td><td class='name'>destroy</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="MaterialReducer">
+    <a href="#MaterialReducer"><div class='packet-id datatype'>Type</div><div class='packet-name name'>MaterialReducer</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>mix</td><td>varint</td><td></td></tr>
+<tr><td class='name'>items </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>network id</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>count</td><td>varint</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="WindowID">
     <a href="#WindowID"><div class='packet-id datatype'>Type</div><div class='packet-name name'>WindowID</div></a>
@@ -2888,6 +2985,7 @@ The exact function of this field isn't clear.</p></td></tr>
 <tr><td class='field-name name'>limited world width</td><td>li32</td><td></td></tr>
 <tr><td class='field-name name'>limited world length</td><td>li32</td><td></td></tr>
 <tr><td class='field-name name'>is new nether</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>edu resource uri</td><td><a href="#EducationSharedResourceURI">EducationSharedResourceURI</a></td><td></td></tr>
 <tr><td class='field-name name'>experimental gameplay override</td><td>bool</td><td></td></tr>
 <tr><td class='field-name name'>level id</td><td>string</td><td><p>A base64 encoded world ID that is used to identify the world.</p></td></tr>
 <tr><td class='field-name name'>world name</td><td>string</td><td><p>The name of the world that the player is joining. Note that this field shows up
@@ -2927,6 +3025,7 @@ A random UUID should be filled out for this field.</p></td></tr>
 is a new system introduced in 1.16. Backwards compatibility with the inventory transactions has to
 some extent been preserved, but will eventually be removed.</p></td></tr>
 <tr><td class='field-name name'>engine</td><td>string</td><td><p>The server's engine version, used for telemetry</p></td></tr>
+<tr><td class='field-name name'>block pallete checksum</td><td>lu64</td><td><p>A checksum to ensure block types between the server and client match</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_add_player">
     <a href="#packet_add_player"><div class='packet-id client'>12</div><div class='packet-name name'>packet add player</div></a>
@@ -3222,6 +3321,9 @@ the field implies</p></td></tr>
   <tr><td class='name'>2031</td><td class='name'>particle wax off</td><td></td></tr>
   <tr><td class='name'>2032</td><td class='name'>particle scrape</td><td></td></tr>
   <tr><td class='name'>2033</td><td class='name'>particle electric spark</td><td></td></tr>
+  <tr><td class='name'>2034</td><td class='name'>particle turtle egg</td><td></td></tr>
+  <tr><td class='name'>2035</td><td class='name'>particle sculk shriek</td><td></td></tr>
+  <tr><td class='name'>2036</td><td class='name'>sculk catalyst bloom</td><td></td></tr>
   <tr><td class='name'>3001</td><td class='name'>start rain</td><td></td></tr>
   <tr><td class='name'>3002</td><td class='name'>start thunder</td><td></td></tr>
   <tr><td class='name'>3003</td><td class='name'>stop rain</td><td></td></tr>
@@ -3243,6 +3345,7 @@ the field implies</p></td></tr>
   <tr><td class='name'>3601</td><td class='name'>block stop break</td><td></td></tr>
   <tr><td class='name'>4000</td><td class='name'>set data</td><td></td></tr>
   <tr><td class='name'>9800</td><td class='name'>players sleeping</td><td></td></tr>
+  <tr><td class='name'>9801</td><td class='name'>sleeping players</td><td></td></tr>
   <tr><td class='name'>16384</td><td class='name'>add particle mask</td><td></td></tr>
   <tr><td class='name'>16385</td><td class='name'>particle bubble</td><td><p>0x4000 | + particle ID</p></td></tr>
   <tr><td class='name'>16386</td><td class='name'>particle bubble manual</td><td></td></tr>
@@ -3517,6 +3620,7 @@ InteractActionLeaveVehicle, this is the position that the player spawns at after
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>runtime entity id</td><td>lu64</td><td></td></tr>
 <tr><td class='field-name name'>selected slot</td><td>u8</td><td></td></tr>
+<tr><td class='field-name name'>with data</td><td>bool</td><td><p>WithData is true if the pick request requests the entity metadata.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_player_action">
     <a href="#packet_player_action"><div class='packet-id server'>36</div><div class='packet-name name'>packet player action</div></a>
@@ -3542,7 +3646,9 @@ concerned a block. If not, the face is always 0.</p></td></tr>
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>health</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>cause</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>damage</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>armor slots</td><td>zigzag64</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_set_entity_data">
     <a href="#packet_set_entity_data"><div class='packet-id both'>39</div><div class='packet-name name'>packet set entity data</div></a>
@@ -3743,9 +3849,14 @@ IF BREWING STAND:
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>recipes</td><td><a href="#Recipes">Recipes</a></td><td></td></tr>
-<tr><td class='field-name name'>potion type recipes</td><td><a href="#PotionTypeRecipes">PotionTypeRecipes</a></td><td></td></tr>
+<tr><td class='field-name name'>potion type recipes</td><td><a href="#PotionTypeRecipes">PotionTypeRecipes</a></td><td><p>PotionContainerChangeRecipes is a list of all recipes to convert a potion from one type to another,
+such as from a drinkable potion to a splash potion, or from a splash potion to a lingering potion.</p></td></tr>
+<tr><td class='field-name'><span class='name'>material reducers</span> length</td><td>varint</td><td rowspan=2><p>MaterialReducers is a list of all material reducers which is used in education edition chemistry.</p></td></tr>
+<tr><td class='field-name'><span class='name'>material reducers</span> <div class="tag tag-array">array</div></td><td>MaterialReducer</td><td></td></tr>
 <tr><td class='field-name name'>potion container recipes</td><td><a href="#PotionContainerChangeRecipes">PotionContainerChangeRecipes</a></td><td></td></tr>
-<tr><td class='field-name name'>is clean</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>clear recipes</td><td>bool</td><td><p>ClearRecipes indicates if all recipes currently active on the client should be cleaned. Doing this
+means that the client will have no recipes active by itself: Any CraftingData packets previously sent
+will also be discarded, and only the recipes in this CraftingData packet will be used.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_crafting_event">
     <a href="#packet_crafting_event"><div class='packet-id both'>53</div><div class='packet-name name'>packet crafting event</div></a>
@@ -4212,8 +4323,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3283</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3283</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3362</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3362</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -4747,6 +4858,10 @@ PNG work, as long as PhotoName has the correct extension.</p></td></tr>
 <tr><td class='field-name name'>book id</td><td>string</td><td><p>BookID is the ID of the book that the photo is associated with. If the PhotoName in a book with this ID
 is set to PhotoName, it will display the photo (provided Education Edition is used).
 The photo image is downloaded to a sub-folder with this book ID.</p></td></tr>
+<tr><td class='field-name name'>photo type</td><td>u8</td><td><p>PhotoType is one of the three photo types above.</p></td></tr>
+<tr><td class='field-name name'>source type</td><td>u8</td><td><p>SourceType is the source photo type. It is one of the three photo types above.</p></td></tr>
+<tr><td class='field-name name'>owner entity unique id</td><td>i64</td><td><p>OwnerEntityUniqueID is the entity unique ID of the photo's owner.</p></td></tr>
+<tr><td class='field-name name'>new photo name</td><td>string</td><td><p>NewPhotoName is the new name of the photo.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_modal_form_request">
     <a href="#packet_modal_form_request"><div class='packet-id client'>100</div><div class='packet-name name'>packet modal form request</div></a>
@@ -4930,13 +5045,7 @@ that layer is the default layer to place blocks on, but for blocks inside of eac
 entity transitions from.
 Note that for both possible values for TransitionType, the EntityUniqueID should point to the falling
 block entity involved.</p></td></tr>
-<tr><td class='name field-name'>transition type</td><td colspan=2>varint64 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
-  <tr><td class='name'>0</td><td class='name'>entity</td><td><p>TransitionType is the type of the transition that happened. It is either BlockToEntityTransition, when
-a block placed becomes a falling entity, or EntityToBlockTransition, when a falling entity hits the
-ground and becomes a solid block again.
-For falling sand, when a sand turns to an entity</p></td></tr>
-  <tr><td class='name'>1</td><td class='name'>create</td><td><p>When sand turns back to a new block</p></td></tr>
-  <tr><td class='name'>2</td><td class='name'>destroy</td><td></td></tr>
+<tr><td class='name field-name'>transition type</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_move_entity_delta">
@@ -4944,7 +5053,10 @@ For falling sand, when a sand turns to an entity</p></td></tr>
       <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
-<p><p>MoveActorDelta is sent by the server to move an entity. The packet is specifically optimised to save as
+<p><p>TransitionType is the type of the transition that happened. It is either BlockToEntityTransition, when
+a block placed becomes a falling entity, or EntityToBlockTransition, when a falling entity hits the
+ground and becomes a solid block again.
+MoveActorDelta is sent by the server to move an entity. The packet is specifically optimised to save as
 much space as possible, by only writing non-zero fields.
 As of 1.16.100, this packet no longer actually contains any deltas.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
@@ -5336,11 +5448,27 @@ program can make code directly affect the server.</p></td></tr>
 <tr><td class='field-name name'>CodeBuilderTitle</td><td>string</td><td><p>CodeBuilderTitle is the title of the code builder shown when connected to the CodeBuilderDefaultURI.</p></td></tr>
 <tr><td class='field-name name'>CanResizeCodeBuilder</td><td>bool</td><td><p>CanResizeCodeBuilder specifies if clients connected to the world should be able to resize the code
 builder when it is opened.</p></td></tr>
+<tr><td class='field-name name'>disable legacy title bar</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>post process filter</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>screenshot border path</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>has agent capabilities</td><td>bool</td><td></td></tr>
+<tr><td><b class='name'>agent capabilities</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>has agent capabilities</span></div></i></td><td colspan=2><table>
+<tr><td class='name'><span class='fake'>is true</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>has</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>can modify blocks</td><td>bool</td><td></td></tr>
+</table></td></tr>
+</table></td></tr>
 <tr><td class='field-name name'>HasOverrideURI</td><td>bool</td><td></td></tr>
 <tr><td><b class='name'>OverrideURI</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>HasOverrideURI</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>is true</span></td><td>string</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>HasQuiz</td><td>bool</td><td><p>HasQuiz specifies if the world has a quiz connected to it.</p></td></tr>
+<tr><td class='field-name name'>has external link settings</td><td>bool</td><td></td></tr>
+<tr><td><b class='name'>external link settings</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>has external link settings</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'>has</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>url</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>display name</td><td>string</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_multiplayer_settings">
     <a href="#packet_multiplayer_settings"><div class='packet-id server'>139</div><div class='packet-name name'>packet multiplayer settings</div></a>
@@ -5690,6 +5818,7 @@ https://minecraft.gamepedia.com/Bedrock<em>Edition</em>beta<em>animation</em>doc
 in themselves, are animations too). These states in turn may have animations and transitions to move to
 a next state.</p></td></tr>
 <tr><td class='field-name name'>stop condition</td><td>string</td><td><p>StopCondition is a MoLang expression that specifies when the animation should be stopped.</p></td></tr>
+<tr><td class='field-name name'>stop condition version</td><td>li64</td><td><p>StopConditionVersion is the MoLang stop condition version.</p></td></tr>
 <tr><td class='field-name name'>controller</td><td>string</td><td><p>Controller is the animation controller that is used to manage animations. These controllers decide when
 to play which animation.</p></td></tr>
 <tr><td class='field-name name'>blend out time</td><td>lf32</td><td><p>How long to move from the previous animation to the next.</p></td></tr>
@@ -5806,6 +5935,7 @@ safer version of the text.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>entity id</td><td>varint64</td><td><p>The Runtime Entity ID</p></td></tr>
 <tr><td class='field-name name'>nbt</td><td>nbt</td><td></td></tr>
+<tr><td class='field-name name'>engine version</td><td>string</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_remove_volume_entity">
     <a href="#packet_remove_volume_entity"><div class='packet-id client'>167</div><div class='packet-name name'>packet remove volume entity</div></a>
@@ -5846,4 +5976,95 @@ safer version of the text.</p></p>
 <tr><td class='field-name name'>screen name</td><td>string</td><td><p>SceneName is the scene the data was pulled from for the client.</p></td></tr>
 <tr><td class='field-name name'>npc name</td><td>string</td><td><p>NPCName is the name of the NPC to be displayed to the client.</p></td></tr>
 <tr><td class='field-name name'>action json</td><td>string</td><td><p>ActionJSON is the JSON string of the buttons/actions the server can perform.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_edu_uri_resource_packet">
+    <a href="#packet_edu_uri_resource_packet"><div class='packet-id datatype'>170</div><div class='packet-name name'>packet edu uri resource packet</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>resource</td><td><a href="#EducationSharedResourceURI">EducationSharedResourceURI</a></td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_create_photo">
+    <a href="#packet_create_photo"><div class='packet-id datatype'>171</div><div class='packet-name name'>packet create photo</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>CreatePhoto is a packet that allows players to export photos from their portfolios into items in their inventory.
+This packet only works on the Education Edition version of Minecraft.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>entity unique id</td><td>i64</td><td><p>EntityUniqueID is the unique ID of the entity.</p></td></tr>
+<tr><td class='field-name name'>photo name</td><td>string</td><td><p>PhotoName is the name of the photo.</p></td></tr>
+<tr><td class='field-name name'>item name</td><td>string</td><td><p>ItemName is the name of the photo as an item.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_update_subchunk_blocks">
+    <a href="#packet_update_subchunk_blocks"><div class='packet-id datatype'>172</div><div class='packet-name name'>packet update subchunk blocks</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>UpdateSubChunkBlocks is essentially just UpdateBlock packet, however for a set of blocks in a sub chunk.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>x</td><td>varint</td><td><p>SubChunkX, SubChunkY, and SubChunkZ help identify the sub chunk.</p></td></tr>
+<tr><td class='field-name name'>y</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>z</td><td>varint</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>blocks</span> length</td><td>varint</td><td rowspan=2><p>Blocks contains each updated block change entry.</p></td></tr>
+<tr><td class='field-name'><span class='name'>blocks</span> <div class="tag tag-array">array</div></td><td>BlockUpdate</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>extra</span> length</td><td>varint</td><td rowspan=2><p>Extra contains each updated block change entry for the second layer, usually for waterlogged blocks.</p></td></tr>
+<tr><td class='field-name'><span class='name'>extra</span> <div class="tag tag-array">array</div></td><td>BlockUpdate</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_photo_info_request">
+    <a href="#packet_photo_info_request"><div class='packet-id datatype'>173</div><div class='packet-name name'>packet photo info request</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>photo id</td><td>zigzag64</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_subchunk">
+    <a href="#packet_subchunk"><div class='packet-id datatype'>174</div><div class='packet-name name'>packet subchunk</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>dimension</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>x</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>y</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>z</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>data</td><td>ByteArray</td><td><p>Data is the actual sub chunk data, such as the blocks.</p></td></tr>
+<tr><td class='name field-name'>request result</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>undefined</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>success</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>chunk not found</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>invalid dimension</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>player not found</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>y index out of bounds</td><td></td></tr>
+</table></td></tr>
+<tr><td class='name field-name'>heightmap type</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>no data</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>has data</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>too high</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>too low</td><td></td></tr>
+</table></td></tr>
+<tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>heightmap type</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is has data</span></td><td>["buffer", { "count": 256 }]</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>cache enabled</td><td>bool</td><td></td></tr>
+<tr><td><b class='name'>blob id</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>cache enabled</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span></td><td>u64</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_subchunk_request">
+    <a href="#packet_subchunk_request"><div class='packet-id datatype'>175</div><div class='packet-name name'>packet subchunk request</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>dimension</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>x</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>y</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>z</td><td>varint</td><td></td></tr>
 </table><br/><hr/><br/></div>

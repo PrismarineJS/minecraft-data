@@ -2721,8 +2721,8 @@ include TextTypeTip, TextTypePopup and TextTypeJukeboxPopup.</p></td></tr>
 </table></td></tr>
 <tr><td class='name'><span class='fake'>is translation or popup or jukebox popup</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>message</td><td>string</td><td></td></tr>
-<tr><td class='field-name'><span class='name'>paramaters</span> length</td><td>varint</td><td rowspan=2></td></tr>
-<tr><td class='field-name'><span class='name'>paramaters</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>parameters</span> length</td><td>varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>parameters</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
 </table></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>xuid</td><td>string</td><td><p>The XUID of the player who sent this message.</p></td></tr>
@@ -4043,14 +4043,14 @@ fight. It is set if EventType is either BossEventRegisterPlayer or BossEventUnre
 arguments, and some of those arguments can have 'enum' values, which are a list of possible
 values for the argument. The serialization is rather complex and involves palettes like chunks.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>values len</td><td>varint</td><td><p>The length of the enums for all the command paramaters in this packet</p></td></tr>
+<tr><td class='field-name name'>values len</td><td>varint</td><td><p>The length of the enums for all the command parameters in this packet</p></td></tr>
 <tr><td class='field-name name'>_enum_type</td><td>["enum_size_based_on_values_len"]</td><td><p>Not read from stream: instead calculated from the <code>values_len</code> field
 If the values<em>len < 0xff => byte,
 If the values</em>len < 0xffff => short,
 If the values_len < 0xffffff => int</p></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>enum values</span> below is <b class='name'>values len</b> from above</td><td rowspan=2><p>Here all the enum values for all of the possible commands are stored to one array palette</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>enum values</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
-<tr><td class='field-name'><span class='name'>suffixes</span> length</td><td>varint</td><td rowspan=2><p>Integer paramaters may sometimes have a prefix, such as the XP command:
+<tr><td class='field-name'><span class='name'>suffixes</span> length</td><td>varint</td><td rowspan=2><p>Integer parameters may sometimes have a prefix, such as the XP command:
 /xp <amount: int> [player: target] <- here, the xp command gives experience points
 /xp <amount: int>L [player: target] &lt;- here, the xp command gives experience levels
 This is the palette of suffixes</p></td></tr>
@@ -4074,11 +4074,11 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>flags</td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>permission level</td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
-<tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload paramaters for this command</p></td></tr>
+<tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3154</span> length</td><td>varint</td><td ><p>Each of the paramaters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3154</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
 <tr><td class='field-name'><span class='name'>__3154</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name name'>paramater name</td><td>string</td><td><p>The name of the paramater shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
+<tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
   <tr><td class='name'>2</td><td class='name'>float</td><td></td></tr>
@@ -4100,7 +4100,7 @@ This is the palette of suffixes</p></td></tr>
   <tr><td class='name'>256</td><td class='name'>suffixed</td><td></td></tr>
   <tr><td class='name'>1024</td><td class='name'>soft enum</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'>optional</td><td>bool</td><td><p>Is this paramater required?</p></td></tr>
+<tr><td class='field-name name'>optional</td><td>bool</td><td><p>Is this parameter required?</p></td></tr>
 <tr><td class='field-name name'>options</td><td>CommandFlags</td><td><p>Additinal options for this command (thanks macroshaft…)</p></td></tr>
 </table></td></tr>
 </table></td></tr>
@@ -4222,10 +4222,10 @@ coloured red.</p></td></tr>
 <tr><td class='field-name name'>message id</td><td>string</td><td><p>Message is the message that is sent to the client in the chat window. It may either be simply a
 message or a translated built-in string like 'commands.tp.success.coordinates', combined with specific
 parameters below.</p></td></tr>
-<tr><td class='field-name'><span class='name'>paramaters</span> length</td><td>varint</td><td rowspan=2><p>Parameters is a list of parameters that serve to supply the message sent with additional information,
+<tr><td class='field-name'><span class='name'>parameters</span> length</td><td>varint</td><td rowspan=2><p>Parameters is a list of parameters that serve to supply the message sent with additional information,
 such as the position that a player was teleported to or the effect that was applied to an entity.
 These parameters only apply for the Minecraft built-in command output.</p></td></tr>
-<tr><td class='field-name'><span class='name'>paramaters</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>parameters</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>data set</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>output type</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>is data set</span></td><td>string</td><td></td></tr>
