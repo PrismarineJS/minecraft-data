@@ -3,14 +3,16 @@
     "varint": "native",
     "optvarint": "varint",
     "pstring": "native",
-    "u16": "native",
-    "u8": "native",
-    "i64": "native",
     "buffer": "native",
-    "i32": "native",
+    "u8": "native",
+    "u16": "native",
+    "u32": "native",
+    "u64": "native",
     "i8": "native",
-    "bool": "native",
     "i16": "native",
+    "i32": "native",
+    "i64": "native",
+    "bool": "native",
     "f32": "native",
     "f64": "native",
     "UUID": "native",
@@ -92,7 +94,7 @@
       {
         "compareTo": "$compareTo",
         "fields": {
-          "4": [
+          "2": [
             "container",
             [
               {
@@ -101,7 +103,16 @@
               }
             ]
           ],
-          "15": [
+          "3": [
+            "container",
+            [
+              {
+                "name": "blockState",
+                "type": "varint"
+              }
+            ]
+          ],
+          "14": [
             "container",
             [
               {
@@ -122,7 +133,7 @@
               }
             ]
           ],
-          "16": [
+          "15": [
             "container",
             [
               {
@@ -155,7 +166,7 @@
               }
             ]
           ],
-          "25": [
+          "24": [
             "container",
             [
               {
@@ -164,7 +175,7 @@
               }
             ]
           ],
-          "36": [
+          "35": [
             "container",
             [
               {
@@ -173,36 +184,20 @@
               }
             ]
           ],
-          "37": [
+          "36": [
             "container",
             [
               {
-                "name": "originX",
-                "type": "f64"
+                "name": "origin",
+                "type": "position"
               },
               {
-                "name": "originY",
-                "type": "f64"
-              },
-              {
-                "name": "originZ",
-                "type": "f64"
-              },
-              {
-                "name": "destX",
-                "type": "f64"
-              },
-              {
-                "name": "destY",
-                "type": "f64"
-              },
-              {
-                "name": "destZ",
-                "type": "f64"
+                "name": "dest",
+                "type": "position"
               },
               {
                 "name": "ticks",
-                "type": "i32"
+                "type": "varint"
               }
             ]
           ]
@@ -390,6 +385,41 @@
           ]
         ]
       }
+    ],
+    "chunkBlockEntity": [
+      "container",
+      [
+        {
+          "anon": true,
+          "type": [
+            "bitfield",
+            [
+              {
+                "name": "x_sec",
+                "size": 4,
+                "signed": false
+              },
+              {
+                "name": "z_sec",
+                "size": 4,
+                "signed": false
+              }
+            ]
+          ]
+        },
+        {
+          "name": "y",
+          "type": "short"
+        },
+        {
+          "name": "type",
+          "type": "varint"
+        },
+        {
+          "name": "nbtData",
+          "type": "nbt"
+        }
+      ]
     ]
   },
   "handshaking": {
@@ -1265,7 +1295,7 @@
             },
             {
               "name": "action",
-              "type": "u8"
+              "type": "varint"
             },
             {
               "name": "nbtData",
@@ -2213,28 +2243,8 @@
               "type": "i32"
             },
             {
-              "name": "bitMap",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": "i64"
-                }
-              ]
-            },
-            {
               "name": "heightmaps",
               "type": "nbt"
-            },
-            {
-              "name": "biomes",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": "varint"
-                }
-              ]
             },
             {
               "name": "chunkData",
@@ -2251,7 +2261,83 @@
                 "array",
                 {
                   "countType": "varint",
-                  "type": "nbt"
+                  "type": "chunkBlockEntity"
+                }
+              ]
+            },
+            {
+              "name": "trustEdges",
+              "type": "bool"
+            },
+            {
+              "name": "skyLightMask",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "i64"
+                }
+              ]
+            },
+            {
+              "name": "blockLightMask",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "i64"
+                }
+              ]
+            },
+            {
+              "name": "emptySkyLightMask",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "i64"
+                }
+              ]
+            },
+            {
+              "name": "emptyBlockLightMask",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "i64"
+                }
+              ]
+            },
+            {
+              "name": "skyLight",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "u8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "blockLight",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "u8"
+                    }
+                  ]
                 }
               ]
             }
@@ -4274,6 +4360,15 @@
             }
           ]
         ],
+        "packet_simulation_distance": [
+          "container",
+          [
+            {
+              "name": "dist",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -4371,22 +4466,23 @@
                     "0x54": "set_passengers",
                     "0x55": "teams",
                     "0x56": "scoreboard_score",
-                    "0x57": "set_title_subtitle",
-                    "0x58": "update_time",
-                    "0x59": "set_title_text",
-                    "0x5a": "set_title_time",
-                    "0x5b": "entity_sound_effect",
-                    "0x5c": "sound_effect",
-                    "0x5d": "stop_sound",
-                    "0x5e": "playerlist_header",
-                    "0x5f": "nbt_query_response",
-                    "0x60": "collect",
-                    "0x61": "entity_teleport",
-                    "0x62": "advancements",
-                    "0x63": "entity_update_attributes",
-                    "0x64": "entity_effect",
-                    "0x65": "declare_recipes",
-                    "0x66": "tags"
+                    "0x57": "simulation_distance",
+                    "0x58": "set_title_subtitle",
+                    "0x59": "update_time",
+                    "0x5a": "set_title_text",
+                    "0x5b": "set_title_time",
+                    "0x5c": "entity_sound_effect",
+                    "0x5d": "sound_effect",
+                    "0x5e": "stop_sound",
+                    "0x5f": "playerlist_header",
+                    "0x60": "nbt_query_response",
+                    "0x61": "collect",
+                    "0x62": "entity_teleport",
+                    "0x63": "advancements",
+                    "0x64": "entity_update_attributes",
+                    "0x65": "entity_effect",
+                    "0x66": "declare_recipes",
+                    "0x67": "tags"
                   }
                 }
               ]
@@ -4787,7 +4883,11 @@
               "type": "varint"
             },
             {
-              "name": "disableTextFiltering",
+              "name": "enableTextFiltering",
+              "type": "bool"
+            },
+            {
+              "name": "enableServerListing",
               "type": "bool"
             }
           ]
