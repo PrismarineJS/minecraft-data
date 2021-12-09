@@ -181,8 +181,21 @@
                 "type": "position"
               },
               {
-                "name": "dest",
-                "type": "position"
+                "name": "positionType",
+                "type": "string"
+              },
+              {
+                "name": "destination",
+                "type": [
+                  "switch",
+                  {
+                    "compareTo": "positionType",
+                    "fields": {
+                      "block": "position",
+                      "entity": "varint"
+                    }
+                  }
+                ]
               },
               {
                 "name": "ticks",
