@@ -1,3 +1,6 @@
+## 2.98.0
+* pc: Add 1.18 protocol data (@nickelpro)
+
 ## 2.97.0
 * bedrock: Add 1.18.0 data (@extremeheat)
 
