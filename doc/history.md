@@ -1,3 +1,6 @@
+## 2.98.1
+* pc: Properly prefix particle resourceIDs in 1.17+ (@nickelpro)
+
 ## 2.98.0
 * pc: Add 1.18 protocol data (@nickelpro)
 
