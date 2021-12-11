@@ -1,3 +1,7 @@
+## 2.99.0
+* pc: fix version path in 1.18 (@u9g)
+* bedrock: update 1.18 data (@extremeheat)
+
 ## 2.98.1
 * pc: Properly prefix particle resourceIDs in 1.17+ (@nickelpro)
 
