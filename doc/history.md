@@ -1,3 +1,6 @@
+## 2.99.2
+* pc: change nbtData field of chunkBlockEntity to optionalNbt in 1.18
+
 ## 2.99.1
 * pc: fix simulation distance packet in 1.18
 
