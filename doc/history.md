@@ -1,3 +1,6 @@
+## 2.99.3
+* pc: rename x_sec and z_sec to x and z in chunk block entity
+
 ## 2.99.2
 * pc: change nbtData field of chunkBlockEntity to optionalNbt in 1.18
 
