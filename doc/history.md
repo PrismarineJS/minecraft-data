@@ -1,3 +1,6 @@
+## 2.99.1
+* pc: fix simulation distance packet in 1.18
+
 ## 2.99.0
 * pc: fix version path in 1.18 (@u9g)
 * bedrock: update 1.18 data (@extremeheat)
