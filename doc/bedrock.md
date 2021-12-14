@@ -7,6 +7,19 @@
 | blockStates.json | Contains the global block palette for a Minecraft version. <br>Contains all of the possible block states. <br><br><br>The index of a Block State instance here is the paletted ID, <br>which can be used to idenfify this block state<br>instead of a string. | [bedrock-extractor][1] ("BlockStates.json" file) |  |
 | steve.json | Skin data for clients connecting to BE servers, for default Steve character | [bedrock-protocol][2] (capture from proxy) |  |
 
+### Updating protocol data
+
+* To update bedrock protocol data, open `data/bedrock/latest` (or replace "latest" with some older version) and update the `proto.yml` and `types.yml` files.
+* Go to `tools/js`, run `npm install` then `npm run build` to update the protodef JSON files
+
+To update to a new protocol version:
+* Copy `data/bedrock/latest` files into the old version's folder.
+* Open `data/bedrock/latest` and update the `proto.yml` and `types.yml` files and update the `!version` part at the top
+* Go to `tools/js`, run `npm install` then `npm run build` to update the protodef JSON files
+
+
+then run `npm test` to test validity
+
 ### Status of data
 
 <!--StartFragment-->
