@@ -1643,10 +1643,11 @@ packet_available_commands:
 # with enums that have a big amount of options. To illustrate, it can make
 # <false|true|yes|no> <$Name: bool>.
 CommandFlags: [ "bitfield", [
-   { "name": "unused", "size": 1, "signed": false }, # 6 unused upper bits
+   { "name": "unused", "size": 1, "signed": false },
    { "name": "collapse_enum", "size": 1, "signed": false },
    { "name": "has_semantic_constraint", "size": 1, "signed": false },
    { "name": "as_chained_command", "size": 1, "signed": false },
+   { "name": "unknown2", "size": 4, "signed": false }, # 4 unused upper bits
 ]]
 
 # enum_size_based_on_values_len: native
@@ -3227,9 +3228,9 @@ packet_create_photo:
 packet_update_subchunk_blocks:
    !id: 0xac
    # SubChunkX, SubChunkY, and SubChunkZ help identify the sub chunk.
-   x: varint
-   y: varint
-   z: varint
+   x: zigzag32
+   y: zigzag32
+   z: zigzag32
    # Blocks contains each updated block change entry.
    blocks: BlockUpdate[]varint
    # Extra contains each updated block change entry for the second layer, usually for waterlogged blocks.
@@ -3241,13 +3242,13 @@ packet_photo_info_request:
 
 packet_subchunk:
    !id: 0xae
-   dimension: varint
-   x: varint
-   y: varint
-   z: varint
+   dimension: zigzag32
+   x: zigzag32
+   y: zigzag32
+   z: zigzag32
    # Data is the actual sub chunk data, such as the blocks.
    data: ByteArray
-   request_result: varint =>
+   request_result: zigzag32 =>
       0: undefined
       1: success
       2: chunk_not_found
@@ -3259,7 +3260,7 @@ packet_subchunk:
       1: has_data
       2: too_high
       3: too_low
-   _: heightmap_type ?
+   heightmap: heightmap_type ?
       if has_data: '["buffer", { "count": 256 }]'
    cache_enabled: bool
    blob_id: cache_enabled ?
@@ -3267,7 +3268,7 @@ packet_subchunk:
 
 packet_subchunk_request:
    !id: 0xaf
-   dimension: varint
-   x: varint
-   y: varint
-   z: varint
+   dimension: zigzag32
+   x: zigzag32
+   y: zigzag32
+   z: zigzag32
