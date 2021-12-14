@@ -3224,9 +3224,9 @@ packet_create_photo:
 packet_update_subchunk_blocks:
    !id: 0xac
    # SubChunkX, SubChunkY, and SubChunkZ help identify the sub chunk.
-   x: varint
-   y: varint
-   z: varint
+   x: zigzag32
+   y: zigzag32
+   z: zigzag32
    # Blocks contains each updated block change entry.
    blocks: BlockUpdate[]varint
    # Extra contains each updated block change entry for the second layer, usually for waterlogged blocks.
@@ -3238,13 +3238,13 @@ packet_photo_info_request:
 
 packet_subchunk:
    !id: 0xae
-   dimension: varint
-   x: varint
-   y: varint
-   z: varint
+   dimension: zigzag32
+   x: zigzag32
+   y: zigzag32
+   z: zigzag32
    # Data is the actual sub chunk data, such as the blocks.
    data: ByteArray
-   request_result: varint =>
+   request_result: zigzag32 =>
       0: undefined
       1: success
       2: chunk_not_found
@@ -3256,12 +3256,12 @@ packet_subchunk:
       1: has_data
       2: too_high
       3: too_low
-   _: heightmap_type ?
+   heightmap: heightmap_type ?
       if has_data: '["buffer", { "count": 256 }]'
 
 packet_subchunk_request:
    !id: 0xaf
-   dimension: varint
-   x: varint
-   y: varint
-   z: varint
+   dimension: zigzag32
+   x: zigzag32
+   y: zigzag32
+   z: zigzag32
