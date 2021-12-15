@@ -2023,6 +2023,20 @@ packet_education_settings:
    # HasQuiz specifies if the world has a quiz connected to it.
    HasQuiz: bool
 
+# Emote is sent by both the server and the client. When the client sends an emote, it sends this packet to
+# the server, after which the server will broadcast the packet to other players online.
+packet_emote:
+   !id: 0x8a
+   !bound: both
+   # EntityRuntimeID is the entity that sent the emote. When a player sends this packet, it has this field
+   # set as its own entity runtime ID.
+   entity_id: varint64
+   # EmoteID is the ID of the emote to send.
+   emote_id: string
+   # Flags is a combination of flags that change the way the Emote packet operates. When the server sends
+   # this packet to other players, EmoteFlagServerSide must be present.
+   flags: u8
+
 # MultiPlayerSettings is sent by the client to update multi-player related settings server-side and sent back
 # to online players by the server.
 # The MultiPlayerSettings packet is a Minecraft: Education Edition packet. It has no functionality for the
@@ -2280,6 +2294,19 @@ packet_update_player_game_type:
    # packet is sent to other clients with the player unique ID of another player, nothing happens.
    player_unique_id: zigzag64
 
+# EmoteList is sent by the client every time it joins the server and when it equips new emotes. It may be
+# used by the server to find out which emotes the client has available. If the player has no emotes equipped,
+# this packet is not sent.
+# Under certain circumstances, this packet is also sent from the server to the client, but I was unable to
+# find when this is done.
+packet_emote_list:
+   !id: 0x98
+   !bound: server
+   # PlayerRuntimeID is the runtime ID of the player that owns the emote pieces below. If sent by the
+   # client, this player runtime ID is always that of the player itself.
+   player_id: varint64
+   # EmotePieces is a list of emote pieces that the player with the runtime ID above has.
+   emote_pieces: uuid[]varint
 
 # PositionTrackingDBClientRequest is a packet sent by the client to request the position and dimension of a
 # 'tracking ID'. These IDs are tracked in a database by the server. In 1.16, this is used for lodestones.
