@@ -3409,6 +3409,7 @@
                 "135": "client_cache_blob_status",
                 "136": "client_cache_miss_response",
                 "137": "education_settings",
+                "138": "emote",
                 "139": "multiplayer_settings",
                 "140": "settings_command",
                 "141": "anvil_damage",
@@ -3421,6 +3422,7 @@
                 "148": "item_stack_response",
                 "149": "player_armor_damage",
                 "151": "update_player_game_type",
+                "152": "emote_list",
                 "153": "position_tracking_db_broadcast",
                 "154": "position_tracking_db_request",
                 "156": "packet_violation_warning",
@@ -3577,6 +3579,7 @@
                 "client_cache_blob_status": "packet_client_cache_blob_status",
                 "client_cache_miss_response": "packet_client_cache_miss_response",
                 "education_settings": "packet_education_settings",
+                "emote": "packet_emote",
                 "multiplayer_settings": "packet_multiplayer_settings",
                 "settings_command": "packet_settings_command",
                 "anvil_damage": "packet_anvil_damage",
@@ -3589,6 +3592,7 @@
                 "item_stack_response": "packet_item_stack_response",
                 "player_armor_damage": "packet_player_armor_damage",
                 "update_player_game_type": "packet_update_player_game_type",
+                "emote_list": "packet_emote_list",
                 "position_tracking_db_request": "packet_position_tracking_db_request",
                 "position_tracking_db_broadcast": "packet_position_tracking_db_broadcast",
                 "packet_violation_warning": "packet_packet_violation_warning",
@@ -7741,6 +7745,23 @@
         }
       ]
     ],
+    "packet_emote": [
+      "container",
+      [
+        {
+          "name": "entity_id",
+          "type": "varint64"
+        },
+        {
+          "name": "emote_id",
+          "type": "string"
+        },
+        {
+          "name": "flags",
+          "type": "u8"
+        }
+      ]
+    ],
     "packet_multiplayer_settings": [
       "container",
       [
@@ -8200,6 +8221,25 @@
         {
           "name": "player_unique_id",
           "type": "zigzag64"
+        }
+      ]
+    ],
+    "packet_emote_list": [
+      "container",
+      [
+        {
+          "name": "player_id",
+          "type": "varint64"
+        },
+        {
+          "name": "emote_pieces",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "uuid"
+            }
+          ]
         }
       ]
     ],
