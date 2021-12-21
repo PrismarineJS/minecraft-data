@@ -1,3 +1,8 @@
+## 2.100.0
+* pc: add more 1.18 data
+* bedrock: update protocol
+* pc: add attribute support
+
 ## 2.99.3
 * pc: rename x_sec and z_sec to x and z in chunk block entity
 
