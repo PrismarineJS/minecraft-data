@@ -572,6 +572,9 @@ a { text-decoration: none; }
 <tr><td><a href="#packet_education_settings">0x89</a></td><td><a href="#packet_education_settings">packet_education_settings</a></td></tr>
 
 
+<tr><td><a href="#packet_emote">0x8a</a></td><td><a href="#packet_emote">packet_emote</a></td></tr>
+
+
 
 
 <tr><td><a href="#packet_multiplayer_settings">0x8b</a></td><td><a href="#packet_multiplayer_settings">packet_multiplayer_settings</a></td></tr>
@@ -624,6 +627,12 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#packet_update_player_game_type">0x97</a></td><td><a href="#packet_update_player_game_type">packet_update_player_game_type</a></td></tr>
+
+
+
+
+
+<tr><td><a href="#packet_emote_list">0x98</a></td><td><a href="#packet_emote_list">packet_emote_list</a></td></tr>
 
 
 
@@ -5194,6 +5203,20 @@ builder when it is opened.</p></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>HasQuiz</td><td>bool</td><td><p>HasQuiz specifies if the world has a quiz connected to it.</p></td></tr>
 </table><br/><hr/><br/>
+    <div class="packet-header" id="packet_emote">
+    <a href="#packet_emote"><div class='packet-id both'>138</div><div class='packet-name name'>packet emote</div></a>
+      <small style='vertical-align:middle;float:right'>Bidirectional</small>
+    </div><br/>
+    
+<p><p>Emote is sent by both the server and the client. When the client sends an emote, it sends this packet to
+the server, after which the server will broadcast the packet to other players online.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>entity id</td><td>varint64</td><td><p>EntityRuntimeID is the entity that sent the emote. When a player sends this packet, it has this field
+set as its own entity runtime ID.</p></td></tr>
+<tr><td class='field-name name'>emote id</td><td>string</td><td><p>EmoteID is the ID of the emote to send.</p></td></tr>
+<tr><td class='field-name name'>flags</td><td>u8</td><td><p>Flags is a combination of flags that change the way the Emote packet operates. When the server sends
+this packet to other players, EmoteFlagServerSide must be present.</p></td></tr>
+</table><br/><hr/><br/>
     <div class="packet-header" id="packet_multiplayer_settings">
     <a href="#packet_multiplayer_settings"><div class='packet-id server'>139</div><div class='packet-name name'>packet multiplayer settings</div></a>
       <small style='vertical-align:middle;float:right'>Serverbound</small>
@@ -5446,6 +5469,22 @@ set<em>player</em>game_type.go. Some of these game types require additional flag
 AdventureSettings packet for the game mode to obtain its full functionality.</p></td></tr>
 <tr><td class='field-name name'>player unique id</td><td>zigzag64</td><td><p>PlayerUniqueID is the entity unique ID of the player that should have its game mode updated. If this
 packet is sent to other clients with the player unique ID of another player, nothing happens.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_emote_list">
+    <a href="#packet_emote_list"><div class='packet-id server'>152</div><div class='packet-name name'>packet emote list</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
+    </div><br/>
+    
+<p><p>EmoteList is sent by the client every time it joins the server and when it equips new emotes. It may be
+used by the server to find out which emotes the client has available. If the player has no emotes equipped,
+this packet is not sent.
+Under certain circumstances, this packet is also sent from the server to the client, but I was unable to
+find when this is done.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>player id</td><td>varint64</td><td><p>PlayerRuntimeID is the runtime ID of the player that owns the emote pieces below. If sent by the
+client, this player runtime ID is always that of the player itself.</p></td></tr>
+<tr><td class='field-name'><span class='name'>emote pieces</span> length</td><td>varint</td><td rowspan=2><p>EmotePieces is a list of emote pieces that the player with the runtime ID above has.</p></td></tr>
+<tr><td class='field-name'><span class='name'>emote pieces</span> <div class="tag tag-array">array</div></td><td>uuid</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_position_tracking_db_request">
     <a href="#packet_position_tracking_db_request"><div class='packet-id server'>154</div><div class='packet-name name'>packet position tracking db request</div></a>
