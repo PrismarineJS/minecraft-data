@@ -1,3 +1,6 @@
+## 2.102.0
+* pc: loginPacket for 1.18
+
 ## 2.101.0
 * pc: fix states in blocks 1.18
 
