@@ -1,3 +1,6 @@
+## 2.101.0
+* pc: fix states in blocks 1.18
+
 ## 2.100.0
 * pc: add more 1.18 data
 * bedrock: update protocol
