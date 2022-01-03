@@ -1,3 +1,6 @@
+## 2.104.0
+* pc: fix biomes for 1.18
+
 ## 2.103.0
 * pc: biomes for 1.18
 
