@@ -1,3 +1,6 @@
+## 2.105.0
+* bedrock: Add block data for 1.16.220, 1.17.0 (@extremeheat)
+
 ## 2.104.0
 * pc: fix biomes for 1.18
 
