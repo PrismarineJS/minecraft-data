@@ -13,7 +13,7 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | commands.json | No? |Use [mc-data-command-generator][5] | link to jar files have to be manually added |
 | biomes.json | Yes | Use [Burger][1], then use [burger-extractor][2] | [extra info][13] |
 | instruments | No | [wiki.vg block actions][11] |
-| materials.json | No | ? |
+| materials.json | No | [import from previous version](18) or [fix it properly](19) |
 | windows.json | No | Look at [wiki.vg inventories][7] |
 | version.json | No | Look at [Protocol Versions][9] | [wiki.vg protocol numbers][8] |
 | effects.json | No | Look at [minecraft wiki effects][12] |
@@ -43,3 +43,6 @@ For bedrock edition see [bedrock.md](bedrock.md)
 [15]: https://minecraft.gamepedia.com/Map#Map_icons
 [16]: https://wiki.vg/Protocol#Map_Data
 [17]: https://github.com/PrismarineJS/minecraft-data-auto-updater
+[18]: https://github.com/PrismarineJS/minecraft-data/pull/282#issue-612896577
+[19]: https://github.com/PrismarineJS/minecraft-data/issues/412#issuecomment-1008202471
+
