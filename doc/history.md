@@ -1,3 +1,6 @@
+## 2.106.0
+* pc: add materials 1.18
+
 ## 2.105.0
 * bedrock: Add block data for 1.16.220, 1.17.0 (@extremeheat)
 
