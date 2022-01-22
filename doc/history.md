@@ -1,3 +1,6 @@
+## 2.108.0
+* pc: support 1.18.1
+
 ## 2.107.0
 * pc: y is signed in 1.18 packet_multi_block_change
 
