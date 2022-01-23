@@ -1,3 +1,6 @@
+## 2.110.0
+* pc: add cake outshapes (@nickelpro, @SaubereSache)
+
 ## 2.109.0
 * pc: fix version for 1.18.1
 
