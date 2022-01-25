@@ -1,3 +1,6 @@
+## 2.111.0
+* pc: add missing attributes pointer for 1.18
+
 ## 2.110.0
 * pc: add cake outshapes (@nickelpro, @SaubereSache)
 
