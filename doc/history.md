@@ -1,3 +1,6 @@
+## 2.112.0
+* bedrock: version data parity, block state and protocol fixes
+
 ## 2.111.0
 * pc: add missing attributes pointer for 1.18
 
