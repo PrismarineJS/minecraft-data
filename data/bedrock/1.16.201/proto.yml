@@ -1381,11 +1381,55 @@ packet_command_request:
    # this field is not known.
    interval: bool
 
-
+# CommandBlockUpdate is sent by the client to update a command block at a specific position. The command
+# block may be either a physical block or an entity.
 packet_command_block_update:
    !id: 0x4e
    !bound: server
+   # Block specifies if the command block updated was an actual physical block. If false, the command block
+   # is in a minecart and has an entity runtime ID instead.
    is_block: bool
+   # Position is the position of the command block updated. It is only set if Block is set to true. Nothing
+   # happens if no command block is set at this position.
+   _: is_block ?
+      if true:
+         # Position is the position of the command block updated. It is only set if Block is set to true. Nothing
+         # happens if no command block is set at this position.
+         position: BlockCoordinates
+         # Mode is the mode of the command block. It is either CommandBlockImpulse, CommandBlockChain or
+         # CommandBlockRepeat. It is only set if Block is set to true.
+         mode: varint =>
+            0: impulse
+            1: repeat
+            2: chain
+         # NeedsRedstone specifies if the command block needs to be powered by redstone to be activated. If false,
+         # the command block is always active. The field is only set if Block is set to true.
+         needs_redstone: bool
+         # Conditional specifies the behaviour of the command block if the command block before it (the opposite
+         # side of the direction the arrow if facing) fails to execute. If set to false, it will activate at all
+         # times, whereas if set to true, it will activate only if the previous command block executed
+         # successfully. The field is only set if Block is set to true.
+         conditional: bool
+      if false:
+         minecart_entity_runtime_id: varint64
+   # Command is the command currently entered in the command block. This is the command that is executed
+   # when the command block is activated.
+   command: string
+   # LastOutput is the output of the last command executed by the command block. It may be left empty to
+   # show simply no output at all, in combination with setting ShouldTrackOutput to false.
+   last_output: string
+   # Name is the name of the command block updated. If not empty, it will show this name hovering above the
+   # command block when hovering over the block with the cursor.
+   name: string
+   # ShouldTrackOutput specifies if the command block tracks output. If set to false, the output box won't
+   # be shown within the command block.
+   should_track_output: bool
+   # TickDelay is the delay in ticks between executions of a command block, if it is a repeating command
+   # block.
+   tick_delay: li32
+   # ExecuteOnFirstTick specifies if the command block should execute on the first tick, AKA as soon as the
+   # command block is enabled.
+   execute_on_first_tick: bool
 
 packet_command_output:
    !id: 0x4f

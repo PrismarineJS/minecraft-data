@@ -5650,6 +5650,82 @@
         {
           "name": "is_block",
           "type": "bool"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "is_block",
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "position",
+                      "type": "BlockCoordinates"
+                    },
+                    {
+                      "name": "mode",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "varint",
+                          "mappings": {
+                            "0": "impulse",
+                            "1": "repeat",
+                            "2": "chain"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "needs_redstone",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "conditional",
+                      "type": "bool"
+                    }
+                  ]
+                ],
+                "false": [
+                  "container",
+                  [
+                    {
+                      "name": "minecart_entity_runtime_id",
+                      "type": "varint64"
+                    }
+                  ]
+                ]
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
+          "name": "command",
+          "type": "string"
+        },
+        {
+          "name": "last_output",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "should_track_output",
+          "type": "bool"
+        },
+        {
+          "name": "tick_delay",
+          "type": "li32"
+        },
+        {
+          "name": "execute_on_first_tick",
+          "type": "bool"
         }
       ]
     ],
