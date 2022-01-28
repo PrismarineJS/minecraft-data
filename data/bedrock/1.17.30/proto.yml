@@ -1013,9 +1013,12 @@ packet_animate:
       3: wake_up
       4: critical_hit
       5: magic_critical_hit
-      6: row_right
-      7: row_left
+      128: row_right
+      129: row_left
    runtime_entity_id: varint64
+   _: action_id ?
+      if row_right or row_left:
+         boat_rowing_time: lf32
 
 packet_respawn:
    !id: 0x2d
@@ -1690,7 +1693,7 @@ packet_command_block_update:
          # times, whereas if set to true, it will activate only if the previous command block executed
          # successfully. The field is only set if Block is set to true.
          conditional: bool
-      default:
+      if false:
          minecart_entity_runtime_id: varint64
    # Command is the command currently entered in the command block. This is the command that is executed
    # when the command block is activated.

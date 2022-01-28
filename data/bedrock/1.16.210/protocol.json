@@ -4699,11 +4699,56 @@
       [
         {
           "name": "action_id",
-          "type": "zigzag32"
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "swing_arm",
+                "2": "unknown",
+                "3": "wake_up",
+                "4": "critical_hit",
+                "5": "magic_critical_hit",
+                "128": "row_right",
+                "129": "row_left"
+              }
+            }
+          ]
         },
         {
           "name": "runtime_entity_id",
           "type": "varint64"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "action_id",
+              "fields": {
+                "row_right": [
+                  "container",
+                  [
+                    {
+                      "name": "boat_rowing_time",
+                      "type": "lf32"
+                    }
+                  ]
+                ],
+                "row_left": [
+                  "container",
+                  [
+                    {
+                      "name": "boat_rowing_time",
+                      "type": "lf32"
+                    }
+                  ]
+                ]
+              },
+              "default": "void"
+            }
+          ]
         }
       ]
     ],
@@ -5649,6 +5694,82 @@
       [
         {
           "name": "is_block",
+          "type": "bool"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "is_block",
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "position",
+                      "type": "BlockCoordinates"
+                    },
+                    {
+                      "name": "mode",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "varint",
+                          "mappings": {
+                            "0": "impulse",
+                            "1": "repeat",
+                            "2": "chain"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "needs_redstone",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "conditional",
+                      "type": "bool"
+                    }
+                  ]
+                ],
+                "false": [
+                  "container",
+                  [
+                    {
+                      "name": "minecart_entity_runtime_id",
+                      "type": "varint64"
+                    }
+                  ]
+                ]
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
+          "name": "command",
+          "type": "string"
+        },
+        {
+          "name": "last_output",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "should_track_output",
+          "type": "bool"
+        },
+        {
+          "name": "tick_delay",
+          "type": "li32"
+        },
+        {
+          "name": "execute_on_first_tick",
           "type": "bool"
         }
       ]
