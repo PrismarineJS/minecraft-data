@@ -888,8 +888,19 @@ packet_set_spawn_position:
 packet_animate:
    !id: 0x2c
    !bound: both
-   action_id: zigzag32
+   action_id: zigzag32 =>
+      0: none
+      1: swing_arm
+      2: unknown
+      3: wake_up
+      4: critical_hit
+      5: magic_critical_hit
+      128: row_right
+      129: row_left
    runtime_entity_id: varint64
+   _: action_id ?
+      if row_right or row_left:
+         boat_rowing_time: lf32
 
 packet_respawn:
    !id: 0x2d

@@ -4548,11 +4548,56 @@
       [
         {
           "name": "action_id",
-          "type": "zigzag32"
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "swing_arm",
+                "2": "unknown",
+                "3": "wake_up",
+                "4": "critical_hit",
+                "5": "magic_critical_hit",
+                "128": "row_right",
+                "129": "row_left"
+              }
+            }
+          ]
         },
         {
           "name": "runtime_entity_id",
-          "type": "varint"
+          "type": "varint64"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "action_id",
+              "fields": {
+                "row_right": [
+                  "container",
+                  [
+                    {
+                      "name": "boat_rowing_time",
+                      "type": "lf32"
+                    }
+                  ]
+                ],
+                "row_left": [
+                  "container",
+                  [
+                    {
+                      "name": "boat_rowing_time",
+                      "type": "lf32"
+                    }
+                  ]
+                ]
+              },
+              "default": "void"
+            }
+          ]
         }
       ]
     ],
