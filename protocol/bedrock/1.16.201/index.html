@@ -296,6 +296,8 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#packet_command_request">0x4d</a></td><td><a href="#packet_command_request">packet_command_request</a></td></tr>
+
+
 <tr><td><a href="#packet_command_block_update">0x4e</a></td><td><a href="#packet_command_block_update">packet_command_block_update</a></td></tr>
 <tr><td><a href="#packet_command_output">0x4f</a></td><td><a href="#packet_command_output">packet_command_output</a></td></tr>
 
@@ -2584,8 +2586,22 @@ riding another.</p></p>
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>action id</td><td>zigzag32</td><td></td></tr>
-<tr><td class='field-name name'>runtime entity id</td><td>varint</td><td></td></tr>
+<tr><td class='name field-name'>action id</td><td colspan=2>zigzag32 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>none</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>swing arm</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>unknown</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>wake up</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>critical hit</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>magic critical hit</td><td></td></tr>
+  <tr><td class='name'>128</td><td class='name'>row right</td><td></td></tr>
+  <tr><td class='name'>129</td><td class='name'>row left</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>runtime entity id</td><td>varint64</td><td></td></tr>
+<tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>action id</span></div></i></td><td colspan=2><table>
+<tr><td class='name'><span class='fake'>is row right or row left</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>boat rowing time</td><td>lf32</td><td></td></tr>
+</table></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_respawn">
     <a href="#packet_respawn"><div class='packet-id both'>45</div><div class='packet-name name'>packet respawn</div></a>
@@ -3085,8 +3101,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__2276</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__2276</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__2287</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__2287</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -3160,9 +3176,46 @@ this field is not known.</p></td></tr>
       <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
-<p></p>
+<p><p>CommandBlockUpdate is sent by the client to update a command block at a specific position. The command
+block may be either a physical block or an entity.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>is block</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>is block</td><td>bool</td><td><p>Block specifies if the command block updated was an actual physical block. If false, the command block
+is in a minecart and has an entity runtime ID instead.</p></td></tr>
+<tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>is block</span></div></i></td><td colspan=2><table>
+<tr><td class='name'><span class='fake'>is true</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>Position is the position of the command block updated. It is only set if Block is set to true. Nothing
+happens if no command block is set at this position.
+Position is the position of the command block updated. It is only set if Block is set to true. Nothing
+happens if no command block is set at this position.</p></td></tr>
+<tr><td class='name field-name'>mode</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>impulse</td><td><p>Mode is the mode of the command block. It is either CommandBlockImpulse, CommandBlockChain or
+CommandBlockRepeat. It is only set if Block is set to true.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>repeat</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>chain</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>needs redstone</td><td>bool</td><td><p>NeedsRedstone specifies if the command block needs to be powered by redstone to be activated. If false,
+the command block is always active. The field is only set if Block is set to true.</p></td></tr>
+<tr><td class='field-name name'>conditional</td><td>bool</td><td><p>Conditional specifies the behaviour of the command block if the command block before it (the opposite
+side of the direction the arrow if facing) fails to execute. If set to false, it will activate at all
+times, whereas if set to true, it will activate only if the previous command block executed
+successfully. The field is only set if Block is set to true.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is false</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>minecart entity runtime id</td><td>varint64</td><td></td></tr>
+</table></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>command</td><td>string</td><td><p>Command is the command currently entered in the command block. This is the command that is executed
+when the command block is activated.</p></td></tr>
+<tr><td class='field-name name'>last output</td><td>string</td><td><p>LastOutput is the output of the last command executed by the command block. It may be left empty to
+show simply no output at all, in combination with setting ShouldTrackOutput to false.</p></td></tr>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the command block updated. If not empty, it will show this name hovering above the
+command block when hovering over the block with the cursor.</p></td></tr>
+<tr><td class='field-name name'>should track output</td><td>bool</td><td><p>ShouldTrackOutput specifies if the command block tracks output. If set to false, the output box won't
+be shown within the command block.</p></td></tr>
+<tr><td class='field-name name'>tick delay</td><td>li32</td><td><p>TickDelay is the delay in ticks between executions of a command block, if it is a repeating command
+block.</p></td></tr>
+<tr><td class='field-name name'>execute on first tick</td><td>bool</td><td><p>ExecuteOnFirstTick specifies if the command block should execute on the first tick, AKA as soon as the
+command block is enabled.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_command_output">
     <a href="#packet_command_output"><div class='packet-id client'>79</div><div class='packet-name name'>packet command output</div></a>
