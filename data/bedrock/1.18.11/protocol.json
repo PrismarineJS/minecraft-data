@@ -2100,17 +2100,19 @@
                           "4": "destroy",
                           "5": "consume",
                           "6": "create",
-                          "7": "lab_table_combine",
-                          "8": "beacon_payment",
-                          "9": "mine_block",
-                          "10": "craft_recipe",
-                          "11": "craft_recipe_auto",
-                          "12": "craft_creative",
-                          "13": "optional",
-                          "14": "craft_grindstone_request",
-                          "15": "craft_loom_request",
-                          "16": "non_implemented",
-                          "17": "results_deprecated"
+                          "7": "place_in_container",
+                          "8": "take_out_container",
+                          "9": "lab_table_combine",
+                          "10": "beacon_payment",
+                          "11": "mine_block",
+                          "12": "craft_recipe",
+                          "13": "craft_recipe_auto",
+                          "14": "craft_creative",
+                          "15": "optional",
+                          "16": "craft_grindstone_request",
+                          "17": "craft_loom_request",
+                          "18": "non_implemented",
+                          "19": "results_deprecated"
                         }
                       }
                     ]
@@ -2499,7 +2501,8 @@
                 "11": "entity_server",
                 "12": "precompiled",
                 "13": "game_director_entity_server",
-                "14": "script"
+                "14": "script",
+                "15": "executor"
               }
             }
           ]
@@ -3341,7 +3344,17 @@
           "359": "convert_to_stray",
           "360": "extinguish_candle",
           "361": "ambient_candle",
-          "362": "Undefined"
+          "362": "sculk_catalyst_bloom",
+          "363": "sculk_shrieker_shriek",
+          "364": "warden_nearby_close",
+          "365": "warden_nearby_closer",
+          "366": "warden_nearby_closest",
+          "367": "warden_slightly_angry",
+          "368": "record_otherside",
+          "369": "tongue",
+          "370": "crack_iron_golem",
+          "371": "repair_iron_golem",
+          "372": "Undefined"
         }
       }
     ],
@@ -3450,6 +3463,29 @@
           "111": "tropicalfish",
           "112": "cod",
           "113": "panda"
+        }
+      }
+    ],
+    "DeviceOS": [
+      "mapper",
+      {
+        "type": "li32",
+        "mappings": {
+          "0": "Undefined",
+          "1": "Android",
+          "2": "IOS",
+          "3": "OSX",
+          "4": "FireOS",
+          "5": "GearVR",
+          "6": "Hololens",
+          "7": "Win10",
+          "8": "Win32",
+          "9": "Dedicated",
+          "10": "TVOS",
+          "11": "Orbis",
+          "12": "NintendoSwitch",
+          "13": "Xbox",
+          "14": "WindowsPhone"
         }
       }
     ],
@@ -3632,7 +3668,10 @@
                 "172": "update_subchunk_blocks",
                 "173": "photo_info_request",
                 "174": "subchunk",
-                "175": "subchunk_request"
+                "175": "subchunk_request",
+                "176": "client_start_item_cooldown",
+                "177": "script_message",
+                "178": "code_builder_source"
               }
             }
           ]
@@ -3813,7 +3852,10 @@
                 "update_subchunk_blocks": "packet_update_subchunk_blocks",
                 "photo_info_request": "packet_photo_info_request",
                 "subchunk": "packet_subchunk",
-                "subchunk_request": "packet_subchunk_request"
+                "subchunk_request": "packet_subchunk_request",
+                "client_start_item_cooldown": "packet_client_start_item_cooldown",
+                "script_message": "packet_script_message",
+                "code_builder_source": "packet_code_builder_source"
               },
               "default": "void"
             }
@@ -4531,7 +4573,7 @@
         },
         {
           "name": "device_os",
-          "type": "li32"
+          "type": "DeviceOS"
         }
       ]
     ],
@@ -5816,6 +5858,19 @@
           "type": "varint"
         },
         {
+          "name": "highest_subchunk_count",
+          "type": [
+            "switch",
+            {
+              "compareTo": "sub_chunk_count",
+              "fields": {
+                "-2": "lu16"
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
           "name": "cache_enabled",
           "type": "bool"
         },
@@ -6193,7 +6248,8 @@
                 "4": "set_bar_progress",
                 "5": "set_bar_title",
                 "6": "update_properties",
-                "7": "texture"
+                "7": "texture",
+                "8": "query"
               }
             }
           ]
@@ -6240,6 +6296,15 @@
                   ]
                 ],
                 "unregister_player": [
+                  "container",
+                  [
+                    {
+                      "name": "player_id",
+                      "type": "zigzag64"
+                    }
+                  ]
+                ],
+                "query": [
                   "container",
                   [
                     {
@@ -9013,12 +9078,20 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "runtime_id",
           "type": "varint64"
         },
         {
           "name": "nbt",
           "type": "nbt"
+        },
+        {
+          "name": "json_identifier",
+          "type": "string"
+        },
+        {
+          "name": "instance_name",
+          "type": "string"
         },
         {
           "name": "engine_version",
@@ -9169,6 +9242,10 @@
       "container",
       [
         {
+          "name": "cache_enabled",
+          "type": "bool"
+        },
+        {
           "name": "dimension",
           "type": "zigzag32"
         },
@@ -9185,73 +9262,114 @@
           "type": "zigzag32"
         },
         {
-          "name": "data",
-          "type": "ByteArray"
-        },
-        {
-          "name": "request_result",
+          "name": "entries",
           "type": [
-            "mapper",
+            "array",
             {
-              "type": "zigzag32",
-              "mappings": {
-                "0": "undefined",
-                "1": "success",
-                "2": "chunk_not_found",
-                "3": "invalid_dimension",
-                "4": "player_not_found",
-                "5": "y_index_out_of_bounds"
-              }
-            }
-          ]
-        },
-        {
-          "name": "heightmap_type",
-          "type": [
-            "mapper",
-            {
-              "type": "u8",
-              "mappings": {
-                "0": "no_data",
-                "1": "has_data",
-                "2": "too_high",
-                "3": "too_low"
-              }
-            }
-          ]
-        },
-        {
-          "name": "heightmap",
-          "type": [
-            "switch",
-            {
-              "compareTo": "heightmap_type",
-              "fields": {
-                "has_data": [
-                  "buffer",
+              "countType": "lu32",
+              "type": [
+                "container",
+                [
                   {
-                    "count": 256
+                    "name": "dx",
+                    "type": "u8"
+                  },
+                  {
+                    "name": "dy",
+                    "type": "u8"
+                  },
+                  {
+                    "name": "dz",
+                    "type": "u8"
+                  },
+                  {
+                    "name": "result",
+                    "type": [
+                      "mapper",
+                      {
+                        "type": "u8",
+                        "mappings": {
+                          "0": "undefined",
+                          "1": "success",
+                          "2": "chunk_not_found",
+                          "3": "invalid_dimension",
+                          "4": "player_not_found",
+                          "5": "y_index_out_of_bounds",
+                          "6": "success_all_air"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "payload",
+                    "type": [
+                      "switch",
+                      {
+                        "compareTo": "result",
+                        "fields": {
+                          "success_all_air": "void"
+                        },
+                        "default": [
+                          "switch",
+                          {
+                            "compareTo": "../cache_enabled",
+                            "fields": {
+                              "false": "ByteArray"
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "heightmap_type",
+                    "type": [
+                      "mapper",
+                      {
+                        "type": "u8",
+                        "mappings": {
+                          "0": "no_data",
+                          "1": "has_data",
+                          "2": "too_high",
+                          "3": "too_low"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "heightmap",
+                    "type": [
+                      "switch",
+                      {
+                        "compareTo": "heightmap_type",
+                        "fields": {
+                          "has_data": [
+                            "buffer",
+                            {
+                              "count": 256
+                            }
+                          ]
+                        },
+                        "default": "void"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "blob_id",
+                    "type": [
+                      "switch",
+                      {
+                        "compareTo": "../cache_enabled",
+                        "fields": {
+                          "true": "lu64"
+                        },
+                        "default": "void"
+                      }
+                    ]
                   }
                 ]
-              },
-              "default": "void"
-            }
-          ]
-        },
-        {
-          "name": "cache_enabled",
-          "type": "bool"
-        },
-        {
-          "name": "blob_id",
-          "type": [
-            "switch",
-            {
-              "compareTo": "cache_enabled",
-              "fields": {
-                "true": "lu64"
-              },
-              "default": "void"
+              ]
             }
           ]
         }
@@ -9265,16 +9383,94 @@
           "type": "zigzag32"
         },
         {
-          "name": "x",
-          "type": "zigzag32"
+          "name": "requests",
+          "type": [
+            "array",
+            {
+              "countType": "lu32",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "x",
+                    "type": "zigzag32"
+                  },
+                  {
+                    "name": "y",
+                    "type": "zigzag32"
+                  },
+                  {
+                    "name": "z",
+                    "type": "zigzag32"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_client_start_item_cooldown": [
+      "container",
+      [
+        {
+          "name": "category",
+          "type": "string"
         },
         {
-          "name": "y",
+          "name": "duration",
           "type": "zigzag32"
+        }
+      ]
+    ],
+    "packet_script_message": [
+      "container",
+      [
+        {
+          "name": "message_id",
+          "type": "string"
         },
         {
-          "name": "z",
-          "type": "zigzag32"
+          "name": "data",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_code_builder_source": [
+      "container",
+      [
+        {
+          "name": "operation",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "get",
+                "2": "set",
+                "3": "reset"
+              }
+            }
+          ]
+        },
+        {
+          "name": "category",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "code_status",
+                "2": "instantiation"
+              }
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "type": "string"
         }
       ]
     ],
@@ -9420,7 +9616,11 @@
           "celebrating_special",
           "unknown95",
           "ram_attack",
-          "playing_dead"
+          "playing_dead",
+          "in_ascendable_block",
+          "over_descendable_block",
+          "croaking",
+          "eat_mob"
         ]
       }
     ],
