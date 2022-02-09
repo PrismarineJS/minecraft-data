@@ -1,3 +1,6 @@
+## 2.113.0
+* bedrock: add 1.18.11 protocol data
+
 ## 2.112.0
 * bedrock: version data parity, block state and protocol fixes
 
