@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.18.11
+!version: 1.18.0
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -428,7 +428,7 @@ packet_add_player:
    user_id: li64
    links: Links
    device_id: string
-   device_os: DeviceOS
+   device_os: li32
 
 packet_add_entity:
    !id: 0x0d
@@ -1279,12 +1279,7 @@ packet_level_chunk:
    z: zigzag32
    # SubChunkCount is the amount of sub chunks that are part of the chunk sent. Depending on if the cache
    # is enabled, a list of blob hashes will be sent, or, if disabled, the sub chunk data.
-   # On newer versions, if this is a negative value it indicates to use the Subchunk Polling mechanism
    sub_chunk_count: varint
-   # HighestSubChunk is the highest sub-chunk at the position that is not all air. It is only set if the
-   # RequestMode is set to protocol.SubChunkRequestModeLimited.
-   highest_subchunk_count: sub_chunk_count ?
-      if -2: lu16
    # CacheEnabled specifies if the client blob cache should be enabled. This system is based on hashes of
    # blobs which are consistent and saved by the client in combination with that blob, so that the server
    # does not have to send the same chunk multiple times. If the client does not yet have a blob with the hash sent,
@@ -1518,8 +1513,6 @@ packet_boss_event:
       6: update_properties
       # S2C: Not implemented :( Intended to alter bar appearance, but these currently produce no effect on client-side whatsoever.
       7: texture
-      # C2S: Client asking the server to resend all boss data.
-      8: query
    _: type?
       if show_bar:
          # BossBarTitle is the title shown above the boss bar. It currently does not function, and instead uses
@@ -1541,7 +1534,7 @@ packet_boss_event:
          # subscribed. It currently does not function. It is only set if the EventType is BossEventShow,
          # BossEventAppearanceProperties or BossEventTexture.
          overlay: varint
-      if register_player or unregister_player or query:
+      if register_player or unregister_player:
          # PlayerUniqueID is the unique ID of the player that is registered to or unregistered from the boss
          # fight. It is set if EventType is either BossEventRegisterPlayer or BossEventUnregisterPlayer.
          player_id: zigzag64
@@ -3207,14 +3200,9 @@ packet_sync_entity_property:
 packet_add_volume_entity:
    !id: 0xa6
    !bound: client
-   # EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
-   # entities are generally identified in packets using this runtime ID.
-   runtime_id: varint64
-   # EntityMetadata is a map of entity metadata, which includes flags and data properties that alter in
-   # particular the way the entity looks.
+   # The Runtime Entity ID
+   entity_id: varint64
    nbt: nbt
-   json_identifier: string
-   instance_name: string
    engine_version: string
 
 # RemoveVolumeEntity indicates a volume entity to be removed from server to client.
@@ -3283,81 +3271,35 @@ packet_photo_info_request:
    !id: 0xad
    photo_id: zigzag64
 
-# SubChunk sends data about multiple sub-chunks around a center point.
 packet_subchunk:
    !id: 0xae
-   cache_enabled: bool
    dimension: zigzag32
-   # Origin point
    x: zigzag32
    y: zigzag32
    z: zigzag32
-   entries: []lu32
-      dx: u8
-      dy: u8
-      dz: u8
-      result: u8 =>
-         0: undefined
-         1: success
-         2: chunk_not_found
-         3: invalid_dimension
-         4: player_not_found
-         5: y_index_out_of_bounds
-         6: success_all_air
-      # Payload has the terrain data, if the chunk isn't empty and caching is disabled
-      payload: result ?
-         if success_all_air: void
-         default: ../cache_enabled ?
-            if false: ByteArray
-      heightmap_type: u8 =>
-         0: no_data
-         1: has_data
-         2: too_high
-         3: too_low
-      heightmap: heightmap_type ?
-         if has_data: '["buffer", { "count": 256 }]'
-      blob_id: ../cache_enabled ?
-         if true: u64
+   # Data is the actual sub chunk data, such as the blocks.
+   data: ByteArray
+   request_result: zigzag32 =>
+      0: undefined
+      1: success
+      2: chunk_not_found
+      3: invalid_dimension
+      4: player_not_found
+      5: y_index_out_of_bounds
+   heightmap_type: u8 =>
+      0: no_data
+      1: has_data
+      2: too_high
+      3: too_low
+   heightmap: heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+   cache_enabled: bool
+   blob_id: cache_enabled ?
+      if true: u64
 
 packet_subchunk_request:
    !id: 0xaf
    dimension: zigzag32
-   requests: []lu32
-      x: zigzag32
-      y: zigzag32
-      z: zigzag32
-
-packet_client_start_item_cooldown:
-   !id: 0xb0
-   # ClientStartItemCooldown is sent by the client to the server to initiate a cooldown on an item. The purpose of this
-   # packet isn't entirely clear.
-   category: string
-   # Duration is the duration of ticks the cooldown should last.
-   duration: zigzag32
-
-# ScriptMessage is used to communicate custom messages from the client to the server, or from the server to the client.
-# While the name may suggest this packet is used for the discontinued scripting API, it is likely instead for the
-# GameTest framework.
-packet_script_message:
-   !id: 0xb1
-   # Message ID is the identifier of the message, used by either party to identify the message data sent.
-   message_id: string
-   # Data contains the data of the message.
-   data: string
-
-# CodeBuilderSource is an Education Edition packet sent by the client to the server to run an operation with a
-packet_code_builder_source:
-   !id: 0xb2
-   # Operation is used to distinguish the operation performed. It is always one of the constants listed above.
-   operation: u8 =>
-   - none
-   - get
-   - set
-   - reset
-   # Category is used to distinguish the category of the operation performed. It is always one of the constants
-   category: u8 =>
-   - none
-   - code_status
-   - instantiation
-   # Value contains extra data about the operation performed. It is always empty unless the operation is
-   value: string
+   x: zigzag32
+   y: zigzag32
+   z: zigzag32
