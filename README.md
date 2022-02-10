@@ -23,6 +23,7 @@ Minecraft-data is language independent, you can use it with these language speci
 | [McData](https://github.com/McEx/McData) | Elixir | protocol |
 | [ProtocolGen](https://github.com/Johni0702/ProtocolGen) | java | generated java files from protocol.json to read and write minecraft packets |
 | [mcdata](https://github.com/wlwanpan/mcdata) | Go | everything |
+| [minecraft-data-rs](https://github.com/Trivernis/minecraft-data-rs) | Rust | everything |
 
 If you want to use minecraft-data in a new language, we advise you to [create a new wrapper](doc/make-a-new-wrapper.md)
 
