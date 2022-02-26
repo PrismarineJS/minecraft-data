@@ -1,3 +1,6 @@
+## 2.113.1
+* bedrock: Corrections to protocol data for subchunk packets
+
 ## 2.113.0
 * bedrock: add 1.18.11 protocol data
 
