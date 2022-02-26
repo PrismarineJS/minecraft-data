@@ -3283,49 +3283,74 @@ packet_photo_info_request:
    !id: 0xad
    photo_id: zigzag64
 
+SubChunkEntryWithoutCaching: []lu32
+   dx: u8
+   dy: u8
+   dz: u8
+   result: u8 =>
+      0: undefined
+      1: success
+      2: chunk_not_found
+      3: invalid_dimension
+      4: player_not_found
+      5: y_index_out_of_bounds
+      6: success_all_air
+   # Payload has the terrain data, if the chunk isn't empty and caching is disabled
+   payload: ByteArray
+   heightmap_type: u8 =>
+      0: no_data
+      1: has_data
+      2: too_high
+      3: too_low
+   heightmap: heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+   blob_id: lu64
+
+SubChunkEntryWithCaching: []lu32
+   dx: u8
+   dy: u8
+   dz: u8
+   result: u8 =>
+      0: undefined
+      1: success
+      2: chunk_not_found
+      3: invalid_dimension
+      4: player_not_found
+      5: y_index_out_of_bounds
+      6: success_all_air
+   # Payload has the terrain data, if the chunk isn't empty and caching is disabled
+   payload: result ?
+      if success_all_air: void
+      default: ByteArray
+   heightmap_type: u8 =>
+      0: no_data
+      1: has_data
+      2: too_high
+      3: too_low
+   heightmap: heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+   blob_id: lu64
+
 # SubChunk sends data about multiple sub-chunks around a center point.
 packet_subchunk:
    !id: 0xae
    cache_enabled: bool
    dimension: zigzag32
    # Origin point
-   x: zigzag32
-   y: zigzag32
-   z: zigzag32
-   entries: []lu32
-      dx: u8
-      dy: u8
-      dz: u8
-      result: u8 =>
-         0: undefined
-         1: success
-         2: chunk_not_found
-         3: invalid_dimension
-         4: player_not_found
-         5: y_index_out_of_bounds
-         6: success_all_air
-      # Payload has the terrain data, if the chunk isn't empty and caching is disabled
-      payload: result ?
-         if success_all_air: void
-         default: ../cache_enabled ?
-            if false: ByteArray
-      heightmap_type: u8 =>
-         0: no_data
-         1: has_data
-         2: too_high
-         3: too_low
-      heightmap: heightmap_type ?
-         if has_data: '["buffer", { "count": 256 }]'
-      blob_id: ../cache_enabled ?
-         if true: lu64
+   origin: vec3i
+   entries: cache_enabled ?
+      if true: SubChunkEntryWithCaching
+      if false: SubChunkEntryWithoutCaching
 
 packet_subchunk_request:
    !id: 0xaf
    dimension: zigzag32
+   # Origin point
+   origin: vec3i
    requests: []lu32
-      x: zigzag32
-      y: zigzag32
-      z: zigzag32
+      dx: u8
+      dy: u8
+      dz: u8
 
 packet_client_start_item_cooldown:
    !id: 0xb0

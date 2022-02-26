@@ -9238,6 +9238,179 @@
         }
       ]
     ],
+    "SubChunkEntryWithoutCaching": [
+      "array",
+      {
+        "countType": "lu32",
+        "type": [
+          "container",
+          [
+            {
+              "name": "dx",
+              "type": "u8"
+            },
+            {
+              "name": "dy",
+              "type": "u8"
+            },
+            {
+              "name": "dz",
+              "type": "u8"
+            },
+            {
+              "name": "result",
+              "type": [
+                "mapper",
+                {
+                  "type": "u8",
+                  "mappings": {
+                    "0": "undefined",
+                    "1": "success",
+                    "2": "chunk_not_found",
+                    "3": "invalid_dimension",
+                    "4": "player_not_found",
+                    "5": "y_index_out_of_bounds",
+                    "6": "success_all_air"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "payload",
+              "type": "ByteArray"
+            },
+            {
+              "name": "heightmap_type",
+              "type": [
+                "mapper",
+                {
+                  "type": "u8",
+                  "mappings": {
+                    "0": "no_data",
+                    "1": "has_data",
+                    "2": "too_high",
+                    "3": "too_low"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "heightmap",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "heightmap_type",
+                  "fields": {
+                    "has_data": [
+                      "buffer",
+                      {
+                        "count": 256
+                      }
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "blob_id",
+              "type": "lu64"
+            }
+          ]
+        ]
+      }
+    ],
+    "SubChunkEntryWithCaching": [
+      "array",
+      {
+        "countType": "lu32",
+        "type": [
+          "container",
+          [
+            {
+              "name": "dx",
+              "type": "u8"
+            },
+            {
+              "name": "dy",
+              "type": "u8"
+            },
+            {
+              "name": "dz",
+              "type": "u8"
+            },
+            {
+              "name": "result",
+              "type": [
+                "mapper",
+                {
+                  "type": "u8",
+                  "mappings": {
+                    "0": "undefined",
+                    "1": "success",
+                    "2": "chunk_not_found",
+                    "3": "invalid_dimension",
+                    "4": "player_not_found",
+                    "5": "y_index_out_of_bounds",
+                    "6": "success_all_air"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "payload",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "result",
+                  "fields": {
+                    "success_all_air": "void"
+                  },
+                  "default": "ByteArray"
+                }
+              ]
+            },
+            {
+              "name": "heightmap_type",
+              "type": [
+                "mapper",
+                {
+                  "type": "u8",
+                  "mappings": {
+                    "0": "no_data",
+                    "1": "has_data",
+                    "2": "too_high",
+                    "3": "too_low"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "heightmap",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "heightmap_type",
+                  "fields": {
+                    "has_data": [
+                      "buffer",
+                      {
+                        "count": 256
+                      }
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "blob_id",
+              "type": "lu64"
+            }
+          ]
+        ]
+      }
+    ],
     "packet_subchunk": [
       "container",
       [
@@ -9250,19 +9423,38 @@
           "type": "zigzag32"
         },
         {
-          "name": "x",
-          "type": "zigzag32"
-        },
-        {
-          "name": "y",
-          "type": "zigzag32"
-        },
-        {
-          "name": "z",
-          "type": "zigzag32"
+          "name": "origin",
+          "type": "vec3i"
         },
         {
           "name": "entries",
+          "type": [
+            "switch",
+            {
+              "compareTo": "cache_enabled",
+              "fields": {
+                "true": "SubChunkEntryWithCaching",
+                "false": "SubChunkEntryWithoutCaching"
+              },
+              "default": "void"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_subchunk_request": [
+      "container",
+      [
+        {
+          "name": "dimension",
+          "type": "zigzag32"
+        },
+        {
+          "name": "origin",
+          "type": "vec3i"
+        },
+        {
+          "name": "requests",
           "type": [
             "array",
             {
@@ -9281,127 +9473,6 @@
                   {
                     "name": "dz",
                     "type": "u8"
-                  },
-                  {
-                    "name": "result",
-                    "type": [
-                      "mapper",
-                      {
-                        "type": "u8",
-                        "mappings": {
-                          "0": "undefined",
-                          "1": "success",
-                          "2": "chunk_not_found",
-                          "3": "invalid_dimension",
-                          "4": "player_not_found",
-                          "5": "y_index_out_of_bounds",
-                          "6": "success_all_air"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "name": "payload",
-                    "type": [
-                      "switch",
-                      {
-                        "compareTo": "result",
-                        "fields": {
-                          "success_all_air": "void"
-                        },
-                        "default": [
-                          "switch",
-                          {
-                            "compareTo": "../cache_enabled",
-                            "fields": {
-                              "false": "ByteArray"
-                            },
-                            "default": "void"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "name": "heightmap_type",
-                    "type": [
-                      "mapper",
-                      {
-                        "type": "u8",
-                        "mappings": {
-                          "0": "no_data",
-                          "1": "has_data",
-                          "2": "too_high",
-                          "3": "too_low"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "name": "heightmap",
-                    "type": [
-                      "switch",
-                      {
-                        "compareTo": "heightmap_type",
-                        "fields": {
-                          "has_data": [
-                            "buffer",
-                            {
-                              "count": 256
-                            }
-                          ]
-                        },
-                        "default": "void"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "blob_id",
-                    "type": [
-                      "switch",
-                      {
-                        "compareTo": "../cache_enabled",
-                        "fields": {
-                          "true": "lu64"
-                        },
-                        "default": "void"
-                      }
-                    ]
-                  }
-                ]
-              ]
-            }
-          ]
-        }
-      ]
-    ],
-    "packet_subchunk_request": [
-      "container",
-      [
-        {
-          "name": "dimension",
-          "type": "zigzag32"
-        },
-        {
-          "name": "requests",
-          "type": [
-            "array",
-            {
-              "countType": "lu32",
-              "type": [
-                "container",
-                [
-                  {
-                    "name": "x",
-                    "type": "zigzag32"
-                  },
-                  {
-                    "name": "y",
-                    "type": "zigzag32"
-                  },
-                  {
-                    "name": "z",
-                    "type": "zigzag32"
                   }
                 ]
               ]
