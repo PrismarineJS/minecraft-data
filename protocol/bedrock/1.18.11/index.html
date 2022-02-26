@@ -705,6 +705,8 @@ a { text-decoration: none; }
 
 <tr><td><a href="#packet_update_subchunk_blocks">0xac</a></td><td><a href="#packet_update_subchunk_blocks">packet_update_subchunk_blocks</a></td></tr>
 <tr><td><a href="#packet_photo_info_request">0xad</a></td><td><a href="#packet_photo_info_request">packet_photo_info_request</a></td></tr>
+<tr><td><a href="#SubChunkEntryWithoutCaching">Type</a><td class='name'><a href="#SubChunkEntryWithoutCaching">SubChunkEntryWithoutCaching</a></td></tr>
+<tr><td><a href="#SubChunkEntryWithCaching">Type</a><td class='name'><a href="#SubChunkEntryWithCaching">SubChunkEntryWithCaching</a></td></tr>
 
 <tr><td><a href="#packet_subchunk">0xae</a></td><td><a href="#packet_subchunk">packet_subchunk</a></td></tr>
 <tr><td><a href="#packet_subchunk_request">0xaf</a></td><td><a href="#packet_subchunk_request">packet_subchunk_request</a></td></tr>
@@ -6106,20 +6108,49 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>photo id</td><td>zigzag64</td><td></td></tr>
 </table><br/><hr/><br/>
-    <div class="packet-header" id="packet_subchunk">
-    <a href="#packet_subchunk"><div class='packet-id datatype'>174</div><div class='packet-name name'>packet subchunk</div></a>
+    <div class="packet-header" id="SubChunkEntryWithoutCaching">
+    <a href="#SubChunkEntryWithoutCaching"><div class='packet-id datatype'>Type</div><div class='packet-name name'>SubChunkEntryWithoutCaching</div></a>
       <small style='vertical-align:middle;float:right'>Datatype</small>
     </div><br/>
     
-<p><p>SubChunk sends data about multiple sub-chunks around a center point.</p></p>
+<p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>cache enabled</td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'>dimension</td><td>zigzag32</td><td></td></tr>
-<tr><td class='field-name name'>x</td><td>zigzag32</td><td><p>Origin point</p></td></tr>
-<tr><td class='field-name name'>y</td><td>zigzag32</td><td></td></tr>
-<tr><td class='field-name name'>z</td><td>zigzag32</td><td></td></tr>
-<tr><td class='field-name'><span class='name'>entries</span> length</td><td>lu32</td><td ></td></tr>
-<tr><td class='field-name'><span class='name'>entries</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>SubChunkEntryWithoutCaching</span> length</td><td>lu32</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>SubChunkEntryWithoutCaching</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>dx</td><td>u8</td><td></td></tr>
+<tr><td class='field-name name'>dy</td><td>u8</td><td></td></tr>
+<tr><td class='field-name name'>dz</td><td>u8</td><td></td></tr>
+<tr><td class='name field-name'>result</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>undefined</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>success</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>chunk not found</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>invalid dimension</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>player not found</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>y index out of bounds</td><td></td></tr>
+  <tr><td class='name'>6</td><td class='name'>success all air</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>payload</td><td>ByteArray</td><td><p>Payload has the terrain data, if the chunk isn't empty and caching is disabled</p></td></tr>
+<tr><td class='name field-name'>heightmap type</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>no data</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>has data</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>too high</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>too low</td><td></td></tr>
+</table></td></tr>
+<tr><td><b class='name'>heightmap</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>heightmap type</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is has data</span></td><td>["buffer", { "count": 256 }]</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>blob id</td><td>lu64</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="SubChunkEntryWithCaching">
+    <a href="#SubChunkEntryWithCaching"><div class='packet-id datatype'>Type</div><div class='packet-name name'>SubChunkEntryWithCaching</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name'><span class='name'>SubChunkEntryWithCaching</span> length</td><td>lu32</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>SubChunkEntryWithCaching</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>dx</td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>dy</td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>dz</td><td>u8</td><td></td></tr>
@@ -6134,9 +6165,7 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 </table></td></tr>
 <tr><td><b class='name'>payload</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>result</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>is success all air</span></td><td>void</td><td><p>Payload has the terrain data, if the chunk isn't empty and caching is disabled</p></td></tr>
-<tr><td><b class='name'>default</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>../cache enabled</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is false</span></td><td>ByteArray</td><td></td></tr>
-</table></td></tr>
+<tr><td class='field-name name'><span class='fake'>default</span></td><td>ByteArray</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name field-name'>heightmap type</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>0</td><td class='name'>no data</td><td></td></tr>
@@ -6147,9 +6176,22 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 <tr><td><b class='name'>heightmap</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>heightmap type</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>is has data</span></td><td>["buffer", { "count": 256 }]</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>blob id</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>../cache enabled</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is true</span></td><td>lu64</td><td></td></tr>
+<tr><td class='field-name name'>blob id</td><td>lu64</td><td></td></tr>
 </table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_subchunk">
+    <a href="#packet_subchunk"><div class='packet-id datatype'>174</div><div class='packet-name name'>packet subchunk</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>SubChunk sends data about multiple sub-chunks around a center point.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>cache enabled</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>dimension</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>origin</td><td><a href="#vec3i">vec3i</a></td><td><p>Origin point</p></td></tr>
+<tr><td><b class='name'>entries</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>cache enabled</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span></td><td><a href="#SubChunkEntryWithCaching">SubChunkEntryWithCaching</a></td><td></td></tr>
+<tr><td class='field-name name'><span class='fake'>is false</span></td><td><a href="#SubChunkEntryWithoutCaching">SubChunkEntryWithoutCaching</a></td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_subchunk_request">
@@ -6160,11 +6202,12 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>dimension</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>origin</td><td><a href="#vec3i">vec3i</a></td><td><p>Origin point</p></td></tr>
 <tr><td class='field-name'><span class='name'>requests</span> length</td><td>lu32</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>requests</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name name'>x</td><td>zigzag32</td><td></td></tr>
-<tr><td class='field-name name'>y</td><td>zigzag32</td><td></td></tr>
-<tr><td class='field-name name'>z</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>dx</td><td>u8</td><td></td></tr>
+<tr><td class='field-name name'>dy</td><td>u8</td><td></td></tr>
+<tr><td class='field-name name'>dz</td><td>u8</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_client_start_item_cooldown">
