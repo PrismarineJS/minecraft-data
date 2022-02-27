@@ -1,8 +1,11 @@
+## 2.113.3
+* bedrock: correction to protocol data for subchunk packets without caching for 1.18.11
+
 ## 2.113.2
 * new release because 2.113.1 of nmd already exists
 
 ## 2.113.1
-* bedrock: Corrections to protocol data for subchunk packets
+* bedrock: Corrections to protocol data for subchunk packets for 1.18.11
 
 ## 2.113.0
 * bedrock: add 1.18.11 protocol data
