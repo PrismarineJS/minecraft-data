@@ -1,3 +1,6 @@
+## 2.114.1
+* fix 1.18.2 data paths
+
 ## 2.114.0
 * mcpc 1.18.2 protocol support
 
