@@ -1,3 +1,6 @@
+## 2.114.0
+* mcpc 1.18.2 protocol support
+
 ## 2.113.3
 * bedrock: correction to protocol data for subchunk packets without caching for 1.18.11
 
