@@ -55,6 +55,7 @@ Data provided:
 | Commands | a tree structure for vanilla minecraft server commands, and some info needed to implement sub-parsers.
 | Legacy | mappings between legacy (1.12) and post-flattening (1.13+) blocks and items ids
 | Skin data | (bedrock edition) Skin geometry and texture data for steve skin
+| Features | This can be used to check is a specific feature is available in the current Minecraft version. This is usually only required for handling version-specific functionality.
 
 See more information about this data in the [documentation](http://prismarinejs.github.io/minecraft-data/)
 
