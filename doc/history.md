@@ -1,3 +1,6 @@
+## 2.115.1
+* Fix name conflict with existing "version" and type from features.json
+
 ## 2.115.0
 * Add features.json from mineflayer
 
