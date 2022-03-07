@@ -1,3 +1,6 @@
+## 2.115.0
+* Add features.json from mineflayer
+
 ## 2.114.1
 * fix 1.18.2 data paths
 
