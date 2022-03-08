@@ -1,3 +1,6 @@
+## 2.116.0
+* Fix loginPacket for 1.18.2
+
 ## 2.115.1
 * Fix name conflict with existing "version" and type from features.json
 
