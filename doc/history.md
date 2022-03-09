@@ -1,3 +1,6 @@
+## 2.117.0
+* Add "metadataIxOfItem" feature
+
 ## 2.116.0
 * Fix loginPacket for 1.18.2
 
