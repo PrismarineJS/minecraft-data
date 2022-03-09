@@ -1,3 +1,6 @@
+## 2.119.0
+* reverse bedrock version list
+
 ## 2.118.0
 * Add prismarine-item features
 
