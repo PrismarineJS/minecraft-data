@@ -1,3 +1,6 @@
+## 2.118.0
+* Add prismarine-item features
+
 ## 2.117.0
 * Add "metadataIxOfItem" feature
 
