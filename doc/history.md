@@ -1,3 +1,6 @@
+## 2.220.0
+Fix effect names in 1.17
+
 ## 2.119.0
 * reverse bedrock version list
 
