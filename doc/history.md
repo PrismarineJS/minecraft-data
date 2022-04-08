@@ -1,5 +1,10 @@
+## 2.221.0
+* Add bedrock 1.18.11 data
+* Add 22w11a,22w12a, 22w13a, 22w13oneblockatatime and 22w14a to common/protocolVersions.json 
+* Fix to 1.18.2 login packet
+
 ## 2.220.0
-Fix effect names in 1.17
+* Fix effect names in 1.17
 
 ## 2.119.0
 * reverse bedrock version list
