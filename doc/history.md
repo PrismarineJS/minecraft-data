@@ -1,5 +1,9 @@
+## 2.221.0
+* Add bedrock 1.18.11 data
+* Fix to 1.18.2 login packet
+
 ## 2.220.0
-Fix effect names in 1.17
+* Fix effect names in 1.17
 
 ## 2.119.0
 * reverse bedrock version list
