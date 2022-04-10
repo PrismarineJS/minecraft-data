@@ -1,3 +1,6 @@
+## 3.0.0
+* remove findItemOrBlockById and findItemOrBlockByName entirely
+
 ## 2.221.0
 * Add bedrock 1.18.11 data
 * Fix to 1.18.2 login packet
