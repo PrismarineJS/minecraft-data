@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.18.30
+!version: 1.18.11
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -229,16 +229,13 @@ packet_start_game:
    player_position: vec3f
    # The pitch and yaw of the player
    rotation: vec2f
-   # The seed used to generate the world.
-   seed: lu64
+   # The seed used to generate the world. Unlike in Java edition, the seed is a 32bit Integer here.
+   seed: zigzag32
    biome_type: li16
    biome_name: string
    # Dimension is the ID of the dimension that the player spawns in. It is a value from 0-2, 
    # with 0 being the overworld, 1 being the nether and 2 being the end.
-   dimension: zigzag32 =>
-      0: overworld
-      1: nether
-      2: end
+   dimension: zigzag32
    # Generator is the generator used for the world. It is a value from 0-4, with 0 being old
    # limited worlds, 1 being infinite worlds, 2 being flat worlds, 3 being nether worlds and 
    # 4 being end worlds. A value of 0 will actually make the client stop rendering chunks you 
@@ -408,7 +405,7 @@ packet_add_player:
    # The unique ID of the player. The unique ID is a value that remains consistent
    #  across different sessions of the same world, but most unoffical servers simply 
    # fill the runtime ID of the player out for this field.
-   unique_entity_id: zigzag64
+   entity_id_self: zigzag64
    # The runtime ID of the player. The runtime ID is unique for each world session,
    # and entities are generally identified in packets using this runtime ID.
    runtime_entity_id: varint64
@@ -422,7 +419,6 @@ packet_add_player:
    yaw: lf32
    head_yaw: lf32
    held_item: Item
-   gamemode: GameMode
    metadata: MetadataDictionary
    flags: varint
    command_permission: varint
@@ -680,8 +676,6 @@ packet_level_event:
       2034: particle_turtle_egg
       2035: particle_sculk_shriek
       2036: sculk_catalyst_bloom
-      2037: sculk_charge
-      2038: sculk_charge_pop
 
       3001: start_rain  
       3002: start_thunder  
@@ -854,20 +848,18 @@ packet_entity_event:
       61: death_smoke_cloud 
       62: complete_trade 
       63: remove_leash  #data 1 = cut leash
-      64: caravan
+
       65: consume_totem 
       66: player_check_treasure_hunter_achievement  #mojang...
       67: entity_spawn  #used for MinecraftEventing stuff, not needed
       68: dragon_puke  #they call this puke particles
-      69: item_entity_merge
-      70: start_swim
-      71: balloon_pop
-      72: treasure_hunt
-      73: agent_summon
-      74: charged_crossbow
-      75: fall
-      76: grow_up
-      77: vibration_detected
+      69: item_entity_merge 
+      70: start_swim 
+      71: balloon_pop 
+      72: treasure_hunt 
+      73: agent_summon 
+      74: charged_crossbow 
+      75: fall 
    data: zigzag32
 
 packet_mob_effect:
@@ -2440,10 +2432,6 @@ packet_spawn_particle_effect:
    # ParticleName is the name of the particle that should be shown. This name may point to a particle effect
    # that is built-in, or to one implemented by behaviour packs.
    particle_name: string
-   # MoLangVariables is an encoded JSON map of MoLang variables that may be applicable to the particle spawn. This can
-   # just be left empty in most cases.
-   # TODO: Investigate, probably not a ByteArray...
-   molang_variables: ByteArray
 
 # AvailableActorIdentifiers is sent by the server at the start of the game to let the client know all
 # entities that are available on the server.
@@ -3225,12 +3213,8 @@ packet_add_volume_entity:
    # EntityMetadata is a map of entity metadata, which includes flags and data properties that alter in
    # particular the way the entity looks.
    nbt: nbt
-   encoding_identifier: string
+   json_identifier: string
    instance_name: string
-   bounds: 
-      min: BlockCoordinates
-      max: BlockCoordinates
-   dimension: zigzag32
    engine_version: string
 
 # RemoveVolumeEntity indicates a volume entity to be removed from server to client.
@@ -3349,7 +3333,6 @@ SubChunkEntryWithCaching: []lu32
 # SubChunk sends data about multiple sub-chunks around a center point.
 packet_subchunk:
    !id: 0xae
-   !bound: client
    cache_enabled: bool
    dimension: zigzag32
    # Origin point
@@ -3360,7 +3343,6 @@ packet_subchunk:
 
 packet_subchunk_request:
    !id: 0xaf
-   !bound: server
    dimension: zigzag32
    # Origin point
    origin: vec3i
@@ -3369,11 +3351,10 @@ packet_subchunk_request:
       dy: u8
       dz: u8
 
-# ClientStartItemCooldown is sent by the client to the server to initiate a cooldown on an item. The purpose of this
-# packet isn't entirely clear.
 packet_client_start_item_cooldown:
    !id: 0xb0
-   !bound: server
+   # ClientStartItemCooldown is sent by the client to the server to initiate a cooldown on an item. The purpose of this
+   # packet isn't entirely clear.
    category: string
    # Duration is the duration of ticks the cooldown should last.
    duration: zigzag32
@@ -3383,7 +3364,6 @@ packet_client_start_item_cooldown:
 # GameTest framework.
 packet_script_message:
    !id: 0xb1
-   !bound: server
    # Message ID is the identifier of the message, used by either party to identify the message data sent.
    message_id: string
    # Data contains the data of the message.
@@ -3392,7 +3372,6 @@ packet_script_message:
 # CodeBuilderSource is an Education Edition packet sent by the client to the server to run an operation with a
 packet_code_builder_source:
    !id: 0xb2
-   !bound: client
    # Operation is used to distinguish the operation performed. It is always one of the constants listed above.
    operation: u8 =>
    - none
@@ -3406,73 +3385,3 @@ packet_code_builder_source:
    - instantiation
    # Value contains extra data about the operation performed. It is always empty unless the operation is
    value: string
-
-# TickingAreasLoadStatus is sent by the server to the client to notify the client of a ticking area's loading status.
-packet_ticking_areas_load_status:
-   !id: 0xb3
-   !bound: client
-   # Preload is true if the server is waiting for the area's preload.
-   preload: bool
-
-# DimensionData is a packet sent from the server to the client containing information about data-driven dimensions
-# that the server may have registered. This packet does not seem to be sent by default, rather only being sent when
-# any data-driven dimensions are registered.
-packet_dimension_data:
-   !id: 0xb4
-   !bound: client
-   definitions: []varint
-      id: string
-      max_height: zigzag32
-      min_height: zigzag32
-      generator: zigzag32 =>
-         0: legacy
-         1: overworld 
-         2: flat 
-         3: nether
-         4: end
-         5: void
-
-# AgentAction is an Education Edition packet sent from the server to the client to return a response to a
-# previously requested action.
-packet_agent_action:
-   !id: 0xb5
-   !bound: client
-   request_id: string
-   action_type: zigzag32 =>
-   - none
-   - attack
-   - collect
-   - destroy
-   - detect_redstone
-   - detect_obstacle
-   - drop
-   - drop_all
-   - inspect
-   - inspect_data
-   - inspect_item_count
-   - inspect_item_detail
-   - inspect_item_space
-   - interact
-   - move
-   - place_block
-   - till
-   - transfer_item_to
-   - turn
-   body: string
-
-# ChangeMobProperty is a packet sent from the server to the client to change one of the properties of a mob client-side.
-packet_change_mob_property:
-   !id: 0xb6
-   !bound: client
-   # EntityUniqueID is the unique ID of the entity whose property is being changed.
-   entity_unique_id: lu64
-   # Property is the name of the property being updated.
-   property: string
-   # BoolValue is set if the property value is a bool type. If the type is not a bool, this field is ignored.
-   bool_value: bool
-   # StringValue is set if the property value is a string type. If the type is not a string, this field is ignored.
-   string_value: string
-   # IntValue is set if the property value is an int type. If the type is not an int, this field is ignored.
-   int_value: zigzag32
-   # FloatValue is set if the property value is a float type. If the type is not a float, this field is ignored.
-   float_value: lf32
