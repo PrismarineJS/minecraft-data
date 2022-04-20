@@ -1,3 +1,6 @@
+## 3.1.0
+* bedrock: Add 1.18.30 protocol data
+
 ## 3.0.0
 * remove findItemOrBlockById and findItemOrBlockByName entirely
 
