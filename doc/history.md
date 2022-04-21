@@ -1,3 +1,6 @@
+## 3.1.1
+* Fix Github CI release action
+
 ## 3.1.0
 * bedrock: Add 1.18.30 protocol data
 
