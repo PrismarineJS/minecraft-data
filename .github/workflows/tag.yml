@@ -13,10 +13,18 @@ jobs:
       with:
         text: ${{ github.event.head_commit.message }}
         regex: '^Release ([0-9]+\.[0-9]+\.[0-9]+)'
-    - uses: actions-ecosystem/action-push-tag@v1
-      if: ${{ steps.regex-match.outputs.match != '' }}
-      with:
-        tag: ${{ steps.regex-match.outputs.group1 }}
+#   - uses: actions-ecosystem/action-push-tag@v1
+#     if: ${{ steps.regex-match.outputs.match != '' }}
+#     with:
+#       tag: ${{ steps.regex-match.outputs.group1 }}
+    - name: Push tags
+      run: |
+        tag=${{ steps.regex-match.outputs.group1 }}
+        message=${{ steps.regex-match.outputs.group1 }}
+        git config user.name "${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        git tag -a "${tag}" -m "${message}"
+        git push origin "${tag}"
     - uses: peter-evans/repository-dispatch@v1
       if: ${{ steps.regex-match.outputs.match != '' }}
       with:
