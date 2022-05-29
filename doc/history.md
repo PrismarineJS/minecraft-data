@@ -1,3 +1,10 @@
+## 3.2.0
+* Fix 1.17+ biome colors (@Karang)
+* Fix shulker box and ender pearl stack sizes (@RoseChilds)
+* Fixed hardness & resistance of copper_ore (@sefirosweb)
+* Fix guitar spelling in instruments.json (@MrAwesome)
+* Add bedrock 1.18 block/entity loot data, recipe data fix (@extremeheat)
+
 ## 3.1.1
 * Fix Github CI release action
 
