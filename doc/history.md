@@ -5,7 +5,6 @@
 * bedrock: 1.18 protocol fixes
 * Add 1.19 to common/protocolVersions.json
 
-
 ## 3.2.0
 * Fix 1.17+ biome colors (@Karang)
 * Fix shulker box and ender pearl stack sizes (@RoseChilds)
