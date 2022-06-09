@@ -41,7 +41,8 @@ GameMode: zigzag32 =>
    2: adventure
    3: survival_spectator
    4: creative_spectator
-   5: fallback  
+   5: fallback
+   6: spectator
 
 GameRule:
    name: string
@@ -289,6 +290,9 @@ MetadataDictionary: []varint
       122: buoyancy_data
       123: goat_horn_count
       124: update_properties
+      125: movement_sound_distance_offset
+      126: heartbeat_interval_ticks
+      127: heartbeat_sound_event
    type: varint =>
       0: byte
       1: short
@@ -421,7 +425,15 @@ MetadataFlags2: [ "bitflags", {
       "celebrating_special",
       "unknown95",               # 95
       "ram_attack",
-      "playing_dead"
+      "playing_dead",
+      "in_ascendable_block",
+      "over_descendable_block",
+      "croaking",
+      "eat_mob",
+      "jump_goal_jump",
+      "emerging",
+      "sniffing",
+      "digging"
    ]
 }]
 
@@ -818,6 +830,10 @@ ItemStackRequest:
          # that are not fully consumed when used for a recipe should not be destroyed there, but instead, should be
          # turned into their respective resulting items. 
          - create
+         # (as of 1.18.10) Not currently used
+         - place_in_container
+         # (as of 1.18.10) Not currently used
+         - take_out_container
          # LabTableCombineStackRequestAction is sent by the client when it uses a lab table to combine item stacks.
          - lab_table_combine
          # BeaconPaymentStackRequestAction is sent by the client when it submits an item to enable effects from a
@@ -993,6 +1009,7 @@ CommandOrigin:
       12: precompiled
       13: game_director_entity_server # ?
       14: script
+      15: executor
 
    # UUID is the UUID of the command called. This UUID is a bit odd as it is not specified by the server. It
    # is not clear what exactly this UUID is meant to identify, but it is unique for each command called.
@@ -1053,6 +1070,7 @@ StructureBlockSettings:
    # IgnoreBlocks specifies if the structure should ignore blocks or include them. If set to false, blocks
    # will show up in the exported structure.
    ignore_blocks: bool
+   non_ticking_players_and_ticking_areas: bool
    # Size is the size of the area that is about to be exported. The area exported will start at the
    # Position + Offset, and will extend as far as Size specifies.
    size: BlockCoordinates
@@ -1571,9 +1589,9 @@ SoundType: varint =>
    - RaidHorn
    - LoomUse
    - AmbientInRaid
-   - UICartographyTableUse
-   - UIStonecutterUse
-   - UILoomUse
+   - UicartographyTableUse
+   - UistonecutterUse
+   - UiloomUse
    - SmokerUse
    - BlastFurnaceUse
    - SmithingTableUse
@@ -1668,6 +1686,57 @@ SoundType: varint =>
    - WardenNearbyClosest
    - WardenSlightlyAngry
    - RecordOtherside
+   - Tongue
+   - CrackIronGolem
+   - RepairIronGolem
+   - Listening
+   - Heartbeat
+   - HornBreak
+   - SculkPlace
+   - SculkSpread
+   - SculkCharge
+   - SculkSensorPlace
+   - SculkShriekerPlace
+   - goat_call_0
+   - goat_call_1
+   - goat_call_2
+   - goat_call_3
+   - goat_call_4
+   - goat_call_5
+   - goat_call_6
+   - goat_call_7
+   - goat_call_8
+   - goat_call_9
+   - goat_harmony_0
+   - goat_harmony_1
+   - goat_harmony_2
+   - goat_harmony_3
+   - goat_harmony_4
+   - goat_harmony_5
+   - goat_harmony_6
+   - goat_harmony_7
+   - goat_harmony_8
+   - goat_harmony_9
+   - goat_melody_0
+   - goat_melody_1
+   - goat_melody_2
+   - goat_melody_3
+   - goat_melody_4
+   - goat_melody_5
+   - goat_melody_6
+   - goat_melody_7
+   - goat_melody_8
+   - goat_melody_9
+   - goat_bass_0
+   - goat_bass_1
+   - goat_bass_2
+   - goat_bass_3
+   - goat_bass_4
+   - goat_bass_5
+   - goat_bass_6
+   - goat_bass_7
+   - goat_bass_8
+   - goat_bass_9
    - Undefined
 
 # TODO: remove?
@@ -1772,3 +1841,20 @@ LegacyEntityType: li32 =>
    111: tropicalfish
    112: cod
    113: panda
+
+DeviceOS: li32 =>
+- Undefined
+- Android
+- IOS
+- OSX
+- FireOS
+- GearVR
+- Hololens
+- Win10
+- Win32
+- Dedicated
+- TVOS
+- Orbis
+- NintendoSwitch
+- Xbox
+- WindowsPhone

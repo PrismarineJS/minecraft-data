@@ -155,7 +155,8 @@
           "2": "adventure",
           "3": "survival_spectator",
           "4": "creative_spectator",
-          "5": "fallback"
+          "5": "fallback",
+          "6": "spectator"
         }
       }
     ],
@@ -736,7 +737,10 @@
                     "121": "freezing_effect_strength",
                     "122": "buoyancy_data",
                     "123": "goat_horn_count",
-                    "124": "update_properties"
+                    "124": "update_properties",
+                    "125": "movement_sound_distance_offset",
+                    "126": "heartbeat_interval_ticks",
+                    "127": "heartbeat_sound_event"
                   }
                 }
               ]
@@ -2049,7 +2053,9 @@
           "24": "stop_spin_attack",
           "25": "interact_block",
           "26": "predict_break",
-          "27": "continue_break"
+          "27": "continue_break",
+          "28": "start_item_use_on",
+          "29": "stop_item_use_on"
         }
       }
     ],
@@ -2636,6 +2642,10 @@
           "type": "bool"
         },
         {
+          "name": "non_ticking_players_and_ticking_areas",
+          "type": "bool"
+        },
+        {
           "name": "size",
           "type": "BlockCoordinates"
         },
@@ -2794,6 +2804,18 @@
           ]
         }
       ]
+    ],
+    "PermissionLevel": [
+      "mapper",
+      {
+        "type": "varint",
+        "mappings": {
+          "0": "visitor",
+          "1": "member",
+          "2": "operator",
+          "3": "custom"
+        }
+      }
     ],
     "WindowID": [
       "mapper",
@@ -3257,9 +3279,9 @@
           "272": "RaidHorn",
           "273": "LoomUse",
           "274": "AmbientInRaid",
-          "275": "UICartographyTableUse",
-          "276": "UIStonecutterUse",
-          "277": "UILoomUse",
+          "275": "UicartographyTableUse",
+          "276": "UistonecutterUse",
+          "277": "UiloomUse",
           "278": "SmokerUse",
           "279": "BlastFurnaceUse",
           "280": "SmithingTableUse",
@@ -3357,7 +3379,73 @@
           "372": "Tongue",
           "373": "CrackIronGolem",
           "374": "RepairIronGolem",
-          "375": "Undefined"
+          "375": "Listening",
+          "376": "Heartbeat",
+          "377": "HornBreak",
+          "378": "SculkPlace",
+          "379": "SculkSpread",
+          "380": "SculkCharge",
+          "381": "SculkSensorPlace",
+          "382": "SculkShriekerPlace",
+          "383": "goat_call_0",
+          "384": "goat_call_1",
+          "385": "goat_call_2",
+          "386": "goat_call_3",
+          "387": "goat_call_4",
+          "388": "goat_call_5",
+          "389": "goat_call_6",
+          "390": "goat_call_7",
+          "391": "goat_call_8",
+          "392": "goat_call_9",
+          "393": "goat_harmony_0",
+          "394": "goat_harmony_1",
+          "395": "goat_harmony_2",
+          "396": "goat_harmony_3",
+          "397": "goat_harmony_4",
+          "398": "goat_harmony_5",
+          "399": "goat_harmony_6",
+          "400": "goat_harmony_7",
+          "401": "goat_harmony_8",
+          "402": "goat_harmony_9",
+          "403": "goat_melody_0",
+          "404": "goat_melody_1",
+          "405": "goat_melody_2",
+          "406": "goat_melody_3",
+          "407": "goat_melody_4",
+          "408": "goat_melody_5",
+          "409": "goat_melody_6",
+          "410": "goat_melody_7",
+          "411": "goat_melody_8",
+          "412": "goat_melody_9",
+          "413": "goat_bass_0",
+          "414": "goat_bass_1",
+          "415": "goat_bass_2",
+          "416": "goat_bass_3",
+          "417": "goat_bass_4",
+          "418": "goat_bass_5",
+          "419": "goat_bass_6",
+          "420": "goat_bass_7",
+          "421": "goat_bass_8",
+          "422": "goat_bass_9",
+          "423": "_",
+          "424": "_",
+          "425": "_",
+          "426": "ImitateWarden",
+          "427": "ListeningAngry",
+          "428": "ItemGiven",
+          "429": "ItemTaken",
+          "430": "Disappeared",
+          "431": "Reappeared",
+          "432": "_",
+          "433": "FrogspawnHatched",
+          "434": "LaySpawn",
+          "435": "FrogspawnBreak",
+          "436": "SonicBoom",
+          "437": "SonicCharge",
+          "438": "SoundeventItemThrown",
+          "439": "Record5",
+          "440": "ConvertToFrog",
+          "441": "Undefined"
         }
       }
     ],
@@ -3488,7 +3576,8 @@
           "11": "Orbis",
           "12": "NintendoSwitch",
           "13": "Xbox",
-          "14": "WindowsPhone"
+          "14": "WindowsPhone",
+          "15": "Linux"
         }
       }
     ],
@@ -3674,7 +3763,15 @@
                 "175": "subchunk_request",
                 "176": "client_start_item_cooldown",
                 "177": "script_message",
-                "178": "code_builder_source"
+                "178": "code_builder_source",
+                "179": "ticking_areas_load_status",
+                "180": "dimension_data",
+                "181": "agent_action",
+                "182": "change_mob_property",
+                "183": "lesson_progress",
+                "184": "request_ability",
+                "185": "request_permissions",
+                "186": "toast_request"
               }
             }
           ]
@@ -3858,7 +3955,15 @@
                 "subchunk_request": "packet_subchunk_request",
                 "client_start_item_cooldown": "packet_client_start_item_cooldown",
                 "script_message": "packet_script_message",
-                "code_builder_source": "packet_code_builder_source"
+                "code_builder_source": "packet_code_builder_source",
+                "ticking_areas_load_status": "packet_ticking_areas_load_status",
+                "dimension_data": "packet_dimension_data",
+                "agent_action": "packet_agent_action",
+                "change_mob_property": "packet_change_mob_property",
+                "lesson_progress": "packet_lesson_progress",
+                "request_ability": "packet_request_ability",
+                "request_permissions": "packet_request_permissions",
+                "toast_request": "packet_toast_request"
               },
               "default": "void"
             }
@@ -4253,7 +4358,7 @@
         },
         {
           "name": "seed",
-          "type": "zigzag32"
+          "type": "lu64"
         },
         {
           "name": "biome_type",
@@ -4265,7 +4370,17 @@
         },
         {
           "name": "dimension",
-          "type": "zigzag32"
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "overworld",
+                "1": "nether",
+                "2": "end"
+              }
+            }
+          ]
         },
         {
           "name": "generator",
@@ -4486,8 +4601,16 @@
           "type": "string"
         },
         {
-          "name": "block_pallete_checksum",
+          "name": "property_data",
+          "type": "nbt"
+        },
+        {
+          "name": "block_pallette_checksum",
           "type": "lu64"
+        },
+        {
+          "name": "world_template_id",
+          "type": "uuid"
         }
       ]
     ],
@@ -4503,7 +4626,7 @@
           "type": "string"
         },
         {
-          "name": "entity_id_self",
+          "name": "unique_entity_id",
           "type": "zigzag64"
         },
         {
@@ -4537,6 +4660,10 @@
         {
           "name": "held_item",
           "type": "Item"
+        },
+        {
+          "name": "gamemode",
+          "type": "GameMode"
         },
         {
           "name": "metadata",
@@ -4970,6 +5097,9 @@
                 "2034": "particle_turtle_egg",
                 "2035": "particle_sculk_shriek",
                 "2036": "sculk_catalyst_bloom",
+                "2037": "sculk_charge",
+                "2038": "sculk_charge_pop",
+                "2039": "sonic_explosion",
                 "3001": "start_rain",
                 "3002": "start_thunder",
                 "3003": "stop_rain",
@@ -5170,6 +5300,7 @@
                 "61": "death_smoke_cloud",
                 "62": "complete_trade",
                 "63": "remove_leash",
+                "64": "caravan",
                 "65": "consume_totem",
                 "66": "player_check_treasure_hunter_achievement",
                 "67": "entity_spawn",
@@ -5180,7 +5311,9 @@
                 "72": "treasure_hunt",
                 "73": "agent_summon",
                 "74": "charged_crossbow",
-                "75": "fall"
+                "75": "fall",
+                "76": "grow_up",
+                "77": "vibration_detected"
               }
             }
           ]
@@ -5388,6 +5521,10 @@
         },
         {
           "name": "position",
+          "type": "BlockCoordinates"
+        },
+        {
+          "name": "result_position",
           "type": "BlockCoordinates"
         },
         {
@@ -5788,18 +5925,7 @@
         },
         {
           "name": "permission_level",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "visitor",
-                "1": "member",
-                "2": "operator",
-                "3": "custom"
-              }
-            }
-          ]
+          "type": "PermissionLevel"
         },
         {
           "name": "custom_stored_permissions",
@@ -6510,18 +6636,19 @@
                                       "type": "lu16",
                                       "mappings": {
                                         "1": "int",
-                                        "2": "float",
-                                        "3": "value",
-                                        "4": "wildcard_int",
-                                        "5": "operator",
-                                        "6": "target",
-                                        "16": "file_path",
-                                        "32": "string",
-                                        "40": "position",
-                                        "44": "message",
-                                        "46": "raw_text",
-                                        "50": "json",
-                                        "63": "command"
+                                        "3": "float",
+                                        "4": "value",
+                                        "5": "wildcard_int",
+                                        "6": "operator",
+                                        "8": "target",
+                                        "17": "file_path",
+                                        "39": "string",
+                                        "47": "block_position",
+                                        "48": "position",
+                                        "51": "message",
+                                        "53": "raw_text",
+                                        "57": "json",
+                                        "70": "command"
                                       }
                                     }
                                   ]
@@ -7854,6 +7981,10 @@
         {
           "name": "particle_name",
           "type": "string"
+        },
+        {
+          "name": "molang_variables",
+          "type": "ByteArray"
         }
       ]
     ],
@@ -8441,6 +8572,20 @@
                 "7": "exit_level",
                 "8": "exit_level_living_room",
                 "9": "num_modes"
+              }
+            }
+          ]
+        },
+        {
+          "name": "interaction_model",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "touch",
+                "1": "crosshair",
+                "2": "classic"
               }
             }
           ]
@@ -9089,12 +9234,32 @@
           "type": "nbt"
         },
         {
-          "name": "json_identifier",
+          "name": "encoding_identifier",
           "type": "string"
         },
         {
           "name": "instance_name",
           "type": "string"
+        },
+        {
+          "name": "bounds",
+          "type": [
+            "container",
+            [
+              {
+                "name": "min",
+                "type": "BlockCoordinates"
+              },
+              {
+                "name": "max",
+                "type": "BlockCoordinates"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "dimension",
+          "type": "zigzag32"
         },
         {
           "name": "engine_version",
@@ -9544,6 +9709,238 @@
         }
       ]
     ],
+    "packet_ticking_areas_load_status": [
+      "container",
+      [
+        {
+          "name": "preload",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_dimension_data": [
+      "container",
+      [
+        {
+          "name": "definitions",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "id",
+                    "type": "string"
+                  },
+                  {
+                    "name": "max_height",
+                    "type": "zigzag32"
+                  },
+                  {
+                    "name": "min_height",
+                    "type": "zigzag32"
+                  },
+                  {
+                    "name": "generator",
+                    "type": [
+                      "mapper",
+                      {
+                        "type": "zigzag32",
+                        "mappings": {
+                          "0": "legacy",
+                          "1": "overworld",
+                          "2": "flat",
+                          "3": "nether",
+                          "4": "end",
+                          "5": "void"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_agent_action": [
+      "container",
+      [
+        {
+          "name": "request_id",
+          "type": "string"
+        },
+        {
+          "name": "action_type",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "attack",
+                "2": "collect",
+                "3": "destroy",
+                "4": "detect_redstone",
+                "5": "detect_obstacle",
+                "6": "drop",
+                "7": "drop_all",
+                "8": "inspect",
+                "9": "inspect_data",
+                "10": "inspect_item_count",
+                "11": "inspect_item_detail",
+                "12": "inspect_item_space",
+                "13": "interact",
+                "14": "move",
+                "15": "place_block",
+                "16": "till",
+                "17": "transfer_item_to",
+                "18": "turn"
+              }
+            }
+          ]
+        },
+        {
+          "name": "body",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_change_mob_property": [
+      "container",
+      [
+        {
+          "name": "entity_unique_id",
+          "type": "zigzag64"
+        },
+        {
+          "name": "property",
+          "type": "string"
+        },
+        {
+          "name": "bool_value",
+          "type": "bool"
+        },
+        {
+          "name": "string_value",
+          "type": "string"
+        },
+        {
+          "name": "int_value",
+          "type": "zigzag32"
+        },
+        {
+          "name": "float_value",
+          "type": "lf32"
+        }
+      ]
+    ],
+    "packet_lesson_progress": [
+      "container",
+      [
+        {
+          "name": "action",
+          "type": "u8"
+        },
+        {
+          "name": "score",
+          "type": "zigzag32"
+        },
+        {
+          "name": "identifier",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_request_ability": [
+      "container",
+      [
+        {
+          "name": "ability",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "build",
+                "1": "mine",
+                "2": "doors_and_switches",
+                "3": "open_containers",
+                "4": "attack_players",
+                "5": "attack_mobs",
+                "6": "operator_commands",
+                "7": "teleport",
+                "8": "invulnerable",
+                "9": "flying",
+                "10": "may_fly",
+                "11": "instant_build",
+                "12": "lightning",
+                "13": "fly_speed",
+                "14": "walk_speed",
+                "15": "muted",
+                "16": "world_builder",
+                "17": "no_clip",
+                "18": "ability_count"
+              }
+            }
+          ]
+        },
+        {
+          "name": "value_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "1": "bool",
+                "2": "float"
+              }
+            }
+          ]
+        },
+        {
+          "name": "bool_value",
+          "type": "bool"
+        },
+        {
+          "name": "float_val",
+          "type": "lf32"
+        }
+      ]
+    ],
+    "packet_request_permissions": [
+      "container",
+      [
+        {
+          "name": "entity_unique_id",
+          "type": "li64"
+        },
+        {
+          "name": "permission_level",
+          "type": "PermissionLevel"
+        },
+        {
+          "name": "requested_permissions",
+          "type": "RequestPermissions"
+        }
+      ]
+    ],
+    "packet_toast_request": [
+      "container",
+      [
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "message",
+          "type": "string"
+        }
+      ]
+    ],
     "string": [
       "pstring",
       {
@@ -9690,7 +10087,11 @@
           "in_ascendable_block",
           "over_descendable_block",
           "croaking",
-          "eat_mob"
+          "eat_mob",
+          "jump_goal_jump",
+          "emerging",
+          "sniffing",
+          "digging"
         ]
       }
     ],
@@ -9854,6 +10255,22 @@
           "chest": 2,
           "legs": 4,
           "feet": 8
+        }
+      }
+    ],
+    "RequestPermissions": [
+      "bitflags",
+      {
+        "type": "lu16",
+        "flags": {
+          "build": 1,
+          "mine": 2,
+          "doors_and_switches": 4,
+          "open_containers": 8,
+          "attack_players": 16,
+          "attack_mobs": 32,
+          "operator": 64,
+          "teleport": 128
         }
       }
     ]

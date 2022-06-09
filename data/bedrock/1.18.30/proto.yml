@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.1
+!version: 1.18.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -392,14 +392,8 @@ packet_start_game:
    server_authoritative_inventory: bool
    # The server's engine version, used for telemetry
    engine: string
-   # PropertyData contains properties that should be applied on the player. These properties are the same as the
-   # ones that are sent in the SyncActorProperty packet.
-   property_data: nbt
    # A checksum to ensure block types between the server and client match
-   block_pallette_checksum: lu64
-   # WorldTemplateID is a UUID that identifies the template that was used to generate the world. Servers that do not
-   # use a world based off of a template can set this to an empty UUID.
-   world_template_id: uuid
+   block_pallete_checksum: lu64
 
 packet_add_player:
    !id: 0x0c
@@ -688,7 +682,6 @@ packet_level_event:
       2036: sculk_catalyst_bloom
       2037: sculk_charge
       2038: sculk_charge_pop
-      2039: sonic_explosion
 
       3001: start_rain  
       3002: start_thunder  
@@ -972,9 +965,6 @@ packet_player_action:
    # BlockPosition is the position of the target block, if the action with the ActionType set concerned a
    # block. If that is not the case, the block position will be zero.
    position: BlockCoordinates
-   # ResultPosition is the position of the action's result. When a UseItemOn action is sent, this is the position of
-   # the block clicked, but when a block is placed, this is the position at which the block will be placed.
-   result_position: BlockCoordinates
    # BlockFace is the face of the target block that was touched. If the action with the ActionType set
    # concerned a block. If not, the face is always 0.
    face: zigzag32
@@ -1227,7 +1217,11 @@ packet_adventure_settings:
    action_permissions: ActionPermissions
    # PermissionLevel is the permission level of the player as it shows up in the player list built up using
    # the PlayerList packet. It is one of the PermissionLevel constants above.
-   permission_level: PermissionLevel
+   permission_level: varint =>
+      0: visitor
+      1: member
+      2: operator
+      3: custom
    # Custom permissions
    custom_stored_permissions: varint
    # PlayerUniqueID is a unique identifier of the player. It appears it is not required to fill this field
@@ -1624,19 +1618,20 @@ packet_available_commands:
             parameter_name: string
             value_type: lu16 =>
                1: int
-               3: float
-               4: value
-               5: wildcard_int
-               6: operator
-               8: target
-               17: file_path
-               39: string
-               47: block_position
-               48: position
-               51: message
-               53: raw_text
-               57: json
-               70: command
+               2: float
+               3: value
+               4: wildcard_int
+               5: operator
+               7: target
+               9: wildcard
+               16: file_path
+               38: string
+               46: block_position
+               47: position
+               50: message
+               52: raw_text
+               56: json
+               69: command
             # In MC, this + prior field are combined to one 32bit bitfield
             enum_type: lu16 =>
                0x10: valid
@@ -2847,11 +2842,6 @@ packet_player_auth_input:
       7: exit_level
       8: exit_level_living_room
       9: num_modes
-   # InteractionModel is a constant representing the interaction model the player is using.
-   interaction_model: zigzag32 =>
-   - touch
-   - crosshair
-   - classic
    # GazeDirection is the direction in which the player is gazing, when the PlayMode is PlayModeReality: In
    # other words, when the player is playing in virtual reality.
    gaze_direction: play_mode ?
@@ -3488,88 +3478,3 @@ packet_change_mob_property:
    int_value: zigzag32
    # FloatValue is set if the property value is a float type. If the type is not a float, this field is ignored.
    float_value: lf32
-
-# LessonProgress is a packet sent by the server to the client to inform the client of updated progress on a lesson.
-# This packet only functions on the Minecraft: Education Edition version of the game.
-packet_lesson_progress:
-   !id: 0xb7
-   # Action is the action the client should perform to show progress. This is one of the constants defined above.
-   action: u8
-   # Score is the score the client should use when displaying the progress.
-   score: zigzag32
-   # Identifier is the identifier of the lesson that is being progressed.
-   identifier: string
-
-# RequestAbility is a packet sent by the client to the server to request permission for a specific ability from the
-# server.
-packet_request_ability:
-   !id: 0xb8
-   !bound: server
-   # Ability is the ability that the client is requesting. This is one of the constants defined above.
-   ability: zigzag32 =>
-   - build
-   - mine
-   - doors_and_switches
-   - open_containers
-   - attack_players
-   - attack_mobs
-   - operator_commands
-   - teleport
-   - invulnerable
-   - flying
-   - may_fly
-   - instant_build
-   - lightning
-   - fly_speed
-   - walk_speed
-   - muted
-   - world_builder
-   - no_clip
-   - ability_count
-   # Value type decides which of the fields you should read/write from
-   value_type: u8 =>
-      1: bool
-      2: float
-   # If value type is bool, use this value
-   bool_value: bool
-   # If value type is float, use this value
-   float_val: lf32
-
-# RequestPermissions is a packet sent from the client to the server to request permissions that the client does not
-# currently have. It can only be sent by operators and host in vanilla Minecraft.
-packet_request_permissions:
-   !id: 0xb9
-   !bound: server
-   # EntityUniqueID is the unique ID of the player. The unique ID is unique for the entire world and is
-   # often used in packets. Most servers send an EntityUniqueID equal to the EntityRuntimeID.
-   entity_unique_id: li64
-   # PermissionLevel is the current permission level of the player. Same as constants in AdventureSettings packet.
-   permission_level: PermissionLevel
-   # RequestedPermissions contains the requested permission flags.
-   requested_permissions: RequestPermissions
-
-RequestPermissions: [ "bitflags",
-   {
-      "type": "lu16",
-      "flags": {
-         "build": 0b1,
-         "mine": 0b10,
-         "doors_and_switches": 0b100,
-         "open_containers": 0b1000,
-         "attack_players": 0b10000,
-         "attack_mobs": 0b100000,
-         "operator": 0b1000000,
-         "teleport": 0b10000000
-      }
-   }
-]
-
-# ToastRequest is a packet sent from the server to the client to display a toast to the top of the screen. These toasts
-# are the same as the ones seen when, for example, loading a new resource pack or obtaining an achievement.
-packet_toast_request:
-   !id: 0xba
-   # Title is the title of the toast.
-   title: string
-   # Message is the message that the toast may contain alongside the title.
-   message: string
-
