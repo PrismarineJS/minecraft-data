@@ -1,3 +1,6 @@
+## 3.4.0
+* Add bedrock 1.19 protocol data, 1.18 protocol corrections
+
 ## 3.3.0
 * Update dimension descriptions (#565)
 * Add 1.19-pre4 to pc/common/protocolVersions.json
