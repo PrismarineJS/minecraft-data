@@ -1,3 +1,7 @@
+## 3.5.0
+* Add 1.19 Data (all but protocol) @u9g
+* Add blockloot for 1.18 and 1.19 @Eejit43
+
 ## 3.4.0
 * Add bedrock 1.19 protocol data, 1.18 protocol corrections
 
