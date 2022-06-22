@@ -259,7 +259,12 @@
     "experience": 50,
     "criteria": {
       "bullseye": {
-        "trigger": "minecraft:target_hit"
+        "trigger": "minecraft:target_hit",
+        "distance": {
+          "horizontal": {
+            "min": 30
+          }
+        }
       }
     }
   },
@@ -312,7 +317,8 @@
     "parent": "adventure/root",
     "criteria": {
       "honey_block_slide": {
-        "trigger": "minecraft:slide_down_block"
+        "trigger": "minecraft:slide_down_block",
+        "block": "minecraft:honey_block"
       }
     }
   },
@@ -771,7 +777,10 @@
     "parent": "adventure/root",
     "criteria": {
       "lightning_rod_with_villager_no_fire": {
-        "trigger": "minecraft:lightning_strike"
+        "trigger": "minecraft:lightning_strike",
+        "entities": [
+          "minecraft:villager"
+        ]
       }
     }
   },
@@ -1074,7 +1083,11 @@
     "parent": "adventure/sleep_in_bed",
     "criteria": {
       "walk_on_powder_snow_with_leather_boots": {
-        "trigger": "minecraft:location"
+        "trigger": "minecraft:location",
+        "items": [
+          "minecraft:leather_boots"
+        ],
+        "block": "minecraft:powder_snow"
       }
     }
   },
@@ -1156,7 +1169,8 @@
     "parent": "end/kill_dragon",
     "criteria": {
       "entered_end_gateway": {
-        "trigger": "minecraft:enter_block"
+        "trigger": "minecraft:enter_block",
+        "block": "minecraft:end_gateway"
       }
     }
   },
@@ -1238,7 +1252,8 @@
     "type": "hidden",
     "criteria": {
       "entered_end": {
-        "trigger": "minecraft:changed_dimension"
+        "trigger": "minecraft:changed_dimension",
+        "dimension": "minecraft:the_end"
       }
     }
   },
@@ -1839,7 +1854,8 @@
     "parent": "husbandry/axolotl_in_a_bucket",
     "criteria": {
       "kill_axolotl_target": {
-        "trigger": "minecraft:effects_changed"
+        "trigger": "minecraft:effects_changed",
+        "entities": "minecraft:axolotl"
       }
     }
   },
@@ -1894,7 +1910,8 @@
         "trigger": "minecraft:item_used_on_block",
         "items": [
           "minecraft:glow_ink_sac"
-        ]
+        ],
+        "block": "#minecraft:signs"
       }
     }
   },
@@ -1926,19 +1943,24 @@
     "parent": "husbandry/root",
     "criteria": {
       "beetroots": {
-        "trigger": "minecraft:placed_block"
+        "trigger": "minecraft:placed_block",
+        "block": "minecraft:beetroots"
       },
       "melon_stem": {
-        "trigger": "minecraft:placed_block"
+        "trigger": "minecraft:placed_block",
+        "block": "minecraft:melon_stem"
       },
       "nether_wart": {
-        "trigger": "minecraft:placed_block"
+        "trigger": "minecraft:placed_block",
+        "block": "minecraft:nether_wart"
       },
       "pumpkin_stem": {
-        "trigger": "minecraft:placed_block"
+        "trigger": "minecraft:placed_block",
+        "block": "minecraft:pumpkin_stem"
       },
       "wheat": {
-        "trigger": "minecraft:placed_block"
+        "trigger": "minecraft:placed_block",
+        "block": "minecraft:wheat"
       }
     }
   },
@@ -1983,7 +2005,8 @@
         "trigger": "minecraft:item_used_on_block",
         "items": [
           "minecraft:glass_bottle"
-        ]
+        ],
+        "block": "#minecraft:beehives"
       }
     }
   },
@@ -1997,7 +2020,17 @@
     "parent": "husbandry/root",
     "criteria": {
       "silk_touch_nest": {
-        "trigger": "minecraft:bee_nest_destroyed"
+        "trigger": "minecraft:bee_nest_destroyed",
+        "block": "minecraft:bee_nest",
+        "enchantments": [
+          {
+            "enchantment": "minecraft:silk_touch",
+            "levels": {
+              "min": 1
+            }
+          }
+        ],
+        "numBeesInside": 3
       }
     }
   },
@@ -2117,7 +2150,36 @@
     "experience": 1000,
     "criteria": {
       "all_effects": {
-        "trigger": "minecraft:effects_changed"
+        "trigger": "minecraft:effects_changed",
+        "effects": [
+          "minecraft:absorption",
+          "minecraft:bad_omen",
+          "minecraft:blindness",
+          "minecraft:conduit_power",
+          "minecraft:darkness",
+          "minecraft:dolphins_grace",
+          "minecraft:fire_resistance",
+          "minecraft:glowing",
+          "minecraft:haste",
+          "minecraft:hero_of_the_village",
+          "minecraft:hunger",
+          "minecraft:invisibility",
+          "minecraft:jump_boost",
+          "minecraft:levitation",
+          "minecraft:mining_fatigue",
+          "minecraft:nausea",
+          "minecraft:night_vision",
+          "minecraft:poison",
+          "minecraft:regeneration",
+          "minecraft:resistance",
+          "minecraft:slow_falling",
+          "minecraft:slowness",
+          "minecraft:speed",
+          "minecraft:strength",
+          "minecraft:water_breathing",
+          "minecraft:weakness",
+          "minecraft:wither"
+        ]
       }
     }
   },
@@ -2132,7 +2194,22 @@
     "experience": 100,
     "criteria": {
       "all_effects": {
-        "trigger": "minecraft:effects_changed"
+        "trigger": "minecraft:effects_changed",
+        "effects": [
+          "minecraft:fire_resistance",
+          "minecraft:invisibility",
+          "minecraft:jump_boost",
+          "minecraft:night_vision",
+          "minecraft:poison",
+          "minecraft:regeneration",
+          "minecraft:resistance",
+          "minecraft:slow_falling",
+          "minecraft:slowness",
+          "minecraft:speed",
+          "minecraft:strength",
+          "minecraft:water_breathing",
+          "minecraft:weakness"
+        ]
       }
     }
   },
@@ -2177,7 +2254,10 @@
     "parent": "nether/summon_wither",
     "criteria": {
       "beacon": {
-        "trigger": "minecraft:construct_beacon"
+        "trigger": "minecraft:construct_beacon",
+        "beaconLevel": {
+          "min": 1
+        }
       }
     }
   },
@@ -2191,7 +2271,8 @@
     "parent": "nether/create_beacon",
     "criteria": {
       "beacon": {
-        "trigger": "minecraft:construct_beacon"
+        "trigger": "minecraft:construct_beacon",
+        "beaconLevel": 4
       }
     }
   },
@@ -2481,7 +2562,8 @@
     "type": "hidden",
     "criteria": {
       "entered_nether": {
-        "trigger": "minecraft:changed_dimension"
+        "trigger": "minecraft:changed_dimension",
+        "dimension": "minecraft:the_nether"
       }
     }
   },
@@ -2589,7 +2671,8 @@
     "parent": "story/follow_ender_eye",
     "criteria": {
       "entered_end": {
-        "trigger": "minecraft:changed_dimension"
+        "trigger": "minecraft:changed_dimension",
+        "dimension": "minecraft:the_end"
       }
     }
   },
@@ -2603,7 +2686,8 @@
     "parent": "story/form_obsidian",
     "criteria": {
       "entered_nether": {
-        "trigger": "minecraft:changed_dimension"
+        "trigger": "minecraft:changed_dimension",
+        "dimension": "minecraft:the_nether"
       }
     }
   },
