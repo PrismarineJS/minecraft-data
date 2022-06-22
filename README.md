@@ -44,6 +44,7 @@ Data provided:
 | Map icons | Provides all available map icons as used by (crafted) maps |
 | Materials | to be used with blocks data. Provides tool speed multipliers against material types. |
 | Particles | Id and names of minecraft particles |
+| Advancements | |
 | Protocol | a complete description of the protocol, can be used to automatically implement the protocol, see [protodef doc](https://github.com/ProtoDef-io/ProtoDef) |
 | Protocol Versions | the whole list of minecraft protocol versions |
 | Recipes | to be used with blocks and items data |
