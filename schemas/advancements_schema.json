@@ -43,77 +43,212 @@
         "type": "object",
         "properties": {
           "trigger": {
-            "description": "The trigger required",
+            "description": "The trigger of an advancement",
             "type": "string"
           },
           "items": {
-            "description": "The item(s) required",
+            "description": "The item(s) required to complete an advancement",
             "type": "array",
             "items": {
-              "type": "string"
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
             }
           },
           "block": {
-            "description": "The block required",
+            "description": "The block required to complete an advancement",
             "type": "string"
           },
           "biome": {
-            "description": "The biome required",
+            "description": "The biome required to complete an advancement",
             "type": "string"
           },
           "structure": {
-            "description": "The structure required",
+            "description": "The structure required to complete an advancement",
             "type": "string"
           },
           "vehicle": {
-            "description": "The vehicle required",
+            "description": "The vehicle required to complete an advancement",
             "type": "string"
           },
           "entities": {
-            "description": "The entities required",
+            "description": "The entities required to complete an advancement",
             "type": "array",
             "items": {
-              "type": "string"
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
             }
           },
           "effects": {
-            "description": "The effects required",
+            "description": "The effects required to complete an advancement",
             "type": "array",
             "items": {
               "type": "string"
             }
           },
           "enchantments": {
-            "description": "The enchantments required",
+            "description": "The enchantments required to complete an advancement",
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "enchantment": {
+                  "description": "The enchantment required to complete an advancement",
+                  "type": "string"
+                },
+                "level": {
+                  "type": "object",
+                  "properties": {
+                    "min": {
+                      "description": "The minimum level required to complete an advancement",
+                      "type": "number"
+                    },
+                    "max": {
+                      "description": "The maximum level required to complete an advancement",
+                      "type": "number"
+                    }
+                  }
+                }
+              }
             }
           },
           "dimension": {
-            "description": "The dimension required",
+            "description": "The dimension required to complete an advancement",
             "type": "string"
           },
           "position": {
-            "description": "The position required",
-            "type": "object"
+            "description": "The position required to complete an advancement",
+            "type": "object",
+            "properties": {
+              "x": {
+                "description": "The x position required to complete an advancement",
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "description": "The minimum x position required to complete an advancement",
+                    "type": "number"
+                  },
+                  "max": {
+                    "description": "The maximum x position required to complete an advancement",
+                    "type": "number"
+                  }
+                }
+              },
+              "y": {
+                "description": "The y position required to complete an advancement",
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "description": "The minimum y position required to complete an advancement",
+                    "type": "number"
+                  },
+                  "max": {
+                    "description": "The maximum y position required to complete an advancement",
+                    "type": "number"
+                  }
+                }
+              },
+              "z": {
+                "description": "The z position required to complete an advancement",
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "description": "The minimum z position required to complete an advancement",
+                    "type": "number"
+                  },
+                  "max": {
+                    "description": "The maximum z position required to complete an advancement",
+                    "type": "number"
+                  }
+                }
+              }
+            }
           },
           "distance": {
-            "description": "The distance required",
-            "type": "number"
+            "description": "The distance required to complete an advancement",
+            "type": "object",
+            "x": {
+              "description": "The x position required to complete an advancement",
+              "type": "object",
+              "properties": {
+                "min": {
+                  "description": "The minimum x position required to complete an advancement",
+                  "type": "number"
+                },
+                "max": {
+                  "description": "The maximum x position required to complete an advancement",
+                  "type": "number"
+                }
+              }
+            },
+            "y": {
+              "description": "The y position required to complete an advancement",
+              "type": "object",
+              "properties": {
+                "min": {
+                  "description": "The minimum y position required to complete an advancement",
+                  "type": "number"
+                },
+                "max": {
+                  "description": "The maximum y position required to complete an advancement",
+                  "type": "number"
+                }
+              }
+            },
+            "z": {
+              "description": "The z position required to complete an advancement",
+              "type": "object",
+              "properties": {
+                "min": {
+                  "description": "The minimum z position required to complete an advancement",
+                  "type": "number"
+                },
+                "max": {
+                  "description": "The maximum z position required to complete an advancement",
+                  "type": "number"
+                }
+              }
+            }
           },
           "numBeesInside": {
-            "description": "The number of bees required",
+            "description": "The number of bees required to complete an advancement",
             "type": "number"
           },
           "beaconLevel": {
-            "description": "The level of a beacon required",
+            "description": "The level of a beacon required to complete an advancement",
             "oneOf": [
               {
                 "type": "number"
               },
               {
-                "type": "string"
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "description": "The minimum level of a beacon required to complete an advancement",
+                    "type": "number"
+                  },
+                  "max": {
+                    "description": "The maximum level of a beacon required to complete an advancement",
+                    "type": "number"
+                  }
+                }
               }
             ]
           }
