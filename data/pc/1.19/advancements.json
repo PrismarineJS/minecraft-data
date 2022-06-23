@@ -780,7 +780,8 @@
         "trigger": "minecraft:lightning_strike",
         "entities": [
           "minecraft:villager"
-        ]
+        ],
+        "blocksSetOnFire": 0
       }
     }
   },
@@ -812,7 +813,9 @@
     "criteria": {
       "play_jukebox_in_meadows": {
         "trigger": "minecraft:item_used_on_block",
-        "items": "#minecraft:music_discs"
+        "items": "#minecraft:music_discs",
+        "block": "minecraft:jukebox",
+        "biome": "minecraft:meadow"
       }
     }
   },
@@ -843,7 +846,9 @@
     "criteria": {
       "shot_arrow": {
         "trigger": "minecraft:player_hurt_entity",
-        "items": "#minecraft:arrows"
+        "items": [
+          "#minecraft:arrows"
+        ]
       }
     }
   },
@@ -898,7 +903,9 @@
         "items": [
           "minecraft:spyglass"
         ],
-        "entities": "minecraft:ender_dragon"
+        "entities": [
+          "minecraft:ender_dragon"
+        ]
       }
     }
   },
@@ -916,7 +923,9 @@
         "items": [
           "minecraft:spyglass"
         ],
-        "entities": "minecraft:ghast"
+        "entities": [
+          "minecraft:ghast"
+        ]
       }
     }
   },
@@ -934,7 +943,9 @@
         "items": [
           "minecraft:spyglass"
         ],
-        "entities": "minecraft:parrot"
+        "entities": [
+          "minecraft:parrot"
+        ]
       }
     }
   },
@@ -966,7 +977,9 @@
     "criteria": {
       "shot_trident": {
         "trigger": "minecraft:player_hurt_entity",
-        "items": "minecraft:trident"
+        "items": [
+          "minecraft:trident"
+        ]
       }
     }
   },
@@ -1069,7 +1082,15 @@
         "trigger": "minecraft:player_killed_entity",
         "entities": [
           "#minecraft:raiders"
-        ]
+        ],
+        "entityWearing": {
+          "head": {
+            "items": [
+              "minecraft:white_banner"
+            ],
+            "nbt": "{BlockEntityTag:{Patterns:[{Color:9,Pattern:\"mr\"},{Color:8,Pattern:\"bs\"},{Color:7,Pattern:\"cs\"},{Color:8,Pattern:\"bo\"},{Color:15,Pattern:\"ms\"},{Color:8,Pattern:\"hh\"},{Color:8,Pattern:\"mc\"},{Color:15,Pattern:\"bo\"}],id:\"minecraft:banner\"},HideFlags:32,display:{Name:'{\"color\":\"gold\",\"translate\":\"block.minecraft.ominous_banner\"}'}}"
+          }
+        }
       }
     }
   },
@@ -1084,10 +1105,14 @@
     "criteria": {
       "walk_on_powder_snow_with_leather_boots": {
         "trigger": "minecraft:location",
-        "items": [
-          "minecraft:leather_boots"
-        ],
-        "block": "minecraft:powder_snow"
+        "block": "minecraft:powder_snow",
+        "wearing": {
+          "feet": {
+            "items": [
+              "minecraft:leather_boots"
+            ]
+          }
+        }
       }
     }
   },
@@ -1270,7 +1295,8 @@
         "trigger": "minecraft:allay_drop_item_on_block",
         "items": [
           "minecraft:cake"
-        ]
+        ],
+        "block": "minecraft:note_block"
       }
     }
   },
@@ -1613,7 +1639,10 @@
         ]
       },
       "minecraft:frog": {
-        "trigger": "minecraft:bred_animals"
+        "trigger": "minecraft:bred_animals",
+        "entities": [
+          "minecraft:frog"
+        ]
       },
       "minecraft:goat": {
         "trigger": "minecraft:bred_animals",
@@ -1688,7 +1717,10 @@
         ]
       },
       "minecraft:turtle": {
-        "trigger": "minecraft:bred_animals"
+        "trigger": "minecraft:bred_animals",
+        "entities": [
+          "minecraft:turtle"
+        ]
       },
       "minecraft:wolf": {
         "trigger": "minecraft:bred_animals",
@@ -1855,7 +1887,9 @@
     "criteria": {
       "kill_axolotl_target": {
         "trigger": "minecraft:effects_changed",
-        "entities": "minecraft:axolotl"
+        "entities": [
+          "minecraft:axolotl"
+        ]
       }
     }
   },
@@ -1975,7 +2009,10 @@
     "criteria": {
       "ride_a_boat_with_a_goat": {
         "trigger": "minecraft:started_riding",
-        "vehicle": "minecraft:boat"
+        "vehicle": "minecraft:boat",
+        "entities": [
+          "minecraft:goat"
+        ]
       }
     }
   },
@@ -2006,7 +2043,8 @@
         "items": [
           "minecraft:glass_bottle"
         ],
-        "block": "#minecraft:beehives"
+        "block": "#minecraft:beehives",
+        "smokey": true
       }
     }
   },
@@ -2118,7 +2156,8 @@
           "minecraft:iron_axe",
           "minecraft:diamond_axe",
           "minecraft:netherite_axe"
-        ]
+        ],
+        "block": "minecraft:waxed_copper_block"
       }
     }
   },
@@ -2135,7 +2174,8 @@
         "trigger": "minecraft:item_used_on_block",
         "items": [
           "minecraft:honeycomb"
-        ]
+        ],
+        "block": "minecraft:copper_block"
       }
     }
   },
@@ -2240,7 +2280,11 @@
         "trigger": "minecraft:item_used_on_block",
         "items": [
           "minecraft:glowstone"
-        ]
+        ],
+        "block": "minecraft:respawn_anchor",
+        "blockState": {
+          "charges": "4"
+        }
       }
     }
   },
@@ -2412,16 +2456,20 @@
     "parent": "nether/find_bastion",
     "criteria": {
       "loot_bastion_bridge": {
-        "trigger": "minecraft:player_generates_container_loot"
+        "trigger": "minecraft:player_generates_container_loot",
+        "lootTable": "minecraft:chests/bastion_bridge"
       },
       "loot_bastion_hoglin_stable": {
-        "trigger": "minecraft:player_generates_container_loot"
+        "trigger": "minecraft:player_generates_container_loot",
+        "lootTable": "minecraft:chests/bastion_hoglin_stable"
       },
       "loot_bastion_other": {
-        "trigger": "minecraft:player_generates_container_loot"
+        "trigger": "minecraft:player_generates_container_loot",
+        "lootTable": "minecraft:chests/bastion_other"
       },
       "loot_bastion_treasure": {
-        "trigger": "minecraft:player_generates_container_loot"
+        "trigger": "minecraft:player_generates_container_loot",
+        "lootTable": "minecraft:chests/bastion_treasure"
       }
     }
   },
@@ -2509,6 +2557,9 @@
     "criteria": {
       "killed_ghast": {
         "trigger": "minecraft:player_killed_entity",
+        "items": [
+          "minecraft:fireball"
+        ],
         "entities": [
           "minecraft:ghast"
         ]
@@ -2598,7 +2649,8 @@
         "trigger": "minecraft:player_killed_entity",
         "entities": [
           "minecraft:ghast"
-        ]
+        ],
+        "dimension": "minecraft:overworld"
       }
     }
   },
@@ -2615,7 +2667,8 @@
         "trigger": "minecraft:item_used_on_block",
         "items": [
           "minecraft:compass"
-        ]
+        ],
+        "block": "minecraft:lodestone"
       }
     }
   },
@@ -2643,7 +2696,8 @@
     "parent": "story/obtain_armor",
     "criteria": {
       "deflected_projectile": {
-        "trigger": "minecraft:entity_hurt_player"
+        "trigger": "minecraft:entity_hurt_player",
+        "blocked": true
       }
     }
   },
