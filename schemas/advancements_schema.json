@@ -212,10 +212,7 @@
                 "properties": {
                   "items": {
                     "description": "The items required for an entity to be wearing on their head to complete an advancement",
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "type": "string"
                   },
                   "nbt": {
                     "description": "The nbt of an item on the entity's head required to complete an advancement",
@@ -228,23 +225,110 @@
           },
           "wearing": {
             "description": "The required items for the player to be wearing to complete an advancement",
-            "type": "object",
-            "properties": {
-              "feet": {
-                "description": "The required feet item for the player to be wearing to complete an advancement",
+            "oneOf": [
+              {
                 "type": "object",
                 "properties": {
-                  "items": {
-                    "description": "The items required for the player to be wearing on their feet to complete an advancement",
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                  "head": {
+                    "description": "The required head item for the player to be wearing to complete an advancement",
+                    "type": "object",
+                    "properties": {
+                      "item": {
+                        "description": "The item required for the player to be wearing on their head to complete an advancement",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["item"]
+                  },
+                  "chest": {
+                    "description": "The required chest item for the player to be wearing to complete an advancement",
+                    "type": "object",
+                    "properties": {
+                      "item": {
+                        "description": "The item required for the player to be wearing on their chest to complete an advancement",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["item"]
+                  },
+                  "legs": {
+                    "description": "The required legs item for the player to be wearing to complete an advancement",
+                    "type": "object",
+                    "properties": {
+                      "item": {
+                        "description": "The item required for the player to be wearing on their legs to complete an advancement",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["item"]
+                  },
+                  "feet": {
+                    "description": "The required feet item for the player to be wearing to complete an advancement",
+                    "type": "object",
+                    "properties": {
+                      "item": {
+                        "description": "The item required for the player to be wearing on their feet to complete an advancement",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["item"]
                   }
-                },
-                "required": ["items"]
+                }
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "head": {
+                      "description": "The required head item for the player to be wearing to complete an advancement",
+                      "type": "object",
+                      "properties": {
+                        "item": {
+                          "description": "The item required for the player to be wearing on their head to complete an advancement",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["item"]
+                    },
+                    "chest": {
+                      "description": "The required chest item for the player to be wearing to complete an advancement",
+                      "type": "object",
+                      "properties": {
+                        "item": {
+                          "description": "The item required for the player to be wearing on their chest to complete an advancement",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["item"]
+                    },
+                    "legs": {
+                      "description": "The required legs item for the player to be wearing to complete an advancement",
+                      "type": "object",
+                      "properties": {
+                        "item": {
+                          "description": "The item required for the player to be wearing on their legs to complete an advancement",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["item"]
+                    },
+                    "feet": {
+                      "description": "The required feet item for the player to be wearing to complete an advancement",
+                      "type": "object",
+                      "properties": {
+                        "item": {
+                          "description": "The item required for the player to be wearing on their feet to complete an advancement",
+                          "type": "string"
+                        }
+                      },
+                      "required": ["item"]
+                    }
+                  },
+                  "required": ["item"]
+                }
               }
-            }
+            ]
           },
           "blockState": {
             "description": "The block state(s) required to complete an advancement",
@@ -261,6 +345,10 @@
           "catType": {
             "description": "The cat type required to complete an advancement",
             "type": "string"
+          },
+          "isBaby": {
+            "description": "Whether or not the entity must be a baby to complete an advancement (if false, must be an adult)",
+            "type": "boolean"
           }
         },
         "required": ["trigger"]
