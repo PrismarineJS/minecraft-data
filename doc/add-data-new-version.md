@@ -2,7 +2,7 @@
 
 For bedrock edition see [bedrock.md](bedrock.md)
 
-| file name | auto? | how to get it | notes |
+| File | Auto? | Obtaining | Notes |
 | -- | -- | -- | -- |
 | protocol.json | No | Follow [Pre-release Protocol][3] |
 | blocks.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
@@ -17,14 +17,15 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | windows.json | No | Look at [wiki.vg inventories][7] |
 | version.json | No | Look at [Protocol Versions][9] | [wiki.vg protocol numbers][8] |
 | effects.json | No | Look at [minecraft wiki effects][12] |
-| enchantments.json | No | Duplicate enchantments.json from the latest version and add manually the missing enchantments. Enchantments data could be found by looking into the deobfuscated classe files of each enchantments, as well as in the Enchantments registry. |
+| enchantments.json | No | Duplicate enchantments.json from the latest version and add manually the missing enchantments. Enchantments data could be found by looking into the deobfuscated class files of each enchantments, as well as in the Enchantments registry. |
 | language.json | Yes | Use [minecraft-jar-extractor][10] |
 | particles.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
 | blockLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | entityLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
+| advancements.json | Yes | To be added |
 
-* All files that say Yes for auto can be gotten from [minecraft-data-auto-updater][17]
+* All files that say "Yes" for Auto can be retrieved from [minecraft-data-auto-updater][17]
 
 [1]: https://github.com/Pokechu22/Burger
 [2]: https://github.com/PrismarineJS/burger-extractor
@@ -45,4 +46,3 @@ For bedrock edition see [bedrock.md](bedrock.md)
 [17]: https://github.com/PrismarineJS/minecraft-data-auto-updater
 [18]: https://github.com/PrismarineJS/minecraft-data/pull/282#issue-612896577
 [19]: https://github.com/PrismarineJS/minecraft-data/issues/412#issuecomment-1008202471
-
