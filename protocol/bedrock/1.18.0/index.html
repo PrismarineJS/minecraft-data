@@ -2031,10 +2031,10 @@ ground and becomes a solid block again.</p></p>
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>mix</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>mix</td><td>zigzag32</td><td></td></tr>
 <tr><td class='name'>items </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>network id</td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'>count</td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>network id</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>count</td><td>zigzag32</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="WindowID">
@@ -2350,9 +2350,9 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>110</td><td class='name'>RecordWard</td><td></td></tr>
   <tr><td class='name'>111</td><td class='name'>Record11</td><td></td></tr>
   <tr><td class='name'>112</td><td class='name'>RecordWait</td><td></td></tr>
-  <tr><td class='name'>113</td><td class='name'>unknown1</td><td></td></tr>
+  <tr><td class='name'>113</td><td class='name'>StopRecord</td><td></td></tr>
   <tr><td class='name'>114</td><td class='name'>Flop</td><td></td></tr>
-  <tr><td class='name'>115</td><td class='name'>ElderGuardianCurse</td><td></td></tr>
+  <tr><td class='name'>115</td><td class='name'>GuardianCurse</td><td></td></tr>
   <tr><td class='name'>116</td><td class='name'>MobWarning</td><td></td></tr>
   <tr><td class='name'>117</td><td class='name'>MobWarningBaby</td><td></td></tr>
   <tr><td class='name'>118</td><td class='name'>Teleport</td><td></td></tr>
@@ -2367,7 +2367,7 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>127</td><td class='name'>Glass</td><td></td></tr>
   <tr><td class='name'>128</td><td class='name'>PotionBrewed</td><td></td></tr>
   <tr><td class='name'>129</td><td class='name'>CastSpell</td><td></td></tr>
-  <tr><td class='name'>130</td><td class='name'>PrepareAttack</td><td></td></tr>
+  <tr><td class='name'>130</td><td class='name'>PrepareAttackSpell</td><td></td></tr>
   <tr><td class='name'>131</td><td class='name'>PrepareSummon</td><td></td></tr>
   <tr><td class='name'>132</td><td class='name'>PrepareWololo</td><td></td></tr>
   <tr><td class='name'>133</td><td class='name'>Fang</td><td></td></tr>
@@ -2375,20 +2375,20 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>135</td><td class='name'>CameraTakePicture</td><td></td></tr>
   <tr><td class='name'>136</td><td class='name'>LeashKnotPlace</td><td></td></tr>
   <tr><td class='name'>137</td><td class='name'>LeashKnotBreak</td><td></td></tr>
-  <tr><td class='name'>138</td><td class='name'>Growl</td><td></td></tr>
-  <tr><td class='name'>139</td><td class='name'>Whine</td><td></td></tr>
-  <tr><td class='name'>140</td><td class='name'>Pant</td><td></td></tr>
-  <tr><td class='name'>141</td><td class='name'>Purr</td><td></td></tr>
-  <tr><td class='name'>142</td><td class='name'>Purreow</td><td></td></tr>
+  <tr><td class='name'>138</td><td class='name'>AmbientGrowl</td><td></td></tr>
+  <tr><td class='name'>139</td><td class='name'>AmbientWhine</td><td></td></tr>
+  <tr><td class='name'>140</td><td class='name'>AmbientPant</td><td></td></tr>
+  <tr><td class='name'>141</td><td class='name'>AmbientPurr</td><td></td></tr>
+  <tr><td class='name'>142</td><td class='name'>AmbientPurreow</td><td></td></tr>
   <tr><td class='name'>143</td><td class='name'>DeathMinVolume</td><td></td></tr>
   <tr><td class='name'>144</td><td class='name'>DeathMidVolume</td><td></td></tr>
-  <tr><td class='name'>145</td><td class='name'>unknown2</td><td></td></tr>
+  <tr><td class='name'>145</td><td class='name'>ImitateBlaze</td><td></td></tr>
   <tr><td class='name'>146</td><td class='name'>ImitateCaveSpider</td><td></td></tr>
   <tr><td class='name'>147</td><td class='name'>ImitateCreeper</td><td></td></tr>
   <tr><td class='name'>148</td><td class='name'>ImitateElderGuardian</td><td></td></tr>
   <tr><td class='name'>149</td><td class='name'>ImitateEnderDragon</td><td></td></tr>
   <tr><td class='name'>150</td><td class='name'>ImitateEnderman</td><td></td></tr>
-  <tr><td class='name'>151</td><td class='name'>unknown3</td><td></td></tr>
+  <tr><td class='name'>151</td><td class='name'>ImitateEndermite</td><td></td></tr>
   <tr><td class='name'>152</td><td class='name'>ImitateEvocationIllager</td><td></td></tr>
   <tr><td class='name'>153</td><td class='name'>ImitateGhast</td><td></td></tr>
   <tr><td class='name'>154</td><td class='name'>ImitateHusk</td><td></td></tr>
@@ -2410,196 +2410,206 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>170</td><td class='name'>ImitateZombie</td><td></td></tr>
   <tr><td class='name'>171</td><td class='name'>ImitateZombiePigman</td><td></td></tr>
   <tr><td class='name'>172</td><td class='name'>ImitateZombieVillager</td><td></td></tr>
-  <tr><td class='name'>173</td><td class='name'>BlockEndPortalFrameFill</td><td></td></tr>
-  <tr><td class='name'>174</td><td class='name'>BlockEndPortalSpawn</td><td></td></tr>
-  <tr><td class='name'>175</td><td class='name'>RandomAnvilUse</td><td></td></tr>
+  <tr><td class='name'>173</td><td class='name'>EnderEyePlaced</td><td></td></tr>
+  <tr><td class='name'>174</td><td class='name'>EndPortalCreated</td><td></td></tr>
+  <tr><td class='name'>175</td><td class='name'>AnvilUse</td><td></td></tr>
   <tr><td class='name'>176</td><td class='name'>BottleDragonBreath</td><td></td></tr>
   <tr><td class='name'>177</td><td class='name'>PortalTravel</td><td></td></tr>
-  <tr><td class='name'>178</td><td class='name'>ItemTridentHit</td><td></td></tr>
-  <tr><td class='name'>179</td><td class='name'>ItemTridentReturn</td><td></td></tr>
-  <tr><td class='name'>180</td><td class='name'>ItemTridentRiptide1</td><td></td></tr>
-  <tr><td class='name'>181</td><td class='name'>ItemTridentRiptide2</td><td></td></tr>
-  <tr><td class='name'>182</td><td class='name'>ItemTridentRiptide3</td><td></td></tr>
-  <tr><td class='name'>183</td><td class='name'>ItemTridentThrow</td><td></td></tr>
-  <tr><td class='name'>184</td><td class='name'>ItemTridentThunder</td><td></td></tr>
-  <tr><td class='name'>185</td><td class='name'>ItemTridentHitGround</td><td></td></tr>
+  <tr><td class='name'>178</td><td class='name'>TridentHit</td><td></td></tr>
+  <tr><td class='name'>179</td><td class='name'>TridentReturn</td><td></td></tr>
+  <tr><td class='name'>180</td><td class='name'>TridentRiptide1</td><td></td></tr>
+  <tr><td class='name'>181</td><td class='name'>TridentRiptide2</td><td></td></tr>
+  <tr><td class='name'>182</td><td class='name'>TridentRiptide3</td><td></td></tr>
+  <tr><td class='name'>183</td><td class='name'>TridentThrow</td><td></td></tr>
+  <tr><td class='name'>184</td><td class='name'>TridentThunder</td><td></td></tr>
+  <tr><td class='name'>185</td><td class='name'>TridentHitGround</td><td></td></tr>
   <tr><td class='name'>186</td><td class='name'>Default</td><td></td></tr>
-  <tr><td class='name'>187</td><td class='name'>BlockFletchingTableUse</td><td></td></tr>
+  <tr><td class='name'>187</td><td class='name'>FletchingTableUse</td><td></td></tr>
   <tr><td class='name'>188</td><td class='name'>ElemConstructOpen</td><td></td></tr>
   <tr><td class='name'>189</td><td class='name'>IceBombHit</td><td></td></tr>
   <tr><td class='name'>190</td><td class='name'>BalloonPop</td><td></td></tr>
   <tr><td class='name'>191</td><td class='name'>LtReactionIceBomb</td><td></td></tr>
   <tr><td class='name'>192</td><td class='name'>LtReactionBleach</td><td></td></tr>
-  <tr><td class='name'>193</td><td class='name'>LtReactionEPaste</td><td></td></tr>
-  <tr><td class='name'>194</td><td class='name'>LtReactionEPaste2</td><td></td></tr>
-  <tr><td class='name'>195</td><td class='name'>LtReactionFertilizer</td><td></td></tr>
-  <tr><td class='name'>196</td><td class='name'>LtReactionFireball</td><td></td></tr>
-  <tr><td class='name'>197</td><td class='name'>LtReactionMgsalt</td><td></td></tr>
-  <tr><td class='name'>198</td><td class='name'>LtReactionMiscfire</td><td></td></tr>
-  <tr><td class='name'>199</td><td class='name'>LtReactionFire</td><td></td></tr>
-  <tr><td class='name'>200</td><td class='name'>LtReactionMiscexplosion</td><td></td></tr>
-  <tr><td class='name'>201</td><td class='name'>LtReactionMiscmystical</td><td></td></tr>
-  <tr><td class='name'>202</td><td class='name'>LtReactionMiscmystical2</td><td></td></tr>
-  <tr><td class='name'>203</td><td class='name'>LtReactionProduct</td><td></td></tr>
-  <tr><td class='name'>204</td><td class='name'>SparklerUse</td><td></td></tr>
-  <tr><td class='name'>205</td><td class='name'>GlowstickUse</td><td></td></tr>
-  <tr><td class='name'>206</td><td class='name'>SparklerActive</td><td></td></tr>
-  <tr><td class='name'>207</td><td class='name'>ConvertToDrowned</td><td></td></tr>
-  <tr><td class='name'>208</td><td class='name'>BucketFillFish</td><td></td></tr>
-  <tr><td class='name'>209</td><td class='name'>BucketEmptyFish</td><td></td></tr>
-  <tr><td class='name'>210</td><td class='name'>BubbleUp</td><td></td></tr>
-  <tr><td class='name'>211</td><td class='name'>BubbleDown</td><td></td></tr>
-  <tr><td class='name'>212</td><td class='name'>BubblePop</td><td></td></tr>
-  <tr><td class='name'>213</td><td class='name'>BubbleUpInside</td><td></td></tr>
-  <tr><td class='name'>214</td><td class='name'>BubbleDownInside</td><td></td></tr>
-  <tr><td class='name'>215</td><td class='name'>HurtBaby</td><td></td></tr>
-  <tr><td class='name'>216</td><td class='name'>DeathBaby</td><td></td></tr>
-  <tr><td class='name'>217</td><td class='name'>StepBaby</td><td></td></tr>
-  <tr><td class='name'>218</td><td class='name'>BabySpawn</td><td></td></tr>
-  <tr><td class='name'>219</td><td class='name'>Born</td><td></td></tr>
-  <tr><td class='name'>220</td><td class='name'>BlockTurtleEggBreak</td><td></td></tr>
-  <tr><td class='name'>221</td><td class='name'>BlockTurtleEggCrack</td><td></td></tr>
-  <tr><td class='name'>222</td><td class='name'>BlockTurtleEggHatch</td><td></td></tr>
-  <tr><td class='name'>223</td><td class='name'>TurtleLayEgg</td><td></td></tr>
-  <tr><td class='name'>224</td><td class='name'>BlockTurtleEggAttack</td><td></td></tr>
-  <tr><td class='name'>225</td><td class='name'>BeaconActivate</td><td></td></tr>
-  <tr><td class='name'>226</td><td class='name'>BeaconAmbient</td><td></td></tr>
-  <tr><td class='name'>227</td><td class='name'>BeaconDeactivate</td><td></td></tr>
-  <tr><td class='name'>228</td><td class='name'>BeaconPower</td><td></td></tr>
-  <tr><td class='name'>229</td><td class='name'>ConduitActivate</td><td></td></tr>
-  <tr><td class='name'>230</td><td class='name'>ConduitAmbient</td><td></td></tr>
-  <tr><td class='name'>231</td><td class='name'>ConduitAttack</td><td></td></tr>
-  <tr><td class='name'>232</td><td class='name'>ConduitDeactivate</td><td></td></tr>
-  <tr><td class='name'>233</td><td class='name'>ConduitShort</td><td></td></tr>
-  <tr><td class='name'>234</td><td class='name'>Swoop</td><td></td></tr>
-  <tr><td class='name'>235</td><td class='name'>BlockBambooSaplingPlace</td><td></td></tr>
-  <tr><td class='name'>236</td><td class='name'>PreSneeze</td><td></td></tr>
-  <tr><td class='name'>237</td><td class='name'>Sneeze</td><td></td></tr>
-  <tr><td class='name'>238</td><td class='name'>AmbientTame</td><td></td></tr>
-  <tr><td class='name'>239</td><td class='name'>Scared</td><td></td></tr>
-  <tr><td class='name'>240</td><td class='name'>BlockScaffoldingClimb</td><td></td></tr>
-  <tr><td class='name'>241</td><td class='name'>CrossbowLoadingStart</td><td></td></tr>
-  <tr><td class='name'>242</td><td class='name'>CrossbowLoadingMiddle</td><td></td></tr>
-  <tr><td class='name'>243</td><td class='name'>CrossbowLoadingEnd</td><td></td></tr>
-  <tr><td class='name'>244</td><td class='name'>CrossbowShoot</td><td></td></tr>
-  <tr><td class='name'>245</td><td class='name'>CrossbowQuickChargeStart</td><td></td></tr>
-  <tr><td class='name'>246</td><td class='name'>CrossbowQuickChargeMiddle</td><td></td></tr>
-  <tr><td class='name'>247</td><td class='name'>CrossbowQuickChargeEnd</td><td></td></tr>
-  <tr><td class='name'>248</td><td class='name'>AmbientAggressive</td><td></td></tr>
-  <tr><td class='name'>249</td><td class='name'>AmbientWorried</td><td></td></tr>
-  <tr><td class='name'>250</td><td class='name'>CantBreed</td><td></td></tr>
-  <tr><td class='name'>251</td><td class='name'>ItemShieldBlock</td><td></td></tr>
-  <tr><td class='name'>252</td><td class='name'>ItemBookPut</td><td></td></tr>
-  <tr><td class='name'>253</td><td class='name'>BlockGrindstoneUse</td><td></td></tr>
-  <tr><td class='name'>254</td><td class='name'>BlockBellHit</td><td></td></tr>
-  <tr><td class='name'>255</td><td class='name'>BlockCampfireCrackle</td><td></td></tr>
-  <tr><td class='name'>256</td><td class='name'>Roar</td><td></td></tr>
-  <tr><td class='name'>257</td><td class='name'>Stun</td><td></td></tr>
-  <tr><td class='name'>258</td><td class='name'>BlockSweetBerryBushHurt</td><td></td></tr>
-  <tr><td class='name'>259</td><td class='name'>BlockSweetBerryBushPick</td><td></td></tr>
-  <tr><td class='name'>260</td><td class='name'>UICartographyTableTakeResult</td><td></td></tr>
-  <tr><td class='name'>261</td><td class='name'>UIStoneCutterTakeResult</td><td></td></tr>
-  <tr><td class='name'>262</td><td class='name'>BlockComposterEmpty</td><td></td></tr>
-  <tr><td class='name'>263</td><td class='name'>BlockComposterFill</td><td></td></tr>
-  <tr><td class='name'>264</td><td class='name'>BlockComposterFillSuccess</td><td></td></tr>
-  <tr><td class='name'>265</td><td class='name'>BlockComposterReady</td><td></td></tr>
-  <tr><td class='name'>266</td><td class='name'>BlockBarrelOpen</td><td></td></tr>
-  <tr><td class='name'>267</td><td class='name'>BlockBarrelClose</td><td></td></tr>
-  <tr><td class='name'>268</td><td class='name'>RaidHorn</td><td></td></tr>
-  <tr><td class='name'>269</td><td class='name'>BlockLoomUse</td><td></td></tr>
-  <tr><td class='name'>270</td><td class='name'>AmbientRaid</td><td></td></tr>
-  <tr><td class='name'>271</td><td class='name'>UICartographyTableUse</td><td></td></tr>
-  <tr><td class='name'>272</td><td class='name'>UIStoneCutterUse</td><td></td></tr>
-  <tr><td class='name'>273</td><td class='name'>UILoomUse</td><td></td></tr>
-  <tr><td class='name'>274</td><td class='name'>SmokerUse</td><td></td></tr>
-  <tr><td class='name'>275</td><td class='name'>BlastFurnaceUse</td><td></td></tr>
-  <tr><td class='name'>276</td><td class='name'>SmithingTableUse</td><td></td></tr>
-  <tr><td class='name'>277</td><td class='name'>Screech</td><td></td></tr>
-  <tr><td class='name'>278</td><td class='name'>Sleep</td><td></td></tr>
-  <tr><td class='name'>279</td><td class='name'>FurnaceUse</td><td></td></tr>
-  <tr><td class='name'>280</td><td class='name'>MooshroomConvert</td><td></td></tr>
-  <tr><td class='name'>281</td><td class='name'>MilkSuspiciously</td><td></td></tr>
-  <tr><td class='name'>282</td><td class='name'>Celebrate</td><td></td></tr>
-  <tr><td class='name'>283</td><td class='name'>JumpPrevent</td><td></td></tr>
-  <tr><td class='name'>284</td><td class='name'>AmbientPollinate</td><td></td></tr>
-  <tr><td class='name'>285</td><td class='name'>BeeHiveDrip</td><td></td></tr>
-  <tr><td class='name'>286</td><td class='name'>BeeHiveEnter</td><td></td></tr>
-  <tr><td class='name'>287</td><td class='name'>BeeHiveExit</td><td></td></tr>
-  <tr><td class='name'>288</td><td class='name'>BeeHiveWork</td><td></td></tr>
-  <tr><td class='name'>289</td><td class='name'>BeeHiveShear</td><td></td></tr>
-  <tr><td class='name'>290</td><td class='name'>HoneyBottleDrink</td><td></td></tr>
-  <tr><td class='name'>291</td><td class='name'>AmbientCave</td><td></td></tr>
-  <tr><td class='name'>292</td><td class='name'>Retreat</td><td></td></tr>
-  <tr><td class='name'>293</td><td class='name'>ConvertToZombified</td><td></td></tr>
-  <tr><td class='name'>294</td><td class='name'>Admire</td><td></td></tr>
-  <tr><td class='name'>295</td><td class='name'>StepLava</td><td></td></tr>
-  <tr><td class='name'>296</td><td class='name'>Tempt</td><td></td></tr>
-  <tr><td class='name'>297</td><td class='name'>Panic</td><td></td></tr>
-  <tr><td class='name'>298</td><td class='name'>Angry</td><td></td></tr>
-  <tr><td class='name'>299</td><td class='name'>AmbientWarpedForest</td><td></td></tr>
-  <tr><td class='name'>300</td><td class='name'>AmbientSoulsandValley</td><td></td></tr>
-  <tr><td class='name'>301</td><td class='name'>AmbientNetherWastes</td><td></td></tr>
-  <tr><td class='name'>302</td><td class='name'>AmbientBasaltDeltas</td><td></td></tr>
-  <tr><td class='name'>303</td><td class='name'>AmbientCrimsonForest</td><td></td></tr>
-  <tr><td class='name'>304</td><td class='name'>RespawnAnchorCharge</td><td></td></tr>
-  <tr><td class='name'>305</td><td class='name'>RespawnAnchorDeplete</td><td></td></tr>
-  <tr><td class='name'>306</td><td class='name'>RespawnAnchorSetSpawn</td><td></td></tr>
-  <tr><td class='name'>307</td><td class='name'>RespawnAnchorAmbient</td><td></td></tr>
-  <tr><td class='name'>308</td><td class='name'>SoulEscapeQuiet</td><td></td></tr>
-  <tr><td class='name'>309</td><td class='name'>SoulEscapeLoud</td><td></td></tr>
-  <tr><td class='name'>310</td><td class='name'>RecordPigstep</td><td></td></tr>
-  <tr><td class='name'>311</td><td class='name'>LinkCompassToLodestone</td><td></td></tr>
-  <tr><td class='name'>312</td><td class='name'>BlockSmithingTableUse</td><td></td></tr>
-  <tr><td class='name'>313</td><td class='name'>EquipNetherite</td><td></td></tr>
-  <tr><td class='name'>314</td><td class='name'>AmbientLoopWarpedForest</td><td></td></tr>
-  <tr><td class='name'>315</td><td class='name'>AmbientLoopSoulsandValley</td><td></td></tr>
-  <tr><td class='name'>316</td><td class='name'>AmbientLoopNetherWastes</td><td></td></tr>
-  <tr><td class='name'>317</td><td class='name'>AmbientLoopBasaltDeltas</td><td></td></tr>
-  <tr><td class='name'>318</td><td class='name'>AmbientLoopCrimsonForest</td><td></td></tr>
-  <tr><td class='name'>319</td><td class='name'>AmbientAdditionWarpedForest</td><td></td></tr>
-  <tr><td class='name'>320</td><td class='name'>AmbientAdditionSoulsandValley</td><td></td></tr>
-  <tr><td class='name'>321</td><td class='name'>AmbientAdditionNetherWastes</td><td></td></tr>
-  <tr><td class='name'>322</td><td class='name'>AmbientAdditionBasaltDeltas</td><td></td></tr>
-  <tr><td class='name'>323</td><td class='name'>AmbientAdditionCrimsonForest</td><td></td></tr>
-  <tr><td class='name'>324</td><td class='name'>SculkSensorPowerOn</td><td></td></tr>
-  <tr><td class='name'>325</td><td class='name'>SculkSensorPowerOff</td><td></td></tr>
-  <tr><td class='name'>326</td><td class='name'>BucketFillPowderSnow</td><td></td></tr>
-  <tr><td class='name'>327</td><td class='name'>BucketEmptyPowderSnow</td><td></td></tr>
-  <tr><td class='name'>328</td><td class='name'>PointedDripstoneCauldronDripWater</td><td></td></tr>
-  <tr><td class='name'>329</td><td class='name'>PointedDripstoneCauldronDripLava</td><td></td></tr>
-  <tr><td class='name'>330</td><td class='name'>PointedDripstoneDripWater</td><td></td></tr>
-  <tr><td class='name'>331</td><td class='name'>PointedDripstoneDripLava</td><td></td></tr>
-  <tr><td class='name'>332</td><td class='name'>CaveVinesPickBerries</td><td></td></tr>
-  <tr><td class='name'>333</td><td class='name'>BigDripleafTiltDown</td><td></td></tr>
-  <tr><td class='name'>334</td><td class='name'>BigDripleafTiltUp</td><td></td></tr>
-  <tr><td class='name'>335</td><td class='name'>unknown335</td><td></td></tr>
-  <tr><td class='name'>336</td><td class='name'>unknown336</td><td></td></tr>
-  <tr><td class='name'>337</td><td class='name'>unknown337</td><td></td></tr>
-  <tr><td class='name'>338</td><td class='name'>unknown338</td><td></td></tr>
-  <tr><td class='name'>339</td><td class='name'>copper wax on</td><td></td></tr>
-  <tr><td class='name'>340</td><td class='name'>copper wax off</td><td></td></tr>
-  <tr><td class='name'>341</td><td class='name'>scrape</td><td></td></tr>
-  <tr><td class='name'>342</td><td class='name'>player hurt drown</td><td></td></tr>
-  <tr><td class='name'>343</td><td class='name'>player hurt on fire</td><td></td></tr>
-  <tr><td class='name'>344</td><td class='name'>player hurt freeze</td><td></td></tr>
-  <tr><td class='name'>345</td><td class='name'>use spyglass</td><td></td></tr>
-  <tr><td class='name'>346</td><td class='name'>stop using spyglass</td><td></td></tr>
-  <tr><td class='name'>347</td><td class='name'>amethyst block chime</td><td></td></tr>
-  <tr><td class='name'>348</td><td class='name'>ambient screamer</td><td></td></tr>
-  <tr><td class='name'>349</td><td class='name'>hurt screamer</td><td></td></tr>
-  <tr><td class='name'>350</td><td class='name'>death screamer</td><td></td></tr>
-  <tr><td class='name'>351</td><td class='name'>milk screamer</td><td></td></tr>
-  <tr><td class='name'>352</td><td class='name'>jump to block</td><td></td></tr>
-  <tr><td class='name'>353</td><td class='name'>pre ram</td><td></td></tr>
-  <tr><td class='name'>354</td><td class='name'>pre ram screamer</td><td></td></tr>
-  <tr><td class='name'>355</td><td class='name'>ram impact</td><td></td></tr>
-  <tr><td class='name'>356</td><td class='name'>ram impact screamer</td><td></td></tr>
-  <tr><td class='name'>357</td><td class='name'>squid ink squirt</td><td></td></tr>
-  <tr><td class='name'>358</td><td class='name'>glow squid ink squirt</td><td></td></tr>
-  <tr><td class='name'>359</td><td class='name'>convert to stray</td><td></td></tr>
-  <tr><td class='name'>360</td><td class='name'>extinguish candle</td><td></td></tr>
-  <tr><td class='name'>361</td><td class='name'>ambient candle</td><td></td></tr>
-  <tr><td class='name'>362</td><td class='name'>Undefined</td><td></td></tr>
+  <tr><td class='name'>193</td><td class='name'>LtReactionElephantToothpaste</td><td></td></tr>
+  <tr><td class='name'>194</td><td class='name'>LtReactionElephantToothpaste2</td><td></td></tr>
+  <tr><td class='name'>195</td><td class='name'>LtReactionGlowStick</td><td></td></tr>
+  <tr><td class='name'>196</td><td class='name'>LtReactionGlowStick2</td><td></td></tr>
+  <tr><td class='name'>197</td><td class='name'>LtReactionLuminol</td><td></td></tr>
+  <tr><td class='name'>198</td><td class='name'>LtReactionSalt</td><td></td></tr>
+  <tr><td class='name'>199</td><td class='name'>LtReactionFertilizer</td><td></td></tr>
+  <tr><td class='name'>200</td><td class='name'>LtReactionFireball</td><td></td></tr>
+  <tr><td class='name'>201</td><td class='name'>LtReactionMagnesiumSalt</td><td></td></tr>
+  <tr><td class='name'>202</td><td class='name'>LtReactionMiscFire</td><td></td></tr>
+  <tr><td class='name'>203</td><td class='name'>LtReactionFire</td><td></td></tr>
+  <tr><td class='name'>204</td><td class='name'>LtReactionMiscExplosion</td><td></td></tr>
+  <tr><td class='name'>205</td><td class='name'>LtReactionMiscMystical</td><td></td></tr>
+  <tr><td class='name'>206</td><td class='name'>LtReactionMiscMystical2</td><td></td></tr>
+  <tr><td class='name'>207</td><td class='name'>LtReactionProduct</td><td></td></tr>
+  <tr><td class='name'>208</td><td class='name'>SparklerUse</td><td></td></tr>
+  <tr><td class='name'>209</td><td class='name'>GlowStickUse</td><td></td></tr>
+  <tr><td class='name'>210</td><td class='name'>SparklerActive</td><td></td></tr>
+  <tr><td class='name'>211</td><td class='name'>ConvertToDrowned</td><td></td></tr>
+  <tr><td class='name'>212</td><td class='name'>BucketFillFish</td><td></td></tr>
+  <tr><td class='name'>213</td><td class='name'>BucketEmptyFish</td><td></td></tr>
+  <tr><td class='name'>214</td><td class='name'>BubbleColumnUpwards</td><td></td></tr>
+  <tr><td class='name'>215</td><td class='name'>BubbleColumnDownwards</td><td></td></tr>
+  <tr><td class='name'>216</td><td class='name'>BubblePop</td><td></td></tr>
+  <tr><td class='name'>217</td><td class='name'>BubbleUpInside</td><td></td></tr>
+  <tr><td class='name'>218</td><td class='name'>BubbleDownInside</td><td></td></tr>
+  <tr><td class='name'>219</td><td class='name'>HurtBaby</td><td></td></tr>
+  <tr><td class='name'>220</td><td class='name'>DeathBaby</td><td></td></tr>
+  <tr><td class='name'>221</td><td class='name'>StepBaby</td><td></td></tr>
+  <tr><td class='name'>222</td><td class='name'>SpawnBaby</td><td></td></tr>
+  <tr><td class='name'>223</td><td class='name'>Born</td><td></td></tr>
+  <tr><td class='name'>224</td><td class='name'>TurtleEggBreak</td><td></td></tr>
+  <tr><td class='name'>225</td><td class='name'>TurtleEggCrack</td><td></td></tr>
+  <tr><td class='name'>226</td><td class='name'>TurtleEggHatched</td><td></td></tr>
+  <tr><td class='name'>227</td><td class='name'>LayEgg</td><td></td></tr>
+  <tr><td class='name'>228</td><td class='name'>TurtleEggAttacked</td><td></td></tr>
+  <tr><td class='name'>229</td><td class='name'>BeaconActivate</td><td></td></tr>
+  <tr><td class='name'>230</td><td class='name'>BeaconAmbient</td><td></td></tr>
+  <tr><td class='name'>231</td><td class='name'>BeaconDeactivate</td><td></td></tr>
+  <tr><td class='name'>232</td><td class='name'>BeaconPower</td><td></td></tr>
+  <tr><td class='name'>233</td><td class='name'>ConduitActivate</td><td></td></tr>
+  <tr><td class='name'>234</td><td class='name'>ConduitAmbient</td><td></td></tr>
+  <tr><td class='name'>235</td><td class='name'>ConduitAttack</td><td></td></tr>
+  <tr><td class='name'>236</td><td class='name'>ConduitDeactivate</td><td></td></tr>
+  <tr><td class='name'>237</td><td class='name'>ConduitShort</td><td></td></tr>
+  <tr><td class='name'>238</td><td class='name'>Swoop</td><td></td></tr>
+  <tr><td class='name'>239</td><td class='name'>BambooSaplingPlace</td><td></td></tr>
+  <tr><td class='name'>240</td><td class='name'>PreSneeze</td><td></td></tr>
+  <tr><td class='name'>241</td><td class='name'>Sneeze</td><td></td></tr>
+  <tr><td class='name'>242</td><td class='name'>AmbientTame</td><td></td></tr>
+  <tr><td class='name'>243</td><td class='name'>Scared</td><td></td></tr>
+  <tr><td class='name'>244</td><td class='name'>ScaffoldingClimb</td><td></td></tr>
+  <tr><td class='name'>245</td><td class='name'>CrossbowLoadingStart</td><td></td></tr>
+  <tr><td class='name'>246</td><td class='name'>CrossbowLoadingMiddle</td><td></td></tr>
+  <tr><td class='name'>247</td><td class='name'>CrossbowLoadingEnd</td><td></td></tr>
+  <tr><td class='name'>248</td><td class='name'>CrossbowShoot</td><td></td></tr>
+  <tr><td class='name'>249</td><td class='name'>CrossbowQuickChargeStart</td><td></td></tr>
+  <tr><td class='name'>250</td><td class='name'>CrossbowQuickChargeMiddle</td><td></td></tr>
+  <tr><td class='name'>251</td><td class='name'>CrossbowQuickChargeEnd</td><td></td></tr>
+  <tr><td class='name'>252</td><td class='name'>AmbientAggressive</td><td></td></tr>
+  <tr><td class='name'>253</td><td class='name'>AmbientWorried</td><td></td></tr>
+  <tr><td class='name'>254</td><td class='name'>CantBreed</td><td></td></tr>
+  <tr><td class='name'>255</td><td class='name'>ShieldBlock</td><td></td></tr>
+  <tr><td class='name'>256</td><td class='name'>LecternBookPlace</td><td></td></tr>
+  <tr><td class='name'>257</td><td class='name'>GrindstoneUse</td><td></td></tr>
+  <tr><td class='name'>258</td><td class='name'>Bell</td><td></td></tr>
+  <tr><td class='name'>259</td><td class='name'>CampfireCrackle</td><td></td></tr>
+  <tr><td class='name'>260</td><td class='name'>Roar</td><td></td></tr>
+  <tr><td class='name'>261</td><td class='name'>Stun</td><td></td></tr>
+  <tr><td class='name'>262</td><td class='name'>SweetBerryBushHurt</td><td></td></tr>
+  <tr><td class='name'>263</td><td class='name'>SweetBerryBushPick</td><td></td></tr>
+  <tr><td class='name'>264</td><td class='name'>CartographyTableUse</td><td></td></tr>
+  <tr><td class='name'>265</td><td class='name'>StonecutterUse</td><td></td></tr>
+  <tr><td class='name'>266</td><td class='name'>ComposterEmpty</td><td></td></tr>
+  <tr><td class='name'>267</td><td class='name'>ComposterFill</td><td></td></tr>
+  <tr><td class='name'>268</td><td class='name'>ComposterFillLayer</td><td></td></tr>
+  <tr><td class='name'>269</td><td class='name'>ComposterReady</td><td></td></tr>
+  <tr><td class='name'>270</td><td class='name'>BarrelOpen</td><td></td></tr>
+  <tr><td class='name'>271</td><td class='name'>BarrelClose</td><td></td></tr>
+  <tr><td class='name'>272</td><td class='name'>RaidHorn</td><td></td></tr>
+  <tr><td class='name'>273</td><td class='name'>LoomUse</td><td></td></tr>
+  <tr><td class='name'>274</td><td class='name'>AmbientInRaid</td><td></td></tr>
+  <tr><td class='name'>275</td><td class='name'>UICartographyTableUse</td><td></td></tr>
+  <tr><td class='name'>276</td><td class='name'>UIStonecutterUse</td><td></td></tr>
+  <tr><td class='name'>277</td><td class='name'>UILoomUse</td><td></td></tr>
+  <tr><td class='name'>278</td><td class='name'>SmokerUse</td><td></td></tr>
+  <tr><td class='name'>279</td><td class='name'>BlastFurnaceUse</td><td></td></tr>
+  <tr><td class='name'>280</td><td class='name'>SmithingTableUse</td><td></td></tr>
+  <tr><td class='name'>281</td><td class='name'>Screech</td><td></td></tr>
+  <tr><td class='name'>282</td><td class='name'>Sleep</td><td></td></tr>
+  <tr><td class='name'>283</td><td class='name'>FurnaceUse</td><td></td></tr>
+  <tr><td class='name'>284</td><td class='name'>MooshroomConvert</td><td></td></tr>
+  <tr><td class='name'>285</td><td class='name'>MilkSuspiciously</td><td></td></tr>
+  <tr><td class='name'>286</td><td class='name'>Celebrate</td><td></td></tr>
+  <tr><td class='name'>287</td><td class='name'>JumpPrevent</td><td></td></tr>
+  <tr><td class='name'>288</td><td class='name'>AmbientPollinate</td><td></td></tr>
+  <tr><td class='name'>289</td><td class='name'>BeehiveDrip</td><td></td></tr>
+  <tr><td class='name'>290</td><td class='name'>BeehiveEnter</td><td></td></tr>
+  <tr><td class='name'>291</td><td class='name'>BeehiveExit</td><td></td></tr>
+  <tr><td class='name'>292</td><td class='name'>BeehiveWork</td><td></td></tr>
+  <tr><td class='name'>293</td><td class='name'>BeehiveShear</td><td></td></tr>
+  <tr><td class='name'>294</td><td class='name'>HoneybottleDrink</td><td></td></tr>
+  <tr><td class='name'>295</td><td class='name'>AmbientCave</td><td></td></tr>
+  <tr><td class='name'>296</td><td class='name'>Retreat</td><td></td></tr>
+  <tr><td class='name'>297</td><td class='name'>ConvertToZombified</td><td></td></tr>
+  <tr><td class='name'>298</td><td class='name'>Admire</td><td></td></tr>
+  <tr><td class='name'>299</td><td class='name'>StepLava</td><td></td></tr>
+  <tr><td class='name'>300</td><td class='name'>Tempt</td><td></td></tr>
+  <tr><td class='name'>301</td><td class='name'>Panic</td><td></td></tr>
+  <tr><td class='name'>302</td><td class='name'>Angry</td><td></td></tr>
+  <tr><td class='name'>303</td><td class='name'>AmbientMoodWarpedForest</td><td></td></tr>
+  <tr><td class='name'>304</td><td class='name'>AmbientMoodSoulsandValley</td><td></td></tr>
+  <tr><td class='name'>305</td><td class='name'>AmbientMoodNetherWastes</td><td></td></tr>
+  <tr><td class='name'>306</td><td class='name'>AmbientMoodBasaltDeltas</td><td></td></tr>
+  <tr><td class='name'>307</td><td class='name'>AmbientMoodCrimsonForest</td><td></td></tr>
+  <tr><td class='name'>308</td><td class='name'>RespawnAnchorCharge</td><td></td></tr>
+  <tr><td class='name'>309</td><td class='name'>RespawnAnchorDeplete</td><td></td></tr>
+  <tr><td class='name'>310</td><td class='name'>RespawnAnchorSetSpawn</td><td></td></tr>
+  <tr><td class='name'>311</td><td class='name'>RespawnAnchorAmbient</td><td></td></tr>
+  <tr><td class='name'>312</td><td class='name'>SoulEscapeQuiet</td><td></td></tr>
+  <tr><td class='name'>313</td><td class='name'>SoulEscapeLoud</td><td></td></tr>
+  <tr><td class='name'>314</td><td class='name'>RecordPigstep</td><td></td></tr>
+  <tr><td class='name'>315</td><td class='name'>LinkCompassToLodestone</td><td></td></tr>
+  <tr><td class='name'>316</td><td class='name'>UseSmithingTable</td><td></td></tr>
+  <tr><td class='name'>317</td><td class='name'>EquipNetherite</td><td></td></tr>
+  <tr><td class='name'>318</td><td class='name'>AmbientLoopWarpedForest</td><td></td></tr>
+  <tr><td class='name'>319</td><td class='name'>AmbientLoopSoulsandValley</td><td></td></tr>
+  <tr><td class='name'>320</td><td class='name'>AmbientLoopNetherWastes</td><td></td></tr>
+  <tr><td class='name'>321</td><td class='name'>AmbientLoopBasaltDeltas</td><td></td></tr>
+  <tr><td class='name'>322</td><td class='name'>AmbientLoopCrimsonForest</td><td></td></tr>
+  <tr><td class='name'>323</td><td class='name'>AmbientAdditionWarpedForest</td><td></td></tr>
+  <tr><td class='name'>324</td><td class='name'>AmbientAdditionSoulsandValley</td><td></td></tr>
+  <tr><td class='name'>325</td><td class='name'>AmbientAdditionNetherWastes</td><td></td></tr>
+  <tr><td class='name'>326</td><td class='name'>AmbientAdditionBasaltDeltas</td><td></td></tr>
+  <tr><td class='name'>327</td><td class='name'>AmbientAdditionCrimsonForest</td><td></td></tr>
+  <tr><td class='name'>328</td><td class='name'>SculkSensorPowerOn</td><td></td></tr>
+  <tr><td class='name'>329</td><td class='name'>SculkSensorPowerOff</td><td></td></tr>
+  <tr><td class='name'>330</td><td class='name'>BucketFillPowderSnow</td><td></td></tr>
+  <tr><td class='name'>331</td><td class='name'>BucketEmptyPowderSnow</td><td></td></tr>
+  <tr><td class='name'>332</td><td class='name'>PointedDripstoneCauldronDripWater</td><td></td></tr>
+  <tr><td class='name'>333</td><td class='name'>PointedDripstoneCauldronDripLava</td><td></td></tr>
+  <tr><td class='name'>334</td><td class='name'>PointedDripstoneDripWater</td><td></td></tr>
+  <tr><td class='name'>335</td><td class='name'>PointedDripstoneDripLava</td><td></td></tr>
+  <tr><td class='name'>336</td><td class='name'>CaveVinesPickBerries</td><td></td></tr>
+  <tr><td class='name'>337</td><td class='name'>BigDripleafTiltDown</td><td></td></tr>
+  <tr><td class='name'>338</td><td class='name'>BigDripleafTiltUp</td><td></td></tr>
+  <tr><td class='name'>339</td><td class='name'>CopperWaxOn</td><td></td></tr>
+  <tr><td class='name'>340</td><td class='name'>CopperWaxOff</td><td></td></tr>
+  <tr><td class='name'>341</td><td class='name'>Scrape</td><td></td></tr>
+  <tr><td class='name'>342</td><td class='name'>PlayerHurtDrown</td><td></td></tr>
+  <tr><td class='name'>343</td><td class='name'>PlayerHurtOnFire</td><td></td></tr>
+  <tr><td class='name'>344</td><td class='name'>PlayerHurtFreeze</td><td></td></tr>
+  <tr><td class='name'>345</td><td class='name'>UseSpyglass</td><td></td></tr>
+  <tr><td class='name'>346</td><td class='name'>StopUsingSpyglass</td><td></td></tr>
+  <tr><td class='name'>347</td><td class='name'>AmethystBlockChime</td><td></td></tr>
+  <tr><td class='name'>348</td><td class='name'>AmbientScreamer</td><td></td></tr>
+  <tr><td class='name'>349</td><td class='name'>HurtScreamer</td><td></td></tr>
+  <tr><td class='name'>350</td><td class='name'>DeathScreamer</td><td></td></tr>
+  <tr><td class='name'>351</td><td class='name'>MilkScreamer</td><td></td></tr>
+  <tr><td class='name'>352</td><td class='name'>JumpToBlock</td><td></td></tr>
+  <tr><td class='name'>353</td><td class='name'>PreRam</td><td></td></tr>
+  <tr><td class='name'>354</td><td class='name'>PreRamScreamer</td><td></td></tr>
+  <tr><td class='name'>355</td><td class='name'>RamImpact</td><td></td></tr>
+  <tr><td class='name'>356</td><td class='name'>RamImpactScreamer</td><td></td></tr>
+  <tr><td class='name'>357</td><td class='name'>SquidInkSquirt</td><td></td></tr>
+  <tr><td class='name'>358</td><td class='name'>GlowSquidInkSquirt</td><td></td></tr>
+  <tr><td class='name'>359</td><td class='name'>ConvertToStray</td><td></td></tr>
+  <tr><td class='name'>360</td><td class='name'>CakeAddCandle</td><td></td></tr>
+  <tr><td class='name'>361</td><td class='name'>ExtinguishCandle</td><td></td></tr>
+  <tr><td class='name'>362</td><td class='name'>AmbientCandle</td><td></td></tr>
+  <tr><td class='name'>363</td><td class='name'>BlockClick</td><td></td></tr>
+  <tr><td class='name'>364</td><td class='name'>BlockClickFail</td><td></td></tr>
+  <tr><td class='name'>365</td><td class='name'>SculkCatalystBloom</td><td></td></tr>
+  <tr><td class='name'>366</td><td class='name'>SculkShriekerShriek</td><td></td></tr>
+  <tr><td class='name'>367</td><td class='name'>WardenNearbyClose</td><td></td></tr>
+  <tr><td class='name'>368</td><td class='name'>WardenNearbyCloser</td><td></td></tr>
+  <tr><td class='name'>369</td><td class='name'>WardenNearbyClosest</td><td></td></tr>
+  <tr><td class='name'>370</td><td class='name'>WardenSlightlyAngry</td><td></td></tr>
+  <tr><td class='name'>371</td><td class='name'>RecordOtherside</td><td></td></tr>
+  <tr><td class='name'>372</td><td class='name'>Undefined</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="LegacyEntityType">
@@ -3865,9 +3875,9 @@ IF BREWING STAND:
 <tr><td class='field-name name'>recipes</td><td><a href="#Recipes">Recipes</a></td><td></td></tr>
 <tr><td class='field-name name'>potion type recipes</td><td><a href="#PotionTypeRecipes">PotionTypeRecipes</a></td><td><p>PotionContainerChangeRecipes is a list of all recipes to convert a potion from one type to another,
 such as from a drinkable potion to a splash potion, or from a splash potion to a lingering potion.</p></td></tr>
+<tr><td class='field-name name'>potion container recipes</td><td><a href="#PotionContainerChangeRecipes">PotionContainerChangeRecipes</a></td><td></td></tr>
 <tr><td class='field-name'><span class='name'>material reducers</span> length</td><td>varint</td><td rowspan=2><p>MaterialReducers is a list of all material reducers which is used in education edition chemistry.</p></td></tr>
 <tr><td class='field-name'><span class='name'>material reducers</span> <div class="tag tag-array">array</div></td><td>MaterialReducer</td><td></td></tr>
-<tr><td class='field-name name'>potion container recipes</td><td><a href="#PotionContainerChangeRecipes">PotionContainerChangeRecipes</a></td><td></td></tr>
 <tr><td class='field-name name'>clear recipes</td><td>bool</td><td><p>ClearRecipes indicates if all recipes currently active on the client should be cleaned. Doing this
 means that the client will have no recipes active by itself: Any CraftingData packets previously sent
 will also be discarded, and only the recipes in this CraftingData packet will be used.</p></td></tr>
@@ -4337,8 +4347,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3365</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3365</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3375</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3375</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -4874,7 +4884,7 @@ is set to PhotoName, it will display the photo (provided Education Edition is us
 The photo image is downloaded to a sub-folder with this book ID.</p></td></tr>
 <tr><td class='field-name name'>photo type</td><td>u8</td><td><p>PhotoType is one of the three photo types above.</p></td></tr>
 <tr><td class='field-name name'>source type</td><td>u8</td><td><p>SourceType is the source photo type. It is one of the three photo types above.</p></td></tr>
-<tr><td class='field-name name'>owner entity unique id</td><td>i64</td><td><p>OwnerEntityUniqueID is the entity unique ID of the photo's owner.</p></td></tr>
+<tr><td class='field-name name'>owner entity unique id</td><td>li64</td><td><p>OwnerEntityUniqueID is the entity unique ID of the photo's owner.</p></td></tr>
 <tr><td class='field-name name'>new photo name</td><td>string</td><td><p>NewPhotoName is the new name of the photo.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_modal_form_request">
@@ -5862,7 +5872,7 @@ https://minecraft.gamepedia.com/Bedrock<em>Edition</em>beta<em>animation</em>doc
 in themselves, are animations too). These states in turn may have animations and transitions to move to
 a next state.</p></td></tr>
 <tr><td class='field-name name'>stop condition</td><td>string</td><td><p>StopCondition is a MoLang expression that specifies when the animation should be stopped.</p></td></tr>
-<tr><td class='field-name name'>stop condition version</td><td>li64</td><td><p>StopConditionVersion is the MoLang stop condition version.</p></td></tr>
+<tr><td class='field-name name'>stop condition version</td><td>li32</td><td><p>StopConditionVersion is the MoLang stop condition version.</p></td></tr>
 <tr><td class='field-name name'>controller</td><td>string</td><td><p>Controller is the animation controller that is used to manage animations. These controllers decide when
 to play which animation.</p></td></tr>
 <tr><td class='field-name name'>blend out time</td><td>lf32</td><td><p>How long to move from the previous animation to the next.</p></td></tr>
@@ -6038,7 +6048,7 @@ safer version of the text.</p></p>
 <p><p>CreatePhoto is a packet that allows players to export photos from their portfolios into items in their inventory.
 This packet only works on the Education Edition version of Minecraft.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>entity unique id</td><td>i64</td><td><p>EntityUniqueID is the unique ID of the entity.</p></td></tr>
+<tr><td class='field-name name'>entity unique id</td><td>li64</td><td><p>EntityUniqueID is the unique ID of the entity.</p></td></tr>
 <tr><td class='field-name name'>photo name</td><td>string</td><td><p>PhotoName is the name of the photo.</p></td></tr>
 <tr><td class='field-name name'>item name</td><td>string</td><td><p>ItemName is the name of the photo as an item.</p></td></tr>
 </table><br/><hr/><br/>

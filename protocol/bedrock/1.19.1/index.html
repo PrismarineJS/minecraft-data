@@ -164,6 +164,7 @@ a { text-decoration: none; }
 <tr><td><a href="#BlockUpdate">Type</a><td class='name'><a href="#BlockUpdate">BlockUpdate</a></td></tr>
 <tr><td><a href="#TransitionType">Type</a><td class='name'><a href="#TransitionType">TransitionType</a></td></tr>
 <tr><td><a href="#MaterialReducer">Type</a><td class='name'><a href="#MaterialReducer">MaterialReducer</a></td></tr>
+<tr><td><a href="#PermissionLevel">Type</a><td class='name'><a href="#PermissionLevel">PermissionLevel</a></td></tr>
 
 
 
@@ -710,6 +711,8 @@ a { text-decoration: none; }
 
 <tr><td><a href="#packet_subchunk">0xae</a></td><td><a href="#packet_subchunk">packet_subchunk</a></td></tr>
 <tr><td><a href="#packet_subchunk_request">0xaf</a></td><td><a href="#packet_subchunk_request">packet_subchunk_request</a></td></tr>
+
+
 <tr><td><a href="#packet_client_start_item_cooldown">0xb0</a></td><td><a href="#packet_client_start_item_cooldown">packet_client_start_item_cooldown</a></td></tr>
 
 
@@ -717,6 +720,30 @@ a { text-decoration: none; }
 <tr><td><a href="#packet_script_message">0xb1</a></td><td><a href="#packet_script_message">packet_script_message</a></td></tr>
 
 <tr><td><a href="#packet_code_builder_source">0xb2</a></td><td><a href="#packet_code_builder_source">packet_code_builder_source</a></td></tr>
+
+<tr><td><a href="#packet_ticking_areas_load_status">0xb3</a></td><td><a href="#packet_ticking_areas_load_status">packet_ticking_areas_load_status</a></td></tr>
+
+
+
+<tr><td><a href="#packet_dimension_data">0xb4</a></td><td><a href="#packet_dimension_data">packet_dimension_data</a></td></tr>
+
+
+<tr><td><a href="#packet_agent_action">0xb5</a></td><td><a href="#packet_agent_action">packet_agent_action</a></td></tr>
+
+<tr><td><a href="#packet_change_mob_property">0xb6</a></td><td><a href="#packet_change_mob_property">packet_change_mob_property</a></td></tr>
+
+
+<tr><td><a href="#packet_lesson_progress">0xb7</a></td><td><a href="#packet_lesson_progress">packet_lesson_progress</a></td></tr>
+
+
+<tr><td><a href="#packet_request_ability">0xb8</a></td><td><a href="#packet_request_ability">packet_request_ability</a></td></tr>
+
+
+<tr><td><a href="#packet_request_permissions">0xb9</a></td><td><a href="#packet_request_permissions">packet_request_permissions</a></td></tr>
+
+
+
+<tr><td><a href="#packet_toast_request">0xba</a></td><td><a href="#packet_toast_request">packet_toast_request</a></td></tr>
   </tbody>
   </table><br/><hr/>
     <div class="packet-header" id="BehaviourPackInfos">
@@ -794,6 +821,7 @@ a { text-decoration: none; }
   <tr><td class='name'>3</td><td class='name'>survival spectator</td><td></td></tr>
   <tr><td class='name'>4</td><td class='name'>creative spectator</td><td></td></tr>
   <tr><td class='name'>5</td><td class='name'>fallback</td><td></td></tr>
+  <tr><td class='name'>6</td><td class='name'>spectator</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="GameRule">
@@ -1132,6 +1160,9 @@ StartGame packet, or to a unique stack ID if it is enabled.</p></td></tr>
   <tr><td class='name'>122</td><td class='name'>buoyancy data</td><td></td></tr>
   <tr><td class='name'>123</td><td class='name'>goat horn count</td><td></td></tr>
   <tr><td class='name'>124</td><td class='name'>update properties</td><td></td></tr>
+  <tr><td class='name'>125</td><td class='name'>movement sound distance offset</td><td></td></tr>
+  <tr><td class='name'>126</td><td class='name'>heartbeat interval ticks</td><td></td></tr>
+  <tr><td class='name'>127</td><td class='name'>heartbeat sound event</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name field-name'>type</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>0</td><td class='name'>byte</td><td></td></tr>
@@ -1463,8 +1494,8 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
 <tr><td class='field-name name'>height</td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ><p>2D input array, size of width*height</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2><i>Length for <span class='name'>__674</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__674</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2><i>Length for <span class='name'>__682</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__682</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> length</td><td>varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>ItemLegacy</td><td></td></tr>
@@ -1648,6 +1679,8 @@ on a classic skin.</p></td></tr>
   <tr><td class='name'>25</td><td class='name'>interact block</td><td></td></tr>
   <tr><td class='name'>26</td><td class='name'>predict break</td><td></td></tr>
   <tr><td class='name'>27</td><td class='name'>continue break</td><td></td></tr>
+  <tr><td class='name'>28</td><td class='name'>start item use on</td><td></td></tr>
+  <tr><td class='name'>29</td><td class='name'>stop item use on</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="StackRequestSlotInfo">
@@ -1952,6 +1985,7 @@ always 'default'.</p></td></tr>
 entities will also show up in the exported structure.</p></td></tr>
 <tr><td class='field-name name'>ignore blocks</td><td>bool</td><td><p>IgnoreBlocks specifies if the structure should ignore blocks or include them. If set to false, blocks
 will show up in the exported structure.</p></td></tr>
+<tr><td class='field-name name'>non ticking players and ticking areas</td><td>bool</td><td></td></tr>
 <tr><td class='field-name name'>size</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>Size is the size of the area that is about to be exported. The area exported will start at the
 Position + Offset, and will extend as far as Size specifies.</p></td></tr>
 <tr><td class='field-name name'>structure offset</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>Offset is the offset position that was set in the structure block. The area exported is offset by this
@@ -2049,6 +2083,20 @@ ground and becomes a solid block again.</p></p>
 <tr><td class='name'>items </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>network id</td><td>zigzag32</td><td></td></tr>
 <tr><td class='field-name name'>count</td><td>zigzag32</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="PermissionLevel">
+    <a href="#PermissionLevel"><div class='packet-id datatype'>Type</div><div class='packet-name name'>PermissionLevel</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='name field-name'>PermissionLevel</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>visitor</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>member</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>operator</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>custom</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="WindowID">
@@ -2526,9 +2574,9 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>272</td><td class='name'>RaidHorn</td><td></td></tr>
   <tr><td class='name'>273</td><td class='name'>LoomUse</td><td></td></tr>
   <tr><td class='name'>274</td><td class='name'>AmbientInRaid</td><td></td></tr>
-  <tr><td class='name'>275</td><td class='name'>UICartographyTableUse</td><td></td></tr>
-  <tr><td class='name'>276</td><td class='name'>UIStonecutterUse</td><td></td></tr>
-  <tr><td class='name'>277</td><td class='name'>UILoomUse</td><td></td></tr>
+  <tr><td class='name'>275</td><td class='name'>UicartographyTableUse</td><td></td></tr>
+  <tr><td class='name'>276</td><td class='name'>UistonecutterUse</td><td></td></tr>
+  <tr><td class='name'>277</td><td class='name'>UiloomUse</td><td></td></tr>
   <tr><td class='name'>278</td><td class='name'>SmokerUse</td><td></td></tr>
   <tr><td class='name'>279</td><td class='name'>BlastFurnaceUse</td><td></td></tr>
   <tr><td class='name'>280</td><td class='name'>SmithingTableUse</td><td></td></tr>
@@ -2626,7 +2674,73 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>372</td><td class='name'>Tongue</td><td></td></tr>
   <tr><td class='name'>373</td><td class='name'>CrackIronGolem</td><td></td></tr>
   <tr><td class='name'>374</td><td class='name'>RepairIronGolem</td><td></td></tr>
-  <tr><td class='name'>375</td><td class='name'>Undefined</td><td></td></tr>
+  <tr><td class='name'>375</td><td class='name'>Listening</td><td></td></tr>
+  <tr><td class='name'>376</td><td class='name'>Heartbeat</td><td></td></tr>
+  <tr><td class='name'>377</td><td class='name'>HornBreak</td><td></td></tr>
+  <tr><td class='name'>378</td><td class='name'>SculkPlace</td><td></td></tr>
+  <tr><td class='name'>379</td><td class='name'>SculkSpread</td><td></td></tr>
+  <tr><td class='name'>380</td><td class='name'>SculkCharge</td><td></td></tr>
+  <tr><td class='name'>381</td><td class='name'>SculkSensorPlace</td><td></td></tr>
+  <tr><td class='name'>382</td><td class='name'>SculkShriekerPlace</td><td></td></tr>
+  <tr><td class='name'>383</td><td class='name'>goat call 0</td><td></td></tr>
+  <tr><td class='name'>384</td><td class='name'>goat call 1</td><td></td></tr>
+  <tr><td class='name'>385</td><td class='name'>goat call 2</td><td></td></tr>
+  <tr><td class='name'>386</td><td class='name'>goat call 3</td><td></td></tr>
+  <tr><td class='name'>387</td><td class='name'>goat call 4</td><td></td></tr>
+  <tr><td class='name'>388</td><td class='name'>goat call 5</td><td></td></tr>
+  <tr><td class='name'>389</td><td class='name'>goat call 6</td><td></td></tr>
+  <tr><td class='name'>390</td><td class='name'>goat call 7</td><td></td></tr>
+  <tr><td class='name'>391</td><td class='name'>goat call 8</td><td></td></tr>
+  <tr><td class='name'>392</td><td class='name'>goat call 9</td><td></td></tr>
+  <tr><td class='name'>393</td><td class='name'>goat harmony 0</td><td></td></tr>
+  <tr><td class='name'>394</td><td class='name'>goat harmony 1</td><td></td></tr>
+  <tr><td class='name'>395</td><td class='name'>goat harmony 2</td><td></td></tr>
+  <tr><td class='name'>396</td><td class='name'>goat harmony 3</td><td></td></tr>
+  <tr><td class='name'>397</td><td class='name'>goat harmony 4</td><td></td></tr>
+  <tr><td class='name'>398</td><td class='name'>goat harmony 5</td><td></td></tr>
+  <tr><td class='name'>399</td><td class='name'>goat harmony 6</td><td></td></tr>
+  <tr><td class='name'>400</td><td class='name'>goat harmony 7</td><td></td></tr>
+  <tr><td class='name'>401</td><td class='name'>goat harmony 8</td><td></td></tr>
+  <tr><td class='name'>402</td><td class='name'>goat harmony 9</td><td></td></tr>
+  <tr><td class='name'>403</td><td class='name'>goat melody 0</td><td></td></tr>
+  <tr><td class='name'>404</td><td class='name'>goat melody 1</td><td></td></tr>
+  <tr><td class='name'>405</td><td class='name'>goat melody 2</td><td></td></tr>
+  <tr><td class='name'>406</td><td class='name'>goat melody 3</td><td></td></tr>
+  <tr><td class='name'>407</td><td class='name'>goat melody 4</td><td></td></tr>
+  <tr><td class='name'>408</td><td class='name'>goat melody 5</td><td></td></tr>
+  <tr><td class='name'>409</td><td class='name'>goat melody 6</td><td></td></tr>
+  <tr><td class='name'>410</td><td class='name'>goat melody 7</td><td></td></tr>
+  <tr><td class='name'>411</td><td class='name'>goat melody 8</td><td></td></tr>
+  <tr><td class='name'>412</td><td class='name'>goat melody 9</td><td></td></tr>
+  <tr><td class='name'>413</td><td class='name'>goat bass 0</td><td></td></tr>
+  <tr><td class='name'>414</td><td class='name'>goat bass 1</td><td></td></tr>
+  <tr><td class='name'>415</td><td class='name'>goat bass 2</td><td></td></tr>
+  <tr><td class='name'>416</td><td class='name'>goat bass 3</td><td></td></tr>
+  <tr><td class='name'>417</td><td class='name'>goat bass 4</td><td></td></tr>
+  <tr><td class='name'>418</td><td class='name'>goat bass 5</td><td></td></tr>
+  <tr><td class='name'>419</td><td class='name'>goat bass 6</td><td></td></tr>
+  <tr><td class='name'>420</td><td class='name'>goat bass 7</td><td></td></tr>
+  <tr><td class='name'>421</td><td class='name'>goat bass 8</td><td></td></tr>
+  <tr><td class='name'>422</td><td class='name'>goat bass 9</td><td></td></tr>
+  <tr><td class='name'>423</td><td class='name'>_</td><td></td></tr>
+  <tr><td class='name'>424</td><td class='name'>_</td><td></td></tr>
+  <tr><td class='name'>425</td><td class='name'>_</td><td></td></tr>
+  <tr><td class='name'>426</td><td class='name'>ImitateWarden</td><td></td></tr>
+  <tr><td class='name'>427</td><td class='name'>ListeningAngry</td><td></td></tr>
+  <tr><td class='name'>428</td><td class='name'>ItemGiven</td><td></td></tr>
+  <tr><td class='name'>429</td><td class='name'>ItemTaken</td><td></td></tr>
+  <tr><td class='name'>430</td><td class='name'>Disappeared</td><td></td></tr>
+  <tr><td class='name'>431</td><td class='name'>Reappeared</td><td></td></tr>
+  <tr><td class='name'>432</td><td class='name'>_</td><td></td></tr>
+  <tr><td class='name'>433</td><td class='name'>FrogspawnHatched</td><td></td></tr>
+  <tr><td class='name'>434</td><td class='name'>LaySpawn</td><td></td></tr>
+  <tr><td class='name'>435</td><td class='name'>FrogspawnBreak</td><td></td></tr>
+  <tr><td class='name'>436</td><td class='name'>SonicBoom</td><td></td></tr>
+  <tr><td class='name'>437</td><td class='name'>SonicCharge</td><td></td></tr>
+  <tr><td class='name'>438</td><td class='name'>SoundeventItemThrown</td><td></td></tr>
+  <tr><td class='name'>439</td><td class='name'>Record5</td><td></td></tr>
+  <tr><td class='name'>440</td><td class='name'>ConvertToFrog</td><td></td></tr>
+  <tr><td class='name'>441</td><td class='name'>Undefined</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="LegacyEntityType">
@@ -2958,11 +3072,15 @@ field.</p></td></tr>
 <tr><td class='field-name name'>player position</td><td><a href="#vec3f">vec3f</a></td><td><p>The spawn position of the player in the world. In servers this is often the same as the 
 world's spawn position found below.</p></td></tr>
 <tr><td class='field-name name'>rotation</td><td><a href="#vec2f">vec2f</a></td><td><p>The pitch and yaw of the player</p></td></tr>
-<tr><td class='field-name name'>seed</td><td>zigzag32</td><td><p>The seed used to generate the world. Unlike in Java edition, the seed is a 32bit Integer here.</p></td></tr>
+<tr><td class='field-name name'>seed</td><td>lu64</td><td><p>The seed used to generate the world.</p></td></tr>
 <tr><td class='field-name name'>biome type</td><td>li16</td><td></td></tr>
 <tr><td class='field-name name'>biome name</td><td>string</td><td></td></tr>
-<tr><td class='field-name name'>dimension</td><td>zigzag32</td><td><p>Dimension is the ID of the dimension that the player spawns in. It is a value from 0-2, 
+<tr><td class='name field-name'>dimension</td><td colspan=2>zigzag32 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>overworld</td><td><p>Dimension is the ID of the dimension that the player spawns in. It is a value from 0-2, 
 with 0 being the overworld, 1 being the nether and 2 being the end.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>nether</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>end</td><td></td></tr>
+</table></td></tr>
 <tr><td class='field-name name'>generator</td><td>zigzag32</td><td><p>Generator is the generator used for the world. It is a value from 0-4, with 0 being old
 limited worlds, 1 being infinite worlds, 2 being flat worlds, 3 being nether worlds and 
 4 being end worlds. A value of 0 will actually make the client stop rendering chunks you 
@@ -3069,7 +3187,11 @@ A random UUID should be filled out for this field.</p></td></tr>
 is a new system introduced in 1.16. Backwards compatibility with the inventory transactions has to
 some extent been preserved, but will eventually be removed.</p></td></tr>
 <tr><td class='field-name name'>engine</td><td>string</td><td><p>The server's engine version, used for telemetry</p></td></tr>
-<tr><td class='field-name name'>block pallete checksum</td><td>lu64</td><td><p>A checksum to ensure block types between the server and client match</p></td></tr>
+<tr><td class='field-name name'>property data</td><td>nbt</td><td><p>PropertyData contains properties that should be applied on the player. These properties are the same as the
+ones that are sent in the SyncActorProperty packet.</p></td></tr>
+<tr><td class='field-name name'>block pallette checksum</td><td>lu64</td><td><p>A checksum to ensure block types between the server and client match</p></td></tr>
+<tr><td class='field-name name'>world template id</td><td>uuid</td><td><p>WorldTemplateID is a UUID that identifies the template that was used to generate the world. Servers that do not
+use a world based off of a template can set this to an empty UUID.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_add_player">
     <a href="#packet_add_player"><div class='packet-id client'>12</div><div class='packet-name name'>packet add player</div></a>
@@ -3083,7 +3205,7 @@ Login packet at the start of the session. A player with this UUID must exist
 in the player list (built up using the Player List packet) for it to show up in-game.</p></td></tr>
 <tr><td class='field-name name'>username</td><td>string</td><td><p>Username is the name of the player. This username is the username that will be
 set as the initial name tag of the player.</p></td></tr>
-<tr><td class='field-name name'>entity id self</td><td>zigzag64</td><td><p>The unique ID of the player. The unique ID is a value that remains consistent
+<tr><td class='field-name name'>unique entity id</td><td>zigzag64</td><td><p>The unique ID of the player. The unique ID is a value that remains consistent
 across different sessions of the same world, but most unoffical servers simply 
 fill the runtime ID of the player out for this field.</p></td></tr>
 <tr><td class='field-name name'>runtime entity id</td><td>varint64</td><td><p>The runtime ID of the player. The runtime ID is unique for each world session,
@@ -3097,6 +3219,7 @@ are able to chat with each other.</p></td></tr>
 <tr><td class='field-name name'>yaw</td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>head yaw</td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>held item</td><td><a href="#Item">Item</a></td><td></td></tr>
+<tr><td class='field-name name'>gamemode</td><td><a href="#GameMode">GameMode</a></td><td></td></tr>
 <tr><td class='field-name name'>metadata</td><td><a href="#MetadataDictionary">MetadataDictionary</a></td><td></td></tr>
 <tr><td class='field-name name'>flags</td><td>varint</td><td></td></tr>
 <tr><td class='field-name name'>command permission</td><td>varint</td><td></td></tr>
@@ -3368,6 +3491,9 @@ the field implies</p></td></tr>
   <tr><td class='name'>2034</td><td class='name'>particle turtle egg</td><td></td></tr>
   <tr><td class='name'>2035</td><td class='name'>particle sculk shriek</td><td></td></tr>
   <tr><td class='name'>2036</td><td class='name'>sculk catalyst bloom</td><td></td></tr>
+  <tr><td class='name'>2037</td><td class='name'>sculk charge</td><td></td></tr>
+  <tr><td class='name'>2038</td><td class='name'>sculk charge pop</td><td></td></tr>
+  <tr><td class='name'>2039</td><td class='name'>sonic explosion</td><td></td></tr>
   <tr><td class='name'>3001</td><td class='name'>start rain</td><td></td></tr>
   <tr><td class='name'>3002</td><td class='name'>start thunder</td><td></td></tr>
   <tr><td class='name'>3003</td><td class='name'>stop rain</td><td></td></tr>
@@ -3543,6 +3669,7 @@ opening the chest means the data must be 1</p></td></tr>
   <tr><td class='name'>61</td><td class='name'>death smoke cloud</td><td></td></tr>
   <tr><td class='name'>62</td><td class='name'>complete trade</td><td></td></tr>
   <tr><td class='name'>63</td><td class='name'>remove leash</td><td></td></tr>
+  <tr><td class='name'>64</td><td class='name'>caravan</td><td></td></tr>
   <tr><td class='name'>65</td><td class='name'>consume totem</td><td></td></tr>
   <tr><td class='name'>66</td><td class='name'>player check treasure hunter achievement</td><td></td></tr>
   <tr><td class='name'>67</td><td class='name'>entity spawn</td><td></td></tr>
@@ -3554,6 +3681,8 @@ opening the chest means the data must be 1</p></td></tr>
   <tr><td class='name'>73</td><td class='name'>agent summon</td><td></td></tr>
   <tr><td class='name'>74</td><td class='name'>charged crossbow</td><td></td></tr>
   <tr><td class='name'>75</td><td class='name'>fall</td><td></td></tr>
+  <tr><td class='name'>76</td><td class='name'>grow up</td><td></td></tr>
+  <tr><td class='name'>77</td><td class='name'>vibration detected</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>data</td><td>zigzag32</td><td></td></tr>
 </table><br/><hr/><br/>
@@ -3680,6 +3809,8 @@ entities are generally identified in packets using this runtime ID.</p></td></tr
 be found above.</p></td></tr>
 <tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>BlockPosition is the position of the target block, if the action with the ActionType set concerned a
 block. If that is not the case, the block position will be zero.</p></td></tr>
+<tr><td class='field-name name'>result position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>ResultPosition is the position of the action's result. When a UseItemOn action is sent, this is the position of
+the block clicked, but when a block is placed, this is the position at which the block will be placed.</p></td></tr>
 <tr><td class='field-name name'>face</td><td>zigzag32</td><td><p>BlockFace is the face of the target block that was touched. If the action with the ActionType set
 concerned a block. If not, the face is always 0.</p></td></tr>
 </table><br/><hr/><br/>
@@ -3969,13 +4100,8 @@ allowed to use.</p></td></tr>
 <tr><td class='field-name name'>action permissions</td><td>ActionPermissions</td><td><p>ActionPermissions is, much like Flags, a set of flags that specify actions that the player is allowed
 to undertake, such as whether it is allowed to edit blocks, open doors etc. It is a combination of the
 ActionPermission constants above.</p></td></tr>
-<tr><td class='name field-name'>permission level</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
-  <tr><td class='name'>0</td><td class='name'>visitor</td><td><p>PermissionLevel is the permission level of the player as it shows up in the player list built up using
+<tr><td class='field-name name'>permission level</td><td><a href="#PermissionLevel">PermissionLevel</a></td><td><p>PermissionLevel is the permission level of the player as it shows up in the player list built up using
 the PlayerList packet. It is one of the PermissionLevel constants above.</p></td></tr>
-  <tr><td class='name'>1</td><td class='name'>member</td><td></td></tr>
-  <tr><td class='name'>2</td><td class='name'>operator</td><td></td></tr>
-  <tr><td class='name'>3</td><td class='name'>custom</td><td></td></tr>
-</table></td></tr>
 <tr><td class='field-name name'>custom stored permissions</td><td>varint</td><td><p>Custom permissions</p></td></tr>
 <tr><td class='field-name name'>user id</td><td>li64</td><td><p>PlayerUniqueID is a unique identifier of the player. It appears it is not required to fill this field
 out with a correct value. Simply writing 0 seems to work.</p></td></tr>
@@ -4378,23 +4504,24 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3411</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3411</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3509</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3509</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
-  <tr><td class='name'>2</td><td class='name'>float</td><td></td></tr>
-  <tr><td class='name'>3</td><td class='name'>value</td><td></td></tr>
-  <tr><td class='name'>4</td><td class='name'>wildcard int</td><td></td></tr>
-  <tr><td class='name'>5</td><td class='name'>operator</td><td></td></tr>
-  <tr><td class='name'>6</td><td class='name'>target</td><td></td></tr>
-  <tr><td class='name'>16</td><td class='name'>file path</td><td></td></tr>
-  <tr><td class='name'>32</td><td class='name'>string</td><td></td></tr>
-  <tr><td class='name'>40</td><td class='name'>position</td><td></td></tr>
-  <tr><td class='name'>44</td><td class='name'>message</td><td></td></tr>
-  <tr><td class='name'>46</td><td class='name'>raw text</td><td></td></tr>
-  <tr><td class='name'>50</td><td class='name'>json</td><td></td></tr>
-  <tr><td class='name'>63</td><td class='name'>command</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>float</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>value</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>wildcard int</td><td></td></tr>
+  <tr><td class='name'>6</td><td class='name'>operator</td><td></td></tr>
+  <tr><td class='name'>8</td><td class='name'>target</td><td></td></tr>
+  <tr><td class='name'>17</td><td class='name'>file path</td><td></td></tr>
+  <tr><td class='name'>39</td><td class='name'>string</td><td></td></tr>
+  <tr><td class='name'>47</td><td class='name'>block position</td><td></td></tr>
+  <tr><td class='name'>48</td><td class='name'>position</td><td></td></tr>
+  <tr><td class='name'>51</td><td class='name'>message</td><td></td></tr>
+  <tr><td class='name'>53</td><td class='name'>raw text</td><td></td></tr>
+  <tr><td class='name'>57</td><td class='name'>json</td><td></td></tr>
+  <tr><td class='name'>70</td><td class='name'>command</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name field-name'>enum type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>16</td><td class='name'>valid</td><td><p>In MC, this + prior field are combined to one 32bit bitfield</p></td></tr>
@@ -5231,6 +5358,9 @@ the player, it will not show up.
 If EntityUniqueID is not -1, the position will be relative to the position of the entity.</p></td></tr>
 <tr><td class='field-name name'>particle name</td><td>string</td><td><p>ParticleName is the name of the particle that should be shown. This name may point to a particle effect
 that is built-in, or to one implemented by behaviour packs.</p></td></tr>
+<tr><td class='field-name name'>molang variables</td><td>ByteArray</td><td><p>MoLangVariables is an encoded JSON map of MoLang variables that may be applicable to the particle spawn. This can
+just be left empty in most cases.
+TODO: Investigate, probably not a ByteArray…</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_available_entity_identifiers">
     <a href="#packet_available_entity_identifiers"><div class='packet-id client'>119</div><div class='packet-name name'>packet available entity identifiers</div></a>
@@ -5662,7 +5792,8 @@ may be found above.</p></td></tr>
   <tr><td class='name'>9</td><td class='name'>num modes</td><td></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>gaze direction</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>play mode</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is reality</span></td><td><a href="#vec3f">vec3f</a></td><td><p>GazeDirection is the direction in which the player is gazing, when the PlayMode is PlayModeReality: In
+<tr><td class='field-name name'><span class='fake'>is reality</span></td><td><a href="#vec3f">vec3f</a></td><td><p>InteractionModel is a constant representing the interaction model the player is using.
+GazeDirection is the direction in which the player is gazing, when the PlayMode is PlayModeReality: In
 other words, when the player is playing in virtual reality.</p></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>tick</td><td>varint64</td><td><p>Tick is the server tick at which the packet was sent. It is used in relation to
@@ -6022,8 +6153,13 @@ safer version of the text.</p></p>
 entities are generally identified in packets using this runtime ID.</p></td></tr>
 <tr><td class='field-name name'>nbt</td><td>nbt</td><td><p>EntityMetadata is a map of entity metadata, which includes flags and data properties that alter in
 particular the way the entity looks.</p></td></tr>
-<tr><td class='field-name name'>json identifier</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>encoding identifier</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>instance name</td><td>string</td><td></td></tr>
+<tr><td class='name'>bounds </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>min</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td></td></tr>
+<tr><td class='field-name name'>max</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>dimension</td><td>zigzag32</td><td></td></tr>
 <tr><td class='field-name name'>engine version</td><td>string</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_remove_volume_entity">
@@ -6182,8 +6318,8 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_subchunk">
-    <a href="#packet_subchunk"><div class='packet-id datatype'>174</div><div class='packet-name name'>packet subchunk</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_subchunk"><div class='packet-id client'>174</div><div class='packet-name name'>packet subchunk</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
 <p><p>SubChunk sends data about multiple sub-chunks around a center point.</p></p>
@@ -6197,8 +6333,8 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_subchunk_request">
-    <a href="#packet_subchunk_request"><div class='packet-id datatype'>175</div><div class='packet-name name'>packet subchunk request</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_subchunk_request"><div class='packet-id server'>175</div><div class='packet-name name'>packet subchunk request</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p></p>
@@ -6213,19 +6349,19 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_client_start_item_cooldown">
-    <a href="#packet_client_start_item_cooldown"><div class='packet-id datatype'>176</div><div class='packet-name name'>packet client start item cooldown</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_client_start_item_cooldown"><div class='packet-id server'>176</div><div class='packet-name name'>packet client start item cooldown</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
-<p></p>
+<p><p>ClientStartItemCooldown is sent by the client to the server to initiate a cooldown on an item. The purpose of this
+packet isn't entirely clear.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>category</td><td>string</td><td><p>ClientStartItemCooldown is sent by the client to the server to initiate a cooldown on an item. The purpose of this
-packet isn't entirely clear.</p></td></tr>
+<tr><td class='field-name name'>category</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>duration</td><td>zigzag32</td><td><p>Duration is the duration of ticks the cooldown should last.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_script_message">
-    <a href="#packet_script_message"><div class='packet-id datatype'>177</div><div class='packet-name name'>packet script message</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_script_message"><div class='packet-id server'>177</div><div class='packet-name name'>packet script message</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>ScriptMessage is used to communicate custom messages from the client to the server, or from the server to the client.
@@ -6236,8 +6372,8 @@ GameTest framework.</p></p>
 <tr><td class='field-name name'>data</td><td>string</td><td><p>Data contains the data of the message.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_code_builder_source">
-    <a href="#packet_code_builder_source"><div class='packet-id datatype'>178</div><div class='packet-name name'>packet code builder source</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_code_builder_source"><div class='packet-id client'>178</div><div class='packet-name name'>packet code builder source</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
 <p><p>CodeBuilderSource is an Education Edition packet sent by the client to the server to run an operation with a</p></p>
@@ -6245,4 +6381,114 @@ GameTest framework.</p></p>
 <tr><td class='field-name name'>value</td><td>string</td><td><p>Operation is used to distinguish the operation performed. It is always one of the constants listed above.
 Category is used to distinguish the category of the operation performed. It is always one of the constants
 Value contains extra data about the operation performed. It is always empty unless the operation is</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_ticking_areas_load_status">
+    <a href="#packet_ticking_areas_load_status"><div class='packet-id client'>179</div><div class='packet-name name'>packet ticking areas load status</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>TickingAreasLoadStatus is sent by the server to the client to notify the client of a ticking area's loading status.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>preload</td><td>bool</td><td><p>Preload is true if the server is waiting for the area's preload.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_dimension_data">
+    <a href="#packet_dimension_data"><div class='packet-id client'>180</div><div class='packet-name name'>packet dimension data</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>DimensionData is a packet sent from the server to the client containing information about data-driven dimensions
+that the server may have registered. This packet does not seem to be sent by default, rather only being sent when
+any data-driven dimensions are registered.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name'><span class='name'>definitions</span> length</td><td>varint</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>definitions</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>id</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>max height</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>min height</td><td>zigzag32</td><td></td></tr>
+<tr><td class='name field-name'>generator</td><td colspan=2>zigzag32 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>legacy</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>overworld</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>flat</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>nether</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>end</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>void</td><td></td></tr>
+</table></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_agent_action">
+    <a href="#packet_agent_action"><div class='packet-id client'>181</div><div class='packet-name name'>packet agent action</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>AgentAction is an Education Edition packet sent from the server to the client to return a response to a
+previously requested action.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>request id</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>body</td><td>string</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_change_mob_property">
+    <a href="#packet_change_mob_property"><div class='packet-id client'>182</div><div class='packet-name name'>packet change mob property</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>ChangeMobProperty is a packet sent from the server to the client to change one of the properties of a mob client-side.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>entity unique id</td><td>zigzag64</td><td><p>EntityUniqueID is the unique ID of the entity whose property is being changed.</p></td></tr>
+<tr><td class='field-name name'>property</td><td>string</td><td><p>Property is the name of the property being updated.</p></td></tr>
+<tr><td class='field-name name'>bool value</td><td>bool</td><td><p>BoolValue is set if the property value is a bool type. If the type is not a bool, this field is ignored.</p></td></tr>
+<tr><td class='field-name name'>string value</td><td>string</td><td><p>StringValue is set if the property value is a string type. If the type is not a string, this field is ignored.</p></td></tr>
+<tr><td class='field-name name'>int value</td><td>zigzag32</td><td><p>IntValue is set if the property value is an int type. If the type is not an int, this field is ignored.</p></td></tr>
+<tr><td class='field-name name'>float value</td><td>lf32</td><td><p>FloatValue is set if the property value is a float type. If the type is not a float, this field is ignored.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_lesson_progress">
+    <a href="#packet_lesson_progress"><div class='packet-id datatype'>183</div><div class='packet-name name'>packet lesson progress</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>LessonProgress is a packet sent by the server to the client to inform the client of updated progress on a lesson.
+This packet only functions on the Minecraft: Education Edition version of the game.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>action</td><td>u8</td><td><p>Action is the action the client should perform to show progress. This is one of the constants defined above.</p></td></tr>
+<tr><td class='field-name name'>score</td><td>zigzag32</td><td><p>Score is the score the client should use when displaying the progress.</p></td></tr>
+<tr><td class='field-name name'>identifier</td><td>string</td><td><p>Identifier is the identifier of the lesson that is being progressed.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_request_ability">
+    <a href="#packet_request_ability"><div class='packet-id server'>184</div><div class='packet-name name'>packet request ability</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
+    </div><br/>
+    
+<p><p>RequestAbility is a packet sent by the client to the server to request permission for a specific ability from the
+server.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='name field-name'>value type</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>1</td><td class='name'>bool</td><td><p>Ability is the ability that the client is requesting. This is one of the constants defined above.
+Value type decides which of the fields you should read/write from</p></td></tr>
+  <tr><td class='name'>2</td><td class='name'>float</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>bool value</td><td>bool</td><td><p>If value type is bool, use this value</p></td></tr>
+<tr><td class='field-name name'>float val</td><td>lf32</td><td><p>If value type is float, use this value</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_request_permissions">
+    <a href="#packet_request_permissions"><div class='packet-id server'>185</div><div class='packet-name name'>packet request permissions</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
+    </div><br/>
+    
+<p><p>RequestPermissions is a packet sent from the client to the server to request permissions that the client does not
+currently have. It can only be sent by operators and host in vanilla Minecraft.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>entity unique id</td><td>li64</td><td><p>EntityUniqueID is the unique ID of the player. The unique ID is unique for the entire world and is
+often used in packets. Most servers send an EntityUniqueID equal to the EntityRuntimeID.</p></td></tr>
+<tr><td class='field-name name'>permission level</td><td><a href="#PermissionLevel">PermissionLevel</a></td><td><p>PermissionLevel is the current permission level of the player. Same as constants in AdventureSettings packet.</p></td></tr>
+<tr><td class='field-name name'>requested permissions</td><td>RequestPermissions</td><td><p>RequestedPermissions contains the requested permission flags.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_toast_request">
+    <a href="#packet_toast_request"><div class='packet-id datatype'>186</div><div class='packet-name name'>packet toast request</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>ToastRequest is a packet sent from the server to the client to display a toast to the top of the screen. These toasts
+are the same as the ones seen when, for example, loading a new resource pack or obtaining an achievement.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>title</td><td>string</td><td><p>Title is the title of the toast.</p></td></tr>
+<tr><td class='field-name name'>message</td><td>string</td><td><p>Message is the message that the toast may contain alongside the title.</p></td></tr>
 </table><br/><hr/><br/></div>
