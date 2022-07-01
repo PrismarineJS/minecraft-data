@@ -1,3 +1,6 @@
+## 3.5.1
+* Fix Github pages docs
+
 ## 3.5.0
 * Add 1.19 Data (all but protocol) @u9g
 * Add blockloot for 1.18 and 1.19 @Eejit43
