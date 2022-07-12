@@ -4831,6 +4831,97 @@
             }
           ]
         ],
+        "packet_chat_command": [
+          "container",
+          [
+            {
+              "name": "command",
+              "type": "string"
+            },
+            {
+              "name": "timestamp",
+              "type": "i64"
+            },
+            {
+              "name": "salt",
+              "type": "i64"
+            },
+            {
+              "name": "argumentSignatures",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "argumentName",
+                        "type": "string"
+                      },
+                      {
+                        "name": "signature",
+                        "type": [
+                          "buffer",
+                          {
+                            "countType": "varint"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "signedPreview",
+                        "type": "bool"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_chat_message": [
+          "container",
+          [
+            {
+              "name": "message",
+              "type": "string"
+            },
+            {
+              "name": "timestamp",
+              "type": "long"
+            },
+            {
+              "name": "salt",
+              "type": "long"
+            },
+            {
+              "name": "signature",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            },
+            {
+              "name": "signedPreview",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_chat_preview": [
+          "container",
+          [
+            {
+              "name": "query",
+              "type": "i32"
+            },
+            {
+              "name": "message",
+              "type": "string"
+            }
+          ]
+        ],
         "packet_set_difficulty": [
           "container",
           [
@@ -5430,6 +5521,10 @@
             {
               "name": "face",
               "type": "i8"
+            },
+            {
+              "name": "sequence",
+              "type": "varint"
             }
           ]
         ],
@@ -5626,6 +5721,10 @@
             {
               "name": "insideBlock",
               "type": "bool"
+            },
+            {
+              "name": "sequence",
+              "type": "varint"
             }
           ]
         ],
@@ -5634,6 +5733,10 @@
           [
             {
               "name": "hand",
+              "type": "varint"
+            },
+            {
+              "name": "sequence",
               "type": "varint"
             }
           ]
@@ -5682,51 +5785,53 @@
                     "0x00": "teleport_confirm",
                     "0x01": "query_block_nbt",
                     "0x02": "set_difficulty",
-                    "0x03": "chat",
-                    "0x04": "client_command",
-                    "0x05": "settings",
-                    "0x06": "tab_complete",
-                    "0x07": "enchant_item",
-                    "0x08": "window_click",
-                    "0x09": "close_window",
-                    "0x0a": "custom_payload",
-                    "0x0b": "edit_book",
-                    "0x0c": "query_entity_nbt",
-                    "0x0d": "use_entity",
-                    "0x0e": "generate_structure",
-                    "0x0f": "keep_alive",
-                    "0x10": "lock_difficulty",
-                    "0x11": "position",
-                    "0x12": "position_look",
-                    "0x13": "look",
-                    "0x14": "flying",
-                    "0x15": "vehicle_move",
-                    "0x16": "steer_boat",
-                    "0x17": "pick_item",
-                    "0x18": "craft_recipe_request",
-                    "0x19": "abilities",
-                    "0x1a": "block_dig",
-                    "0x1b": "entity_action",
-                    "0x1c": "steer_vehicle",
-                    "0x1d": "pong",
-                    "0x1e": "recipe_book",
-                    "0x1f": "displayed_recipe",
-                    "0x20": "name_item",
-                    "0x21": "resource_pack_receive",
-                    "0x22": "advancement_tab",
-                    "0x23": "select_trade",
-                    "0x24": "set_beacon_effect",
-                    "0x25": "held_item_slot",
-                    "0x26": "update_command_block",
-                    "0x27": "update_command_block_minecart",
-                    "0x28": "set_creative_slot",
-                    "0x29": "update_jigsaw_block",
-                    "0x2a": "update_structure_block",
-                    "0x2b": "update_sign",
-                    "0x2c": "arm_animation",
-                    "0x2d": "spectate",
-                    "0x2e": "block_place",
-                    "0x2f": "use_item"
+                    "0x03": "chat_command",
+                    "0x04": "chat_message",
+                    "0x05": "chat_preview",
+                    "0x06": "client_command",
+                    "0x07": "settings",
+                    "0x08": "tab_complete",
+                    "0x09": "enchant_item",
+                    "0x0a": "window_click",
+                    "0x0b": "close_window",
+                    "0x0c": "custom_payload",
+                    "0x0d": "edit_book",
+                    "0x0e": "query_entity_nbt",
+                    "0x0f": "use_entity",
+                    "0x10": "generate_structure",
+                    "0x11": "keep_alive",
+                    "0x12": "lock_difficulty",
+                    "0x13": "position",
+                    "0x14": "position_look",
+                    "0x15": "look",
+                    "0x16": "flying",
+                    "0x17": "vehicle_move",
+                    "0x18": "steer_boat",
+                    "0x19": "pick_item",
+                    "0x1a": "craft_recipe_request",
+                    "0x1b": "abilities",
+                    "0x1c": "block_dig",
+                    "0x1d": "entity_action",
+                    "0x1e": "steer_vehicle",
+                    "0x1f": "pong",
+                    "0x20": "recipe_book",
+                    "0x21": "displayed_recipe",
+                    "0x22": "name_item",
+                    "0x23": "resource_pack_receive",
+                    "0x24": "advancement_tab",
+                    "0x25": "select_trade",
+                    "0x26": "set_beacon_effect",
+                    "0x27": "held_item_slot",
+                    "0x28": "update_command_block",
+                    "0x29": "update_command_block_minecart",
+                    "0x2a": "set_creative_slot",
+                    "0x2b": "update_jigsaw_block",
+                    "0x2c": "update_structure_block",
+                    "0x2d": "update_sign",
+                    "0x2e": "arm_animation",
+                    "0x2f": "spectate",
+                    "0x30": "block_place",
+                    "0x31": "use_item"
                   }
                 }
               ]
@@ -5741,23 +5846,18 @@
                     "teleport_confirm": "packet_teleport_confirm",
                     "query_block_nbt": "packet_query_block_nbt",
                     "set_difficulty": "packet_set_difficulty",
-                    "edit_book": "packet_edit_book",
-                    "query_entity_nbt": "packet_query_entity_nbt",
-                    "pick_item": "packet_pick_item",
-                    "name_item": "packet_name_item",
-                    "select_trade": "packet_select_trade",
-                    "set_beacon_effect": "packet_set_beacon_effect",
-                    "update_command_block": "packet_update_command_block",
-                    "update_command_block_minecart": "packet_update_command_block_minecart",
-                    "update_structure_block": "packet_update_structure_block",
-                    "tab_complete": "packet_tab_complete",
-                    "chat": "packet_chat",
+                    "chat_command": "packet_chat_command",
+                    "chat_message": "packet_chat_message",
+                    "chat_preview": "packet_chat_preview",
                     "client_command": "packet_client_command",
                     "settings": "packet_settings",
+                    "tab_complete": "packet_tab_complete",
                     "enchant_item": "packet_enchant_item",
                     "window_click": "packet_window_click",
                     "close_window": "packet_close_window",
                     "custom_payload": "packet_custom_payload",
+                    "edit_book": "packet_edit_book",
+                    "query_entity_nbt": "packet_query_entity_nbt",
                     "use_entity": "packet_use_entity",
                     "generate_structure": "packet_generate_structure",
                     "keep_alive": "packet_keep_alive",
@@ -5768,24 +5868,31 @@
                     "flying": "packet_flying",
                     "vehicle_move": "packet_vehicle_move",
                     "steer_boat": "packet_steer_boat",
+                    "pick_item": "packet_pick_item",
                     "craft_recipe_request": "packet_craft_recipe_request",
                     "abilities": "packet_abilities",
                     "block_dig": "packet_block_dig",
                     "entity_action": "packet_entity_action",
                     "steer_vehicle": "packet_steer_vehicle",
-                    "displayed_recipe": "packet_displayed_recipe",
+                    "pong": "packet_pong",
                     "recipe_book": "packet_recipe_book",
+                    "displayed_recipe": "packet_displayed_recipe",
+                    "name_item": "packet_name_item",
                     "resource_pack_receive": "packet_resource_pack_receive",
+                    "advancement_tab": "packet_advancement_tab",
+                    "select_trade": "packet_select_trade",
+                    "set_beacon_effect": "packet_set_beacon_effect",
                     "held_item_slot": "packet_held_item_slot",
+                    "update_command_block": "packet_update_command_block",
+                    "update_command_block_minecart": "packet_update_command_block_minecart",
                     "set_creative_slot": "packet_set_creative_slot",
                     "update_jigsaw_block": "packet_update_jigsaw_block",
+                    "update_structure_block": "packet_update_structure_block",
                     "update_sign": "packet_update_sign",
                     "arm_animation": "packet_arm_animation",
                     "spectate": "packet_spectate",
                     "block_place": "packet_block_place",
-                    "use_item": "packet_use_item",
-                    "advancement_tab": "packet_advancement_tab",
-                    "pong": "packet_pong"
+                    "use_item": "packet_use_item"
                   }
                 }
               ]
