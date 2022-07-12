@@ -683,6 +683,35 @@
             {
               "name": "username",
               "type": "string"
+            },
+            {
+              "name": "properties",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": "string"
+                      },
+                      {
+                        "name": "signature",
+                        "type": [
+                          "option",
+                          "string"
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ],
@@ -759,6 +788,39 @@
             {
               "name": "username",
               "type": "string"
+            },
+            {
+              "name": "signature",
+              "type": [
+                "option",
+                [
+                  "container",
+                  [
+                    {
+                      "name": "timestamp",
+                      "type": "i64"
+                    },
+                    {
+                      "name": "publicKey",
+                      "type": [
+                        "buffer",
+                        {
+                          "countType": "varint"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "signature",
+                      "type": [
+                        "buffer",
+                        {
+                          "countType": "varint"
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              ]
             }
           ]
         ],
@@ -775,11 +837,49 @@
               ]
             },
             {
-              "name": "verifyToken",
+              "name": "hasVerifyToken",
+              "type": "bool"
+            },
+            {
+              "name": "crypto",
               "type": [
-                "buffer",
+                "switch",
                 {
-                  "countType": "varint"
+                  "compareTo": "hasVerifyToken",
+                  "fields": {
+                    "true": [
+                      "container",
+                      [
+                        {
+                          "name": "verifyToken",
+                          "type": [
+                            "buffer",
+                            {
+                              "countType": "varint"
+                            }
+                          ]
+                        }
+                      ]
+                    ],
+                    "false": [
+                      "container",
+                      [
+                        {
+                          "name": "salt",
+                          "type": "i64"
+                        },
+                        {
+                          "name": "messageSignature",
+                          "type": [
+                            "buffer",
+                            {
+                              "countType": "varint"
+                            }
+                          ]
+                        }
+                      ]
+                    ]
+                  }
                 }
               ]
             }
@@ -876,6 +976,10 @@
               "type": "i8"
             },
             {
+              "name": "headYaw",
+              "type": "i8"
+            },
+            {
               "name": "objectData",
               "type": "i32"
             },
@@ -932,80 +1036,6 @@
             {
               "name": "type",
               "type": "varint"
-            },
-            {
-              "name": "x",
-              "type": "f64"
-            },
-            {
-              "name": "y",
-              "type": "f64"
-            },
-            {
-              "name": "z",
-              "type": "f64"
-            },
-            {
-              "name": "yaw",
-              "type": "i8"
-            },
-            {
-              "name": "pitch",
-              "type": "i8"
-            },
-            {
-              "name": "headPitch",
-              "type": "i8"
-            },
-            {
-              "name": "velocityX",
-              "type": "i16"
-            },
-            {
-              "name": "velocityY",
-              "type": "i16"
-            },
-            {
-              "name": "velocityZ",
-              "type": "i16"
-            }
-          ]
-        ],
-        "packet_spawn_entity_painting": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": "varint"
-            },
-            {
-              "name": "entityUUID",
-              "type": "UUID"
-            },
-            {
-              "name": "title",
-              "type": "varint"
-            },
-            {
-              "name": "location",
-              "type": "position"
-            },
-            {
-              "name": "direction",
-              "type": "u8"
-            }
-          ]
-        ],
-        "packet_named_entity_spawn": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": "varint"
-            },
-            {
-              "name": "playerUUID",
-              "type": "UUID"
             },
             {
               "name": "x",
@@ -1443,6 +1473,22 @@
             {
               "name": "difficultyLocked",
               "type": "bool"
+            }
+          ]
+        ],
+        "packet_chat_preview": [
+          "container",
+          [
+            {
+              "name": "queryId",
+              "type": "i32"
+            },
+            {
+              "name": "message",
+              "type": [
+                "option",
+                "string"
+              ]
             }
           ]
         ],
@@ -1902,23 +1948,6 @@
             }
           ]
         ],
-        "packet_chat": [
-          "container",
-          [
-            {
-              "name": "message",
-              "type": "string"
-            },
-            {
-              "name": "position",
-              "type": "i8"
-            },
-            {
-              "name": "sender",
-              "type": "UUID"
-            }
-          ]
-        ],
         "packet_multi_block_change": [
           "container",
           [
@@ -2108,6 +2137,10 @@
             {
               "name": "pitch",
               "type": "f32"
+            },
+            {
+              "name": "seed",
+              "type": "i64"
             }
           ]
         ],
@@ -2545,17 +2578,17 @@
                 "array",
                 {
                   "countType": "varint",
-                  "type": "string"
+                  "type": "nbt"
                 }
               ]
             },
             {
-              "name": "dimensionCodec",
+              "name": "registryCodec",
               "type": "nbt"
             },
             {
-              "name": "dimension",
-              "type": "nbt"
+              "name": "worldType",
+              "type": "string"
             },
             {
               "name": "worldName",
@@ -2592,6 +2625,25 @@
             {
               "name": "isFlat",
               "type": "bool"
+            },
+            {
+              "name": "death",
+              "type": [
+                "option",
+                [
+                  "container",
+                  [
+                    {
+                      "name": "dimensionName",
+                      "type": "string"
+                    },
+                    {
+                      "name": "location",
+                      "type": "position"
+                    }
+                  ]
+                ]
+              ]
             }
           ]
         ],
@@ -2608,6 +2660,10 @@
             },
             {
               "name": "locked",
+              "type": "bool"
+            },
+            {
+              "name": "trackingPosition",
               "type": "bool"
             },
             {
@@ -2947,6 +3003,58 @@
             }
           ]
         ],
+        "packet_player_chat": [
+          "container",
+          [
+            {
+              "name": "signedChatContent",
+              "type": "string"
+            },
+            {
+              "name": "unsignedChatContent",
+              "type": [
+                "option",
+                "string"
+              ]
+            },
+            {
+              "name": "type",
+              "type": "varint"
+            },
+            {
+              "name": "senderUuid",
+              "type": "UUID"
+            },
+            {
+              "name": "senderName",
+              "type": "string"
+            },
+            {
+              "name": "senderTeam",
+              "type": [
+                "option",
+                "string"
+              ]
+            },
+            {
+              "name": "timestamp",
+              "type": "i64"
+            },
+            {
+              "name": "salt",
+              "type": "i64"
+            },
+            {
+              "name": "signature",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_end_combat_event": [
           "container",
           [
@@ -3094,6 +3202,48 @@
                               "3": [
                                 "option",
                                 "string"
+                              ]
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "crypto",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action",
+                            "fields": {
+                              "0": [
+                                "option",
+                                [
+                                  "container",
+                                  [
+                                    {
+                                      "name": "timestamp",
+                                      "type": "i64"
+                                    },
+                                    {
+                                      "name": "publicKey",
+                                      "type": [
+                                        "buffer",
+                                        {
+                                          "countType": "varint"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "name": "signature",
+                                      "type": [
+                                        "buffer",
+                                        {
+                                          "countType": "varint"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                ]
                               ]
                             },
                             "default": "void"
@@ -3300,6 +3450,25 @@
             {
               "name": "copyMetadata",
               "type": "bool"
+            },
+            {
+              "name": "death",
+              "type": [
+                "option",
+                [
+                  "container",
+                  [
+                    {
+                      "name": "dimensionName",
+                      "type": "string"
+                    },
+                    {
+                      "name": "location",
+                      "type": "position"
+                    }
+                  ]
+                ]
+              ]
             }
           ]
         ],
@@ -3353,6 +3522,15 @@
             {
               "name": "viewDistance",
               "type": "varint"
+            }
+          ]
+        ],
+        "packet_should_display_chat_preview": [
+          "container",
+          [
+            {
+              "name": "should_display_chat_preview",
+              "type": "bool"
             }
           ]
         ],
@@ -3832,6 +4010,23 @@
             {
               "name": "pitch",
               "type": "f32"
+            },
+            {
+              "name": "seed",
+              "type": "i64"
+            }
+          ]
+        ],
+        "packet_system_chat": [
+          "container",
+          [
+            {
+              "name": "content",
+              "type": "string"
+            },
+            {
+              "name": "type",
+              "type": "varint"
             }
           ]
         ],
@@ -3977,6 +4172,13 @@
             {
               "name": "hideParticles",
               "type": "i8"
+            },
+            {
+              "name": "factorCodec",
+              "type": [
+                "option",
+                "nbt"
+              ]
             }
           ]
         ],
@@ -3989,6 +4191,29 @@
                 "option",
                 "string"
               ]
+            }
+          ]
+        ],
+        "packet_server_data": [
+          "container",
+          [
+            {
+              "name": "motd",
+              "type": [
+                "option",
+                "string"
+              ]
+            },
+            {
+              "name": "icon",
+              "type": [
+                "option",
+                "string" 
+              ]
+            },
+            {
+              "name": "previewsChat",
+              "type": "bool"
             }
           ]
         ],
@@ -4173,50 +4398,7 @@
           "container",
           [
             {
-              "name": "location",
-              "type": "position"
-            },
-            {
-              "name": "block",
-              "type": "varint"
-            },
-            {
-              "name": "status",
-              "type": "varint"
-            },
-            {
-              "name": "successful",
-              "type": "bool"
-            }
-          ]
-        ],
-        "packet_sculk_vibration_signal": [
-          "container",
-          [
-            {
-              "name": "sourcePosition",
-              "type": "position"
-            },
-            {
-              "name": "destinationIdentifier",
-              "type": "string"
-            },
-            {
-              "name": "destination",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "destinationIdentifier",
-                  "fields": {
-                    "block": "position",
-                    "entityId": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "arrivalTicks",
+              "name": "sequenceId",
               "type": "varint"
             }
           ]
@@ -4399,79 +4581,79 @@
                     "0x00": "spawn_entity",
                     "0x01": "spawn_entity_experience_orb",
                     "0x02": "spawn_entity_living",
-                    "0x03": "spawn_entity_painting",
-                    "0x04": "named_entity_spawn",
-                    "0x05": "sculk_vibration_signal",
-                    "0x06": "animation",
-                    "0x07": "statistics",
-                    "0x08": "acknowledge_player_digging",
-                    "0x09": "block_break_animation",
-                    "0x0a": "tile_entity_data",
-                    "0x0b": "block_action",
-                    "0x0c": "block_change",
-                    "0x0d": "boss_bar",
-                    "0x0e": "difficulty",
-                    "0x0f": "chat",
-                    "0x10": "clear_titles",
-                    "0x11": "tab_complete",
-                    "0x12": "declare_commands",
-                    "0x13": "close_window",
-                    "0x14": "window_items",
-                    "0x15": "craft_progress_bar",
-                    "0x16": "set_slot",
-                    "0x17": "set_cooldown",
-                    "0x18": "custom_payload",
-                    "0x19": "named_sound_effect",
-                    "0x1a": "kick_disconnect",
-                    "0x1b": "entity_status",
-                    "0x1c": "explosion",
-                    "0x1d": "unload_chunk",
-                    "0x1e": "game_state_change",
-                    "0x1f": "open_horse_window",
-                    "0x20": "initialize_world_border",
-                    "0x21": "keep_alive",
-                    "0x22": "map_chunk",
-                    "0x23": "world_event",
-                    "0x24": "world_particles",
-                    "0x25": "update_light",
-                    "0x26": "login",
-                    "0x27": "map",
-                    "0x28": "trade_list",
-                    "0x29": "rel_entity_move",
-                    "0x2a": "entity_move_look",
-                    "0x2b": "entity_look",
-                    "0x2c": "vehicle_move",
-                    "0x2d": "open_book",
-                    "0x2e": "open_window",
-                    "0x2f": "open_sign_entity",
-                    "0x30": "ping",
-                    "0x31": "craft_recipe_response",
-                    "0x32": "abilities",
-                    "0x33": "end_combat_event",
-                    "0x34": "enter_combat_event",
-                    "0x35": "death_combat_event",
-                    "0x36": "player_info",
-                    "0x37": "face_player",
-                    "0x38": "position",
-                    "0x39": "unlock_recipes",
-                    "0x3a": "entity_destroy",
-                    "0x3b": "remove_entity_effect",
-                    "0x3c": "resource_pack_send",
-                    "0x3d": "respawn",
-                    "0x3e": "entity_head_rotation",
-                    "0x3f": "multi_block_change",
-                    "0x40": "select_advancement_tab",
-                    "0x41": "action_bar",
-                    "0x42": "world_border_center",
-                    "0x43": "world_border_lerp_size",
-                    "0x44": "world_border_size",
-                    "0x45": "world_border_warning_delay",
-                    "0x46": "world_border_warning_reach",
-                    "0x47": "camera",
-                    "0x48": "held_item_slot",
-                    "0x49": "update_view_position",
-                    "0x4a": "update_view_distance",
-                    "0x4b": "spawn_position",
+                    "0x03": "animation",
+                    "0x04": "statistics",
+                    "0x05": "acknowledge_player_digging",
+                    "0x06": "block_break_animation",
+                    "0x07": "tile_entity_data",
+                    "0x08": "block_action",
+                    "0x09": "block_change",
+                    "0x0a": "boss_bar",
+                    "0x0b": "difficulty",
+                    "0x0c": "chat_preview",
+                    "0x0d": "clear_titles",
+                    "0x0e": "tab_complete",
+                    "0x0f": "declare_commands",
+                    "0x10": "close_window",
+                    "0x11": "window_items",
+                    "0x12": "craft_progress_bar",
+                    "0x13": "set_slot",
+                    "0x14": "set_cooldown",
+                    "0x15": "custom_payload",
+                    "0x16": "named_sound_effect",
+                    "0x17": "kick_disconnect",
+                    "0x18": "entity_status",
+                    "0x19": "explosion",
+                    "0x1a": "unload_chunk",
+                    "0x1b": "game_state_change",
+                    "0x1c": "open_horse_window",
+                    "0x1d": "initialize_world_border",
+                    "0x1e": "keep_alive",
+                    "0x1f": "map_chunk",
+                    "0x20": "world_event",
+                    "0x21": "world_particles",
+                    "0x22": "update_light",
+                    "0x23": "login",
+                    "0x24": "map",
+                    "0x25": "trade_list",
+                    "0x26": "rel_entity_move",
+                    "0x27": "entity_move_look",
+                    "0x28": "entity_look",
+                    "0x29": "vehicle_move",
+                    "0x2a": "open_book",
+                    "0x2b": "open_window",
+                    "0x2c": "open_sign_entity",
+                    "0x2d": "ping",
+                    "0x2e": "craft_recipe_response",
+                    "0x2f": "abilities",
+                    "0x30": "player_chat",
+                    "0x31": "end_combat_event",
+                    "0x32": "enter_combat_event",
+                    "0x33": "death_combat_event",
+                    "0x34": "player_info",
+                    "0x35": "face_player",
+                    "0x36": "position",
+                    "0x37": "unlock_recipes",
+                    "0x38": "entity_destroy",
+                    "0x39": "remove_entity_effect",
+                    "0x3a": "resource_pack_send",
+                    "0x3b": "respawn",
+                    "0x3c": "entity_head_rotation",
+                    "0x3d": "multi_block_change",
+                    "0x3e": "select_advancement_tab",
+                    "0x3f": "server_data",
+                    "0x40": "action_bar",
+                    "0x41": "world_border_center",
+                    "0x42": "world_border_lerp_size",
+                    "0x43": "world_border_size",
+                    "0x44": "world_border_warning_delay",
+                    "0x45": "world_border_warning_reach",
+                    "0x46": "camera",
+                    "0x47": "held_item_slot",
+                    "0x48": "update_view_position",
+                    "0x49": "update_view_distance",
+                    "0x4a": "spawn_position",
+                    "0x4b": "should_display_chat_preview",
                     "0x4c": "scoreboard_display_objective",
                     "0x4d": "entity_metadata",
                     "0x4e": "attach_entity",
@@ -4491,15 +4673,16 @@
                     "0x5c": "entity_sound_effect",
                     "0x5d": "sound_effect",
                     "0x5e": "stop_sound",
-                    "0x5f": "playerlist_header",
-                    "0x60": "nbt_query_response",
-                    "0x61": "collect",
-                    "0x62": "entity_teleport",
-                    "0x63": "advancements",
-                    "0x64": "entity_update_attributes",
-                    "0x65": "entity_effect",
-                    "0x66": "declare_recipes",
-                    "0x67": "tags"
+                    "0x5f": "system_chat",
+                    "0x60": "playerlist_header",
+                    "0x61": "nbt_query_response",
+                    "0x62": "collect",
+                    "0x63": "entity_teleport",
+                    "0x64": "advancements",
+                    "0x65": "entity_update_attributes",
+                    "0x66": "entity_effect",
+                    "0x67": "declare_recipes",
+                    "0x68": "tags"
                   }
                 }
               ]
@@ -4514,25 +4697,20 @@
                     "spawn_entity": "packet_spawn_entity",
                     "spawn_entity_experience_orb": "packet_spawn_entity_experience_orb",
                     "spawn_entity_living": "packet_spawn_entity_living",
-                    "spawn_entity_painting": "packet_spawn_entity_painting",
-                    "named_entity_spawn": "packet_named_entity_spawn",
                     "animation": "packet_animation",
                     "statistics": "packet_statistics",
-                    "advancements": "packet_advancements",
+                    "acknowledge_player_digging": "packet_acknowledge_player_digging",
                     "block_break_animation": "packet_block_break_animation",
                     "tile_entity_data": "packet_tile_entity_data",
                     "block_action": "packet_block_action",
                     "block_change": "packet_block_change",
                     "boss_bar": "packet_boss_bar",
                     "difficulty": "packet_difficulty",
+                    "chat_preview": "packet_chat_preview",
+                    "clear_titles": "packet_clear_titles",
                     "tab_complete": "packet_tab_complete",
                     "declare_commands": "packet_declare_commands",
-                    "face_player": "packet_face_player",
-                    "nbt_query_response": "packet_nbt_query_response",
-                    "chat": "packet_chat",
-                    "multi_block_change": "packet_multi_block_change",
                     "close_window": "packet_close_window",
-                    "open_window": "packet_open_window",
                     "window_items": "packet_window_items",
                     "craft_progress_bar": "packet_craft_progress_bar",
                     "set_slot": "packet_set_slot",
@@ -4545,6 +4723,7 @@
                     "unload_chunk": "packet_unload_chunk",
                     "game_state_change": "packet_game_state_change",
                     "open_horse_window": "packet_open_horse_window",
+                    "initialize_world_border": "packet_initialize_world_border",
                     "keep_alive": "packet_keep_alive",
                     "map_chunk": "packet_map_chunk",
                     "world_event": "packet_world_event",
@@ -4558,24 +4737,39 @@
                     "entity_look": "packet_entity_look",
                     "vehicle_move": "packet_vehicle_move",
                     "open_book": "packet_open_book",
+                    "open_window": "packet_open_window",
                     "open_sign_entity": "packet_open_sign_entity",
+                    "ping": "packet_ping",
                     "craft_recipe_response": "packet_craft_recipe_response",
                     "abilities": "packet_abilities",
+                    "player_chat": "packet_player_chat",
                     "end_combat_event": "packet_end_combat_event",
                     "enter_combat_event": "packet_enter_combat_event",
                     "death_combat_event": "packet_death_combat_event",
                     "player_info": "packet_player_info",
+                    "face_player": "packet_face_player",
                     "position": "packet_position",
                     "unlock_recipes": "packet_unlock_recipes",
                     "entity_destroy": "packet_entity_destroy",
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "resource_pack_send": "packet_resource_pack_send",
                     "respawn": "packet_respawn",
-                    "entity_update_attributes": "packet_entity_update_attributes",
+                    "entity_head_rotation": "packet_entity_head_rotation",
+                    "multi_block_change": "packet_multi_block_change",
+                    "select_advancement_tab": "packet_select_advancement_tab",
+                    "server_data": "packet_server_data",
+                    "action_bar": "packet_action_bar",
+                    "world_border_center": "packet_world_border_center",
+                    "world_border_lerp_size": "packet_world_border_lerp_size",
+                    "world_border_size": "packet_world_border_size",
+                    "world_border_warning_delay": "packet_world_border_warning_delay",
+                    "world_border_warning_reach": "packet_world_border_warning_reach",
                     "camera": "packet_camera",
                     "held_item_slot": "packet_held_item_slot",
                     "update_view_position": "packet_update_view_position",
                     "update_view_distance": "packet_update_view_distance",
+                    "spawn_position": "packet_spawn_position",
+                    "should_display_chat_preview": "packet_should_display_chat_preview",
                     "scoreboard_display_objective": "packet_scoreboard_display_objective",
                     "entity_metadata": "packet_entity_metadata",
                     "attach_entity": "packet_attach_entity",
@@ -4588,33 +4782,23 @@
                     "teams": "packet_teams",
                     "scoreboard_score": "packet_scoreboard_score",
                     "simulation_distance": "packet_simulation_distance",
-                    "spawn_position": "packet_spawn_position",
+                    "set_title_subtitle": "packet_set_title_subtitle",
                     "update_time": "packet_update_time",
+                    "set_title_text": "packet_set_title_text",
+                    "set_title_time": "packet_set_title_time",
                     "entity_sound_effect": "packet_entity_sound_effect",
-                    "stop_sound": "packet_stop_sound",
                     "sound_effect": "packet_sound_effect",
+                    "stop_sound": "packet_stop_sound",
+                    "system_chat": "packet_system_chat",
                     "playerlist_header": "packet_playerlist_header",
+                    "nbt_query_response": "packet_nbt_query_response",
                     "collect": "packet_collect",
                     "entity_teleport": "packet_entity_teleport",
-                    "entity_head_rotation": "packet_entity_head_rotation",
+                    "advancements": "packet_advancements",
+                    "entity_update_attributes": "packet_entity_update_attributes",
                     "entity_effect": "packet_entity_effect",
-                    "select_advancement_tab": "packet_select_advancement_tab",
                     "declare_recipes": "packet_declare_recipes",
-                    "tags": "packet_tags",
-                    "acknowledge_player_digging": "packet_acknowledge_player_digging",
-                    "sculk_vibration_signal": "packet_sculk_vibration_signal",
-                    "clear_titles": "packet_clear_titles",
-                    "initialize_world_border": "packet_initialize_world_border",
-                    "action_bar": "packet_action_bar",
-                    "world_border_center": "packet_world_border_center",
-                    "world_border_lerp_size": "packet_world_border_lerp_size",
-                    "world_border_size": "packet_world_border_size",
-                    "world_border_warning_delay": "packet_world_border_warning_delay",
-                    "world_border_warning_reach": "packet_world_border_warning_reach",
-                    "ping": "packet_ping",
-                    "set_title_subtitle": "packet_set_title_subtitle",
-                    "set_title_text": "packet_set_title_text",
-                    "set_title_time": "packet_set_title_time"
+                    "tags": "packet_tags"
                   }
                 }
               ]
@@ -4851,15 +5035,6 @@
             },
             {
               "name": "text",
-              "type": "string"
-            }
-          ]
-        ],
-        "packet_chat": [
-          "container",
-          [
-            {
-              "name": "message",
               "type": "string"
             }
           ]
@@ -5332,7 +5507,7 @@
           [
             {
               "name": "slotId",
-              "type": "i16"
+              "type": "i8"
             }
           ]
         ],
