@@ -23,7 +23,7 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | blockLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | entityLoot.json | Yes | Use [minecraft-jar-extractor][10] |
 | mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
-| advancements.json | Yes | To be added |
+| advancements.json | Yes | [Eejit43/minecraft-jar-extractor][20] |
 
 * All files that say "Yes" for Auto can be retrieved from [minecraft-data-auto-updater][17]
 
@@ -46,3 +46,4 @@ For bedrock edition see [bedrock.md](bedrock.md)
 [17]: https://github.com/PrismarineJS/minecraft-data-auto-updater
 [18]: https://github.com/PrismarineJS/minecraft-data/pull/282#issue-612896577
 [19]: https://github.com/PrismarineJS/minecraft-data/issues/412#issuecomment-1008202471
+[20]: https://github.com/Eejit43/minecraft-jar-extractor#advancements-extractor
