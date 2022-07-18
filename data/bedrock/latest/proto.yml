@@ -3576,12 +3576,14 @@ packet_toast_request:
    # Message is the message that the toast may contain alongside the title.
    message: string
 
+# UpdateAbilities is a packet sent from the server to the client to update the abilities of the player. It, along with
+# the UpdateAdventureSettings packet, are replacements of the AdventureSettings packet since v1.19.10.
 packet_update_abilities:
    !id: 0xbb
    # EntityUniqueID is the unique ID of the player. The unique ID is a value that remains consistent across
    # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
    # this field.
-   entity_id: li64
+   entity_id: zigzag64
    # PlayerPermissions is the permission level of the player. It is a value from 0-3, with 0 being visitor,
    # 1 being member, 2 being operator and 3 being custom.
    permission_level: PermissionLevel
@@ -3592,6 +3594,8 @@ packet_update_abilities:
    # base layer.
    ability_layers: AbilityLayers[]varint
 
+# UpdateAdventureSettings is a packet sent from the server to the client to update the adventure settings of the player.
+# It, along with the UpdateAbilities packet, are replacements of the AdventureSettings packet since v1.19.10.
 packet_update_adventure_settings:
    !id: 0xbc
    # NoPvM is a boolean indicating whether the player is allowed to fight mobs or not.
@@ -3606,6 +3610,8 @@ packet_update_adventure_settings:
    # AutoJump is a boolean indicating whether the player is allowed to jump automatically or not.
    auto_jump: bool
 
+# DeathInfo is a packet sent from the server to the client expected to be sent when a player dies. It contains messages
+# related to the player's death, which are shown on the death screen as of v1.19.10.
 packet_death_info:
    !id: 0xbd
    # Cause is the cause of the player's death, such as "suffocation" or "suicide".
@@ -3613,6 +3619,8 @@ packet_death_info:
    # Messages is a list of death messages to be shown on the death screen.
    parameters: string[]varint
 
+# EditorNetwork is a packet sent from the server to the client and vise-versa to communicate editor-mode related
+# information. It carries a single compound tag containing the relevant information.
 packet_editor_network:
    !id: 0xbe
    # Payload is a network little endian compound tag holding data relevant to the editor.
