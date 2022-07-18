@@ -1153,11 +1153,32 @@ MaterialReducer:
       network_id: zigzag32
       count: zigzag32
 
-PermissionLevel: varint =>
+## Permissions
+
+# The permission level of a player, for example whether they are an Server Operator or not.
+PermissionLevel: u8 =>
    0: visitor
    1: member
    2: operator
    3: custom
+
+# The command permission level, for example if being run by a Player, an Op, or a Command Block.
+CommandPermissionLevel: u8 =>
+   0: normal
+   1: operator
+   2: automation
+   3: host
+   4: owner
+   5: internal
+
+# The command permission level, for example if being run by a Player, an Op, or a Command Block.
+CommandPermissionLevelVarint: u8 =>
+   0: normal
+   1: operator
+   2: automation
+   3: host
+   4: owner
+   5: internal
 
 # List of Window IDs. When a new container is opened (container_open), a new sequential Window ID is created.
 # Below window IDs are hard-coded and created when the game starts and the server does not 
@@ -1754,7 +1775,7 @@ SoundType: varint =>
    - ItemTaken
    - Disappeared
    - Reappeared
-   - _
+   - DrinkMilk
    - FrogspawnHatched
    - LaySpawn
    - FrogspawnBreak
@@ -1763,6 +1784,7 @@ SoundType: varint =>
    - SoundeventItemThrown
    - Record5
    - ConvertToFrog
+   - RecordPlaying
    - DrinkMilk
    - RecordPlaying
    - Undefined
@@ -1888,30 +1910,10 @@ DeviceOS: li32 =>
 - WindowsPhone
 - Linux
 
-PermissionLevel: u8 =>
-   0: visitor
-   1: member
-   2: operator
-   3: custom
-
-AdventureCommandPermissionLevel: lu32 =>
-   0: normal
-   1: game_director
-   2: admin
-   3: host
-   4: owner
-   5: internal
-
-CommandPermissionLevel: u8 =>
-   0: normal
-   1: operator
-   2: host
-   3: automation
-   4: admin
 
 AbilitySet: ["bitflags",
    {
-      "type": lu32,
+      "type": "lu32",
       "flags": {
          "build": 1,
          "mine": 2,
@@ -1930,19 +1932,24 @@ AbilitySet: ["bitflags",
          "walk_speed": 16384,
          "muted": 32768,
          "world_builder": 65536,
-         "no_clip": 131072,
-         "ability_count": 262144
+         "no_clip": 131072
       }
    }
 ]
 
+# AbilityLayer represents the abilities of a specific layer, such as the base layer or the spectator layer.
 AbilityLayers:
-   layer_type: lu16 =>
+   # Type represents the type of the layer. This is one of the AbilityLayerType constants defined above.
+   type: lu16 =>
    - cache
    - base
    - spectator
    - commands
-   abilities: AbilitySet
-   values: AbilitySet
+   # The abilities that can be toggled between
+   allowed: AbilitySet
+   # The abilities that are currently active
+   enabled: AbilitySet
+   # FlySpeed is the default fly speed of the layer.
    fly_speed: lf32
+   # WalkSpeed is the default walk speed of the layer.
    walk_speed: lf32
