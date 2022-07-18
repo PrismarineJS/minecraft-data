@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.10
+!version: 1.19.1
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -85,10 +85,6 @@ packet_play_status:
       6: failed_edu_vanilla
       # Displays "Wow this server is popular! Check back later to see if space opens up. Server Full"
       7: failed_server_full
-      # Cannot join a vanilla game on editor
-      8: failed_editor_vanilla_mismatch
-      # Cannot join an editor game on vanilla
-      9: failed_vanilla_editor_mismatch
 
 
 packet_server_to_client_handshake:
@@ -261,9 +257,6 @@ packet_start_game:
    # to true while the player's or the world's game mode is creative, and it's recommended to simply
    # always set this to false as a server.
    achievements_disabled: bool
-   # EditorWorld is a value to dictate if the world is in editor mode, a special mode recently introduced adding
-   # "powerful tools for editing worlds, intended for experienced creators."
-   editor_world: bool
    # The time at which the day cycle was locked if the day cycle is disabled using the respective
    # game rule. The client will maIntain this time as Boolean as the day cycle is disabled.
    day_cycle_stop_time: zigzag32
@@ -309,7 +302,7 @@ packet_start_game:
    map_enabled: bool
    # The permission level of the player. It is a value from 0-3, with 0 being visitor,
    # 1 being member, 2 being operator and 3 being custom.
-   permission_level: PermissionLevel
+   permission_level: zigzag32
    # The radius around the player in which chunks are ticked. Most servers set this value
    # to a fixed number, as it does not necessarily affect anything client-side.
    server_chunk_tick_range: li32
@@ -418,97 +411,48 @@ packet_add_player:
    # Username is the name of the player. This username is the username that will be
    # set as the initial name tag of the player.
    username: string
+   # The unique ID of the player. The unique ID is a value that remains consistent
+   #  across different sessions of the same world, but most unoffical servers simply 
+   # fill the runtime ID of the player out for this field.
+   unique_entity_id: zigzag64
    # The runtime ID of the player. The runtime ID is unique for each world session,
    # and entities are generally identified in packets using this runtime ID.
-   runtime_id: varint64
+   runtime_entity_id: varint64
    # An identifier only set for particular platforms when chatting (presumably only for 
    # Nintendo Switch). It is otherwise an empty string, and is used to decide which players
    # are able to chat with each other.
    platform_chat_id: string
-   # Position is the position to spawn the player on. If the player is on a distance that the viewer cannot
-   # see it, the player will still show up if the viewer moves closer.
    position: vec3f
-   # Velocity is the initial velocity the player spawns with. This velocity will initiate client side
-   # movement of the player.
    velocity: vec3f
-   # Pitch is the vertical rotation of the player. Facing straight forward yields a pitch of 0. Pitch is
-   # measured in degrees.
    pitch: lf32
-   # Yaw is the horizontal rotation of the player. Yaw is also measured in degrees.
    yaw: lf32
-   # HeadYaw is the same as Yaw, except that it applies specifically to the head of the player. A different
-   # value for HeadYaw than Yaw means that the player will have its head turned.
    head_yaw: lf32
-   body_yaw: lf32
-   # HeldItem is the item that the player is holding. The item is shown to the viewer as soon as the player
-   # itself shows up. Needless to say that this field is rather pointless, as additional packets still must
-   # be sent for armour to show up.
    held_item: Item
-   # GameType is the game type of the player. If set to GameTypeSpectator, the player will not be shown to viewers.
    gamemode: GameMode
-   # EntityMetadata is a map of entity metadata, which includes flags and data properties that alter in
-   # particular the way the player looks. Flags include ones such as 'on fire' and 'sprinting'.
-   # The metadata values are indexed by their property key.
    metadata: MetadataDictionary
-   # The unique ID of the player. The unique ID is a value that remains consistent
-   # across different sessions of the same world, but most unoffical servers simply 
-   # fill the runtime ID of the player out for this field.
-   unique_id: li64
-   permission_level: PermissionLevel
-   command_permission: CommandPermissionLevel
-   # AbilityLayer represents the abilities of a specific layer, such as the base layer or the spectator layer.
-   abilities: AbilityLayers[]u8
-   # EntityLinks is a list of entity links that are currently active on the player. These links alter the
-   # way the player shows up when first spawned in terms of it shown as riding an entity. Setting these
-   # links is important for new viewers to see the player is riding another entity.
+   flags: varint
+   command_permission: varint
+   action_permissions: varint
+   permission_level: varint
+   custom_stored_permissions: varint
+   user_id: li64
    links: Links
-   # DeviceID is the device ID set in one of the files found in the storage of the device of the player. It
-   # may be changed freely, so it should not be relied on for anything.
    device_id: string
-   # BuildPlatform is the build platform/device OS of the player that is about to be added, as it sent in
-   # the Login packet when joining.
    device_os: DeviceOS
 
 packet_add_entity:
    !id: 0x0d
    !bound: client
-   # EntityUniqueID is the unique ID of the entity. The unique ID is a value that remains consistent across
-   # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
-   unique_id: zigzag64
-   # EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
-   # entities are generally identified in packets using this runtime ID.
-   runtime_id: varint64
-   # EntityType is the string entity type of the entity, for example 'minecraft:skeleton'. A list of these
-   # entities may be found online.
+   entity_id_self: zigzag64
+   runtime_entity_id: varint64
    entity_type: string
-   # Position is the position to spawn the entity on. If the entity is on a distance that the player cannot
-   # see it, the entity will still show up if the player moves closer.
    position: vec3f
-   # Velocity is the initial velocity the entity spawns with. This velocity will initiate client side
-   # movement of the entity.
    velocity: vec3f
-   # Pitch is the vertical rotation of the entity. Facing straight forward yields a pitch of 0. Pitch is
-   # measured in degrees.
    pitch: lf32
-   # Yaw is the horizontal rotation of the entity. Yaw is also measured in degrees.
    yaw: lf32
-   # HeadYaw is the same as Yaw, except that it applies specifically to the head of the entity. A different value for
-   # HeadYaw than Yaw means that the entity will have its head turned.
    head_yaw: lf32
-   # BodyYaw is the same as Yaw, except that it applies specifically to the body of the entity. A different value for
-   # BodyYaw than HeadYaw means that the entity will have its body turned, although it is unclear what the difference
-   # between BodyYaw and Yaw is.
-   body_yaw: lf32
-   # Attributes is a slice of attributes that the entity has. It includes attributes such as its health,
-   # movement speed, etc.
    attributes: EntityAttributes
-   # EntityMetadata is a map of entity metadata, which includes flags and data properties that alter in
-   # particular the way the entity looks. Flags include ones such as 'on fire' and 'sprinting'.
-   # The metadata values are indexed by their property key.
    metadata: MetadataDictionary
-   # EntityLinks is a list of entity links that are currently active on the entity. These links alter the
-   # way the entity shows up when first spawned in terms of it shown as riding an entity. Setting these
-   # links is important for new viewers to see the entity is riding another entity.
    links: Links
 
 packet_remove_entity:
@@ -931,7 +875,6 @@ packet_entity_event:
       75: fall
       76: grow_up
       77: vibration_detected
-      78: drink_milk
    data: zigzag32
 
 packet_mob_effect:
@@ -1272,7 +1215,12 @@ packet_adventure_settings:
    flags: AdventureFlags
    # CommandPermissionLevel is a permission level that specifies the kind of commands that the player is
    # allowed to use.
-   command_permission: CommandPermissionLevelVarint
+   command_permission: varint =>
+      0: normal
+      1: operator
+      2: host
+      3: automation
+      4: admin
    # ActionPermissions is, much like Flags, a set of flags that specify actions that the player is allowed
    # to undertake, such as whether it is allowed to edit blocks, open doors etc. It is a combination of the
    # ActionPermission constants above.
@@ -3620,62 +3568,8 @@ RequestPermissions: [ "bitflags",
 # are the same as the ones seen when, for example, loading a new resource pack or obtaining an achievement.
 packet_toast_request:
    !id: 0xba
-   !bound: client
    # Title is the title of the toast.
    title: string
    # Message is the message that the toast may contain alongside the title.
    message: string
 
-# UpdateAbilities is a packet sent from the server to the client to update the abilities of the player. It, along with
-# the UpdateAdventureSettings packet, are replacements of the AdventureSettings packet since v1.19.10.
-packet_update_abilities:
-   !id: 0xbb
-   !bound: client
-   # EntityUniqueID is the unique ID of the player. The unique ID is a value that remains consistent across
-   # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
-   # this field.
-   entity_unique_id: li64
-   # PlayerPermissions is the permission level of the player. It is a value from 0-3, with 0 being visitor,
-   # 1 being member, 2 being operator and 3 being custom.
-   permission_level: PermissionLevel
-   # CommandPermissions is a permission level that specifies the kind of commands that the player is
-   # allowed to use. It is one of the CommandPermissionLevel constants in the AdventureSettings packet.
-   command_permission: CommandPermissionLevel
-   # Layers contains all ability layers and their potential values. This should at least have one entry, being the
-   # base layer.
-   abilities: AbilityLayers[]u8
-
-# UpdateAdventureSettings is a packet sent from the server to the client to update the adventure settings of the player.
-# It, along with the UpdateAbilities packet, are replacements of the AdventureSettings packet since v1.19.10.
-packet_update_adventure_settings:
-   !id: 0xbc
-   !bound: client
-   # NoPvM is a boolean indicating whether the player is allowed to fight mobs or not.
-   no_pvm: bool
-   # NoMvP is a boolean indicating whether mobs are allowed to fight the player or not. It is unclear why this is sent
-   # to the client.
-   no_mvp: bool
-   # ImmutableWorld is a boolean indicating whether the player is allowed to modify the world or not.
-   immutable_world: bool
-   # ShowNameTags is a boolean indicating whether player name tags are shown or not.
-   show_name_tags: bool
-   # AutoJump is a boolean indicating whether the player is allowed to jump automatically or not.
-   auto_jump: bool
-
-# DeathInfo is a packet sent from the server to the client expected to be sent when a player dies. It contains messages
-# related to the player's death, which are shown on the death screen as of v1.19.10.
-packet_death_info:
-   !id: 0xbd
-   !bound: client
-   # Cause is the cause of the player's death, such as "suffocation" or "suicide".
-   cause: string
-   # Messages is a list of death messages to be shown on the death screen.
-   messages: string[]varint
-
-# EditorNetwork is a packet sent from the server to the client and vise-versa to communicate editor-mode related
-# information. It carries a single compound tag containing the relevant information.
-packet_editor_network:
-   !id: 0xbe
-   !bound: client
-   # Payload is a network little endian compound tag holding data relevant to the editor.
-   payload: nbt
