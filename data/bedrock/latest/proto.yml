@@ -440,7 +440,7 @@ packet_add_player:
    metadata: MetadataDictionary
    entity_id: zigzag64
    permission_level: PermissionLevel
-   command_permission: CommandPermissionLevel8
+   command_permission: CommandPermissionLevel
    ability_layers: AbilityLayers[]varint
    links: Links
    device_id: string
@@ -1222,7 +1222,7 @@ packet_adventure_settings:
    flags: AdventureFlags
    # CommandPermissionLevel is a permission level that specifies the kind of commands that the player is
    # allowed to use.
-   command_permission: CommandPermissionLevel32
+   command_permission: AdventureCommandPermissionLevel
    # ActionPermissions is, much like Flags, a set of flags that specify actions that the player is allowed
    # to undertake, such as whether it is allowed to edit blocks, open doors etc. It is a combination of the
    # ActionPermission constants above.
@@ -3582,13 +3582,13 @@ packet_update_abilities:
    # EntityUniqueID is the unique ID of the player. The unique ID is a value that remains consistent across
    # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
    # this field.
-   entity_id: zigzag64
+   entity_id: li64
    # PlayerPermissions is the permission level of the player. It is a value from 0-3, with 0 being visitor,
    # 1 being member, 2 being operator and 3 being custom.
    permission_level: PermissionLevel
    # CommandPermissions is a permission level that specifies the kind of commands that the player is
    # allowed to use. It is one of the CommandPermissionLevel constants in the AdventureSettings packet.
-   command_permission: CommandPermissionLevel8
+   command_permission: CommandPermissionLevel
    # Layers contains all ability layers and their potential values. This should at least have one entry, being the
    # base layer.
    ability_layers: AbilityLayers[]varint
