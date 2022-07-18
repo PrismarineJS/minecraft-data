@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.10
+!version: 1.19.1
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -85,10 +85,6 @@ packet_play_status:
       6: failed_edu_vanilla
       # Displays "Wow this server is popular! Check back later to see if space opens up. Server Full"
       7: failed_server_full
-      # Editor to Vanilla Mismatch
-      8: editor_vanilla_mismatch
-      # Vanilla to Editor Mismatch
-      9: vanilla_editor_mismatch
 
 
 packet_server_to_client_handshake:
@@ -160,8 +156,8 @@ packet_resource_pack_client_response:
 
 # Sent by the client to the server to send chat messages, and by the server to the client 
 # to forward or send messages, which may be chat, popups, tips etc.
-## https:#github.com/pmmp/PocketMine-MP/blob/a43b46a93cb127f037c879b5d8c29cda251dd60c/src/pocketmine/network/mcpe/protocol/TextPacket.php
-## https:#github.com/Sandertv/gophertunnel/blob/05ac3f843dd60d48b9ca0ab275cda8d9e85d8c43/minecraft/protocol/packet/text.go
+## https://github.com/pmmp/PocketMine-MP/blob/a43b46a93cb127f037c879b5d8c29cda251dd60c/src/pocketmine/network/mcpe/protocol/TextPacket.php
+## https://github.com/Sandertv/gophertunnel/blob/05ac3f843dd60d48b9ca0ab275cda8d9e85d8c43/minecraft/protocol/packet/text.go
 packet_text:
    !id: 0x09
    !bound: both
@@ -198,7 +194,7 @@ packet_text:
    # Nintendo Switch). It is otherwise an empty string, and is used to decide which players are able to
    # chat with each other.
    platform_chat_id: string
-# For additional information and examples of all the chat types above, see here: https:#imgur.com/a/KhcFscg
+# For additional information and examples of all the chat types above, see here: https://imgur.com/a/KhcFscg
 
 
 # Sent by the server to update the current time client-side. The client actually advances time
@@ -261,9 +257,6 @@ packet_start_game:
    # to true while the player's or the world's game mode is creative, and it's recommended to simply
    # always set this to false as a server.
    achievements_disabled: bool
-   # EditorWorld is a value to dictate if the world is in editor mode, a special mode recently introduced adding
-   # "powerful tools for editing worlds, intended for experienced creators."
-   editor_world: bool
    # The time at which the day cycle was locked if the day cycle is disabled using the respective
    # game rule. The client will maIntain this time as Boolean as the day cycle is disabled.
    day_cycle_stop_time: zigzag32
@@ -309,7 +302,7 @@ packet_start_game:
    map_enabled: bool
    # The permission level of the player. It is a value from 0-3, with 0 being visitor,
    # 1 being member, 2 being operator and 3 being custom.
-   permission_level: PermissionLevel
+   permission_level: zigzag32
    # The radius around the player in which chunks are ticked. Most servers set this value
    # to a fixed number, as it does not necessarily affect anything client-side.
    server_chunk_tick_range: li32
@@ -363,7 +356,7 @@ packet_start_game:
    #
    # Specifies if the client or server is authoritative over the movement of the player, 
    # meaning it controls the movement of it. 
-   ## https:#github.com/pmmp/PocketMine-MP/blob/a43b46a93cb127f037c879b5d8c29cda251dd60c/src/pocketmine/network/mcpe/protocol/types/PlayerMovementType.php#L26
+   ## https://github.com/pmmp/PocketMine-MP/blob/a43b46a93cb127f037c879b5d8c29cda251dd60c/src/pocketmine/network/mcpe/protocol/types/PlayerMovementType.php#L26
    movement_authority: zigzag32 =>
       0: client
       1: server
@@ -434,14 +427,13 @@ packet_add_player:
    pitch: lf32
    yaw: lf32
    head_yaw: lf32
-   body_yaw: lf32
    held_item: Item
    gamemode: GameMode
    metadata: MetadataDictionary
    flags: varint
-   command_permission: CommandPermissionLevel
+   command_permission: varint
    action_permissions: varint
-   permission_level: PermissionLevel
+   permission_level: varint
    custom_stored_permissions: varint
    user_id: li64
    links: Links
@@ -1223,7 +1215,12 @@ packet_adventure_settings:
    flags: AdventureFlags
    # CommandPermissionLevel is a permission level that specifies the kind of commands that the player is
    # allowed to use.
-   command_permission: CommandPermissionLevel32
+   command_permission: varint =>
+      0: normal
+      1: operator
+      2: host
+      3: automation
+      4: admin
    # ActionPermissions is, much like Flags, a set of flags that specify actions that the player is allowed
    # to undertake, such as whether it is allowed to edit blocks, open doors etc. It is a combination of the
    # ActionPermission constants above.
@@ -1814,7 +1811,7 @@ packet_update_trade:
    # Trading based on Minecraft economy - specifies if the prices of the villager's offers are modified by an increase in
    # demand for the item. (A mechanic added in 1.11.) Buying more of the same item will increase the price
    # of that particular item.
-   # https:#minecraft.gamepedia.com/Trading#Economics
+   # https://minecraft.gamepedia.com/Trading#Economics
    economic_trades: bool
    # NBT serialised compound of offers that the villager has.
    offers: nbt
@@ -1980,7 +1977,7 @@ packet_structure_block_update:
    # used to export the structure to a file.
    structure_name: string
    # DataField is the name of a function to run, usually used during natural generation. A description can
-   # be found here: https:#minecraft.gamepedia.com/Structure_Block#Data.
+   # be found here: https://minecraft.gamepedia.com/Structure_Block#Data.
    data_field: string
    # IncludePlayers specifies if the 'Include Players' toggle has been enabled, meaning players are also
    # exported by the structure block.
@@ -3112,7 +3109,7 @@ packet_motion_prediction_hints:
 # animation, or to activate a controller which can start a sequence of animations based on different
 # conditions specified in an animation controller.
 # Much of the documentation of this packet can be found at
-# https:#minecraft.gamepedia.com/Bedrock_Edition_beta_animation_documentation.
+# https://minecraft.gamepedia.com/Bedrock_Edition_beta_animation_documentation.
 packet_animate_entity:
    !id: 0x9e
    !bound: client
@@ -3576,44 +3573,3 @@ packet_toast_request:
    # Message is the message that the toast may contain alongside the title.
    message: string
 
-packet_update_abilities:
-   !id: 0xbb
-   # EntityUniqueID is the unique ID of the player. The unique ID is a value that remains consistent across
-   # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
-   # this field.
-   entity_id: li64
-   # PlayerPermissions is the permission level of the player. It is a value from 0-3, with 0 being visitor,
-   # 1 being member, 2 being operator and 3 being custom.
-   permission_level: PermissionLevel
-   # CommandPermissions is a permission level that specifies the kind of commands that the player is
-   # allowed to use. It is one of the CommandPermissionLevel constants in the AdventureSettings packet.
-   command_permission: CommandPermissionLevel8
-   # Layers contains all ability layers and their potential values. This should at least have one entry, being the
-   # base layer.
-   ability_layers: AbilityLayers[]varint
-
-packet_update_adventure_settings:
-   !id: 0xbc
-   # NoPvM is a boolean indicating whether the player is allowed to fight mobs or not.
-   no_pvm: bool
-   # NoMvP is a boolean indicating whether mobs are allowed to fight the player or not. It is unclear why this is sent
-   # to the client.
-   no_mvp: bool
-   # ImmutableWorld is a boolean indicating whether the player is allowed to modify the world or not.
-   imutable_world: bool
-   # ShowNameTags is a boolean indicating whether player name tags are shown or not.
-   show_name_tags: bool
-   # AutoJump is a boolean indicating whether the player is allowed to jump automatically or not.
-   auto_jump: bool
-
-packet_death_info:
-   !id: 0xbd
-   # Cause is the cause of the player's death, such as "suffocation" or "suicide".
-   cause: string
-   # Messages is a list of death messages to be shown on the death screen.
-   parameters: string[]varint
-
-packet_editor_network:
-   !id: 0xbe
-   # Payload is a network little endian compound tag holding data relevant to the editor.
-   nbt: nbt
