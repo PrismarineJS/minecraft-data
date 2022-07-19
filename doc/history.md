@@ -1,5 +1,7 @@
 ## 3.6.0
 * bedrock: Add bedrock 1.19.10 protocol data (#588) @stevarino
+* pc: Fix 1.18 language.json (#585) @Eejit43
+* pc: Add 1.19.1-pre4, 1.19.1-pre3 to protocol versions 
 
 ## 3.5.1
 * Fix Github pages docs
