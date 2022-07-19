@@ -1,3 +1,8 @@
+## 3.7.0
+
+* pc: 1.8-1.18 protocol fixes from @rob9315
+* pc: 1.19 protocol from @U9G
+
 ## 3.6.0
 * bedrock: Add bedrock 1.19.10 protocol data (#588) @stevarino
 * pc: Fix 1.18 language.json (#585) @Eejit43
