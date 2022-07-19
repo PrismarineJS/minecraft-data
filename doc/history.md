@@ -1,26 +1,29 @@
+## 3.6.0
+* bedrock: Add bedrock 1.19.10 protocol data (#588) @stevarino
+
 ## 3.5.1
 * Fix Github pages docs
 
 ## 3.5.0
-* Add 1.19 Data (all but protocol) @u9g
-* Add blockloot for 1.18 and 1.19 @Eejit43
+* pc: Add 1.19 Data (all but protocol) @u9g
+* pc: Add blockloot for 1.18 and 1.19 @Eejit43
 
 ## 3.4.0
-* Add bedrock 1.19 protocol data, 1.18 protocol corrections
+* bedrock: Add bedrock 1.19 protocol data, 1.18 protocol corrections
 
 ## 3.3.0
-* Update dimension descriptions (#565)
-* Add 1.19-pre4 to pc/common/protocolVersions.json
-* Add bedrock 1.18.30 block, item, recipe data
+* pc: Update dimension descriptions (#565)
+* pc: Add 1.19-pre4 to pc/common/protocolVersions.json
+* bedrock: Add bedrock 1.18.30 block, item, recipe data
 * bedrock: 1.18 protocol fixes
-* Add 1.19 to common/protocolVersions.json
+* pc: Add 1.19 to common/protocolVersions.json
 
 ## 3.2.0
-* Fix 1.17+ biome colors (@Karang)
-* Fix shulker box and ender pearl stack sizes (@RoseChilds)
-* Fixed hardness & resistance of copper_ore (@sefirosweb)
-* Fix guitar spelling in instruments.json (@MrAwesome)
-* Add bedrock 1.18 block/entity loot data, recipe data fix (@extremeheat)
+* pc: Fix 1.17+ biome colors (@Karang)
+* pc: Fix shulker box and ender pearl stack sizes (@RoseChilds)
+* pc: Fixed hardness & resistance of copper_ore (@sefirosweb)
+* pc: Fix guitar spelling in instruments.json (@MrAwesome)
+* bedrock: Add bedrock 1.18 block/entity loot data, recipe data fix (@extremeheat)
 
 ## 3.1.1
 * Fix Github CI release action
@@ -29,14 +32,14 @@
 * bedrock: Add 1.18.30 protocol data
 
 ## 3.0.0
-* remove findItemOrBlockById and findItemOrBlockByName entirely
+* nmd: remove findItemOrBlockById and findItemOrBlockByName entirely
 
 ## 2.221.0
-* Add bedrock 1.18.11 data
-* Fix to 1.18.2 login packet
+* bedrock: Add bedrock 1.18.11 data
+* pc: Fix to 1.18.2 login packet
 
 ## 2.220.0
-* Fix effect names in 1.17
+* pc: Fix effect names in 1.17
 
 ## 2.119.0
 * reverse bedrock version list
@@ -48,16 +51,16 @@
 * Add "metadataIxOfItem" feature
 
 ## 2.116.0
-* Fix loginPacket for 1.18.2
+* pc: Fix loginPacket for 1.18.2
 
 ## 2.115.1
-* Fix name conflict with existing "version" and type from features.json
+* pc: Fix name conflict with existing "version" and type from features.json
 
 ## 2.115.0
-* Add features.json from mineflayer
+* pc: Add features.json from mineflayer
 
 ## 2.114.1
-* fix 1.18.2 data paths
+* pc: fix 1.18.2 data paths
 
 ## 2.114.0
 * mcpc 1.18.2 protocol support
