@@ -1,3 +1,7 @@
+## 3.7.2
+
+* Fix packet declare command @rob9315
+
 ## 3.7.1
 
 * bedrock: 1.19 fixes @extremeheat
