@@ -309,455 +309,449 @@
       ]]
     }],
     "command_node": [
-      "array",
-      {
-        "countType": "varint",
-        "type": [
-          "container",
-          [
+      "container",
+      [
+        {
+          "name": "flags",
+          "type": [
+            "bitfield",
+            [
+              {
+                "name": "unused",
+                "size": 3,
+                "signed": false
+              },
+              {
+                "name": "has_custom_suggestions",
+                "size": 1,
+                "signed": false
+              },
+              {
+                "name": "has_redirect_node",
+                "size": 1,
+                "signed": false
+              },
+              {
+                "name": "has_command",
+                "size": 1,
+                "signed": false
+              },
+              {
+                "name": "command_node_type",
+                "size": 2,
+                "signed": false
+              }
+            ]
+          ]
+        },
+        {
+          "name": "children",
+          "type": [
+            "array",
             {
-              "name": "flags",
-              "type": [
-                "bitfield",
-                [
-                  {
-                    "name": "unused",
-                    "size": 3,
-                    "signed": false
-                  },
-                  {
-                    "name": "has_custom_suggestions",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "has_redirect_node",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "has_command",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "command_node_type",
-                    "size": 2,
-                    "signed": false
-                  }
-                ]
-              ]
-            },
-            {
-              "name": "children",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": "varint"
-                }
-              ]
-            },
-            {
-              "name": "redirectNode",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "flags/has_redirect_node",
-                  "fields": {
-                    "1": "varint"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "extraNodeData",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "flags/command_node_type",
-                  "fields": {
-                    "0": "void",
-                    "1": [
-                      "container",
-                      [
-                        {
-                          "name": "name",
-                          "type": "string"
-                        }
-                      ]
-                    ],
-                    "2": [
-                      "container",
-                      [
-                        {
-                          "name": "name",
-                          "type": "string"
-                        },
-                        {
-                          "name": "parser",
-                          "type": "string"
-                        },
-                        {
-                          "name": "properties",
-                          "type": [
-                            "switch",
-                            {
-                              "compareTo": "parser",
-                              "fields": {
-                                "brigadier:bool": "void",
-                                "brigadier:float": [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          {
-                                            "name": "unused",
-                                            "size": 6,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "max_present",
-                                            "size": 1,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "min_present",
-                                            "size": 1,
-                                            "signed": false
-                                          }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/min_present",
-                                          "fields": {
-                                            "1": "f32"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/max_present",
-                                          "fields": {
-                                            "1": "f32"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                ],
-                                "brigadier:double": [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          {
-                                            "name": "unused",
-                                            "size": 6,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "max_present",
-                                            "size": 1,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "min_present",
-                                            "size": 1,
-                                            "signed": false
-                                          }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/min_present",
-                                          "fields": {
-                                            "1": "f64"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/max_present",
-                                          "fields": {
-                                            "1": "f64"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                ],
-                                "brigadier:integer": [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          {
-                                            "name": "unused",
-                                            "size": 6,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "max_present",
-                                            "size": 1,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "min_present",
-                                            "size": 1,
-                                            "signed": false
-                                          }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/min_present",
-                                          "fields": {
-                                            "1": "i32"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/max_present",
-                                          "fields": {
-                                            "1": "i32"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                ],
-                                "brigadier:long": [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          {
-                                            "name": "unused",
-                                            "size": 6,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "max_present",
-                                            "size": 1,
-                                            "signed": false
-                                          },
-                                          {
-                                            "name": "min_present",
-                                            "size": 1,
-                                            "signed": false
-                                          }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/min_present",
-                                          "fields": {
-                                            "1": "i64"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type": [
-                                        "switch",
-                                        {
-                                          "compareTo": "flags/max_present",
-                                          "fields": {
-                                            "1": "i64"
-                                          },
-                                          "default": "void"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                ],
-                                "brigadier:string": [
-                                  "mapper",
-                                  {
-                                    "type": "varint",
-                                    "mappings": {
-                                      "0": "SINGLE_WORD",
-                                      "1": "QUOTABLE_PHRASE",
-                                      "2": "GREEDY_PHRASE"
-                                    }
-                                  }
-                                ],
-                                "minecraft:entity": [
-                                  "bitfield",
-                                  [
-                                    {
-                                      "name": "unused",
-                                      "size": 6,
-                                      "signed": false
-                                    },
-                                    {
-                                      "name": "onlyAllowPlayers",
-                                      "size": 1,
-                                      "signed": false
-                                    },
-                                    {
-                                      "name": "onlyAllowEntities",
-                                      "size": 1,
-                                      "signed": false
-                                    }
-                                  ]
-                                ],
-                                "minecraft:game_profile": "void",
-                                "minecraft:block_pos": "void",
-                                "minecraft:column_pos": "void",
-                                "minecraft:vec3": "void",
-                                "minecraft:vec2": "void",
-                                "minecraft:block_state": "void",
-                                "minecraft:block_predicate": "void",
-                                "minecraft:item_stack": "void",
-                                "minecraft:item_predicate": "void",
-                                "minecraft:color": "void",
-                                "minecraft:component": "void",
-                                "minecraft:message": "void",
-                                "minecraft:nbt": "void",
-                                "minecraft:nbt_path": "void",
-                                "minecraft:objective": "void",
-                                "minecraft:objective_criteria": "void",
-                                "minecraft:operation": "void",
-                                "minecraft:particle": "void",
-                                "minecraft:angle": "void",
-                                "minecraft:rotation": "void",
-                                "minecraft:scoreboard_slot": "void",
-                                "minecraft:score_holder": [
-                                  "bitfield",
-                                  [
-                                    {
-                                      "name": "unused",
-                                      "size": 7,
-                                      "signed": false
-                                    },
-                                    {
-                                      "name": "allowMultiple",
-                                      "size": 1,
-                                      "signed": false
-                                    }
-                                  ]
-                                ],
-                                "minecraft:swizzle": "void",
-                                "minecraft:team": "void",
-                                "minecraft:item_slot": "void",
-                                "minecraft:resource_location": "void",
-                                "minecraft:mob_effect": "void",
-                                "minecraft:function": "void",
-                                "minecraft:entity_anchor": "void",
-                                "minecraft:range": [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "allowDecimals",
-                                      "type": "bool"
-                                    }
-                                  ]
-                                ],
-                                "minecraft:int_range": "void",
-                                "minecraft:float_range": "void",
-                                "minecraft:item_enchantment": "void",
-                                "minecraft:entity_summon": "void",
-                                "minecraft:dimension": "void",
-                                "minecraft:nbt_compound_tag": "void",
-                                "minecraft:time": "void",
-                                "minecraft:resource_or_tag": [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "registry",
-                                      "type": "string"
-                                    }
-                                  ]
-                                ],
-                                "minecraft:resource": [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "registry",
-                                      "type": "string"
-                                    }
-                                  ]
-                                ],
-                                "minecraft:uuid": "void"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "name": "suggestionType",
-                          "type": [
-                            "switch",
-                            {
-                              "compareTo": "../flags/has_custom_suggestions",
-                              "fields": {
-                                "1": "string"
-                              },
-                              "default": "void"
-                            }
-                          ]
-                        }
-                      ]
-                    ]
-                  }
-                }
-              ]
+              "countType": "varint",
+              "type": "varint"
             }
           ]
-        ]
-      }
+        },
+        {
+          "name": "redirectNode",
+          "type": [
+            "switch",
+            {
+              "compareTo": "flags/has_redirect_node",
+              "fields": {
+                "1": "varint"
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
+          "name": "extraNodeData",
+          "type": [
+            "switch",
+            {
+              "compareTo": "flags/command_node_type",
+              "fields": {
+                "0": "void",
+                "1": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "2": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "parser",
+                      "type": "string"
+                    },
+                    {
+                      "name": "properties",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "parser",
+                          "fields": {
+                            "brigadier:bool": "void",
+                            "brigadier:float": [
+                              "container",
+                              [
+                                {
+                                  "name": "flags",
+                                  "type": [
+                                    "bitfield",
+                                    [
+                                      {
+                                        "name": "unused",
+                                        "size": 6,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "max_present",
+                                        "size": 1,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "min_present",
+                                        "size": 1,
+                                        "signed": false
+                                      }
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "name": "min",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/min_present",
+                                      "fields": {
+                                        "1": "f32"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "max",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/max_present",
+                                      "fields": {
+                                        "1": "f32"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "brigadier:double": [
+                              "container",
+                              [
+                                {
+                                  "name": "flags",
+                                  "type": [
+                                    "bitfield",
+                                    [
+                                      {
+                                        "name": "unused",
+                                        "size": 6,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "max_present",
+                                        "size": 1,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "min_present",
+                                        "size": 1,
+                                        "signed": false
+                                      }
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "name": "min",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/min_present",
+                                      "fields": {
+                                        "1": "f64"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "max",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/max_present",
+                                      "fields": {
+                                        "1": "f64"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "brigadier:integer": [
+                              "container",
+                              [
+                                {
+                                  "name": "flags",
+                                  "type": [
+                                    "bitfield",
+                                    [
+                                      {
+                                        "name": "unused",
+                                        "size": 6,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "max_present",
+                                        "size": 1,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "min_present",
+                                        "size": 1,
+                                        "signed": false
+                                      }
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "name": "min",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/min_present",
+                                      "fields": {
+                                        "1": "i32"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "max",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/max_present",
+                                      "fields": {
+                                        "1": "i32"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "brigadier:long": [
+                              "container",
+                              [
+                                {
+                                  "name": "flags",
+                                  "type": [
+                                    "bitfield",
+                                    [
+                                      {
+                                        "name": "unused",
+                                        "size": 6,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "max_present",
+                                        "size": 1,
+                                        "signed": false
+                                      },
+                                      {
+                                        "name": "min_present",
+                                        "size": 1,
+                                        "signed": false
+                                      }
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "name": "min",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/min_present",
+                                      "fields": {
+                                        "1": "i64"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "max",
+                                  "type": [
+                                    "switch",
+                                    {
+                                      "compareTo": "flags/max_present",
+                                      "fields": {
+                                        "1": "i64"
+                                      },
+                                      "default": "void"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "brigadier:string": [
+                              "mapper",
+                              {
+                                "type": "varint",
+                                "mappings": {
+                                  "0": "SINGLE_WORD",
+                                  "1": "QUOTABLE_PHRASE",
+                                  "2": "GREEDY_PHRASE"
+                                }
+                              }
+                            ],
+                            "minecraft:entity": [
+                              "bitfield",
+                              [
+                                {
+                                  "name": "unused",
+                                  "size": 6,
+                                  "signed": false
+                                },
+                                {
+                                  "name": "onlyAllowPlayers",
+                                  "size": 1,
+                                  "signed": false
+                                },
+                                {
+                                  "name": "onlyAllowEntities",
+                                  "size": 1,
+                                  "signed": false
+                                }
+                              ]
+                            ],
+                            "minecraft:game_profile": "void",
+                            "minecraft:block_pos": "void",
+                            "minecraft:column_pos": "void",
+                            "minecraft:vec3": "void",
+                            "minecraft:vec2": "void",
+                            "minecraft:block_state": "void",
+                            "minecraft:block_predicate": "void",
+                            "minecraft:item_stack": "void",
+                            "minecraft:item_predicate": "void",
+                            "minecraft:color": "void",
+                            "minecraft:component": "void",
+                            "minecraft:message": "void",
+                            "minecraft:nbt": "void",
+                            "minecraft:nbt_path": "void",
+                            "minecraft:objective": "void",
+                            "minecraft:objective_criteria": "void",
+                            "minecraft:operation": "void",
+                            "minecraft:particle": "void",
+                            "minecraft:angle": "void",
+                            "minecraft:rotation": "void",
+                            "minecraft:scoreboard_slot": "void",
+                            "minecraft:score_holder": [
+                              "bitfield",
+                              [
+                                {
+                                  "name": "unused",
+                                  "size": 7,
+                                  "signed": false
+                                },
+                                {
+                                  "name": "allowMultiple",
+                                  "size": 1,
+                                  "signed": false
+                                }
+                              ]
+                            ],
+                            "minecraft:swizzle": "void",
+                            "minecraft:team": "void",
+                            "minecraft:item_slot": "void",
+                            "minecraft:resource_location": "void",
+                            "minecraft:mob_effect": "void",
+                            "minecraft:function": "void",
+                            "minecraft:entity_anchor": "void",
+                            "minecraft:range": [
+                              "container",
+                              [
+                                {
+                                  "name": "allowDecimals",
+                                  "type": "bool"
+                                }
+                              ]
+                            ],
+                            "minecraft:int_range": "void",
+                            "minecraft:float_range": "void",
+                            "minecraft:item_enchantment": "void",
+                            "minecraft:entity_summon": "void",
+                            "minecraft:dimension": "void",
+                            "minecraft:nbt_compound_tag": "void",
+                            "minecraft:time": "void",
+                            "minecraft:resource_or_tag": [
+                              "container",
+                              [
+                                {
+                                  "name": "registry",
+                                  "type": "string"
+                                }
+                              ]
+                            ],
+                            "minecraft:resource": [
+                              "container",
+                              [
+                                {
+                                  "name": "registry",
+                                  "type": "string"
+                                }
+                              ]
+                            ],
+                            "minecraft:uuid": "void"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "suggestionType",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "../flags/has_custom_suggestions",
+                          "fields": {
+                            "1": "string"
+                          },
+                          "default": "void"
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
     ]
   },
   "handshaking": {
@@ -1799,7 +1793,13 @@
           [
             {
               "name": "nodes",
-              "type": "command_node"
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "command_node"
+                }
+              ]
             },
             {
               "name": "rootIndex",
