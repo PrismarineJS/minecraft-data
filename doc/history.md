@@ -1,3 +1,8 @@
+## 3.7.1
+
+* bedrock: 1.19 fixes @extremeheat
+* pc: 1.19 fixes @rob9315
+
 ## 3.7.0
 
 * pc: 1.8-1.18 protocol fixes from @rob9315
