@@ -1,3 +1,7 @@
+## 3.7.3
+
+* Move array back to declare_commands @rob9315
+
 ## 3.7.2
 
 * Fix packet declare command @rob9315
