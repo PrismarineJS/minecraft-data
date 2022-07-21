@@ -1,3 +1,8 @@
+## 3.8.0
+
+* [1.19] update features and add some @rob9315
+* replace varint with custom native varlong @rob9315
+
 ## 3.7.3
 
 * Move array back to declare_commands @rob9315
