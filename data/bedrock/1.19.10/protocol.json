@@ -2817,6 +2817,34 @@
         }
       }
     ],
+    "CommandPermissionLevel": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "normal",
+          "1": "operator",
+          "2": "automation",
+          "3": "host",
+          "4": "owner",
+          "5": "internal"
+        }
+      }
+    ],
+    "CommandPermissionLevelVarint": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "normal",
+          "1": "operator",
+          "2": "automation",
+          "3": "host",
+          "4": "owner",
+          "5": "internal"
+        }
+      }
+    ],
     "WindowID": [
       "mapper",
       {
@@ -3436,7 +3464,7 @@
           "429": "ItemTaken",
           "430": "Disappeared",
           "431": "Reappeared",
-          "432": "_",
+          "432": "DrinkMilk",
           "433": "FrogspawnHatched",
           "434": "LaySpawn",
           "435": "FrogspawnBreak",
@@ -3445,9 +3473,10 @@
           "438": "SoundeventItemThrown",
           "439": "Record5",
           "440": "ConvertToFrog",
-          "441": "DrinkMilk",
-          "442": "RecordPlaying",
-          "443": "Undefined"
+          "441": "RecordPlaying",
+          "442": "DrinkMilk",
+          "443": "RecordPlaying",
+          "444": "Undefined"
         }
       }
     ],
@@ -3583,38 +3612,11 @@
         }
       }
     ],
-    "AdventureCommandPermissionLevel": [
-      "mapper",
-      {
-        "type": "lu32",
-        "mappings": {
-          "0": "normal",
-          "1": "game_director",
-          "2": "admin",
-          "3": "host",
-          "4": "owner",
-          "5": "internal"
-        }
-      }
-    ],
-    "CommandPermissionLevel": [
-      "mapper",
-      {
-        "type": "u8",
-        "mappings": {
-          "0": "normal",
-          "1": "operator",
-          "2": "host",
-          "3": "automation",
-          "4": "admin"
-        }
-      }
-    ],
     "AbilityLayers": [
       "container",
       [
         {
-          "name": "layer_type",
+          "name": "type",
           "type": [
             "mapper",
             {
@@ -3629,11 +3631,11 @@
           ]
         },
         {
-          "name": "abilities",
+          "name": "allowed",
           "type": "AbilitySet"
         },
         {
-          "name": "values",
+          "name": "enabled",
           "type": "AbilitySet"
         },
         {
@@ -4094,8 +4096,8 @@
                 "5": "failed_vanilla_edu",
                 "6": "failed_edu_vanilla",
                 "7": "failed_server_full",
-                "8": "editor_vanilla_mismatch",
-                "9": "vanilla_editor_mismatch"
+                "8": "failed_editor_vanilla_mismatch",
+                "9": "failed_vanilla_editor_mismatch"
               }
             }
           ]
@@ -4705,11 +4707,7 @@
           "type": "string"
         },
         {
-          "name": "unique_entity_id",
-          "type": "zigzag64"
-        },
-        {
-          "name": "runtime_entity_id",
+          "name": "runtime_id",
           "type": "varint64"
         },
         {
@@ -4749,8 +4747,8 @@
           "type": "MetadataDictionary"
         },
         {
-          "name": "entity_id",
-          "type": "zigzag64"
+          "name": "unique_id",
+          "type": "li64"
         },
         {
           "name": "permission_level",
@@ -4761,11 +4759,11 @@
           "type": "CommandPermissionLevel"
         },
         {
-          "name": "ability_layers",
+          "name": "abilities",
           "type": [
             "array",
             {
-              "countType": "varint",
+              "countType": "u8",
               "type": "AbilityLayers"
             }
           ]
@@ -4788,11 +4786,11 @@
       "container",
       [
         {
-          "name": "entity_id_self",
+          "name": "unique_id",
           "type": "zigzag64"
         },
         {
-          "name": "runtime_entity_id",
+          "name": "runtime_id",
           "type": "varint64"
         },
         {
@@ -5394,7 +5392,8 @@
                 "74": "charged_crossbow",
                 "75": "fall",
                 "76": "grow_up",
-                "77": "vibration_detected"
+                "77": "vibration_detected",
+                "78": "drink_milk"
               }
             }
           ]
@@ -5986,7 +5985,7 @@
         },
         {
           "name": "command_permission",
-          "type": "AdventureCommandPermissionLevel"
+          "type": "CommandPermissionLevelVarint"
         },
         {
           "name": "action_permissions",
@@ -10014,7 +10013,7 @@
       "container",
       [
         {
-          "name": "entity_id",
+          "name": "entity_unique_id",
           "type": "li64"
         },
         {
@@ -10026,11 +10025,11 @@
           "type": "CommandPermissionLevel"
         },
         {
-          "name": "ability_layers",
+          "name": "abilities",
           "type": [
             "array",
             {
-              "countType": "varint",
+              "countType": "u8",
               "type": "AbilityLayers"
             }
           ]
@@ -10049,7 +10048,7 @@
           "type": "bool"
         },
         {
-          "name": "imutable_world",
+          "name": "immutable_world",
           "type": "bool"
         },
         {
@@ -10070,7 +10069,7 @@
           "type": "string"
         },
         {
-          "name": "parameters",
+          "name": "messages",
           "type": [
             "array",
             {
@@ -10085,7 +10084,7 @@
       "container",
       [
         {
-          "name": "nbt",
+          "name": "payload",
           "type": "nbt"
         }
       ]
@@ -10266,8 +10265,7 @@
           "walk_speed": 16384,
           "muted": 32768,
           "world_builder": 65536,
-          "no_clip": 131072,
-          "ability_count": 262144
+          "no_clip": 131072
         }
       }
     ],
