@@ -52,20 +52,45 @@ function convert (ver, path) {
   return version
 }
 
+function validate (ver, path) {
+  process.chdir(path || join(__dirname, '../../data/bedrock/' + ver))
+  console.log(process.cwd())
+  const version = genProtoSchema()
+
+  const expected = JSON.stringify({ types: getJSON('./proto.json') })
+  // If you crash here, no protocol.json was generated - run `npm run build`
+  const actual = JSON.stringify(getJSON(`../${version}/protocol.json`))
+
+  fs.unlinkSync('./proto.json') // remove temp file
+  fs.unlinkSync('./packet_map.yml') // remove temp file
+
+  // Make sure the protocol_expected.json file equals the protocol.json file; otherwise the JSON must be rebuilt
+  if (expected !== actual) {
+    throw Error(`${ver} (${version}) / protocol.json is desynced from yaml, please run 'npm run build'`)
+  }
+
+  console.log('ok', `../${version}/protocol.json`)
+  return version
+}
+
+function all (fn) {
+  const versions = require('../../data/dataPaths.json').bedrock
+  for (const versionId in versions) {
+    console.log('⏳', fn.name, 'protocol for bedrock', versionId)
+    const ver = versions[versionId]
+    if (ver.proto) {
+      fn(ver.proto.includes('latest') ? 'latest' : versionId)
+    }
+  }
+}
+
 // If no argument, build everything
 if (!module.parent) {
   if (!process.argv[2]) {
-    const versions = require('../../data/dataPaths.json').bedrock
-    for (const versionId in versions) {
-      console.log('Compiling bedrock protocol', versionId)
-      const ver = versions[versionId]
-      if (ver.proto) {
-        convert(ver.proto.includes('latest') ? 'latest' : versionId)
-      }
-    }
+    all(convert)
   } else { // build the specified version
     convert(process.argv[2])
   }
 }
 
-module.exports = { convert }
+module.exports = { convert, validate, all }
