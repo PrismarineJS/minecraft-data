@@ -1,3 +1,8 @@
+## 3.9.0
+* bedrock: Add bedrock 1.19 data (#600)
+* bedrock: protocol corrections
+* pc: Add 1.19.1-rc2 to protocol versions
+
 ## 3.8.0
 
 * [1.19] update features and add some @rob9315
