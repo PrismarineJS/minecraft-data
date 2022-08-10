@@ -141,7 +141,7 @@
     "Experiments": [
       "array",
       {
-        "countType": "lu32",
+        "countType": "li32",
         "type": "Experiment"
       }
     ],
@@ -193,7 +193,7 @@
               "compareTo": "type",
               "fields": {
                 "bool": "bool",
-                "int": "varint",
+                "int": "zigzag32",
                 "float": "lf32"
               },
               "default": "void"
@@ -6457,20 +6457,8 @@
                 "container",
                 [
                   {
-                    "name": "red",
-                    "type": "u8"
-                  },
-                  {
-                    "name": "green",
-                    "type": "u8"
-                  },
-                  {
-                    "name": "blue",
-                    "type": "u8"
-                  },
-                  {
-                    "name": "alpha",
-                    "type": "u8"
+                    "name": "rgba",
+                    "type": "li32"
                   },
                   {
                     "name": "index",
@@ -7740,7 +7728,7 @@
           "type": "bool"
         },
         {
-          "name": "data",
+          "anon": true,
           "type": [
             "switch",
             {
@@ -7750,12 +7738,17 @@
                   "container",
                   [
                     {
-                      "name": "%n,0",
-                      "type": "closed"
-                    },
-                    {
-                      "name": "%n,1",
-                      "type": "busy"
+                      "name": "cancel_reason",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "u8",
+                          "mappings": {
+                            "0": "closed",
+                            "1": "busy"
+                          }
+                        }
+                      ]
                     }
                   ]
                 ]
@@ -10278,7 +10271,7 @@
                     "type": "string"
                   },
                   {
-                    "name": "feature",
+                    "name": "options",
                     "type": "string"
                   }
                 ]
