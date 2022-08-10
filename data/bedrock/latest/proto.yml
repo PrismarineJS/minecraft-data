@@ -2260,10 +2260,11 @@ packet_modal_form_response:
    # HasCancelReason is true if the client provided a reason for the form being cancelled.
    has_cancel_reason: bool
    # CancelReason represents the reason why the form was cancelled.
-   data: has_cancel_reason ?
-      if true: u8 =>
-         0: closed
-         1: busy
+   _: has_cancel_reason ?
+      if true:
+         cancel_reason: u8 =>
+            0: closed
+            1: busy
 
 # ServerSettingsRequest is sent by the client to request the settings specific to the server. These settings
 # are shown in a separate tab client-side, and have the same structure as a custom form.
