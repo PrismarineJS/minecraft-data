@@ -1,3 +1,6 @@
+## 3.10.0
+* bedrock: add protocol data for 1.19.20 (@stevarino)
+
 ## 3.9.1
 
 * pc: fix packet_respawn (@rob9315)
