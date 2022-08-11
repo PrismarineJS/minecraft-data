@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.20
+!version: 1.19.10
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -334,10 +334,6 @@ packet_start_game:
    # A hack that Mojang put in place to preserve backwards compatibility with old villagers. 
    # The his never actually read though, so it has no functionality.
    only_spawn_v1_villagers: bool
-   # PersonaDisabled is true if persona skins are disabled for the current game session.
-   persona_disabled: bool
-   # CustomSkinsDisabled is true if custom skins are disabled for the current game session.
-   custom_skins_disabled: bool
    # The version of the game from which Vanilla features will be used.
    # The exact function of this field isn't clear.
    game_version: string
@@ -346,13 +342,6 @@ packet_start_game:
    is_new_nether: bool
    edu_resource_uri: EducationSharedResourceURI
    experimental_gameplay_override: bool
-   # ChatRestrictionLevel specifies the level of restriction on in-game chat.
-   chat_restriction_level: u8 =>
-      0: none
-      1: dropped
-      2: disabled
-   # DisablePlayerInteractions is true if the client should ignore other players when interacting with the world.
-   disable_player_interactions: bool
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -418,9 +407,6 @@ packet_start_game:
    # WorldTemplateID is a UUID that identifies the template that was used to generate the world. Servers that do not
    # use a world based off of a template can set this to an empty UUID.
    world_template_id: uuid
-   # ClientSideGeneration is true if the client should use the features registered in the FeatureRegistry packet to
-   # generate terrain client-side to save on bandwidth.
-   client_side_generation: bool
 
 packet_add_player:
    !id: 0x0c
@@ -1527,19 +1513,12 @@ packet_clientbound_map_item_data:
          # the length of the outer slice having to be exactly Height long and the inner slices exactly Width long.
          # To access this array, use $width * y + x
          pixels: varint[]varint
-         # Origin is the center position of the map being updated.
-         origin: BlockCoordinates
 
 
 packet_map_info_request:
    !id: 0x44
    !bound: both
    map_id: zigzag64
-   # ClientPixels is a map of pixels sent from the client to notify the server about the pixels that it isn't
-   # aware of.
-   client_pixels: []lu32
-      rgba: li32
-      index: lu16
 
 # RequestChunkRadius is sent by the client to the server to update the server on the chunk view radius that
 # it has set in the settings. The server may respond with a ChunkRadiusUpdated packet with either the chunk
@@ -2247,21 +2226,11 @@ packet_modal_form_response:
    # FormID is the form ID of the form the client has responded to. It is the same as the ID sent in the
    # ModalFormRequest, and may be used to identify which form was submitted.
    form_id: varint
-   # HasResponseData is true if the client provided response data.
-   has_response_data: bool
-   # ResponseData is a JSON encoded value representing the response of the player. For a modal form, the response is
-   # either true or false, for a menu form, the response is an integer specifying the index of the button clicked, and
-   # for a custom form, the response is an array containing a value for each element.
-   data: has_response_data ?
-      if true: string
-   # HasCancelReason is true if the client provided a reason for the form being cancelled.
-   has_cancel_reason: bool
-   # CancelReason represents the reason why the form was cancelled.
-   _: has_cancel_reason ?
-      if true:
-         cancel_reason: u8 =>
-            0: closed
-            1: busy
+   # ResponseData is a JSON encoded value representing the response of the player. If the form was
+   # cancelled, a JSON encoded 'null' is in the response. For a modal form, the response is either true or
+   # false, for a menu form, the response is an integer specifying the index of the button clicked, and for
+   # a custom form, the response is an array containing a value for each element.
+   data: string
 
 # ServerSettingsRequest is sent by the client to request the settings specific to the server. These settings
 # are shown in a separate tab client-side, and have the same structure as a custom form.
@@ -2571,12 +2540,6 @@ packet_network_chunk_publisher_update:
    # Unlike the RequestChunkRadius and ChunkRadiusUpdated packets, this radius is in blocks rather than
    # chunks, so the chunk radius needs to be multiplied by 16. (Or shifted to the left by 4.)
    radius: varint
-   saved_chunks: []lu32
-      # ChunkX is the X coordinate of the chunk sent. (To translate a block's X to a chunk's X: x >> 4)
-      x: zigzag32
-      # ChunkZ is the Z coordinate of the chunk sent. (To translate a block's Z to a chunk's Z: z >> 4)
-      z: zigzag32
-
 
 # BiomeDefinitionList is sent by the server to let the client know all biomes that are available and
 # implemented on the server side. It is much like the AvailableActorIdentifiers packet, but instead
@@ -3715,14 +3678,3 @@ packet_editor_network:
    !bound: client
    # Payload is a network little endian compound tag holding data relevant to the editor.
    payload: nbt
-
-# FeatureRegistry is a packet used to notify the client about the world generation features the server is currently
-# using. This is used in combination with the client-side world generation system introduced in v1.19.20, allowing the
-# client to completely generate the chunks of the world without having to rely on the server.
-packet_feature_registry:
-   !id: 0xbf
-   !bound: client
-   # Features is a slice of all registered world generation features.
-   features: []varint
-      name: string
-      options: string
