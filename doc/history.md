@@ -1,3 +1,6 @@
+## 3.10.1
+* node-minecraft-data release
+
 ## 3.10.0
 * bedrock: add protocol data for 1.19.20 (@stevarino)
 
