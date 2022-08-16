@@ -1,3 +1,6 @@
+## 3.10.2
+* bedrock: fix 1.19.20 map data packet
+
 ## 3.10.1
 * node-minecraft-data release
 
