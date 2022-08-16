@@ -1489,6 +1489,8 @@ packet_clientbound_map_item_data:
    # LockedMap specifies if the map that was updated was a locked map, which may be done using a cartography
    # table.
    locked: bool
+   # Origin is the center position of the map being updated.
+   origin: BlockCoordinates
    # The following fields apply only for the MapUpdateFlagInitialisation.
    # MapsIncludedIn holds an array of map IDs that the map updated is included in. This has to do with the
    # scale of the map: Each map holds its own map ID and all map IDs of maps that include this map and have
@@ -1527,8 +1529,6 @@ packet_clientbound_map_item_data:
          # the length of the outer slice having to be exactly Height long and the inner slices exactly Width long.
          # To access this array, use $width * y + x
          pixels: varint[]varint
-         # Origin is the center position of the map being updated.
-         origin: BlockCoordinates
 
 
 packet_map_info_request:
