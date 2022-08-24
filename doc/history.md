@@ -1,6 +1,3 @@
-## 3.10.3
-* bedrock: add protocol data for 1.19.21 (@stevarino)
-
 ## 3.10.2
 * bedrock: fix 1.19.20 map data packet
 
