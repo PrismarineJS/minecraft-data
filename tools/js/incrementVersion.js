@@ -13,19 +13,19 @@ function writeJSON (path, data) {
   fs.writeFileSync(path, JSON.stringify(data, null, 2), 'utf-8')
 }
 
-function alterJSON(path, callback) {
+function alterJSON (path, callback) {
   const jsonContents = getJSON(path)
   if (callback(jsonContents) !== false) {
     writeJSON(path, jsonContents)
   }
 }
 
-if (process.argv.length != 5) {
+if (process.argv.length !== 5) {
   console.log(`Usage: npm run version <${platforms.join('|')}> {version} {protocol_version}`)
   process.exit(1)
 }
 
-const [,, platform, version, protocol] = process.argv;
+const [,, platform, version, protocol] = process.argv
 
 if (!platforms.includes(platform)) {
   console.log(`Received platform ${platform}, expected one of (${platforms.join(', ')})`)
@@ -37,14 +37,13 @@ if (fs.existsSync(join(data, platform, version))) {
   process.exit(1)
 }
 
-
 alterJSON(join(data, 'dataPaths.json'), dataPaths => {
-  let latest = null;
+  let latest = null
   Object.entries(dataPaths[platform]).forEach(([ver, values]) => {
-    if (values['proto'] == `${platform}/latest`) {
-      latest = ver;
+    if (values.proto === `${platform}/latest`) {
+      latest = ver
     }
-  });
+  })
 
   if (latest === null) {
     console.log('Unable to determine previous version.')
@@ -52,9 +51,9 @@ alterJSON(join(data, 'dataPaths.json'), dataPaths => {
   }
 
   dataPaths[platform][version] = Object.assign({}, dataPaths[platform][latest])
-  dataPaths[platform][version]['version'] = `${platform}/${version}`
-  dataPaths[platform][latest]['proto'] = `${platform}/${latest}`
-  dataPaths[platform][latest]['types'] = `${platform}/${latest}`
+  dataPaths[platform][version].version = `${platform}/${version}`
+  dataPaths[platform][latest].proto = `${platform}/${latest}`
+  dataPaths[platform][latest].types = `${platform}/${latest}`
   fs.copyFileSync(
     join(data, platform, 'latest', 'proto.yml'),
     join(data, platform, latest, 'proto.yml'))
@@ -67,7 +66,7 @@ const protocolVersion = {
   version: parseInt(protocol),
   minecraftVersion: version,
   majorVersion: version.split('.').slice(0, 2).join('.'),
-  releaseType: "release"
+  releaseType: 'release'
 }
 
 alterJSON(join(data, platform, 'common', 'protocolVersions.json'), protoVers => {
