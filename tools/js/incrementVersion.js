@@ -64,7 +64,7 @@ alterJSON(join(data, 'dataPaths.json'), dataPaths => {
 })
 
 const protocolVersion = {
-  version: protocol,
+  version: parseInt(protocol),
   minecraftVersion: version,
   majorVersion: version.split('.').slice(0, 2).join('.'),
   releaseType: "release"
