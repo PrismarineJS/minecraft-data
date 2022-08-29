@@ -7,9 +7,10 @@
     "test": "npm run lint",
     "lint": "standard",
     "build": "browserify index.js -o bundle.js && node compileProtocol.js",
+    "minify": "uglifyjs bundle.js -o bundle.js",
     "start": "beefy index.js:bundle.js 9998",
     "prod-start": "http-server .",
-    "gh-publish": "git checkout gh-pages && git merge web && npm run build && git add -f bundle.js && git add -f protocol && git commit -m 'publish' ; git push origin gh-pages && git checkout web"
+    "gh-publish": "git checkout gh-pages && git merge web && npm run build && npm run minify && git add -f bundle.js && git add -f protocol && git commit -m 'publish' ; git push origin gh-pages && git checkout web"
   },
   "repository": {
     "type": "git",
@@ -28,14 +29,14 @@
     "json-stable-stringify": "^1.0.1",
     "marked": "^0.3.5",
     "minecraft-assets": "^1.2.0",
-    "minecraft-data": "^3.5.1",
-    "query-string": "^3.0.3"
+    "minecraft-data": "^3.5.1"
   },
   "devDependencies": {
     "beefy": "^2.1.8",
     "browserify": "^17.0.0",
     "http-server": "^0.12.3",
     "protodef-yaml": "^1.2.2",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "uglify-js": "^3.17.0"
   }
 }

@@ -1,7 +1,6 @@
 /* global $j */
 
-const queryString = require('query-string')
-const parameters = queryString.parse(window.location.search)
+const parameters = Object.fromEntries(new URLSearchParams(window.location.search))
 
 function capitalize (s) {
   return s.charAt(0).toUpperCase() + s.slice(1)
