@@ -1,12 +1,10 @@
 /* global $j */
-
-const parameters = Object.fromEntries(new URLSearchParams(window.location.search))
-
 function capitalize (s) {
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 module.exports = function (active, enums, enumsValues) {
+  const parameters = Object.fromEntries(new URLSearchParams(window.location.search))
   const navTabs = enums.map(function (e) {
     return '<li role="presentation"' + (active === e ? ' class="active"' : '') + '><a href="#' + e + 'Tab"' +
       ' aria-controls="' + e + 'Tab" role="tab" data-toggle="tab">' + capitalize(e) + '</a></li>'
