@@ -1,13 +1,21 @@
+## 3.12.0
+
+* pc: fix protocol login packet and update feature.json for 1.19 (@extremeheat)
+
 ## 3.11.0
+
 * bedrock: add protocol data for 1.19.21 (@stevarino)
 
 ## 3.10.2
+
 * bedrock: fix 1.19.20 map data packet
 
 ## 3.10.1
+
 * node-minecraft-data release
 
 ## 3.10.0
+
 * bedrock: add protocol data for 1.19.20 (@stevarino)
 
 ## 3.9.1
