@@ -52,6 +52,7 @@ function bedrockProtocol (version, protocol) {
 
     paths[version] = Object.assign({}, paths[latest])
     paths[version].version = `bedrock/${version}`
+    paths[version].protocol = `bedrock/${version}`
     paths[latest].proto = `bedrock/${latest}`
     paths[latest].types = `bedrock/${latest}`
     fs.copyFileSync(
