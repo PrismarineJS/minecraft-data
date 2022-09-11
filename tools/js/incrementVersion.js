@@ -18,11 +18,11 @@ function alterJSON (path, callback) {
   }
 }
 
-function pcProtocol(version, protocol) {
+function pcProtocol (version, protocol) {
   throw new Error('Not Implemented')
 }
 
-function bedrockProtocol(version, protocol) {
+function bedrockProtoco (version, protocol) {
   const dataRoot = join(data, 'bedrock')
   if (fs.existsSync(join(data, 'bedrock', version))) {
     console.log(`data/bedrock/${version} already exists`)
@@ -38,9 +38,9 @@ function bedrockProtocol(version, protocol) {
 
   alterJSON(join(data, 'dataPaths.json'), dataPaths => {
     let latest = null
-    const paths = dataPaths['bedrock']
+    const paths = dataPaths.bedrock
     Object.entries(paths).forEach(([ver, values]) => {
-      if (values.proto === `bedrock/latest`) {
+      if (values.proto === 'bedrock/latest') {
         latest = ver
       }
     })
@@ -75,7 +75,7 @@ function bedrockProtocol(version, protocol) {
 
   const protoYml = fs.readFileSync(join(dataRoot, 'latest', 'proto.yml'), 'utf-8')
   const protoYmlUpdate = protoYml.replace(/!version: [0-9.]+/, `!version: ${version}`)
-  fs.writeFileSync(join(dataRoot, 'latest', 'proto.yml'), protoYmlUpdate, 'utf-8') 
+  fs.writeFileSync(join(dataRoot, 'latest', 'proto.yml'), protoYmlUpdate, 'utf-8')
 }
 
 const platforms = {
@@ -90,10 +90,9 @@ if (process.argv.length !== 5) {
 
 const [,, platform, version, protocol] = process.argv
 
-if (platforms[platform] == undefined) {
+if (platforms[platform] === undefined) {
   console.log(`Received platform "${platform}", expected one of (${Object.keys(platforms).join(', ')})`)
   process.exit(1)
 }
 
-platforms[platform](version, protocol);
-
+platforms[platform](version, protocol)
