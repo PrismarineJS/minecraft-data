@@ -22,7 +22,7 @@ function pcProtocol (version, protocol) {
   throw new Error('Not Implemented')
 }
 
-function bedrockProtoco (version, protocol) {
+function bedrockProtocol (version, protocol) {
   const dataRoot = join(data, 'bedrock')
   if (fs.existsSync(join(data, 'bedrock', version))) {
     console.log(`data/bedrock/${version} already exists`)
