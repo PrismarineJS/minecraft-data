@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.30
+!version: 1.19.21
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -179,7 +179,6 @@ packet_text:
       8: announcement
       9: json_whisper
       10: json
-      11: json_announcement
    # NeedsTranslation specifies if any of the messages need to be translated. It seems that where % is found
    # in translatable text types, these are translated regardless of this bool. Translatable text types
    # include TextTypeTip, TextTypePopup and TextTypeJukeboxPopup.
@@ -188,7 +187,7 @@ packet_text:
       if chat or whisper or announcement:
          source_name: string
          message: string
-      if raw or tip or system or json_whisper or json or json_announcement:
+      if raw or tip or system or json_whisper or json:
          message: string
       if translation or popup or jukebox_popup:
          message: string
@@ -2076,8 +2075,6 @@ packet_structure_block_update:
    # ShouldTrigger specifies if the structure block should be triggered immediately after this packet
    # reaches the server.
    should_trigger: bool
-   # Waterlogged specifies if the structure block is waterlogged at the time of the packet being sent.
-   water_logged: bool
 
 # ShowStoreOffer is sent by the server to show a Marketplace store offer to a player. It opens a window
 # client-side that displays the item.
@@ -2894,24 +2891,12 @@ packet_completed_using_item:
 # way packets are sent over the network stack.
 packet_network_settings:
    !id: 0x8f
-   !bound: client
+   !bound: both
    # CompressionThreshold is the minimum size of a packet that is compressed when sent. If the size of a
    # packet is under this value, it is not compressed.
    # When set to 0, all packets will be left uncompressed.
-   compression_threshold: lu16
-   # CompressionAlgorithm is the algorithm that is used to compress packets.
-   compression_algorithm: lu16 =>
-      0: deflate
-      1: snappy
-   # ClientThrottle regulates whether the client should throttle players when exceeding of the threshold. Players
-   # outside threshold will not be ticked, improving performance on low-end devices.
-   client_throttle: bool
-   # ClientThrottleThreshold is the threshold for client throttling. If the number of players exceeds this value, the
-   # client will throttle players.
-   client_throttle_threshold: u8
-   # ClientThrottleScalar is the scalar for client throttling. The scalar is the amount of players that are ticked
-   # when throttling is enabled.
-   client_throttle_scalar: lf32
+   compression_threshold: u16
+
 
 # PlayerAuthInput is sent by the client to allow for server authoritative movement. It is used to synchronise
 # the player input with the position server-side.
@@ -3746,49 +3731,3 @@ packet_feature_registry:
    features: []varint
       name: string
       options: string
-
-# ServerStats is a packet sent from the server to the client to update the client on server statistics. It is purely
-# used for telemetry.
-packet_server_stats:
-   !id: 0xc0
-   !bound: client
-   server_time: lf32
-   network_time: lf32
-
-packet_request_network_settings:
-   !id: 0xc1
-   !bound: server
-   client_protocol: i32
-
-packet_game_test_request:
-   !id: 0xc2
-   # MaxTestsPerBatch ...
-   max_tests_per_batch: varint
-   # Repetitions represents the amount of times the test will be run.
-   repetitions: varint
-   # Rotation represents the rotation of the test. It is one of the constants above.
-   rotation: u8 => 
-    - 0deg
-    - 90deg
-    - 180deg
-    - 270deg
-    - 360deg
-   # StopOnError indicates whether the test should immediately stop when an error is encountered.
-   stop_on_error: bool
-   # Position is the position at which the test will be performed.
-   position: BlockCoordinates
-   # TestsPerRow ...
-   tests_per_row: varint
-   # Name represents the name of the test.
-   name: string
-
-# GameTestResults is a packet sent in response to the GameTestRequest packet, with a boolean indicating whether the
-# test was successful or not, and an error string if the test failed.
-packet_game_test_results:
-   !id: 0xc3
-   # Succeeded indicates whether the test succeeded or not.
-   succeeded: bool
-   # Error is the error that occurred. If Succeeded is true, this field is empty.
-   error: string
-   # Name represents the name of the test.
-   name: string

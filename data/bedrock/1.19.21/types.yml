@@ -614,41 +614,12 @@ Transaction:
 ItemStacks: Item[]varint
 
 RecipeIngredient:
-   type: u8 =>
-      0: invalid
-      # DefaultItemDescriptor represents an item descriptor for regular items.
-      1: int_id_meta
-      # MoLangItemDescriptor represents an item descriptor for items that use MoLang (e.g. behaviour packs).
-      2: molang
-      # ItemTagItemDescriptor represents an item descriptor that uses item tagging. This should be used to reduce duplicative
-      # entries for items that can be grouped under a single tag.
-      3: item_tag
-      # DeferredItemDescriptor represents an item descriptor that uses a namespace and metadata value to identify the item.
-      # There is no clear benefit of using this item descriptor.
-      4: string_id_meta
-   _: type ?
-      if int_id_meta:
-         # NetworkID is the numerical network ID of the item. This is sometimes a positive ID, and sometimes a
-         # negative ID, depending on what item it concerns.
-         network_id: li16
-         metadata: network_id ?
-            if 0: void
-            default: li16
-      if molang:
-         # Expression represents the MoLang expression used to identify the item/it's associated tag.
-         expression: string
-         # Version represents the version of MoLang to use.
-         version: u8
-      if item_tag:
-         # Tag represents the tag that the item is part of.
-         tag: string
-      if string_id_meta:
-         # Name is the name of the item, which is a name like 'minecraft:stick'.
-         name: string
-         # MetadataValue is the metadata value of the item. For some items, this is the damage value, whereas for
-         # other items it is simply an identifier of a variant of the item.
-         metadata: li16
-   count: zigzag32
+   network_id: zigzag32
+   _: network_id?
+      if 0: void
+      default:
+         network_data: zigzag32
+         count: zigzag32
 
 PotionTypeRecipes: []varint
    input_item_id: zigzag32
@@ -980,20 +951,6 @@ ItemStackRequest:
    # when an anvil is used.
    # * Used for the server to determine which strings should be filtered. Used in anvils to verify a renamed item.
    custom_names: string[]varint
-   # FilterCause represents the cause of any potential filtering. This is one of the constants above.
-   cause: li32 =>
-     - chat_public
-     - chat_whisper
-     - sign_text
-     - anvil_text
-     - book_and_quill_text
-     - command_block_text
-     - block_actor_data_text
-     - join_event_text
-     - leave_event_text
-     - slash_command_chat
-     - cartography_text
-
 
 # ItemStackResponse is a response to an individual ItemStackRequest.
 ItemStackResponses: []varint
@@ -1837,7 +1794,7 @@ SoundType: varint =>
    - RecordPlaying
    - DrinkMilk
    - RecordPlaying
-   - EnchantingTableUse
+   - Undefined
 
 # TODO: remove?
 LegacyEntityType: li32 =>

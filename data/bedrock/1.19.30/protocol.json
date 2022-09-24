@@ -919,6 +919,44 @@
             {
               "name": "name",
               "type": "string"
+            },
+            {
+              "name": "modifiers",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "id",
+                        "type": "string"
+                      },
+                      {
+                        "name": "name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "amount",
+                        "type": "lf32"
+                      },
+                      {
+                        "name": "operation",
+                        "type": "li32"
+                      },
+                      {
+                        "name": "operand",
+                        "type": "li32"
+                      },
+                      {
+                        "name": "serializable",
+                        "type": "bool"
+                      }
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ]
@@ -1236,33 +1274,93 @@
       "container",
       [
         {
-          "name": "network_id",
-          "type": "zigzag32"
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "invalid",
+                "1": "int_id_meta",
+                "2": "molang",
+                "3": "item_tag",
+                "4": "string_id_meta"
+              }
+            }
+          ]
         },
         {
           "anon": true,
           "type": [
             "switch",
             {
-              "compareTo": "network_id",
+              "compareTo": "type",
               "fields": {
-                "0": "void"
-              },
-              "default": [
-                "container",
-                [
-                  {
-                    "name": "network_data",
-                    "type": "zigzag32"
-                  },
-                  {
-                    "name": "count",
-                    "type": "zigzag32"
-                  }
+                "int_id_meta": [
+                  "container",
+                  [
+                    {
+                      "name": "network_id",
+                      "type": "li16"
+                    },
+                    {
+                      "name": "metadata",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "network_id",
+                          "fields": {
+                            "0": "void"
+                          },
+                          "default": "li16"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "molang": [
+                  "container",
+                  [
+                    {
+                      "name": "expression",
+                      "type": "string"
+                    },
+                    {
+                      "name": "version",
+                      "type": "u8"
+                    }
+                  ]
+                ],
+                "item_tag": [
+                  "container",
+                  [
+                    {
+                      "name": "tag",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "string_id_meta": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "metadata",
+                      "type": "li16"
+                    }
+                  ]
                 ]
-              ]
+              },
+              "default": "void"
             }
           ]
+        },
+        {
+          "name": "count",
+          "type": "zigzag32"
         }
       ]
     ],
@@ -2360,6 +2458,28 @@
               "type": "string"
             }
           ]
+        },
+        {
+          "name": "cause",
+          "type": [
+            "mapper",
+            {
+              "type": "li32",
+              "mappings": {
+                "0": "chat_public",
+                "1": "chat_whisper",
+                "2": "sign_text",
+                "3": "anvil_text",
+                "4": "book_and_quill_text",
+                "5": "command_block_text",
+                "6": "block_actor_data_text",
+                "7": "join_event_text",
+                "8": "leave_event_text",
+                "9": "slash_command_chat",
+                "10": "cartography_text"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -2808,12 +2928,40 @@
     "PermissionLevel": [
       "mapper",
       {
-        "type": "varint",
+        "type": "u8",
         "mappings": {
           "0": "visitor",
           "1": "member",
           "2": "operator",
           "3": "custom"
+        }
+      }
+    ],
+    "CommandPermissionLevel": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "normal",
+          "1": "operator",
+          "2": "automation",
+          "3": "host",
+          "4": "owner",
+          "5": "internal"
+        }
+      }
+    ],
+    "CommandPermissionLevelVarint": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "normal",
+          "1": "operator",
+          "2": "automation",
+          "3": "host",
+          "4": "owner",
+          "5": "internal"
         }
       }
     ],
@@ -3436,7 +3584,7 @@
           "429": "ItemTaken",
           "430": "Disappeared",
           "431": "Reappeared",
-          "432": "_",
+          "432": "DrinkMilk",
           "433": "FrogspawnHatched",
           "434": "LaySpawn",
           "435": "FrogspawnBreak",
@@ -3445,7 +3593,10 @@
           "438": "SoundeventItemThrown",
           "439": "Record5",
           "440": "ConvertToFrog",
-          "441": "Undefined"
+          "441": "RecordPlaying",
+          "442": "DrinkMilk",
+          "443": "RecordPlaying",
+          "444": "EnchantingTableUse"
         }
       }
     ],
@@ -3580,6 +3731,42 @@
           "15": "Linux"
         }
       }
+    ],
+    "AbilityLayers": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "lu16",
+              "mappings": {
+                "0": "cache",
+                "1": "base",
+                "2": "spectator",
+                "3": "commands"
+              }
+            }
+          ]
+        },
+        {
+          "name": "allowed",
+          "type": "AbilitySet"
+        },
+        {
+          "name": "enabled",
+          "type": "AbilitySet"
+        },
+        {
+          "name": "fly_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "walk_speed",
+          "type": "lf32"
+        }
+      ]
     ],
     "mcpe_packet": [
       "container",
@@ -3771,7 +3958,16 @@
                 "183": "lesson_progress",
                 "184": "request_ability",
                 "185": "request_permissions",
-                "186": "toast_request"
+                "186": "toast_request",
+                "187": "update_abilities",
+                "188": "update_adventure_settings",
+                "189": "death_info",
+                "190": "editor_network",
+                "191": "feature_registry",
+                "192": "server_stats",
+                "193": "request_network_settings",
+                "194": "game_test_request",
+                "195": "game_test_results"
               }
             }
           ]
@@ -3963,7 +4159,16 @@
                 "lesson_progress": "packet_lesson_progress",
                 "request_ability": "packet_request_ability",
                 "request_permissions": "packet_request_permissions",
-                "toast_request": "packet_toast_request"
+                "toast_request": "packet_toast_request",
+                "update_abilities": "packet_update_abilities",
+                "update_adventure_settings": "packet_update_adventure_settings",
+                "death_info": "packet_death_info",
+                "editor_network": "packet_editor_network",
+                "feature_registry": "packet_feature_registry",
+                "server_stats": "packet_server_stats",
+                "request_network_settings": "packet_request_network_settings",
+                "game_test_request": "packet_game_test_request",
+                "game_test_results": "packet_game_test_results"
               },
               "default": "void"
             }
@@ -4020,7 +4225,9 @@
                 "4": "failed_invalid_tenant",
                 "5": "failed_vanilla_edu",
                 "6": "failed_edu_vanilla",
-                "7": "failed_server_full"
+                "7": "failed_server_full",
+                "8": "failed_editor_vanilla_mismatch",
+                "9": "failed_vanilla_editor_mismatch"
               }
             }
           ]
@@ -4152,7 +4359,8 @@
                 "7": "whisper",
                 "8": "announcement",
                 "9": "json_whisper",
-                "10": "json"
+                "10": "json",
+                "11": "json_announcement"
               }
             }
           ]
@@ -4244,6 +4452,15 @@
                   ]
                 ],
                 "json": [
+                  "container",
+                  [
+                    {
+                      "name": "message",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "json_announcement": [
                   "container",
                   [
                     {
@@ -4403,6 +4620,10 @@
           "type": "bool"
         },
         {
+          "name": "editor_world",
+          "type": "bool"
+        },
+        {
           "name": "day_cycle_stop_time",
           "type": "zigzag32"
         },
@@ -4476,7 +4697,7 @@
         },
         {
           "name": "permission_level",
-          "type": "zigzag32"
+          "type": "PermissionLevel"
         },
         {
           "name": "server_chunk_tick_range",
@@ -4511,6 +4732,14 @@
           "type": "bool"
         },
         {
+          "name": "persona_disabled",
+          "type": "bool"
+        },
+        {
+          "name": "custom_skins_disabled",
+          "type": "bool"
+        },
+        {
           "name": "game_version",
           "type": "string"
         },
@@ -4532,6 +4761,24 @@
         },
         {
           "name": "experimental_gameplay_override",
+          "type": "bool"
+        },
+        {
+          "name": "chat_restriction_level",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "dropped",
+                "2": "disabled"
+              }
+            }
+          ]
+        },
+        {
+          "name": "disable_player_interactions",
           "type": "bool"
         },
         {
@@ -4611,6 +4858,10 @@
         {
           "name": "world_template_id",
           "type": "uuid"
+        },
+        {
+          "name": "client_side_generation",
+          "type": "bool"
         }
       ]
     ],
@@ -4626,11 +4877,7 @@
           "type": "string"
         },
         {
-          "name": "unique_entity_id",
-          "type": "zigzag64"
-        },
-        {
-          "name": "runtime_entity_id",
+          "name": "runtime_id",
           "type": "varint64"
         },
         {
@@ -4670,28 +4917,26 @@
           "type": "MetadataDictionary"
         },
         {
-          "name": "flags",
-          "type": "varint"
-        },
-        {
-          "name": "command_permission",
-          "type": "varint"
-        },
-        {
-          "name": "action_permissions",
-          "type": "varint"
+          "name": "unique_id",
+          "type": "li64"
         },
         {
           "name": "permission_level",
-          "type": "varint"
+          "type": "PermissionLevel"
         },
         {
-          "name": "custom_stored_permissions",
-          "type": "varint"
+          "name": "command_permission",
+          "type": "CommandPermissionLevel"
         },
         {
-          "name": "user_id",
-          "type": "li64"
+          "name": "abilities",
+          "type": [
+            "array",
+            {
+              "countType": "u8",
+              "type": "AbilityLayers"
+            }
+          ]
         },
         {
           "name": "links",
@@ -4711,11 +4956,11 @@
       "container",
       [
         {
-          "name": "entity_id_self",
+          "name": "unique_id",
           "type": "zigzag64"
         },
         {
-          "name": "runtime_entity_id",
+          "name": "runtime_id",
           "type": "varint64"
         },
         {
@@ -4740,6 +4985,10 @@
         },
         {
           "name": "head_yaw",
+          "type": "lf32"
+        },
+        {
+          "name": "body_yaw",
           "type": "lf32"
         },
         {
@@ -5313,7 +5562,8 @@
                 "74": "charged_crossbow",
                 "75": "fall",
                 "76": "grow_up",
-                "77": "vibration_detected"
+                "77": "vibration_detected",
+                "78": "drink_milk"
               }
             }
           ]
@@ -5905,19 +6155,7 @@
         },
         {
           "name": "command_permission",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "normal",
-                "1": "operator",
-                "2": "host",
-                "3": "automation",
-                "4": "admin"
-              }
-            }
-          ]
+          "type": "CommandPermissionLevelVarint"
         },
         {
           "name": "action_permissions",
@@ -6185,6 +6423,10 @@
           "type": "bool"
         },
         {
+          "name": "origin",
+          "type": "BlockCoordinates"
+        },
+        {
           "name": "included_in",
           "type": [
             "switch",
@@ -6304,6 +6546,28 @@
         {
           "name": "map_id",
           "type": "zigzag64"
+        },
+        {
+          "name": "client_pixels",
+          "type": [
+            "array",
+            {
+              "countType": "lu32",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "rgba",
+                    "type": "li32"
+                  },
+                  {
+                    "name": "index",
+                    "type": "lu16"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -7243,6 +7507,10 @@
         {
           "name": "should_trigger",
           "type": "bool"
+        },
+        {
+          "name": "water_logged",
+          "type": "bool"
         }
       ]
     ],
@@ -7548,8 +7816,55 @@
           "type": "varint"
         },
         {
+          "name": "has_response_data",
+          "type": "bool"
+        },
+        {
           "name": "data",
-          "type": "string"
+          "type": [
+            "switch",
+            {
+              "compareTo": "has_response_data",
+              "fields": {
+                "true": "string"
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
+          "name": "has_cancel_reason",
+          "type": "bool"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "has_cancel_reason",
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "cancel_reason",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "u8",
+                          "mappings": {
+                            "0": "closed",
+                            "1": "busy"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              },
+              "default": "void"
+            }
+          ]
         }
       ]
     ],
@@ -8041,6 +8356,28 @@
         {
           "name": "radius",
           "type": "varint"
+        },
+        {
+          "name": "saved_chunks",
+          "type": [
+            "array",
+            {
+              "countType": "lu32",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "x",
+                    "type": "zigzag32"
+                  },
+                  {
+                    "name": "z",
+                    "type": "zigzag32"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -8513,7 +8850,32 @@
       [
         {
           "name": "compression_threshold",
-          "type": "u16"
+          "type": "lu16"
+        },
+        {
+          "name": "compression_algorithm",
+          "type": [
+            "mapper",
+            {
+              "type": "lu16",
+              "mappings": {
+                "0": "deflate",
+                "1": "snappy"
+              }
+            }
+          ]
+        },
+        {
+          "name": "client_throttle",
+          "type": "bool"
+        },
+        {
+          "name": "client_throttle_threshold",
+          "type": "u8"
+        },
+        {
+          "name": "client_throttle_scalar",
+          "type": "lf32"
         }
       ]
     ],
@@ -9946,6 +10308,197 @@
         }
       ]
     ],
+    "packet_update_abilities": [
+      "container",
+      [
+        {
+          "name": "entity_unique_id",
+          "type": "li64"
+        },
+        {
+          "name": "permission_level",
+          "type": "PermissionLevel"
+        },
+        {
+          "name": "command_permission",
+          "type": "CommandPermissionLevel"
+        },
+        {
+          "name": "abilities",
+          "type": [
+            "array",
+            {
+              "countType": "u8",
+              "type": "AbilityLayers"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_update_adventure_settings": [
+      "container",
+      [
+        {
+          "name": "no_pvm",
+          "type": "bool"
+        },
+        {
+          "name": "no_mvp",
+          "type": "bool"
+        },
+        {
+          "name": "immutable_world",
+          "type": "bool"
+        },
+        {
+          "name": "show_name_tags",
+          "type": "bool"
+        },
+        {
+          "name": "auto_jump",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_death_info": [
+      "container",
+      [
+        {
+          "name": "cause",
+          "type": "string"
+        },
+        {
+          "name": "messages",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_editor_network": [
+      "container",
+      [
+        {
+          "name": "payload",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_feature_registry": [
+      "container",
+      [
+        {
+          "name": "features",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "options",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_server_stats": [
+      "container",
+      [
+        {
+          "name": "server_time",
+          "type": "lf32"
+        },
+        {
+          "name": "network_time",
+          "type": "lf32"
+        }
+      ]
+    ],
+    "packet_request_network_settings": [
+      "container",
+      [
+        {
+          "name": "client_protocol",
+          "type": "i32"
+        }
+      ]
+    ],
+    "packet_game_test_request": [
+      "container",
+      [
+        {
+          "name": "max_tests_per_batch",
+          "type": "varint"
+        },
+        {
+          "name": "repetitions",
+          "type": "varint"
+        },
+        {
+          "name": "rotation",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "0deg",
+                "1": "90deg",
+                "2": "180deg",
+                "3": "270deg",
+                "4": "360deg"
+              }
+            }
+          ]
+        },
+        {
+          "name": "stop_on_error",
+          "type": "bool"
+        },
+        {
+          "name": "position",
+          "type": "BlockCoordinates"
+        },
+        {
+          "name": "tests_per_row",
+          "type": "varint"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_game_test_results": [
+      "container",
+      [
+        {
+          "name": "succeeded",
+          "type": "bool"
+        },
+        {
+          "name": "error",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    ],
     "string": [
       "pstring",
       {
@@ -10098,6 +10651,32 @@
           "sniffing",
           "digging"
         ]
+      }
+    ],
+    "AbilitySet": [
+      "bitflags",
+      {
+        "type": "lu32",
+        "flags": {
+          "build": 1,
+          "mine": 2,
+          "doors_and_switches": 4,
+          "open_containers": 8,
+          "attack_players": 16,
+          "attack_mobs": 32,
+          "operator_commands": 64,
+          "teleport": 128,
+          "invulnerable": 256,
+          "flying": 512,
+          "may_fly": 1024,
+          "instant_build": 2048,
+          "lightning": 4096,
+          "fly_speed": 8192,
+          "walk_speed": 16384,
+          "muted": 32768,
+          "world_builder": 65536,
+          "no_clip": 131072
+        }
       }
     ],
     "UpdateBlockFlags": [
