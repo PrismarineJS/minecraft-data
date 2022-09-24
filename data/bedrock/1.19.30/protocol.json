@@ -1274,33 +1274,93 @@
       "container",
       [
         {
-          "name": "network_id",
-          "type": "zigzag32"
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "invalid",
+                "1": "int_id_meta",
+                "2": "molang",
+                "3": "item_tag",
+                "4": "string_id_meta"
+              }
+            }
+          ]
         },
         {
           "anon": true,
           "type": [
             "switch",
             {
-              "compareTo": "network_id",
+              "compareTo": "type",
               "fields": {
-                "0": "void"
-              },
-              "default": [
-                "container",
-                [
-                  {
-                    "name": "network_data",
-                    "type": "zigzag32"
-                  },
-                  {
-                    "name": "count",
-                    "type": "zigzag32"
-                  }
+                "int_id_meta": [
+                  "container",
+                  [
+                    {
+                      "name": "network_id",
+                      "type": "li16"
+                    },
+                    {
+                      "name": "metadata",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "network_id",
+                          "fields": {
+                            "0": "void"
+                          },
+                          "default": "li16"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "molang": [
+                  "container",
+                  [
+                    {
+                      "name": "expression",
+                      "type": "string"
+                    },
+                    {
+                      "name": "version",
+                      "type": "u8"
+                    }
+                  ]
+                ],
+                "item_tag": [
+                  "container",
+                  [
+                    {
+                      "name": "tag",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "string_id_meta": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "metadata",
+                      "type": "li16"
+                    }
+                  ]
                 ]
-              ]
+              },
+              "default": "void"
             }
           ]
+        },
+        {
+          "name": "count",
+          "type": "zigzag32"
         }
       ]
     ],
@@ -6844,14 +6904,19 @@
                                         "4": "value",
                                         "5": "wildcard_int",
                                         "6": "operator",
+                                        "7": "command_operator",
                                         "8": "target",
+                                        "10": "wildcard_target",
                                         "17": "file_path",
+                                        "23": "integer_range",
+                                        "38": "equipment_slots",
                                         "39": "string",
                                         "47": "block_position",
                                         "48": "position",
                                         "51": "message",
                                         "53": "raw_text",
                                         "57": "json",
+                                        "67": "block_states",
                                         "70": "command"
                                       }
                                     }
@@ -8785,20 +8850,32 @@
       [
         {
           "name": "compression_threshold",
-          "type": "u16"
+          "type": "lu16"
         },
         {
           "name": "compression_algorithm",
           "type": [
             "mapper",
             {
-              "type": "u16",
+              "type": "lu16",
               "mappings": {
-                "0": "Flate",
-                "1": "Snappy"
+                "0": "deflate",
+                "1": "snappy"
               }
             }
           ]
+        },
+        {
+          "name": "client_throttle",
+          "type": "bool"
+        },
+        {
+          "name": "client_throttle_threshold",
+          "type": "u8"
+        },
+        {
+          "name": "client_throttle_scalar",
+          "type": "lf32"
         }
       ]
     ],
@@ -10378,11 +10455,11 @@
             {
               "type": "u8",
               "mappings": {
-                "0": 0,
-                "1": 90,
-                "2": 180,
-                "3": 270,
-                "4": 360
+                "0": "0deg",
+                "1": "90deg",
+                "2": "180deg",
+                "3": "270deg",
+                "4": "360deg"
               }
             }
           ]
