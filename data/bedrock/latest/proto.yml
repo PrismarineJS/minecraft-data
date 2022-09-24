@@ -1701,14 +1701,19 @@ packet_available_commands:
                4: value
                5: wildcard_int
                6: operator
+               7: command_operator
                8: target
+               10: wildcard_target
                17: file_path
+               23: integer_range
+               38: equipment_slots
                39: string
                47: block_position
                48: position
                51: message
                53: raw_text
                57: json
+               67: block_states
                70: command
             # In MC, this + prior field are combined to one 32bit bitfield
             enum_type: lu16 =>
@@ -2889,15 +2894,24 @@ packet_completed_using_item:
 # way packets are sent over the network stack.
 packet_network_settings:
    !id: 0x8f
-   !bound: both
+   !bound: client
    # CompressionThreshold is the minimum size of a packet that is compressed when sent. If the size of a
    # packet is under this value, it is not compressed.
    # When set to 0, all packets will be left uncompressed.
-   compression_threshold: u16
+   compression_threshold: lu16
    # CompressionAlgorithm is the algorithm that is used to compress packets.
-   compression_algorithm: u16 =>
-      0: Flate
-      1: Snappy
+   compression_algorithm: lu16 =>
+      0: deflate
+      1: snappy
+   # ClientThrottle regulates whether the client should throttle players when exceeding of the threshold. Players
+   # outside threshold will not be ticked, improving performance on low-end devices.
+   client_throttle: bool
+   # ClientThrottleThreshold is the threshold for client throttling. If the number of players exceeds this value, the
+   # client will throttle players.
+   client_throttle_threshold: u8
+   # ClientThrottleScalar is the scalar for client throttling. The scalar is the amount of players that are ticked
+   # when throttling is enabled.
+   client_throttle_scalar: lf32
 
 # PlayerAuthInput is sent by the client to allow for server authoritative movement. It is used to synchronise
 # the player input with the position server-side.
@@ -3733,6 +3747,8 @@ packet_feature_registry:
       name: string
       options: string
 
+# ServerStats is a packet sent from the server to the client to update the client on server statistics. It is purely
+# used for telemetry.
 packet_server_stats:
    !id: 0xc0
    !bound: client
@@ -3766,6 +3782,8 @@ packet_game_test_request:
    # Name represents the name of the test.
    name: string
 
+# GameTestResults is a packet sent in response to the GameTestRequest packet, with a boolean indicating whether the
+# test was successful or not, and an error string if the test failed.
 packet_game_test_results:
    !id: 0xc3
    # Succeeded indicates whether the test succeeded or not.
@@ -3774,4 +3792,3 @@ packet_game_test_results:
    error: string
    # Name represents the name of the test.
    name: string
-
