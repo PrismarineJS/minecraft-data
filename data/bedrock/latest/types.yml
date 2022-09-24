@@ -631,7 +631,9 @@ RecipeIngredient:
          # NetworkID is the numerical network ID of the item. This is sometimes a positive ID, and sometimes a
          # negative ID, depending on what item it concerns.
          network_id: li16
-         metadata: li16
+         metadata: network_id ?
+            if 0: void
+            default: li16
       if molang:
          # Expression represents the MoLang expression used to identify the item/it's associated tag.
          expression: string
