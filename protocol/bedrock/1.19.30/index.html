@@ -764,6 +764,18 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#packet_editor_network">0xbe</a></td><td><a href="#packet_editor_network">packet_editor_network</a></td></tr>
+
+
+
+<tr><td><a href="#packet_feature_registry">0xbf</a></td><td><a href="#packet_feature_registry">packet_feature_registry</a></td></tr>
+
+
+<tr><td><a href="#packet_server_stats">0xc0</a></td><td><a href="#packet_server_stats">packet_server_stats</a></td></tr>
+<tr><td><a href="#packet_request_network_settings">0xc1</a></td><td><a href="#packet_request_network_settings">packet_request_network_settings</a></td></tr>
+<tr><td><a href="#packet_game_test_request">0xc2</a></td><td><a href="#packet_game_test_request">packet_game_test_request</a></td></tr>
+
+
+<tr><td><a href="#packet_game_test_results">0xc3</a></td><td><a href="#packet_game_test_results">packet_game_test_results</a></td></tr>
   </tbody>
   </table><br/><hr/>
     <div class="packet-header" id="BehaviourPackInfos">
@@ -1276,6 +1288,15 @@ StartGame packet, or to a unique stack ID if it is enabled.</p></td></tr>
 <tr><td class='field-name name'>current</td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>default</td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>name</td><td>string</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>modifiers</span> length</td><td>varint</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>modifiers</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>id</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>name</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>amount</td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>operation</td><td>li32</td><td></td></tr>
+<tr><td class='field-name name'>operand</td><td>li32</td><td></td></tr>
+<tr><td class='field-name name'>serializable</td><td>bool</td><td></td></tr>
+</table></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="TransactionUseItem">
@@ -1436,14 +1457,38 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>network id</td><td>zigzag32</td><td></td></tr>
-<tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>network id</span></div></i></td><td colspan=2><table>
+<tr><td class='name field-name'>type</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>invalid</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>int id meta</td><td><p>DefaultItemDescriptor represents an item descriptor for regular items.</p></td></tr>
+  <tr><td class='name'>2</td><td class='name'>molang</td><td><p>MoLangItemDescriptor represents an item descriptor for items that use MoLang (e.g. behaviour packs).</p></td></tr>
+  <tr><td class='name'>3</td><td class='name'>item tag</td><td><p>ItemTagItemDescriptor represents an item descriptor that uses item tagging. This should be used to reduce duplicative
+entries for items that can be grouped under a single tag.</p></td></tr>
+  <tr><td class='name'>4</td><td class='name'>string id meta</td><td><p>DeferredItemDescriptor represents an item descriptor that uses a namespace and metadata value to identify the item.
+There is no clear benefit of using this item descriptor.</p></td></tr>
+</table></td></tr>
+<tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
+<tr><td class='name'><span class='fake'>is int id meta</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>network id</td><td>li16</td><td><p>NetworkID is the numerical network ID of the item. This is sometimes a positive ID, and sometimes a
+negative ID, depending on what item it concerns.</p></td></tr>
+<tr><td><b class='name'>metadata</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>network id</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>is 0</span></td><td>void</td><td></td></tr>
-<tr><td class='name'><span class='fake'>default</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>network data</td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'><span class='fake'>default</span></td><td>li16</td><td></td></tr>
+</table></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is molang</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>expression</td><td>string</td><td><p>Expression represents the MoLang expression used to identify the item/it's associated tag.</p></td></tr>
+<tr><td class='field-name name'>version</td><td>u8</td><td><p>Version represents the version of MoLang to use.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is item tag</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>tag</td><td>string</td><td><p>Tag represents the tag that the item is part of.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is string id meta</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the item, which is a name like 'minecraft:stick'.</p></td></tr>
+<tr><td class='field-name name'>metadata</td><td>li16</td><td><p>MetadataValue is the metadata value of the item. For some items, this is the damage value, whereas for
+other items it is simply an identifier of a variant of the item.</p></td></tr>
+</table></td></tr>
+</table></td></tr>
 <tr><td class='field-name name'>count</td><td>zigzag32</td><td></td></tr>
-</table></td></tr>
-</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="PotionTypeRecipes">
     <a href="#PotionTypeRecipes"><div class='packet-id datatype'>Type</div><div class='packet-name name'>PotionTypeRecipes</div></a>
@@ -1514,8 +1559,8 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
 <tr><td class='field-name name'>height</td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ><p>2D input array, size of width*height</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2><i>Length for <span class='name'>__682</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__682</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2><i>Length for <span class='name'>__718</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__718</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> length</td><td>varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>ItemLegacy</td><td></td></tr>
@@ -1853,6 +1898,19 @@ when an anvil is used.</p>
 <li>Used for the server to determine which strings should be filtered. Used in anvils to verify a renamed item.</li>
 </ul></td></tr>
 <tr><td class='field-name'><span class='name'>custom names</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+<tr><td class='name field-name'>cause</td><td colspan=2>li32 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>chat public</td><td><p>FilterCause represents the cause of any potential filtering. This is one of the constants above.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>chat whisper</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>sign text</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>anvil text</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>book and quill text</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>command block text</td><td></td></tr>
+  <tr><td class='name'>6</td><td class='name'>block actor data text</td><td></td></tr>
+  <tr><td class='name'>7</td><td class='name'>join event text</td><td></td></tr>
+  <tr><td class='name'>8</td><td class='name'>leave event text</td><td></td></tr>
+  <tr><td class='name'>9</td><td class='name'>slash command chat</td><td></td></tr>
+  <tr><td class='name'>10</td><td class='name'>cartography text</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="ItemStackResponses">
     <a href="#ItemStackResponses"><div class='packet-id datatype'>Type</div><div class='packet-name name'>ItemStackResponses</div></a>
@@ -2795,7 +2853,7 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>441</td><td class='name'>RecordPlaying</td><td></td></tr>
   <tr><td class='name'>442</td><td class='name'>DrinkMilk</td><td></td></tr>
   <tr><td class='name'>443</td><td class='name'>RecordPlaying</td><td></td></tr>
-  <tr><td class='name'>444</td><td class='name'>Undefined</td><td></td></tr>
+  <tr><td class='name'>444</td><td class='name'>EnchantingTableUse</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="LegacyEntityType">
@@ -3086,6 +3144,7 @@ TextTypeChat. If the server sends it, it may be one of the other text types abov
   <tr><td class='name'>8</td><td class='name'>announcement</td><td></td></tr>
   <tr><td class='name'>9</td><td class='name'>json whisper</td><td></td></tr>
   <tr><td class='name'>10</td><td class='name'>json</td><td></td></tr>
+  <tr><td class='name'>11</td><td class='name'>json announcement</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>needs translation</td><td>bool</td><td><p>NeedsTranslation specifies if any of the messages need to be translated. It seems that where % is found
 in translatable text types, these are translated regardless of this bool. Translatable text types
@@ -3095,7 +3154,7 @@ include TextTypeTip, TextTypePopup and TextTypeJukeboxPopup.</p></td></tr>
 <tr><td class='field-name name'>source name</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>message</td><td>string</td><td></td></tr>
 </table></td></tr>
-<tr><td class='name'><span class='fake'>is raw or tip or system or json whisper or json</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='name'><span class='fake'>is raw or tip or system or json whisper or json or json announcement</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>message</td><td>string</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name'><span class='fake'>is translation or popup or jukebox popup</span> </td><td colspan=2 class='bordered'><table>
@@ -3214,6 +3273,8 @@ above in the settings GUI. It is recommended to set this to true for servers tha
 do not allow things such as setting game rules through the GUI.</p></td></tr>
 <tr><td class='field-name name'>only spawn v1 villagers</td><td>bool</td><td><p>A hack that Mojang put in place to preserve backwards compatibility with old villagers. 
 The his never actually read though, so it has no functionality.</p></td></tr>
+<tr><td class='field-name name'>persona disabled</td><td>bool</td><td><p>PersonaDisabled is true if persona skins are disabled for the current game session.</p></td></tr>
+<tr><td class='field-name name'>custom skins disabled</td><td>bool</td><td><p>CustomSkinsDisabled is true if custom skins are disabled for the current game session.</p></td></tr>
 <tr><td class='field-name name'>game version</td><td>string</td><td><p>The version of the game from which Vanilla features will be used.
 The exact function of this field isn't clear.</p></td></tr>
 <tr><td class='field-name name'>limited world width</td><td>li32</td><td></td></tr>
@@ -3221,6 +3282,12 @@ The exact function of this field isn't clear.</p></td></tr>
 <tr><td class='field-name name'>is new nether</td><td>bool</td><td></td></tr>
 <tr><td class='field-name name'>edu resource uri</td><td><a href="#EducationSharedResourceURI">EducationSharedResourceURI</a></td><td></td></tr>
 <tr><td class='field-name name'>experimental gameplay override</td><td>bool</td><td></td></tr>
+<tr><td class='name field-name'>chat restriction level</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>none</td><td><p>ChatRestrictionLevel specifies the level of restriction on in-game chat.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>dropped</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>disabled</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>disable player interactions</td><td>bool</td><td><p>DisablePlayerInteractions is true if the client should ignore other players when interacting with the world.</p></td></tr>
 <tr><td class='field-name name'>level id</td><td>string</td><td><p>A base64 encoded world ID that is used to identify the world.</p></td></tr>
 <tr><td class='field-name name'>world name</td><td>string</td><td><p>The name of the world that the player is joining. Note that this field shows up
 above the player list for the rest of the game session, and cannot be changed.
@@ -3264,6 +3331,8 @@ ones that are sent in the SyncActorProperty packet.</p></td></tr>
 <tr><td class='field-name name'>block pallette checksum</td><td>lu64</td><td><p>A checksum to ensure block types between the server and client match</p></td></tr>
 <tr><td class='field-name name'>world template id</td><td>uuid</td><td><p>WorldTemplateID is a UUID that identifies the template that was used to generate the world. Servers that do not
 use a world based off of a template can set this to an empty UUID.</p></td></tr>
+<tr><td class='field-name name'>client side generation</td><td>bool</td><td><p>ClientSideGeneration is true if the client should use the features registered in the FeatureRegistry packet to
+generate terrain client-side to save on bandwidth.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_add_player">
     <a href="#packet_add_player"><div class='packet-id client'>12</div><div class='packet-name name'>packet add player</div></a>
@@ -4382,6 +4451,7 @@ client-side.</p></td></tr>
 (1) or the end (2).</p></td></tr>
 <tr><td class='field-name name'>locked</td><td>bool</td><td><p>LockedMap specifies if the map that was updated was a locked map, which may be done using a cartography
 table.</p></td></tr>
+<tr><td class='field-name name'>origin</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>Origin is the center position of the map being updated.</p></td></tr>
 <tr><td><b class='name'>included in</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>update flags.initialisation</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name'><span class='name'><span class='fake'>is true</span></span> length</td><td>varint</td><td rowspan=2><p>The following fields apply only for the MapUpdateFlagInitialisation.
 MapsIncludedIn holds an array of map IDs that the map updated is included in. This has to do with the
@@ -4431,6 +4501,12 @@ To access this array, use $width * y + x</p></td></tr>
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>map id</td><td>zigzag64</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>client pixels</span> length</td><td>lu32</td><td ><p>ClientPixels is a map of pixels sent from the client to notify the server about the pixels that it isn't
+aware of.</p></td></tr>
+<tr><td class='field-name'><span class='name'>client pixels</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>rgba</td><td>li32</td><td></td></tr>
+<tr><td class='field-name name'>index</td><td>lu16</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_request_chunk_radius">
     <a href="#packet_request_chunk_radius"><div class='packet-id both'>69</div><div class='packet-name name'>packet request chunk radius</div></a>
@@ -4596,8 +4672,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3629</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3629</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3701</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3701</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -4970,6 +5046,7 @@ Java Edition, this is always stored in memory, but in Bedrock Edition it can be 
 or memory. See the constants above for the options.</p></td></tr>
 <tr><td class='field-name name'>should trigger</td><td>bool</td><td><p>ShouldTrigger specifies if the structure block should be triggered immediately after this packet
 reaches the server.</p></td></tr>
+<tr><td class='field-name name'>water logged</td><td>bool</td><td><p>Waterlogged specifies if the structure block is waterlogged at the time of the packet being sent.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_show_store_offer">
     <a href="#packet_show_store_offer"><div class='packet-id client'>91</div><div class='packet-name name'>packet show store offer</div></a>
@@ -5166,10 +5243,21 @@ the form was closed by clicking the X at the top right corner of the form.</p></
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>form id</td><td>varint</td><td><p>FormID is the form ID of the form the client has responded to. It is the same as the ID sent in the
 ModalFormRequest, and may be used to identify which form was submitted.</p></td></tr>
-<tr><td class='field-name name'>data</td><td>string</td><td><p>ResponseData is a JSON encoded value representing the response of the player. If the form was
-cancelled, a JSON encoded 'null' is in the response. For a modal form, the response is either true or
-false, for a menu form, the response is an integer specifying the index of the button clicked, and for
-a custom form, the response is an array containing a value for each element.</p></td></tr>
+<tr><td class='field-name name'>has response data</td><td>bool</td><td><p>HasResponseData is true if the client provided response data.</p></td></tr>
+<tr><td><b class='name'>data</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>has response data</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span></td><td>string</td><td><p>ResponseData is a JSON encoded value representing the response of the player. For a modal form, the response is
+either true or false, for a menu form, the response is an integer specifying the index of the button clicked, and
+for a custom form, the response is an array containing a value for each element.</p></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>has cancel reason</td><td>bool</td><td><p>HasCancelReason is true if the client provided a reason for the form being cancelled.</p></td></tr>
+<tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>has cancel reason</span></div></i></td><td colspan=2><table>
+<tr><td class='name'><span class='fake'>is true</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='name field-name'>cancel reason</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>closed</td><td><p>CancelReason represents the reason why the form was cancelled.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>busy</td><td></td></tr>
+</table></td></tr>
+</table></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_server_settings_request">
     <a href="#packet_server_settings_request"><div class='packet-id server'>102</div><div class='packet-name name'>packet server settings request</div></a>
@@ -5502,6 +5590,11 @@ set this position to the position of the player itself.</p></td></tr>
 <tr><td class='field-name name'>radius</td><td>varint</td><td><p>Radius is the radius in blocks around Position that chunks sent show up in and will remain loaded in.
 Unlike the RequestChunkRadius and ChunkRadiusUpdated packets, this radius is in blocks rather than
 chunks, so the chunk radius needs to be multiplied by 16. (Or shifted to the left by 4.)</p></td></tr>
+<tr><td class='field-name'><span class='name'>saved chunks</span> length</td><td>lu32</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>saved chunks</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>x</td><td>zigzag32</td><td><p>ChunkX is the X coordinate of the chunk sent. (To translate a block's X to a chunk's X: x &gt;&gt; 4)</p></td></tr>
+<tr><td class='field-name name'>z</td><td>zigzag32</td><td><p>ChunkZ is the Z coordinate of the chunk sent. (To translate a block's Z to a chunk's Z: z &gt;&gt; 4)</p></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_biome_definition_list">
     <a href="#packet_biome_definition_list"><div class='packet-id client'>122</div><div class='packet-name name'>packet biome definition list</div></a>
@@ -5838,16 +5931,26 @@ may be found above.</p></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_network_settings">
-    <a href="#packet_network_settings"><div class='packet-id both'>143</div><div class='packet-name name'>packet network settings</div></a>
-      <small style='vertical-align:middle;float:right'>Bidirectional</small>
+    <a href="#packet_network_settings"><div class='packet-id client'>143</div><div class='packet-name name'>packet network settings</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
 <p><p>NetworkSettings is sent by the server to update a variety of network settings. These settings modify the
 way packets are sent over the network stack.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>compression threshold</td><td>u16</td><td><p>CompressionThreshold is the minimum size of a packet that is compressed when sent. If the size of a
+<tr><td class='field-name name'>compression threshold</td><td>lu16</td><td><p>CompressionThreshold is the minimum size of a packet that is compressed when sent. If the size of a
 packet is under this value, it is not compressed.
 When set to 0, all packets will be left uncompressed.</p></td></tr>
+<tr><td class='name field-name'>compression algorithm</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>deflate</td><td><p>CompressionAlgorithm is the algorithm that is used to compress packets.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>snappy</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>client throttle</td><td>bool</td><td><p>ClientThrottle regulates whether the client should throttle players when exceeding of the threshold. Players
+outside threshold will not be ticked, improving performance on low-end devices.</p></td></tr>
+<tr><td class='field-name name'>client throttle threshold</td><td>u8</td><td><p>ClientThrottleThreshold is the threshold for client throttling. If the number of players exceeds this value, the
+client will throttle players.</p></td></tr>
+<tr><td class='field-name name'>client throttle scalar</td><td>lf32</td><td><p>ClientThrottleScalar is the scalar for client throttling. The scalar is the amount of players that are ticked
+when throttling is enabled.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_player_auth_input">
     <a href="#packet_player_auth_input"><div class='packet-id server'>144</div><div class='packet-name name'>packet player auth input</div></a>
@@ -6644,4 +6747,72 @@ related to the player's death, which are shown on the death screen as of v1.19.1
 information. It carries a single compound tag containing the relevant information.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>payload</td><td>nbt</td><td><p>Payload is a network little endian compound tag holding data relevant to the editor.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_feature_registry">
+    <a href="#packet_feature_registry"><div class='packet-id client'>191</div><div class='packet-name name'>packet feature registry</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>FeatureRegistry is a packet used to notify the client about the world generation features the server is currently
+using. This is used in combination with the client-side world generation system introduced in v1.19.20, allowing the
+client to completely generate the chunks of the world without having to rely on the server.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name'><span class='name'>features</span> length</td><td>varint</td><td ><p>Features is a slice of all registered world generation features.</p></td></tr>
+<tr><td class='field-name'><span class='name'>features</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>name</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>options</td><td>string</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_server_stats">
+    <a href="#packet_server_stats"><div class='packet-id client'>192</div><div class='packet-name name'>packet server stats</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>ServerStats is a packet sent from the server to the client to update the client on server statistics. It is purely
+used for telemetry.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>server time</td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>network time</td><td>lf32</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_request_network_settings">
+    <a href="#packet_request_network_settings"><div class='packet-id server'>193</div><div class='packet-name name'>packet request network settings</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>client protocol</td><td>i32</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_game_test_request">
+    <a href="#packet_game_test_request"><div class='packet-id datatype'>194</div><div class='packet-name name'>packet game test request</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>max tests per batch</td><td>varint</td><td><p>MaxTestsPerBatch …</p></td></tr>
+<tr><td class='field-name name'>repetitions</td><td>varint</td><td><p>Repetitions represents the amount of times the test will be run.</p></td></tr>
+<tr><td class='name field-name'>rotation</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>0deg</td><td><p>Rotation represents the rotation of the test. It is one of the constants above.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>90deg</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>180deg</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>270deg</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>360deg</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>stop on error</td><td>bool</td><td><p>StopOnError indicates whether the test should immediately stop when an error is encountered.</p></td></tr>
+<tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>Position is the position at which the test will be performed.</p></td></tr>
+<tr><td class='field-name name'>tests per row</td><td>varint</td><td><p>TestsPerRow …</p></td></tr>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>Name represents the name of the test.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_game_test_results">
+    <a href="#packet_game_test_results"><div class='packet-id datatype'>195</div><div class='packet-name name'>packet game test results</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>GameTestResults is a packet sent in response to the GameTestRequest packet, with a boolean indicating whether the
+test was successful or not, and an error string if the test failed.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>succeeded</td><td>bool</td><td><p>Succeeded indicates whether the test succeeded or not.</p></td></tr>
+<tr><td class='field-name name'>error</td><td>string</td><td><p>Error is the error that occurred. If Succeeded is true, this field is empty.</p></td></tr>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>Name represents the name of the test.</p></td></tr>
 </table><br/><hr/><br/></div>
