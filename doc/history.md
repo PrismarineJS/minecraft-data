@@ -1,3 +1,7 @@
+## 3.15.0
+
+* added Burger extracted recipes.json for 1.19 (thanks @FCKJohni)
+
 ## 3.14.0
 
 * update 1.19 features list (@extremeheat)
