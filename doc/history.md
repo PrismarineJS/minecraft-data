@@ -1,4 +1,10 @@
+## 3.14.0
+
+* update 1.19 features list (@extremeheat)
+* Add features.json for bedrock (@extremeheat)
+
 ## 3.13.0
+
 * bedrock : add protocol data for 1.19.30 (@stevarino)
 * pc : Fix login packet structure in 1.19 (#632) @mkorman9
 
