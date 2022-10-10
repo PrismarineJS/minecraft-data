@@ -1,3 +1,6 @@
+## 3.15.3
+* Fix pc1.19 villager trade packet (#641) 
+
 ## 3.15.1
 * Fix pc1.19 entity spawn packet (#639)
 
