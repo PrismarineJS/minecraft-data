@@ -1,3 +1,6 @@
+## 3.15.1
+* Fix pc1.19 entity spawn packet (#639)
+
 ## 3.15.0
 
 * added Burger extracted recipes.json for 1.19 (thanks @FCKJohni)
