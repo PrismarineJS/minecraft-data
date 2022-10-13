@@ -1,3 +1,6 @@
+## 3.16.0
+* Moving features to mcData (@Epirito)
+
 ## 3.15.3
 * Fix pc1.19 villager trade packet (#641) 
 
