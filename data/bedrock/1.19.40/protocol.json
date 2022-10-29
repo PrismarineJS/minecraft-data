@@ -860,59 +860,53 @@
       }
     ],
     "EntityProperties": [
-      "array",
-      {
-        "countType": "varint",
-        "type": [
-          "container",
-          [
+      "container",
+      [
+        {
+          "name": "ints",
+          "type": [
+            "array",
             {
-              "name": "ints",
+              "countType": "varint",
               "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "index",
-                        "type": "varint"
-                      },
-                      {
-                        "name": "value",
-                        "type": "zigzag32"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "floats",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "index",
-                        "type": "varint"
-                      },
-                      {
-                        "name": "value",
-                        "type": "lf32"
-                      }
-                    ]
-                  ]
-                }
+                "container",
+                [
+                  {
+                    "name": "index",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "value",
+                    "type": "zigzag32"
+                  }
+                ]
               ]
             }
           ]
-        ]
-      }
+        },
+        {
+          "name": "floats",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "index",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "value",
+                    "type": "lf32"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
     ],
     "Rotation": [
       "container",
@@ -4979,6 +4973,10 @@
           "type": "MetadataDictionary"
         },
         {
+          "name": "properties",
+          "type": "EntityProperties"
+        },
+        {
           "name": "unique_id",
           "type": "li64"
         },
@@ -4989,10 +4987,6 @@
         {
           "name": "command_permission",
           "type": "CommandPermissionLevel"
-        },
-        {
-          "name": "properties",
-          "type": "EntityProperties"
         },
         {
           "name": "abilities",
