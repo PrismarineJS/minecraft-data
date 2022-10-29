@@ -1,3 +1,6 @@
+## 3.17.0
+* bedrock : add 1.19.40 protocol data
+
 ## 3.16.0
 * Moving features to mcData (@Epirito)
 
