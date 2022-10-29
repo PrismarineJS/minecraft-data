@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.40
+!version: 1.19.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -464,9 +464,6 @@ packet_add_player:
    # particular the way the player looks. Flags include ones such as 'on fire' and 'sprinting'.
    # The metadata values are indexed by their property key.
    metadata: MetadataDictionary
-   # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
-   # vanilla server does not use these properties, however they are still supported by the protocol.
-   properties: EntityProperties
    # The unique ID of the player. The unique ID is a value that remains consistent
    # across different sessions of the same world, but most unoffical servers simply 
    # fill the runtime ID of the player out for this field.
@@ -523,9 +520,6 @@ packet_add_entity:
    # particular the way the entity looks. Flags include ones such as 'on fire' and 'sprinting'.
    # The metadata values are indexed by their property key.
    metadata: MetadataDictionary
-   # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
-   # vanilla server does not use these properties, however they are still supported by the protocol.
-   properties: EntityProperties
    # EntityLinks is a list of entity links that are currently active on the entity. These links alter the
    # way the entity shows up when first spawned in terms of it shown as riding an entity. Setting these
    # links is important for new viewers to see the entity is riding another entity.
@@ -1068,9 +1062,6 @@ packet_set_entity_data:
    !bound: both
    runtime_entity_id: varint64
    metadata: MetadataDictionary
-   # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
-   # vanilla server does not use these properties, however they are still supported by the protocol.
-   properties: EntityProperties
    tick: varint64
 
 # SetActorMotion is sent by the server to change the client-side velocity of an entity. It is usually used
