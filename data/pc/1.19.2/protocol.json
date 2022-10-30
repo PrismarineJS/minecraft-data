@@ -1313,6 +1313,13 @@
                   ]
                 ]
               ]
+            },
+            {
+              "name": "playerUUID",
+              "type": [
+                "option",
+                "UUID"
+              ]
             }
           ]
         ],
@@ -2132,7 +2139,7 @@
               ]
             },
             {
-              "name": "notTrustEdges",
+              "name": "suppressLightUpdates",
               "type": "bool"
             },
             {
@@ -2328,15 +2335,15 @@
           [
             {
               "name": "x",
-              "type": "f32"
+              "type": "f64"
             },
             {
               "name": "y",
-              "type": "f32"
+              "type": "f64"
             },
             {
               "name": "z",
-              "type": "f32"
+              "type": "f64"
             },
             {
               "name": "radius",
@@ -2934,7 +2941,7 @@
               "type": [
                 "array",
                 {
-                  "countType": "u8",
+                  "countType": "varint",
                   "type": [
                     "container",
                     [
@@ -3157,30 +3164,36 @@
           "container",
           [
             {
-              "name": "signedChatContent",
-              "type": "string"
-            },
-            {
-              "name": "unsignedChatContent",
+              "name": "messageSignature",
               "type": [
                 "option",
-                "string"
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "u8"
+                }
               ]
-            },
-            {
-              "name": "type",
-              "type": "varint"
             },
             {
               "name": "senderUuid",
               "type": "UUID"
             },
             {
-              "name": "senderName",
+              "name": "headerSignature",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "u8"
+                }
+              ]
+            },
+            {
+              "name": "plainMessage",
               "type": "string"
             },
             {
-              "name": "senderTeam",
+              "name": "formattedMessage",
               "type": [
                 "option",
                 "string"
@@ -3195,12 +3208,76 @@
               "type": "i64"
             },
             {
-              "name": "signature",
+              "name": "previousMessages",
               "type": [
-                "buffer",
+                "array",
                 {
-                  "countType": "varint"
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "previousMessageSender",
+                        "type": "UUID"
+                      },
+                      {
+                        "name": "previousMessageSignature",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": "u8"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
                 }
+              ]
+            },
+            {
+              "name": "unsignedContent",
+              "type": [
+                "option",
+                "string"
+              ]
+            },
+            {
+              "name": "filterType",
+              "type": "varint"
+            },
+            {
+              "name": "filterTypeMask",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "filterType",
+                  "fields": {
+                    "99999": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "i64"
+                      }
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "type",
+              "type": "varint"
+            },
+            {
+              "name": "networkName",
+              "type": "string"
+            },
+            {
+              "name": "networkTargetName",
+              "type": [
+                "option",
+                "string"
               ]
             }
           ]
@@ -3583,7 +3660,7 @@
             },
             {
               "name": "gamemode",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "previousGamemode",
@@ -4175,8 +4252,8 @@
               "type": "string"
             },
             {
-              "name": "type",
-              "type": "varint"
+              "name": "isActionBar",
+              "type": "bool"
             }
           ]
         ],
@@ -4363,6 +4440,10 @@
             },
             {
               "name": "previewsChat",
+              "type": "bool"
+            },
+            {
+              "name": "enforcesSecureChat",
               "type": "bool"
             }
           ]
@@ -4749,90 +4830,93 @@
                     "0x12": "craft_progress_bar",
                     "0x13": "set_slot",
                     "0x14": "set_cooldown",
-                    "0x15": "custom_payload",
-                    "0x16": "named_sound_effect",
-                    "0x17": "kick_disconnect",
-                    "0x18": "entity_status",
-                    "0x19": "explosion",
-                    "0x1a": "unload_chunk",
-                    "0x1b": "game_state_change",
-                    "0x1c": "open_horse_window",
-                    "0x1d": "initialize_world_border",
-                    "0x1e": "keep_alive",
-                    "0x1f": "map_chunk",
-                    "0x20": "world_event",
-                    "0x21": "world_particles",
-                    "0x22": "update_light",
-                    "0x23": "login",
-                    "0x24": "map",
-                    "0x25": "trade_list",
-                    "0x26": "rel_entity_move",
-                    "0x27": "entity_move_look",
-                    "0x28": "entity_look",
-                    "0x29": "vehicle_move",
-                    "0x2a": "open_book",
-                    "0x2b": "open_window",
-                    "0x2c": "open_sign_entity",
-                    "0x2d": "ping",
-                    "0x2e": "craft_recipe_response",
-                    "0x2f": "abilities",
-                    "0x30": "player_chat",
-                    "0x31": "end_combat_event",
-                    "0x32": "enter_combat_event",
-                    "0x33": "death_combat_event",
-                    "0x34": "player_info",
-                    "0x35": "face_player",
-                    "0x36": "position",
-                    "0x37": "unlock_recipes",
-                    "0x38": "entity_destroy",
-                    "0x39": "remove_entity_effect",
-                    "0x3a": "resource_pack_send",
-                    "0x3b": "respawn",
-                    "0x3c": "entity_head_rotation",
-                    "0x3d": "multi_block_change",
-                    "0x3e": "select_advancement_tab",
-                    "0x3f": "server_data",
-                    "0x40": "action_bar",
-                    "0x41": "world_border_center",
-                    "0x42": "world_border_lerp_size",
-                    "0x43": "world_border_size",
-                    "0x44": "world_border_warning_delay",
-                    "0x45": "world_border_warning_reach",
-                    "0x46": "camera",
-                    "0x47": "held_item_slot",
-                    "0x48": "update_view_position",
-                    "0x49": "update_view_distance",
-                    "0x4a": "spawn_position",
-                    "0x4b": "should_display_chat_preview",
-                    "0x4c": "scoreboard_display_objective",
-                    "0x4d": "entity_metadata",
-                    "0x4e": "attach_entity",
-                    "0x4f": "entity_velocity",
-                    "0x50": "entity_equipment",
-                    "0x51": "experience",
-                    "0x52": "update_health",
-                    "0x53": "scoreboard_objective",
-                    "0x54": "set_passengers",
-                    "0x55": "teams",
-                    "0x56": "scoreboard_score",
-                    "0x57": "simulation_distance",
-                    "0x58": "set_title_subtitle",
-                    "0x59": "update_time",
-                    "0x5a": "set_title_text",
-                    "0x5b": "set_title_time",
-                    "0x5c": "entity_sound_effect",
-                    "0x5d": "sound_effect",
-                    "0x5e": "stop_sound",
-                    "0x5f": "system_chat",
-                    "0x60": "playerlist_header",
-                    "0x61": "nbt_query_response",
-                    "0x62": "collect",
-                    "0x63": "entity_teleport",
-                    "0x64": "advancements",
-                    "0x65": "entity_update_attributes",
-                    "0x66": "entity_effect",
-                    "0x67": "declare_recipes",
-                    "0x68": "tags"
+                    "0x15": "chat_suggestions",
+                    "0x16": "custom_payload",
+                    "0x17": "named_sound_effect",
+                    "0x18": "hide_message",
+                    "0x19": "kick_disconnect",
+                    "0x1a": "entity_status",
+                    "0x1b": "explosion",
+                    "0x1c": "unload_chunk",
+                    "0x1d": "game_state_change",
+                    "0x1e": "open_horse_window",
+                    "0x1f": "initialize_world_border",
+                    "0x20": "keep_alive",
+                    "0x21": "map_chunk",
+                    "0x22": "world_event",
+                    "0x23": "world_particles",
+                    "0x24": "update_light",
+                    "0x25": "login",
+                    "0x26": "map",
+                    "0x27": "trade_list",
+                    "0x28": "rel_entity_move",
+                    "0x29": "entity_move_look",
+                    "0x2a": "entity_look",
+                    "0x2b": "vehicle_move",
+                    "0x2c": "open_book",
+                    "0x2d": "open_window",
+                    "0x2e": "open_sign_entity",
+                    "0x2f": "ping",
+                    "0x30": "craft_recipe_response",
+                    "0x31": "abilities",
+                    "0x32": "message_header",
+                    "0x33": "player_chat",
+                    "0x34": "end_combat_event",
+                    "0x35": "enter_combat_event",
+                    "0x36": "death_combat_event",
+                    "0x37": "player_info",
+                    "0x38": "face_player",
+                    "0x39": "position",
+                    "0x3a": "unlock_recipes",
+                    "0x3b": "entity_destroy",
+                    "0x3c": "remove_entity_effect",
+                    "0x3d": "resource_pack_send",
+                    "0x3e": "respawn",
+                    "0x3f": "entity_head_rotation",
+                    "0x40": "multi_block_change",
+                    "0x41": "select_advancement_tab",
+                    "0x42": "server_data",
+                    "0x43": "action_bar",
+                    "0x44": "world_border_center",
+                    "0x45": "world_border_lerp_size",
+                    "0x46": "world_border_size",
+                    "0x47": "world_border_warning_delay",
+                    "0x48": "world_border_warning_reach",
+                    "0x49": "camera",
+                    "0x4a": "held_item_slot",
+                    "0x4b": "update_view_position",
+                    "0x4c": "update_view_distance",
+                    "0x4d": "spawn_position",
+                    "0x4e": "should_display_chat_preview",
+                    "0x4f": "scoreboard_display_objective",
+                    "0x50": "entity_metadata",
+                    "0x51": "attach_entity",
+                    "0x52": "entity_velocity",
+                    "0x53": "entity_equipment",
+                    "0x54": "experience",
+                    "0x55": "update_health",
+                    "0x56": "scoreboard_objective",
+                    "0x57": "set_passengers",
+                    "0x58": "teams",
+                    "0x59": "scoreboard_score",
+                    "0x5a": "simulation_distance",
+                    "0x5b": "set_title_subtitle",
+                    "0x5c": "update_time",
+                    "0x5d": "set_title_text",
+                    "0x5e": "set_title_time",
+                    "0x5f": "entity_sound_effect",
+                    "0x60": "sound_effect",
+                    "0x61": "stop_sound",
+                    "0x62": "system_chat",
+                    "0x63": "playerlist_header",
+                    "0x64": "nbt_query_response",
+                    "0x65": "collect",
+                    "0x66": "entity_teleport",
+                    "0x67": "advancements",
+                    "0x68": "entity_update_attributes",
+                    "0x69": "entity_effect",
+                    "0x6a": "declare_recipes",
+                    "0x6b": "tags"
                   }
                 }
               ]
@@ -5026,6 +5110,59 @@
             {
               "name": "signedPreview",
               "type": "bool"
+            },
+            {
+              "name": "previousMessages",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "previousMessageSender",
+                        "type": "UUID"
+                      },
+                      {
+                        "name": "previousMessageSignature",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": "u8"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "lastMessage",
+              "type": [
+                "option",
+                [
+                  "container",
+                  [
+                    {
+                      "name": "lastMessageUser",
+                      "type": "UUID"
+                    },
+                    {
+                      "name": "lastMessageSignature",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "u8"
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              ]
             }
           ]
         ],
@@ -5049,13 +5186,67 @@
               "type": [
                 "buffer",
                 {
-                  "countType": "varint"
+                  "countType": "varint",
+                  "type": "u8"
                 }
               ]
             },
             {
               "name": "signedPreview",
               "type": "bool"
+            },
+            {
+              "name": "previousMessages",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "previousMessageSender",
+                        "type": "UUID"
+                      },
+                      {
+                        "name": "previousMessageSignature",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": "u8"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "lastMessage",
+              "type": [
+                "option",
+                [
+                  "container",
+                  [
+                    {
+                      "name": "lastMessageUser",
+                      "type": "UUID"
+                    },
+                    {
+                      "name": "lastMessageSignature",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "u8"
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              ]
             }
           ]
         ],
@@ -5941,53 +6132,54 @@
                     "0x00": "teleport_confirm",
                     "0x01": "query_block_nbt",
                     "0x02": "set_difficulty",
-                    "0x03": "chat_command",
-                    "0x04": "chat_message",
-                    "0x05": "chat_preview",
-                    "0x06": "client_command",
-                    "0x07": "settings",
-                    "0x08": "tab_complete",
-                    "0x09": "enchant_item",
-                    "0x0a": "window_click",
-                    "0x0b": "close_window",
-                    "0x0c": "custom_payload",
-                    "0x0d": "edit_book",
-                    "0x0e": "query_entity_nbt",
-                    "0x0f": "use_entity",
-                    "0x10": "generate_structure",
-                    "0x11": "keep_alive",
-                    "0x12": "lock_difficulty",
-                    "0x13": "position",
-                    "0x14": "position_look",
-                    "0x15": "look",
-                    "0x16": "flying",
-                    "0x17": "vehicle_move",
-                    "0x18": "steer_boat",
-                    "0x19": "pick_item",
-                    "0x1a": "craft_recipe_request",
-                    "0x1b": "abilities",
-                    "0x1c": "block_dig",
-                    "0x1d": "entity_action",
-                    "0x1e": "steer_vehicle",
-                    "0x1f": "pong",
-                    "0x20": "recipe_book",
-                    "0x21": "displayed_recipe",
-                    "0x22": "name_item",
-                    "0x23": "resource_pack_receive",
-                    "0x24": "advancement_tab",
-                    "0x25": "select_trade",
-                    "0x26": "set_beacon_effect",
-                    "0x27": "held_item_slot",
-                    "0x28": "update_command_block",
-                    "0x29": "update_command_block_minecart",
-                    "0x2a": "set_creative_slot",
-                    "0x2b": "update_jigsaw_block",
-                    "0x2c": "update_structure_block",
-                    "0x2d": "update_sign",
-                    "0x2e": "arm_animation",
-                    "0x2f": "spectate",
-                    "0x30": "block_place",
-                    "0x31": "use_item"
+                    "0x03": "message_acknowledgement",
+                    "0x04": "chat_command",
+                    "0x05": "chat_message",
+                    "0x06": "chat_preview",
+                    "0x07": "client_command",
+                    "0x08": "settings",
+                    "0x09": "tab_complete",
+                    "0x0a": "enchant_item",
+                    "0x0b": "window_click",
+                    "0x0c": "close_window",
+                    "0x0d": "custom_payload",
+                    "0x0e": "edit_book",
+                    "0x0f": "query_entity_nbt",
+                    "0x10": "use_entity",
+                    "0x11": "generate_structure",
+                    "0x12": "keep_alive",
+                    "0x13": "lock_difficulty",
+                    "0x14": "position",
+                    "0x15": "position_look",
+                    "0x16": "look",
+                    "0x17": "flying",
+                    "0x18": "vehicle_move",
+                    "0x19": "steer_boat",
+                    "0x1a": "pick_item",
+                    "0x1b": "craft_recipe_request",
+                    "0x1c": "abilities",
+                    "0x1d": "block_dig",
+                    "0x1e": "entity_action",
+                    "0x1f": "steer_vehicle",
+                    "0x20": "pong",
+                    "0x21": "recipe_book",
+                    "0x22": "displayed_recipe",
+                    "0x23": "name_item",
+                    "0x24": "resource_pack_receive",
+                    "0x25": "advancement_tab",
+                    "0x26": "select_trade",
+                    "0x27": "set_beacon_effect",
+                    "0x28": "held_item_slot",
+                    "0x29": "update_command_block",
+                    "0x2a": "update_command_block_minecart",
+                    "0x2b": "set_creative_slot",
+                    "0x2c": "update_jigsaw_block",
+                    "0x2d": "update_structure_block",
+                    "0x2e": "update_sign",
+                    "0x2f": "arm_animation",
+                    "0x30": "spectate",
+                    "0x31": "block_place",
+                    "0x32": "use_item"
                   }
                 }
               ]
