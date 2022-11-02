@@ -2452,10 +2452,10 @@ packet_spawn_particle_effect:
    # ParticleName is the name of the particle that should be shown. This name may point to a particle effect
    # that is built-in, or to one implemented by behaviour packs.
    particle_name: string
-   # MoLangVariables is an encoded JSON map of MoLang variables that may be applicable to the particle spawn. This can
-   # just be left empty in most cases.
-   # TODO: Investigate, probably not a ByteArray...
-   molang_variables: ByteArray
+   # MoLangVariables is an encoded JSON map of MoLang variables that may be applicable to the particle spawn.
+   has_molang_variables: bool
+   molang_variables: has_molang_variables ?
+      if true: string
 
 # AvailableActorIdentifiers is sent by the server at the start of the game to let the client know all
 # entities that are available on the server.
