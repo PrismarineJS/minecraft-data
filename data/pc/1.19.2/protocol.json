@@ -2290,6 +2290,25 @@
             }
           ]
         ],
+        "packet_chat_suggestions": [
+          "container",
+          [
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "entries",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_custom_payload": [
           "container",
           [
@@ -2337,6 +2356,21 @@
             {
               "name": "seed",
               "type": "i64"
+            }
+          ]
+        ],
+        "packet_hide_message": [
+          "container",
+          [
+            {
+              "name": "signature",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "u8"
+                }
+              ]
             }
           ]
         ],
@@ -4957,8 +4991,10 @@
                     "craft_progress_bar": "packet_craft_progress_bar",
                     "set_slot": "packet_set_slot",
                     "set_cooldown": "packet_set_cooldown",
+                    "chat_suggestions": "packet_chat_suggestions",
                     "custom_payload": "packet_custom_payload",
                     "named_sound_effect": "packet_named_sound_effect",
+                    "hide_message": "packet_hide_message",
                     "kick_disconnect": "packet_kick_disconnect",
                     "entity_status": "packet_entity_status",
                     "explosion": "packet_explosion",
@@ -4984,6 +5020,7 @@
                     "ping": "packet_ping",
                     "craft_recipe_response": "packet_craft_recipe_response",
                     "abilities": "packet_abilities",
+                    "message_header": "packet_message_header",
                     "player_chat": "packet_player_chat",
                     "end_combat_event": "packet_end_combat_event",
                     "enter_combat_event": "packet_enter_combat_event",
@@ -5131,11 +5168,11 @@
                   "container",
                   [
                     {
-                      "name": "lastMessageUser",
+                      "name": "sender",
                       "type": "UUID"
                     },
                     {
-                      "name": "lastMessageSignature",
+                      "name": "signature",
                       "type": [
                         "array",
                         {
@@ -5229,6 +5266,40 @@
             {
               "name": "newDifficulty",
               "type": "u8"
+            }
+          ]
+        ],
+        "packet_message_acknowledgement": [
+          "container",
+          [
+            {
+              "name": "previousMessages",
+              "type": "previousMessages"
+            },
+            {
+              "name": "lastMessage",
+              "type": [
+                "option",
+                [
+                  "container",
+                  [
+                    {
+                      "name": "sender",
+                      "type": "UUID"
+                    },
+                    {
+                      "name": "signature",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "u8"
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              ]
             }
           ]
         ],
@@ -5814,6 +5885,46 @@
             }
           ]
         ],
+        "packet_message_header": [
+          "container",
+          [
+            {
+              "name": "messageSignature",
+              "type": [
+                "option",
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "u8"
+                }
+              ]
+            },
+            {
+              "name": "senderUuid",
+              "type": "UUID"
+            },
+            {
+              "name": "headerSignature",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "u8"
+                }
+              ]
+            },
+            {
+              "name": "bodyDigest",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "u8"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_block_dig": [
           "container",
           [
@@ -6154,6 +6265,7 @@
                     "teleport_confirm": "packet_teleport_confirm",
                     "query_block_nbt": "packet_query_block_nbt",
                     "set_difficulty": "packet_set_difficulty",
+                    "message_acknowledgement": "packet_message_acknowledgement",
                     "chat_command": "packet_chat_command",
                     "chat_message": "packet_chat_message",
                     "chat_preview": "packet_chat_preview",
