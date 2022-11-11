@@ -1,3 +1,6 @@
+## 3.18.0
+* support 1.19.2 (@jtsiskin)
+
 ## 3.17.0
 * bedrock : add 1.19.40 protocol data
 
