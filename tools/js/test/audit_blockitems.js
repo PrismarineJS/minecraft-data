@@ -26,8 +26,8 @@ require('./version_iterator')(function (p, versionString) {
           }
         }
         if (!blockitem) {
-          console.log('Missing item for block ' + block.name)
-          rewriteItems = true
+          // console.log('Missing item for block ' + block.name)
+          rewriteItems = false
           items.push({
             id: block.id,
             displayName: block.displayName,
