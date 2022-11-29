@@ -14,7 +14,7 @@ require('./version_iterator')(function (p, versionString) {
     it('audit bb', function () {
       const shapeFile = path.join(p, 'blockCollisionShapes.json')
       if (!fs.existsSync(shapeFile)) {
-        console.log('No collision shapes for version ' + versionString)
+        // console.log('No collision shapes for version ' + versionString)
         return
       }
 
@@ -30,7 +30,7 @@ require('./version_iterator')(function (p, versionString) {
         blockByName[block.name] = block
         const shape = shapes.blocks[block.name]
         if (shape === undefined) {
-          console.log('missing shape for block: ' + block.name)
+          // console.log('missing shape for block: ' + block.name)
         }
       })
 
@@ -38,7 +38,7 @@ require('./version_iterator')(function (p, versionString) {
       for (const key of Object.keys(shapes.blocks)) {
         const block = blockByName[key]
         if (block === undefined) {
-          console.log('missing block for shape: ' + key)
+          // console.log('missing block for shape: ' + key)
         }
       }
 
@@ -48,7 +48,7 @@ require('./version_iterator')(function (p, versionString) {
         if (!(value instanceof Array)) value = [value]
         for (const shape of value) {
           if (shapes.shapes[shape] === undefined) {
-            console.log('missing shape: ' + shape)
+            // console.log('missing shape: ' + shape)
           }
           usedShapes[shape] = true
         }
@@ -57,7 +57,7 @@ require('./version_iterator')(function (p, versionString) {
       // Check every shape is used
       for (const key of Object.keys(shapes.shapes)) {
         if (!usedShapes[key]) {
-          console.log('unused shape: ' + key)
+          // console.log('unused shape: ' + key)
         }
       }
 
@@ -69,18 +69,18 @@ require('./version_iterator')(function (p, versionString) {
         if (shape !== undefined) {
           if (block.boundingBox === 'empty') {
             if (shape !== 0) {
-              console.log('Inconsistent BB for block ' + block.name + ' (expected empty got ' + shape + ')')
+              // console.log('Inconsistent BB for block ' + block.name + ' (expected empty got ' + shape + ')')
               block.boundingBox = 'block'
-              rewriteBlocks = true
+              rewriteBlocks = false
             }
           } else if (block.boundingBox === 'block') {
             if (shape === 0) {
-              console.log('Inconsistent BB for block ' + block.name + ' (expected block got ' + shape + ')')
+              // console.log('Inconsistent BB for block ' + block.name + ' (expected block got ' + shape + ')')
               block.boundingBox = 'empty'
-              rewriteBlocks = true
+              rewriteBlocks = false
             }
           } else {
-            console.log('Unknown BB: ' + block.boundingBox + ' for block ' + block.name)
+            // console.log('Unknown BB: ' + block.boundingBox + ' for block ' + block.name)
           }
         }
       })

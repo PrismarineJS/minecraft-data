@@ -13,7 +13,7 @@ require('./version_iterator')(function (p, versionString) {
       if (fs.existsSync(pFile)) {
         blocks = require(pFile)
       } else {
-        console.log('No blocks for version ' + versionString)
+        // console.log('No blocks for version ' + versionString)
       }
       if (blocks) {
         const all = []
@@ -27,12 +27,12 @@ require('./version_iterator')(function (p, versionString) {
           const block = all[i]
           if (block) {
             if (block.displayName == null) {
-              console.log('Missing displayName:', i)
+              // console.log('Missing displayName:', i)
             } else {
               const otherBlock = displayNames[block.displayName]
               if (otherBlock) {
-                console.log('Duplicate displayName:', otherBlock.id, 'and', block.id,
-                  'both share', block.displayName)
+                // console.log('Duplicate displayName:', otherBlock.id, 'and', block.id,
+                //  'both share', block.displayName)
               } else {
                 displayNames[block.displayName] = block
               }
@@ -42,14 +42,14 @@ require('./version_iterator')(function (p, versionString) {
             } else {
               const otherBlock = names[block.name]
               if (otherBlock) {
-                console.log('Duplicate name:', otherBlock.id, 'and', block.id,
-                  'both share', block.name)
+                // console.log('Duplicate name:', otherBlock.id, 'and', block.id,
+                //  'both share', block.name)
               } else {
                 names[block.name] = block
               }
             }
           } else {
-            console.log('Missing:', i)
+            // console.log('Missing:', i)
           }
         }
       }
