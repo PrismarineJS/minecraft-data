@@ -1,3 +1,7 @@
+## 3.19.0
+* fix 1.19.2 protocol
+* add all 1.19.2 data (@u9g)
+
 ## 3.18.0
 * support 1.19.2 (@jtsiskin)
 
