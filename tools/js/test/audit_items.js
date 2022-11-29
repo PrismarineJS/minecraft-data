@@ -13,7 +13,7 @@ require('./version_iterator')(function (p, versionString) {
       if (fs.existsSync(pFile)) {
         items = require(pFile)
       } else {
-        console.log('No items for version ' + versionString)
+        // console.log('No items for version ' + versionString)
       }
       if (items) {
         const displayNames = {}
@@ -25,8 +25,8 @@ require('./version_iterator')(function (p, versionString) {
           } else {
             const otherBlock = displayNames[item.displayName]
             if (otherBlock) {
-              console.log('Duplicate displayName:', otherBlock.id, 'and', item.id,
-                'both share', item.displayName)
+              // console.log('Duplicate displayName:', otherBlock.id, 'and', item.id,
+              //  'both share', item.displayName)
             } else {
               displayNames[item.displayName] = item
             }
@@ -36,15 +36,15 @@ require('./version_iterator')(function (p, versionString) {
           } else {
             const otherBlock = names[item.name]
             if (otherBlock) {
-              console.log('Duplicate name:', otherBlock.id, 'and', item.id,
-                'both share', item.name)
+              // console.log('Duplicate name:', otherBlock.id, 'and', item.id,
+              //  'both share', item.name)
             } else {
               names[item.name] = item
             }
           }
           const delta = item.id - lastItemId
           if (delta !== 1) {
-            console.log('jump from', lastItemId, 'to', item.id)
+            // console.log('jump from', lastItemId, 'to', item.id)
           }
           lastItemId = item.id
         })
