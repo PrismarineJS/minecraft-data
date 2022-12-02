@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.50
+!version: 1.19.40
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -2744,7 +2744,6 @@ packet_structure_template_data_export_request:
       1: export_from_save
       2: export_from_load
       3: query_saved_structure
-      4: import_from_save
 
 # StructureTemplateDataResponse is sent by the server to send data of a structure to the client in response
 # to a StructureTemplateDataRequest packet.
@@ -2760,7 +2759,6 @@ packet_structure_template_data_export_response:
    response_type: u8 =>
       1: export
       2: query
-      3: import
 
 # No longer used.
 packet_update_block_properties:
@@ -3803,24 +3801,3 @@ packet_game_test_results:
    error: string
    # Name represents the name of the test.
    name: string
-
-InputLockFlags: [ "bitflags", {
-   "type": "varint",
-   "flags": {
-      "move": 0x02,
-      "jump": 0x04,
-      "sneak": 0x08,
-      "mount": 0x10,
-      "dismount": 0x20,
-      "rotation": 0x40
-   }
-} ]
-
-packet_update_client_input_locks:
-   !id: 0xc4
-   !bound: client
-   # Locks is an encoded bitset of all locks that are currently active. The locks are defined in the constants above.
-   locks: InputLockFlags
-   # Position is the server's position of the client at the time the packet was sent. It is unclear what the exact
-   # purpose of this field is.
-   position: vec3f
