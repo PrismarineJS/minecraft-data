@@ -79,6 +79,7 @@ These are the projects that use minecraft-data:
 | [McEx](https://github.com/hansihe/McEx) | Elixir | server | blocks |
 | [VoxelGamesLib](https://github.com/MiniDigger/VoxelGamesLib) | Java | minigames server library | blocks, items |
 | [Phpcraft](https://github.com/Phpcraft/core) | PHP | all-around library | blocks, items, entities, protocol |
+| [MineSharp](https://github.com/psu-de/MineSharp) | C# | Bots | Protocol, Blocks, Items, Entities, Biomes, Recipes, Enchantments |
 
 ## Extraction
 
