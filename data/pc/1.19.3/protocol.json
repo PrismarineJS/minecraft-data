@@ -260,9 +260,18 @@
             {
               "name": "signature",
               "type": [
-                "buffer",
+                "switch",
                 {
-                  "count": 256
+                  "compareTo": "id",
+                  "fields": {
+                    "0": [
+                      "buffer",
+                      {
+                        "count": 256
+                      }
+                    ]
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -2336,13 +2345,25 @@
         "packet_hide_message": [
           "container",
           [
+          	{
+          		"name": "id",
+          		"type": "varint"
+          	},
             {
               "name": "signature",
               "type": [
-                "array",
+                "switch",
                 {
-                  "countType": "varint",
-                  "type": "u8"
+                  "compareTo": "id",
+                  "fields": {
+                    "0": [
+                      "buffer",
+                      {
+                        "count": 256
+                      }
+                    ]
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -3367,7 +3388,7 @@
               "type": "i8"
             },
             {
-              "name": "players",
+              "name": "data",
               "type": [
                 "array",
                 {
@@ -5331,17 +5352,17 @@
               ]
             },
             {
-              "name": "messageCount",
+              "name": "offset",
               "type": "varint"
             },
             {
-              "name": "acknowledged",
-              "type": [
-              	"buffer",
-              	{
-              		"count": 3
-              	}
-              ]
+            	"name": "acknowledged",
+            	"type": [
+            		"buffer",
+            		{
+            			"count": 3
+            		}
+            	]
             }
           ]
         ],
