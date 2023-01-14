@@ -6,6 +6,7 @@
 |-|-|-|-|
 | blockStates.json | Contains the global block palette for a Minecraft version. <br>Contains all of the possible block states. <br><br><br>The index of a Block State instance here is the paletted ID, <br>which can be used to idenfify this block state<br>instead of a string. | [bedrock-extractor][1] ("BlockStates.json" file) |  |
 | steve.json | Skin data for clients connecting to BE servers, for default Steve character | [bedrock-protocol][2] (capture from proxy) |  |
+| blockMappings.json | Output of bedrock-extractor |
 
 ### Updating protocol data
 
