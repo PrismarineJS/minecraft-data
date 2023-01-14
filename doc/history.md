@@ -1,3 +1,7 @@
+## 3.21.0
+
+* 1.19.1 fixes 
+
 ## 3.20.0
 * bedrock : add 1.19.50 protocol data (@WillQizza)
 
