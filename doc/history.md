@@ -1,3 +1,7 @@
+## 3.24.0
+
+* 1.19.3 protocol (@frej4189)
+
 ## 3.23.0
 
 * Add clientsideChatFormatting (@frej4189)
