@@ -1,6 +1,12 @@
+## 3.22.0
+
+* 1.19.3 support (@frej4189)
+* Add seed to entity-sound-effect (@u9g)
+* Add 1.19 block mappings with new schema (@extremeheat)
+
 ## 3.21.0
 
-* 1.19.1 fixes 
+* 1.19.1 fixes  (@extremeheat)
 
 ## 3.20.0
 * bedrock : add 1.19.50 protocol data (@WillQizza)
