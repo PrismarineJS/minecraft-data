@@ -1,3 +1,7 @@
+## 3.25.1
+
+* Add 1.19.3 to protocolVersions (@frej4189)
+
 ## 3.25.0
 
 * 1.19.3 fixed (@frej4189)
