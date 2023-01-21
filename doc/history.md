@@ -1,3 +1,6 @@
+## 3.25.2
+* Rename chat_command field in 1.19.2 (#671)
+
 ## 3.25.1
 
 * Add 1.19.3 to protocolVersions (@frej4189)
