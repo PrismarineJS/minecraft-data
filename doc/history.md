@@ -1,3 +1,7 @@
+## 3.26.0
+* 1.19.3 fixes
+* Update protocolVersions.json with 1.19.3 snapshots
+
 ## 3.25.2
 * Rename chat_command field in 1.19.2 (#671)
 
