@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.60
+!version: 1.19.50
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -339,8 +339,6 @@ packet_start_game:
    persona_disabled: bool
    # CustomSkinsDisabled is true if custom skins are disabled for the current game session.
    custom_skins_disabled: bool
-   # EmoteChatMuted specifies if players will be sent a chat message when using certain emotes.
-   emote_chat_muted: bool
    # The version of the game from which Vanilla features will be used.
    # The exact function of this field isn't clear.
    game_version: string
@@ -497,7 +495,7 @@ packet_add_entity:
    # EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
    # entities are generally identified in packets using this runtime ID.
    runtime_id: varint64
-   # EntityType is the string entity type of the entity, for example 'minett:skeleton'. A list of these
+   # EntityType is the string entity type of the entity, for example 'minecraft:skeleton'. A list of these
    # entities may be found online.
    entity_type: string
    # Position is the position to spawn the entity on. If the entity is on a distance that the player cannot
@@ -1779,9 +1777,7 @@ packet_command_request:
    origin: CommandOrigin
    # Internal specifies if the command request internal. Setting it to false seems to work and the usage of
    # this field is not known.
-   internal: bool
-   # Version is the version of the command that is being executed. This field currently has no purpose or functionality.
-   version: varint
+   interval: bool
 
 
 # CommandBlockUpdate is sent by the client to update a command block at a specific position. The command
@@ -3044,8 +3040,7 @@ InputFlag: [ "bitflags", {
       "stop_gliding",
       "item_interact",
       "block_action",
-      "item_stack_request",
-      "handled_teleport"
+      "item_stack_request"
    ]
 }]
 
@@ -3829,20 +3824,3 @@ packet_update_client_input_locks:
    # Position is the server's position of the client at the time the packet was sent. It is unclear what the exact
    # purpose of this field is.
    position: vec3f
-
-packet_client_cheat_ability:
-   !id: 0xc5
-   !bound: client
-   # EntityUniqueID is the unique ID of the player. The unique ID is a value that remains consistent across
-   # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
-   # this field.
-   entity_unique_id: li64
-   # PlayerPermissions is the permission level of the player. It is a value from 0-3, with 0 being visitor,
-   # 1 being member, 2 being operator and 3 being custom.
-   permission_level: PermissionLevel
-   # CommandPermissions is a permission level that specifies the kind of commands that the player is
-   # allowed to use. It is one of the CommandPermissionLevel constants in the AdventureSettings packet.
-   command_permission: CommandPermissionLevel
-   # Layers contains all ability layers and their potential values. This should at least have one entry, being the
-   # base layer.
-   abilities: AbilityLayers[]u8
