@@ -1,3 +1,6 @@
+## 3.27.0
+* Add bedrock 1.19.60 protocol data (@CreeperG16)
+
 ## 3.26.0
 * 1.19.3 fixes
 * Update protocolVersions.json with 1.19.3 snapshots
