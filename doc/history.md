@@ -1,3 +1,7 @@
+## 3.28.0
+* Add bedrock 1.19.62 protocol data (@CreeperG16)
+* Update packet_login_plugin_response in 1.19.3 (@frej4189)
+
 ## 3.27.0
 * Add bedrock 1.19.60 protocol data (@CreeperG16)
 
