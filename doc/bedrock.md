@@ -24,26 +24,26 @@ then run `npm test` to test validity
 ### Status of data
 
 <!--StartFragment-->
-file name | status | how to get it | notes
+file name | have? | how to get it | notes
 -- | -- | -- | --
-protocol.json | 🔵 | manual updated | wip
+protocol.json | ✔ | manual updated | wip
 blocks.json | ✔ | bedrock-extractor | &nbsp;
 items.json | ✔ | bedrock-extractor | &nbsp;
-entities.json | ❌ |   | &nbsp;
+entities.json | ✔ | bedrock-extractor  | &nbsp;
 recipes.json | ✔ |  bedrock-protocol dumper | new schema: adds furnace and other special recipes. <br/> Some recipes can have multiple outputs, also allow for recipe ingredients with damage values and specific counts.
 blockCollisionShapes.json | ✔ | (from pc data) | New schema: block IDs map to an array of block state indexes, to get the block stateID, minStateId + index of array. This way different copies of the block with different state IDs can have unique collisions. 
 commands.json | ❌ | bedrock-protocol + dumper | must be custom schema, current JE schema too low level
 biomes.json | ✔ | bedrock-extractor (via Amulet) | 
 instruments | ✔ | manual | &nbsp;
-materials.json | ❌ | (from pc data) | &nbsp;
+materials.json | 🔵 | (from pc data) | &nbsp;
 windows.json | ✔ | manual obtained via proxy | &nbsp;
 version.json | ✔ | from bedrock-protocol | 
 effects.json | ❌ | (from pc data) | &nbsp;
-enchantments.json | ❌ | (from pc data) | &nbsp;
+enchantments.json | ✔ | bedrock-extractor (via Geyser -> pc data) | &nbsp;
 language.json | ❌ | (extract from game) | &nbsp;
 particles.json | 🔵 | bedrock-protocol docs | IDs not needed, handled in protocol
-blockLoot.json | ❌ | (from pc data) | &nbsp;
-entityLoot.json | ❌ | (from pc data) | &nbsp;
+blockLoot.json | 🔵 | manual data for 1.18 | &nbsp;
+entityLoot.json | 🔵 | manual data for 1.18 | &nbsp;
 mapIcons.json | 🔵 | ? | ?
 
 <!--EndFragment-->
