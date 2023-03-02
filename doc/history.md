@@ -1,3 +1,6 @@
+## 3.30.0
+* Add enchanting data for bedrock versions
+
 ## 3.29.0
 * Add bedrock 1.19.63 protocol (@stevarino)
 
