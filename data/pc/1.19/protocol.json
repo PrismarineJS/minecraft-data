@@ -166,7 +166,7 @@
               }
             ]
           ],
-          "24": [
+          "25": [
             "container",
             [
               {
@@ -175,7 +175,7 @@
               }
             ]
           ],
-          "35": [
+          "39": [
             "container",
             [
               {
@@ -184,16 +184,42 @@
               }
             ]
           ],
-          "36": [
+          "40": [
             "container",
             [
+              {
+                "name": "positionType",
+                "type": "string"
+              },
               {
                 "name": "origin",
                 "type": "position"
               },
               {
-                "name": "positionType",
-                "type": "string"
+                "name": "entityId",
+                "type": [
+                  "switch",
+                  {
+                    "compareTo": "positionType",
+                    "fields": {
+                      "minecraft:entity": "varint"
+                    },
+                    "default": "void"
+                  }
+                ]
+              },
+              {
+                "name": "entityEyeHeight",
+                "type": [
+                  "switch",
+                  {
+                    "compareTo": "positionType",
+                    "fields": {
+                      "minecraft:entity": "varint"
+                    },
+                    "default": "void"
+                  }
+                ]
               },
               {
                 "name": "destination",
@@ -210,6 +236,15 @@
               },
               {
                 "name": "ticks",
+                "type": "varint"
+              }
+            ]
+          ],
+          "92": [
+            "container",
+            [
+              {
+                "name": "delayInTicksBeforeShown",
                 "type": "varint"
               }
             ]
