@@ -437,7 +437,11 @@ MetadataFlags2: [ "bitflags", {
       "digging",
       "sonic_boom",
       "has_dash_cooldown",
-      "push_towards_closest_space"
+      "push_towards_closest_space",
+      "scenting",
+      "rising",
+      "feeling_happy",
+      "searching",
    ]
 }]
 
@@ -638,6 +642,9 @@ RecipeIngredient:
       # DeferredItemDescriptor represents an item descriptor that uses a namespace and metadata value to identify the item.
       # There is no clear benefit of using this item descriptor.
       4: string_id_meta
+      # ComplexAliasItemDescriptor represents an item descriptor that uses a single name to identify the item. There is no
+      # clear benefit of using this item descriptor and only seem to be used for specific recipes.
+      5: complex_alias
    _: type ?
       if int_id_meta:
          # NetworkID is the numerical network ID of the item. This is sometimes a positive ID, and sometimes a
@@ -660,6 +667,9 @@ RecipeIngredient:
          # MetadataValue is the metadata value of the item. For some items, this is the damage value, whereas for
          # other items it is simply an identifier of a variant of the item.
          metadata: li16
+      if complex_alias:
+         # Name is the name of the item, which is a name like 'minecraft:stick'.
+         name: string
    count: zigzag32
 
 PotionTypeRecipes: []varint
@@ -1027,8 +1037,6 @@ ItemStackRequest:
      - slash_command_chat
      - cartography_text
      - slash_command_non_chat
-     - scoreboard_text
-     - ticking_area_text
 
 
 # ItemStackResponse is a response to an individual ItemStackRequest.
@@ -1895,6 +1903,10 @@ SoundType: varint =>
    - Pickup
    - InsertEnchanted
    - PickupEnchanted
+   - SoundEventBrush
+   - SoundEventBrushCompleted
+   - SoundEventShatterDecoratedPot
+   - SoundEventBreakDecoratedPot
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2039,7 +2051,8 @@ AbilitySet: ["bitflags",
          "walk_speed": 16384,
          "muted": 32768,
          "world_builder": 65536,
-         "no_clip": 131072
+         "no_clip": 131072,
+         "privileged_builder": 262144
       }
    }
 ]
