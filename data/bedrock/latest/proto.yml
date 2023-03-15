@@ -3007,6 +3007,8 @@ packet_player_auth_input:
                # BlockFace is the face of the target block that was touched. If the action with the ActionType set
                # concerned a block. If not, the face is always 0.
                face: zigzag32
+   # AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
+   # values which are created using an analogue input.
    analogue_move_vector: vec2f
 
 #TODO: update to use the new `shift` option in bitflags
@@ -3857,9 +3859,8 @@ packet_client_cheat_ability:
 packet_camera_presets:
    !id: 0xc6
    !bound: client
-   # Data is a compound tag of the presets being set. The structure of this tag is currently unknown.
-   # data: 
-
+   # Data is a compound tag of the presets being set.
+   data: nbt
 
 # unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
 # the recipe book.
@@ -3869,12 +3870,11 @@ packet_unlocked_recipes:
    # new_unlocks determines if new recipes have been unlocked since the packet was last sent.
    new_unlocks: bool
    # Recipes is a list of recipe names that have been unlocked.
-   recipes: string[]
+   recipes: string[]varint
 
 # camera_instruction gives a custom camera specific instructions to operate.
 packet_camera_instruction:
-   # !id: 0x
-   # !bound:
-   # Data is a compound tag of the instructions to sent. The structure of this tag is currently unknown.
-   # data:
-
+   !id: 0x12c
+   !bound:
+   # Data is a compound tag of the instructions to sent.
+   data: nbt
