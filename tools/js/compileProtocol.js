@@ -79,7 +79,7 @@ function all (fn) {
     console.log('⏳', fn.name, 'protocol for bedrock', versionId)
     const ver = versions[versionId]
     if (ver.proto) {
-      fn(ver.proto.includes('latest') ? 'latest' : versionId)
+      fn(versionId, join(__dirname, '../../data/' + ver.proto))
     }
   }
 }
