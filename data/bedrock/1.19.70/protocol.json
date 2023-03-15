@@ -1333,7 +1333,8 @@
                 "1": "int_id_meta",
                 "2": "molang",
                 "3": "item_tag",
-                "4": "string_id_meta"
+                "4": "string_id_meta",
+                "5": "complex_alias"
               }
             }
           ]
@@ -1399,6 +1400,15 @@
                     {
                       "name": "metadata",
                       "type": "li16"
+                    }
+                  ]
+                ],
+                "complex_alias": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
                     }
                   ]
                 ]
@@ -2561,9 +2571,7 @@
                 "8": "leave_event_text",
                 "9": "slash_command_chat",
                 "10": "cartography_text",
-                "11": "slash_command_non_chat",
-                "12": "scoreboard_text",
-                "13": "ticking_area_text"
+                "11": "slash_command_non_chat"
               }
             }
           ]
@@ -3704,7 +3712,11 @@
           "460": "Insert",
           "461": "Pickup",
           "462": "InsertEnchanted",
-          "463": "PickupEnchanted"
+          "463": "PickupEnchanted",
+          "464": "Brush",
+          "465": "BrushCompleted",
+          "466": "ShatterDecoratedPot",
+          "467": "BreakDecoratedPot"
         }
       }
     ],
@@ -4078,7 +4090,10 @@
                 "194": "game_test_request",
                 "195": "game_test_results",
                 "196": "update_client_input_locks",
-                "197": "client_cheat_ability"
+                "197": "client_cheat_ability",
+                "198": "camera_presets",
+                "199": "unlocked_recipes",
+                "300": "camera_instruction"
               }
             }
           ]
@@ -4281,7 +4296,10 @@
                 "game_test_request": "packet_game_test_request",
                 "game_test_results": "packet_game_test_results",
                 "update_client_input_locks": "packet_update_client_input_locks",
-                "client_cheat_ability": "packet_client_cheat_ability"
+                "client_cheat_ability": "packet_client_cheat_ability",
+                "camera_presets": "packet_camera_presets",
+                "unlocked_recipes": "packet_unlocked_recipes",
+                "camera_instruction": "packet_camera_instruction"
               },
               "default": "void"
             }
@@ -9267,6 +9285,10 @@
               "default": "void"
             }
           ]
+        },
+        {
+          "name": "analogue_move_vector",
+          "type": "vec2f"
         }
       ]
     ],
@@ -10683,6 +10705,43 @@
         }
       ]
     ],
+    "packet_camera_presets": [
+      "container",
+      [
+        {
+          "name": "data",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_unlocked_recipes": [
+      "container",
+      [
+        {
+          "name": "new_unlocks",
+          "type": "bool"
+        },
+        {
+          "name": "recipes",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_instruction": [
+      "container",
+      [
+        {
+          "name": "data",
+          "type": "nbt"
+        }
+      ]
+    ],
     "string": [
       "pstring",
       {
@@ -10843,7 +10902,11 @@
           "digging",
           "sonic_boom",
           "has_dash_cooldown",
-          "push_towards_closest_space"
+          "push_towards_closest_space",
+          "scenting",
+          "rising",
+          "feeling_happy",
+          "searching"
         ]
       }
     ],
@@ -10870,6 +10933,7 @@
           "muted",
           "world_builder",
           "no_clip",
+          "privileged_builder",
           "count"
         ]
       }
@@ -11022,7 +11086,8 @@
           "item_interact",
           "block_action",
           "item_stack_request",
-          "handled_teleport"
+          "handled_teleport",
+          "emoting"
         ]
       }
     ],
