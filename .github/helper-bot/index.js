@@ -107,9 +107,9 @@ async function updateManifestPC() {
     if (process.platform === 'linux') cp.execSync('ls -lh', { stdio: 'inherit' })
     else if (process.platform === 'win32') cp.execSync('dir', { stdio: 'inherit' })
     console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
-    // unzip with tar / unzip
-    if (process.platform === 'win32') cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
-    else cp.execSync(`unzip -o ./${latestRelease}.jar version.json`)
+    // unzip with tar / unzip, Actions image uses 7z
+    if (process.env.CI) cp.execSync(`7z -y e ./${latestRelease}.jar version.json`)
+    else cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
     const versionJson = require('./version.json')
 
     let majorVersion
