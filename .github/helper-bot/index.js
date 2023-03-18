@@ -5,7 +5,7 @@ const helper = require('./github-helper')
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
-function fetch(url) {
+function fetch (url) {
   return new Promise((resolve, reject) => {
     https.get(url, (res) => {
       let data = ''
@@ -25,7 +25,7 @@ function fetch(url) {
 const download = (url, dest) => cp.execSync(`curl -L ${url} -o ${dest}`)
 
 function buildFirstIssue (title, result, jarData) {
-  let protocolVersion = jarData?.protocol_version || 'Failed to obtain from JAR'
+  const protocolVersion = jarData?.protocol_version || 'Failed to obtain from JAR'
   const name = jarData?.name || result.id
   const date = result.releaseTime
 
@@ -60,7 +60,7 @@ const supportedVersions = {
   bedrock: require('../../data/bedrock/common/versions.json')
 }
 
-async function updateManifestPC() {
+async function updateManifestPC () {
   const manifest = await fetch(pcManifestURL).then(res => res.json())
   // fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2))
   const knownVersions = protocolVersions.pc.reduce((acc, cur) => (acc[cur.minecraftVersion] = cur, acc), {})
@@ -87,22 +87,20 @@ async function updateManifestPC() {
   // (data like protocol/blocks/items/etc is present), just to make sure the known protocol version is correct.
   try {
     const latestReleaseManifest = await fetch(latestReleaseData.url).then(res => res.json())
-    // fs.writeFileSync(`./${latestRelease}.json`, JSON.stringify(latestReleaseManifest, null, 2))
     // Download client jar
     if (!fs.existsSync(`./${latestRelease}.jar`)) {
       const clientJarUrl = latestReleaseManifest.downloads.client.url
       console.log('Downloading client jar', clientJarUrl)
       download(clientJarUrl, `./${latestRelease}.jar`)
     }
+
     // Log the byte size of the client jar
     const clientJarSize = fs.statSync(`./${latestRelease}.jar`).size
-    console.log(`Downloaded client jar ${latestRelease}.jar (${clientJarSize} bytes)`)
-    if (process.platform === 'linux') cp.execSync('ls -lh', { stdio: 'inherit' })
-    else if (process.platform === 'win32') cp.execSync('dir', { stdio: 'inherit' })
-    console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
+    console.log(`Downloaded client jar ${latestRelease}.jar (${clientJarSize} bytes), extracting its version.json...`)
+
     // unzip with tar / unzip, Actions image uses 7z
     if (process.platform === 'win32') cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
-    else cp.execSync(`sha1sum 1.19.4.jar && chmod +777 ./${latestRelease}.jar && 7z -y e ./${latestRelease}.jar version.json`, { stdio: 'inherit' })
+    else cp.execSync(`7z -y e ./${latestRelease}.jar version.json`, { stdio: 'inherit' })
     const versionJson = require('./version.json')
 
     let majorVersion
@@ -132,14 +130,15 @@ async function updateManifestPC() {
       cp.execSync('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"')
       cp.execSync('git add ../../data/pc/common/protocolVersions.json')
       cp.execSync(`git commit -m "Add ${versionJson.id} to pc protocolVersions.json"`)
+      cp.execSync('git push')
     }
 
     if (!issueStatus.open && !issueStatus.closed) {
       console.log('Opening issue', versionJson)
       const issuePayload = buildFirstIssue(title, latestReleaseData, versionJson)
-  
+
       helper.createIssue(issuePayload)
-  
+
       fs.writeFileSync('./issue.md', issuePayload.body)
       console.log('OK, wrote to ./issue.md', issuePayload)
     }
