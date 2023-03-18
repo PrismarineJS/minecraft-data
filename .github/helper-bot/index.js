@@ -104,6 +104,8 @@ async function updateManifestPC() {
     // Log the byte size of the client jar
     const clientJarSize = fs.statSync(`./${latestRelease}.jar`).size
     console.log(`Downloaded client jar ${latestRelease}.jar (${clientJarSize} bytes)`)
+    if (process.platform === 'linux') cp.execSync('ls -lh', { stdio: 'inherit' })
+    else if (process.platform === 'win32') cp.execSync('dir', { stdio: 'inherit' })
     console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
     // unzip with tar / unzip
     if (process.platform === 'win32') cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
