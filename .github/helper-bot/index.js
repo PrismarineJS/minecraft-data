@@ -102,8 +102,9 @@ async function updateManifestPC() {
       await fetch(clientJarUrl, `./${latestRelease}.jar`)
     }
     console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
-    // unzip with tar (works on windows too)
-    cp.execSync(`tar -xf ${latestRelease}.jar version.json`)
+    // unzip with tar / unzip
+    if (process.platform === 'win32') cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
+    else cp.execSync(`unzip -o ./${latestRelease}.jar version.json`)
     const versionJson = require('./version.json')
 
     let majorVersion
