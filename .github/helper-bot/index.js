@@ -101,6 +101,9 @@ async function updateManifestPC() {
       console.log('Downloading client jar', clientJarUrl)
       await fetch(clientJarUrl, `./${latestRelease}.jar`)
     }
+    // Log the byte size of the client jar
+    const clientJarSize = fs.statSync(`./${latestRelease}.jar`).size
+    console.log(`Downloaded client jar ${latestRelease}.jar (${clientJarSize} bytes)`)
     console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
     // unzip with tar / unzip
     if (process.platform === 'win32') cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
