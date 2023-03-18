@@ -5,7 +5,8 @@ const helper = require('./github-helper')
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
-function fetch (url) {
+// this is a polyfill for node <18
+const fetch = globalThis.fetch || function (url) {
   return new Promise((resolve, reject) => {
     https.get(url, (res) => {
       let data = ''
