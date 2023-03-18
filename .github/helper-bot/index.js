@@ -108,7 +108,7 @@ async function updateManifestPC() {
     else if (process.platform === 'win32') cp.execSync('dir', { stdio: 'inherit' })
     console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
     // unzip with tar / unzip, Actions image uses 7z
-    if (process.env.CI) cp.execSync(`chmod +777 ./${latestRelease}.jar && 7z -y e ./${latestRelease}.jar version.json`)
+    if (process.env.CI) cp.execSync(`sha1sum 1.19.4.jar && chmod +777 ./${latestRelease}.jar && 7z -y e ./${latestRelease}.jar version.json`, { stdio: 'inherit' })
     else cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
     const versionJson = require('./version.json')
 
