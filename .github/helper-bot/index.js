@@ -5,23 +5,15 @@ const helper = require('./github-helper')
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
-function fetch(url, filePathIfOnDisk) {
+function fetch(url) {
   return new Promise((resolve, reject) => {
     https.get(url, (res) => {
-      let data = filePathIfOnDisk ? fs.createWriteStream(filePathIfOnDisk) : ''
-      const expectedContentLength = res.headers['content-length']
-      let readSoFar = 0
+      let data = ''
       res.on('data', (chunk) => {
-        if (filePathIfOnDisk) {
-          data.write(chunk)
-          readSoFar += chunk.length
-          if (readSoFar === chunk.length) console.log(`Downloaded ${readSoFar} of ${expectedContentLength} bytes for ${filePathIfOnDisk}`)
-        }
-        else data += chunk
+        data += chunk
       })
       res.on('end', () => {
-        if (filePathIfOnDisk) resolve(data.end())
-        else resolve({
+        resolve({
           ok: true,
           text: () => Promise.resolve(data),
           json: () => Promise.resolve(JSON.parse(data))
@@ -30,6 +22,7 @@ function fetch(url, filePathIfOnDisk) {
     }).on('error', reject)
   })
 }
+const download = (url, dest) => cp.execSync(`curl -L ${url} -o ${dest}`)
 
 function buildFirstIssue (title, result, jarData) {
   let protocolVersion = jarData?.protocol_version || 'Failed to obtain from JAR'
@@ -99,7 +92,7 @@ async function updateManifestPC() {
     if (!fs.existsSync(`./${latestRelease}.jar`)) {
       const clientJarUrl = latestReleaseManifest.downloads.client.url
       console.log('Downloading client jar', clientJarUrl)
-      await fetch(clientJarUrl, `./${latestRelease}.jar`)
+      download(clientJarUrl, `./${latestRelease}.jar`)
     }
     // Log the byte size of the client jar
     const clientJarSize = fs.statSync(`./${latestRelease}.jar`).size
@@ -108,8 +101,8 @@ async function updateManifestPC() {
     else if (process.platform === 'win32') cp.execSync('dir', { stdio: 'inherit' })
     console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
     // unzip with tar / unzip, Actions image uses 7z
-    if (process.env.CI) cp.execSync(`sha1sum 1.19.4.jar && chmod +777 ./${latestRelease}.jar && 7z -y e ./${latestRelease}.jar version.json`, { stdio: 'inherit' })
-    else cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
+    if (process.platform === 'win32') cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
+    else cp.execSync(`sha1sum 1.19.4.jar && chmod +777 ./${latestRelease}.jar && 7z -y e ./${latestRelease}.jar version.json`, { stdio: 'inherit' })
     const versionJson = require('./version.json')
 
     let majorVersion
