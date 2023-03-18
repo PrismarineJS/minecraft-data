@@ -108,7 +108,7 @@ async function updateManifestPC() {
     else if (process.platform === 'win32') cp.execSync('dir', { stdio: 'inherit' })
     console.log(`Unzipping client jar ./${latestRelease}.jar's version.json data`)
     // unzip with tar / unzip, Actions image uses 7z
-    if (process.env.CI) cp.execSync(`7z -y e ./${latestRelease}.jar version.json`)
+    if (process.env.CI) cp.execSync(`chmod +777 ./${latestRelease}.jar && 7z -y e ./${latestRelease}.jar version.json`)
     else cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
     const versionJson = require('./version.json')
 
@@ -141,13 +141,15 @@ async function updateManifestPC() {
       cp.execSync(`git commit -m "Add ${versionJson.id} to pc protocolVersions.json"`)
     }
 
-    console.log('Opening issue', versionJson)
-    const issuePayload = buildFirstIssue(title, latestReleaseData, versionJson)
-
-    helper.createIssue(issuePayload)
-
-    fs.writeFileSync('./issue.md', issuePayload.body)
-    console.log('OK, wrote to ./issue.md', issuePayload)
+    if (!issueStatus.open && !issueStatus.closed) {
+      console.log('Opening issue', versionJson)
+      const issuePayload = buildFirstIssue(title, latestReleaseData, versionJson)
+  
+      helper.createIssue(issuePayload)
+  
+      fs.writeFileSync('./issue.md', issuePayload.body)
+      console.log('OK, wrote to ./issue.md', issuePayload)
+    }
   } catch (e) {
     console.error(e)
 
