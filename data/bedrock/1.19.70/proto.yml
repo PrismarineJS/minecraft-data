@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.62
+!version: 1.19.70
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -3008,6 +3008,9 @@ packet_player_auth_input:
                # BlockFace is the face of the target block that was touched. If the action with the ActionType set
                # concerned a block. If not, the face is always 0.
                face: zigzag32
+   # AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
+   # values which are created using an analogue input.
+   analogue_move_vector: vec2f
 
 #TODO: update to use the new `shift` option in bitflags
 InputFlag: [ "bitflags", {
@@ -3050,7 +3053,8 @@ InputFlag: [ "bitflags", {
       "item_interact",
       "block_action",
       "item_stack_request",
-      "handled_teleport"
+      "handled_teleport",
+      "emoting"
    ]
 }]
 
@@ -3851,3 +3855,27 @@ packet_client_cheat_ability:
    # Layers contains all ability layers and their potential values. This should at least have one entry, being the
    # base layer.
    abilities: AbilityLayers[]u8
+
+# camera_presets gives the client a list of custom camera presets.
+packet_camera_presets:
+   !id: 0xc6
+   !bound: client
+   # Data is a compound tag of the presets being set.
+   data: nbt
+
+# unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
+# the recipe book.
+packet_unlocked_recipes:
+   !id: 0xc7
+   !bound: client
+   # new_unlocks determines if new recipes have been unlocked since the packet was last sent.
+   new_unlocks: bool
+   # Recipes is a list of recipe names that have been unlocked.
+   recipes: string[]varint
+
+# camera_instruction gives a custom camera specific instructions to operate.
+packet_camera_instruction:
+   !id: 0x12c
+   !bound:
+   # Data is a compound tag of the instructions to sent.
+   data: nbt

@@ -1725,13 +1725,22 @@ packet_set_score:
    !bound: client
    entries: ScoreEntries
 
+# LabTable is sent by the client to let the server know it started a chemical reaction in Education Edition,
+# and is sent by the server to other clients to show the effects.
+# The packet is only functional if Education features are enabled.
 packet_lab_table:
    !id: 0x6d
    !bound: both
-   useless_byte: u8
-   lab_table_x: varint
-   lab_table_y: varint
-   lab_table_z: varint
+   # ActionType is the type of the action that was executed. It is one of the constants above. Typically,
+   # only LabTableActionCombine is sent by the client, whereas LabTableActionReact is sent by the server.
+   action_type: u8 =>
+      0: combine
+      1: react
+   # Position is the position at which the lab table used was located.
+   position: vec3i
+   # ReactionType is the type of the reaction that took place as a result of the items put into the lab
+   # table. The reaction type can be either that of an item or a particle, depending on whatever the result
+   # was of the reaction.
    reaction_type: u8
 
 packet_update_block_synced:

@@ -859,6 +859,55 @@
         ]
       }
     ],
+    "EntityProperties": [
+      "container",
+      [
+        {
+          "name": "ints",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "index",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "value",
+                    "type": "zigzag32"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "floats",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "index",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "value",
+                    "type": "lf32"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
     "Rotation": [
       "container",
       [
@@ -1284,7 +1333,8 @@
                 "1": "int_id_meta",
                 "2": "molang",
                 "3": "item_tag",
-                "4": "string_id_meta"
+                "4": "string_id_meta",
+                "5": "complex_alias"
               }
             }
           ]
@@ -1350,6 +1400,15 @@
                     {
                       "name": "metadata",
                       "type": "li16"
+                    }
+                  ]
+                ],
+                "complex_alias": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
                     }
                   ]
                 ]
@@ -1443,7 +1502,9 @@
                     "4": "multi",
                     "5": "shulker_box",
                     "6": "shapeless_chemistry",
-                    "7": "shaped_chemistry"
+                    "7": "shaped_chemistry",
+                    "8": "smithing_transform",
+                    "9": "smithing_trim"
                   }
                 }
               ]
@@ -1758,6 +1819,68 @@
                           "type": "varint"
                         }
                       ]
+                    ],
+                    "smithing_transform": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "string"
+                        },
+                        {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "base",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "addition",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "result",
+                          "type": "ItemLegacy"
+                        },
+                        {
+                          "name": "tag",
+                          "type": "string"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
+                    ],
+                    "smithing_trim": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "string"
+                        },
+                        {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "input",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "addition",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "block",
+                          "type": "string"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
                     ]
                   },
                   "default": "void"
@@ -1942,6 +2065,10 @@
         },
         {
           "name": "primary_user",
+          "type": "bool"
+        },
+        {
+          "name": "overriding_player_appearance",
           "type": "bool"
         }
       ]
@@ -2153,7 +2280,8 @@
           "26": "predict_break",
           "27": "continue_break",
           "28": "start_item_use_on",
-          "29": "stop_item_use_on"
+          "29": "stop_item_use_on",
+          "30": "handled_teleport"
         }
       }
     ],
@@ -2476,7 +2604,8 @@
                 "7": "join_event_text",
                 "8": "leave_event_text",
                 "9": "slash_command_chat",
-                "10": "cartography_text"
+                "10": "cartography_text",
+                "11": "slash_command_non_chat"
               }
             }
           ]
@@ -3074,6 +3203,7 @@
           "31": "hud",
           "32": "jigsaw_editor",
           "33": "smithing_table",
+          "34": "chest_boat",
           "-9": "none",
           "-1": "inventory"
         }
@@ -3105,45 +3235,47 @@
           "18": "recipe_search",
           "19": "recipe_search_bar",
           "20": "recipe_equipment",
-          "21": "enchanting_input",
-          "22": "enchanting_lapis",
-          "23": "furnace_fuel",
-          "24": "furnace_ingredient",
-          "25": "furnace_output",
-          "26": "horse_equip",
-          "27": "hotbar",
-          "28": "inventory",
-          "29": "shulker",
-          "30": "trade_ingredient1",
-          "31": "trade_ingredient2",
-          "32": "trade_result",
-          "33": "offhand",
-          "34": "compcreate_input",
-          "35": "compcreate_output",
-          "36": "elemconstruct_output",
-          "37": "matreduce_input",
-          "38": "matreduce_output",
-          "39": "labtable_input",
-          "40": "loom_input",
-          "41": "loom_dye",
-          "42": "loom_material",
-          "43": "loom_result",
-          "44": "blast_furnace_ingredient",
-          "45": "smoker_ingredient",
-          "46": "trade2_ingredient1",
-          "47": "trade2_ingredient2",
-          "48": "trade2_result",
-          "49": "grindstone_input",
-          "50": "grindstone_additional",
-          "51": "grindstone_result",
-          "52": "stonecutter_input",
-          "53": "stonecutter_result",
-          "54": "cartography_input",
-          "55": "cartography_additional",
-          "56": "cartography_result",
-          "57": "barrel",
-          "58": "cursor",
-          "59": "creative_output"
+          "21": "recipe_book",
+          "22": "enchanting_input",
+          "23": "enchanting_lapis",
+          "24": "furnace_fuel",
+          "25": "furnace_ingredient",
+          "26": "furnace_output",
+          "27": "horse_equip",
+          "28": "hotbar",
+          "29": "inventory",
+          "30": "shulker",
+          "31": "trade_ingredient1",
+          "32": "trade_ingredient2",
+          "33": "trade_result",
+          "34": "offhand",
+          "35": "compcreate_input",
+          "36": "compcreate_output",
+          "37": "elemconstruct_output",
+          "38": "matreduce_input",
+          "39": "matreduce_output",
+          "40": "labtable_input",
+          "41": "loom_input",
+          "42": "loom_dye",
+          "43": "loom_material",
+          "44": "loom_result",
+          "45": "blast_furnace_ingredient",
+          "46": "smoker_ingredient",
+          "47": "trade2_ingredient1",
+          "48": "trade2_ingredient2",
+          "49": "trade2_result",
+          "50": "grindstone_input",
+          "51": "grindstone_additional",
+          "52": "grindstone_result",
+          "53": "stonecutter_input",
+          "54": "stonecutter_result",
+          "55": "cartography_input",
+          "56": "cartography_additional",
+          "57": "cartography_result",
+          "58": "barrel",
+          "59": "cursor",
+          "60": "creative_output",
+          "61": "smithing_table_template"
         }
       }
     ],
@@ -3596,7 +3728,30 @@
           "441": "RecordPlaying",
           "442": "DrinkMilk",
           "443": "RecordPlaying",
-          "444": "EnchantingTableUse"
+          "444": "EnchantingTableUse",
+          "445": "StepSand",
+          "446": "DashReady",
+          "447": "BundleDropContents",
+          "448": "BundleInsert",
+          "449": "BundleRemoveOne",
+          "450": "PressurePlateClickOff",
+          "451": "PressurePlateClickOn",
+          "452": "ButtonClickOff",
+          "453": "ButtonClickOn",
+          "454": "DoorOpen",
+          "455": "DoorClose",
+          "456": "TrapdoorOpen",
+          "457": "TrapdoorClose",
+          "458": "FenceGateOpen",
+          "459": "FenceGateClose",
+          "460": "Insert",
+          "461": "Pickup",
+          "462": "InsertEnchanted",
+          "463": "PickupEnchanted",
+          "464": "Brush",
+          "465": "BrushCompleted",
+          "466": "ShatterDecoratedPot",
+          "467": "BreakDecoratedPot"
         }
       }
     ],
@@ -3745,7 +3900,8 @@
                 "0": "cache",
                 "1": "base",
                 "2": "spectator",
-                "3": "commands"
+                "3": "commands",
+                "4": "editor"
               }
             }
           ]
@@ -3967,7 +4123,15 @@
                 "192": "server_stats",
                 "193": "request_network_settings",
                 "194": "game_test_request",
-                "195": "game_test_results"
+                "195": "game_test_results",
+                "196": "update_client_input_locks",
+                "197": "client_cheat_ability",
+                "198": "camera_presets",
+                "199": "unlocked_recipes",
+                "300": "camera_instruction",
+                "301": "compressed_biome_definitions",
+                "302": "trim_data",
+                "303": "open_sign"
               }
             }
           ]
@@ -4168,7 +4332,15 @@
                 "server_stats": "packet_server_stats",
                 "request_network_settings": "packet_request_network_settings",
                 "game_test_request": "packet_game_test_request",
-                "game_test_results": "packet_game_test_results"
+                "game_test_results": "packet_game_test_results",
+                "update_client_input_locks": "packet_update_client_input_locks",
+                "client_cheat_ability": "packet_client_cheat_ability",
+                "camera_presets": "packet_camera_presets",
+                "unlocked_recipes": "packet_unlocked_recipes",
+                "camera_instruction": "packet_camera_instruction",
+                "compressed_biome_definitions": "packet_compressed_biome_definitions",
+                "trim_data": "packet_trim_data",
+                "open_sign": "packet_open_sign"
               },
               "default": "void"
             }
@@ -4624,6 +4796,14 @@
           "type": "bool"
         },
         {
+          "name": "created_in_editor",
+          "type": "bool"
+        },
+        {
+          "name": "exported_from_editor",
+          "type": "bool"
+        },
+        {
           "name": "day_cycle_stop_time",
           "type": "zigzag32"
         },
@@ -4737,6 +4917,10 @@
         },
         {
           "name": "custom_skins_disabled",
+          "type": "bool"
+        },
+        {
+          "name": "emote_chat_muted",
           "type": "bool"
         },
         {
@@ -4862,6 +5046,10 @@
         {
           "name": "client_side_generation",
           "type": "bool"
+        },
+        {
+          "name": "block_network_ids_are_hashes",
+          "type": "bool"
         }
       ]
     ],
@@ -4915,6 +5103,10 @@
         {
           "name": "metadata",
           "type": "MetadataDictionary"
+        },
+        {
+          "name": "properties",
+          "type": "EntityProperties"
         },
         {
           "name": "unique_id",
@@ -4998,6 +5190,10 @@
         {
           "name": "metadata",
           "type": "MetadataDictionary"
+        },
+        {
+          "name": "properties",
+          "type": "EntityProperties"
         },
         {
           "name": "links",
@@ -5368,6 +5564,13 @@
                 "3509": "cauldron_clean_banner",
                 "3600": "block_start_break",
                 "3601": "block_stop_break",
+                "3602": "block_break_speed",
+                "3603": "particle_punch_block_down",
+                "3604": "particle_punch_block_up",
+                "3605": "particle_punch_block_north",
+                "3606": "particle_punch_block_south",
+                "3607": "particle_punch_block_west",
+                "3608": "particle_punch_block_east",
                 "4000": "set_data",
                 "9800": "players_sleeping",
                 "9801": "sleeping_players",
@@ -5810,6 +6013,10 @@
         {
           "name": "metadata",
           "type": "MetadataDictionary"
+        },
+        {
+          "name": "properties",
+          "type": "EntityProperties"
         },
         {
           "name": "tick",
@@ -6577,6 +6784,10 @@
         {
           "name": "chunk_radius",
           "type": "zigzag32"
+        },
+        {
+          "name": "max_radius",
+          "type": "u8"
         }
       ]
     ],
@@ -6909,15 +7120,15 @@
                                         "10": "wildcard_target",
                                         "17": "file_path",
                                         "23": "integer_range",
-                                        "38": "equipment_slots",
-                                        "39": "string",
-                                        "47": "block_position",
-                                        "48": "position",
-                                        "51": "message",
-                                        "53": "raw_text",
-                                        "57": "json",
-                                        "67": "block_states",
-                                        "70": "command"
+                                        "43": "equipment_slots",
+                                        "44": "string",
+                                        "52": "block_position",
+                                        "53": "position",
+                                        "55": "message",
+                                        "58": "raw_text",
+                                        "62": "json",
+                                        "71": "block_states",
+                                        "74": "command"
                                       }
                                     }
                                   ]
@@ -7051,6 +7262,10 @@
         {
           "name": "internal",
           "type": "bool"
+        },
+        {
+          "name": "version",
+          "type": "varint"
         }
       ]
     ],
@@ -8551,7 +8766,8 @@
               "mappings": {
                 "1": "export_from_save",
                 "2": "export_from_load",
-                "3": "query_saved_structure"
+                "3": "query_saved_structure",
+                "4": "import_from_save"
               }
             }
           ]
@@ -8590,7 +8806,8 @@
               "type": "u8",
               "mappings": {
                 "1": "export",
-                "2": "query"
+                "2": "query",
+                "3": "import"
               }
             }
           ]
@@ -8761,7 +8978,16 @@
         },
         {
           "name": "flags",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "1": "server_side",
+                "2": "mute_chat"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -9123,6 +9349,10 @@
               "default": "void"
             }
           ]
+        },
+        {
+          "name": "analogue_move_vector",
+          "type": "vec2f"
         }
       ]
     ],
@@ -10499,6 +10729,158 @@
         }
       ]
     ],
+    "packet_update_client_input_locks": [
+      "container",
+      [
+        {
+          "name": "locks",
+          "type": "InputLockFlags"
+        },
+        {
+          "name": "position",
+          "type": "vec3f"
+        }
+      ]
+    ],
+    "packet_client_cheat_ability": [
+      "container",
+      [
+        {
+          "name": "entity_unique_id",
+          "type": "li64"
+        },
+        {
+          "name": "permission_level",
+          "type": "PermissionLevel"
+        },
+        {
+          "name": "command_permission",
+          "type": "CommandPermissionLevel"
+        },
+        {
+          "name": "abilities",
+          "type": [
+            "array",
+            {
+              "countType": "u8",
+              "type": "AbilityLayers"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_presets": [
+      "container",
+      [
+        {
+          "name": "data",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_unlocked_recipes": [
+      "container",
+      [
+        {
+          "name": "new_unlocks",
+          "type": "bool"
+        },
+        {
+          "name": "recipes",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_instruction": [
+      "container",
+      [
+        {
+          "name": "data",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_compressed_biome_definitions": [
+      "container",
+      [
+        {
+          "name": "raw_payload",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_trim_data": [
+      "container",
+      [
+        {
+          "name": "patterns",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "pattern",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "materials",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "material",
+                    "type": "string"
+                  },
+                  {
+                    "name": "color",
+                    "type": "string"
+                  },
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_open_sign": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "vec3i"
+        },
+        {
+          "name": "is_front",
+          "type": "bool"
+        }
+      ]
+    ],
     "string": [
       "pstring",
       {
@@ -10587,6 +10969,7 @@
           "charge_attack",
           "wasd_controlled",
           "can_power_jump",
+          "can_dash",
           "linger",
           "has_collision",
           "affected_by_gravity",
@@ -10655,7 +11038,14 @@
           "jump_goal_jump",
           "emerging",
           "sniffing",
-          "digging"
+          "digging",
+          "sonic_boom",
+          "has_dash_cooldown",
+          "push_towards_closest_space",
+          "scenting",
+          "rising",
+          "feeling_happy",
+          "searching"
         ]
       }
     ],
@@ -10682,6 +11072,7 @@
           "muted",
           "world_builder",
           "no_clip",
+          "privileged_builder",
           "count"
         ]
       }
@@ -10833,7 +11224,9 @@
           "stop_gliding",
           "item_interact",
           "block_action",
-          "item_stack_request"
+          "item_stack_request",
+          "handled_teleport",
+          "emoting"
         ]
       }
     ],
@@ -10862,6 +11255,20 @@
           "attack_mobs": 32,
           "operator": 64,
           "teleport": 128
+        }
+      }
+    ],
+    "InputLockFlags": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "move": 2,
+          "jump": 4,
+          "sneak": 8,
+          "mount": 16,
+          "dismount": 32,
+          "rotation": 64
         }
       }
     ]
