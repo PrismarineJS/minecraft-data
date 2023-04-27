@@ -1,3 +1,6 @@
+## 3.33.0
+* Use node 18.
+
 ## 3.32.0
 * Add bedrock 1.19.80 protocol data
 
