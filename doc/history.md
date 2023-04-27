@@ -1,3 +1,6 @@
+## 3.32.0
+* Add bedrock 1.19.80 protocol data
+
 ## 3.31.0
 * Add bedrock 1.19.70 protocol data (@CreeperG16)
 * Fix bedrock protocol item CanPlace/CanDestroy fields (#694)
