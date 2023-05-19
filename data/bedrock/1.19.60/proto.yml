@@ -787,7 +787,8 @@ packet_level_event:
       3508: cauldron_add_dye  
       3509: cauldron_clean_banner  
       3600: block_start_break  
-      3601: block_stop_break  
+      3601: block_stop_break
+      3602: block_break_speed
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
@@ -1503,7 +1504,7 @@ packet_clientbound_map_item_data:
    # table.
    locked: bool
    # Origin is the center position of the map being updated.
-   origin: BlockCoordinates
+   origin: vec3i
    # The following fields apply only for the MapUpdateFlagInitialisation.
    # MapsIncludedIn holds an array of map IDs that the map updated is included in. This has to do with the
    # scale of the map: Each map holds its own map ID and all map IDs of maps that include this map and have
@@ -2393,7 +2394,7 @@ packet_lab_table:
       0: combine
       1: react
    # Position is the position at which the lab table used was located.
-   position: vec3u
+   position: vec3i
    # ReactionType is the type of the reaction that took place as a result of the items put into the lab
    # table. The reaction type can be either that of an item or a particle, depending on whatever the result
    # was of the reaction.
