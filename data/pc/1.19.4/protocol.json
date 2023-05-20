@@ -34,6 +34,61 @@
         "countType": "varint"
       }
     ],
+    "vec3f": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "f32"
+        },
+        {
+          "name": "y",
+          "type": "f32"
+        },
+        {
+          "name": "z",
+          "type": "f32"
+        }
+      ]
+    ],
+    "vec4f": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "f32"
+        },
+        {
+          "name": "y",
+          "type": "f32"
+        },
+        {
+          "name": "z",
+          "type": "f32"
+        },
+        {
+          "name": "w",
+          "type": "f32"
+        }
+      ]
+    ],
+    "vec3f64": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "f64"
+        },
+        {
+          "name": "y",
+          "type": "f64"
+        },
+        {
+          "name": "z",
+          "type": "f64"
+        }
+      ]
+    ],
     "slot": [
       "container",
       [
@@ -324,9 +379,13 @@
             "UUID"
           ],
           "14": "varint",
-          "15": "nbt",
-          "16": "particle",
-          "17": [
+          "15": [
+            "option",
+            "varint"
+          ],
+          "16": "nbt",
+          "17": "particle",
+          "18": [
             "container",
             [
               {
@@ -343,15 +402,18 @@
               }
             ]
           ],
-          "18": "optvarint",
-          "19": "varint",
+          "19": "optvarint",
           "20": "varint",
           "21": "varint",
-          "22": [
+          "22": "varint",
+          "23": [
             "option",
             "string"
           ],
-          "23": "varint"
+          "24": "varint",
+          "25": "varint",
+          "26": "vec3f",
+          "27": "vec4f"
         }
       }
     ],
@@ -1452,7 +1514,7 @@
                 }
               ]
             },
-         	{
+            {
               "name": "verifyToken",
               "type": [
                 "buffer",
@@ -2356,10 +2418,10 @@
         "packet_hide_message": [
           "container",
           [
-          	{
-          		"name": "id",
-          		"type": "varint"
-          	},
+            {
+              "name": "id",
+              "type": "varint"
+            },
             {
               "name": "signature",
               "type": [
@@ -2390,7 +2452,7 @@
           ]
         ],
         "packet_profileless_chat": [
-        	"container",
+          "container",
           [
             {
               "name": "message",
@@ -3259,7 +3321,7 @@
         "packet_player_chat": [
           "container",
           [
-          	{
+            {
               "name": "senderUuid",
               "type": "UUID"
             },
@@ -3377,19 +3439,19 @@
           ]
         ],
         "packet_player_remove": [
-        	"container",
-        	[
-        		{
-        			"name": "players",
-        			"type": [
-        				"array",
-        				{
-        					"countType": "varint",
-        					"type": "UUID"
-        				}
-        			]		
-        		}
-        	]
+          "container",
+          [
+            {
+              "name": "players",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "UUID"
+                }
+              ]
+            }
+          ]
         ],
         "packet_player_info": [
           "container",
@@ -4354,8 +4416,8 @@
               "type": "f32"
             },
             {
-            	"name": "seed",
-            	"type": "i64"
+              "name": "seed",
+              "type": "i64"
             }
           ]
         ],
@@ -4567,19 +4629,19 @@
           ]
         ],
         "packet_feature_flags": [
-        	"container",
-        	[
-        		{
-        			"name": "features",
-        			"type": [
-        				"array",
-        				{
-        					"countType": "varint",
-        					"type": "string"
-        				}
-        			]
-        		}
-        	]
+          "container",
+          [
+            {
+              "name": "features",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
         ],
         "packet_entity_effect": [
           "container",
@@ -4630,10 +4692,7 @@
           [
             {
               "name": "motd",
-              "type": [
-                "option",
-                "string"
-              ]
+              "type": "string"
             },
             {
               "name": "icon",
@@ -4741,10 +4800,10 @@
                                     "name": "result",
                                     "type": "slot"
                                   },
-								  {
-									"name": "show_toast",
-									"type": "bool"
-								  }
+                                  {
+                                    "name": "showToast",
+                                    "type": "bool"
+                                  }
                                 ]
                               ],
                               "minecraft:crafting_special_armordye": "minecraft_simple_recipe_format",
@@ -5021,7 +5080,6 @@
                 {
                   "type": "varint",
                   "mappings": {
-					"0x00": "bundle_delim",
                     "0x01": "spawn_entity",
                     "0x02": "spawn_entity_experience_orb",
                     "0x03": "named_entity_spawn",
@@ -5034,7 +5092,7 @@
                     "0x0a": "block_change",
                     "0x0b": "boss_bar",
                     "0x0c": "difficulty",
-					"0x0d": "chunk_biomes",
+                    "0x0d": "chunk_biomes",
                     "0x0e": "clear_titles",
                     "0x0f": "tab_complete",
                     "0x10": "declare_commands",
@@ -5045,7 +5103,7 @@
                     "0x15": "set_cooldown",
                     "0x16": "chat_suggestions",
                     "0x17": "custom_payload",
-					"0x18": "damage_event",
+                    "0x18": "damage_event",
                     "0x19": "hide_message",
                     "0x1a": "kick_disconnect",
                     "0x1b": "profileless_chat",
@@ -5054,7 +5112,7 @@
                     "0x1e": "unload_chunk",
                     "0x1f": "game_state_change",
                     "0x20": "open_horse_window",
-					"0x21": "hurt_animation",
+                    "0x21": "hurt_animation",
                     "0x22": "initialize_world_border",
                     "0x23": "keep_alive",
                     "0x24": "map_chunk",
@@ -5155,6 +5213,7 @@
                     "block_change": "packet_block_change",
                     "boss_bar": "packet_boss_bar",
                     "difficulty": "packet_difficulty",
+                    "chunk_biomes": "packet_chunk_biomes",
                     "clear_titles": "packet_clear_titles",
                     "tab_complete": "packet_tab_complete",
                     "declare_commands": "packet_declare_commands",
@@ -5165,6 +5224,7 @@
                     "set_cooldown": "packet_set_cooldown",
                     "chat_suggestions": "packet_chat_suggestions",
                     "custom_payload": "packet_custom_payload",
+                    "damage_event": "packet_damage_event",
                     "hide_message": "packet_hide_message",
                     "kick_disconnect": "packet_kick_disconnect",
                     "profileless_chat": "packet_profileless_chat",
@@ -5173,6 +5233,7 @@
                     "unload_chunk": "packet_unload_chunk",
                     "game_state_change": "packet_game_state_change",
                     "open_horse_window": "packet_open_horse_window",
+                    "hurt_animation": "packet_hurt_animation",
                     "initialize_world_border": "packet_initialize_world_border",
                     "keep_alive": "packet_keep_alive",
                     "map_chunk": "packet_map_chunk",
@@ -5313,10 +5374,10 @@
                       {
                         "name": "signature",
                         "type": [
-                        	"buffer",
-                        	{
-                        		"count": 256
-                        	}
+                          "buffer",
+                          {
+                            "count": 256
+                          }
                         ]
                       }
                     ]
@@ -5331,10 +5392,10 @@
             {
               "name": "acknowledged",
               "type": [
-              	"buffer",
-              	{
-              		"count": 3
-              	}
+                "buffer",
+                {
+                  "count": 3
+                }
               ]
             }
           ]
@@ -5359,10 +5420,10 @@
               "type": [
                 "option",
                 [
-                	"buffer",
-                	{
-                		"count": 256
-                	}
+                  "buffer",
+                  {
+                    "count": 256
+                  }
                 ]
               ]
             },
@@ -5371,13 +5432,13 @@
               "type": "varint"
             },
             {
-            	"name": "acknowledged",
-            	"type": [
-            		"buffer",
-            		{
-            			"count": 3
-            		}
-            	]
+              "name": "acknowledged",
+              "type": [
+                "buffer",
+                {
+                  "count": 3
+                }
+              ]
             }
           ]
         ],
@@ -5394,10 +5455,10 @@
           "container",
           [
             {
-            	"name": "count",
-            	"type": "varint"
+              "name": "count",
+              "type": "varint"
             }
-        ]
+          ]
         ],
         "packet_edit_book": [
           "container",
@@ -6246,36 +6307,101 @@
             }
           ]
         ],
-        "packet_session": [
-        	"container",
-        	[
-        		{
-        			"name": "sessionUUID",
-        			"type": "UUID"
-        		},
+        "packet_chat_session_update": [
+          "container",
+          [
+            {
+              "name": "sessionUUID",
+              "type": "UUID"
+            },
             {
               "name": "expireTime",
               "type": "i64"
             },
-        		{
-        			"name": "publicKey",
-        			"type": [
-        				"buffer",
-        				{
-        					"countType": "varint"
-        				}
-        			]
-        		},
-        		{
-        			"name": "signature",
-        			"type": [
-        				"buffer",
-        				{
-        					"countType": "varint"
-        				}
-        			]
-        		}
-        	]
+            {
+              "name": "publicKey",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            },
+            {
+              "name": "signature",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_chunk_biomes": [
+          "container",
+          [
+            {
+              "name": "biomes",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "position",
+                        "type": "position"
+                      },
+                      {
+                        "name": "buffer",
+                        "type": [
+                          "buffer",
+                          {
+                            "countType": "varint"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_damage_event": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "sourceTypeId",
+              "type": "varint"
+            },
+            {
+              "name": "sourceCauseId",
+              "type": [
+                "option",
+                "vec3f64"
+              ]
+            }
+          ]
+        ],
+        "packet_hurt_animation": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            }
+          ]
         ],
         "packet": [
           "container",
@@ -6293,7 +6419,7 @@
                     "0x03": "message_acknowledgement",
                     "0x04": "chat_command",
                     "0x05": "chat_message",
-					"0x06": "session",
+                    "0x06": "chat_session_update",
                     "0x07": "client_command",
                     "0x08": "settings",
                     "0x09": "tab_complete",
@@ -6381,7 +6507,7 @@
                     "entity_action": "packet_entity_action",
                     "steer_vehicle": "packet_steer_vehicle",
                     "pong": "packet_pong",
-                    "session": "packet_session",
+                    "chat_session_update": "packet_chat_session_update",
                     "recipe_book": "packet_recipe_book",
                     "displayed_recipe": "packet_displayed_recipe",
                     "name_item": "packet_name_item",
@@ -6410,3 +6536,12 @@
     }
   }
 }
+var1.writeVarInt(this.entityId);
+var1.writeVarInt(this.sourceTypeId);
+writeOptionalEntityId(var1, this.sourceCauseId);
+writeOptionalEntityId(var1, this.sourceDirectId);
+var1.writeOptional(this.sourcePosition, (var0, var1x) -> {
+   var0.writeDouble(var1x.x());
+   var0.writeDouble(var1x.y());
+   var0.writeDouble(var1x.z());
+});
