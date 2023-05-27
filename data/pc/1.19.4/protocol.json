@@ -222,7 +222,7 @@
               }
             ]
           ],
-          "24": [
+          "25": [
             "container",
             [
               {
@@ -231,7 +231,7 @@
               }
             ]
           ],
-          "35": [
+          "48": [
             "container",
             [
               {
@@ -240,16 +240,42 @@
               }
             ]
           ],
-          "36": [
+          "49": [
             "container",
             [
+              {
+                "name": "positionType",
+                "type": "string"
+              },
               {
                 "name": "origin",
                 "type": "position"
               },
               {
-                "name": "positionType",
-                "type": "string"
+                "name": "entityId",
+                "type": [
+                  "switch",
+                  {
+                    "compareTo": "positionType",
+                    "fields": {
+                      "minecraft:entity": "varint"
+                    },
+                    "default": "void"
+                  }
+                ]
+              },
+              {
+                "name": "entityEyeHeight",
+                "type": [
+                  "switch",
+                  {
+                    "compareTo": "positionType",
+                    "fields": {
+                      "minecraft:entity": "varint"
+                    },
+                    "default": "void"
+                  }
+                ]
               },
               {
                 "name": "destination",
@@ -266,6 +292,15 @@
               },
               {
                 "name": "ticks",
+                "type": "varint"
+              }
+            ]
+          ],
+          "undefined": [
+            "container",
+            [
+              {
+                "name": "delayInTicksBeforeShown",
                 "type": "varint"
               }
             ]
@@ -379,10 +414,7 @@
             "UUID"
           ],
           "14": "varint",
-          "15": [
-            "option",
-            "varint"
-          ],
+          "15": "optvarint",
           "16": "nbt",
           "17": "particle",
           "18": [
@@ -3700,38 +3732,134 @@
                           {
                             "compareTo": "../action",
                             "fields": {
-                              "32": ["option", "string"],
-                              "33": ["option", "string"],
-                              "34": ["option", "string"],
-                              "35": ["option", "string"],
-                              "36": ["option", "string"],
-                              "37": ["option", "string"],
-                              "38": ["option", "string"],
-                              "39": ["option", "string"],
-                              "40": ["option", "string"],
-                              "41": ["option", "string"],
-                              "42": ["option", "string"],
-                              "43": ["option", "string"],
-                              "44": ["option", "string"],
-                              "45": ["option", "string"],
-                              "46": ["option", "string"],
-                              "47": ["option", "string"],
-                              "48": ["option", "string"],
-                              "49": ["option", "string"],
-                              "50": ["option", "string"],
-                              "51": ["option", "string"],
-                              "52": ["option", "string"],
-                              "53": ["option", "string"],
-                              "54": ["option", "string"],
-                              "55": ["option", "string"],
-                              "56": ["option", "string"],
-                              "57": ["option", "string"],
-                              "58": ["option", "string"],
-                              "59": ["option", "string"],
-                              "60": ["option", "string"],
-                              "61": ["option", "string"],
-                              "62": ["option", "string"],
-                              "63": ["option", "string"]
+                              "32": [
+                                "option",
+                                "string"
+                              ],
+                              "33": [
+                                "option",
+                                "string"
+                              ],
+                              "34": [
+                                "option",
+                                "string"
+                              ],
+                              "35": [
+                                "option",
+                                "string"
+                              ],
+                              "36": [
+                                "option",
+                                "string"
+                              ],
+                              "37": [
+                                "option",
+                                "string"
+                              ],
+                              "38": [
+                                "option",
+                                "string"
+                              ],
+                              "39": [
+                                "option",
+                                "string"
+                              ],
+                              "40": [
+                                "option",
+                                "string"
+                              ],
+                              "41": [
+                                "option",
+                                "string"
+                              ],
+                              "42": [
+                                "option",
+                                "string"
+                              ],
+                              "43": [
+                                "option",
+                                "string"
+                              ],
+                              "44": [
+                                "option",
+                                "string"
+                              ],
+                              "45": [
+                                "option",
+                                "string"
+                              ],
+                              "46": [
+                                "option",
+                                "string"
+                              ],
+                              "47": [
+                                "option",
+                                "string"
+                              ],
+                              "48": [
+                                "option",
+                                "string"
+                              ],
+                              "49": [
+                                "option",
+                                "string"
+                              ],
+                              "50": [
+                                "option",
+                                "string"
+                              ],
+                              "51": [
+                                "option",
+                                "string"
+                              ],
+                              "52": [
+                                "option",
+                                "string"
+                              ],
+                              "53": [
+                                "option",
+                                "string"
+                              ],
+                              "54": [
+                                "option",
+                                "string"
+                              ],
+                              "55": [
+                                "option",
+                                "string"
+                              ],
+                              "56": [
+                                "option",
+                                "string"
+                              ],
+                              "57": [
+                                "option",
+                                "string"
+                              ],
+                              "58": [
+                                "option",
+                                "string"
+                              ],
+                              "59": [
+                                "option",
+                                "string"
+                              ],
+                              "60": [
+                                "option",
+                                "string"
+                              ],
+                              "61": [
+                                "option",
+                                "string"
+                              ],
+                              "62": [
+                                "option",
+                                "string"
+                              ],
+                              "63": [
+                                "option",
+                                "string"
+                              ]
                             },
                             "default": "void"
                           }
@@ -4435,8 +4563,8 @@
                 {
                   "compareTo": "flags",
                   "fields": {
-                    "3": "varint",
-                    "1": "varint"
+                    "1": "varint",
+                    "3": "varint"
                   },
                   "default": "void"
                 }
@@ -4449,8 +4577,8 @@
                 {
                   "compareTo": "flags",
                   "fields": {
-                    "3": "string",
-                    "2": "string"
+                    "2": "string",
+                    "3": "string"
                   },
                   "default": "void"
                 }
