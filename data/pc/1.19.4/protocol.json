@@ -34,6 +34,61 @@
         "countType": "varint"
       }
     ],
+    "vec3f": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "f32"
+        },
+        {
+          "name": "y",
+          "type": "f32"
+        },
+        {
+          "name": "z",
+          "type": "f32"
+        }
+      ]
+    ],
+    "vec4f": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "f32"
+        },
+        {
+          "name": "y",
+          "type": "f32"
+        },
+        {
+          "name": "z",
+          "type": "f32"
+        },
+        {
+          "name": "w",
+          "type": "f32"
+        }
+      ]
+    ],
+    "vec3f64": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "f64"
+        },
+        {
+          "name": "y",
+          "type": "f64"
+        },
+        {
+          "name": "z",
+          "type": "f64"
+        }
+      ]
+    ],
     "slot": [
       "container",
       [
@@ -176,7 +231,7 @@
               }
             ]
           ],
-          "39": [
+          "42": [
             "container",
             [
               {
@@ -185,7 +240,7 @@
               }
             ]
           ],
-          "40": [
+          "43": [
             "container",
             [
               {
@@ -241,7 +296,7 @@
               }
             ]
           ],
-          "92": [
+          "95": [
             "container",
             [
               {
@@ -359,9 +414,10 @@
             "UUID"
           ],
           "14": "varint",
-          "15": "nbt",
-          "16": "particle",
-          "17": [
+          "15": "optvarint",
+          "16": "nbt",
+          "17": "particle",
+          "18": [
             "container",
             [
               {
@@ -378,15 +434,18 @@
               }
             ]
           ],
-          "18": "optvarint",
-          "19": "varint",
+          "19": "optvarint",
           "20": "varint",
           "21": "varint",
-          "22": [
+          "22": "varint",
+          "23": [
             "option",
             "string"
           ],
-          "23": "varint"
+          "24": "varint",
+          "25": "varint",
+          "26": "vec3f",
+          "27": "vec4f"
         }
       }
     ],
@@ -1046,7 +1105,15 @@
                             "minecraft:int_range": "void",
                             "minecraft:float_range": "void",
                             "minecraft:dimension": "void",
-                            "minecraft:time": "void",
+                            "minecraft:time": [
+                              "container",
+                              [
+                                {
+                                  "name": "min",
+                                  "type": "i32"
+                                }
+                              ]
+                            ],
                             "minecraft:resource_or_tag": [
                               "container",
                               [
@@ -1487,7 +1554,7 @@
                 }
               ]
             },
-         	{
+            {
               "name": "verifyToken",
               "type": [
                 "buffer",
@@ -2391,10 +2458,10 @@
         "packet_hide_message": [
           "container",
           [
-          	{
-          		"name": "id",
-          		"type": "varint"
-          	},
+            {
+              "name": "id",
+              "type": "varint"
+            },
             {
               "name": "signature",
               "type": [
@@ -2425,7 +2492,7 @@
           ]
         ],
         "packet_profileless_chat": [
-        	"container",
+          "container",
           [
             {
               "name": "message",
@@ -3294,7 +3361,7 @@
         "packet_player_chat": [
           "container",
           [
-          	{
+            {
               "name": "senderUuid",
               "type": "UUID"
             },
@@ -3412,19 +3479,19 @@
           ]
         ],
         "packet_player_remove": [
-        	"container",
-        	[
-        		{
-        			"name": "players",
-        			"type": [
-        				"array",
-        				{
-        					"countType": "varint",
-        					"type": "UUID"
-        				}
-        			]		
-        		}
-        	]
+          "container",
+          [
+            {
+              "name": "players",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "UUID"
+                }
+              ]
+            }
+          ]
         ],
         "packet_player_info": [
           "container",
@@ -3673,38 +3740,134 @@
                           {
                             "compareTo": "../action",
                             "fields": {
-                              "32": ["option", "string"],
-                              "33": ["option", "string"],
-                              "34": ["option", "string"],
-                              "35": ["option", "string"],
-                              "36": ["option", "string"],
-                              "37": ["option", "string"],
-                              "38": ["option", "string"],
-                              "39": ["option", "string"],
-                              "40": ["option", "string"],
-                              "41": ["option", "string"],
-                              "42": ["option", "string"],
-                              "43": ["option", "string"],
-                              "44": ["option", "string"],
-                              "45": ["option", "string"],
-                              "46": ["option", "string"],
-                              "47": ["option", "string"],
-                              "48": ["option", "string"],
-                              "49": ["option", "string"],
-                              "50": ["option", "string"],
-                              "51": ["option", "string"],
-                              "52": ["option", "string"],
-                              "53": ["option", "string"],
-                              "54": ["option", "string"],
-                              "55": ["option", "string"],
-                              "56": ["option", "string"],
-                              "57": ["option", "string"],
-                              "58": ["option", "string"],
-                              "59": ["option", "string"],
-                              "60": ["option", "string"],
-                              "61": ["option", "string"],
-                              "62": ["option", "string"],
-                              "63": ["option", "string"]
+                              "32": [
+                                "option",
+                                "string"
+                              ],
+                              "33": [
+                                "option",
+                                "string"
+                              ],
+                              "34": [
+                                "option",
+                                "string"
+                              ],
+                              "35": [
+                                "option",
+                                "string"
+                              ],
+                              "36": [
+                                "option",
+                                "string"
+                              ],
+                              "37": [
+                                "option",
+                                "string"
+                              ],
+                              "38": [
+                                "option",
+                                "string"
+                              ],
+                              "39": [
+                                "option",
+                                "string"
+                              ],
+                              "40": [
+                                "option",
+                                "string"
+                              ],
+                              "41": [
+                                "option",
+                                "string"
+                              ],
+                              "42": [
+                                "option",
+                                "string"
+                              ],
+                              "43": [
+                                "option",
+                                "string"
+                              ],
+                              "44": [
+                                "option",
+                                "string"
+                              ],
+                              "45": [
+                                "option",
+                                "string"
+                              ],
+                              "46": [
+                                "option",
+                                "string"
+                              ],
+                              "47": [
+                                "option",
+                                "string"
+                              ],
+                              "48": [
+                                "option",
+                                "string"
+                              ],
+                              "49": [
+                                "option",
+                                "string"
+                              ],
+                              "50": [
+                                "option",
+                                "string"
+                              ],
+                              "51": [
+                                "option",
+                                "string"
+                              ],
+                              "52": [
+                                "option",
+                                "string"
+                              ],
+                              "53": [
+                                "option",
+                                "string"
+                              ],
+                              "54": [
+                                "option",
+                                "string"
+                              ],
+                              "55": [
+                                "option",
+                                "string"
+                              ],
+                              "56": [
+                                "option",
+                                "string"
+                              ],
+                              "57": [
+                                "option",
+                                "string"
+                              ],
+                              "58": [
+                                "option",
+                                "string"
+                              ],
+                              "59": [
+                                "option",
+                                "string"
+                              ],
+                              "60": [
+                                "option",
+                                "string"
+                              ],
+                              "61": [
+                                "option",
+                                "string"
+                              ],
+                              "62": [
+                                "option",
+                                "string"
+                              ],
+                              "63": [
+                                "option",
+                                "string"
+                              ]
                             },
                             "default": "void"
                           }
@@ -3747,10 +3910,6 @@
             {
               "name": "teleportId",
               "type": "varint"
-            },
-            {
-              "name": "dismountVehicle",
-              "type": "bool"
             }
           ]
         ],
@@ -4393,8 +4552,8 @@
               "type": "f32"
             },
             {
-            	"name": "seed",
-            	"type": "i64"
+              "name": "seed",
+              "type": "i64"
             }
           ]
         ],
@@ -4412,8 +4571,8 @@
                 {
                   "compareTo": "flags",
                   "fields": {
-                    "3": "varint",
-                    "1": "varint"
+                    "1": "varint",
+                    "3": "varint"
                   },
                   "default": "void"
                 }
@@ -4426,8 +4585,8 @@
                 {
                   "compareTo": "flags",
                   "fields": {
-                    "3": "string",
-                    "2": "string"
+                    "2": "string",
+                    "3": "string"
                   },
                   "default": "void"
                 }
@@ -4606,19 +4765,19 @@
           ]
         ],
         "packet_feature_flags": [
-        	"container",
-        	[
-        		{
-        			"name": "features",
-        			"type": [
-        				"array",
-        				{
-        					"countType": "varint",
-        					"type": "string"
-        				}
-        			]
-        		}
-        	]
+          "container",
+          [
+            {
+              "name": "features",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
         ],
         "packet_entity_effect": [
           "container",
@@ -4669,16 +4828,18 @@
           [
             {
               "name": "motd",
-              "type": [
-                "option",
-                "string"
-              ]
+              "type": "string"
             },
             {
-              "name": "icon",
+              "name": "iconBytes",
               "type": [
                 "option",
-                "string"
+                [
+                  "buffer",
+                  {
+                    "countType": "varint"
+                  }
+                ]
               ]
             },
             {
@@ -4779,6 +4940,10 @@
                                   {
                                     "name": "result",
                                     "type": "slot"
+                                  },
+                                  {
+                                    "name": "showNotification",
+                                    "type": "bool"
                                   }
                                 ]
                               ],
@@ -4833,7 +4998,46 @@
                                     "type": "slot"
                                   }
                                 ]
-                              ]
+                              ],
+                              "minecraft:smithing_transform": [
+                                "container",
+                                [
+                                  {
+                                    "name": "template",
+                                    "type": "ingredient"
+                                  },
+                                  {
+                                    "name": "base",
+                                    "type": "ingredient"
+                                  },
+                                  {
+                                    "name": "addition",
+                                    "type": "ingredient"
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "minecraft:smithing_trim": [
+                                "container",
+                                [
+                                  {
+                                    "name": "base",
+                                    "type": "ingredient"
+                                  },
+                                  {
+                                    "name": "addition",
+                                    "type": "ingredient"
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "minecraft:crafting_decorated_pot": "minecraft_simple_recipe_format"
                             }
                           }
                         ]
@@ -5046,6 +5250,85 @@
             }
           ]
         ],
+        "packet_chunk_biomes": [
+          "container",
+          [
+            {
+              "name": "biomes",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "position",
+                        "type": "position"
+                      },
+                      {
+                        "name": "data",
+                        "type": [
+                          "buffer",
+                          {
+                            "countType": "varint"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_damage_event": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "sourceTypeId",
+              "type": "varint"
+            },
+            {
+              "name": "sourceCauseId",
+              "type": [
+                "option",
+                "varint"
+              ]
+            },
+            {
+              "name": "sourceDirectId",
+              "type": [
+                "option",
+                "varint"
+              ]
+            },
+            {
+              "name": "sourcePosition",
+              "type": [
+                "option",
+                "vec3f64"
+              ]
+            }
+          ]
+        ],
+        "packet_hurt_animation": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -5056,113 +5339,117 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "spawn_entity",
-                    "0x01": "spawn_entity_experience_orb",
-                    "0x02": "named_entity_spawn",
-                    "0x03": "animation",
-                    "0x04": "statistics",
-                    "0x05": "acknowledge_player_digging",
-                    "0x06": "block_break_animation",
-                    "0x07": "tile_entity_data",
-                    "0x08": "block_action",
-                    "0x09": "block_change",
-                    "0x0a": "boss_bar",
-                    "0x0b": "difficulty",
-                    "0x0c": "clear_titles",
-                    "0x0d": "tab_complete",
-                    "0x0e": "declare_commands",
-                    "0x0f": "close_window",
-                    "0x10": "window_items",
-                    "0x11": "craft_progress_bar",
-                    "0x12": "set_slot",
-                    "0x13": "set_cooldown",
-                    "0x14": "chat_suggestions",
-                    "0x15": "custom_payload",
-                    "0x16": "hide_message",
-                    "0x17": "kick_disconnect",
-                    "0x18": "profileless_chat",
-                    "0x19": "entity_status",
-                    "0x1a": "explosion",
-                    "0x1b": "unload_chunk",
-                    "0x1c": "game_state_change",
-                    "0x1d": "open_horse_window",
-                    "0x1e": "initialize_world_border",
-                    "0x1f": "keep_alive",
-                    "0x20": "map_chunk",
-                    "0x21": "world_event",
-                    "0x22": "world_particles",
-                    "0x23": "update_light",
-                    "0x24": "login",
-                    "0x25": "map",
-                    "0x26": "trade_list",
-                    "0x27": "rel_entity_move",
-                    "0x28": "entity_move_look",
-                    "0x29": "entity_look",
-                    "0x2a": "vehicle_move",
-                    "0x2b": "open_book",
-                    "0x2c": "open_window",
-                    "0x2d": "open_sign_entity",
-                    "0x2e": "ping",
-                    "0x2f": "craft_recipe_response",
-                    "0x30": "abilities",
-                    "0x31": "player_chat",
-                    "0x32": "end_combat_event",
-                    "0x33": "enter_combat_event",
-                    "0x34": "death_combat_event",
-                    "0x35": "player_remove",
-                    "0x36": "player_info",
-                    "0x37": "face_player",
-                    "0x38": "position",
-                    "0x39": "unlock_recipes",
-                    "0x3a": "entity_destroy",
-                    "0x3b": "remove_entity_effect",
-                    "0x3c": "resource_pack_send",
-                    "0x3d": "respawn",
-                    "0x3e": "entity_head_rotation",
-                    "0x3f": "multi_block_change",
-                    "0x40": "select_advancement_tab",
-                    "0x41": "server_data",
-                    "0x42": "action_bar",
-                    "0x43": "world_border_center",
-                    "0x44": "world_border_lerp_size",
-                    "0x45": "world_border_size",
-                    "0x46": "world_border_warning_delay",
-                    "0x47": "world_border_warning_reach",
-                    "0x48": "camera",
-                    "0x49": "held_item_slot",
-                    "0x4a": "update_view_position",
-                    "0x4b": "update_view_distance",
-                    "0x4c": "spawn_position",
-                    "0x4d": "scoreboard_display_objective",
-                    "0x4e": "entity_metadata",
-                    "0x4f": "attach_entity",
-                    "0x50": "entity_velocity",
-                    "0x51": "entity_equipment",
-                    "0x52": "experience",
-                    "0x53": "update_health",
-                    "0x54": "scoreboard_objective",
-                    "0x55": "set_passengers",
-                    "0x56": "teams",
-                    "0x57": "scoreboard_score",
-                    "0x58": "simulation_distance",
-                    "0x59": "set_title_subtitle",
-                    "0x5a": "update_time",
-                    "0x5b": "set_title_text",
-                    "0x5c": "set_title_time",
-                    "0x5d": "entity_sound_effect",
-                    "0x5e": "sound_effect",
-                    "0x5f": "stop_sound",
-                    "0x60": "system_chat",
-                    "0x61": "playerlist_header",
-                    "0x62": "nbt_query_response",
-                    "0x63": "collect",
-                    "0x64": "entity_teleport",
-                    "0x65": "advancements",
-                    "0x66": "entity_update_attributes",
-                    "0x67": "feature_flags",
-                    "0x68": "entity_effect",
-                    "0x69": "declare_recipes",
-                    "0x6a": "tags"
+                    "0x00": "bundle_delimiter",
+                    "0x01": "spawn_entity",
+                    "0x02": "spawn_entity_experience_orb",
+                    "0x03": "named_entity_spawn",
+                    "0x04": "animation",
+                    "0x05": "statistics",
+                    "0x06": "acknowledge_player_digging",
+                    "0x07": "block_break_animation",
+                    "0x08": "tile_entity_data",
+                    "0x09": "block_action",
+                    "0x0a": "block_change",
+                    "0x0b": "boss_bar",
+                    "0x0c": "difficulty",
+                    "0x0d": "chunk_biomes",
+                    "0x0e": "clear_titles",
+                    "0x0f": "tab_complete",
+                    "0x10": "declare_commands",
+                    "0x11": "close_window",
+                    "0x12": "window_items",
+                    "0x13": "craft_progress_bar",
+                    "0x14": "set_slot",
+                    "0x15": "set_cooldown",
+                    "0x16": "chat_suggestions",
+                    "0x17": "custom_payload",
+                    "0x18": "damage_event",
+                    "0x19": "hide_message",
+                    "0x1a": "kick_disconnect",
+                    "0x1b": "profileless_chat",
+                    "0x1c": "entity_status",
+                    "0x1d": "explosion",
+                    "0x1e": "unload_chunk",
+                    "0x1f": "game_state_change",
+                    "0x20": "open_horse_window",
+                    "0x21": "hurt_animation",
+                    "0x22": "initialize_world_border",
+                    "0x23": "keep_alive",
+                    "0x24": "map_chunk",
+                    "0x25": "world_event",
+                    "0x26": "world_particles",
+                    "0x27": "update_light",
+                    "0x28": "login",
+                    "0x29": "map",
+                    "0x2a": "trade_list",
+                    "0x2b": "rel_entity_move",
+                    "0x2c": "entity_move_look",
+                    "0x2d": "entity_look",
+                    "0x2e": "vehicle_move",
+                    "0x2f": "open_book",
+                    "0x30": "open_window",
+                    "0x31": "open_sign_entity",
+                    "0x32": "ping",
+                    "0x33": "craft_recipe_response",
+                    "0x34": "abilities",
+                    "0x35": "player_chat",
+                    "0x36": "end_combat_event",
+                    "0x37": "enter_combat_event",
+                    "0x38": "death_combat_event",
+                    "0x39": "player_remove",
+                    "0x3a": "player_info",
+                    "0x3b": "face_player",
+                    "0x3c": "position",
+                    "0x3d": "unlock_recipes",
+                    "0x3e": "entity_destroy",
+                    "0x3f": "remove_entity_effect",
+                    "0x40": "resource_pack_send",
+                    "0x41": "respawn",
+                    "0x42": "entity_head_rotation",
+                    "0x43": "multi_block_change",
+                    "0x44": "select_advancement_tab",
+                    "0x45": "server_data",
+                    "0x46": "action_bar",
+                    "0x47": "world_border_center",
+                    "0x48": "world_border_lerp_size",
+                    "0x49": "world_border_size",
+                    "0x4a": "world_border_warning_delay",
+                    "0x4b": "world_border_warning_reach",
+                    "0x4c": "camera",
+                    "0x4d": "held_item_slot",
+                    "0x4e": "update_view_position",
+                    "0x4f": "update_view_distance",
+                    "0x50": "spawn_position",
+                    "0x51": "scoreboard_display_objective",
+                    "0x52": "entity_metadata",
+                    "0x53": "attach_entity",
+                    "0x54": "entity_velocity",
+                    "0x55": "entity_equipment",
+                    "0x56": "experience",
+                    "0x57": "update_health",
+                    "0x58": "scoreboard_objective",
+                    "0x59": "set_passengers",
+                    "0x5a": "teams",
+                    "0x5b": "scoreboard_score",
+                    "0x5c": "simulation_distance",
+                    "0x5d": "set_title_subtitle",
+                    "0x5e": "update_time",
+                    "0x5f": "set_title_text",
+                    "0x60": "set_title_time",
+                    "0x61": "entity_sound_effect",
+                    "0x62": "sound_effect",
+                    "0x63": "stop_sound",
+                    "0x64": "system_chat",
+                    "0x65": "playerlist_header",
+                    "0x66": "nbt_query_response",
+                    "0x67": "collect",
+                    "0x68": "entity_teleport",
+                    "0x69": "advancements",
+                    "0x6a": "entity_update_attributes",
+                    "0x6b": "feature_flags",
+                    "0x6c": "entity_effect",
+                    "0x6d": "declare_recipes",
+                    "0x6e": "tags"
                   }
                 }
               ]
@@ -5174,6 +5461,7 @@
                 {
                   "compareTo": "name",
                   "fields": {
+                    "bundle_delimiter": "void",
                     "spawn_entity": "packet_spawn_entity",
                     "spawn_entity_experience_orb": "packet_spawn_entity_experience_orb",
                     "named_entity_spawn": "packet_named_entity_spawn",
@@ -5186,6 +5474,7 @@
                     "block_change": "packet_block_change",
                     "boss_bar": "packet_boss_bar",
                     "difficulty": "packet_difficulty",
+                    "chunk_biomes": "packet_chunk_biomes",
                     "clear_titles": "packet_clear_titles",
                     "tab_complete": "packet_tab_complete",
                     "declare_commands": "packet_declare_commands",
@@ -5196,6 +5485,7 @@
                     "set_cooldown": "packet_set_cooldown",
                     "chat_suggestions": "packet_chat_suggestions",
                     "custom_payload": "packet_custom_payload",
+                    "damage_event": "packet_damage_event",
                     "hide_message": "packet_hide_message",
                     "kick_disconnect": "packet_kick_disconnect",
                     "profileless_chat": "packet_profileless_chat",
@@ -5204,6 +5494,7 @@
                     "unload_chunk": "packet_unload_chunk",
                     "game_state_change": "packet_game_state_change",
                     "open_horse_window": "packet_open_horse_window",
+                    "hurt_animation": "packet_hurt_animation",
                     "initialize_world_border": "packet_initialize_world_border",
                     "keep_alive": "packet_keep_alive",
                     "map_chunk": "packet_map_chunk",
@@ -5344,10 +5635,10 @@
                       {
                         "name": "signature",
                         "type": [
-                        	"buffer",
-                        	{
-                        		"count": 256
-                        	}
+                          "buffer",
+                          {
+                            "count": 256
+                          }
                         ]
                       }
                     ]
@@ -5362,10 +5653,10 @@
             {
               "name": "acknowledged",
               "type": [
-              	"buffer",
-              	{
-              		"count": 3
-              	}
+                "buffer",
+                {
+                  "count": 3
+                }
               ]
             }
           ]
@@ -5390,10 +5681,10 @@
               "type": [
                 "option",
                 [
-                	"buffer",
-                	{
-                		"count": 256
-                	}
+                  "buffer",
+                  {
+                    "count": 256
+                  }
                 ]
               ]
             },
@@ -5402,13 +5693,13 @@
               "type": "varint"
             },
             {
-            	"name": "acknowledged",
-            	"type": [
-            		"buffer",
-            		{
-            			"count": 3
-            		}
-            	]
+              "name": "acknowledged",
+              "type": [
+                "buffer",
+                {
+                  "count": 3
+                }
+              ]
             }
           ]
         ],
@@ -5425,10 +5716,10 @@
           "container",
           [
             {
-            	"name": "count",
-            	"type": "varint"
+              "name": "count",
+              "type": "varint"
             }
-        ]
+          ]
         ],
         "packet_edit_book": [
           "container",
@@ -6278,35 +6569,35 @@
           ]
         ],
         "packet_chat_session_update": [
-        	"container",
-        	[
-        		{
-        			"name": "sessionUUID",
-        			"type": "UUID"
-        		},
+          "container",
+          [
+            {
+              "name": "sessionUUID",
+              "type": "UUID"
+            },
             {
               "name": "expireTime",
               "type": "i64"
             },
-        		{
-        			"name": "publicKey",
-        			"type": [
-        				"buffer",
-        				{
-        					"countType": "varint"
-        				}
-        			]
-        		},
-        		{
-        			"name": "signature",
-        			"type": [
-        				"buffer",
-        				{
-        					"countType": "varint"
-        				}
-        			]
-        		}
-        	]
+            {
+              "name": "publicKey",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            },
+            {
+              "name": "signature",
+              "type": [
+                "buffer",
+                {
+                  "countType": "varint"
+                }
+              ]
+            }
+          ]
         ],
         "packet": [
           "container",
@@ -6324,33 +6615,33 @@
                     "0x03": "message_acknowledgement",
                     "0x04": "chat_command",
                     "0x05": "chat_message",
-                    "0x06": "client_command",
-                    "0x07": "settings",
-                    "0x08": "tab_complete",
-                    "0x09": "enchant_item",
-                    "0x0a": "window_click",
-                    "0x0b": "close_window",
-                    "0x0c": "custom_payload",
-                    "0x0d": "edit_book",
-                    "0x0e": "query_entity_nbt",
-                    "0x0f": "use_entity",
-                    "0x10": "generate_structure",
-                    "0x11": "keep_alive",
-                    "0x12": "lock_difficulty",
-                    "0x13": "position",
-                    "0x14": "position_look",
-                    "0x15": "look",
-                    "0x16": "flying",
-                    "0x17": "vehicle_move",
-                    "0x18": "steer_boat",
-                    "0x19": "pick_item",
-                    "0x1a": "craft_recipe_request",
-                    "0x1b": "abilities",
-                    "0x1c": "block_dig",
-                    "0x1d": "entity_action",
-                    "0x1e": "steer_vehicle",
-                    "0x1f": "pong",
-                    "0x20": "chat_session_update",
+                    "0x06": "chat_session_update",
+                    "0x07": "client_command",
+                    "0x08": "settings",
+                    "0x09": "tab_complete",
+                    "0x0a": "enchant_item",
+                    "0x0b": "window_click",
+                    "0x0c": "close_window",
+                    "0x0d": "custom_payload",
+                    "0x0e": "edit_book",
+                    "0x0f": "query_entity_nbt",
+                    "0x10": "use_entity",
+                    "0x11": "generate_structure",
+                    "0x12": "keep_alive",
+                    "0x13": "lock_difficulty",
+                    "0x14": "position",
+                    "0x15": "position_look",
+                    "0x16": "look",
+                    "0x17": "flying",
+                    "0x18": "vehicle_move",
+                    "0x19": "steer_boat",
+                    "0x1a": "pick_item",
+                    "0x1b": "craft_recipe_request",
+                    "0x1c": "abilities",
+                    "0x1d": "block_dig",
+                    "0x1e": "entity_action",
+                    "0x1f": "steer_vehicle",
+                    "0x20": "pong",
                     "0x21": "recipe_book",
                     "0x22": "displayed_recipe",
                     "0x23": "name_item",
