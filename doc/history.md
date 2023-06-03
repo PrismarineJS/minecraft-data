@@ -1,3 +1,6 @@
+## 3.34.0
+* Partially updated protocol to 1.19.4 (thqnks @extremeheat @TFBosoN @frej4189 @bradisson)
+
 ## 3.33.0
 * Use node 18.
 
