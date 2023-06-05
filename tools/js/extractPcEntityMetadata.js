@@ -57,11 +57,11 @@ const allEntityFileCodes = Object.fromEntries(allEntityFiles.map(file => [
 ]))
 
 const entityPreTree = []
-const inheritPairs = {}
+const metadatas = {}
 
 for (const file in allEntityFileCodes) {
   const code = allEntityFileCodes[file]
-  const lines = code.split('\n')
+  const lines = code.split(';')
   let lastClass
   for (const line of lines) {
     let lineWithoutGenerics = line.replace(/<.*>/g, '')
@@ -84,10 +84,12 @@ for (const file in allEntityFileCodes) {
     if (line.includes('SynchedEntityData.defineId(')) {
       // from:    private static final EntityDataAccessor<Sniffer.State> DATA_STATE = SynchedEntityData.defineId(Sniffer.class, EntityDataSerializers.SNIFFER_STATE);
       // extract: DATA_STATE, SNIFFER_STATE
-      const r = line.match(/> ([A-Z_0-9]+) = .*EntityDataSerializers.([A-Z_0-9]+)/)
+      const r = line.match(/> ([A-Z_0-9]+) = .*EntityDataSerializers.([A-Z_0-9]+)/s)
       if (r) {
         const [, data, serializer] = r
-        ;(inheritPairs[lastClass] ??= []).push([data, serializer])
+        ; (metadatas[lastClass] ??= []).push([data, serializer])
+      } else {
+        throw new Error('Failed to parse line: ' + line)
       }
     }
   }
@@ -98,7 +100,7 @@ const flat = {}
 const handledNames = []
 function build (ele, root = tree, arr = []) {
   const name = classNameToRegistryName[ele]
-  const metadata = inheritPairs[ele]
+  const metadata = metadatas[ele]
   root[ele] = { children: {}, name, metadata }
   if (name) flat[name] = arr.concat(metadata ?? [])
   handledNames.push(ele)
@@ -145,5 +147,7 @@ function updateMcDataProtocolJSON () {
   fs.writeFileSync(presentMcDataPath, JSON.stringify(mcdata, null, 2))
 }
 
+// fs.writeFileSync(`./entityTree.json`, JSON.stringify(tree, null, 2))
+// fs.writeFileSync(`./entityFlat.json`, JSON.stringify(flat, null, 2))
 updateMcDataEntitiesJSON()
 updateMcDataProtocolJSON()
