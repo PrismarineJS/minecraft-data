@@ -22,7 +22,6 @@ function getEntityTypes () {
       const regex = line.match(/EntityType<(.*)> (.*) = register\(\W+"([a-z0-9_]+)"/)
       if (regex) {
         const [, type, , name] = regex
-        // console.log('Type', type, 'Name', name)
         classNameTo[type] = name
       }
     }
@@ -56,10 +55,8 @@ const allEntityFileCodes = Object.fromEntries(allEntityFiles.map(file => [
   file.split(/\\|\//g).pop().replace('.java', ''),
   fs.readFileSync(file, 'utf8')
 ]))
-const entityPreTree = []
-// console.log('All Entity Files', allEntityFileCodes)
-// this is really bad code, but it's way easier to write
 
+const entityPreTree = []
 const inheritPairs = {}
 
 for (const file in allEntityFileCodes) {
@@ -120,10 +117,7 @@ for (const key in classNameToRegistryName) {
 function updateMcDataEntitiesJSON () {
   const presentMcDataPath = `../../data/pc/${version}/entities.json`
   const presentMcData = require(presentMcDataPath)
-  // const newMcData = []
   for (const entry of presentMcData) {
-    // newMcData.push(flat[entry.name].map(e => e[0].toLowerCase()))
-    // entry.metadataKeys = newMcData.length - 1
     entry.metadataKeys = flat[entry.name].map(e => e[0].replace('DATA_', '').replace('_ID', '').replace('ID_', '').toLowerCase())
   }
   fs.writeFileSync(presentMcDataPath, JSON.stringify(presentMcData, null, 2))
@@ -136,7 +130,6 @@ function updateMcDataProtocolJSON () {
   for (let i = 0; i < serializers.length; i++) {
     mapper.mappings[i] = serializers[i].toLowerCase()
   }
-  // const mcdata = require('../../data/pc/1.19.4/protocol.json')
   mcdata.types.entityMetadata[1].type[1] = [
     { name: 'key', type: 'u8' },
     { name: 'type', type: ['mapper', mapper] },
@@ -151,9 +144,6 @@ function updateMcDataProtocolJSON () {
   // mcdata.types.entityMetadataItem[1].fields = next
   fs.writeFileSync(presentMcDataPath, JSON.stringify(mcdata, null, 2))
 }
-
-// fs.writeFileSync('entityTree.json', JSON.stringify(tree, null, 2))
-// fs.writeFileSync('entityFlat.json', JSON.stringify(flat, null, 2))
 
 updateMcDataEntitiesJSON()
 updateMcDataProtocolJSON()
