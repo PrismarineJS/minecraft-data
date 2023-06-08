@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.80
+!version: 1.20.0
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -429,7 +429,11 @@ packet_start_game:
    # ClientSideGeneration is true if the client should use the features registered in the FeatureRegistry packet to
    # generate terrain client-side to save on bandwidth.
    client_side_generation: bool
+   # UseBlockNetworkIDHashes is true if the client should use the hash of a block's name as its network ID rather than
+   # its index in the expected block palette. This is useful for servers that wish to support multiple protocol versions
+   # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
+   server_controlled_sound: bool
 
 packet_add_player:
    !id: 0x0c
@@ -1476,6 +1480,11 @@ packet_event:
       23: target_block_hit
       24: piglin_barter
       25: waxed_or_unwaxed_copper
+      26: code_builder_runtime_action
+      27: code_builder_scoreboard
+      28: strider_ridden_in_lava_in_overworld
+      29: sneak_close_to_sculk_sensor
+      30: careful_restoration
    use_player_id: u8
    event_data: restBuffer # Unknown data, TODO: add
 
@@ -2853,6 +2862,12 @@ packet_emote:
    entity_id: varint64
    # EmoteID is the ID of the emote to send.
    emote_id: string
+   # XUID is the Xbox User ID of the player that sent the emote. It is only set when the emote is used by a player that
+   # is authenticated with Xbox Live.
+   xuid: string
+   # PlatformID is an identifier only set for particular platforms when using an emote (presumably only for Nintendo
+   # Switch). It is otherwise an empty string, and is used to decide which players are able to emote with each other.
+   platform_id: DeviceOS
    # Flags is a combination of flags that change the way the Emote packet operates. When the server sends
    # this packet to other players, EmoteFlagServerSide must be present.
    flags: u8 =>
@@ -3882,7 +3897,12 @@ packet_unlocked_recipes:
    !id: 0xc7
    !bound: client
    # new_unlocks determines if new recipes have been unlocked since the packet was last sent.
-   new_unlocks: bool
+   unlock_type: lu32 =>
+   - empty
+   - initially_unlocked
+   - newly_unlocked
+   - remove_unlocked
+   - remove_all_unlocked
    # Recipes is a list of recipe names that have been unlocked.
    recipes: string[]varint
 

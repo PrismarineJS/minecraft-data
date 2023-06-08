@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.19.10
+!version: 1.19.80
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -180,6 +180,7 @@ packet_text:
       8: announcement
       9: json_whisper
       10: json
+      11: json_announcement
    # NeedsTranslation specifies if any of the messages need to be translated. It seems that where % is found
    # in translatable text types, these are translated regardless of this bool. Translatable text types
    # include TextTypeTip, TextTypePopup and TextTypeJukeboxPopup.
@@ -188,7 +189,7 @@ packet_text:
       if chat or whisper or announcement:
          source_name: string
          message: string
-      if raw or tip or system or json_whisper or json:
+      if raw or tip or system or json_whisper or json or json_announcement:
          message: string
       if translation or popup or jukebox_popup:
          message: string
@@ -265,6 +266,10 @@ packet_start_game:
    # EditorWorld is a value to dictate if the world is in editor mode, a special mode recently introduced adding
    # "powerful tools for editing worlds, intended for experienced creators."
    editor_world: bool
+   # Whether the world was created in editor mode
+   created_in_editor: bool
+   # Whether the world was exported from editor mode
+   exported_from_editor: bool
    # The time at which the day cycle was locked if the day cycle is disabled using the respective
    # game rule. The client will maIntain this time as Boolean as the day cycle is disabled.
    day_cycle_stop_time: zigzag32
@@ -335,6 +340,12 @@ packet_start_game:
    # A hack that Mojang put in place to preserve backwards compatibility with old villagers. 
    # The his never actually read though, so it has no functionality.
    only_spawn_v1_villagers: bool
+   # PersonaDisabled is true if persona skins are disabled for the current game session.
+   persona_disabled: bool
+   # CustomSkinsDisabled is true if custom skins are disabled for the current game session.
+   custom_skins_disabled: bool
+   # EmoteChatMuted specifies if players will be sent a chat message when using certain emotes.
+   emote_chat_muted: bool
    # The version of the game from which Vanilla features will be used.
    # The exact function of this field isn't clear.
    game_version: string
@@ -343,6 +354,13 @@ packet_start_game:
    is_new_nether: bool
    edu_resource_uri: EducationSharedResourceURI
    experimental_gameplay_override: bool
+   # ChatRestrictionLevel specifies the level of restriction on in-game chat.
+   chat_restriction_level: u8 =>
+      0: none
+      1: dropped
+      2: disabled
+   # DisablePlayerInteractions is true if the client should ignore other players when interacting with the world.
+   disable_player_interactions: bool
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -408,6 +426,10 @@ packet_start_game:
    # WorldTemplateID is a UUID that identifies the template that was used to generate the world. Servers that do not
    # use a world based off of a template can set this to an empty UUID.
    world_template_id: uuid
+   # ClientSideGeneration is true if the client should use the features registered in the FeatureRegistry packet to
+   # generate terrain client-side to save on bandwidth.
+   client_side_generation: bool
+   block_network_ids_are_hashes: bool
 
 packet_add_player:
    !id: 0x0c
@@ -450,6 +472,9 @@ packet_add_player:
    # particular the way the player looks. Flags include ones such as 'on fire' and 'sprinting'.
    # The metadata values are indexed by their property key.
    metadata: MetadataDictionary
+   # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
+   # vanilla server does not use these properties, however they are still supported by the protocol.
+   properties: EntityProperties
    # The unique ID of the player. The unique ID is a value that remains consistent
    # across different sessions of the same world, but most unoffical servers simply 
    # fill the runtime ID of the player out for this field.
@@ -506,6 +531,9 @@ packet_add_entity:
    # particular the way the entity looks. Flags include ones such as 'on fire' and 'sprinting'.
    # The metadata values are indexed by their property key.
    metadata: MetadataDictionary
+   # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
+   # vanilla server does not use these properties, however they are still supported by the protocol.
+   properties: EntityProperties
    # EntityLinks is a list of entity links that are currently active on the entity. These links alter the
    # way the entity shows up when first spawned in terms of it shown as riding an entity. Setting these
    # links is important for new viewers to see the entity is riding another entity.
@@ -765,6 +793,13 @@ packet_level_event:
       3509: cauldron_clean_banner  
       3600: block_start_break  
       3601: block_stop_break  
+      3602: block_break_speed
+      3603: particle_punch_block_down
+      3604: particle_punch_block_up
+      3605: particle_punch_block_north
+      3606: particle_punch_block_south
+      3607: particle_punch_block_west
+      3608: particle_punch_block_east
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
@@ -1048,6 +1083,9 @@ packet_set_entity_data:
    !bound: both
    runtime_entity_id: varint64
    metadata: MetadataDictionary
+   # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
+   # vanilla server does not use these properties, however they are still supported by the protocol.
+   properties: EntityProperties
    tick: varint64
 
 # SetActorMotion is sent by the server to change the client-side velocity of an entity. It is usually used
@@ -1480,6 +1518,8 @@ packet_clientbound_map_item_data:
    # LockedMap specifies if the map that was updated was a locked map, which may be done using a cartography
    # table.
    locked: bool
+   # Origin is the center position of the map being updated.
+   origin: vec3i
    # The following fields apply only for the MapUpdateFlagInitialisation.
    # MapsIncludedIn holds an array of map IDs that the map updated is included in. This has to do with the
    # scale of the map: Each map holds its own map ID and all map IDs of maps that include this map and have
@@ -1524,6 +1564,11 @@ packet_map_info_request:
    !id: 0x44
    !bound: both
    map_id: zigzag64
+   # ClientPixels is a map of pixels sent from the client to notify the server about the pixels that it isn't
+   # aware of.
+   client_pixels: []lu32
+      rgba: li32
+      index: lu16
 
 # RequestChunkRadius is sent by the client to the server to update the server on the chunk view radius that
 # it has set in the settings. The server may respond with a ChunkRadiusUpdated packet with either the chunk
@@ -1534,6 +1579,7 @@ packet_request_chunk_radius:
    # ChunkRadius is the requested chunk radius. This value is always the value set in the settings of the
    # player.
    chunk_radius: zigzag32
+   max_radius: u8
 
 # ChunkRadiusUpdated is sent by the server in response to a RequestChunkRadius packet. It defines the chunk
 # radius that the server allows the client to have. This may be lower than the chunk radius requested by the
@@ -1689,15 +1735,15 @@ packet_available_commands:
                10: wildcard_target
                17: file_path
                23: integer_range
-               38: equipment_slots
-               39: string
-               47: block_position
-               48: position
-               51: message
-               53: raw_text
-               57: json
-               67: block_states
-               70: command
+               43: equipment_slots
+               44: string
+               52: block_position
+               53: position
+               55: message
+               58: raw_text
+               62: json
+               71: block_states
+               74: command
             # In MC, this + prior field are combined to one 32bit bitfield
             enum_type: lu16 =>
                0x10: valid
@@ -1752,6 +1798,9 @@ packet_command_request:
    # Internal specifies if the command request internal. Setting it to false seems to work and the usage of
    # this field is not known.
    internal: bool
+   # Specifies the version of the command to run, relative to the current Minecraft version. Should be set
+   # to 52 as of 1.19.62
+   version: varint
 
 
 # CommandBlockUpdate is sent by the client to update a command block at a specific position. The command
@@ -2059,6 +2108,8 @@ packet_structure_block_update:
    # ShouldTrigger specifies if the structure block should be triggered immediately after this packet
    # reaches the server.
    should_trigger: bool
+   # Waterlogged specifies if the structure block is waterlogged at the time of the packet being sent.
+   water_logged: bool
 
 # ShowStoreOffer is sent by the server to show a Marketplace store offer to a player. It opens a window
 # client-side that displays the item.
@@ -2236,11 +2287,21 @@ packet_modal_form_response:
    # FormID is the form ID of the form the client has responded to. It is the same as the ID sent in the
    # ModalFormRequest, and may be used to identify which form was submitted.
    form_id: varint
-   # ResponseData is a JSON encoded value representing the response of the player. If the form was
-   # cancelled, a JSON encoded 'null' is in the response. For a modal form, the response is either true or
-   # false, for a menu form, the response is an integer specifying the index of the button clicked, and for
-   # a custom form, the response is an array containing a value for each element.
-   data: string
+   # HasResponseData is true if the client provided response data.
+   has_response_data: bool
+   # ResponseData is a JSON encoded value representing the response of the player. For a modal form, the response is
+   # either true or false, for a menu form, the response is an integer specifying the index of the button clicked, and
+   # for a custom form, the response is an array containing a value for each element.
+   data: has_response_data ?
+      if true: string
+   # HasCancelReason is true if the client provided a reason for the form being cancelled.
+   has_cancel_reason: bool
+   # CancelReason represents the reason why the form was cancelled.
+   _: has_cancel_reason ?
+      if true:
+         cancel_reason: u8 =>
+            0: closed
+            1: busy
 
 # ServerSettingsRequest is sent by the client to request the settings specific to the server. These settings
 # are shown in a separate tab client-side, and have the same structure as a custom form.
@@ -2545,11 +2606,18 @@ packet_network_chunk_publisher_update:
    !bound: client
    # Position is the block position around which chunks loaded will remain shown to the client. Most servers
    # set this position to the position of the player itself.
+   ##TODO: Check putSignedBlockPosition
    coordinates: BlockCoordinates
    # Radius is the radius in blocks around Position that chunks sent show up in and will remain loaded in.
    # Unlike the RequestChunkRadius and ChunkRadiusUpdated packets, this radius is in blocks rather than
    # chunks, so the chunk radius needs to be multiplied by 16. (Or shifted to the left by 4.)
    radius: varint
+   saved_chunks: []lu32
+      # ChunkX is the X coordinate of the chunk sent. (To translate a block's X to a chunk's X: x >> 4)
+      x: zigzag32
+      # ChunkZ is the Z coordinate of the chunk sent. (To translate a block's Z to a chunk's Z: z >> 4)
+      z: zigzag32
+
 
 # BiomeDefinitionList is sent by the server to let the client know all biomes that are available and
 # implemented on the server side. It is much like the AvailableActorIdentifiers packet, but instead
@@ -2700,6 +2768,7 @@ packet_structure_template_data_export_request:
       1: export_from_save
       2: export_from_load
       3: query_saved_structure
+      4: import_from_save
 
 # StructureTemplateDataResponse is sent by the server to send data of a structure to the client in response
 # to a StructureTemplateDataRequest packet.
@@ -2715,6 +2784,7 @@ packet_structure_template_data_export_response:
    response_type: u8 =>
       1: export
       2: query
+      3: import
 
 # No longer used.
 packet_update_block_properties:
@@ -2789,7 +2859,9 @@ packet_emote:
    emote_id: string
    # Flags is a combination of flags that change the way the Emote packet operates. When the server sends
    # this packet to other players, EmoteFlagServerSide must be present.
-   flags: u8
+   flags: u8 =>
+      1: server_side
+      2: mute_chat
 
 # MultiPlayerSettings is sent by the client to update multi-player related settings server-side and sent back
 # to online players by the server.
@@ -2859,12 +2931,24 @@ packet_completed_using_item:
 # way packets are sent over the network stack.
 packet_network_settings:
    !id: 0x8f
-   !bound: both
+   !bound: client
    # CompressionThreshold is the minimum size of a packet that is compressed when sent. If the size of a
    # packet is under this value, it is not compressed.
    # When set to 0, all packets will be left uncompressed.
-   compression_threshold: u16
-
+   compression_threshold: lu16
+   # CompressionAlgorithm is the algorithm that is used to compress packets.
+   compression_algorithm: lu16 =>
+      0: deflate
+      1: snappy
+   # ClientThrottle regulates whether the client should throttle players when exceeding of the threshold. Players
+   # outside threshold will not be ticked, improving performance on low-end devices.
+   client_throttle: bool
+   # ClientThrottleThreshold is the threshold for client throttling. If the number of players exceeds this value, the
+   # client will throttle players.
+   client_throttle_threshold: u8
+   # ClientThrottleScalar is the scalar for client throttling. The scalar is the amount of players that are ticked
+   # when throttling is enabled.
+   client_throttle_scalar: lf32
 
 # PlayerAuthInput is sent by the client to allow for server authoritative movement. It is used to synchronise
 # the player input with the position server-side.
@@ -2941,6 +3025,9 @@ packet_player_auth_input:
                # BlockFace is the face of the target block that was touched. If the action with the ActionType set
                # concerned a block. If not, the face is always 0.
                face: zigzag32
+   # AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
+   # values which are created using an analogue input.
+   analogue_move_vector: vec2f
 
 #TODO: update to use the new `shift` option in bitflags
 InputFlag: [ "bitflags", {
@@ -2982,7 +3069,9 @@ InputFlag: [ "bitflags", {
       "stop_gliding",
       "item_interact",
       "block_action",
-      "item_stack_request"
+      "item_stack_request",
+      "handled_teleport",
+      "emoting"
    ]
 }]
 
@@ -3688,3 +3777,150 @@ packet_editor_network:
    !bound: client
    # Payload is a network little endian compound tag holding data relevant to the editor.
    payload: nbt
+
+# FeatureRegistry is a packet used to notify the client about the world generation features the server is currently
+# using. This is used in combination with the client-side world generation system introduced in v1.19.20, allowing the
+# client to completely generate the chunks of the world without having to rely on the server.
+packet_feature_registry:
+   !id: 0xbf
+   !bound: client
+   # Features is a slice of all registered world generation features.
+   features: []varint
+      name: string
+      options: string
+
+# ServerStats is a packet sent from the server to the client to update the client on server statistics. It is purely
+# used for telemetry.
+packet_server_stats:
+   !id: 0xc0
+   !bound: client
+   server_time: lf32
+   network_time: lf32
+
+packet_request_network_settings:
+   !id: 0xc1
+   !bound: server
+   client_protocol: i32
+
+packet_game_test_request:
+   !id: 0xc2
+   # MaxTestsPerBatch ...
+   max_tests_per_batch: varint
+   # Repetitions represents the amount of times the test will be run.
+   repetitions: varint
+   # Rotation represents the rotation of the test. It is one of the constants above.
+   rotation: u8 => 
+    - 0deg
+    - 90deg
+    - 180deg
+    - 270deg
+    - 360deg
+   # StopOnError indicates whether the test should immediately stop when an error is encountered.
+   stop_on_error: bool
+   # Position is the position at which the test will be performed.
+   position: BlockCoordinates
+   # TestsPerRow ...
+   tests_per_row: varint
+   # Name represents the name of the test.
+   name: string
+
+# GameTestResults is a packet sent in response to the GameTestRequest packet, with a boolean indicating whether the
+# test was successful or not, and an error string if the test failed.
+packet_game_test_results:
+   !id: 0xc3
+   # Succeeded indicates whether the test succeeded or not.
+   succeeded: bool
+   # Error is the error that occurred. If Succeeded is true, this field is empty.
+   error: string
+   # Name represents the name of the test.
+   name: string
+
+InputLockFlags: [ "bitflags", {
+   "type": "varint",
+   "flags": {
+      "move": 0x02,
+      "jump": 0x04,
+      "sneak": 0x08,
+      "mount": 0x10,
+      "dismount": 0x20,
+      "rotation": 0x40
+   }
+} ]
+
+packet_update_client_input_locks:
+   !id: 0xc4
+   !bound: client
+   # Locks is an encoded bitset of all locks that are currently active. The locks are defined in the constants above.
+   locks: InputLockFlags
+   # Position is the server's position of the client at the time the packet was sent. It is unclear what the exact
+   # purpose of this field is.
+   position: vec3f
+
+packet_client_cheat_ability:
+   !id: 0xc5
+   !bound: client
+   # EntityUniqueID is the unique ID of the player. The unique ID is a value that remains consistent across
+   # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
+   # this field.
+   entity_unique_id: li64
+   # PlayerPermissions is the permission level of the player. It is a value from 0-3, with 0 being visitor,
+   # 1 being member, 2 being operator and 3 being custom.
+   permission_level: PermissionLevel
+   # CommandPermissions is a permission level that specifies the kind of commands that the player is
+   # allowed to use. It is one of the CommandPermissionLevel constants in the AdventureSettings packet.
+   command_permission: CommandPermissionLevel
+   # Layers contains all ability layers and their potential values. This should at least have one entry, being the
+   # base layer.
+   abilities: AbilityLayers[]u8
+
+# camera_presets gives the client a list of custom camera presets.
+packet_camera_presets:
+   !id: 0xc6
+   !bound: client
+   # Data is a compound tag of the presets being set.
+   data: nbt
+
+# unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
+# the recipe book.
+packet_unlocked_recipes:
+   !id: 0xc7
+   !bound: client
+   # new_unlocks determines if new recipes have been unlocked since the packet was last sent.
+   new_unlocks: bool
+   # Recipes is a list of recipe names that have been unlocked.
+   recipes: string[]varint
+
+# camera_instruction gives a custom camera specific instructions to operate.
+packet_camera_instruction:
+   !id: 0x12c
+   !bound:
+   # Data is a compound tag of the instructions to sent.
+   data: nbt
+
+packet_compressed_biome_definitions:
+   !id: 0x12d
+   !bound: client
+   # via PMMP:
+   # This packet is only sent by the server when client-side chunk generation is enabled in vanilla. It contains NBT data
+   # for biomes, similar to the BiomeDefinitionListPacket, but with a large amount of extra data for client-side chunk
+   # generation.
+   # 
+   # The data is compressed with a cursed home-brewed compression format, and it's a miracle it even works.
+   raw_payload: string
+
+packet_trim_data:
+   !id: 0x12e
+   !bound: client
+   patterns: []varint
+      item_name: string
+      pattern: string
+   materials: []varint
+      material: string
+      color: string
+      item_name: string
+
+packet_open_sign:
+   !id: 0x12f
+   !bound: client
+   position: BlockCoordinates
+   is_front: bool
