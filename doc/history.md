@@ -1,3 +1,6 @@
+## 3.35.0
+* Add bedrock 1.20.0 protocol data
+
 ## 3.34.0
 * Partially updated protocol to 1.19.4 (thqnks @extremeheat @TFBosoN @frej4189 @bradisson)
 
