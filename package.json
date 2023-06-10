@@ -7,7 +7,7 @@
     "test": "npm run lint",
     "lint": "standard",
     "fix": "standard --fix",
-    "build": "browserify index.js -i **/blocks_models.json -i **/steve.json -i **/blockMappings.json -i **/blockCollisionShapes.json -i **/blocksJ2B.json -i **/blocksB2J.json --full-paths -o bundle.js && node compileProtocol.js",
+    "build": "node buildBundle.js && node compileProtocol.js",
     "minify": "NODE_OPTIONS=--max_old_space_size=4096 uglifyjs bundle.js -o bundle.js",
     "start": "beefy index.js:bundle.js 9998",
     "prod-start": "http-server .",
