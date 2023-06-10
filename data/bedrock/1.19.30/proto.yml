@@ -953,7 +953,10 @@ packet_mob_effect:
    !id: 0x1c
    !bound: client
    runtime_entity_id: varint64
-   event_id: u8
+   event_id: u8 =>
+      1: add
+      2: update
+      3: remove
    effect_id: zigzag32
    amplifier: zigzag32
    particles: bool
@@ -1003,6 +1006,7 @@ packet_interact:
    action_id: u8 =>
       3: leave_vehicle
       4: mouse_over_entity
+      5: npc_open
       6: open_inventory
    # TargetEntityRuntimeID is the runtime ID of the entity that the player interacted with. This is empty
    # for the InteractActionOpenInventory action type.
@@ -2388,6 +2392,7 @@ packet_lab_table:
    action_type: u8 =>
       0: combine
       1: react
+      2: reset
    # Position is the position at which the lab table used was located.
    position: vec3i
    # ReactionType is the type of the reaction that took place as a result of the items put into the lab
@@ -2670,7 +2675,9 @@ packet_video_stream_connect:
    !bound: client
    server_uri: string
    frame_send_frequency: lf32
-   action: u8
+   action: u8 =>
+      1: none
+      2: close
    resolution_x: li32
    resolution_y: li32
 
