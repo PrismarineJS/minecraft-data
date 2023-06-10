@@ -57,7 +57,7 @@ packet_login:
    !bound: server
    # Protocol version (Big Endian!)
    protocol_version: i32
-   tokens: LoginTokens
+   tokens: '["encapsulated", { "lengthType": "varint", "type": "LoginTokens" }]'
 
 LoginTokens:
    # JSON array of JWT data: contains the display name, UUID and XUID
@@ -2059,7 +2059,7 @@ packet_sub_client_login:
    # verify if the player is connected to XBOX Live. The connection request also contains the necessary
    # client public key to initiate encryption.
    # The ConnectionRequest in this packet is identical to the one found in the Login packet.
-   tokens: LoginTokens
+   tokens: '["encapsulated", { "lengthType": "varint", "type": "LoginTokens" }]'
 
 # AutomationClientConnect is used to make the client connect to a websocket server. This websocket server has
 # the ability to execute commands on the behalf of the client and it can listen for certain events fired by
@@ -2680,7 +2680,7 @@ packet_update_block_properties:
 # what blobs it needs and which blobs it already has, in an ACK type system.
 packet_client_cache_blob_status:
    !id: 0x87
-   !bound: serverbound
+   !bound: server
    # The number of MISSes in this packet
    misses: varint
    # The number of HITs in this packet
