@@ -11,7 +11,7 @@ bundler.transform(function (file, options) {
   for (const blockedFile of blockedFiles) {
     if (file.endsWith(blockedFile)) {
       console.log('Blocked', file)
-      return through(function write() {
+      return through(function write () {
         // no op
       }, function end () {
         this.queue(stubs[blockedFile] || '[]')
