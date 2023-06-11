@@ -781,6 +781,16 @@ a { text-decoration: none; }
 
 <tr><td><a href="#packet_update_client_input_locks">0xc4</a></td><td><a href="#packet_update_client_input_locks">packet_update_client_input_locks</a></td></tr>
 <tr><td><a href="#packet_client_cheat_ability">0xc5</a></td><td><a href="#packet_client_cheat_ability">packet_client_cheat_ability</a></td></tr>
+
+<tr><td><a href="#packet_camera_presets">0xc6</a></td><td><a href="#packet_camera_presets">packet_camera_presets</a></td></tr>
+
+
+<tr><td><a href="#packet_unlocked_recipes">0xc7</a></td><td><a href="#packet_unlocked_recipes">packet_unlocked_recipes</a></td></tr>
+
+<tr><td><a href="#packet_camera_instruction">0x12c</a></td><td><a href="#packet_camera_instruction">packet_camera_instruction</a></td></tr>
+<tr><td><a href="#packet_compressed_biome_definitions">0x12d</a></td><td><a href="#packet_compressed_biome_definitions">packet_compressed_biome_definitions</a></td></tr>
+<tr><td><a href="#packet_trim_data">0x12e</a></td><td><a href="#packet_trim_data">packet_trim_data</a></td></tr>
+<tr><td><a href="#packet_open_sign">0x12f</a></td><td><a href="#packet_open_sign">packet_open_sign</a></td></tr>
   </tbody>
   </table><br/><hr/>
     <div class="packet-header" id="BehaviourPackInfos">
@@ -1488,6 +1498,8 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
 entries for items that can be grouped under a single tag.</p></td></tr>
   <tr><td class='name'>4</td><td class='name'>string id meta</td><td><p>DeferredItemDescriptor represents an item descriptor that uses a namespace and metadata value to identify the item.
 There is no clear benefit of using this item descriptor.</p></td></tr>
+  <tr><td class='name'>5</td><td class='name'>complex alias</td><td><p>ComplexAliasItemDescriptor represents an item descriptor that uses a single name to identify the item. There is no
+clear benefit of using this item descriptor and only seem to be used for specific recipes.</p></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is int id meta</span> </td><td colspan=2 class='bordered'><table>
@@ -1509,6 +1521,9 @@ negative ID, depending on what item it concerns.</p></td></tr>
 <tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the item, which is a name like 'minecraft:stick'.</p></td></tr>
 <tr><td class='field-name name'>metadata</td><td>li16</td><td><p>MetadataValue is the metadata value of the item. For some items, this is the damage value, whereas for
 other items it is simply an identifier of a variant of the item.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is complex alias</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the item, which is a name like 'minecraft:stick'.</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>count</td><td>zigzag32</td><td></td></tr>
@@ -1565,6 +1580,7 @@ other items it is simply an identifier of a variant of the item.</p></td></tr>
   <tr><td class='name'>7</td><td class='name'>shaped chemistry</td><td></td></tr>
   <tr><td class='name'>8</td><td class='name'>smithing transform</td><td><p>SmithingTransformRecipe is a recipe specifically used for smithing tables. It has two input items and adds them
 together, resulting in a new item.</p></td></tr>
+  <tr><td class='name'>9</td><td class='name'>smithing trim</td><td></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>recipe</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is shapeless or shulker box or shapeless chemistry</span> </td><td colspan=2 class='bordered'><table>
@@ -1584,8 +1600,8 @@ together, resulting in a new item.</p></td></tr>
 <tr><td class='field-name name'>height</td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ><p>2D input array, size of width*height</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2><i>Length for <span class='name'>__734</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__734</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2><i>Length for <span class='name'>__745</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__745</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> length</td><td>varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>ItemLegacy</td><td></td></tr>
@@ -1612,6 +1628,7 @@ together, resulting in a new item.</p></td></tr>
 <tr><td class='name'><span class='fake'>is smithing transform</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>recipe id</td><td>string</td><td><p>RecipeID is a unique ID of the recipe. This ID must be unique amongst all other types of recipes too,
 but its functionality is not exactly known.</p></td></tr>
+<tr><td class='field-name name'>template</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
 <tr><td class='field-name name'>base</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td><p>Base is the item that the Addition is being applied to in the smithing table.</p></td></tr>
 <tr><td class='field-name name'>addition</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td><p>Addition is the item that is being added to the Base item to result in a modified item.</p></td></tr>
 <tr><td class='field-name name'>result</td><td><a href="#ItemLegacy">ItemLegacy</a></td><td><p>Result is the resulting item from the two items being added together.</p></td></tr>
@@ -1619,6 +1636,14 @@ but its functionality is not exactly known.</p></td></tr>
 <tr><td class='field-name name'>network id</td><td>varint</td><td><p>RecipeNetworkID is a unique ID used to identify the recipe over network. Each recipe must have a unique
 network ID. Recommended is to just increment a variable for each unique recipe registered.
 This field must never be 0.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is smithing trim</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>recipe id</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>template</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
+<tr><td class='field-name name'>input</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
+<tr><td class='field-name name'>addition</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
+<tr><td class='field-name name'>block</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>network id</td><td>varint</td><td></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table></td></tr>
@@ -1949,8 +1974,6 @@ when an anvil is used.</p>
   <tr><td class='name'>9</td><td class='name'>slash command chat</td><td></td></tr>
   <tr><td class='name'>10</td><td class='name'>cartography text</td><td></td></tr>
   <tr><td class='name'>11</td><td class='name'>slash command non chat</td><td></td></tr>
-  <tr><td class='name'>12</td><td class='name'>scoreboard text</td><td></td></tr>
-  <tr><td class='name'>13</td><td class='name'>ticking area text</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="ItemStackResponses">
@@ -2442,6 +2465,7 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>58</td><td class='name'>barrel</td><td></td></tr>
   <tr><td class='name'>59</td><td class='name'>cursor</td><td></td></tr>
   <tr><td class='name'>60</td><td class='name'>creative output</td><td></td></tr>
+  <tr><td class='name'>61</td><td class='name'>smithing table template</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="SoundType">
@@ -2916,6 +2940,10 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>461</td><td class='name'>Pickup</td><td></td></tr>
   <tr><td class='name'>462</td><td class='name'>InsertEnchanted</td><td></td></tr>
   <tr><td class='name'>463</td><td class='name'>PickupEnchanted</td><td></td></tr>
+  <tr><td class='name'>464</td><td class='name'>Brush</td><td></td></tr>
+  <tr><td class='name'>465</td><td class='name'>BrushCompleted</td><td></td></tr>
+  <tr><td class='name'>466</td><td class='name'>ShatterDecoratedPot</td><td></td></tr>
+  <tr><td class='name'>467</td><td class='name'>BreakDecoratedPot</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="LegacyEntityType">
@@ -3287,6 +3315,8 @@ to true while the player's or the world's game mode is creative, and it's recomm
 always set this to false as a server.</p></td></tr>
 <tr><td class='field-name name'>editor world</td><td>bool</td><td><p>EditorWorld is a value to dictate if the world is in editor mode, a special mode recently introduced adding
 "powerful tools for editing worlds, intended for experienced creators."</p></td></tr>
+<tr><td class='field-name name'>created in editor</td><td>bool</td><td><p>Whether the world was created in editor mode</p></td></tr>
+<tr><td class='field-name name'>exported from editor</td><td>bool</td><td><p>Whether the world was exported from editor mode</p></td></tr>
 <tr><td class='field-name name'>day cycle stop time</td><td>zigzag32</td><td><p>The time at which the day cycle was locked if the day cycle is disabled using the respective
 game rule. The client will maIntain this time as Boolean as the day cycle is disabled.</p></td></tr>
 <tr><td class='field-name name'>edu offer</td><td>zigzag32</td><td><p>Some Minecraft: Education Edition field that specifies what 'region' the world was from, 
@@ -3396,6 +3426,7 @@ ones that are sent in the SyncActorProperty packet.</p></td></tr>
 use a world based off of a template can set this to an empty UUID.</p></td></tr>
 <tr><td class='field-name name'>client side generation</td><td>bool</td><td><p>ClientSideGeneration is true if the client should use the features registered in the FeatureRegistry packet to
 generate terrain client-side to save on bandwidth.</p></td></tr>
+<tr><td class='field-name name'>block network ids are hashes</td><td>bool</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_add_player">
     <a href="#packet_add_player"><div class='packet-id client'>12</div><div class='packet-name name'>packet add player</div></a>
@@ -3747,6 +3778,12 @@ the field implies</p></td></tr>
   <tr><td class='name'>3600</td><td class='name'>block start break</td><td></td></tr>
   <tr><td class='name'>3601</td><td class='name'>block stop break</td><td></td></tr>
   <tr><td class='name'>3602</td><td class='name'>block break speed</td><td></td></tr>
+  <tr><td class='name'>3603</td><td class='name'>particle punch block down</td><td></td></tr>
+  <tr><td class='name'>3604</td><td class='name'>particle punch block up</td><td></td></tr>
+  <tr><td class='name'>3605</td><td class='name'>particle punch block north</td><td></td></tr>
+  <tr><td class='name'>3606</td><td class='name'>particle punch block south</td><td></td></tr>
+  <tr><td class='name'>3607</td><td class='name'>particle punch block west</td><td></td></tr>
+  <tr><td class='name'>3608</td><td class='name'>particle punch block east</td><td></td></tr>
   <tr><td class='name'>4000</td><td class='name'>set data</td><td></td></tr>
   <tr><td class='name'>9800</td><td class='name'>players sleeping</td><td></td></tr>
   <tr><td class='name'>9801</td><td class='name'>sleeping players</td><td></td></tr>
@@ -4593,6 +4630,7 @@ radius requested, or a different chunk radius if the server chooses so.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>chunk radius</td><td>zigzag32</td><td><p>ChunkRadius is the requested chunk radius. This value is always the value set in the settings of the
 player.</p></td></tr>
+<tr><td class='field-name name'>max radius</td><td>u8</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_chunk_radius_update">
     <a href="#packet_chunk_radius_update"><div class='packet-id client'>70</div><div class='packet-name name'>packet chunk radius update</div></a>
@@ -4746,8 +4784,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3777</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3777</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3812</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3812</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -4760,15 +4798,15 @@ This is the palette of suffixes</p></td></tr>
   <tr><td class='name'>10</td><td class='name'>wildcard target</td><td></td></tr>
   <tr><td class='name'>17</td><td class='name'>file path</td><td></td></tr>
   <tr><td class='name'>23</td><td class='name'>integer range</td><td></td></tr>
-  <tr><td class='name'>38</td><td class='name'>equipment slots</td><td></td></tr>
-  <tr><td class='name'>39</td><td class='name'>string</td><td></td></tr>
-  <tr><td class='name'>47</td><td class='name'>block position</td><td></td></tr>
-  <tr><td class='name'>48</td><td class='name'>position</td><td></td></tr>
-  <tr><td class='name'>51</td><td class='name'>message</td><td></td></tr>
-  <tr><td class='name'>53</td><td class='name'>raw text</td><td></td></tr>
-  <tr><td class='name'>57</td><td class='name'>json</td><td></td></tr>
-  <tr><td class='name'>67</td><td class='name'>block states</td><td></td></tr>
-  <tr><td class='name'>70</td><td class='name'>command</td><td></td></tr>
+  <tr><td class='name'>43</td><td class='name'>equipment slots</td><td></td></tr>
+  <tr><td class='name'>44</td><td class='name'>string</td><td></td></tr>
+  <tr><td class='name'>52</td><td class='name'>block position</td><td></td></tr>
+  <tr><td class='name'>53</td><td class='name'>position</td><td></td></tr>
+  <tr><td class='name'>55</td><td class='name'>message</td><td></td></tr>
+  <tr><td class='name'>58</td><td class='name'>raw text</td><td></td></tr>
+  <tr><td class='name'>62</td><td class='name'>json</td><td></td></tr>
+  <tr><td class='name'>71</td><td class='name'>block states</td><td></td></tr>
+  <tr><td class='name'>74</td><td class='name'>command</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name field-name'>enum type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>16</td><td class='name'>valid</td><td><p>In MC, this + prior field are combined to one 32bit bitfield</p></td></tr>
@@ -6105,6 +6143,8 @@ concerned a block. If not, the face is always 0.</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table></td></tr>
+<tr><td class='field-name name'>analogue move vector</td><td><a href="#vec2f">vec2f</a></td><td><p>AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
+values which are created using an analogue input.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_creative_content">
     <a href="#packet_creative_content"><div class='packet-id client'>145</div><div class='packet-name name'>packet creative content</div></a>
@@ -6925,4 +6965,76 @@ allowed to use. It is one of the CommandPermissionLevel constants in the Adventu
 <tr><td class='field-name'><span class='name'>abilities</span> length</td><td>u8</td><td rowspan=2><p>Layers contains all ability layers and their potential values. This should at least have one entry, being the
 base layer.</p></td></tr>
 <tr><td class='field-name'><span class='name'>abilities</span> <div class="tag tag-array">array</div></td><td>AbilityLayers</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_camera_presets">
+    <a href="#packet_camera_presets"><div class='packet-id client'>198</div><div class='packet-name name'>packet camera presets</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>camera_presets gives the client a list of custom camera presets.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>data</td><td>nbt</td><td><p>Data is a compound tag of the presets being set.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_unlocked_recipes">
+    <a href="#packet_unlocked_recipes"><div class='packet-id client'>199</div><div class='packet-name name'>packet unlocked recipes</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
+the recipe book.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>new unlocks</td><td>bool</td><td><p>new_unlocks determines if new recipes have been unlocked since the packet was last sent.</p></td></tr>
+<tr><td class='field-name'><span class='name'>recipes</span> length</td><td>varint</td><td rowspan=2><p>Recipes is a list of recipe names that have been unlocked.</p></td></tr>
+<tr><td class='field-name'><span class='name'>recipes</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_camera_instruction">
+    <a href="#packet_camera_instruction"><div class='packet-id datatype'>300</div><div class='packet-name name'>packet camera instruction</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>camera_instruction gives a custom camera specific instructions to operate.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>data</td><td>nbt</td><td><p>Data is a compound tag of the instructions to sent.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_compressed_biome_definitions">
+    <a href="#packet_compressed_biome_definitions"><div class='packet-id client'>301</div><div class='packet-name name'>packet compressed biome definitions</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>raw payload</td><td>string</td><td><p>via PMMP:
+This packet is only sent by the server when client-side chunk generation is enabled in vanilla. It contains NBT data
+for biomes, similar to the BiomeDefinitionListPacket, but with a large amount of extra data for client-side chunk
+generation.
+The data is compressed with a cursed home-brewed compression format, and it's a miracle it even works.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_trim_data">
+    <a href="#packet_trim_data"><div class='packet-id client'>302</div><div class='packet-name name'>packet trim data</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name'><span class='name'>patterns</span> length</td><td>varint</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>patterns</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>item name</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>pattern</td><td>string</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name'><span class='name'>materials</span> length</td><td>varint</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>materials</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>material</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>color</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>item name</td><td>string</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_open_sign">
+    <a href="#packet_open_sign"><div class='packet-id client'>303</div><div class='packet-name name'>packet open sign</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td></td></tr>
+<tr><td class='field-name name'>is front</td><td>bool</td><td></td></tr>
 </table><br/><hr/><br/></div>

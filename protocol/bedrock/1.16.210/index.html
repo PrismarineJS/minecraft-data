@@ -357,6 +357,9 @@ a { text-decoration: none; }
 <tr><td><a href="#packet_remove_objective">0x6a</a></td><td><a href="#packet_remove_objective">packet_remove_objective</a></td></tr>
 <tr><td><a href="#packet_set_display_objective">0x6b</a></td><td><a href="#packet_set_display_objective">packet_set_display_objective</a></td></tr>
 <tr><td><a href="#packet_set_score">0x6c</a></td><td><a href="#packet_set_score">packet_set_score</a></td></tr>
+
+
+
 <tr><td><a href="#packet_lab_table">0x6d</a></td><td><a href="#packet_lab_table">packet_lab_table</a></td></tr>
 
 
@@ -3819,13 +3822,19 @@ game type.</p></td></tr>
       <small style='vertical-align:middle;float:right'>Bidirectional</small>
     </div><br/>
     
-<p></p>
+<p><p>LabTable is sent by the client to let the server know it started a chemical reaction in Education Edition,
+and is sent by the server to other clients to show the effects.
+The packet is only functional if Education features are enabled.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>useless byte</td><td>u8</td><td></td></tr>
-<tr><td class='field-name name'>lab table x</td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'>lab table y</td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'>lab table z</td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'>reaction type</td><td>u8</td><td></td></tr>
+<tr><td class='name field-name'>action type</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>combine</td><td><p>ActionType is the type of the action that was executed. It is one of the constants above. Typically,
+only LabTableActionCombine is sent by the client, whereas LabTableActionReact is sent by the server.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>react</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>position</td><td><a href="#vec3i">vec3i</a></td><td><p>Position is the position at which the lab table used was located.</p></td></tr>
+<tr><td class='field-name name'>reaction type</td><td>u8</td><td><p>ReactionType is the type of the reaction that took place as a result of the items put into the lab
+table. The reaction type can be either that of an item or a particle, depending on whatever the result
+was of the reaction.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_update_block_synced">
     <a href="#packet_update_block_synced"><div class='packet-id client'>110</div><div class='packet-name name'>packet update block synced</div></a>

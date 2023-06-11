@@ -781,6 +781,13 @@ a { text-decoration: none; }
 
 <tr><td><a href="#packet_update_client_input_locks">0xc4</a></td><td><a href="#packet_update_client_input_locks">packet_update_client_input_locks</a></td></tr>
 <tr><td><a href="#packet_client_cheat_ability">0xc5</a></td><td><a href="#packet_client_cheat_ability">packet_client_cheat_ability</a></td></tr>
+
+<tr><td><a href="#packet_camera_presets">0xc6</a></td><td><a href="#packet_camera_presets">packet_camera_presets</a></td></tr>
+
+
+<tr><td><a href="#packet_unlocked_recipes">0xc7</a></td><td><a href="#packet_unlocked_recipes">packet_unlocked_recipes</a></td></tr>
+
+<tr><td><a href="#packet_camera_instruction">0x12c</a></td><td><a href="#packet_camera_instruction">packet_camera_instruction</a></td></tr>
   </tbody>
   </table><br/><hr/>
     <div class="packet-header" id="BehaviourPackInfos">
@@ -1488,6 +1495,8 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
 entries for items that can be grouped under a single tag.</p></td></tr>
   <tr><td class='name'>4</td><td class='name'>string id meta</td><td><p>DeferredItemDescriptor represents an item descriptor that uses a namespace and metadata value to identify the item.
 There is no clear benefit of using this item descriptor.</p></td></tr>
+  <tr><td class='name'>5</td><td class='name'>complex alias</td><td><p>ComplexAliasItemDescriptor represents an item descriptor that uses a single name to identify the item. There is no
+clear benefit of using this item descriptor and only seem to be used for specific recipes.</p></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is int id meta</span> </td><td colspan=2 class='bordered'><table>
@@ -1509,6 +1518,9 @@ negative ID, depending on what item it concerns.</p></td></tr>
 <tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the item, which is a name like 'minecraft:stick'.</p></td></tr>
 <tr><td class='field-name name'>metadata</td><td>li16</td><td><p>MetadataValue is the metadata value of the item. For some items, this is the damage value, whereas for
 other items it is simply an identifier of a variant of the item.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is complex alias</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the item, which is a name like 'minecraft:stick'.</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>count</td><td>zigzag32</td><td></td></tr>
@@ -1584,8 +1596,8 @@ together, resulting in a new item.</p></td></tr>
 <tr><td class='field-name name'>height</td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ><p>2D input array, size of width*height</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2><i>Length for <span class='name'>__734</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__734</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2><i>Length for <span class='name'>__744</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__744</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> length</td><td>varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>ItemLegacy</td><td></td></tr>
@@ -1949,8 +1961,6 @@ when an anvil is used.</p>
   <tr><td class='name'>9</td><td class='name'>slash command chat</td><td></td></tr>
   <tr><td class='name'>10</td><td class='name'>cartography text</td><td></td></tr>
   <tr><td class='name'>11</td><td class='name'>slash command non chat</td><td></td></tr>
-  <tr><td class='name'>12</td><td class='name'>scoreboard text</td><td></td></tr>
-  <tr><td class='name'>13</td><td class='name'>ticking area text</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="ItemStackResponses">
@@ -2916,6 +2926,10 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>461</td><td class='name'>Pickup</td><td></td></tr>
   <tr><td class='name'>462</td><td class='name'>InsertEnchanted</td><td></td></tr>
   <tr><td class='name'>463</td><td class='name'>PickupEnchanted</td><td></td></tr>
+  <tr><td class='name'>464</td><td class='name'>Brush</td><td></td></tr>
+  <tr><td class='name'>465</td><td class='name'>BrushCompleted</td><td></td></tr>
+  <tr><td class='name'>466</td><td class='name'>ShatterDecoratedPot</td><td></td></tr>
+  <tr><td class='name'>467</td><td class='name'>BreakDecoratedPot</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="LegacyEntityType">
@@ -4746,8 +4760,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3777</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3777</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3790</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3790</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -6105,6 +6119,8 @@ concerned a block. If not, the face is always 0.</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table></td></tr>
+<tr><td class='field-name name'>analogue move vector</td><td><a href="#vec2f">vec2f</a></td><td><p>AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
+values which are created using an analogue input.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_creative_content">
     <a href="#packet_creative_content"><div class='packet-id client'>145</div><div class='packet-name name'>packet creative content</div></a>
@@ -6925,4 +6941,34 @@ allowed to use. It is one of the CommandPermissionLevel constants in the Adventu
 <tr><td class='field-name'><span class='name'>abilities</span> length</td><td>u8</td><td rowspan=2><p>Layers contains all ability layers and their potential values. This should at least have one entry, being the
 base layer.</p></td></tr>
 <tr><td class='field-name'><span class='name'>abilities</span> <div class="tag tag-array">array</div></td><td>AbilityLayers</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_camera_presets">
+    <a href="#packet_camera_presets"><div class='packet-id client'>198</div><div class='packet-name name'>packet camera presets</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>camera_presets gives the client a list of custom camera presets.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>data</td><td>nbt</td><td><p>Data is a compound tag of the presets being set.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_unlocked_recipes">
+    <a href="#packet_unlocked_recipes"><div class='packet-id client'>199</div><div class='packet-name name'>packet unlocked recipes</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
+the recipe book.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>new unlocks</td><td>bool</td><td><p>new_unlocks determines if new recipes have been unlocked since the packet was last sent.</p></td></tr>
+<tr><td class='field-name'><span class='name'>recipes</span> length</td><td>varint</td><td rowspan=2><p>Recipes is a list of recipe names that have been unlocked.</p></td></tr>
+<tr><td class='field-name'><span class='name'>recipes</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_camera_instruction">
+    <a href="#packet_camera_instruction"><div class='packet-id datatype'>300</div><div class='packet-name name'>packet camera instruction</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>camera_instruction gives a custom camera specific instructions to operate.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>data</td><td>nbt</td><td><p>Data is a compound tag of the instructions to sent.</p></td></tr>
 </table><br/><hr/><br/></div>
