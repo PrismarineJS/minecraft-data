@@ -1,3 +1,6 @@
+## 3.36.0
+* pc: add entity metadata (@extremeheat)
+
 ## 3.35.0
 * Add bedrock 1.20.0 protocol data
 
