@@ -292,10 +292,13 @@ function eqs (compareTo, k) {
   }, compareTo + ' == ' + k[0])
 }
 
+const dataPaths = require('minecraft-data/minecraft-data/data/dataPaths.json')
+
 function loadProtocol (version) {
   if (version.startsWith('bedrock')) {
     const [, v] = version.split('_')
-    $j('#protocolTable').html(`<html-view src="protocol/bedrock/${v}"><a href="protocol/bedrock/${v}">Click here</a></html-view>`)
+    const path = dataPaths.bedrock[v].protocol
+    $j('#protocolTable').html(`<html-view src="protocol/${path}"><a href="protocol/${path}">Click here</a></html-view>`)
   } else {
     const data = require('minecraft-data')(version).protocol
     const comments = require('minecraft-data')(version).protocolComments
