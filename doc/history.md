@@ -1,3 +1,7 @@
+## 3.37.9
+* pc: add 1.20.1
+* bedrock: Fix bedrock-protocol relay crashing when emoting
+
 ## 3.36.0
 * pc: add entity metadata (@extremeheat)
 
