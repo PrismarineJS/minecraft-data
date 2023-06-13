@@ -1,4 +1,4 @@
-## 3.37.9
+## 3.37.0
 * pc: add 1.20.1
 * bedrock: Fix bedrock-protocol relay crashing when emoting
 
