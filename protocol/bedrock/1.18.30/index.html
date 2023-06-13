@@ -3642,7 +3642,11 @@ opening the chest means the data must be 1</p></td></tr>
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>runtime entity id</td><td>varint64</td><td></td></tr>
-<tr><td class='field-name name'>event id</td><td>u8</td><td></td></tr>
+<tr><td class='name field-name'>event id</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>1</td><td class='name'>add</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>update</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>remove</td><td></td></tr>
+</table></td></tr>
 <tr><td class='field-name name'>effect id</td><td>zigzag32</td><td></td></tr>
 <tr><td class='field-name name'>amplifier</td><td>zigzag32</td><td></td></tr>
 <tr><td class='field-name name'>particles</td><td>bool</td><td></td></tr>
@@ -3709,6 +3713,7 @@ normal entity and block interaction, but this is no longer the case now.</p></p>
   <tr><td class='name'>3</td><td class='name'>leave vehicle</td><td><p>Action type is the ID of the action that was executed by the player. It is one of the constants that
 may be found above.</p></td></tr>
   <tr><td class='name'>4</td><td class='name'>mouse over entity</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>npc open</td><td></td></tr>
   <tr><td class='name'>6</td><td class='name'>open inventory</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>target entity id</td><td>varint64</td><td><p>TargetEntityRuntimeID is the runtime ID of the entity that the player interacted with. This is empty
@@ -4171,7 +4176,12 @@ the game mode to obtain its full functionality.</p></td></tr>
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>event type</td><td>lu16</td><td></td></tr>
+<tr><td class='name field-name'>event type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>uninitialized subtype</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>enable commands</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>disable commands</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>unlock world template settings</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_event">
     <a href="#packet_event"><div class='packet-id client'>65</div><div class='packet-name name'>packet event</div></a>
@@ -4455,8 +4465,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3477</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3477</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3485</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3485</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -4869,8 +4879,8 @@ player.</p></td></tr>
 <tr><td class='field-name name'>is verified</td><td>bool</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_sub_client_login">
-    <a href="#packet_sub_client_login"><div class='packet-id client'>94</div><div class='packet-name name'>packet sub client login</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_sub_client_login"><div class='packet-id server'>94</div><div class='packet-name name'>packet sub client login</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>SubClientLogin is sent when a sub-client joins the server while another client is already connected to it.
@@ -4907,8 +4917,8 @@ packet is sent or not.</p></p>
 <tr><td class='field-name name'>entity type</td><td>varint</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_book_edit">
-    <a href="#packet_book_edit"><div class='packet-id client'>97</div><div class='packet-name name'>packet book edit</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_book_edit"><div class='packet-id server'>97</div><div class='packet-name name'>packet book edit</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>BookEdit is sent by the client when it edits a book. It is sent each time a modification was made and the
@@ -4961,6 +4971,7 @@ editing window.</p></td></tr>
   <tr><td class='name'>3</td><td class='name'>set name</td><td></td></tr>
   <tr><td class='name'>4</td><td class='name'>set skin</td><td></td></tr>
   <tr><td class='name'>5</td><td class='name'>set interaction text</td><td></td></tr>
+  <tr><td class='name'>6</td><td class='name'>execute opening commands</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>command</td><td>string</td><td><p>CommandString is the command string set in the NPC. It may consist of multiple commands, depending on
 what the player set in it.</p></td></tr>
@@ -4971,7 +4982,7 @@ what the player set in it.</p></td></tr>
   <tr><td class='name'>3</td><td class='name'>set name</td><td></td></tr>
   <tr><td class='name'>4</td><td class='name'>set skin</td><td></td></tr>
   <tr><td class='name'>5</td><td class='name'>set interact text</td><td></td></tr>
-  <tr><td class='name'>6</td><td class='name'>execute openining commands</td><td></td></tr>
+  <tr><td class='name'>6</td><td class='name'>execute opening commands</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>scene name</td><td>string</td><td><p>SceneName is the name of the scene.</p></td></tr>
 </table><br/><hr/><br/>
@@ -5063,8 +5074,8 @@ type of the form sent, which is also set in the JSON.</p></td></tr>
 a valid XUID, the client ignores the packet.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_set_default_game_type">
-    <a href="#packet_set_default_game_type"><div class='packet-id client'>105</div><div class='packet-name name'>packet set default game type</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_set_default_game_type"><div class='packet-id server'>105</div><div class='packet-name name'>packet set default game type</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>SetDefaultGameType is sent by the client when it toggles the default game type in the settings UI, and is
@@ -5153,6 +5164,7 @@ The packet is only functional if Education features are enabled.</p></p>
   <tr><td class='name'>0</td><td class='name'>combine</td><td><p>ActionType is the type of the action that was executed. It is one of the constants above. Typically,
 only LabTableActionCombine is sent by the client, whereas LabTableActionReact is sent by the server.</p></td></tr>
   <tr><td class='name'>1</td><td class='name'>react</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>reset</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>position</td><td><a href="#vec3i">vec3i</a></td><td><p>Position is the position at which the lab table used was located.</p></td></tr>
 <tr><td class='field-name name'>reaction type</td><td>u8</td><td><p>ReactionType is the type of the reaction that took place as a result of the items put into the lab
@@ -5412,8 +5424,8 @@ and name length) and add 0x00 at the end, to manually wrap it in a compound. Lik
 to remove these bytes when encoding.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_lectern_update">
-    <a href="#packet_lectern_update"><div class='packet-id client'>125</div><div class='packet-name name'>packet lectern update</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_lectern_update"><div class='packet-id server'>125</div><div class='packet-name name'>packet lectern update</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>LecternUpdate is sent by the client to update the server on which page was opened in a book on a lectern,
@@ -5434,7 +5446,10 @@ the packet should be ignored.</p></td></tr>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>server uri</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>frame send frequency</td><td>lf32</td><td></td></tr>
-<tr><td class='field-name name'>action</td><td>u8</td><td></td></tr>
+<tr><td class='name field-name'>action</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>1</td><td class='name'>none</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>close</td><td></td></tr>
+</table></td></tr>
 <tr><td class='field-name name'>resolution x</td><td>li32</td><td></td></tr>
 <tr><td class='field-name name'>resolution y</td><td>li32</td><td></td></tr>
 </table><br/><hr/><br/>
@@ -5499,8 +5514,8 @@ is visible on this map, except the content will not change.</p></td></tr>
 contents will be impossible to change.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_structure_template_data_export_request">
-    <a href="#packet_structure_template_data_export_request"><div class='packet-id client'>132</div><div class='packet-name name'>packet structure template data export request</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_structure_template_data_export_request"><div class='packet-id server'>132</div><div class='packet-name name'>packet structure template data export request</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>StructureTemplateDataRequest is sent by the client to request data of a structure.</p></p>
@@ -5545,8 +5560,8 @@ the StructureTemplateDataRequest packet and is one of the constants above.</p></
 <tr><td class='field-name name'>nbt</td><td>nbt</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_client_cache_blob_status">
-    <a href="#packet_client_cache_blob_status"><div class='packet-id client'>135</div><div class='packet-name name'>packet client cache blob status</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_client_cache_blob_status"><div class='packet-id server'>135</div><div class='packet-name name'>packet client cache blob status</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>ClientCacheBlobStatus is part of the blob cache protocol. It is sent by the client to let the server know
@@ -5861,8 +5876,8 @@ and the fourth for boots.</p></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_update_player_game_type">
-    <a href="#packet_update_player_game_type"><div class='packet-id server'>151</div><div class='packet-name name'>packet update player game type</div></a>
-      <small style='vertical-align:middle;float:right'>Serverbound</small>
+    <a href="#packet_update_player_game_type"><div class='packet-id client'>151</div><div class='packet-name name'>packet update player game type</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
 <p><p>UpdatePlayerGameType is sent by the server to change the game mode of a player. It is functionally
@@ -6049,8 +6064,8 @@ Position.</p></td></tr>
 <tr><td class='field-name name'>entries</td><td><a href="#ItemComponentList">ItemComponentList</a></td><td><p><code>entries</code> holds a list of all custom items with their respective components set.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_filter_text_packet">
-    <a href="#packet_filter_text_packet"><div class='packet-id client'>163</div><div class='packet-name name'>packet filter text packet</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_filter_text_packet"><div class='packet-id both'>163</div><div class='packet-name name'>packet filter text packet</div></a>
+      <small style='vertical-align:middle;float:right'>Bidirectional</small>
     </div><br/>
     
 <p><p>FilterText is sent by the both the client and the server. The client sends the packet to the server to
@@ -6137,8 +6152,8 @@ particular the way the entity looks.</p></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_npc_dialogue">
-    <a href="#packet_npc_dialogue"><div class='packet-id datatype'>169</div><div class='packet-name name'>packet npc dialogue</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_npc_dialogue"><div class='packet-id client'>169</div><div class='packet-name name'>packet npc dialogue</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
 <p><p>NPCDialogue is a packet that allows the client to display dialog boxes for interacting with NPCs.</p></p>
@@ -6163,8 +6178,8 @@ particular the way the entity looks.</p></td></tr>
 <tr><td class='field-name name'>resource</td><td><a href="#EducationSharedResourceURI">EducationSharedResourceURI</a></td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_create_photo">
-    <a href="#packet_create_photo"><div class='packet-id datatype'>171</div><div class='packet-name name'>packet create photo</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_create_photo"><div class='packet-id client'>171</div><div class='packet-name name'>packet create photo</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
 <p><p>CreatePhoto is a packet that allows players to export photos from their portfolios into items in their inventory.
@@ -6175,8 +6190,8 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 <tr><td class='field-name name'>item name</td><td>string</td><td><p>ItemName is the name of the photo as an item.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_update_subchunk_blocks">
-    <a href="#packet_update_subchunk_blocks"><div class='packet-id datatype'>172</div><div class='packet-name name'>packet update subchunk blocks</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_update_subchunk_blocks"><div class='packet-id client'>172</div><div class='packet-name name'>packet update subchunk blocks</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
 <p><p>UpdateSubChunkBlocks is essentially just UpdateBlock packet, however for a set of blocks in a sub chunk.</p></p>
@@ -6190,8 +6205,8 @@ This packet only works on the Education Edition version of Minecraft.</p></p>
 <tr><td class='field-name'><span class='name'>extra</span> <div class="tag tag-array">array</div></td><td>BlockUpdate</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_photo_info_request">
-    <a href="#packet_photo_info_request"><div class='packet-id datatype'>173</div><div class='packet-name name'>packet photo info request</div></a>
-      <small style='vertical-align:middle;float:right'>Datatype</small>
+    <a href="#packet_photo_info_request"><div class='packet-id server'>173</div><div class='packet-name name'>packet photo info request</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p></p>
@@ -6323,8 +6338,8 @@ GameTest framework.</p></p>
 <tr><td class='field-name name'>data</td><td>string</td><td><p>Data contains the data of the message.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_code_builder_source">
-    <a href="#packet_code_builder_source"><div class='packet-id client'>178</div><div class='packet-name name'>packet code builder source</div></a>
-      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    <a href="#packet_code_builder_source"><div class='packet-id server'>178</div><div class='packet-name name'>packet code builder source</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
     </div><br/>
     
 <p><p>CodeBuilderSource is an Education Edition packet sent by the client to the server to run an operation with a</p></p>
