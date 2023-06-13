@@ -1,6 +1,5 @@
-## 3.37.0
-* pc: add 1.20.1
-* bedrock: Fix bedrock-protocol relay crashing when emoting
+## 3.36.1
+* bedrock: Fixes to protocol data (thanks @MrDiamond64)
 
 ## 3.36.0
 * pc: add entity metadata (@extremeheat)
@@ -9,7 +8,7 @@
 * Add bedrock 1.20.0 protocol data
 
 ## 3.34.0
-* Partially updated protocol to 1.19.4 (thqnks @extremeheat @TFBosoN @frej4189 @bradisson)
+* Partially updated protocol to 1.19.4 (thanks @extremeheat @TFBosoN @frej4189 @bradisson)
 
 ## 3.33.0
 * Use node 18.
