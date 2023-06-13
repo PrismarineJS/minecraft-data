@@ -5013,7 +5013,17 @@
         },
         {
           "name": "event_id",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "1": "add",
+                "2": "update",
+                "3": "remove"
+              }
+            }
+          ]
         },
         {
           "name": "effect_id",
@@ -5121,6 +5131,7 @@
               "mappings": {
                 "3": "leave_vehicle",
                 "4": "mouse_over_entity",
+                "5": "npc_open",
                 "6": "open_inventory"
               }
             }
@@ -5746,7 +5757,18 @@
       [
         {
           "name": "event_type",
-          "type": "lu16"
+          "type": [
+            "mapper",
+            {
+              "type": "lu16",
+              "mappings": {
+                "0": "uninitialized_subtype",
+                "1": "enable_commands",
+                "2": "disable_commands",
+                "3": "unlock_world_template_settings"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -7097,7 +7119,8 @@
                 "2": "execute_closing_commands",
                 "3": "set_name",
                 "4": "set_skin",
-                "5": "set_interaction_text"
+                "5": "set_interaction_text",
+                "6": "execute_opening_commands"
               }
             }
           ]
@@ -7119,7 +7142,7 @@
                 "3": "set_name",
                 "4": "set_skin",
                 "5": "set_interact_text",
-                "6": "execute_openining_commands"
+                "6": "execute_opening_commands"
               }
             }
           ]
@@ -7355,7 +7378,8 @@
               "type": "u8",
               "mappings": {
                 "0": "combine",
-                "1": "react"
+                "1": "react",
+                "2": "reset"
               }
             }
           ]
@@ -7745,7 +7769,16 @@
         },
         {
           "name": "action",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "1": "none",
+                "2": "close"
+              }
+            }
+          ]
         },
         {
           "name": "resolution_x",

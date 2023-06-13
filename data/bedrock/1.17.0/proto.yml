@@ -777,7 +777,10 @@ packet_mob_effect:
    !id: 0x1c
    !bound: client
    runtime_entity_id: varint64
-   event_id: u8
+   event_id: u8 =>
+      1: add
+      2: update
+      3: remove
    effect_id: zigzag32
    amplifier: zigzag32
    particles: bool
@@ -827,6 +830,7 @@ packet_interact:
    action_id: u8 =>
       3: leave_vehicle
       4: mouse_over_entity
+      5: npc_open
       6: open_inventory
    # TargetEntityRuntimeID is the runtime ID of the entity that the player interacted with. This is empty
    # for the InteractActionOpenInventory action type.
@@ -1232,7 +1236,11 @@ packet_player_list:
 packet_simple_event:
    !id: 0x40
    !bound: client
-   event_type: lu16
+   event_type: lu16 =>
+      0: uninitialized_subtype
+      1: enable_commands
+      2: disable_commands
+      3: unlock_world_template_settings
 
 # Event is sent by the server to send an event with additional data. It is typically sent to the client for
 # telemetry reasons, much like the SimpleEvent packet.
@@ -1911,7 +1919,7 @@ packet_player_skin:
 # connects sends a SubClientLogin to request their own login.
 packet_sub_client_login:
    !id: 0x5e
-   !bound: client
+   !bound: server
    # ConnectionRequest is a string containing information about the player and JWTs that may be used to
    # verify if the player is connected to XBOX Live. The connection request also contains the necessary
    # client public key to initiate encryption.
@@ -1941,7 +1949,7 @@ packet_set_last_hurt_by:
 # player stops its typing 'session', rather than simply after closing the book.
 packet_book_edit:
    !id: 0x61
-   !bound: client
+   !bound: server
    type: u8 =>
       0: replace_page
       1: add_page
@@ -1984,6 +1992,7 @@ packet_npc_request:
       3: set_name
       4: set_skin
       5: set_interaction_text
+      6: execute_opening_commands
    # CommandString is the command string set in the NPC. It may consist of multiple commands, depending on
    # what the player set in it.
    command: string
@@ -2070,7 +2079,7 @@ packet_show_profile:
 # in the settings UI.
 packet_set_default_game_type:
    !id: 0x69
-   !bound: client
+   !bound: server
    # GameType is the new game type that is set. When sent by the client, this is the requested new default
    # game type.
    gamemode: GameMode
@@ -2142,6 +2151,7 @@ packet_lab_table:
    action_type: u8 =>
       0: combine
       1: react
+      2: reset
    # Position is the position at which the lab table used was located.
    position: vec3i
    # ReactionType is the type of the reaction that took place as a result of the items put into the lab
@@ -2402,7 +2412,7 @@ packet_level_event_generic:
 # or if the book should be removed from it.
 packet_lectern_update:
    !id: 0x7d
-   !bound: client
+   !bound: server
    # Page is the page number in the book that was opened by the player on the lectern.
    page: u8
    # PageCount is the number of pages that the book opened in the lectern has.
@@ -2419,7 +2429,9 @@ packet_video_stream_connect:
    !bound: client
    server_uri: string
    frame_send_frequency: lf32
-   action: u8
+   action: u8 =>
+      1: none
+      2: close
    resolution_x: li32
    resolution_y: li32
 
@@ -2480,7 +2492,7 @@ packet_map_create_locked_copy:
 # StructureTemplateDataRequest is sent by the client to request data of a structure.
 packet_structure_template_data_export_request:
    !id: 0x84
-   !bound: client
+   !bound: server
    # StructureName is the name of the structure that was set in the structure block's UI. This is the name
    # used to export the structure to a file.
    name: string
@@ -2520,7 +2532,7 @@ packet_update_block_properties:
 # what blobs it needs and which blobs it already has, in an ACK type system.
 packet_client_cache_blob_status:
    !id: 0x87
-   !bound: client
+   !bound: server
    # The number of MISSes in this packet
    misses: varint
    # The number of HITs in this packet
@@ -2843,7 +2855,7 @@ ArmorDamageType: [ "bitflags",
 # identical to the SetPlayerGameType packet.
 packet_update_player_game_type:
    !id: 0x97
-   !bound: server
+   !bound: client
    # GameType is the new game type of the player. It is one of the constants that can be found in
    # set_player_game_type.go. Some of these game types require additional flags to be set in an
    # AdventureSettings packet for the game mode to obtain its full functionality.
@@ -3023,7 +3035,7 @@ packet_item_component:
 # safer version of the text.
 packet_filter_text_packet:
    !id: 0xa3
-   !bound: client
+   !bound: both
    # Text is either the text from the client or the safer version of the text sent by the server.
    text: string
    # FromServer indicates if the packet was sent by the server or not.
