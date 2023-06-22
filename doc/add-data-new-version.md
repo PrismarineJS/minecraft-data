@@ -2,6 +2,17 @@
 
 For bedrock edition see [bedrock.md](bedrock.md)
 
+## Now
+
+There is a tool that generates almost every file here: [minecraft-data-generator-server](https://github.com/PrismarineJS/minecraft-data-generator-server)
+The files it generates: [biomes.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/BiomesDataGenerator.java#L173), [blockCollisionShapes.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/BlockCollisionShapesDataGenerator.java#L96), [blocks.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/BlocksDataGenerator.java#L105), [effects.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/EffectsDataGenerator.java#L20), [enchantments.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/EnchantmentsDataGenerator.java#L63), [entities.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/main/src/main/java/dev/u9g/minecraftdatagenerator/generators/EntitiesDataGenerator.java#L22), [foods.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/FoodsDataGenerator.java#L18), [items.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/ItemsDataGenerator.java#L34), [particles.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/ParticlesDataGenerator.java#L15), [tints.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/TintsDataGenerator.java#L139), [materials.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/MaterialsDataGenerator.java#L42), [language.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/LanguageDataGenerator.java#L15), [instruments.json](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/InstrumentsDataGenerator.java#L11)
+
+You can see all generators as of the latest commit when this was written [here](https://github.com/PrismarineJS/minecraft-data-generator-server/blob/83fca6907591ce30458334620bfd5386df6d8f98/src/main/java/dev/u9g/minecraftdatagenerator/generators/DataGenerators.java#L61)
+
+For everything else you can look at the next table under the Previously header.
+
+## Previously
+
 | file name | auto? | how to get it | notes |
 | -- | -- | -- | -- |
 | protocol.json | No | Follow [Pre-release Protocol][3] |

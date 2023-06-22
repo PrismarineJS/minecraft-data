@@ -65,6 +65,12 @@ The latter can thus have negative coordinate entries.
 
 ## Data Source
 
+### Now
+
+There is a tool that generates these here: https://github.com/PrismarineJS/minecraft-data-generator-server
+
+### Previously
+
 Because the way that block collision boxes are stored/computed has changed between versions, there are multiple versions of the extraction code:
 [1.12.2](https://github.com/Gjum/McDataExtracting/blob/85b564a2c00aa2e88b5b9bd6246f13df39cf215a/src/main/java/mcextract/Main.java#L87-L162),
 [1.14.4](https://github.com/Gjum/McDataExtracting/blob/ff8fa51759/src/main/java/mcextract/Main.java#L57-L117),
