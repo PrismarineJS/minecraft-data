@@ -1333,7 +1333,8 @@
                 "1": "int_id_meta",
                 "2": "molang",
                 "3": "item_tag",
-                "4": "string_id_meta"
+                "4": "string_id_meta",
+                "5": "complex_alias"
               }
             }
           ]
@@ -1399,6 +1400,15 @@
                     {
                       "name": "metadata",
                       "type": "li16"
+                    }
+                  ]
+                ],
+                "complex_alias": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
                     }
                   ]
                 ]
@@ -1493,7 +1503,8 @@
                     "5": "shulker_box",
                     "6": "shapeless_chemistry",
                     "7": "shaped_chemistry",
-                    "8": "smithing_transform"
+                    "8": "smithing_transform",
+                    "9": "smithing_trim"
                   }
                 }
               ]
@@ -1817,6 +1828,10 @@
                           "type": "string"
                         },
                         {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
                           "name": "base",
                           "type": "RecipeIngredient"
                         },
@@ -1830,6 +1845,35 @@
                         },
                         {
                           "name": "tag",
+                          "type": "string"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
+                    ],
+                    "smithing_trim": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "string"
+                        },
+                        {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "input",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "addition",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "block",
                           "type": "string"
                         },
                         {
@@ -2561,9 +2605,9 @@
                 "8": "leave_event_text",
                 "9": "slash_command_chat",
                 "10": "cartography_text",
-                "11": "slash_command_non_chat",
-                "12": "scoreboard_text",
-                "13": "ticking_area_text"
+                "11": "kick_command",
+                "12": "title_command",
+                "13": "summon_command"
               }
             }
           ]
@@ -3232,7 +3276,8 @@
           "57": "cartography_result",
           "58": "barrel",
           "59": "cursor",
-          "60": "creative_output"
+          "60": "creative_output",
+          "61": "smithing_table_template"
         }
       }
     ],
@@ -3704,7 +3749,15 @@
           "460": "Insert",
           "461": "Pickup",
           "462": "InsertEnchanted",
-          "463": "PickupEnchanted"
+          "463": "PickupEnchanted",
+          "464": "Brush",
+          "465": "BrushCompleted",
+          "466": "ShatterDecoratedPot",
+          "467": "BreakDecoratedPot",
+          "468": "SnifferEggCrack",
+          "469": "SnifferEggHatched",
+          "470": "WaxedSignInteractFail",
+          "471": "RecordRelic"
         }
       }
     ],
@@ -4078,7 +4131,13 @@
                 "194": "game_test_request",
                 "195": "game_test_results",
                 "196": "update_client_input_locks",
-                "197": "client_cheat_ability"
+                "197": "client_cheat_ability",
+                "198": "camera_presets",
+                "199": "unlocked_recipes",
+                "300": "camera_instruction",
+                "301": "compressed_biome_definitions",
+                "302": "trim_data",
+                "303": "open_sign"
               }
             }
           ]
@@ -4281,7 +4340,13 @@
                 "game_test_request": "packet_game_test_request",
                 "game_test_results": "packet_game_test_results",
                 "update_client_input_locks": "packet_update_client_input_locks",
-                "client_cheat_ability": "packet_client_cheat_ability"
+                "client_cheat_ability": "packet_client_cheat_ability",
+                "camera_presets": "packet_camera_presets",
+                "unlocked_recipes": "packet_unlocked_recipes",
+                "camera_instruction": "packet_camera_instruction",
+                "compressed_biome_definitions": "packet_compressed_biome_definitions",
+                "trim_data": "packet_trim_data",
+                "open_sign": "packet_open_sign"
               },
               "default": "void"
             }
@@ -4737,6 +4802,14 @@
           "type": "bool"
         },
         {
+          "name": "created_in_editor",
+          "type": "bool"
+        },
+        {
+          "name": "exported_from_editor",
+          "type": "bool"
+        },
+        {
           "name": "day_cycle_stop_time",
           "type": "zigzag32"
         },
@@ -4978,6 +5051,14 @@
         },
         {
           "name": "client_side_generation",
+          "type": "bool"
+        },
+        {
+          "name": "block_network_ids_are_hashes",
+          "type": "bool"
+        },
+        {
+          "name": "server_controlled_sound",
           "type": "bool"
         }
       ]
@@ -5494,6 +5575,12 @@
                 "3600": "block_start_break",
                 "3601": "block_stop_break",
                 "3602": "block_break_speed",
+                "3603": "particle_punch_block_down",
+                "3604": "particle_punch_block_up",
+                "3605": "particle_punch_block_north",
+                "3606": "particle_punch_block_south",
+                "3607": "particle_punch_block_west",
+                "3608": "particle_punch_block_east",
                 "4000": "set_data",
                 "9800": "players_sleeping",
                 "9801": "sleeping_players",
@@ -6531,7 +6618,8 @@
                 "26": "code_builder_runtime_action",
                 "27": "code_builder_scoreboard",
                 "28": "strider_ridden_in_lava_in_overworld",
-                "29": "sneak_close_to_sculk_sensor"
+                "29": "sneak_close_to_sculk_sensor",
+                "30": "careful_restoration"
               }
             }
           ]
@@ -6733,6 +6821,10 @@
         {
           "name": "chunk_radius",
           "type": "zigzag32"
+        },
+        {
+          "name": "max_radius",
+          "type": "u8"
         }
       ]
     ],
@@ -7065,15 +7157,15 @@
                                         "10": "wildcard_target",
                                         "17": "file_path",
                                         "23": "integer_range",
-                                        "38": "equipment_slots",
-                                        "39": "string",
-                                        "47": "block_position",
-                                        "48": "position",
-                                        "51": "message",
-                                        "53": "raw_text",
-                                        "57": "json",
-                                        "67": "block_states",
-                                        "70": "command"
+                                        "43": "equipment_slots",
+                                        "44": "string",
+                                        "52": "block_position",
+                                        "53": "position",
+                                        "55": "message",
+                                        "58": "raw_text",
+                                        "62": "json",
+                                        "71": "block_states",
+                                        "74": "command"
                                       }
                                     }
                                   ]
@@ -8933,6 +9025,14 @@
           "type": "string"
         },
         {
+          "name": "xuid",
+          "type": "string"
+        },
+        {
+          "name": "platform_id",
+          "type": "string"
+        },
+        {
           "name": "flags",
           "type": [
             "mapper",
@@ -9305,6 +9405,10 @@
               "default": "void"
             }
           ]
+        },
+        {
+          "name": "analogue_move_vector",
+          "type": "vec2f"
         }
       ]
     ],
@@ -10721,6 +10825,130 @@
         }
       ]
     ],
+    "packet_camera_presets": [
+      "container",
+      [
+        {
+          "name": "data",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_unlocked_recipes": [
+      "container",
+      [
+        {
+          "name": "unlock_type",
+          "type": [
+            "mapper",
+            {
+              "type": "lu32",
+              "mappings": {
+                "0": "empty",
+                "1": "initially_unlocked",
+                "2": "newly_unlocked",
+                "3": "remove_unlocked",
+                "4": "remove_all_unlocked"
+              }
+            }
+          ]
+        },
+        {
+          "name": "recipes",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_instruction": [
+      "container",
+      [
+        {
+          "name": "data",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_compressed_biome_definitions": [
+      "container",
+      [
+        {
+          "name": "raw_payload",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_trim_data": [
+      "container",
+      [
+        {
+          "name": "patterns",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "pattern",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "materials",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "material",
+                    "type": "string"
+                  },
+                  {
+                    "name": "color",
+                    "type": "string"
+                  },
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_open_sign": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "BlockCoordinates"
+        },
+        {
+          "name": "is_front",
+          "type": "bool"
+        }
+      ]
+    ],
     "string": [
       "pstring",
       {
@@ -10881,7 +11109,11 @@
           "digging",
           "sonic_boom",
           "has_dash_cooldown",
-          "push_towards_closest_space"
+          "push_towards_closest_space",
+          "scenting",
+          "rising",
+          "feeling_happy",
+          "searching"
         ]
       }
     ],
@@ -10908,6 +11140,7 @@
           "muted",
           "world_builder",
           "no_clip",
+          "privileged_builder",
           "count"
         ]
       }
@@ -11060,7 +11293,8 @@
           "item_interact",
           "block_action",
           "item_stack_request",
-          "handled_teleport"
+          "handled_teleport",
+          "emoting"
         ]
       }
     ],
