@@ -1,3 +1,6 @@
+## 3.37.0
+* pc: support 1.20.0 and 1.20.1 (thanks @PondWader)
+
 ## 3.36.1
 * bedrock: Fixes to protocol data (thanks @MrDiamond64)
 
