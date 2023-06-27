@@ -1,3 +1,6 @@
+## 3.38.0
+* pc: Add "multiSidedSigns" feature + some missing data (@PondWader)
+
 ## 3.37.0
 * pc: support 1.20.0 and 1.20.1 (thanks @PondWader)
 
