@@ -1,3 +1,7 @@
+## 3.39.0
+* [Add commands workflow (#727)](https://github.com/PrismarineJS/minecraft-data/commit/ecc33128220bdb20dc813b484d5374a9bdd26d40) (thanks @extremeheat)
+* [bedrock: Fix chunk request packet field in protocol (#725)](https://github.com/PrismarineJS/minecraft-data/commit/57e5888d8876a16a6011757065a1e7494ac25483) (thanks @irkmandeer)
+
 ## 3.38.0
 * pc: Add "multiSidedSigns" feature + some missing data (@PondWader)
 
