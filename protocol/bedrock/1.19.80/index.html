@@ -1210,6 +1210,9 @@ StartGame packet, or to a unique stack ID if it is enabled.</p></td></tr>
   <tr><td class='name'>125</td><td class='name'>movement sound distance offset</td><td></td></tr>
   <tr><td class='name'>126</td><td class='name'>heartbeat interval ticks</td><td></td></tr>
   <tr><td class='name'>127</td><td class='name'>heartbeat sound event</td><td></td></tr>
+  <tr><td class='name'>128</td><td class='name'>player last death position</td><td></td></tr>
+  <tr><td class='name'>129</td><td class='name'>player last death dimension</td><td></td></tr>
+  <tr><td class='name'>130</td><td class='name'>player has died</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name field-name'>type</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>0</td><td class='name'>byte</td><td></td></tr>
@@ -1346,9 +1349,9 @@ and specifies the way the player interacted with the block.</p></td></tr>
   <tr><td class='name'>1</td><td class='name'>click air</td><td></td></tr>
   <tr><td class='name'>2</td><td class='name'>break block</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'>block position</td><td><a href="#vec3i">vec3i</a></td><td><p>BlockPosition is the position of the block that was interacted with. This is only really a correct
+<tr><td class='field-name name'>block position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>BlockPosition is the position of the block that was interacted with. This is only really a correct
 block position if ActionType is not UseItemActionClickAir.</p></td></tr>
-<tr><td class='field-name name'>face</td><td>varint</td><td><p>BlockFace is the face of the block that was interacted with. When clicking the block, it is the face
+<tr><td class='field-name name'>face</td><td>zigzag32</td><td><p>BlockFace is the face of the block that was interacted with. When clicking the block, it is the face
 clicked. When breaking the block, it is the face that was last being hit until the block broke.</p></td></tr>
 <tr><td class='field-name name'>hotbar slot</td><td>varint</td><td><p>HotBarSlot is the hot bar slot that the player was holding while clicking the block. It should be used
 to ensure that the hot bar slot and held item are correctly synchronised with the server.</p></td></tr>
@@ -1600,8 +1603,8 @@ together, resulting in a new item.</p></td></tr>
 <tr><td class='field-name name'>height</td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ><p>2D input array, size of width*height</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2><i>Length for <span class='name'>__745</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__745</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2><i>Length for <span class='name'>__748</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__748</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> length</td><td>varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>ItemLegacy</td><td></td></tr>
@@ -3950,7 +3953,7 @@ opening the chest means the data must be 1</p></td></tr>
   <tr><td class='name'>71</td><td class='name'>balloon pop</td><td></td></tr>
   <tr><td class='name'>72</td><td class='name'>treasure hunt</td><td></td></tr>
   <tr><td class='name'>73</td><td class='name'>agent summon</td><td></td></tr>
-  <tr><td class='name'>74</td><td class='name'>charged crossbow</td><td></td></tr>
+  <tr><td class='name'>74</td><td class='name'>charged item</td><td></td></tr>
   <tr><td class='name'>75</td><td class='name'>fall</td><td></td></tr>
   <tr><td class='name'>76</td><td class='name'>grow up</td><td></td></tr>
   <tr><td class='name'>77</td><td class='name'>vibration detected</td><td></td></tr>
@@ -4794,8 +4797,8 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3820</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3820</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name'><span class='name'>__3823</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3823</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -6150,7 +6153,7 @@ as it can be calculated by the server itself.</p></td></tr>
 <tr><td class='field-name name'>action</td><td><a href="#Action">Action</a></td><td></td></tr>
 <tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>action</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is start break or abort break or crack break or predict break or continue break</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>BlockPosition is the position of the target block, if the action with the ActionType set concerned a
+<tr><td class='field-name name'>position</td><td><a href="#vec3i">vec3i</a></td><td><p>BlockPosition is the position of the target block, if the action with the ActionType set concerned a
 block. If that is not the case, the block position will be zero.</p></td></tr>
 <tr><td class='field-name name'>face</td><td>zigzag32</td><td><p>BlockFace is the face of the target block that was touched. If the action with the ActionType set
 concerned a block. If not, the face is always 0.</p></td></tr>

@@ -1273,9 +1273,9 @@ and specifies the way the player interacted with the block.</p></td></tr>
   <tr><td class='name'>1</td><td class='name'>click air</td><td></td></tr>
   <tr><td class='name'>2</td><td class='name'>break block</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'>block position</td><td><a href="#vec3i">vec3i</a></td><td><p>BlockPosition is the position of the block that was interacted with. This is only really a correct
+<tr><td class='field-name name'>block position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>BlockPosition is the position of the block that was interacted with. This is only really a correct
 block position if ActionType is not UseItemActionClickAir.</p></td></tr>
-<tr><td class='field-name name'>face</td><td>varint</td><td><p>BlockFace is the face of the block that was interacted with. When clicking the block, it is the face
+<tr><td class='field-name name'>face</td><td>zigzag32</td><td><p>BlockFace is the face of the block that was interacted with. When clicking the block, it is the face
 clicked. When breaking the block, it is the face that was last being hit until the block broke.</p></td></tr>
 <tr><td class='field-name name'>hotbar slot</td><td>varint</td><td><p>HotBarSlot is the hot bar slot that the player was holding while clicking the block. It should be used
 to ensure that the hot bar slot and held item are correctly synchronised with the server.</p></td></tr>
@@ -3680,7 +3680,7 @@ opening the chest means the data must be 1</p></td></tr>
   <tr><td class='name'>71</td><td class='name'>balloon pop</td><td></td></tr>
   <tr><td class='name'>72</td><td class='name'>treasure hunt</td><td></td></tr>
   <tr><td class='name'>73</td><td class='name'>agent summon</td><td></td></tr>
-  <tr><td class='name'>74</td><td class='name'>charged crossbow</td><td></td></tr>
+  <tr><td class='name'>74</td><td class='name'>charged item</td><td></td></tr>
   <tr><td class='name'>75</td><td class='name'>fall</td><td></td></tr>
   <tr><td class='name'>76</td><td class='name'>grow up</td><td></td></tr>
   <tr><td class='name'>77</td><td class='name'>vibration detected</td><td></td></tr>
@@ -5841,7 +5841,7 @@ as it can be calculated by the server itself.</p></td></tr>
 <tr><td class='field-name name'>action</td><td><a href="#Action">Action</a></td><td></td></tr>
 <tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>action</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is start break or abort break or crack break or predict break or continue break</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td><p>BlockPosition is the position of the target block, if the action with the ActionType set concerned a
+<tr><td class='field-name name'>position</td><td><a href="#vec3i">vec3i</a></td><td><p>BlockPosition is the position of the target block, if the action with the ActionType set concerned a
 block. If that is not the case, the block position will be zero.</p></td></tr>
 <tr><td class='field-name name'>face</td><td>zigzag32</td><td><p>BlockFace is the face of the target block that was touched. If the action with the ActionType set
 concerned a block. If not, the face is always 0.</p></td></tr>

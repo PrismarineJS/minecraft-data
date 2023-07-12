@@ -516,6 +516,7 @@ a { text-decoration: none; }
 
 
 
+
 <tr><td><a href="#packet_script_custom_event">0x75</a></td><td><a href="#packet_script_custom_event">packet_script_custom_event</a></td></tr>
 
 
@@ -778,6 +779,22 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#packet_game_test_results">0xc3</a></td><td><a href="#packet_game_test_results">packet_game_test_results</a></td></tr>
+
+<tr><td><a href="#packet_update_client_input_locks">0xc4</a></td><td><a href="#packet_update_client_input_locks">packet_update_client_input_locks</a></td></tr>
+
+<tr><td><a href="#packet_client_cheat_ability">0xc5</a></td><td><a href="#packet_client_cheat_ability">packet_client_cheat_ability</a></td></tr>
+
+<tr><td><a href="#packet_camera_presets">0xc6</a></td><td><a href="#packet_camera_presets">packet_camera_presets</a></td></tr>
+
+
+<tr><td><a href="#packet_unlocked_recipes">0xc7</a></td><td><a href="#packet_unlocked_recipes">packet_unlocked_recipes</a></td></tr>
+
+<tr><td><a href="#packet_camera_instruction">0x12c</a></td><td><a href="#packet_camera_instruction">packet_camera_instruction</a></td></tr>
+<tr><td><a href="#packet_compressed_biome_definitions">0x12d</a></td><td><a href="#packet_compressed_biome_definitions">packet_compressed_biome_definitions</a></td></tr>
+<tr><td><a href="#packet_trim_data">0x12e</a></td><td><a href="#packet_trim_data">packet_trim_data</a></td></tr>
+<tr><td><a href="#packet_open_sign">0x12f</a></td><td><a href="#packet_open_sign">packet_open_sign</a></td></tr>
+
+<tr><td><a href="#packet_agent_animation">0x130</a></td><td><a href="#packet_agent_animation">packet_agent_animation</a></td></tr>
   </tbody>
   </table><br/><hr/>
     <div class="packet-header" id="BehaviourPackInfos">
@@ -1200,6 +1217,7 @@ StartGame packet, or to a unique stack ID if it is enabled.</p></td></tr>
   <tr><td class='name'>128</td><td class='name'>player last death position</td><td></td></tr>
   <tr><td class='name'>129</td><td class='name'>player last death dimension</td><td></td></tr>
   <tr><td class='name'>130</td><td class='name'>player has died</td><td></td></tr>
+  <tr><td class='name'>131</td><td class='name'>collision box</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name field-name'>type</td><td colspan=2>varint <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>0</td><td class='name'>byte</td><td></td></tr>
@@ -1488,6 +1506,8 @@ mainly for purposes such as spawning eating particles at that position.</p></td>
 entries for items that can be grouped under a single tag.</p></td></tr>
   <tr><td class='name'>4</td><td class='name'>string id meta</td><td><p>DeferredItemDescriptor represents an item descriptor that uses a namespace and metadata value to identify the item.
 There is no clear benefit of using this item descriptor.</p></td></tr>
+  <tr><td class='name'>5</td><td class='name'>complex alias</td><td><p>ComplexAliasItemDescriptor represents an item descriptor that uses a single name to identify the item. There is no
+clear benefit of using this item descriptor and only seem to be used for specific recipes.</p></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is int id meta</span> </td><td colspan=2 class='bordered'><table>
@@ -1509,6 +1529,9 @@ negative ID, depending on what item it concerns.</p></td></tr>
 <tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the item, which is a name like 'minecraft:stick'.</p></td></tr>
 <tr><td class='field-name name'>metadata</td><td>li16</td><td><p>MetadataValue is the metadata value of the item. For some items, this is the damage value, whereas for
 other items it is simply an identifier of a variant of the item.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is complex alias</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>Name is the name of the item, which is a name like 'minecraft:stick'.</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>count</td><td>zigzag32</td><td></td></tr>
@@ -1563,6 +1586,9 @@ other items it is simply an identifier of a variant of the item.</p></td></tr>
   <tr><td class='name'>5</td><td class='name'>shulker box</td><td></td></tr>
   <tr><td class='name'>6</td><td class='name'>shapeless chemistry</td><td></td></tr>
   <tr><td class='name'>7</td><td class='name'>shaped chemistry</td><td></td></tr>
+  <tr><td class='name'>8</td><td class='name'>smithing transform</td><td><p>SmithingTransformRecipe is a recipe specifically used for smithing tables. It has two input items and adds them
+together, resulting in a new item.</p></td></tr>
+  <tr><td class='name'>9</td><td class='name'>smithing trim</td><td></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>recipe</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is shapeless or shulker box or shapeless chemistry</span> </td><td colspan=2 class='bordered'><table>
@@ -1582,8 +1608,8 @@ other items it is simply an identifier of a variant of the item.</p></td></tr>
 <tr><td class='field-name name'>height</td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ><p>2D input array, size of width*height</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2><i>Length for <span class='name'>__730</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__730</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2><i>Length for <span class='name'>__750</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__750</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> length</td><td>varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>ItemLegacy</td><td></td></tr>
@@ -1605,6 +1631,26 @@ other items it is simply an identifier of a variant of the item.</p></td></tr>
 </table></td></tr>
 <tr><td class='name'><span class='fake'>is multi</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>uuid</td><td>uuid</td><td></td></tr>
+<tr><td class='field-name name'>network id</td><td>varint</td><td></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is smithing transform</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>recipe id</td><td>string</td><td><p>RecipeID is a unique ID of the recipe. This ID must be unique amongst all other types of recipes too,
+but its functionality is not exactly known.</p></td></tr>
+<tr><td class='field-name name'>template</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
+<tr><td class='field-name name'>base</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td><p>Base is the item that the Addition is being applied to in the smithing table.</p></td></tr>
+<tr><td class='field-name name'>addition</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td><p>Addition is the item that is being added to the Base item to result in a modified item.</p></td></tr>
+<tr><td class='field-name name'>result</td><td><a href="#ItemLegacy">ItemLegacy</a></td><td><p>Result is the resulting item from the two items being added together.</p></td></tr>
+<tr><td class='field-name name'>tag</td><td>string</td><td><p>Tag is a serialized compound tag in the network little endian format.</p></td></tr>
+<tr><td class='field-name name'>network id</td><td>varint</td><td><p>RecipeNetworkID is a unique ID used to identify the recipe over network. Each recipe must have a unique
+network ID. Recommended is to just increment a variable for each unique recipe registered.
+This field must never be 0.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is smithing trim</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>recipe id</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>template</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
+<tr><td class='field-name name'>input</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
+<tr><td class='field-name name'>addition</td><td><a href="#RecipeIngredient">RecipeIngredient</a></td><td></td></tr>
+<tr><td class='field-name name'>block</td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>network id</td><td>varint</td><td></td></tr>
 </table></td></tr>
 </table></td></tr>
@@ -1666,6 +1712,7 @@ other items it is simply an identifier of a variant of the item.</p></td></tr>
 <tr><td class='field-name name'>cape on classic</td><td>bool</td><td><p>PersonaCapeOnClassicSkin specifies if the skin had a Persona cape (in-game skin creator cape) equipped
 on a classic skin.</p></td></tr>
 <tr><td class='field-name name'>primary user</td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>overriding player appearance</td><td>bool</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="PlayerRecords">
     <a href="#PlayerRecords"><div class='packet-id datatype'>Type</div><div class='packet-name name'>PlayerRecords</div></a>
@@ -1769,6 +1816,10 @@ on a classic skin.</p></td></tr>
   <tr><td class='name'>27</td><td class='name'>continue break</td><td></td></tr>
   <tr><td class='name'>28</td><td class='name'>start item use on</td><td></td></tr>
   <tr><td class='name'>29</td><td class='name'>stop item use on</td><td></td></tr>
+  <tr><td class='name'>30</td><td class='name'>handled teleport</td><td></td></tr>
+  <tr><td class='name'>31</td><td class='name'>missed swing</td><td></td></tr>
+  <tr><td class='name'>32</td><td class='name'>start crawling</td><td></td></tr>
+  <tr><td class='name'>33</td><td class='name'>stop crawling</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="StackRequestSlotInfo">
@@ -1933,7 +1984,9 @@ when an anvil is used.</p>
   <tr><td class='name'>8</td><td class='name'>leave event text</td><td></td></tr>
   <tr><td class='name'>9</td><td class='name'>slash command chat</td><td></td></tr>
   <tr><td class='name'>10</td><td class='name'>cartography text</td><td></td></tr>
-  <tr><td class='name'>11</td><td class='name'>slash command non chat</td><td></td></tr>
+  <tr><td class='name'>11</td><td class='name'>kick command</td><td></td></tr>
+  <tr><td class='name'>12</td><td class='name'>title command</td><td></td></tr>
+  <tr><td class='name'>13</td><td class='name'>summon command</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="ItemStackResponses">
@@ -2353,6 +2406,7 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>31</td><td class='name'>hud</td><td></td></tr>
   <tr><td class='name'>32</td><td class='name'>jigsaw editor</td><td></td></tr>
   <tr><td class='name'>33</td><td class='name'>smithing table</td><td></td></tr>
+  <tr><td class='name'>34</td><td class='name'>chest boat</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="ContainerSlotType">
@@ -2384,45 +2438,47 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>18</td><td class='name'>recipe search</td><td></td></tr>
   <tr><td class='name'>19</td><td class='name'>recipe search bar</td><td></td></tr>
   <tr><td class='name'>20</td><td class='name'>recipe equipment</td><td></td></tr>
-  <tr><td class='name'>21</td><td class='name'>enchanting input</td><td></td></tr>
-  <tr><td class='name'>22</td><td class='name'>enchanting lapis</td><td></td></tr>
-  <tr><td class='name'>23</td><td class='name'>furnace fuel</td><td></td></tr>
-  <tr><td class='name'>24</td><td class='name'>furnace ingredient</td><td></td></tr>
-  <tr><td class='name'>25</td><td class='name'>furnace output</td><td></td></tr>
-  <tr><td class='name'>26</td><td class='name'>horse equip</td><td></td></tr>
-  <tr><td class='name'>27</td><td class='name'>hotbar</td><td></td></tr>
-  <tr><td class='name'>28</td><td class='name'>inventory</td><td></td></tr>
-  <tr><td class='name'>29</td><td class='name'>shulker</td><td></td></tr>
-  <tr><td class='name'>30</td><td class='name'>trade ingredient1</td><td></td></tr>
-  <tr><td class='name'>31</td><td class='name'>trade ingredient2</td><td></td></tr>
-  <tr><td class='name'>32</td><td class='name'>trade result</td><td></td></tr>
-  <tr><td class='name'>33</td><td class='name'>offhand</td><td></td></tr>
-  <tr><td class='name'>34</td><td class='name'>compcreate input</td><td></td></tr>
-  <tr><td class='name'>35</td><td class='name'>compcreate output</td><td></td></tr>
-  <tr><td class='name'>36</td><td class='name'>elemconstruct output</td><td></td></tr>
-  <tr><td class='name'>37</td><td class='name'>matreduce input</td><td></td></tr>
-  <tr><td class='name'>38</td><td class='name'>matreduce output</td><td></td></tr>
-  <tr><td class='name'>39</td><td class='name'>labtable input</td><td></td></tr>
-  <tr><td class='name'>40</td><td class='name'>loom input</td><td></td></tr>
-  <tr><td class='name'>41</td><td class='name'>loom dye</td><td></td></tr>
-  <tr><td class='name'>42</td><td class='name'>loom material</td><td></td></tr>
-  <tr><td class='name'>43</td><td class='name'>loom result</td><td></td></tr>
-  <tr><td class='name'>44</td><td class='name'>blast furnace ingredient</td><td></td></tr>
-  <tr><td class='name'>45</td><td class='name'>smoker ingredient</td><td></td></tr>
-  <tr><td class='name'>46</td><td class='name'>trade2 ingredient1</td><td></td></tr>
-  <tr><td class='name'>47</td><td class='name'>trade2 ingredient2</td><td></td></tr>
-  <tr><td class='name'>48</td><td class='name'>trade2 result</td><td></td></tr>
-  <tr><td class='name'>49</td><td class='name'>grindstone input</td><td></td></tr>
-  <tr><td class='name'>50</td><td class='name'>grindstone additional</td><td></td></tr>
-  <tr><td class='name'>51</td><td class='name'>grindstone result</td><td></td></tr>
-  <tr><td class='name'>52</td><td class='name'>stonecutter input</td><td></td></tr>
-  <tr><td class='name'>53</td><td class='name'>stonecutter result</td><td></td></tr>
-  <tr><td class='name'>54</td><td class='name'>cartography input</td><td></td></tr>
-  <tr><td class='name'>55</td><td class='name'>cartography additional</td><td></td></tr>
-  <tr><td class='name'>56</td><td class='name'>cartography result</td><td></td></tr>
-  <tr><td class='name'>57</td><td class='name'>barrel</td><td></td></tr>
-  <tr><td class='name'>58</td><td class='name'>cursor</td><td></td></tr>
-  <tr><td class='name'>59</td><td class='name'>creative output</td><td></td></tr>
+  <tr><td class='name'>21</td><td class='name'>recipe book</td><td></td></tr>
+  <tr><td class='name'>22</td><td class='name'>enchanting input</td><td></td></tr>
+  <tr><td class='name'>23</td><td class='name'>enchanting lapis</td><td></td></tr>
+  <tr><td class='name'>24</td><td class='name'>furnace fuel</td><td></td></tr>
+  <tr><td class='name'>25</td><td class='name'>furnace ingredient</td><td></td></tr>
+  <tr><td class='name'>26</td><td class='name'>furnace output</td><td></td></tr>
+  <tr><td class='name'>27</td><td class='name'>horse equip</td><td></td></tr>
+  <tr><td class='name'>28</td><td class='name'>hotbar</td><td></td></tr>
+  <tr><td class='name'>29</td><td class='name'>inventory</td><td></td></tr>
+  <tr><td class='name'>30</td><td class='name'>shulker</td><td></td></tr>
+  <tr><td class='name'>31</td><td class='name'>trade ingredient1</td><td></td></tr>
+  <tr><td class='name'>32</td><td class='name'>trade ingredient2</td><td></td></tr>
+  <tr><td class='name'>33</td><td class='name'>trade result</td><td></td></tr>
+  <tr><td class='name'>34</td><td class='name'>offhand</td><td></td></tr>
+  <tr><td class='name'>35</td><td class='name'>compcreate input</td><td></td></tr>
+  <tr><td class='name'>36</td><td class='name'>compcreate output</td><td></td></tr>
+  <tr><td class='name'>37</td><td class='name'>elemconstruct output</td><td></td></tr>
+  <tr><td class='name'>38</td><td class='name'>matreduce input</td><td></td></tr>
+  <tr><td class='name'>39</td><td class='name'>matreduce output</td><td></td></tr>
+  <tr><td class='name'>40</td><td class='name'>labtable input</td><td></td></tr>
+  <tr><td class='name'>41</td><td class='name'>loom input</td><td></td></tr>
+  <tr><td class='name'>42</td><td class='name'>loom dye</td><td></td></tr>
+  <tr><td class='name'>43</td><td class='name'>loom material</td><td></td></tr>
+  <tr><td class='name'>44</td><td class='name'>loom result</td><td></td></tr>
+  <tr><td class='name'>45</td><td class='name'>blast furnace ingredient</td><td></td></tr>
+  <tr><td class='name'>46</td><td class='name'>smoker ingredient</td><td></td></tr>
+  <tr><td class='name'>47</td><td class='name'>trade2 ingredient1</td><td></td></tr>
+  <tr><td class='name'>48</td><td class='name'>trade2 ingredient2</td><td></td></tr>
+  <tr><td class='name'>49</td><td class='name'>trade2 result</td><td></td></tr>
+  <tr><td class='name'>50</td><td class='name'>grindstone input</td><td></td></tr>
+  <tr><td class='name'>51</td><td class='name'>grindstone additional</td><td></td></tr>
+  <tr><td class='name'>52</td><td class='name'>grindstone result</td><td></td></tr>
+  <tr><td class='name'>53</td><td class='name'>stonecutter input</td><td></td></tr>
+  <tr><td class='name'>54</td><td class='name'>stonecutter result</td><td></td></tr>
+  <tr><td class='name'>55</td><td class='name'>cartography input</td><td></td></tr>
+  <tr><td class='name'>56</td><td class='name'>cartography additional</td><td></td></tr>
+  <tr><td class='name'>57</td><td class='name'>cartography result</td><td></td></tr>
+  <tr><td class='name'>58</td><td class='name'>barrel</td><td></td></tr>
+  <tr><td class='name'>59</td><td class='name'>cursor</td><td></td></tr>
+  <tr><td class='name'>60</td><td class='name'>creative output</td><td></td></tr>
+  <tr><td class='name'>61</td><td class='name'>smithing table template</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="SoundType">
@@ -2878,11 +2934,33 @@ send a <code>container_open</code> for them.</p></p>
   <tr><td class='name'>442</td><td class='name'>DrinkMilk</td><td></td></tr>
   <tr><td class='name'>443</td><td class='name'>RecordPlaying</td><td></td></tr>
   <tr><td class='name'>444</td><td class='name'>EnchantingTableUse</td><td></td></tr>
-  <tr><td class='name'>445</td><td class='name'>_</td><td></td></tr>
-  <tr><td class='name'>446</td><td class='name'>_</td><td></td></tr>
+  <tr><td class='name'>445</td><td class='name'>StepSand</td><td></td></tr>
+  <tr><td class='name'>446</td><td class='name'>DashReady</td><td></td></tr>
   <tr><td class='name'>447</td><td class='name'>BundleDropContents</td><td></td></tr>
   <tr><td class='name'>448</td><td class='name'>BundleInsert</td><td></td></tr>
   <tr><td class='name'>449</td><td class='name'>BundleRemoveOne</td><td></td></tr>
+  <tr><td class='name'>450</td><td class='name'>PressurePlateClickOff</td><td></td></tr>
+  <tr><td class='name'>451</td><td class='name'>PressurePlateClickOn</td><td></td></tr>
+  <tr><td class='name'>452</td><td class='name'>ButtonClickOff</td><td></td></tr>
+  <tr><td class='name'>453</td><td class='name'>ButtonClickOn</td><td></td></tr>
+  <tr><td class='name'>454</td><td class='name'>DoorOpen</td><td></td></tr>
+  <tr><td class='name'>455</td><td class='name'>DoorClose</td><td></td></tr>
+  <tr><td class='name'>456</td><td class='name'>TrapdoorOpen</td><td></td></tr>
+  <tr><td class='name'>457</td><td class='name'>TrapdoorClose</td><td></td></tr>
+  <tr><td class='name'>458</td><td class='name'>FenceGateOpen</td><td></td></tr>
+  <tr><td class='name'>459</td><td class='name'>FenceGateClose</td><td></td></tr>
+  <tr><td class='name'>460</td><td class='name'>Insert</td><td></td></tr>
+  <tr><td class='name'>461</td><td class='name'>Pickup</td><td></td></tr>
+  <tr><td class='name'>462</td><td class='name'>InsertEnchanted</td><td></td></tr>
+  <tr><td class='name'>463</td><td class='name'>PickupEnchanted</td><td></td></tr>
+  <tr><td class='name'>464</td><td class='name'>Brush</td><td></td></tr>
+  <tr><td class='name'>465</td><td class='name'>BrushCompleted</td><td></td></tr>
+  <tr><td class='name'>466</td><td class='name'>ShatterDecoratedPot</td><td></td></tr>
+  <tr><td class='name'>467</td><td class='name'>BreakDecoratedPot</td><td></td></tr>
+  <tr><td class='name'>468</td><td class='name'>SnifferEggCrack</td><td></td></tr>
+  <tr><td class='name'>469</td><td class='name'>SnifferEggHatched</td><td></td></tr>
+  <tr><td class='name'>470</td><td class='name'>WaxedSignInteractFail</td><td></td></tr>
+  <tr><td class='name'>471</td><td class='name'>RecordRelic</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="LegacyEntityType">
@@ -3254,6 +3332,8 @@ to true while the player's or the world's game mode is creative, and it's recomm
 always set this to false as a server.</p></td></tr>
 <tr><td class='field-name name'>editor world</td><td>bool</td><td><p>EditorWorld is a value to dictate if the world is in editor mode, a special mode recently introduced adding
 "powerful tools for editing worlds, intended for experienced creators."</p></td></tr>
+<tr><td class='field-name name'>created in editor</td><td>bool</td><td><p>Whether the world was created in editor mode</p></td></tr>
+<tr><td class='field-name name'>exported from editor</td><td>bool</td><td><p>Whether the world was exported from editor mode</p></td></tr>
 <tr><td class='field-name name'>day cycle stop time</td><td>zigzag32</td><td><p>The time at which the day cycle was locked if the day cycle is disabled using the respective
 game rule. The client will maIntain this time as Boolean as the day cycle is disabled.</p></td></tr>
 <tr><td class='field-name name'>edu offer</td><td>zigzag32</td><td><p>Some Minecraft: Education Edition field that specifies what 'region' the world was from, 
@@ -3304,6 +3384,7 @@ do not allow things such as setting game rules through the GUI.</p></td></tr>
 The his never actually read though, so it has no functionality.</p></td></tr>
 <tr><td class='field-name name'>persona disabled</td><td>bool</td><td><p>PersonaDisabled is true if persona skins are disabled for the current game session.</p></td></tr>
 <tr><td class='field-name name'>custom skins disabled</td><td>bool</td><td><p>CustomSkinsDisabled is true if custom skins are disabled for the current game session.</p></td></tr>
+<tr><td class='field-name name'>emote chat muted</td><td>bool</td><td><p>EmoteChatMuted specifies if players will be sent a chat message when using certain emotes.</p></td></tr>
 <tr><td class='field-name name'>game version</td><td>string</td><td><p>The version of the game from which Vanilla features will be used.
 The exact function of this field isn't clear.</p></td></tr>
 <tr><td class='field-name name'>limited world width</td><td>li32</td><td></td></tr>
@@ -3362,6 +3443,10 @@ ones that are sent in the SyncActorProperty packet.</p></td></tr>
 use a world based off of a template can set this to an empty UUID.</p></td></tr>
 <tr><td class='field-name name'>client side generation</td><td>bool</td><td><p>ClientSideGeneration is true if the client should use the features registered in the FeatureRegistry packet to
 generate terrain client-side to save on bandwidth.</p></td></tr>
+<tr><td class='field-name name'>block network ids are hashes</td><td>bool</td><td><p>UseBlockNetworkIDHashes is true if the client should use the hash of a block's name as its network ID rather than
+its index in the expected block palette. This is useful for servers that wish to support multiple protocol versions
+and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.</p></td></tr>
+<tr><td class='field-name name'>server controlled sound</td><td>bool</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_add_player">
     <a href="#packet_add_player"><div class='packet-id client'>12</div><div class='packet-name name'>packet add player</div></a>
@@ -3713,6 +3798,12 @@ the field implies</p></td></tr>
   <tr><td class='name'>3600</td><td class='name'>block start break</td><td></td></tr>
   <tr><td class='name'>3601</td><td class='name'>block stop break</td><td></td></tr>
   <tr><td class='name'>3602</td><td class='name'>block break speed</td><td></td></tr>
+  <tr><td class='name'>3603</td><td class='name'>particle punch block down</td><td></td></tr>
+  <tr><td class='name'>3604</td><td class='name'>particle punch block up</td><td></td></tr>
+  <tr><td class='name'>3605</td><td class='name'>particle punch block north</td><td></td></tr>
+  <tr><td class='name'>3606</td><td class='name'>particle punch block south</td><td></td></tr>
+  <tr><td class='name'>3607</td><td class='name'>particle punch block west</td><td></td></tr>
+  <tr><td class='name'>3608</td><td class='name'>particle punch block east</td><td></td></tr>
   <tr><td class='name'>4000</td><td class='name'>set data</td><td></td></tr>
   <tr><td class='name'>9800</td><td class='name'>players sleeping</td><td></td></tr>
   <tr><td class='name'>9801</td><td class='name'>sleeping players</td><td></td></tr>
@@ -4469,6 +4560,7 @@ telemetry reasons, much like the SimpleEvent packet.</p></p>
   <tr><td class='name'>27</td><td class='name'>code builder scoreboard</td><td></td></tr>
   <tr><td class='name'>28</td><td class='name'>strider ridden in lava in overworld</td><td></td></tr>
   <tr><td class='name'>29</td><td class='name'>sneak close to sculk sensor</td><td></td></tr>
+  <tr><td class='name'>30</td><td class='name'>careful restoration</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>use player id</td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>event data</td><td>restBuffer</td><td></td></tr>
@@ -4569,6 +4661,7 @@ radius requested, or a different chunk radius if the server chooses so.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>chunk radius</td><td>zigzag32</td><td><p>ChunkRadius is the requested chunk radius. This value is always the value set in the settings of the
 player.</p></td></tr>
+<tr><td class='field-name name'>max radius</td><td>u8</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_chunk_radius_update">
     <a href="#packet_chunk_radius_update"><div class='packet-id client'>70</div><div class='packet-name name'>packet chunk radius update</div></a>
@@ -4696,6 +4789,9 @@ If the values</em>len < 0xffff => short,
 If the values_len < 0xffffff => int</p></td></tr>
 <tr><td colspan=2><i>Length for <span class='name'>enum values</span> below is <b class='name'>values len</b> from above</td><td rowspan=2><p>Here all the enum values for all of the possible commands are stored to one array palette</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>enum values</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>chained subcommand values</span> length</td><td>varint</td><td rowspan=2><p>chained<em>subcommand</em>values is a slice of all chained subcommand names. chained<em>subcommand</em>values generally should
+contain each possible value only once. chained_subcommands are built by pointing to entries in this slice.</p></td></tr>
+<tr><td class='field-name'><span class='name'>chained subcommand values</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>suffixes</span> length</td><td>varint</td><td rowspan=2><p>Integer parameters may sometimes have a prefix, such as the XP command:
 /xp <amount: int> [player: target] <- here, the xp command gives experience points
 /xp <amount: int>L [player: target] &lt;- here, the xp command gives experience levels
@@ -4713,6 +4809,19 @@ This is the palette of suffixes</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table></td></tr>
+<tr><td class='field-name'><span class='name'>chained subcommands</span> length</td><td>varint</td><td ><p>chained_subcommands is a slice of all subcommands that are followed by a chained command. An example usage of this
+is /execute which allows you to run another command as another entity or at a different position etc.</p></td></tr>
+<tr><td class='field-name'><span class='name'>chained subcommands</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>name</td><td>string</td><td><p>ChainedSubcommandValue represents the value for a chained subcommand argument.
+name is the name of the chained subcommand and shows up in the list as a regular subcommand enum.</p></td></tr>
+<tr><td class='field-name'><span class='name'>values</span> length</td><td>varint</td><td ><p>values contains the index and parameter type of the chained subcommand.</p></td></tr>
+<tr><td class='field-name'><span class='name'>values</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>index</td><td>lu16</td><td><p>index is the index of the argument in the ChainedSubcommandValues slice from the AvailableCommands packet. This is
+then used to set the type specified by the Value field below.</p></td></tr>
+<tr><td class='field-name name'>value</td><td>lu16</td><td><p>value is a combination of the flags above and specified the type of argument. Unlike regular parameter types,
+this should NOT contain any of the special flags (valid, enum, suffixed or soft enum) but only the basic types.</p></td></tr>
+</table></td></tr>
+</table></td></tr>
 <tr><td class='field-name'><span class='name'>command data</span> length</td><td>varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>command data</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>name</td><td>string</td><td></td></tr>
@@ -4720,10 +4829,14 @@ This is the palette of suffixes</p></td></tr>
 <tr><td class='field-name name'>flags</td><td>lu16</td><td></td></tr>
 <tr><td class='field-name name'>permission level</td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>alias</td><td>li32</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>chained subcommand offsets</span> length</td><td>varint</td><td rowspan=2><p>chained<em>subcommand</em>offsets is a slice of offsets that all point to a different chained<em>subcommand from the
+chained</em>subcommands slice in the available_commands packet.</p></td></tr>
+<tr><td class='field-name'><span class='name'>chained subcommand offsets</span> <div class="tag tag-array">array</div></td><td>lu16</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> length</td><td>varint</td><td ><p>The list of overload parameters for this command</p></td></tr>
 <tr><td class='field-name'><span class='name'>overloads</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name'><span class='name'>__3743</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
-<tr><td class='field-name'><span class='name'>__3743</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>chaining</td><td>bool</td><td><p>chaining determines if the parameters use chained subcommands or not.</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3861</span> length</td><td>varint</td><td ><p>Each of the parameters gets an array of posible overloads</p></td></tr>
+<tr><td class='field-name'><span class='name'>__3861</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>parameter name</td><td>string</td><td><p>The name of the parameter shown to the user (the <code>amount</code> in <code>/xp &lt;amount: int&gt;</code>)</p></td></tr>
 <tr><td class='name field-name'>value type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>1</td><td class='name'>int</td><td></td></tr>
@@ -4736,15 +4849,15 @@ This is the palette of suffixes</p></td></tr>
   <tr><td class='name'>10</td><td class='name'>wildcard target</td><td></td></tr>
   <tr><td class='name'>17</td><td class='name'>file path</td><td></td></tr>
   <tr><td class='name'>23</td><td class='name'>integer range</td><td></td></tr>
-  <tr><td class='name'>38</td><td class='name'>equipment slots</td><td></td></tr>
-  <tr><td class='name'>39</td><td class='name'>string</td><td></td></tr>
-  <tr><td class='name'>47</td><td class='name'>block position</td><td></td></tr>
-  <tr><td class='name'>48</td><td class='name'>position</td><td></td></tr>
-  <tr><td class='name'>51</td><td class='name'>message</td><td></td></tr>
-  <tr><td class='name'>53</td><td class='name'>raw text</td><td></td></tr>
-  <tr><td class='name'>57</td><td class='name'>json</td><td></td></tr>
-  <tr><td class='name'>67</td><td class='name'>block states</td><td></td></tr>
-  <tr><td class='name'>70</td><td class='name'>command</td><td></td></tr>
+  <tr><td class='name'>43</td><td class='name'>equipment slots</td><td></td></tr>
+  <tr><td class='name'>44</td><td class='name'>string</td><td></td></tr>
+  <tr><td class='name'>52</td><td class='name'>block position</td><td></td></tr>
+  <tr><td class='name'>53</td><td class='name'>position</td><td></td></tr>
+  <tr><td class='name'>55</td><td class='name'>message</td><td></td></tr>
+  <tr><td class='name'>58</td><td class='name'>raw text</td><td></td></tr>
+  <tr><td class='name'>62</td><td class='name'>json</td><td></td></tr>
+  <tr><td class='name'>71</td><td class='name'>block states</td><td></td></tr>
+  <tr><td class='name'>74</td><td class='name'>command</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name field-name'>enum type</td><td colspan=2>lu16 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
   <tr><td class='name'>16</td><td class='name'>valid</td><td><p>In MC, this + prior field are combined to one 32bit bitfield</p></td></tr>
@@ -4799,6 +4912,8 @@ result.</p></p>
 <tr><td class='field-name name'>origin</td><td><a href="#CommandOrigin">CommandOrigin</a></td><td><p>Origin holds information about the command sender that will be returnd back in the command response</p></td></tr>
 <tr><td class='field-name name'>internal</td><td>bool</td><td><p>Internal specifies if the command request internal. Setting it to false seems to work and the usage of
 this field is not known.</p></td></tr>
+<tr><td class='field-name name'>version</td><td>varint</td><td><p>Specifies the version of the command to run, relative to the current Minecraft version. Should be set
+to 52 as of 1.19.62</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_command_block_update">
     <a href="#packet_command_block_update"><div class='packet-id server'>78</div><div class='packet-name name'>packet command block update</div></a>
@@ -5569,7 +5684,8 @@ the other side should send a NetworkStackLatency packet back.</p></td></tr>
     
 <p><p>ScriptCustomEvent is sent by both the client and the server. It is a way to let scripts communicate with
 the server, so that the client can let the server know it triggered an event, or the other way around.
-It is essentially an RPC kind of system.</p></p>
+It is essentially an RPC kind of system.
+Deprecated: ScriptCustomEvent is deprecated as of 1.20.10.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>event name</td><td>string</td><td><p>EventName is the name of the event. The script and the server will use this event name to identify the
 data that is sent.</p></td></tr>
@@ -5807,6 +5923,7 @@ identical to the last sent in the StructureBlockUpdate packet by the client.</p>
   <tr><td class='name'>1</td><td class='name'>export from save</td><td><p>RequestType specifies the type of template data request that the player sent.</p></td></tr>
   <tr><td class='name'>2</td><td class='name'>export from load</td><td></td></tr>
   <tr><td class='name'>3</td><td class='name'>query saved structure</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>import from save</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_structure_template_data_export_response">
@@ -5826,6 +5943,7 @@ to a StructureTemplateDataRequest packet.</p></p>
   <tr><td class='name'>1</td><td class='name'>export</td><td><p>ResponseType specifies the response type of the packet. This depends on the RequestType field sent in
 the StructureTemplateDataRequest packet and is one of the constants above.</p></td></tr>
   <tr><td class='name'>2</td><td class='name'>query</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>import</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_update_block_properties">
@@ -5911,8 +6029,15 @@ the server, after which the server will broadcast the packet to other players on
 <tr><td class='field-name name'>entity id</td><td>varint64</td><td><p>EntityRuntimeID is the entity that sent the emote. When a player sends this packet, it has this field
 set as its own entity runtime ID.</p></td></tr>
 <tr><td class='field-name name'>emote id</td><td>string</td><td><p>EmoteID is the ID of the emote to send.</p></td></tr>
-<tr><td class='field-name name'>flags</td><td>u8</td><td><p>Flags is a combination of flags that change the way the Emote packet operates. When the server sends
+<tr><td class='field-name name'>xuid</td><td>string</td><td><p>XUID is the Xbox User ID of the player that sent the emote. It is only set when the emote is used by a player that
+is authenticated with Xbox Live.</p></td></tr>
+<tr><td class='field-name name'>platform id</td><td>string</td><td><p>PlatformID is an identifier only set for particular platforms when using an emote (presumably only for Nintendo
+Switch). It is otherwise an empty string, and is used to decide which players are able to emote with each other.</p></td></tr>
+<tr><td class='name field-name'>flags</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>1</td><td class='name'>server side</td><td><p>Flags is a combination of flags that change the way the Emote packet operates. When the server sends
 this packet to other players, EmoteFlagServerSide must be present.</p></td></tr>
+  <tr><td class='name'>2</td><td class='name'>mute chat</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_multiplayer_settings">
     <a href="#packet_multiplayer_settings"><div class='packet-id server'>139</div><div class='packet-name name'>packet multiplayer settings</div></a>
@@ -5983,6 +6108,7 @@ may be found above.</p></td></tr>
   <tr><td class='name'>12</td><td class='name'>retrieved</td><td></td></tr>
   <tr><td class='name'>13</td><td class='name'>dyed</td><td></td></tr>
   <tr><td class='name'>14</td><td class='name'>traded</td><td></td></tr>
+  <tr><td class='name'>15</td><td class='name'>brushing completed</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_network_settings">
@@ -6079,6 +6205,8 @@ concerned a block. If not, the face is always 0.</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table></td></tr>
+<tr><td class='field-name name'>analogue move vector</td><td><a href="#vec2f">vec2f</a></td><td><p>AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
+values which are created using an analogue input.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_creative_content">
     <a href="#packet_creative_content"><div class='packet-id client'>145</div><div class='packet-name name'>packet creative content</div></a>
@@ -6870,4 +6998,120 @@ test was successful or not, and an error string if the test failed.</p></p>
 <tr><td class='field-name name'>succeeded</td><td>bool</td><td><p>Succeeded indicates whether the test succeeded or not.</p></td></tr>
 <tr><td class='field-name name'>error</td><td>string</td><td><p>Error is the error that occurred. If Succeeded is true, this field is empty.</p></td></tr>
 <tr><td class='field-name name'>name</td><td>string</td><td><p>Name represents the name of the test.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_update_client_input_locks">
+    <a href="#packet_update_client_input_locks"><div class='packet-id client'>196</div><div class='packet-name name'>packet update client input locks</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>locks</td><td>InputLockFlags</td><td><p>Locks is an encoded bitset of all locks that are currently active. The locks are defined in the constants above.</p></td></tr>
+<tr><td class='field-name name'>position</td><td><a href="#vec3f">vec3f</a></td><td><p>Position is the server's position of the client at the time the packet was sent. It is unclear what the exact
+purpose of this field is.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_client_cheat_ability">
+    <a href="#packet_client_cheat_ability"><div class='packet-id client'>197</div><div class='packet-name name'>packet client cheat ability</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>Deprecated: ClientCheatAbility is deprecated as of 1.20.10.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>entity unique id</td><td>li64</td><td><p>EntityUniqueID is the unique ID of the player. The unique ID is a value that remains consistent across
+different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
+this field.</p></td></tr>
+<tr><td class='field-name name'>permission level</td><td><a href="#PermissionLevel">PermissionLevel</a></td><td><p>PlayerPermissions is the permission level of the player. It is a value from 0-3, with 0 being visitor,
+1 being member, 2 being operator and 3 being custom.</p></td></tr>
+<tr><td class='field-name name'>command permission</td><td><a href="#CommandPermissionLevel">CommandPermissionLevel</a></td><td><p>CommandPermissions is a permission level that specifies the kind of commands that the player is
+allowed to use. It is one of the CommandPermissionLevel constants in the AdventureSettings packet.</p></td></tr>
+<tr><td class='field-name'><span class='name'>abilities</span> length</td><td>u8</td><td rowspan=2><p>Layers contains all ability layers and their potential values. This should at least have one entry, being the
+base layer.</p></td></tr>
+<tr><td class='field-name'><span class='name'>abilities</span> <div class="tag tag-array">array</div></td><td>AbilityLayers</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_camera_presets">
+    <a href="#packet_camera_presets"><div class='packet-id client'>198</div><div class='packet-name name'>packet camera presets</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>camera_presets gives the client a list of custom camera presets.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>data</td><td>nbt</td><td><p>Data is a compound tag of the presets being set.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_unlocked_recipes">
+    <a href="#packet_unlocked_recipes"><div class='packet-id client'>199</div><div class='packet-name name'>packet unlocked recipes</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
+the recipe book.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name'><span class='name'>recipes</span> length</td><td>varint</td><td rowspan=2><p>new_unlocks determines if new recipes have been unlocked since the packet was last sent.
+Recipes is a list of recipe names that have been unlocked.</p></td></tr>
+<tr><td class='field-name'><span class='name'>recipes</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_camera_instruction">
+    <a href="#packet_camera_instruction"><div class='packet-id datatype'>300</div><div class='packet-name name'>packet camera instruction</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p><p>camera_instruction gives a custom camera specific instructions to operate.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>data</td><td>nbt</td><td><p>Data is a compound tag of the instructions to sent.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_compressed_biome_definitions">
+    <a href="#packet_compressed_biome_definitions"><div class='packet-id client'>301</div><div class='packet-name name'>packet compressed biome definitions</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>raw payload</td><td>string</td><td><p>via PMMP:
+This packet is only sent by the server when client-side chunk generation is enabled in vanilla. It contains NBT data
+for biomes, similar to the BiomeDefinitionListPacket, but with a large amount of extra data for client-side chunk
+generation.
+The data is compressed with a cursed home-brewed compression format, and it's a miracle it even works.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_trim_data">
+    <a href="#packet_trim_data"><div class='packet-id client'>302</div><div class='packet-name name'>packet trim data</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name'><span class='name'>patterns</span> length</td><td>varint</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>patterns</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>item name</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>pattern</td><td>string</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name'><span class='name'>materials</span> length</td><td>varint</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>materials</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>material</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>color</td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>item name</td><td>string</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_open_sign">
+    <a href="#packet_open_sign"><div class='packet-id client'>303</div><div class='packet-name name'>packet open sign</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>position</td><td><a href="#BlockCoordinates">BlockCoordinates</a></td><td></td></tr>
+<tr><td class='field-name name'>is front</td><td>bool</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_agent_animation">
+    <a href="#packet_agent_animation"><div class='packet-id client'>304</div><div class='packet-name name'>packet agent animation</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>agent_animation is an Education Edition packet sent from the server to the client to make an agent perform an animation.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='name field-name'>animation</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>arm swing</td><td><p>animation is the ID of the animation that the agent should perform. As of its implementation, there are no IDs
+that can be used in the regular client.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>shrug</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'>entity runtime id</td><td>varint64</td><td><p>entity<em>runtime</em>id is the runtime ID of the entity. The runtime ID is unique for each world session, and
+entities are generally identified in packets using this runtime ID.</p></td></tr>
 </table><br/><hr/><br/></div>
