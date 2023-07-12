@@ -966,7 +966,7 @@ packet_entity_event:
       71: balloon_pop
       72: treasure_hunt
       73: agent_summon
-      74: charged_crossbow
+      74: charged_item
       75: fall
       76: grow_up
       77: vibration_detected
@@ -1709,6 +1709,9 @@ packet_available_commands:
    _enum_type: '["enum_size_based_on_values_len"]'
    # Here all the enum values for all of the possible commands are stored to one array palette
    enum_values: string[]$values_len
+   # chained_subcommand_values is a slice of all chained subcommand names. chained_subcommand_values generally should
+   # contain each possible value only once. chained_subcommands are built by pointing to entries in this slice.
+   chained_subcommand_values: string[]varint
    # Integer parameters may sometimes have a prefix, such as the XP command:
    # /xp <amount: int> [player: target] <- here, the xp command gives experience points
    # /xp <amount: int>L [player: target] <- here, the xp command gives experience levels
@@ -1725,14 +1728,33 @@ packet_available_commands:
             if byte: u8
             if short: lu16
             if int: lu32
+   # chained_subcommands is a slice of all subcommands that are followed by a chained command. An example usage of this
+   # is /execute which allows you to run another command as another entity or at a different position etc.
+   chained_subcommands: []varint
+      # ChainedSubcommandValue represents the value for a chained subcommand argument.
+      # name is the name of the chained subcommand and shows up in the list as a regular subcommand enum.
+      name: string
+      # values contains the index and parameter type of the chained subcommand.
+      values: []varint
+         # index is the index of the argument in the ChainedSubcommandValues slice from the AvailableCommands packet. This is
+         # then used to set the type specified by the Value field below.
+         index: lu16
+         # value is a combination of the flags above and specified the type of argument. Unlike regular parameter types,
+         # this should NOT contain any of the special flags (valid, enum, suffixed or soft enum) but only the basic types.
+         value: lu16
    command_data: []varint
       name: string
       description: string
       flags: lu16
       permission_level: u8
       alias: li32
+      # chained_subcommand_offsets is a slice of offsets that all point to a different chained_subcommand from the
+      # chained_subcommands slice in the available_commands packet.
+      chained_subcommand_offsets: lu16[]varint
       # The list of overload parameters for this command
       overloads: []varint
+         # chaining determines if the parameters use chained subcommands or not.
+         chaining: bool
          # Each of the parameters gets an array of posible overloads
          _: []varint
             # The name of the parameter shown to the user (the `amount` in `/xp <amount: int>`)
@@ -2554,6 +2576,7 @@ packet_network_stack_latency:
 # ScriptCustomEvent is sent by both the client and the server. It is a way to let scripts communicate with
 # the server, so that the client can let the server know it triggered an event, or the other way around.
 # It is essentially an RPC kind of system.
+# Deprecated: ScriptCustomEvent is deprecated as of 1.20.10.
 packet_script_custom_event:
    !id: 0x75
    !bound: both
@@ -3094,7 +3117,10 @@ InputFlag: [ "bitflags", {
       "block_action",
       "item_stack_request",
       "handled_teleport",
-      "emoting"
+      "emoting",
+      "missed_swing",
+      "start_crawling",
+      "stop_crawling"
    ]
 }]
 
@@ -3886,6 +3912,7 @@ packet_update_client_input_locks:
    # purpose of this field is.
    position: vec3f
 
+# Deprecated: ClientCheatAbility is deprecated as of 1.20.10.
 packet_client_cheat_ability:
    !id: 0xc5
    !bound: client
@@ -3959,3 +3986,14 @@ packet_open_sign:
    !bound: client
    position: BlockCoordinates
    is_front: bool
+
+# agent_animation is an Education Edition packet sent from the server to the client to make an agent perform an animation.
+packet_agent_animation:
+   !id: 0x130
+   !bound: client
+   # animation is the ID of the animation that the agent should perform. As of its implementation, there are no IDs
+   # that can be used in the regular client.
+   animation: u8
+   # entity_runtime_id is the runtime ID of the entity. The runtime ID is unique for each world session, and
+   # entities are generally identified in packets using this runtime ID.
+   entity_runtime_id: lu64
