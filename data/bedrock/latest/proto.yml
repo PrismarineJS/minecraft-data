@@ -2972,6 +2972,7 @@ packet_completed_using_item:
       12: retrieved
       13: dyed
       14: traded
+      15: brushing_completed
 
 # NetworkSettings is sent by the server to update a variety of network settings. These settings modify the
 # way packets are sent over the network stack.
@@ -3993,7 +3994,9 @@ packet_agent_animation:
    !bound: client
    # animation is the ID of the animation that the agent should perform. As of its implementation, there are no IDs
    # that can be used in the regular client.
-   animation: u8
+   animation: u8 =>
+      0: arm_swing
+      1: shrug
    # entity_runtime_id is the runtime ID of the entity. The runtime ID is unique for each world session, and
    # entities are generally identified in packets using this runtime ID.
    entity_runtime_id: varint64
