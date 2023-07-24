@@ -6597,68 +6597,76 @@
                       {
                         "countType": "varint",
                         "type": [
-                          "array",
-                          {
-                            "countType": "varint",
-                            "type": [
-                              "container",
-                              [
+                          "container",
+                          [
+                            {
+                              "name": "parameters",
+                              "type": [
+                                "array",
                                 {
-                                  "name": "parameter_name",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "value_type",
+                                  "countType": "varint",
                                   "type": [
-                                    "mapper",
-                                    {
-                                      "type": "lu16",
-                                      "mappings": {
-                                        "1": "int",
-                                        "2": "float",
-                                        "3": "value",
-                                        "4": "wildcard_int",
-                                        "5": "operator",
-                                        "7": "target",
-                                        "9": "wildcard",
-                                        "16": "file_path",
-                                        "38": "string",
-                                        "46": "block_position",
-                                        "47": "position",
-                                        "50": "message",
-                                        "52": "raw_text",
-                                        "56": "json",
-                                        "69": "command"
+                                    "container",
+                                    [
+                                      {
+                                        "name": "parameter_name",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "value_type",
+                                        "type": [
+                                          "mapper",
+                                          {
+                                            "type": "lu16",
+                                            "mappings": {
+                                              "1": "int",
+                                              "2": "float",
+                                              "3": "value",
+                                              "4": "wildcard_int",
+                                              "5": "operator",
+                                              "7": "target",
+                                              "9": "wildcard",
+                                              "16": "file_path",
+                                              "38": "string",
+                                              "46": "block_position",
+                                              "47": "position",
+                                              "50": "message",
+                                              "52": "raw_text",
+                                              "56": "json",
+                                              "69": "command"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "enum_type",
+                                        "type": [
+                                          "mapper",
+                                          {
+                                            "type": "lu16",
+                                            "mappings": {
+                                              "16": "valid",
+                                              "48": "enum",
+                                              "256": "suffixed",
+                                              "1040": "soft_enum"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "optional",
+                                        "type": "bool"
+                                      },
+                                      {
+                                        "name": "options",
+                                        "type": "CommandFlags"
                                       }
-                                    }
+                                    ]
                                   ]
-                                },
-                                {
-                                  "name": "enum_type",
-                                  "type": [
-                                    "mapper",
-                                    {
-                                      "type": "lu16",
-                                      "mappings": {
-                                        "16": "valid",
-                                        "32": "enum",
-                                        "256": "suffixed",
-                                        "1024": "soft_enum"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "name": "optional",
-                                  "type": "bool"
-                                },
-                                {
-                                  "name": "options",
-                                  "type": "CommandFlags"
                                 }
                               ]
-                            ]
-                          }
+                            }
+                          ]
                         ]
                       }
                     ]
