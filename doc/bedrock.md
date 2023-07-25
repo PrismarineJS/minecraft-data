@@ -40,7 +40,7 @@ windows.json | ✔ | manual obtained via proxy | &nbsp;
 version.json | ✔ | from bedrock-protocol | 
 effects.json | ❌ | (from pc data) | &nbsp;
 enchantments.json | ✔ | bedrock-extractor (via Geyser -> pc data) | &nbsp;
-language.json | ❌ | (extract from game) | &nbsp;
+language.json | ✔ | (extract from game) | &nbsp;
 particles.json | 🔵 | bedrock-protocol docs | IDs not needed, handled in protocol
 blockLoot.json | 🔵 | manual data for 1.18 | &nbsp;
 entityLoot.json | 🔵 | manual data for 1.18 | &nbsp;
