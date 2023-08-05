@@ -949,7 +949,7 @@ packet_entity_event:
       71: balloon_pop
       72: treasure_hunt
       73: agent_summon
-      74: charged_crossbow
+      74: charged_item
       75: fall
       76: grow_up
       77: vibration_detected
@@ -1715,7 +1715,7 @@ packet_available_commands:
       # The list of overload parameters for this command
       overloads: []varint
          # Each of the parameters gets an array of posible overloads
-         _: []varint
+         parameters: []varint
             # The name of the parameter shown to the user (the `amount` in `/xp <amount: int>`)
             parameter_name: string
             value_type: lu16 =>
@@ -1741,9 +1741,9 @@ packet_available_commands:
             # In MC, this + prior field are combined to one 32bit bitfield
             enum_type: lu16 =>
                0x10: valid
-               0x20: enum
+               0x30: enum
                0x100: suffixed
-               0x400: soft_enum
+               0x410: soft_enum
             # Is this parameter required?
             optional: bool
             # Additinal options for this command (thanks macroshaft...)
@@ -3013,7 +3013,7 @@ packet_player_auth_input:
             if start_break or abort_break or crack_break or predict_break or continue_break:
                # BlockPosition is the position of the target block, if the action with the ActionType set concerned a
                # block. If that is not the case, the block position will be zero.
-               position: BlockCoordinates
+               position: vec3i
                # BlockFace is the face of the target block that was touched. If the action with the ActionType set
                # concerned a block. If not, the face is always 0.
                face: zigzag32
@@ -3453,9 +3453,9 @@ packet_photo_info_request:
    photo_id: zigzag64
 
 SubChunkEntryWithoutCaching: []lu32
-   dx: u8
-   dy: u8
-   dz: u8
+   dx: i8
+   dy: i8
+   dz: i8
    result: u8 =>
       0: undefined
       1: success
@@ -3475,9 +3475,9 @@ SubChunkEntryWithoutCaching: []lu32
       if has_data: '["buffer", { "count": 256 }]'
 
 SubChunkEntryWithCaching: []lu32
-   dx: u8
-   dy: u8
-   dz: u8
+   dx: i8
+   dy: i8
+   dz: i8
    result: u8 =>
       0: undefined
       1: success
@@ -3518,9 +3518,9 @@ packet_subchunk_request:
    # Origin point
    origin: vec3i
    requests: []lu32
-      dx: u8
-      dy: u8
-      dz: u8
+      dx: i8
+      dy: i8
+      dz: i8
 
 # ClientStartItemCooldown is sent by the client to the server to initiate a cooldown on an item. The purpose of this
 # packet isn't entirely clear.

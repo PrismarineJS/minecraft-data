@@ -943,11 +943,11 @@
         },
         {
           "name": "block_position",
-          "type": "vec3i"
+          "type": "BlockCoordinates"
         },
         {
           "name": "face",
-          "type": "varint"
+          "type": "zigzag32"
         },
         {
           "name": "hotbar_slot",
@@ -5389,7 +5389,7 @@
                 "71": "balloon_pop",
                 "72": "treasure_hunt",
                 "73": "agent_summon",
-                "74": "charged_crossbow",
+                "74": "charged_item",
                 "75": "fall",
                 "76": "grow_up",
                 "77": "vibration_detected",
@@ -6712,72 +6712,80 @@
                       {
                         "countType": "varint",
                         "type": [
-                          "array",
-                          {
-                            "countType": "varint",
-                            "type": [
-                              "container",
-                              [
+                          "container",
+                          [
+                            {
+                              "name": "parameters",
+                              "type": [
+                                "array",
                                 {
-                                  "name": "parameter_name",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "value_type",
+                                  "countType": "varint",
                                   "type": [
-                                    "mapper",
-                                    {
-                                      "type": "lu16",
-                                      "mappings": {
-                                        "1": "int",
-                                        "3": "float",
-                                        "4": "value",
-                                        "5": "wildcard_int",
-                                        "6": "operator",
-                                        "7": "command_operator",
-                                        "8": "target",
-                                        "10": "wildcard_target",
-                                        "17": "file_path",
-                                        "23": "integer_range",
-                                        "38": "equipment_slots",
-                                        "39": "string",
-                                        "47": "block_position",
-                                        "48": "position",
-                                        "51": "message",
-                                        "53": "raw_text",
-                                        "57": "json",
-                                        "67": "block_states",
-                                        "70": "command"
+                                    "container",
+                                    [
+                                      {
+                                        "name": "parameter_name",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "value_type",
+                                        "type": [
+                                          "mapper",
+                                          {
+                                            "type": "lu16",
+                                            "mappings": {
+                                              "1": "int",
+                                              "3": "float",
+                                              "4": "value",
+                                              "5": "wildcard_int",
+                                              "6": "operator",
+                                              "7": "command_operator",
+                                              "8": "target",
+                                              "10": "wildcard_target",
+                                              "17": "file_path",
+                                              "23": "integer_range",
+                                              "38": "equipment_slots",
+                                              "39": "string",
+                                              "47": "block_position",
+                                              "48": "position",
+                                              "51": "message",
+                                              "53": "raw_text",
+                                              "57": "json",
+                                              "67": "block_states",
+                                              "70": "command"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "enum_type",
+                                        "type": [
+                                          "mapper",
+                                          {
+                                            "type": "lu16",
+                                            "mappings": {
+                                              "16": "valid",
+                                              "48": "enum",
+                                              "256": "suffixed",
+                                              "1040": "soft_enum"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "optional",
+                                        "type": "bool"
+                                      },
+                                      {
+                                        "name": "options",
+                                        "type": "CommandFlags"
                                       }
-                                    }
+                                    ]
                                   ]
-                                },
-                                {
-                                  "name": "enum_type",
-                                  "type": [
-                                    "mapper",
-                                    {
-                                      "type": "lu16",
-                                      "mappings": {
-                                        "16": "valid",
-                                        "32": "enum",
-                                        "256": "suffixed",
-                                        "1024": "soft_enum"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "name": "optional",
-                                  "type": "bool"
-                                },
-                                {
-                                  "name": "options",
-                                  "type": "CommandFlags"
                                 }
                               ]
-                            ]
-                          }
+                            }
+                          ]
                         ]
                       }
                     ]
@@ -8793,7 +8801,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8806,7 +8814,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8819,7 +8827,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8832,7 +8840,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8845,7 +8853,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -9525,15 +9533,15 @@
           [
             {
               "name": "dx",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "dy",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "dz",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "result",
@@ -9603,15 +9611,15 @@
           [
             {
               "name": "dx",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "dy",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "dz",
-              "type": "u8"
+              "type": "i8"
             },
             {
               "name": "result",
@@ -9738,15 +9746,15 @@
                 [
                   {
                     "name": "dx",
-                    "type": "u8"
+                    "type": "i8"
                   },
                   {
                     "name": "dy",
-                    "type": "u8"
+                    "type": "i8"
                   },
                   {
                     "name": "dz",
-                    "type": "u8"
+                    "type": "i8"
                   }
                 ]
               ]

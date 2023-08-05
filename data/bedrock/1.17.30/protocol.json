@@ -939,11 +939,11 @@
         },
         {
           "name": "block_position",
-          "type": "vec3i"
+          "type": "BlockCoordinates"
         },
         {
           "name": "face",
-          "type": "varint"
+          "type": "zigzag32"
         },
         {
           "name": "hotbar_slot",
@@ -5098,7 +5098,7 @@
                 "71": "balloon_pop",
                 "72": "treasure_hunt",
                 "73": "agent_summon",
-                "74": "charged_crossbow",
+                "74": "charged_item",
                 "75": "fall"
               }
             }
@@ -6410,66 +6410,74 @@
                       {
                         "countType": "varint",
                         "type": [
-                          "array",
-                          {
-                            "countType": "varint",
-                            "type": [
-                              "container",
-                              [
+                          "container",
+                          [
+                            {
+                              "name": "parameters",
+                              "type": [
+                                "array",
                                 {
-                                  "name": "parameter_name",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "value_type",
+                                  "countType": "varint",
                                   "type": [
-                                    "mapper",
-                                    {
-                                      "type": "lu16",
-                                      "mappings": {
-                                        "1": "int",
-                                        "2": "float",
-                                        "3": "value",
-                                        "4": "wildcard_int",
-                                        "5": "operator",
-                                        "6": "target",
-                                        "16": "file_path",
-                                        "32": "string",
-                                        "40": "position",
-                                        "44": "message",
-                                        "46": "raw_text",
-                                        "50": "json",
-                                        "63": "command"
+                                    "container",
+                                    [
+                                      {
+                                        "name": "parameter_name",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "value_type",
+                                        "type": [
+                                          "mapper",
+                                          {
+                                            "type": "lu16",
+                                            "mappings": {
+                                              "1": "int",
+                                              "2": "float",
+                                              "3": "value",
+                                              "4": "wildcard_int",
+                                              "5": "operator",
+                                              "6": "target",
+                                              "16": "file_path",
+                                              "32": "string",
+                                              "40": "position",
+                                              "44": "message",
+                                              "46": "raw_text",
+                                              "50": "json",
+                                              "63": "command"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "enum_type",
+                                        "type": [
+                                          "mapper",
+                                          {
+                                            "type": "lu16",
+                                            "mappings": {
+                                              "16": "valid",
+                                              "48": "enum",
+                                              "256": "suffixed",
+                                              "1040": "soft_enum"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "name": "optional",
+                                        "type": "bool"
+                                      },
+                                      {
+                                        "name": "options",
+                                        "type": "CommandFlags"
                                       }
-                                    }
+                                    ]
                                   ]
-                                },
-                                {
-                                  "name": "enum_type",
-                                  "type": [
-                                    "mapper",
-                                    {
-                                      "type": "lu16",
-                                      "mappings": {
-                                        "16": "valid",
-                                        "32": "enum",
-                                        "256": "suffixed",
-                                        "1024": "soft_enum"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "name": "optional",
-                                  "type": "bool"
-                                },
-                                {
-                                  "name": "options",
-                                  "type": "CommandFlags"
                                 }
                               ]
-                            ]
-                          }
+                            }
+                          ]
                         ]
                       }
                     ]
@@ -8467,7 +8475,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8480,7 +8488,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8493,7 +8501,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8506,7 +8514,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",
@@ -8519,7 +8527,7 @@
                                   [
                                     {
                                       "name": "position",
-                                      "type": "BlockCoordinates"
+                                      "type": "vec3i"
                                     },
                                     {
                                       "name": "face",

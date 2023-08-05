@@ -769,7 +769,7 @@ packet_entity_event:
       71: balloon_pop 
       72: treasure_hunt 
       73: agent_summon 
-      74: charged_crossbow 
+      74: charged_item 
       75: fall 
    data: zigzag32
 
@@ -1506,7 +1506,7 @@ packet_available_commands:
       # The list of overload parameters for this command
       overloads: []varint
          # Each of the parameters gets an array of posible overloads
-         _: []varint
+         parameters: []varint
             # The name of the parameter shown to the user (the `amount` in `/xp <amount: int>`)
             parameter_name: string
             value_type: lu16 =>
@@ -1526,9 +1526,9 @@ packet_available_commands:
             # In MC, this + prior field are combined to one 32bit bitfield
             enum_type: lu16 =>
                0x10: valid
-               0x20: enum
+               0x30: enum
                0x100: suffixed
-               0x400: soft_enum
+               0x410: soft_enum
             # Is this parameter required?
             optional: bool
             # Additinal options for this command (thanks macroshaft...)
@@ -2725,7 +2725,7 @@ packet_player_auth_input:
             if start_break or abort_break or crack_break or predict_break or continue_break:
                # BlockPosition is the position of the target block, if the action with the ActionType set concerned a
                # block. If that is not the case, the block position will be zero.
-               position: BlockCoordinates
+               position: vec3i
                # BlockFace is the face of the target block that was touched. If the action with the ActionType set
                # concerned a block. If not, the face is always 0.
                face: zigzag32
