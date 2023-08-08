@@ -136,7 +136,7 @@ Item:
          # StartGame packet, or to a unique stack ID if it is enabled.
          stack_id: has_stack_id ?
             if 0: void
-            default: zigzag32
+            default: varint
          block_runtime_id: zigzag32
          extra: network_id ?
             # The Shield Item ID is sent in the StartGame packet. It is usually 355 in vanilla.
@@ -773,7 +773,7 @@ StackRequestSlotInfo:
    # StackNetworkID is the unique stack ID that the client assumes to be present in this slot. The server
    # must check if these IDs match. If they do not match, servers should reject the stack request that the
    # action holding this info was in.
-   stack_id: zigzag32
+   stack_id: varint
 
 # ItemStackRequest is sent by the client to change item stacks in an inventory. It is essentially a
 # replacement of the InventoryTransaction packet added in 1.16 for inventory specific actions, such as moving
