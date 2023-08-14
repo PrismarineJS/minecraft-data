@@ -1,3 +1,6 @@
+## 3.42.1
+* [Sync itemDrop object types in blockLoot_schema and entityLoot_schema (#753)](https://github.com/PrismarineJS/minecraft-data/commit/9fc22eeab83e41cedb2fc1bbb225d4d3368280bc) (thanks @extremeheat)
+
 ## 3.42.0
 * [Fix bedrock packet_education_settings field (#751)](https://github.com/PrismarineJS/minecraft-data/commit/25496b14e0176850f39ceadc134962e5f08922e2) (thanks @extremeheat)
 * [Bedrock hotbar_slot type fix for 1.16.220 to 1.20.10 (#748)](https://github.com/PrismarineJS/minecraft-data/commit/1c5fb1f2517386b546c77b43e7f164943a338efa) (thanks @irkmandeer)
