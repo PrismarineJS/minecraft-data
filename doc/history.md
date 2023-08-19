@@ -1,3 +1,6 @@
+## 3.43.0
+* [Add legacy.json flattening mappings for bedrock blocks (#755)](https://github.com/PrismarineJS/minecraft-data/commit/60682082d2dda5d5e7827ae908236dc1fbd8b79d) (thanks @Flonja)
+
 ## 3.42.1
 * [Sync itemDrop object types in blockLoot_schema and entityLoot_schema (#753)](https://github.com/PrismarineJS/minecraft-data/commit/9fc22eeab83e41cedb2fc1bbb225d4d3368280bc) (thanks @extremeheat)
 
