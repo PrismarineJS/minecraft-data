@@ -1,3 +1,24 @@
+## 3.43.0
+* [Add legacy.json flattening mappings for bedrock blocks (#755)](https://github.com/PrismarineJS/minecraft-data/commit/60682082d2dda5d5e7827ae908236dc1fbd8b79d) (thanks @Flonja)
+
+## 3.42.1
+* [Sync itemDrop object types in blockLoot_schema and entityLoot_schema (#753)](https://github.com/PrismarineJS/minecraft-data/commit/9fc22eeab83e41cedb2fc1bbb225d4d3368280bc) (thanks @extremeheat)
+
+## 3.42.0
+* [Fix bedrock packet_education_settings field (#751)](https://github.com/PrismarineJS/minecraft-data/commit/25496b14e0176850f39ceadc134962e5f08922e2) (thanks @extremeheat)
+* [Bedrock hotbar_slot type fix for 1.16.220 to 1.20.10 (#748)](https://github.com/PrismarineJS/minecraft-data/commit/1c5fb1f2517386b546c77b43e7f164943a338efa) (thanks @irkmandeer)
+* [Bedrock 1.20.0 block, biome and item data (#747)](https://github.com/PrismarineJS/minecraft-data/commit/fecc3e9e55a03ee84195099cf821140e56b65844) (thanks @CreeperG16)
+* [fix: correct schema types (#746)](https://github.com/PrismarineJS/minecraft-data/commit/7428c8522f23d6049d3246653fb2f366ae1faba9) (thanks @Eejit43)
+* [Add bedrock language data (#743)](https://github.com/PrismarineJS/minecraft-data/commit/d34a2f4654f5429aa36bc6be23f2b0acc7dfb2a9) (thanks @CreeperG16)
+
+## 3.41.0
+* [Add explicitMaxDurability feature (#744)](https://github.com/PrismarineJS/minecraft-data/commit/e9bea106cda498671c11d62d2bb9d22accd7551a) (thanks @frej4189)
+* [Update attributes schema, add bedrock data (#692)](https://github.com/PrismarineJS/minecraft-data/commit/fa4c64ea7c144bced0560b9b06c6eee2a25991f6) (thanks @extremeheat)
+* [Fix values for enum type in available_commands packet (#742)](https://github.com/PrismarineJS/minecraft-data/commit/b04d0940925247e7aa45434094eb7b4b119322f1) (thanks @CreeperG16)
+* [fix `command_node` (#740)](https://github.com/PrismarineJS/minecraft-data/commit/099a80ddad349bb15ff4c02407a233a555a8a83d) (thanks @Nickid2018)
+* [Particle changes (#739)](https://github.com/PrismarineJS/minecraft-data/commit/787107dd4da145babde00d8708bb714f445d008f) (thanks @PondWader)
+* [damage_event packet fix (#738)](https://github.com/PrismarineJS/minecraft-data/commit/37015f4fad97a9b2a91333b38bc22c4b6f5909e7) (thanks @PondWader)
+
 ## 3.40.0
 * [Bedrock 1.20.10 protocol support (#734)](https://github.com/PrismarineJS/minecraft-data/commit/fa521866fb2c50af30d072413b2a12a5a2a5eb45) (thanks @CreeperG16)
 * [Changes to 1.19.3, 1.19.4 and 1.20 protocols to fix packet_entity_sound_effect and packet_sound_effect to include optional soundEvent argument (#731)](https://github.com/PrismarineJS/minecraft-data/commit/8ab8476ae6da4a0d1f86c30bfc2120b7d417426b) (thanks @TheRedXD)

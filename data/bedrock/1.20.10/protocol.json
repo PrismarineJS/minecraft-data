@@ -1042,7 +1042,7 @@
         },
         {
           "name": "hotbar_slot",
-          "type": "varint"
+          "type": "zigzag32"
         },
         {
           "name": "held_item",
@@ -9087,7 +9087,25 @@
             "switch",
             {
               "compareTo": "has_external_link_settings",
-              "fields": {},
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "has",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "name": "display_name",
+                      "type": "string"
+                    }
+                  ]
+                ]
+              },
               "default": "void"
             }
           ]
