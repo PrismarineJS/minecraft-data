@@ -507,6 +507,11 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#packet_set_local_player_as_initialized">0x71</a></td><td><a href="#packet_set_local_player_as_initialized">packet_set_local_player_as_initialized</a></td></tr>
+
+
+
+
+
 <tr><td><a href="#packet_update_soft_enum">0x72</a></td><td><a href="#packet_update_soft_enum">packet_update_soft_enum</a></td></tr>
 
 
@@ -5544,8 +5549,24 @@ StartGame packet.</p></td></tr>
       <small style='vertical-align:middle;float:right'>Clientbound</small>
     </div><br/>
     
-<p></p>
+<p><p>UpdateSoftEnum is sent by the server to update a soft enum, also known as a dynamic enum, previously sent
+in the AvailableCommands packet. It is sent whenever the enum should get new options or when some of its
+options should be removed.
+The UpdateSoftEnum packet will apply for enums that have been set in the AvailableCommands packet with the
+'Dynamic' field of the CommandEnum set to true.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>enum type</td><td>string</td><td><p>EnumType is the type of the enum. This type must be identical to the one set in the AvailableCommands
+packet, because the client uses this to recognise which enum to update.</p></td></tr>
+<tr><td class='field-name'><span class='name'>options</span> length</td><td>varint</td><td rowspan=2><p>Options is a list of options that should be updated. Depending on the ActionType field, either these
+options will be added to the enum, the enum options will be set to these options or all of these
+options will be removed from the enum.</p></td></tr>
+<tr><td class='field-name'><span class='name'>options</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+<tr><td class='name field-name'>action type</td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
+  <tr><td class='name'>0</td><td class='name'>add</td><td><p>ActionType is the type of the action to execute on the enum. The Options field has a different result,
+depending on what ActionType is used.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>remove</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>update</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_network_stack_latency">
     <a href="#packet_network_stack_latency"><div class='packet-id both'>115</div><div class='packet-name name'>packet network stack latency</div></a>
