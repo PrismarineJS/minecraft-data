@@ -1,3 +1,6 @@
+## 3.43.1
+* [Fix bedrock update_soft_enum packet missing encoding (#758)](https://github.com/PrismarineJS/minecraft-data/commit/d58b99fec41b8c23820168228cca9e86d1f45165) (thanks @JSbETms)
+
 ## 3.43.0
 * [Add legacy.json flattening mappings for bedrock blocks (#755)](https://github.com/PrismarineJS/minecraft-data/commit/60682082d2dda5d5e7827ae908236dc1fbd8b79d) (thanks @Flonja)
 
