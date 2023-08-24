@@ -7782,7 +7782,36 @@
     ],
     "packet_update_soft_enum": [
       "container",
-      []
+      [
+        {
+          "name": "enum_type",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "action_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "add",
+                "1": "remove",
+                "2": "update"
+              }
+            }
+          ]
+        }
+      ]
     ],
     "packet_network_stack_latency": [
       "container",
@@ -8251,7 +8280,25 @@
             "switch",
             {
               "compareTo": "has_external_link_settings",
-              "fields": {},
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "has",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "name": "display_name",
+                      "type": "string"
+                    }
+                  ]
+                ]
+              },
               "default": "void"
             }
           ]
