@@ -1680,7 +1680,7 @@ replacement of the InventoryTransaction packet added in 1.16 for inventory speci
 items around or crafting. The InventoryTransaction packet is still used for actions such as placing blocks
 and interacting with entities.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>request id</td><td>varint</td><td><p>RequestID is a unique ID for the request. This ID is used by the server to send a response for this
+<tr><td class='field-name name'>request id</td><td>zigzag32</td><td><p>RequestID is a unique ID for the request. This ID is used by the server to send a response for this
 specific request in the ItemStackResponse packet.</p></td></tr>
 <tr><td class='field-name'><span class='name'>actions</span> length</td><td>varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>actions</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
@@ -1823,7 +1823,7 @@ will be empty.
 A non-0 status means an error occurred and will result in the action being reverted.</p></td></tr>
   <tr><td class='name'>1</td><td class='name'>error</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'>request id</td><td>varint</td><td><p>RequestID is the unique ID of the request that this response is in reaction to. If rejected, the client
+<tr><td class='field-name name'>request id</td><td>zigzag32</td><td><p>RequestID is the unique ID of the request that this response is in reaction to. If rejected, the client
 will undo the actions from the request with this ID.</p></td></tr>
 <tr><td><b class='name'>&#128257;</b><br/><br/> <i><div class='tag tag-switch'>if <span class='name'>status</span></div></i></td><td colspan=2><table>
 <tr><td class='name'><span class='fake'>is ok</span> </td><td colspan=2 class='bordered'><table>
@@ -1843,7 +1843,7 @@ sure if these slots ever differ.</p></td></tr>
 <tr><td class='field-name name'>hotbar slot</td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>count</td><td>u8</td><td><p>Count is the total count of the item stack. This count will be shown client-side after the response is
 sent to the client.</p></td></tr>
-<tr><td class='field-name name'>item stack id</td><td>varint</td><td><p>StackNetworkID is the network ID of the new stack at a specific slot.</p></td></tr>
+<tr><td class='field-name name'>item stack id</td><td>zigzag32</td><td><p>StackNetworkID is the network ID of the new stack at a specific slot.</p></td></tr>
 <tr><td class='field-name name'>custom name</td><td>string</td><td><p>CustomName is the custom name of the item stack. It is used in relation to text filtering.</p></td></tr>
 <tr><td class='field-name name'>durability correction</td><td>zigzag32</td><td><p>DurabilityCorrection is the current durability of the item stack. This durability will be shown
 client-side after the response is sent to the client.</p></td></tr>
