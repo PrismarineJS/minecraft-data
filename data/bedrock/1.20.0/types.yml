@@ -892,7 +892,7 @@ StackRequestSlotInfo:
 ItemStackRequest:
    # RequestID is a unique ID for the request. This ID is used by the server to send a response for this
    # specific request in the ItemStackResponse packet.
-   request_id: varint
+   request_id: zigzag32
    actions: []varint
       type_id: u8 =>
          # TakeStackRequestAction is sent by the client to the server to take x amount of items from one slot in a
@@ -1064,7 +1064,7 @@ ItemStackResponses: []varint
       1: error
    # RequestID is the unique ID of the request that this response is in reaction to. If rejected, the client
    # will undo the actions from the request with this ID.
-   request_id: varint
+   request_id: zigzag32
    _: status ?
       if ok:
          # ContainerInfo holds information on the containers that had their contents changed as a result of the
@@ -1085,7 +1085,7 @@ ItemStackResponses: []varint
                # sent to the client.
                count: u8
                # StackNetworkID is the network ID of the new stack at a specific slot.
-               item_stack_id: varint
+               item_stack_id: zigzag32
                # CustomName is the custom name of the item stack. It is used in relation to text filtering.
                custom_name: string
                # DurabilityCorrection is the current durability of the item stack. This durability will be shown
