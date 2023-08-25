@@ -1,3 +1,8 @@
+## 3.44.0
+* [Elytra support (#761)](https://github.com/PrismarineJS/minecraft-data/commit/72a267757b8fbb8462f3c3f25001754af9d1f7c4) (thanks @lkwilson)
+* [Bedrock stack and request network id fix for 1.16.220 to 1.20.10 (#762)](https://github.com/PrismarineJS/minecraft-data/commit/7f144de36862de3dfe16b8b6272fcbd286327e16) (thanks @irkmandeer)
+* [1.19.4 protocol fixes (#759)](https://github.com/PrismarineJS/minecraft-data/commit/5c7e7960270ef329f7c9e037d08adbf5ae2ba3d6) (thanks @frej4189)
+
 ## 3.43.1
 * [Fix bedrock update_soft_enum packet missing encoding (#758)](https://github.com/PrismarineJS/minecraft-data/commit/d58b99fec41b8c23820168228cca9e86d1f45165) (thanks @JSbETms)
 
