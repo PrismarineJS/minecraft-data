@@ -1,28 +1,9 @@
 const fs = require('fs')
 const cp = require('child_process')
-const https = require('https')
 const helper = require('./github-helper')
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
-// this is a polyfill for node <18
-const fetch = globalThis.fetch || function (url) {
-  return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      let data = ''
-      res.on('data', (chunk) => {
-        data += chunk
-      })
-      res.on('end', () => {
-        resolve({
-          ok: true,
-          text: () => Promise.resolve(data),
-          json: () => Promise.resolve(JSON.parse(data))
-        })
-      })
-    }).on('error', reject)
-  })
-}
 const download = (url, dest) => cp.execSync(`curl -L ${url} -o ${dest}`)
 
 function buildFirstIssue (title, result, jarData) {
@@ -65,43 +46,78 @@ async function updateManifestPC () {
   const manifest = await fetch(pcManifestURL).then(res => res.json())
   // fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2))
   const knownVersions = protocolVersions.pc.reduce((acc, cur) => (acc[cur.minecraftVersion] = cur, acc), {})
-  const latestRelease = manifest.latest.release
+  const latestVersion = manifest.latest.snapshot
+  const latestVersionData = manifest.versions.find(v => v.id === latestVersion)
+  const latestVersionIsSnapshot = latestVersionData.type !== 'release'
 
-  const title = `Support Minecraft PC ${latestRelease}`
+  const title = `Support Minecraft PC ${latestVersion}`
   const issueStatus = await helper.getIssueStatus(title)
 
-  if (supportedVersions.pc.includes(latestRelease)) {
-    if (issueStatus.open) {
-      helper.close(issueStatus.id, `Closing as PC ${latestRelease} is now supported`)
+  if (latestVersionIsSnapshot) {
+    // don't make issues for snapshots
+    if (supportedVersions.pc.includes(latestVersion) || knownVersions[latestVersion]) {
+      console.log('Latest version is a known snapshot, no work to do')
+      return
     }
-    console.log('Latest PC version is supported.')
-    return
-  } else if (knownVersions[latestRelease]) {
-    console.log(`Latest PC version ${latestRelease} is known in protocolVersions.json, but not in versions.json (protocol version ${knownVersions[latestRelease].version})`)
-    return
   } else {
-    console.log(`Latest PC version ${latestRelease} is not known in protocolVersions.json, adding and making issue`)
+    if (supportedVersions.pc.includes(latestVersion)) {
+      if (issueStatus.open) {
+        helper.close(issueStatus.id, `Closing as PC ${latestVersion} is now supported`)
+      }
+      console.log('Latest PC version is supported.')
+      return
+    } else if (knownVersions[latestVersion]) {
+      console.log(`Latest PC version ${latestVersion} is known in protocolVersions.json, but not in versions.json (protocol version ${knownVersions[latestVersion].version})`)
+      return
+    } else {
+      console.log(`Latest PC version ${latestVersion} is not known in protocolVersions.json, adding and making issue`)
+    }
   }
-  const latestReleaseData = manifest.versions.find(v => v.id === latestRelease)
 
-  // Note: We don't use the below check to track if the version is supported properly or not
-  // (data like protocol/blocks/items/etc is present), just to make sure the known protocol version is correct.
+  let versionJson
   try {
-    const latestReleaseManifest = await fetch(latestReleaseData.url).then(res => res.json())
+    versionJson = await addEntryFor(latestVersion, latestVersionData)
+  } catch (e) {
+    console.error(e)
+
+    if (latestVersionIsSnapshot) {
+      console.warn('Failed to update protocolVersions.json for the snapshot', latestVersion)
+    } else {
+      console.log('Latest PC version is not supported and we failed to load data. Opening issue...')
+      const issuePayload = buildFirstIssue(title, latestVersionData)
+      helper.createIssue(issuePayload)
+
+      fs.writeFileSync('./issue.md', issuePayload.body)
+      console.log('OK, wrote to ./issue.md', issuePayload)
+    }
+  }
+
+  if (!latestVersionIsSnapshot && !issueStatus.open && !issueStatus.closed) {
+    console.log('Opening issue', versionJson)
+    const issuePayload = buildFirstIssue(title, latestVersionData, versionJson)
+
+    helper.createIssue(issuePayload)
+
+    fs.writeFileSync('./issue.md', issuePayload.body)
+    console.log('OK, wrote to ./issue.md', issuePayload)
+  }
+
+  async function addEntryFor (releaseVersion, releaseData) {
+    const latestReleaseManifest = await fetch(releaseData.url).then(res => res.json())
     // Download client jar
-    if (!fs.existsSync(`./${latestRelease}.jar`)) {
+    if (!fs.existsSync(`./${releaseVersion}.jar`)) {
       const clientJarUrl = latestReleaseManifest.downloads.client.url
       console.log('Downloading client jar', clientJarUrl)
-      download(clientJarUrl, `./${latestRelease}.jar`)
+      download(clientJarUrl, `./${releaseVersion}.jar`)
     }
 
     // Log the byte size of the client jar
-    const clientJarSize = fs.statSync(`./${latestRelease}.jar`).size
-    console.log(`Downloaded client jar ${latestRelease}.jar (${clientJarSize} bytes), extracting its version.json...`)
+    const clientJarSize = fs.statSync(`./${releaseVersion}.jar`).size
+    console.log(`Downloaded client jar ${releaseVersion}.jar (${clientJarSize} bytes), extracting its version.json...`)
 
     // unzip with tar / unzip, Actions image uses 7z
-    if (process.platform === 'win32') cp.execSync(`tar -xf ./${latestRelease}.jar version.json`)
-    else cp.execSync(`7z -y e ./${latestRelease}.jar version.json`, { stdio: 'inherit' })
+    if (process.platform === 'win32') cp.execSync(`tar -xf ./${releaseVersion}.jar version.json`)
+    else cp.execSync(`7z -y e ./${releaseVersion}.jar version.json`, { stdio: 'inherit' })
     const versionJson = require('./version.json')
 
     let majorVersion
@@ -118,7 +134,7 @@ async function updateManifestPC () {
       dataVersion: versionJson.world_version,
       usesNetty: true,
       majorVersion,
-      releaseType: latestReleaseData.type
+      releaseType: latestVersionData.type
     }
     console.log('Adding new entry to pc protocolVersions.json', newEntry)
     const updatedProtocolVersions = [newEntry, ...protocolVersions.pc]
@@ -134,24 +150,7 @@ async function updateManifestPC () {
       cp.execSync('git push')
     }
 
-    if (!issueStatus.open && !issueStatus.closed) {
-      console.log('Opening issue', versionJson)
-      const issuePayload = buildFirstIssue(title, latestReleaseData, versionJson)
-
-      helper.createIssue(issuePayload)
-
-      fs.writeFileSync('./issue.md', issuePayload.body)
-      console.log('OK, wrote to ./issue.md', issuePayload)
-    }
-  } catch (e) {
-    console.error(e)
-
-    console.log('Latest PC version is not supported and we failed to load data. Opening issue...')
-    const issuePayload = buildFirstIssue(title, latestReleaseData)
-    helper.createIssue(issuePayload)
-
-    fs.writeFileSync('./issue.md', issuePayload.body)
-    console.log('OK, wrote to ./issue.md', issuePayload)
+    return versionJson
   }
 }
 
