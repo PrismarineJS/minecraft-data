@@ -1,3 +1,8 @@
+## 3.45.0
+* [add features for prismarine chunk (#763)](https://github.com/PrismarineJS/minecraft-data/commit/1b9380edb159721bef2342d4214b0ebb3128c812) (thanks @extremeheat)
+* [1.20 block data fixes (#766)](https://github.com/PrismarineJS/minecraft-data/commit/b130830580ea0cc5551cd736bdc139ac79d3eba7) (thanks @MathiasElgaard)
+* [Handle snapshots in update checking workflow (#767)](https://github.com/PrismarineJS/minecraft-data/commit/b5037850d0f3abf77b2197535b042e23d012aad6) (thanks @extremeheat)
+
 ## 3.44.0
 * [Elytra support (#761)](https://github.com/PrismarineJS/minecraft-data/commit/72a267757b8fbb8462f3c3f25001754af9d1f7c4) (thanks @lkwilson)
 * [Bedrock stack and request network id fix for 1.16.220 to 1.20.10 (#762)](https://github.com/PrismarineJS/minecraft-data/commit/7f144de36862de3dfe16b8b6272fcbd286327e16) (thanks @irkmandeer)
