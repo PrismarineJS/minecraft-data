@@ -1,3 +1,8 @@
+## 3.46.0
+* [Add bedrock 1.20.30 protocol data (#774)](https://github.com/PrismarineJS/minecraft-data/commit/dd5f730dd8b930cc1d6dc6a7f464a020064f160d) (thanks @extremeheat)
+* [Update bedrock protocol data for has_stack_id in Item to a boolean (#770)](https://github.com/PrismarineJS/minecraft-data/commit/3928388ae32e44558cc342a888d95278a8a1ac70) (thanks @CreeperG16)
+* Update protocolVersions.json
+
 ## 3.45.0
 * [add features for prismarine chunk (#763)](https://github.com/PrismarineJS/minecraft-data/commit/1b9380edb159721bef2342d4214b0ebb3128c812) (thanks @extremeheat)
 * [1.20 block data fixes (#766)](https://github.com/PrismarineJS/minecraft-data/commit/b130830580ea0cc5551cd736bdc139ac79d3eba7) (thanks @MathiasElgaard)
