@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.20.30
+!version: 1.20.10
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -133,11 +133,6 @@ packet_resource_packs_info:
    # A list of resource packs that the client needs to download before joining the server. 
    # The order of these resource packs is not relevant in this packet. It is however important in the Resource Pack Stack packet.
    texture_packs: TexturePackInfos
-   # Resource Pack Links contains a list of URLs where the client can download required
-   # resource packs, as opposed to the current Minecraft sever sending the data over
-   resource_pack_links: []varint
-      id: string
-      url: string
 
 packet_resource_pack_stack:
    !id: 0x07
@@ -268,12 +263,9 @@ packet_start_game:
    # to true while the player's or the world's game mode is creative, and it's recommended to simply
    # always set this to false as a server.
    achievements_disabled: bool
-   # EditorWorldType is a value to dictate the type of editor mode, a special mode recently introduced adding
+   # EditorWorld is a value to dictate if the world is in editor mode, a special mode recently introduced adding
    # "powerful tools for editing worlds, intended for experienced creators."
-   editor_world_type: zigzag32 =>
-   - not_editor
-   - project
-   - test_level
+   editor_world: bool
    # Whether the world was created in editor mode
    created_in_editor: bool
    # Whether the world was exported from editor mode
@@ -3148,9 +3140,7 @@ InputFlag: [ "bitflags", {
       "emoting",
       "missed_swing",
       "start_crawling",
-      "stop_crawling",
-      "start_flying",
-      "stop_flying"
+      "stop_crawling"
    ]
 }]
 
@@ -3964,24 +3954,8 @@ packet_client_cheat_ability:
 packet_camera_presets:
    !id: 0xc6
    !bound: client
-   # Name is the name of the preset. Each preset must have their own unique name.
-   name: string
-   # Parent is the name of the preset that this preset extends upon. This can be left empty.
-   parent: string
-   position: Vec3fopts
-   rotation: Vec3fopts
-   ## TODO: make this an enum afer adding proper optional support inside pdefyaml
-   audio_listener: ["option", "u8"]
-   player_effects: ["option", "bool"]
-
-Vec3fopts: [
-   "container",
-   [
-      { "name": "x", "type": ["option", "vec3f"] },
-      { "name": "y", "type": ["option", "vec3f"] },
-      { "name": "z", "type": ["option", "vec3f"] }
-   ]
-]
+   # Data is a compound tag of the presets being set.
+   data: nbt
 
 # unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
 # the recipe book.
@@ -4001,63 +3975,9 @@ packet_unlocked_recipes:
 # camera_instruction gives a custom camera specific instructions to operate.
 packet_camera_instruction:
    !id: 0x12c
-   !bound: client
-   # Instruction Set is a camera instruction that sets the camera to a specified preset.
-   has_instruction_set: bool
-   instruction_set: has_instruction_set ?
-      if true:
-         #  Preset is the index of the preset in the CameraPresets packet sent to the player.
-         runtime_id: li32
-         # Ease represents the easing function that is used by the instruction.
-         has_ease_data: bool
-         ease_data: has_ease_data ?
-            if true:
-               type: u8 =>
-               - Linear
-               - Spring
-               - InQuad
-               - OutQuad
-               - InOutQuad
-               - InCubic
-               - OutCubic
-               - InOutCubic
-               - InQuart
-               - OutQuart
-               - InOutQuart
-               - InQuint
-               - OutQuint
-               - InOutQuint
-               - InSine
-               - OutSine
-               - InOutSine
-               - InExpo
-               - OutExpo
-               - InOutExpo
-               - InCirc
-               - OutCirc
-               - InOutCirc
-               - InBounce
-               - OutBounce
-               - InOutBounce
-               - InBack
-               - OutBack
-               - InOutBack
-               - InElastic
-               - OutElastic
-               - InOutElastic
-               duration: lf32
-         position: '["option", "vec3f"]'
-         rotation: '["option", "vec2f"]'
-         facing: '["option", "vec3f"]'
-         default: '["option", "bool"]'
-   clear: '["option", "bool"]'
-   has_fade: bool
-   fade: has_fade ?
-      fade_in_duration: lf32
-      wait_duration: lf32
-      fade_out_duration: lf32
-      color_rgb: vec3f
-
+   !bound:
+   # Data is a compound tag of the instructions to sent.
+   data: nbt
 
 packet_compressed_biome_definitions:
    !id: 0x12d
@@ -4099,8 +4019,3 @@ packet_agent_animation:
    # entity_runtime_id is the runtime ID of the entity. The runtime ID is unique for each world session, and
    # entities are generally identified in packets using this runtime ID.
    entity_runtime_id: varint64
-
-# RefreshEntitlements is sent by the client to the server to refresh the entitlements of the player.
-packet_refresh_entitlements:
-   !id: 0x131
-   !bound: server
