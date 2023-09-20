@@ -3969,19 +3969,10 @@ packet_camera_presets:
    # Parent is the name of the preset that this preset extends upon. This can be left empty.
    parent: string
    position: Vec3fopts
-   rotation: Vec3fopts
+   rotation: Vec2fopts
    ## TODO: make this an enum afer adding proper optional support inside pdefyaml
-   audio_listener: ["option", "u8"]
-   player_effects: ["option", "bool"]
-
-Vec3fopts: [
-   "container",
-   [
-      { "name": "x", "type": ["option", "vec3f"] },
-      { "name": "y", "type": ["option", "vec3f"] },
-      { "name": "z", "type": ["option", "vec3f"] }
-   ]
-]
+   audio_listener?: u8
+   player_effects?: bool
 
 # unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
 # the recipe book.
@@ -4003,56 +3994,51 @@ packet_camera_instruction:
    !id: 0x12c
    !bound: client
    # Instruction Set is a camera instruction that sets the camera to a specified preset.
-   has_instruction_set: bool
-   instruction_set: has_instruction_set ?
-      if true:
-         #  Preset is the index of the preset in the CameraPresets packet sent to the player.
-         runtime_id: li32
-         # Ease represents the easing function that is used by the instruction.
-         has_ease_data: bool
-         ease_data: has_ease_data ?
-            if true:
-               type: u8 =>
-               - Linear
-               - Spring
-               - InQuad
-               - OutQuad
-               - InOutQuad
-               - InCubic
-               - OutCubic
-               - InOutCubic
-               - InQuart
-               - OutQuart
-               - InOutQuart
-               - InQuint
-               - OutQuint
-               - InOutQuint
-               - InSine
-               - OutSine
-               - InOutSine
-               - InExpo
-               - OutExpo
-               - InOutExpo
-               - InCirc
-               - OutCirc
-               - InOutCirc
-               - InBounce
-               - OutBounce
-               - InOutBounce
-               - InBack
-               - OutBack
-               - InOutBack
-               - InElastic
-               - OutElastic
-               - InOutElastic
-               duration: lf32
-         position: '["option", "vec3f"]'
-         rotation: '["option", "vec2f"]'
-         facing: '["option", "vec3f"]'
-         default: '["option", "bool"]'
-   clear: '["option", "bool"]'
-   has_fade: bool
-   fade: has_fade ?
+   instruction_set?:
+      #  Preset is the index of the preset in the CameraPresets packet sent to the player.
+      runtime_id: li32
+      # Ease represents the easing function that is used by the instruction.
+      ease_data?:
+         type: u8 =>
+         - Linear
+         - Spring
+         - InQuad
+         - OutQuad
+         - InOutQuad
+         - InCubic
+         - OutCubic
+         - InOutCubic
+         - InQuart
+         - OutQuart
+         - InOutQuart
+         - InQuint
+         - OutQuint
+         - InOutQuint
+         - InSine
+         - OutSine
+         - InOutSine
+         - InExpo
+         - OutExpo
+         - InOutExpo
+         - InCirc
+         - OutCirc
+         - InOutCirc
+         - InBounce
+         - OutBounce
+         - InOutBounce
+         - InBack
+         - OutBack
+         - InOutBack
+         - InElastic
+         - OutElastic
+         - InOutElastic
+         duration: lf32
+      position?: vec3f
+      rotation?: vec2f
+      facing?: vec3f
+      default?: bool
+   clear?: bool
+   fade?:
       fade_in_duration: lf32
       wait_duration: lf32
       fade_out_duration: lf32
