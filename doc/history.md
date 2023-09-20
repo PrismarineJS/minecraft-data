@@ -1,13 +1,7 @@
 ## 3.46.0
 * [Add bedrock 1.20.30 protocol data (#774)](https://github.com/PrismarineJS/minecraft-data/commit/dd5f730dd8b930cc1d6dc6a7f464a020064f160d) (thanks @extremeheat)
-* [Add 1.20.2-rc2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/655cce748ce8b86d037568badeb326a3db1f8102) (thanks @github-actions[bot])
-* [Add 1.20.2-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4a33f90fe4497d5f8c8f4b38048540ca684144fd) (thanks @github-actions[bot])
-* [Add 1.20.2-pre4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/365b1306a642557525d9d6ae0ccbee3f633ad9af) (thanks @github-actions[bot])
 * [Update bedrock protocol data for has_stack_id in Item to a boolean (#770)](https://github.com/PrismarineJS/minecraft-data/commit/3928388ae32e44558cc342a888d95278a8a1ac70) (thanks @CreeperG16)
-* [Add 1.20.2-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/43d3931bfe6477a1e910438bfd34931cb259fa50) (thanks @github-actions[bot])
-* [Add 1.20.2-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7dad56d8124d9c47e19d2ad801b6b3b1c2b7dfb9) (thanks @github-actions[bot])
-* [Update protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/b9c93b535e59bc63c970ae5e2c3c9ce09815c97f) (thanks @extremeheat)
-* [Add 1.20.2-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/83374caca45c2c1cfbaed0ae50c71bee4c03da4e) (thanks @github-actions[bot])
+* Update protocolVersions.json
 
 ## 3.45.0
 * [add features for prismarine chunk (#763)](https://github.com/PrismarineJS/minecraft-data/commit/1b9380edb159721bef2342d4214b0ebb3128c812) (thanks @extremeheat)
