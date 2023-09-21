@@ -1,3 +1,6 @@
+## 3.46.1
+* [Revert "Change has_stack_id in bedrock Item to a boolean" (#776)](https://github.com/PrismarineJS/minecraft-data/commit/f7d70f0ee654e3d4f59354734b340ff00f794355) (thanks @extremeheat)
+
 ## 3.46.0
 * [Add bedrock 1.20.30 protocol data (#774)](https://github.com/PrismarineJS/minecraft-data/commit/dd5f730dd8b930cc1d6dc6a7f464a020064f160d) (thanks @extremeheat)
 * [Update bedrock protocol data for has_stack_id in Item to a boolean (#770)](https://github.com/PrismarineJS/minecraft-data/commit/3928388ae32e44558cc342a888d95278a8a1ac70) (thanks @CreeperG16)
