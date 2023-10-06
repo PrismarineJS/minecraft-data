@@ -37,10 +37,10 @@ For bedrock edition see [bedrock.md](bedrock.md)
 [9]: https://github.com/PrismarineJS/minecraft-data/blob/master/data/pc/common/protocolVersions.json
 [10]: https://github.com/PrismarineJS/minecraft-jar-extractor
 [11]: http://wiki.vg/Block_Actions
-[12]: http://minecraft.gamepedia.com/Status_effect
+[12]: https://minecraft.wiki/w/Effect
 [13]: https://github.com/PrismarineJS/mineflayer/pull/197
 [14]: https://github.com/PrismarineJS/minecraft-data/pull/348#issue-545841883
-[15]: https://minecraft.gamepedia.com/Map#Map_icons
+[15]: https://minecraft.wiki/Map#Map_icons
 [16]: https://wiki.vg/Protocol#Map_Data
 [17]: https://github.com/PrismarineJS/minecraft-data-auto-updater
 [18]: https://github.com/PrismarineJS/minecraft-data/pull/282#issue-612896577

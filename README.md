@@ -91,7 +91,7 @@ Projects that provide data:
 
 | Project name | Language | Source | Data provided |
 | --- | --- | --- | --- |
-| [minecraft-wiki-extractor](https://github.com/PrismarineJS/minecraft-wiki-extractor) | Node.js | [minecraft wiki](http://minecraft.gamepedia.com/Minecraft_Wiki) | blocks, items, entities, recipes |
+| [minecraft-wiki-extractor](https://github.com/PrismarineJS/minecraft-wiki-extractor) | Node.js | [minecraft wiki](https://minecraft.wiki) | blocks, items, entities, recipes |
 | [mcdevs-wiki-extractor](https://github.com/PrismarineJS/mcdevs-wiki-extractor) | Node.js | [wiki.vg](http://wiki.vg/Protocol) | a partial protocol, entities |
 | [node-minecraft-extractor](https://github.com/PrismarineJS/node-minecraft-extractor) | Node.js | merge between wiki.vg and mcwiki | a complete entities file |
 | [minecraft-jar-extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) | Node.js | minecraft server jar | a very partial but completely up to date protocol |
@@ -109,7 +109,7 @@ Pages interesting to manually update the data if necessary:
 | [wiki.vg Inventory page](http://wiki.vg/Inventory) | windows |
 | [wiki.vg](http://wiki.vg/Block_Actions) | instruments |
 | [a mineflayer PR](https://github.com/PrismarineJS/mineflayer/pull/197) | biomes |
-| [mcwiki effects page](http://minecraft.gamepedia.com/Status_effect) | effects |
+| [mcwiki effects page](https://minecraft.wiki/w/Effect) | effects |
 | [wiki.vg protocol version numbers](http://wiki.vg/Protocol_version_numbers) | protocolVersions |
 
 ## Data quality
