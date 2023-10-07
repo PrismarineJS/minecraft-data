@@ -121,10 +121,10 @@ async function updateManifestPC () {
     const versionJson = require('./version.json')
 
     let majorVersion
-    try {
+    if (versionJson.id && versionJson.id.includes('.')) {
       majorVersion = versionJson.id.split('.', 2).join('.')
-    } catch (e) {
-      console.error('Failed to get major version from version.json.id', versionJson.id, ', falling back to protocolVersions.json latest (may be incorrect)')
+    } else {
+      console.error(`Version '${versionJson.id}' appears to be a snapshot (no dot in name). Using the last known majorVersion in protocolVersions.json for this version (may be incorrect)`)
       majorVersion = protocolVersions.pc[0].majorVersion
     }
 
