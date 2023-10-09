@@ -1,3 +1,12 @@
+## 3.46.2
+* [Fix CameraPresets parse error (#782)](https://github.com/PrismarineJS/minecraft-data/commit/4139610a241411296a47723d6d978047c52cc7cf) (thanks @MrDiamond64)
+* [Update Minecraft wiki references (#781)](https://github.com/PrismarineJS/minecraft-data/commit/16aaf99c002125749dbcbf165e3ead15e104f7e8) (thanks @Spongecade)
+* [Update protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/2393663c5977918a77f43fd024044c65c409e7be) (thanks @extremeheat)
+* [Fix update checking workflow's majorVersion handling](https://github.com/PrismarineJS/minecraft-data/commit/c99820788884a6054d06c29ed29b5e83dac66caa) (thanks @extremeheat)
+* [Add 23w40a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0dca7fed365dafb77966bbed4d7c7f48e81bf935) (thanks @github-actions[bot])
+* [Add bedrock 1.20.15 protocol data (#778)](https://github.com/PrismarineJS/minecraft-data/commit/a2df4110718476dd9e6997f99ac419d2308c19bd) (thanks @irkmandeer)
+* [Add 1.20.2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/15dade38bba5c140a3863cfd267fcba45eb2fcab) (thanks @github-actions[bot])
+
 ## 3.46.1
 * [Revert "Change has_stack_id in bedrock Item to a boolean" (#776)](https://github.com/PrismarineJS/minecraft-data/commit/f7d70f0ee654e3d4f59354734b340ff00f794355) (thanks @extremeheat)
 
