@@ -1,3 +1,8 @@
+## 3.46.2
+* [Fix bedrock protocol CameraPresets packet(#782)](https://github.com/PrismarineJS/minecraft-data/commit/4139610a241411296a47723d6d978047c52cc7cf) (thanks @MrDiamond64)
+* [Update Minecraft wiki references (#781)](https://github.com/PrismarineJS/minecraft-data/commit/16aaf99c002125749dbcbf165e3ead15e104f7e8) (thanks @Spongecade)
+* [Add bedrock 1.20.15 data mapping (#778)](https://github.com/PrismarineJS/minecraft-data/commit/a2df4110718476dd9e6997f99ac419d2308c19bd) (thanks @irkmandeer)
+
 ## 3.46.1
 * [Revert "Change has_stack_id in bedrock Item to a boolean" (#776)](https://github.com/PrismarineJS/minecraft-data/commit/f7d70f0ee654e3d4f59354734b340ff00f794355) (thanks @extremeheat)
 
