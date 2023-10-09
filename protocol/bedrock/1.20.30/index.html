@@ -192,6 +192,7 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#AbilityLayers">Type</a><td class='name'><a href="#AbilityLayers">AbilityLayers</a></td></tr>
+<tr><td><a href="#CameraPresets">Type</a><td class='name'><a href="#CameraPresets">CameraPresets</a></td></tr>
 
 
 
@@ -3133,6 +3134,20 @@ The abilities that can be toggled between</p></td></tr>
 <tr><td class='field-name name'>enabled </td><td>AbilitySet</td><td><p>The abilities that are currently active</p></td></tr>
 <tr><td class='field-name name'>fly speed </td><td>lf32</td><td><p>FlySpeed is the default fly speed of the layer.</p></td></tr>
 <tr><td class='field-name name'>walk speed </td><td>lf32</td><td><p>WalkSpeed is the default walk speed of the layer.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="CameraPresets">
+    <a href="#CameraPresets"><div class='packet-id datatype'>Type</div><div class='packet-name name'>CameraPresets</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>name </td><td>string</td><td><p>Name is the name of the preset. Each preset must have their own unique name.</p></td></tr>
+<tr><td class='field-name name'>parent </td><td>string</td><td><p>Parent is the name of the preset that this preset extends upon. This can be left empty.</p></td></tr>
+<tr><td class='field-name name'>position </td><td><a href="#Vec3fopts">Vec3fopts</a></td><td></td></tr>
+<tr><td class='field-name name'>rotation </td><td><a href="#Vec2fopts">Vec2fopts</a></td><td></td></tr>
+<tr><td class='field-name name'>audio listener <div class='tag tag-optional'>optional</div></td><td>u8</td><td></td></tr>
+<tr><td class='field-name name'>player effects <div class='tag tag-optional'>optional</div></td><td>bool</td><td></td></tr>
 </table><br/><hr/><br/><p><h1 id="loginsequence">Login Sequence</h1>
 <p>The login process is as follows:</p>
 <ul>
@@ -5071,7 +5086,7 @@ than the old one. This should usually be set to true.</p></td></tr>
 <tr><td class='field-name name'>economic trades </td><td>bool</td><td><p>Trading based on Minecraft economy - specifies if the prices of the villager's offers are modified by an increase in
 demand for the item. (A mechanic added in 1.11.) Buying more of the same item will increase the price
 of that particular item.
-https://minecraft.gamepedia.com/Trading#Economics</p></td></tr>
+https://minecraft.wiki/w/Trading#Economics</p></td></tr>
 <tr><td class='field-name name'>offers </td><td>nbt</td><td><p>NBT serialised compound of offers that the villager has.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_update_equipment">
@@ -5243,7 +5258,7 @@ according to the wiki, be added too.</p></p>
 <tr><td class='field-name name'>structure name </td><td>string</td><td><p>StructureName is the name of the structure that was set in the structure block's UI. This is the name
 used to export the structure to a file.</p></td></tr>
 <tr><td class='field-name name'>data field </td><td>string</td><td><p>DataField is the name of a function to run, usually used during natural generation. A description can
-be found here: https://minecraft.gamepedia.com/Structure_Block#Data.</p></td></tr>
+be found here: https://minecraft.wiki/w/Structure_Block#Data.</p></td></tr>
 <tr><td class='field-name name'>include players </td><td>bool</td><td><p>IncludePlayers specifies if the 'Include Players' toggle has been enabled, meaning players are also
 exported by the structure block.</p></td></tr>
 <tr><td class='field-name name'>show bounding box </td><td>bool</td><td><p>ShowBoundingBox specifies if the structure block should have its bounds outlined. A thin line will
@@ -6474,7 +6489,7 @@ enabled.</p></p>
 animation, or to activate a controller which can start a sequence of animations based on different
 conditions specified in an animation controller.
 Much of the documentation of this packet can be found at
-https://minecraft.gamepedia.com/Bedrock<em>Edition</em>beta<em>animation</em>documentation.</p></p>
+https://learn.microsoft.com/minecraft/creator/reference/content/animationsreference.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>animation </td><td>string</td><td><p>Animation is the name of a single animation to start playing.</p></td></tr>
 <tr><td class='field-name name'>next state </td><td>string</td><td><p>NextState is the first state to start with. These states are declared in animation controllers (which,
@@ -7099,12 +7114,8 @@ base layer.</p></td></tr>
     
 <p><p>camera_presets gives the client a list of custom camera presets.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>name </td><td>string</td><td><p>Name is the name of the preset. Each preset must have their own unique name.</p></td></tr>
-<tr><td class='field-name name'>parent </td><td>string</td><td><p>Parent is the name of the preset that this preset extends upon. This can be left empty.</p></td></tr>
-<tr><td class='field-name name'>position </td><td><a href="#Vec3fopts">Vec3fopts</a></td><td></td></tr>
-<tr><td class='field-name name'>rotation </td><td><a href="#Vec2fopts">Vec2fopts</a></td><td></td></tr>
-<tr><td class='field-name name'>audio listener <div class='tag tag-optional'>optional</div></td><td>u8</td><td></td></tr>
-<tr><td class='field-name name'>player effects <div class='tag tag-optional'>optional</div></td><td>bool</td><td></td></tr>
+<tr><td class='field-name'><span class='name'>presets</span> length</td><td>varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>presets</span> <div class="tag tag-array">array</div></td><td>CameraPresets</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_unlocked_recipes">
     <a href="#packet_unlocked_recipes"><div class='packet-id client'>199</div><div class='packet-name name'>packet unlocked recipes</div></a>
