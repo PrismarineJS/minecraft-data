@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.20.40
+!version: 1.20.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -111,9 +111,6 @@ packet_client_to_server_handshake:
 packet_disconnect:
    !id: 0x05
    !bound: client
-   # Reason is the reason for the disconnection. It seems as if this field has no use other than for
-   # telemetry reasons as it does not affect the message that gets displayed on the disconnect screen.
-   reason: DisconnectFailReason
    # Specifies if the disconnection screen should be hidden when the client is disconnected, 
    # meaning it will be sent directly to the main menu.
    hide_disconnect_reason: bool
@@ -3153,8 +3150,7 @@ InputFlag: [ "bitflags", {
       "start_crawling",
       "stop_crawling",
       "start_flying",
-      "stop_flying",
-      "received_server_data"
+      "stop_flying"
    ]
 }]
 

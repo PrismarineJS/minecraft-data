@@ -2335,7 +2335,8 @@
           "32": "start_crawling",
           "33": "stop_crawling",
           "34": "start_flying",
-          "35": "stop_flying"
+          "35": "stop_flying",
+          "36": "received_server_data"
         }
       }
     ],
@@ -2907,7 +2908,38 @@
       [
         {
           "name": "type",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "marker_white",
+                "1": "marker_green",
+                "2": "marker_red",
+                "3": "marker_blue",
+                "4": "cross_white",
+                "5": "triangle_red",
+                "6": "square_white",
+                "7": "marker_sign",
+                "8": "marker_pink",
+                "9": "marker_orange",
+                "10": "marker_yellow",
+                "11": "marker_teal",
+                "12": "triangle_green",
+                "13": "small_square_white",
+                "14": "mansion",
+                "15": "monument",
+                "16": "no_draw",
+                "17": "village_desert",
+                "18": "village_plains",
+                "19": "village_savanna",
+                "20": "village_snowy",
+                "21": "village_taiga",
+                "22": "jungle_temple",
+                "23": "witch_hut"
+              }
+            }
+          ]
         },
         {
           "name": "rotation",
@@ -4026,6 +4058,105 @@
         }
       ]
     ],
+    "DisconnectFailReason": [
+      "mapper",
+      {
+        "type": "varint",
+        "mappings": {
+          "0": "UNKNOWN",
+          "1": "CANT_CONNECT_NO_INTERNET",
+          "2": "NO_PERMISSIONS",
+          "3": "UNRECOVERABLE_ERROR",
+          "4": "THIRD_PARTY_BLOCKED",
+          "5": "THIRD_PARTY_NO_INTERNET",
+          "6": "THIRD_PARTY_BAD_IP",
+          "7": "THIRD_PARTY_NO_SERVER_OR_SERVER_LOCKED",
+          "8": "VERSION_MISMATCH",
+          "9": "SKIN_ISSUE",
+          "10": "INVITE_SESSION_NOT_FOUND",
+          "11": "EDU_LEVEL_SETTINGS_MISSING",
+          "12": "LOCAL_SERVER_NOT_FOUND",
+          "13": "LEGACY_DISCONNECT",
+          "14": "USER_LEAVE_GAME_ATTEMPTED",
+          "15": "PLATFORM_LOCKED_SKINS_ERROR",
+          "16": "REALMS_WORLD_UNASSIGNED",
+          "17": "REALMS_SERVER_CANT_CONNECT",
+          "18": "REALMS_SERVER_HIDDEN",
+          "19": "REALMS_SERVER_DISABLED_BETA",
+          "20": "REALMS_SERVER_DISABLED",
+          "21": "CROSS_PLATFORM_DISALLOWED",
+          "22": "CANT_CONNECT",
+          "23": "SESSION_NOT_FOUND",
+          "24": "CLIENT_SETTINGS_INCOMPATIBLE_WITH_SERVER",
+          "25": "SERVER_FULL",
+          "26": "INVALID_PLATFORM_SKIN",
+          "27": "EDITION_VERSION_MISMATCH",
+          "28": "EDITION_MISMATCH",
+          "29": "LEVEL_NEWER_THAN_EXE_VERSION",
+          "30": "NO_FAIL_OCCURRED",
+          "31": "BANNED_SKIN",
+          "32": "TIMEOUT",
+          "33": "SERVER_NOT_FOUND",
+          "34": "OUTDATED_SERVER",
+          "35": "OUTDATED_CLIENT",
+          "36": "NO_PREMIUM_PLATFORM",
+          "37": "MULTIPLAYER_DISABLED",
+          "38": "NO_WIFI",
+          "39": "WORLD_CORRUPTION",
+          "40": "NO_REASON",
+          "41": "DISCONNECTED",
+          "42": "INVALID_PLAYER",
+          "43": "LOGGED_IN_OTHER_LOCATION",
+          "44": "SERVER_ID_CONFLICT",
+          "45": "NOT_ALLOWED",
+          "46": "NOT_AUTHENTICATED",
+          "47": "INVALID_TENANT",
+          "48": "UNKNOWN_PACKET",
+          "49": "UNEXPECTED_PACKET",
+          "50": "INVALID_COMMAND_REQUEST_PACKET",
+          "51": "HOST_SUSPENDED",
+          "52": "LOGIN_PACKET_NO_REQUEST",
+          "53": "LOGIN_PACKET_NO_CERT",
+          "54": "MISSING_CLIENT",
+          "55": "KICKED",
+          "56": "KICKED_FOR_EXPLOIT",
+          "57": "KICKED_FOR_IDLE",
+          "58": "RESOURCE_PACK_PROBLEM",
+          "59": "INCOMPATIBLE_PACK",
+          "60": "OUT_OF_STORAGE",
+          "61": "INVALID_LEVEL",
+          "62": "DISCONNECT_PACKET_DEPRECATED",
+          "63": "BLOCK_MISMATCH",
+          "64": "INVALID_HEIGHTS",
+          "65": "INVALID_WIDTHS",
+          "66": "CONNECTION_LOST",
+          "67": "ZOMBIE_CONNECTION",
+          "68": "SHUTDOWN",
+          "69": "REASON_NOT_SET",
+          "70": "LOADING_STATE_TIMEOUT",
+          "71": "RESOURCE_PACK_LOADING_FAILED",
+          "72": "SEARCHING_FOR_SESSION_LOADING_SCREEN_FAILED",
+          "73": "CONN_PROTOCOL_VERSION",
+          "74": "SUBSYSTEM_STATUS_ERROR",
+          "75": "EMPTY_AUTH_FROM_DISCOVERY",
+          "76": "EMPTY_URL_FROM_DISCOVERY",
+          "77": "EXPIRED_AUTH_FROM_DISCOVERY",
+          "78": "UNKNOWN_SIGNAL_SERVICE_SIGN_IN_FAILURE",
+          "79": "XBL_JOIN_LOBBY_FAILURE",
+          "80": "UNSPECIFIED_CLIENT_INSTANCE_DISCONNECTION",
+          "81": "CONN_SESSION_NOT_FOUND",
+          "82": "CONN_CREATE_PEER_CONNECTION",
+          "83": "CONN_ICE",
+          "84": "CONN_CONNECT_REQUEST",
+          "85": "CONN_CONNECT_RESPONSE",
+          "86": "CONN_NEGOTIATION_TIMEOUT",
+          "87": "CONN_INACTIVITY_TIMEOUT",
+          "88": "STALE_CONNECTION_BEING_REPLACED",
+          "89": "REALMS_SESSION_NOT_FOUND",
+          "90": "BAD_PACKET"
+        }
+      }
+    ],
     "mcpe_packet": [
       "container",
       [
@@ -4528,6 +4659,10 @@
     "packet_disconnect": [
       "container",
       [
+        {
+          "name": "reason",
+          "type": "DisconnectFailReason"
+        },
         {
           "name": "hide_disconnect_reason",
           "type": "bool"
@@ -11529,7 +11664,10 @@
           "rising",
           "feeling_happy",
           "searching",
-          "crawling"
+          "crawling",
+          "timer_flag_1",
+          "timer_flag_2",
+          "timer_flag_3"
         ]
       }
     ],
@@ -11715,7 +11853,8 @@
           "start_crawling",
           "stop_crawling",
           "start_flying",
-          "stop_flying"
+          "stop_flying",
+          "received_server_data"
         ]
       }
     ],
