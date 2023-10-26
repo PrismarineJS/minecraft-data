@@ -1,3 +1,9 @@
+## 3.47.0
+* [Add bedrock 1.20.40 protocol data (#784)](https://github.com/PrismarineJS/minecraft-data/commit/0c1d4e649a4755c3226dd93174249e9a75fde12c) (thanks @CreeperG16)
+* [Add 23w43a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/2a236dba9780b69406d93c4dea4902a843d6fe09) (thanks @github-actions[bot])
+* [Add 23w42a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/d39bd42483133adc2c2a011ab4a28471c98b3e92) (thanks @github-actions[bot])
+* [Add 23w41a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/00dba938c5cdaa9b1f9c77b0429eeb05341a00a8) (thanks @github-actions[bot])
+
 ## 3.46.2
 * [Fix bedrock protocol CameraPresets packet(#782)](https://github.com/PrismarineJS/minecraft-data/commit/4139610a241411296a47723d6d978047c52cc7cf) (thanks @MrDiamond64)
 * [Update Minecraft wiki references (#781)](https://github.com/PrismarineJS/minecraft-data/commit/16aaf99c002125749dbcbf165e3ead15e104f7e8) (thanks @Spongecade)
