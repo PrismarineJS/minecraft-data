@@ -601,6 +601,51 @@
         }
       ]
     ],
+    "Vec3fopts": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "y",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "z",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        }
+      ]
+    ],
+    "Vec2fopts": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "y",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        }
+      ]
+    ],
     "MetadataDictionary": [
       "array",
       {
@@ -740,7 +785,11 @@
                     "124": "update_properties",
                     "125": "movement_sound_distance_offset",
                     "126": "heartbeat_interval_ticks",
-                    "127": "heartbeat_sound_event"
+                    "127": "heartbeat_sound_event",
+                    "128": "player_last_death_position",
+                    "129": "player_last_death_dimension",
+                    "130": "player_has_died",
+                    "131": "collision_box"
                   }
                 }
               ]
@@ -859,6 +908,55 @@
         ]
       }
     ],
+    "EntityProperties": [
+      "container",
+      [
+        {
+          "name": "ints",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "index",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "value",
+                    "type": "zigzag32"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "floats",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "index",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "value",
+                    "type": "lf32"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
     "Rotation": [
       "container",
       [
@@ -919,6 +1017,44 @@
             {
               "name": "name",
               "type": "string"
+            },
+            {
+              "name": "modifiers",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "id",
+                        "type": "string"
+                      },
+                      {
+                        "name": "name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "amount",
+                        "type": "lf32"
+                      },
+                      {
+                        "name": "operation",
+                        "type": "li32"
+                      },
+                      {
+                        "name": "operand",
+                        "type": "li32"
+                      },
+                      {
+                        "name": "serializable",
+                        "type": "bool"
+                      }
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ]
@@ -1236,33 +1372,103 @@
       "container",
       [
         {
-          "name": "network_id",
-          "type": "zigzag32"
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "invalid",
+                "1": "int_id_meta",
+                "2": "molang",
+                "3": "item_tag",
+                "4": "string_id_meta",
+                "5": "complex_alias"
+              }
+            }
+          ]
         },
         {
           "anon": true,
           "type": [
             "switch",
             {
-              "compareTo": "network_id",
+              "compareTo": "type",
               "fields": {
-                "0": "void"
-              },
-              "default": [
-                "container",
-                [
-                  {
-                    "name": "network_data",
-                    "type": "zigzag32"
-                  },
-                  {
-                    "name": "count",
-                    "type": "zigzag32"
-                  }
+                "int_id_meta": [
+                  "container",
+                  [
+                    {
+                      "name": "network_id",
+                      "type": "li16"
+                    },
+                    {
+                      "name": "metadata",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "network_id",
+                          "fields": {
+                            "0": "void"
+                          },
+                          "default": "li16"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "molang": [
+                  "container",
+                  [
+                    {
+                      "name": "expression",
+                      "type": "string"
+                    },
+                    {
+                      "name": "version",
+                      "type": "u8"
+                    }
+                  ]
+                ],
+                "item_tag": [
+                  "container",
+                  [
+                    {
+                      "name": "tag",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "string_id_meta": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "metadata",
+                      "type": "li16"
+                    }
+                  ]
+                ],
+                "complex_alias": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    }
+                  ]
                 ]
-              ]
+              },
+              "default": "void"
             }
           ]
+        },
+        {
+          "name": "count",
+          "type": "zigzag32"
         }
       ]
     ],
@@ -1345,7 +1551,9 @@
                     "4": "multi",
                     "5": "shulker_box",
                     "6": "shapeless_chemistry",
-                    "7": "shaped_chemistry"
+                    "7": "shaped_chemistry",
+                    "8": "smithing_transform",
+                    "9": "smithing_trim"
                   }
                 }
               ]
@@ -1660,6 +1868,68 @@
                           "type": "varint"
                         }
                       ]
+                    ],
+                    "smithing_transform": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "string"
+                        },
+                        {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "base",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "addition",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "result",
+                          "type": "ItemLegacy"
+                        },
+                        {
+                          "name": "tag",
+                          "type": "string"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
+                    ],
+                    "smithing_trim": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "string"
+                        },
+                        {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "input",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "addition",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "block",
+                          "type": "string"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
                     ]
                   },
                   "default": "void"
@@ -1844,6 +2114,10 @@
         },
         {
           "name": "primary_user",
+          "type": "bool"
+        },
+        {
+          "name": "overriding_player_appearance",
           "type": "bool"
         }
       ]
@@ -2055,7 +2329,14 @@
           "26": "predict_break",
           "27": "continue_break",
           "28": "start_item_use_on",
-          "29": "stop_item_use_on"
+          "29": "stop_item_use_on",
+          "30": "handled_teleport",
+          "31": "missed_swing",
+          "32": "start_crawling",
+          "33": "stop_crawling",
+          "34": "start_flying",
+          "35": "stop_flying",
+          "36": "received_server_data"
         }
       }
     ],
@@ -2360,6 +2641,31 @@
               "type": "string"
             }
           ]
+        },
+        {
+          "name": "cause",
+          "type": [
+            "mapper",
+            {
+              "type": "li32",
+              "mappings": {
+                "0": "chat_public",
+                "1": "chat_whisper",
+                "2": "sign_text",
+                "3": "anvil_text",
+                "4": "book_and_quill_text",
+                "5": "command_block_text",
+                "6": "block_actor_data_text",
+                "7": "join_event_text",
+                "8": "leave_event_text",
+                "9": "slash_command_chat",
+                "10": "cartography_text",
+                "11": "kick_command",
+                "12": "title_command",
+                "13": "summon_command"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -2630,7 +2936,31 @@
                 "20": "village_snowy",
                 "21": "village_taiga",
                 "22": "jungle_temple",
-                "23": "witch_hut"
+                "23": "witch_hut =>",
+                "24": "marker_white",
+                "25": "marker_green",
+                "26": "marker_red",
+                "27": "marker_blue",
+                "28": "cross_white",
+                "29": "triangle_red",
+                "30": "square_white",
+                "31": "marker_sign",
+                "32": "marker_pink",
+                "33": "marker_orange",
+                "34": "marker_yellow",
+                "35": "marker_teal",
+                "36": "triangle_green",
+                "37": "small_square_white",
+                "38": "mansion",
+                "39": "monument",
+                "40": "no_draw",
+                "41": "village_desert",
+                "42": "village_plains",
+                "43": "village_savanna",
+                "44": "village_snowy",
+                "45": "village_taiga",
+                "46": "jungle_temple",
+                "47": "witch_hut"
               }
             }
           ]
@@ -2839,12 +3169,40 @@
     "PermissionLevel": [
       "mapper",
       {
-        "type": "varint",
+        "type": "u8",
         "mappings": {
           "0": "visitor",
           "1": "member",
           "2": "operator",
           "3": "custom"
+        }
+      }
+    ],
+    "CommandPermissionLevel": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "normal",
+          "1": "operator",
+          "2": "automation",
+          "3": "host",
+          "4": "owner",
+          "5": "internal"
+        }
+      }
+    ],
+    "CommandPermissionLevelVarint": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "normal",
+          "1": "operator",
+          "2": "automation",
+          "3": "host",
+          "4": "owner",
+          "5": "internal"
         }
       }
     ],
@@ -2957,6 +3315,7 @@
           "31": "hud",
           "32": "jigsaw_editor",
           "33": "smithing_table",
+          "34": "chest_boat",
           "-9": "none",
           "-1": "inventory"
         }
@@ -2988,45 +3347,47 @@
           "18": "recipe_search",
           "19": "recipe_search_bar",
           "20": "recipe_equipment",
-          "21": "enchanting_input",
-          "22": "enchanting_lapis",
-          "23": "furnace_fuel",
-          "24": "furnace_ingredient",
-          "25": "furnace_output",
-          "26": "horse_equip",
-          "27": "hotbar",
-          "28": "inventory",
-          "29": "shulker",
-          "30": "trade_ingredient1",
-          "31": "trade_ingredient2",
-          "32": "trade_result",
-          "33": "offhand",
-          "34": "compcreate_input",
-          "35": "compcreate_output",
-          "36": "elemconstruct_output",
-          "37": "matreduce_input",
-          "38": "matreduce_output",
-          "39": "labtable_input",
-          "40": "loom_input",
-          "41": "loom_dye",
-          "42": "loom_material",
-          "43": "loom_result",
-          "44": "blast_furnace_ingredient",
-          "45": "smoker_ingredient",
-          "46": "trade2_ingredient1",
-          "47": "trade2_ingredient2",
-          "48": "trade2_result",
-          "49": "grindstone_input",
-          "50": "grindstone_additional",
-          "51": "grindstone_result",
-          "52": "stonecutter_input",
-          "53": "stonecutter_result",
-          "54": "cartography_input",
-          "55": "cartography_additional",
-          "56": "cartography_result",
-          "57": "barrel",
-          "58": "cursor",
-          "59": "creative_output"
+          "21": "recipe_book",
+          "22": "enchanting_input",
+          "23": "enchanting_lapis",
+          "24": "furnace_fuel",
+          "25": "furnace_ingredient",
+          "26": "furnace_output",
+          "27": "horse_equip",
+          "28": "hotbar",
+          "29": "inventory",
+          "30": "shulker",
+          "31": "trade_ingredient1",
+          "32": "trade_ingredient2",
+          "33": "trade_result",
+          "34": "offhand",
+          "35": "compcreate_input",
+          "36": "compcreate_output",
+          "37": "elemconstruct_output",
+          "38": "matreduce_input",
+          "39": "matreduce_output",
+          "40": "labtable_input",
+          "41": "loom_input",
+          "42": "loom_dye",
+          "43": "loom_material",
+          "44": "loom_result",
+          "45": "blast_furnace_ingredient",
+          "46": "smoker_ingredient",
+          "47": "trade2_ingredient1",
+          "48": "trade2_ingredient2",
+          "49": "trade2_result",
+          "50": "grindstone_input",
+          "51": "grindstone_additional",
+          "52": "grindstone_result",
+          "53": "stonecutter_input",
+          "54": "stonecutter_result",
+          "55": "cartography_input",
+          "56": "cartography_additional",
+          "57": "cartography_result",
+          "58": "barrel",
+          "59": "cursor",
+          "60": "creative_output",
+          "61": "smithing_table_template"
         }
       }
     ],
@@ -3467,7 +3828,7 @@
           "429": "ItemTaken",
           "430": "Disappeared",
           "431": "Reappeared",
-          "432": "_",
+          "432": "DrinkMilk",
           "433": "FrogspawnHatched",
           "434": "LaySpawn",
           "435": "FrogspawnBreak",
@@ -3476,7 +3837,44 @@
           "438": "SoundeventItemThrown",
           "439": "Record5",
           "440": "ConvertToFrog",
-          "441": "Undefined"
+          "441": "RecordPlaying",
+          "442": "DrinkMilk",
+          "443": "RecordPlaying",
+          "444": "EnchantingTableUse",
+          "445": "StepSand",
+          "446": "DashReady",
+          "447": "BundleDropContents",
+          "448": "BundleInsert",
+          "449": "BundleRemoveOne",
+          "450": "PressurePlateClickOff",
+          "451": "PressurePlateClickOn",
+          "452": "ButtonClickOff",
+          "453": "ButtonClickOn",
+          "454": "DoorOpen",
+          "455": "DoorClose",
+          "456": "TrapdoorOpen",
+          "457": "TrapdoorClose",
+          "458": "FenceGateOpen",
+          "459": "FenceGateClose",
+          "460": "Insert",
+          "461": "Pickup",
+          "462": "InsertEnchanted",
+          "463": "PickupEnchanted",
+          "464": "Brush",
+          "465": "BrushCompleted",
+          "466": "ShatterDecoratedPot",
+          "467": "BreakDecoratedPot",
+          "468": "SnifferEggCrack",
+          "469": "SnifferEggHatched",
+          "470": "WaxedSignInteractFail",
+          "471": "RecordRelic",
+          "472": "Bump",
+          "473": "PumpkinCarve",
+          "474": "ConvertHuskToZombie",
+          "475": "PigDeath",
+          "476": "HoglinZombified",
+          "477": "AmbientUnderwaterEnter",
+          "478": "AmbientUnderwaterExit"
         }
       }
     ],
@@ -3609,6 +4007,177 @@
           "13": "Xbox",
           "14": "WindowsPhone",
           "15": "Linux"
+        }
+      }
+    ],
+    "AbilityLayers": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "lu16",
+              "mappings": {
+                "0": "cache",
+                "1": "base",
+                "2": "spectator",
+                "3": "commands",
+                "4": "editor"
+              }
+            }
+          ]
+        },
+        {
+          "name": "allowed",
+          "type": "AbilitySet"
+        },
+        {
+          "name": "enabled",
+          "type": "AbilitySet"
+        },
+        {
+          "name": "fly_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "walk_speed",
+          "type": "lf32"
+        }
+      ]
+    ],
+    "CameraPresets": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "parent",
+          "type": "string"
+        },
+        {
+          "name": "position",
+          "type": "Vec3fopts"
+        },
+        {
+          "name": "rotation",
+          "type": "Vec2fopts"
+        },
+        {
+          "name": "audio_listener",
+          "type": [
+            "option",
+            "u8"
+          ]
+        },
+        {
+          "name": "player_effects",
+          "type": [
+            "option",
+            "bool"
+          ]
+        }
+      ]
+    ],
+    "DisconnectFailReason": [
+      "mapper",
+      {
+        "type": "zigzag32",
+        "mappings": {
+          "0": "unknown",
+          "1": "cant_connect_no_internet",
+          "2": "no_permissions",
+          "3": "unrecoverable_error",
+          "4": "third_party_blocked",
+          "5": "third_party_no_internet",
+          "6": "third_party_bad_ip",
+          "7": "third_party_no_server_or_server_locked",
+          "8": "version_mismatch",
+          "9": "skin_issue",
+          "10": "invite_session_not_found",
+          "11": "edu_level_settings_missing",
+          "12": "local_server_not_found",
+          "13": "legacy_disconnect",
+          "14": "user_leave_game_attempted",
+          "15": "platform_locked_skins_error",
+          "16": "realms_world_unassigned",
+          "17": "realms_server_cant_connect",
+          "18": "realms_server_hidden",
+          "19": "realms_server_disabled_beta",
+          "20": "realms_server_disabled",
+          "21": "cross_platform_disallowed",
+          "22": "cant_connect",
+          "23": "session_not_found",
+          "24": "client_settings_incompatible_with_server",
+          "25": "server_full",
+          "26": "invalid_platform_skin",
+          "27": "edition_version_mismatch",
+          "28": "edition_mismatch",
+          "29": "level_newer_than_exe_version",
+          "30": "no_fail_occurred",
+          "31": "banned_skin",
+          "32": "timeout",
+          "33": "server_not_found",
+          "34": "outdated_server",
+          "35": "outdated_client",
+          "36": "no_premium_platform",
+          "37": "multiplayer_disabled",
+          "38": "no_wifi",
+          "39": "world_corruption",
+          "40": "no_reason",
+          "41": "disconnected",
+          "42": "invalid_player",
+          "43": "logged_in_other_location",
+          "44": "server_id_conflict",
+          "45": "not_allowed",
+          "46": "not_authenticated",
+          "47": "invalid_tenant",
+          "48": "unknown_packet",
+          "49": "unexpected_packet",
+          "50": "invalid_command_request_packet",
+          "51": "host_suspended",
+          "52": "login_packet_no_request",
+          "53": "login_packet_no_cert",
+          "54": "missing_client",
+          "55": "kicked",
+          "56": "kicked_for_exploit",
+          "57": "kicked_for_idle",
+          "58": "resource_pack_problem",
+          "59": "incompatible_pack",
+          "60": "out_of_storage",
+          "61": "invalid_level",
+          "62": "disconnect_packet_deprecated",
+          "63": "block_mismatch",
+          "64": "invalid_heights",
+          "65": "invalid_widths",
+          "66": "connection_lost",
+          "67": "zombie_connection",
+          "68": "shutdown",
+          "69": "reason_not_set",
+          "70": "loading_state_timeout",
+          "71": "resource_pack_loading_failed",
+          "72": "searching_for_session_loading_screen_failed",
+          "73": "conn_protocol_version",
+          "74": "subsystem_status_error",
+          "75": "empty_auth_from_discovery",
+          "76": "empty_url_from_discovery",
+          "77": "expired_auth_from_discovery",
+          "78": "unknown_signal_service_sign_in_failure",
+          "79": "xbl_join_lobby_failure",
+          "80": "unspecified_client_instance_disconnection",
+          "81": "conn_session_not_found",
+          "82": "conn_create_peer_connection",
+          "83": "conn_ice",
+          "84": "conn_connect_request",
+          "85": "conn_connect_response",
+          "86": "conn_negotiation_timeout",
+          "87": "conn_inactivity_timeout",
+          "88": "stale_connection_being_replaced",
+          "89": "realms_session_not_found",
+          "90": "bad_packet"
         }
       }
     ],
@@ -3802,7 +4371,26 @@
                 "183": "lesson_progress",
                 "184": "request_ability",
                 "185": "request_permissions",
-                "186": "toast_request"
+                "186": "toast_request",
+                "187": "update_abilities",
+                "188": "update_adventure_settings",
+                "189": "death_info",
+                "190": "editor_network",
+                "191": "feature_registry",
+                "192": "server_stats",
+                "193": "request_network_settings",
+                "194": "game_test_request",
+                "195": "game_test_results",
+                "196": "update_client_input_locks",
+                "197": "client_cheat_ability",
+                "198": "camera_presets",
+                "199": "unlocked_recipes",
+                "300": "camera_instruction",
+                "301": "compressed_biome_definitions",
+                "302": "trim_data",
+                "303": "open_sign",
+                "304": "agent_animation",
+                "305": "refresh_entitlements"
               }
             }
           ]
@@ -3994,7 +4582,26 @@
                 "lesson_progress": "packet_lesson_progress",
                 "request_ability": "packet_request_ability",
                 "request_permissions": "packet_request_permissions",
-                "toast_request": "packet_toast_request"
+                "toast_request": "packet_toast_request",
+                "update_abilities": "packet_update_abilities",
+                "update_adventure_settings": "packet_update_adventure_settings",
+                "death_info": "packet_death_info",
+                "editor_network": "packet_editor_network",
+                "feature_registry": "packet_feature_registry",
+                "server_stats": "packet_server_stats",
+                "request_network_settings": "packet_request_network_settings",
+                "game_test_request": "packet_game_test_request",
+                "game_test_results": "packet_game_test_results",
+                "update_client_input_locks": "packet_update_client_input_locks",
+                "client_cheat_ability": "packet_client_cheat_ability",
+                "camera_presets": "packet_camera_presets",
+                "unlocked_recipes": "packet_unlocked_recipes",
+                "camera_instruction": "packet_camera_instruction",
+                "compressed_biome_definitions": "packet_compressed_biome_definitions",
+                "trim_data": "packet_trim_data",
+                "open_sign": "packet_open_sign",
+                "agent_animation": "packet_agent_animation",
+                "refresh_entitlements": "packet_refresh_entitlements"
               },
               "default": "void"
             }
@@ -4051,7 +4658,9 @@
                 "4": "failed_invalid_tenant",
                 "5": "failed_vanilla_edu",
                 "6": "failed_edu_vanilla",
-                "7": "failed_server_full"
+                "7": "failed_server_full",
+                "8": "failed_editor_vanilla_mismatch",
+                "9": "failed_vanilla_editor_mismatch"
               }
             }
           ]
@@ -4074,6 +4683,10 @@
     "packet_disconnect": [
       "container",
       [
+        {
+          "name": "reason",
+          "type": "DisconnectFailReason"
+        },
         {
           "name": "hide_disconnect_reason",
           "type": "bool"
@@ -4106,6 +4719,28 @@
         {
           "name": "texture_packs",
           "type": "TexturePackInfos"
+        },
+        {
+          "name": "resource_pack_links",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "id",
+                    "type": "string"
+                  },
+                  {
+                    "name": "url",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -4183,7 +4818,8 @@
                 "7": "whisper",
                 "8": "announcement",
                 "9": "json_whisper",
-                "10": "json"
+                "10": "json",
+                "11": "json_announcement"
               }
             }
           ]
@@ -4275,6 +4911,15 @@
                   ]
                 ],
                 "json": [
+                  "container",
+                  [
+                    {
+                      "name": "message",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "json_announcement": [
                   "container",
                   [
                     {
@@ -4434,6 +5079,28 @@
           "type": "bool"
         },
         {
+          "name": "editor_world_type",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "not_editor",
+                "1": "project",
+                "2": "test_level"
+              }
+            }
+          ]
+        },
+        {
+          "name": "created_in_editor",
+          "type": "bool"
+        },
+        {
+          "name": "exported_from_editor",
+          "type": "bool"
+        },
+        {
           "name": "day_cycle_stop_time",
           "type": "zigzag32"
         },
@@ -4507,7 +5174,7 @@
         },
         {
           "name": "permission_level",
-          "type": "zigzag32"
+          "type": "PermissionLevel"
         },
         {
           "name": "server_chunk_tick_range",
@@ -4542,6 +5209,18 @@
           "type": "bool"
         },
         {
+          "name": "persona_disabled",
+          "type": "bool"
+        },
+        {
+          "name": "custom_skins_disabled",
+          "type": "bool"
+        },
+        {
+          "name": "emote_chat_muted",
+          "type": "bool"
+        },
+        {
           "name": "game_version",
           "type": "string"
         },
@@ -4563,6 +5242,24 @@
         },
         {
           "name": "experimental_gameplay_override",
+          "type": "bool"
+        },
+        {
+          "name": "chat_restriction_level",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "dropped",
+                "2": "disabled"
+              }
+            }
+          ]
+        },
+        {
+          "name": "disable_player_interactions",
           "type": "bool"
         },
         {
@@ -4642,6 +5339,18 @@
         {
           "name": "world_template_id",
           "type": "uuid"
+        },
+        {
+          "name": "client_side_generation",
+          "type": "bool"
+        },
+        {
+          "name": "block_network_ids_are_hashes",
+          "type": "bool"
+        },
+        {
+          "name": "server_controlled_sound",
+          "type": "bool"
         }
       ]
     ],
@@ -4657,11 +5366,7 @@
           "type": "string"
         },
         {
-          "name": "unique_entity_id",
-          "type": "zigzag64"
-        },
-        {
-          "name": "runtime_entity_id",
+          "name": "runtime_id",
           "type": "varint64"
         },
         {
@@ -4701,28 +5406,30 @@
           "type": "MetadataDictionary"
         },
         {
-          "name": "flags",
-          "type": "varint"
+          "name": "properties",
+          "type": "EntityProperties"
         },
         {
-          "name": "command_permission",
-          "type": "varint"
-        },
-        {
-          "name": "action_permissions",
-          "type": "varint"
+          "name": "unique_id",
+          "type": "li64"
         },
         {
           "name": "permission_level",
-          "type": "varint"
+          "type": "PermissionLevel"
         },
         {
-          "name": "custom_stored_permissions",
-          "type": "varint"
+          "name": "command_permission",
+          "type": "CommandPermissionLevel"
         },
         {
-          "name": "user_id",
-          "type": "li64"
+          "name": "abilities",
+          "type": [
+            "array",
+            {
+              "countType": "u8",
+              "type": "AbilityLayers"
+            }
+          ]
         },
         {
           "name": "links",
@@ -4742,11 +5449,11 @@
       "container",
       [
         {
-          "name": "entity_id_self",
+          "name": "unique_id",
           "type": "zigzag64"
         },
         {
-          "name": "runtime_entity_id",
+          "name": "runtime_id",
           "type": "varint64"
         },
         {
@@ -4774,12 +5481,20 @@
           "type": "lf32"
         },
         {
+          "name": "body_yaw",
+          "type": "lf32"
+        },
+        {
           "name": "attributes",
           "type": "EntityAttributes"
         },
         {
           "name": "metadata",
           "type": "MetadataDictionary"
+        },
+        {
+          "name": "properties",
+          "type": "EntityProperties"
         },
         {
           "name": "links",
@@ -5150,6 +5865,13 @@
                 "3509": "cauldron_clean_banner",
                 "3600": "block_start_break",
                 "3601": "block_stop_break",
+                "3602": "block_break_speed",
+                "3603": "particle_punch_block_down",
+                "3604": "particle_punch_block_up",
+                "3605": "particle_punch_block_north",
+                "3606": "particle_punch_block_south",
+                "3607": "particle_punch_block_west",
+                "3608": "particle_punch_block_east",
                 "4000": "set_data",
                 "9800": "players_sleeping",
                 "9801": "sleeping_players",
@@ -5344,7 +6066,8 @@
                 "74": "charged_item",
                 "75": "fall",
                 "76": "grow_up",
-                "77": "vibration_detected"
+                "77": "vibration_detected",
+                "78": "drink_milk"
               }
             }
           ]
@@ -5602,6 +6325,10 @@
         {
           "name": "metadata",
           "type": "MetadataDictionary"
+        },
+        {
+          "name": "properties",
+          "type": "EntityProperties"
         },
         {
           "name": "tick",
@@ -5947,19 +6674,7 @@
         },
         {
           "name": "command_permission",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "normal",
-                "1": "operator",
-                "2": "host",
-                "3": "automation",
-                "4": "admin"
-              }
-            }
-          ]
+          "type": "CommandPermissionLevelVarint"
         },
         {
           "name": "action_permissions",
@@ -6194,7 +6909,8 @@
                 "26": "code_builder_runtime_action",
                 "27": "code_builder_scoreboard",
                 "28": "strider_ridden_in_lava_in_overworld",
-                "29": "sneak_close_to_sculk_sensor"
+                "29": "sneak_close_to_sculk_sensor",
+                "30": "careful_restoration"
               }
             }
           ]
@@ -6240,6 +6956,10 @@
         {
           "name": "locked",
           "type": "bool"
+        },
+        {
+          "name": "origin",
+          "type": "vec3i"
         },
         {
           "name": "included_in",
@@ -6361,6 +7081,28 @@
         {
           "name": "map_id",
           "type": "zigzag64"
+        },
+        {
+          "name": "client_pixels",
+          "type": [
+            "array",
+            {
+              "countType": "lu32",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "rgba",
+                    "type": "li32"
+                  },
+                  {
+                    "name": "index",
+                    "type": "lu16"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -6370,6 +7112,10 @@
         {
           "name": "chunk_radius",
           "type": "zigzag32"
+        },
+        {
+          "name": "max_radius",
+          "type": "u8"
         }
       ]
     ],
@@ -6591,6 +7337,16 @@
           ]
         },
         {
+          "name": "chained_subcommand_values",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        },
+        {
           "name": "suffixes",
           "type": [
             "array",
@@ -6640,6 +7396,46 @@
           ]
         },
         {
+          "name": "chained_subcommands",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "values",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "index",
+                              "type": "lu16"
+                            },
+                            {
+                              "name": "value",
+                              "type": "lu16"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
           "name": "command_data",
           "type": [
             "array",
@@ -6669,6 +7465,16 @@
                     "type": "li32"
                   },
                   {
+                    "name": "chained_subcommand_offsets",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "lu16"
+                      }
+                    ]
+                  },
+                  {
                     "name": "overloads",
                     "type": [
                       "array",
@@ -6677,6 +7483,10 @@
                         "type": [
                           "container",
                           [
+                            {
+                              "name": "chaining",
+                              "type": "bool"
+                            },
                             {
                               "name": "parameters",
                               "type": [
@@ -6707,15 +7517,15 @@
                                               "10": "wildcard_target",
                                               "17": "file_path",
                                               "23": "integer_range",
-                                              "38": "equipment_slots",
-                                              "39": "string",
-                                              "47": "block_position",
-                                              "48": "position",
-                                              "51": "message",
-                                              "53": "raw_text",
-                                              "57": "json",
-                                              "67": "block_states",
-                                              "70": "command"
+                                              "43": "equipment_slots",
+                                              "44": "string",
+                                              "52": "block_position",
+                                              "53": "position",
+                                              "55": "message",
+                                              "58": "raw_text",
+                                              "62": "json",
+                                              "71": "block_states",
+                                              "74": "command"
                                             }
                                           }
                                         ]
@@ -6852,6 +7662,10 @@
         {
           "name": "internal",
           "type": "bool"
+        },
+        {
+          "name": "version",
+          "type": "varint"
         }
       ]
     ],
@@ -7308,6 +8122,10 @@
         {
           "name": "should_trigger",
           "type": "bool"
+        },
+        {
+          "name": "water_logged",
+          "type": "bool"
         }
       ]
     ],
@@ -7614,8 +8432,55 @@
           "type": "varint"
         },
         {
+          "name": "has_response_data",
+          "type": "bool"
+        },
+        {
           "name": "data",
-          "type": "string"
+          "type": [
+            "switch",
+            {
+              "compareTo": "has_response_data",
+              "fields": {
+                "true": "string"
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
+          "name": "has_cancel_reason",
+          "type": "bool"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "has_cancel_reason",
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "cancel_reason",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "u8",
+                          "mappings": {
+                            "0": "closed",
+                            "1": "busy"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              },
+              "default": "void"
+            }
+          ]
         }
       ]
     ],
@@ -8137,6 +9002,28 @@
         {
           "name": "radius",
           "type": "varint"
+        },
+        {
+          "name": "saved_chunks",
+          "type": [
+            "array",
+            {
+              "countType": "lu32",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "x",
+                    "type": "zigzag32"
+                  },
+                  {
+                    "name": "z",
+                    "type": "zigzag32"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -8319,7 +9206,8 @@
               "mappings": {
                 "1": "export_from_save",
                 "2": "export_from_load",
-                "3": "query_saved_structure"
+                "3": "query_saved_structure",
+                "4": "import_from_save"
               }
             }
           ]
@@ -8358,7 +9246,8 @@
               "type": "u8",
               "mappings": {
                 "1": "export",
-                "2": "query"
+                "2": "query",
+                "3": "import"
               }
             }
           ]
@@ -8546,8 +9435,25 @@
           "type": "string"
         },
         {
+          "name": "xuid",
+          "type": "string"
+        },
+        {
+          "name": "platform_id",
+          "type": "string"
+        },
+        {
           "name": "flags",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "1": "server_side",
+                "2": "mute_chat"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -8624,7 +9530,8 @@
                 "11": "interact",
                 "12": "retrieved",
                 "13": "dyed",
-                "14": "traded"
+                "14": "traded",
+                "15": "brushing_completed"
               }
             }
           ]
@@ -8636,7 +9543,32 @@
       [
         {
           "name": "compression_threshold",
-          "type": "u16"
+          "type": "lu16"
+        },
+        {
+          "name": "compression_algorithm",
+          "type": [
+            "mapper",
+            {
+              "type": "lu16",
+              "mappings": {
+                "0": "deflate",
+                "1": "snappy"
+              }
+            }
+          ]
+        },
+        {
+          "name": "client_throttle",
+          "type": "bool"
+        },
+        {
+          "name": "client_throttle_threshold",
+          "type": "u8"
+        },
+        {
+          "name": "client_throttle_scalar",
+          "type": "lf32"
         }
       ]
     ],
@@ -8884,6 +9816,10 @@
               "default": "void"
             }
           ]
+        },
+        {
+          "name": "analogue_move_vector",
+          "type": "vec2f"
         }
       ]
     ],
@@ -10069,6 +11005,524 @@
         }
       ]
     ],
+    "packet_update_abilities": [
+      "container",
+      [
+        {
+          "name": "entity_unique_id",
+          "type": "li64"
+        },
+        {
+          "name": "permission_level",
+          "type": "PermissionLevel"
+        },
+        {
+          "name": "command_permission",
+          "type": "CommandPermissionLevel"
+        },
+        {
+          "name": "abilities",
+          "type": [
+            "array",
+            {
+              "countType": "u8",
+              "type": "AbilityLayers"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_update_adventure_settings": [
+      "container",
+      [
+        {
+          "name": "no_pvm",
+          "type": "bool"
+        },
+        {
+          "name": "no_mvp",
+          "type": "bool"
+        },
+        {
+          "name": "immutable_world",
+          "type": "bool"
+        },
+        {
+          "name": "show_name_tags",
+          "type": "bool"
+        },
+        {
+          "name": "auto_jump",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_death_info": [
+      "container",
+      [
+        {
+          "name": "cause",
+          "type": "string"
+        },
+        {
+          "name": "messages",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_editor_network": [
+      "container",
+      [
+        {
+          "name": "payload",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_feature_registry": [
+      "container",
+      [
+        {
+          "name": "features",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "options",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_server_stats": [
+      "container",
+      [
+        {
+          "name": "server_time",
+          "type": "lf32"
+        },
+        {
+          "name": "network_time",
+          "type": "lf32"
+        }
+      ]
+    ],
+    "packet_request_network_settings": [
+      "container",
+      [
+        {
+          "name": "client_protocol",
+          "type": "i32"
+        }
+      ]
+    ],
+    "packet_game_test_request": [
+      "container",
+      [
+        {
+          "name": "max_tests_per_batch",
+          "type": "varint"
+        },
+        {
+          "name": "repetitions",
+          "type": "varint"
+        },
+        {
+          "name": "rotation",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "0deg",
+                "1": "90deg",
+                "2": "180deg",
+                "3": "270deg",
+                "4": "360deg"
+              }
+            }
+          ]
+        },
+        {
+          "name": "stop_on_error",
+          "type": "bool"
+        },
+        {
+          "name": "position",
+          "type": "BlockCoordinates"
+        },
+        {
+          "name": "tests_per_row",
+          "type": "varint"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_game_test_results": [
+      "container",
+      [
+        {
+          "name": "succeeded",
+          "type": "bool"
+        },
+        {
+          "name": "error",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_update_client_input_locks": [
+      "container",
+      [
+        {
+          "name": "locks",
+          "type": "InputLockFlags"
+        },
+        {
+          "name": "position",
+          "type": "vec3f"
+        }
+      ]
+    ],
+    "packet_client_cheat_ability": [
+      "container",
+      [
+        {
+          "name": "entity_unique_id",
+          "type": "li64"
+        },
+        {
+          "name": "permission_level",
+          "type": "PermissionLevel"
+        },
+        {
+          "name": "command_permission",
+          "type": "CommandPermissionLevel"
+        },
+        {
+          "name": "abilities",
+          "type": [
+            "array",
+            {
+              "countType": "u8",
+              "type": "AbilityLayers"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_presets": [
+      "container",
+      [
+        {
+          "name": "presets",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "CameraPresets"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_unlocked_recipes": [
+      "container",
+      [
+        {
+          "name": "unlock_type",
+          "type": [
+            "mapper",
+            {
+              "type": "lu32",
+              "mappings": {
+                "0": "empty",
+                "1": "initially_unlocked",
+                "2": "newly_unlocked",
+                "3": "remove_unlocked",
+                "4": "remove_all_unlocked"
+              }
+            }
+          ]
+        },
+        {
+          "name": "recipes",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_instruction": [
+      "container",
+      [
+        {
+          "name": "instruction_set",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "runtime_id",
+                  "type": "li32"
+                },
+                {
+                  "name": "ease_data",
+                  "type": [
+                    "option",
+                    [
+                      "container",
+                      [
+                        {
+                          "name": "type",
+                          "type": [
+                            "mapper",
+                            {
+                              "type": "u8",
+                              "mappings": {
+                                "0": "Linear",
+                                "1": "Spring",
+                                "2": "InQuad",
+                                "3": "OutQuad",
+                                "4": "InOutQuad",
+                                "5": "InCubic",
+                                "6": "OutCubic",
+                                "7": "InOutCubic",
+                                "8": "InQuart",
+                                "9": "OutQuart",
+                                "10": "InOutQuart",
+                                "11": "InQuint",
+                                "12": "OutQuint",
+                                "13": "InOutQuint",
+                                "14": "InSine",
+                                "15": "OutSine",
+                                "16": "InOutSine",
+                                "17": "InExpo",
+                                "18": "OutExpo",
+                                "19": "InOutExpo",
+                                "20": "InCirc",
+                                "21": "OutCirc",
+                                "22": "InOutCirc",
+                                "23": "InBounce",
+                                "24": "OutBounce",
+                                "25": "InOutBounce",
+                                "26": "InBack",
+                                "27": "OutBack",
+                                "28": "InOutBack",
+                                "29": "InElastic",
+                                "30": "OutElastic",
+                                "31": "InOutElastic"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "name": "duration",
+                          "type": "lf32"
+                        }
+                      ]
+                    ]
+                  ]
+                },
+                {
+                  "name": "position",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
+                  "name": "rotation",
+                  "type": [
+                    "option",
+                    "vec2f"
+                  ]
+                },
+                {
+                  "name": "facing",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
+                  "name": "default",
+                  "type": [
+                    "option",
+                    "bool"
+                  ]
+                }
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "clear",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "fade",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "fade_in_duration",
+                  "type": "lf32"
+                },
+                {
+                  "name": "wait_duration",
+                  "type": "lf32"
+                },
+                {
+                  "name": "fade_out_duration",
+                  "type": "lf32"
+                },
+                {
+                  "name": "color_rgb",
+                  "type": "vec3f"
+                }
+              ]
+            ]
+          ]
+        }
+      ]
+    ],
+    "packet_compressed_biome_definitions": [
+      "container",
+      [
+        {
+          "name": "raw_payload",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_trim_data": [
+      "container",
+      [
+        {
+          "name": "patterns",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "pattern",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "materials",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "material",
+                    "type": "string"
+                  },
+                  {
+                    "name": "color",
+                    "type": "string"
+                  },
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_open_sign": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "BlockCoordinates"
+        },
+        {
+          "name": "is_front",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_agent_animation": [
+      "container",
+      [
+        {
+          "name": "animation",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "arm_swing",
+                "1": "shrug"
+              }
+            }
+          ]
+        },
+        {
+          "name": "entity_runtime_id",
+          "type": "varint64"
+        }
+      ]
+    ],
+    "packet_refresh_entitlements": [
+      "container",
+      []
+    ],
     "string": [
       "pstring",
       {
@@ -10157,6 +11611,7 @@
           "charge_attack",
           "wasd_controlled",
           "can_power_jump",
+          "can_dash",
           "linger",
           "has_collision",
           "affected_by_gravity",
@@ -10225,7 +11680,46 @@
           "jump_goal_jump",
           "emerging",
           "sniffing",
-          "digging"
+          "digging",
+          "sonic_boom",
+          "has_dash_cooldown",
+          "push_towards_closest_space",
+          "scenting",
+          "rising",
+          "feeling_happy",
+          "searching",
+          "crawling",
+          "timer_flag_1",
+          "timer_flag_2",
+          "timer_flag_3"
+        ]
+      }
+    ],
+    "AbilitySet": [
+      "bitflags",
+      {
+        "type": "lu32",
+        "flags": [
+          "build",
+          "mine",
+          "doors_and_switches",
+          "open_containers",
+          "attack_players",
+          "attack_mobs",
+          "operator_commands",
+          "teleport",
+          "invulnerable",
+          "flying",
+          "may_fly",
+          "instant_build",
+          "lightning",
+          "fly_speed",
+          "walk_speed",
+          "muted",
+          "world_builder",
+          "no_clip",
+          "privileged_builder",
+          "count"
         ]
       }
     ],
@@ -10376,7 +11870,15 @@
           "stop_gliding",
           "item_interact",
           "block_action",
-          "item_stack_request"
+          "item_stack_request",
+          "handled_teleport",
+          "emoting",
+          "missed_swing",
+          "start_crawling",
+          "stop_crawling",
+          "start_flying",
+          "stop_flying",
+          "received_server_data"
         ]
       }
     ],
@@ -10405,6 +11907,20 @@
           "attack_mobs": 32,
           "operator": 64,
           "teleport": 128
+        }
+      }
+    ],
+    "InputLockFlags": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "move": 2,
+          "jump": 4,
+          "sneak": 8,
+          "mount": 16,
+          "dismount": 32,
+          "rotation": 64
         }
       }
     ]
