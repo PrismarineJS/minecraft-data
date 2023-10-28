@@ -1570,10 +1570,7 @@
             },
             {
               "name": "playerUUID",
-              "type": [
-                "option",
-                "UUID"
-              ]
+              "type": "UUID"
             }
           ]
         ],
@@ -1616,6 +1613,10 @@
             }
           ]
         ],
+        "packet_login_acknowledged": [
+          "container",
+          []
+        ],
         "packet": [
           "container",
           [
@@ -1628,7 +1629,8 @@
                   "mappings": {
                     "0x00": "login_start",
                     "0x01": "encryption_begin",
-                    "0x02": "login_plugin_response"
+                    "0x02": "login_plugin_response",
+                    "0x03": "packet_login_acknowledged",
                   }
                 }
               ]
@@ -1642,7 +1644,8 @@
                   "fields": {
                     "login_start": "packet_login_start",
                     "encryption_begin": "packet_encryption_begin",
-                    "login_plugin_response": "packet_login_plugin_response"
+                    "login_plugin_response": "packet_login_plugin_response",
+                    "login_acknowledged": "packet_login_plugin_response"
                   }
                 }
               ]
@@ -1667,11 +1670,77 @@
               "type": "restBuffer"
             }
           ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "custom_payload"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "custom_payload": "packet_custom_payload"
+                  }
+                }
+              ]
+            }
+          ]
         ]
       }
     },
     "toServer": {
       "types": {
+        "packet_settings": [
+          "container",
+          [
+            {
+              "name": "locale",
+              "type": "string"
+            },
+            {
+              "name": "viewDistance",
+              "type": "i8"
+            },
+            {
+              "name": "chatFlags",
+              "type": "varint"
+            },
+            {
+              "name": "chatColors",
+              "type": "bool"
+            },
+            {
+              "name": "skinParts",
+              "type": "u8"
+            },
+            {
+              "name": "mainHand",
+              "type": "varint"
+            },
+            {
+              "name": "enableTextFiltering",
+              "type": "bool"
+            },
+            {
+              "name": "enableServerListing",
+              "type": "bool"
+            }
+          ]
+        ],
         "packet_custom_payload": [
           "container",
           [
@@ -1682,6 +1751,37 @@
             {
               "name": "data",
               "type": "restBuffer"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0x00": "settings",
+                    "0x01": "custom_payload"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "settings": "packet_settings    "
+                    "custom_payload": "packet_custom_payload"
+                  }
+                }
+              ]
             }
           ]
         ]
