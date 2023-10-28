@@ -1630,7 +1630,7 @@
                     "0x00": "login_start",
                     "0x01": "encryption_begin",
                     "0x02": "login_plugin_response",
-                    "0x03": "login_acknowledged",
+                    "0x03": "login_acknowledged"
                   }
                 }
               ]
@@ -1671,6 +1671,85 @@
             }
           ]
         ],
+        "packet_disconnect": [
+          "container",
+          [
+            {
+              "name": "reason",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet_finished_configuation": [
+          "container",
+          []
+        ],
+        "packet_keep_alive": [
+          "container",
+          [
+            {
+              "name": "keepAliveId",
+              "type": "i64"
+            }
+          ]
+        ],
+        "packet_ping": [
+          "container",
+          [
+            {
+              "name": "id",
+              "type": "i32"
+            }
+          ]
+        ],
+        "packet_registry_data": [
+          "container",
+          [
+            {
+              "name": "codec",
+              "type": "nbt"
+            }
+          ]
+        ],
+        "packet_resource_pack_send": [
+          "container",
+          [
+            {
+              "name": "url",
+              "type": "string"
+            },
+            {
+              "name": "hash",
+              "type": "string"
+            },
+            {
+              "name": "forced",
+              "type": "bool"
+            },
+            {
+              "name": "promptMessage",
+              "type": [
+                "option",
+                "string"
+              ]
+            }
+          ]
+        ],
+        "packet_feature_flags": [
+          "container",
+          [
+            {
+              "name": "features",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -1681,7 +1760,14 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "custom_payload"
+                    "0x00": "custom_payload",
+                    "0x01": "disconnect",
+                    "0x02": "finished_configuration",
+                    "0x03": "keep_alive",
+                    "0x04": "ping",
+                    "0x05": "registry_data",
+                    "0x06": "resource_pack_send",
+                    "0x07": "feature_flags"
                   }
                 }
               ]
@@ -1693,7 +1779,14 @@
                 {
                   "compareTo": "name",
                   "fields": {
-                    "custom_payload": "packet_custom_payload"
+                    "custom_payload": "packet_custom_payload",
+                    "disconnect": "packet_disconnect",
+                    "finished_configuration": "packet_finished_configuation",
+                    "keep_alive": "packet_keep_alive",
+                    "ping": "packet_ping",
+                    "registry_data": "packet_registry_data",
+                    "resource_pack_send": "packet_resource_pack_send",
+                    "feature_flags": "packet_feature_flags"
                   }
                 }
               ]
@@ -1777,7 +1870,7 @@
                 {
                   "compareTo": "name",
                   "fields": {
-                    "settings": "packet_settings    "
+                    "settings": "packet_settings",
                     "custom_payload": "packet_custom_payload"
                   }
                 }
