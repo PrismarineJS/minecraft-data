@@ -1,3 +1,9 @@
+## 3.48.0
+* [Add 1.20.2 to readme](https://github.com/PrismarineJS/minecraft-data/commit/c156c97cf249f0b5f27999b5282395156c177e37) (thanks @rom1504)
+* [Add 1.20.2 data (#786)](https://github.com/PrismarineJS/minecraft-data/commit/e60570b5b567f0e802133f02bf2e4e3ea912dded) (thanks @wgaylord)
+* [Add 23w44a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6921a493648f721b9b2ebb3684464f11645d10b5) (thanks @github-actions[bot])
+* [Add 23w43b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7b486716da6775f39bbaf755d090f135012b127b) (thanks @github-actions[bot])
+
 ## 3.47.0
 * [Add bedrock 1.20.40 protocol data (#784)](https://github.com/PrismarineJS/minecraft-data/commit/0c1d4e649a4755c3226dd93174249e9a75fde12c) (thanks @CreeperG16)
 
