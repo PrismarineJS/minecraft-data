@@ -1,3 +1,9 @@
+## 3.49.0
+* [Add hasConfigurationState to features.json (#790)](https://github.com/PrismarineJS/minecraft-data/commit/4d190951873034034dfe9d7c7fb3d0475e24c33b) (thanks @wgaylord)
+* [Fix spelling issue and 1 packet field order change. (#793)](https://github.com/PrismarineJS/minecraft-data/commit/5a4d0a0834791b5b725923ac33c3532455539579) (thanks @wgaylord)
+* [Add 23w46a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fb58a7c3d068d281b9c4d18d2cd840410d0cd635) (thanks @github-actions[bot])
+* [Add 23w45a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/cf8333fce886587364e6f510bca72a6e9d555da4) (thanks @github-actions[bot])
+
 ## 3.48.0
 * [Add 1.20.2 to readme](https://github.com/PrismarineJS/minecraft-data/commit/c156c97cf249f0b5f27999b5282395156c177e37) (thanks @rom1504)
 * [Add 1.20.2 data (#786)](https://github.com/PrismarineJS/minecraft-data/commit/e60570b5b567f0e802133f02bf2e4e3ea912dded) (thanks @wgaylord)
