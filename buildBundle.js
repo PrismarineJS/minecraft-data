@@ -2,7 +2,7 @@ const fs = require('fs')
 const browserify = require('browserify')
 const through = require('through')
 
-const blockedFiles = ['steve.json', 'blockMappings.json', 'blockCollisionShapes.json', 'blocksJ2B.json', 'blocksB2J.json']
+const blockedFiles = ['steve.json', 'blockMappings.json', 'blockCollisionShapes.json', 'blocksJ2B.json', 'blocksB2J.json', 'blocks_models.json', 'blocks_states.json', 'entityLoot.json', 'blockLoot.json', 'language.json', 'blockStates.json', 'commands.json']
 const stubs = { 'blockCollisionShapes.json': '{"blocks":{},"shapes":{}}' }
 
 const bundle = fs.createWriteStream('bundle.js')
