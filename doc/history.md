@@ -1,10 +1,6 @@
 ## 3.49.1
-* [Add 1.20.3-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7941efc40aa400c548d50d3a570c01a91e4f428b) (thanks @github-actions[bot])
-* [Add 1.20.3-pre4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4549010357fadacef2d9447709bd96b54e4790c1) (thanks @github-actions[bot])
-* [Add 1.20.3-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5bf534fe60d5415d62bb8c11b67fff7d1c830019) (thanks @github-actions[bot])
+* Fix pc protocol web doc by removing stable-json-stringify
 * [Fixed inconsistency with 'unsignedChatContent' in 'player_chat' packet (#795)](https://github.com/PrismarineJS/minecraft-data/commit/6fc1bb638fb04afefab4ddfa7e736f3727a23004) (thanks @Ynfuien)
-* [Add 1.20.3-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bdfca429fd66424d5959ba7293ce7f5fad79f333) (thanks @github-actions[bot])
-* [Add 1.20.3-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/15db66f3333083c52011830a148a37502bb06d27) (thanks @github-actions[bot])
 
 ## 3.49.0
 * [Add hasConfigurationState to features.json (#790)](https://github.com/PrismarineJS/minecraft-data/commit/4d190951873034034dfe9d7c7fb3d0475e24c33b) (thanks @wgaylord)
