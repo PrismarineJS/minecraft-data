@@ -1,6 +1,5 @@
 /* global DOMBuilder, $j */
 
-const stringify = require('json-stable-stringify')
 const marked = require('marked')
 const renderer = new marked.Renderer()
 renderer.table = function (header, body) {
@@ -155,7 +154,7 @@ function switchToLines (totalCols, field, fieldType, depth, getVal) {
   let firstLine = true
   // First, group together lines
   const elems = Object.keys(fieldType.typeArgs.fields).reduce(function (acc, key) {
-    const k = stringify(fieldType.typeArgs.fields[key])
+    const k = JSON.stringify(fieldType.typeArgs.fields[key])
     if (acc.hasOwnProperty(k)) { acc[k].push(key) } else { acc[k] = [key] }
     return acc
   }, {})
@@ -167,7 +166,7 @@ function switchToLines (totalCols, field, fieldType, depth, getVal) {
     return acc
   }, [])
   const x = uniq(objValues(fieldType.typeArgs.fields)
-    .map(stringify))
+    .map(JSON.stringify))
     .map(JSON.parse.bind(JSON))
     .map(function (item) { return { type: item } })
   if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void') {
@@ -249,7 +248,7 @@ function countRows (fields) {
       } else { return acc + countRows([{ type: fieldType.typeArgs.type }]) }
     } else if (fieldType.type === 'switch') {
       const x = uniq(objValues(fieldType.typeArgs.fields)
-        .map(stringify))
+        .map(JSON.stringify))
         .map(JSON.parse.bind(JSON))
         .map(function (item) { return { type: item } })
       if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void') { x.push({ type: fieldType.typeArgs.default }) }
