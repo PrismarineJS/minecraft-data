@@ -1,3 +1,7 @@
+## 3.49.1
+* Fix pc protocol web doc by removing stable-json-stringify
+* [Fixed inconsistency with 'unsignedChatContent' in 'player_chat' packet (#795)](https://github.com/PrismarineJS/minecraft-data/commit/6fc1bb638fb04afefab4ddfa7e736f3727a23004) (thanks @Ynfuien)
+
 ## 3.49.0
 * [Add hasConfigurationState to features.json (#790)](https://github.com/PrismarineJS/minecraft-data/commit/4d190951873034034dfe9d7c7fb3d0475e24c33b) (thanks @wgaylord)
 * [Fix spelling issue and 1 packet field order change. (#793)](https://github.com/PrismarineJS/minecraft-data/commit/5a4d0a0834791b5b725923ac33c3532455539579) (thanks @wgaylord)
