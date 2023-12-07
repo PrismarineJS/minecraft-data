@@ -788,10 +788,7 @@ packet_level_event:
       2037: sculk_charge
       2038: sculk_charge_pop
       2039: sonic_explosion
-      2040: brush_dust
-      2041: cherry_leaves
-      2042: dust_plume
-      2043: white_smoke
+      2040: dust_plume
 
       3001: start_rain  
       3002: start_thunder  
@@ -819,6 +816,7 @@ packet_level_event:
       3606: particle_punch_block_south
       3607: particle_punch_block_west
       3608: particle_punch_block_east
+      3609: particle_shoot_white_smoke
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
@@ -2175,7 +2173,10 @@ packet_show_store_offer:
    offer_id: string
    # ShowAll specifies if all other offers of the same 'author' as the one of the offer associated with the
    # OfferID should also be displayed, alongside the target offer.
-   redirect_type: u8
+   redirect_type: u8 =>
+	   0: marketplace
+	   1: dressing_room
+	   2: third_party_server_page
 
 
 # PurchaseReceipt is sent by the client to the server to notify the server it purchased an item from the
@@ -4100,11 +4101,30 @@ packet_toggle_crafter_slot_request:
 # TODO: make these enums
 packet_set_player_inventory_options:
    !id: 0x133
-   left_tab: varint
-   right_tab: varint
+   left_tab: zigzag32 =>
+   - none
+   - construction
+   - equipment
+   - items
+   - nature
+   - search
+   - survival
+   right_tab: zigzag32 =>
+   - none
+   - fullscreen
+   - crafting
+   - armor
    filtering: bool
-   layout: varint
-   crafting_layout: varint
+   layout: zigzag32 =>
+   - none
+   - survival
+   - recipe_book
+   - creative
+   crafting_layout: zigzag32 =>
+   - none
+   - survival
+   - recipe_book
+   - creative
 
 packet_server_post_move:
    !id: 0x10

@@ -3333,6 +3333,8 @@
           "32": "jigsaw_editor",
           "33": "smithing_table",
           "34": "chest_boat",
+          "35": "decorated_pot",
+          "36": "crafter",
           "-9": "none",
           "-1": "inventory"
         }
@@ -3404,7 +3406,8 @@
           "58": "barrel",
           "59": "cursor",
           "60": "creative_output",
-          "61": "smithing_table_template"
+          "61": "smithing_table_template",
+          "62": "crafter"
         }
       }
     ],
@@ -3891,7 +3894,16 @@
           "475": "PigDeath",
           "476": "HoglinZombified",
           "477": "AmbientUnderwaterEnter",
-          "478": "AmbientUnderwaterExit"
+          "478": "AmbientUnderwaterExit",
+          "479": "bottle_fill",
+          "480": "bottle_empty",
+          "481": "crafter_craft",
+          "482": "crafter_fail",
+          "483": "block_decorated_pot_insert",
+          "484": "block_decorated_pot_insert_fail",
+          "485": "crafter_disable_slot",
+          "486": "block_copper_bulb_turn_on",
+          "487": "block_copper_bulb_turn_off"
         }
       }
     ],
@@ -5869,10 +5881,7 @@
                 "2037": "sculk_charge",
                 "2038": "sculk_charge_pop",
                 "2039": "sonic_explosion",
-                "2040": "brush_dust",
-                "2041": "cherry_leaves",
-                "2042": "dust_plume",
-                "2043": "white_smoke",
+                "2040": "dust_plume",
                 "3001": "start_rain",
                 "3002": "start_thunder",
                 "3003": "stop_rain",
@@ -5899,6 +5908,7 @@
                 "3606": "particle_punch_block_south",
                 "3607": "particle_punch_block_west",
                 "3608": "particle_punch_block_east",
+                "3609": "particle_shoot_white_smoke",
                 "4000": "set_data",
                 "9800": "players_sleeping",
                 "9801": "sleeping_players",
@@ -8165,7 +8175,17 @@
         },
         {
           "name": "redirect_type",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "marketplace",
+                "1": "dressing_room",
+                "2": "third_party_server_page"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -11572,11 +11592,36 @@
       [
         {
           "name": "left_tab",
-          "type": "varint"
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "construction",
+                "2": "equipment",
+                "3": "items",
+                "4": "nature",
+                "5": "search",
+                "6": "survival"
+              }
+            }
+          ]
         },
         {
           "name": "right_tab",
-          "type": "varint"
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "fullscreen",
+                "2": "crafting",
+                "3": "armor"
+              }
+            }
+          ]
         },
         {
           "name": "filtering",
@@ -11584,11 +11629,33 @@
         },
         {
           "name": "layout",
-          "type": "varint"
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "survival",
+                "2": "recipe_book",
+                "3": "creative"
+              }
+            }
+          ]
         },
         {
           "name": "crafting_layout",
-          "type": "varint"
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "survival",
+                "2": "recipe_book",
+                "3": "creative"
+              }
+            }
+          ]
         }
       ]
     ],
