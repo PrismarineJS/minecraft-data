@@ -1,7 +1,5 @@
 ## 3.50.0
 * [Add bedrock 1.20.50 protocol data (#800)](https://github.com/PrismarineJS/minecraft-data/commit/3dd855a3c0e372daaa210fc698b8040dd693cae8) (thanks @extremeheat)
-* [Add 1.20.4-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e17d770017eb33b7a9276170cf263686aa58ecb9) (thanks @github-actions[bot])
-* [Add 1.20.3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c25e2bce4b335f2fe2ab6d7330ab7f6668936873) (thanks @github-actions[bot])
 
 ## 3.49.1
 * Fix pc protocol web doc by removing stable-json-stringify
