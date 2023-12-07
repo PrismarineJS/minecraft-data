@@ -1,3 +1,6 @@
+## 3.50.0
+* [Add bedrock 1.20.50 protocol data (#800)](https://github.com/PrismarineJS/minecraft-data/commit/3dd855a3c0e372daaa210fc698b8040dd693cae8) (thanks @extremeheat)
+
 ## 3.49.1
 * Fix pc protocol web doc by removing stable-json-stringify
 * [Fixed inconsistency with 'unsignedChatContent' in 'player_chat' packet (#795)](https://github.com/PrismarineJS/minecraft-data/commit/6fc1bb638fb04afefab4ddfa7e736f3727a23004) (thanks @Ynfuien)
