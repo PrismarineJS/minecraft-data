@@ -12,19 +12,20 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | blockCollisionShapes.json | Yes | Use [McDataExtracting][4] |
 | commands.json | No? |Use [mc-data-command-generator][5] | link to jar files have to be manually added |
 | biomes.json | Yes | Use [Burger][1], then use [burger-extractor][2] | [extra info][13] |
-| instruments | No | [wiki.vg block actions][11] |
-| materials.json | No | [import from previous version](18) or [fix it properly](19) |
+| instruments | Yes | [wiki.vg block actions][11] |
+| materials.json | Yes | [import from previous version](18) or [fix it properly](19) |
 | windows.json | No | Look at [wiki.vg inventories][7] |
 | version.json | No | Look at [Protocol Versions][9] | [wiki.vg protocol numbers][8] |
-| effects.json | No | Look at [minecraft wiki effects][12] |
-| enchantments.json | No | Duplicate enchantments.json from the latest version and add manually the missing enchantments. Enchantments data could be found by looking into the deobfuscated classe files of each enchantments, as well as in the Enchantments registry. |
+| effects.json | Yes | Look at [minecraft wiki effects][12] |
+| enchantments.json | Yes | Duplicate enchantments.json from the latest version and add manually the missing enchantments. Enchantments data could be found by looking into the deobfuscated classe files of each enchantments, as well as in the Enchantments registry. |
 | language.json | Yes | Use [minecraft-jar-extractor][10] |
 | particles.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
-| blockLoot.json | Yes | Use [minecraft-jar-extractor][10] |
-| entityLoot.json | Yes | Use [minecraft-jar-extractor][10] |
-| mapIcons.json | No | Icons can be found in the Minecraft jar file where they are added as a single sprite. The file location is `/assets/minecraft/textures/map/map_icons.png`. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] |
+| blockLoot.json | No | Use [minecraft-jar-extractor][10] | Currently no extractor works for this
+| entityLoot.json | No | Use [minecraft-jar-extractor][10] | Currently no extractor works for this
+| mapIcons.json | No | Icons data can be found in the Minecraft src directly. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][15] or from [wiki.vg][16]. | [minecraft-data pr mapIcons][14] | 
 
 * All files that say Yes for auto can be gotten from [minecraft-data-auto-updater][17] (that uses [minecraft-data-generator-server][20]). This is the preferred way to extract the data.
+* When using recipies from this tool. Make sure to repalce `-1` with `null` in the output json file. 
 
 [1]: https://github.com/Pokechu22/Burger
 [2]: https://github.com/PrismarineJS/burger-extractor
