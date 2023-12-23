@@ -13,7 +13,7 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | commands.json | No? |Use [mc-data-command-generator][3] | link to jar files have to be manually added |
 | biomes.json | Yes | Use [minecraft-data-generator-server][2] |
 | instruments | Yes | Use [minecraft-data-generator-server][2] |
-| materials.json | Yes | [minecraft-data-generator-server][2] | Is this actually still useful? |
+| materials.json | Yes | Use [minecraft-data-generator-server][2] |
 | windows.json | No | Look at [wiki.vg inventories][4] |
 | version.json | No | Look at [Protocol Versions][5] | [wiki.vg protocol numbers][6] |
 | effects.json | Yes | Use [minecraft-data-generator-server][2] |
