@@ -1,3 +1,12 @@
+## 3.51.0
+* [Fix bedrock recipe text encoding issue (#808)](https://github.com/PrismarineJS/minecraft-data/commit/900ebf212eb2b97fdbca3aa8527d2ec530a90f2b) (thanks @extremeheat)
+* [1.20.2 protocol: nbt data can have different root data types (#807)](https://github.com/PrismarineJS/minecraft-data/commit/37e288067964e403c29d1d2f72a4acc9a5b7ba52) (thanks @extremeheat)
+* [Add 23w51b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f851a09e3042247d42ab4f2775f986d39b45b39e) (thanks @github-actions[bot])
+* [Add 1.20.3 and 1.20.4 extract-able data (#803)](https://github.com/PrismarineJS/minecraft-data/commit/b1088724d565819f1f1c8ae4931ca3b2fe609b3a) (thanks @wgaylord)
+* [Improve correctness of 1.8 item varieties data (#772)](https://github.com/PrismarineJS/minecraft-data/commit/cf23a7fa2561cbbbbddaf4adc63449d835ac8f74) (thanks @kaduvert)
+* [Fix 1.20.2 Recipes and add test to check for flipped door Fixed #804 (#805)](https://github.com/PrismarineJS/minecraft-data/commit/0ee510f07de8c72efd3634494ab850c9b550c8be) (thanks @wgaylord)
+* [Add 1.20.4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a63198b3cecdd5397949c49aa123484cce77ceb5) (thanks @github-actions[bot])
+
 ## 3.50.0
 * [Add bedrock 1.20.50 protocol data (#800)](https://github.com/PrismarineJS/minecraft-data/commit/3dd855a3c0e372daaa210fc698b8040dd693cae8) (thanks @extremeheat)
 
