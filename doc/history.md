@@ -1,3 +1,6 @@
+## 3.53.0
+* [1.20.2 Protocol fixes (#812)](https://github.com/PrismarineJS/minecraft-data/commit/d4c6ab37e8257e0e74875ac8920e43377911ffe6) (thanks @wgaylord)
+
 ## 3.52.0
 * [1.20.2: use new anonOptionalNbt and anonymousNbt types from prismarine-nbt, add loginPacket (#810)](https://github.com/PrismarineJS/minecraft-data/commit/15f860a55e2ea4c8a62c0eeeaaf05e30f9efb1ac) (thanks @extremeheat)
 
