@@ -1,3 +1,6 @@
+## 3.52.0
+* [1.20.2: use new anonOptionalNbt and anonymousNbt types from prismarine-nbt, add loginPacket (#810)](https://github.com/PrismarineJS/minecraft-data/commit/15f860a55e2ea4c8a62c0eeeaaf05e30f9efb1ac) (thanks @extremeheat)
+
 ## 3.51.0
 * [Fix bedrock recipe text encoding issue (#808)](https://github.com/PrismarineJS/minecraft-data/commit/900ebf212eb2b97fdbca3aa8527d2ec530a90f2b) (thanks @extremeheat)
 * [1.20.2 protocol: nbt data can have different root data types (#807)](https://github.com/PrismarineJS/minecraft-data/commit/37e288067964e403c29d1d2f72a4acc9a5b7ba52) (thanks @extremeheat)
