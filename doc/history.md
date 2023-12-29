@@ -1,3 +1,6 @@
+## 3.54.0
+* [1.20.3-1.20.4 protocol (#806)](https://github.com/PrismarineJS/minecraft-data/commit/1aabc9c5fe190b41d12b08e10ff025c32b8107ed) (thanks @wgaylord)
+
 ## 3.53.0
 * [1.20.2 Protocol fixes (#812)](https://github.com/PrismarineJS/minecraft-data/commit/d4c6ab37e8257e0e74875ac8920e43377911ffe6) (thanks @wgaylord)
 
