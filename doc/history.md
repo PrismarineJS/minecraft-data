@@ -1,3 +1,6 @@
+## 3.55.0
+* [Add missing seed field in 1.19 based on minecraft packet tests](https://github.com/PrismarineJS/minecraft-data/commit/5f9995a821311c9ac926a208f957bd76a468fe55) (thanks @rom1504)
+
 ## 3.54.0
 * [1.20.3-1.20.4 protocol (#806)](https://github.com/PrismarineJS/minecraft-data/commit/1aabc9c5fe190b41d12b08e10ff025c32b8107ed) (thanks @wgaylord)
 
