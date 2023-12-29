@@ -90,5 +90,32 @@ require('./version_iterator')(function (p, versionString) {
         ])
       }
     })
+    it('iron door not rotated', () => {
+      const recipes = getIfExist(path.join(p, 'recipes.json'))
+      const items = getIfExist(path.join(p, 'items.json'))
+      if (recipes && items) {
+        const ironDoor = items.find(x => x.name === 'iron_door')
+        const iron = items.find(x => x.name === 'iron_ingot')
+
+        const recipe = recipes[ironDoor.id]
+
+        if (!recipe[0]) return
+
+        assert.deepStrictEqual(recipe[0].inShape, [
+          [
+            iron.id,
+            iron.id
+          ],
+          [
+            iron.id,
+            iron.id
+          ],
+          [
+            iron.id,
+            iron.id
+          ]
+        ])
+      }
+    })
   })
 })

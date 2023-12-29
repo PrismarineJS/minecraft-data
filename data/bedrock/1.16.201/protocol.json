@@ -1203,7 +1203,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "input",
@@ -1248,7 +1248,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "input",
@@ -1293,7 +1293,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "input",
@@ -1338,7 +1338,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "width",
@@ -1397,7 +1397,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "width",
@@ -6409,7 +6409,36 @@
     ],
     "packet_update_soft_enum": [
       "container",
-      []
+      [
+        {
+          "name": "enum_type",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "action_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "add",
+                "1": "remove",
+                "2": "update"
+              }
+            }
+          ]
+        }
+      ]
     ],
     "packet_network_stack_latency": [
       "container",
@@ -7310,6 +7339,13 @@
       "pstring",
       {
         "countType": "li32"
+      }
+    ],
+    "LatinString": [
+      "pstring",
+      {
+        "countType": "varint",
+        "encoding": "latin1"
       }
     ],
     "AdventureFlags": [

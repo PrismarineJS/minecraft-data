@@ -1042,7 +1042,7 @@
         },
         {
           "name": "hotbar_slot",
-          "type": "varint"
+          "type": "zigzag32"
         },
         {
           "name": "held_item",
@@ -1525,7 +1525,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "input",
@@ -1570,7 +1570,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "input",
@@ -1615,7 +1615,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "input",
@@ -1660,7 +1660,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "width",
@@ -1719,7 +1719,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "width",
@@ -1829,7 +1829,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "template",
@@ -1862,7 +1862,7 @@
                       [
                         {
                           "name": "recipe_id",
-                          "type": "string"
+                          "type": "LatinString"
                         },
                         {
                           "name": "template",
@@ -2314,7 +2314,7 @@
       [
         {
           "name": "request_id",
-          "type": "varint"
+          "type": "zigzag32"
         },
         {
           "name": "actions",
@@ -2643,7 +2643,7 @@
             },
             {
               "name": "request_id",
-              "type": "varint"
+              "type": "zigzag32"
             },
             {
               "anon": true,
@@ -2691,7 +2691,7 @@
                                             },
                                             {
                                               "name": "item_stack_id",
-                                              "type": "varint"
+                                              "type": "zigzag32"
                                             },
                                             {
                                               "name": "custom_name",
@@ -2860,7 +2860,38 @@
       [
         {
           "name": "type",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "marker_white",
+                "1": "marker_green",
+                "2": "marker_red",
+                "3": "marker_blue",
+                "4": "cross_white",
+                "5": "triangle_red",
+                "6": "square_white",
+                "7": "marker_sign",
+                "8": "marker_pink",
+                "9": "marker_orange",
+                "10": "marker_yellow",
+                "11": "marker_teal",
+                "12": "triangle_green",
+                "13": "small_square_white",
+                "14": "mansion",
+                "15": "monument",
+                "16": "no_draw",
+                "17": "village_desert",
+                "18": "village_plains",
+                "19": "village_savanna",
+                "20": "village_snowy",
+                "21": "village_taiga",
+                "22": "jungle_temple",
+                "23": "witch_hut"
+              }
+            }
+          ]
         },
         {
           "name": "rotation",
@@ -8590,7 +8621,36 @@
     ],
     "packet_update_soft_enum": [
       "container",
-      []
+      [
+        {
+          "name": "enum_type",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "action_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "add",
+                "1": "remove",
+                "2": "update"
+              }
+            }
+          ]
+        }
+      ]
     ],
     "packet_network_stack_latency": [
       "container",
@@ -9087,7 +9147,25 @@
             "switch",
             {
               "compareTo": "has_external_link_settings",
-              "fields": {},
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "has",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "name": "display_name",
+                      "type": "string"
+                    }
+                  ]
+                ]
+              },
               "default": "void"
             }
           ]
@@ -11075,6 +11153,13 @@
       "pstring",
       {
         "countType": "li32"
+      }
+    ],
+    "LatinString": [
+      "pstring",
+      {
+        "countType": "varint",
+        "encoding": "latin1"
       }
     ],
     "ShortArray": [

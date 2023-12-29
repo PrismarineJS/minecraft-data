@@ -1,13 +1,14 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.20.10
+!version: 1.20.50
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
 ByteArray: ["buffer",{"countType":"varint"}]
 SignedByteArray: ["buffer",{"countType":"zigzag32"}]
 LittleString: ["pstring",{"countType":"li32"}]
+LatinString: ["pstring",{"countType":"varint", "encoding": "latin1"}]
 ShortArray: ["buffer",{"countType":"li16"}]
 ShortString: ["pstring",{"countType":"li16"}]
 varint64: native                                      # Some primitives
@@ -111,6 +112,9 @@ packet_client_to_server_handshake:
 packet_disconnect:
    !id: 0x05
    !bound: client
+   # Reason is the reason for the disconnection. It seems as if this field has no use other than for
+   # telemetry reasons as it does not affect the message that gets displayed on the disconnect screen.
+   reason: DisconnectFailReason
    # Specifies if the disconnection screen should be hidden when the client is disconnected, 
    # meaning it will be sent directly to the main menu.
    hide_disconnect_reason: bool
@@ -133,6 +137,11 @@ packet_resource_packs_info:
    # A list of resource packs that the client needs to download before joining the server. 
    # The order of these resource packs is not relevant in this packet. It is however important in the Resource Pack Stack packet.
    texture_packs: TexturePackInfos
+   # Resource Pack Links contains a list of URLs where the client can download required
+   # resource packs, as opposed to the current Minecraft sever sending the data over
+   resource_pack_links: []varint
+      id: string
+      url: string
 
 packet_resource_pack_stack:
    !id: 0x07
@@ -263,9 +272,12 @@ packet_start_game:
    # to true while the player's or the world's game mode is creative, and it's recommended to simply
    # always set this to false as a server.
    achievements_disabled: bool
-   # EditorWorld is a value to dictate if the world is in editor mode, a special mode recently introduced adding
+   # EditorWorldType is a value to dictate the type of editor mode, a special mode recently introduced adding
    # "powerful tools for editing worlds, intended for experienced creators."
-   editor_world: bool
+   editor_world_type: zigzag32 =>
+   - not_editor
+   - project
+   - test_level
    # Whether the world was created in editor mode
    created_in_editor: bool
    # Whether the world was exported from editor mode
@@ -777,6 +789,7 @@ packet_level_event:
       2037: sculk_charge
       2038: sculk_charge_pop
       2039: sonic_explosion
+      2040: dust_plume
 
       3001: start_rain  
       3002: start_thunder  
@@ -804,6 +817,7 @@ packet_level_event:
       3606: particle_punch_block_south
       3607: particle_punch_block_west
       3608: particle_punch_block_east
+      3609: particle_shoot_white_smoke
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
@@ -1956,7 +1970,7 @@ packet_update_trade:
    # Trading based on Minecraft economy - specifies if the prices of the villager's offers are modified by an increase in
    # demand for the item. (A mechanic added in 1.11.) Buying more of the same item will increase the price
    # of that particular item.
-   # https://minecraft.gamepedia.com/Trading#Economics
+   # https://minecraft.wiki/w/Trading#Economics
    economic_trades: bool
    # NBT serialised compound of offers that the villager has.
    offers: nbt
@@ -2122,7 +2136,7 @@ packet_structure_block_update:
    # used to export the structure to a file.
    structure_name: string
    # DataField is the name of a function to run, usually used during natural generation. A description can
-   # be found here: https://minecraft.gamepedia.com/Structure_Block#Data.
+   # be found here: https://minecraft.wiki/w/Structure_Block#Data.
    data_field: string
    # IncludePlayers specifies if the 'Include Players' toggle has been enabled, meaning players are also
    # exported by the structure block.
@@ -2160,7 +2174,10 @@ packet_show_store_offer:
    offer_id: string
    # ShowAll specifies if all other offers of the same 'author' as the one of the offer associated with the
    # OfferID should also be displayed, alongside the target offer.
-   show_all: bool
+   redirect_type: u8 =>
+      0: marketplace
+      1: dressing_room
+      2: third_party_server_page
 
 
 # PurchaseReceipt is sent by the client to the server to notify the server it purchased an item from the
@@ -2555,9 +2572,27 @@ packet_set_local_player_as_initialized:
    # StartGame packet.
    runtime_entity_id: varint64
 
+# UpdateSoftEnum is sent by the server to update a soft enum, also known as a dynamic enum, previously sent
+# in the AvailableCommands packet. It is sent whenever the enum should get new options or when some of its
+# options should be removed.
+# The UpdateSoftEnum packet will apply for enums that have been set in the AvailableCommands packet with the
+# 'Dynamic' field of the CommandEnum set to true.
 packet_update_soft_enum:
    !id: 0x72
    !bound: client
+   # EnumType is the type of the enum. This type must be identical to the one set in the AvailableCommands
+   # packet, because the client uses this to recognise which enum to update.
+   enum_type: string
+   # Options is a list of options that should be updated. Depending on the ActionType field, either these
+   # options will be added to the enum, the enum options will be set to these options or all of these
+   # options will be removed from the enum.
+   options: string[]varint
+   # ActionType is the type of the action to execute on the enum. The Options field has a different result,
+   # depending on what ActionType is used.
+   action_type: u8 =>
+      0: add
+      1: remove
+      2: update
 
 # NetworkStackLatency is sent by the server (and the client, on development builds) to measure the latency
 # over the entire Minecraft stack, rather than the RakNet latency. It has other usages too, such as the
@@ -2883,9 +2918,10 @@ packet_education_settings:
    HasQuiz: bool
    has_external_link_settings: bool
    external_link_settings: has_external_link_settings ?
-      has: bool
-      url: string
-      display_name: string
+      if true:
+         has: bool
+         url: string
+         display_name: string
 
 # Emote is sent by both the server and the client. When the client sends an emote, it sends this packet to
 # the server, after which the server will broadcast the packet to other players online.
@@ -3121,7 +3157,10 @@ InputFlag: [ "bitflags", {
       "emoting",
       "missed_swing",
       "start_crawling",
-      "stop_crawling"
+      "stop_crawling",
+      "start_flying",
+      "stop_flying",
+      "received_server_data"
    ]
 }]
 
@@ -3309,7 +3348,7 @@ packet_motion_prediction_hints:
 # animation, or to activate a controller which can start a sequence of animations based on different
 # conditions specified in an animation controller.
 # Much of the documentation of this packet can be found at
-# https://minecraft.gamepedia.com/Bedrock_Edition_beta_animation_documentation.
+# https://learn.microsoft.com/minecraft/creator/reference/content/animationsreference.
 packet_animate_entity:
    !id: 0x9e
    !bound: client
@@ -3935,8 +3974,7 @@ packet_client_cheat_ability:
 packet_camera_presets:
    !id: 0xc6
    !bound: client
-   # Data is a compound tag of the presets being set.
-   data: nbt
+   presets: CameraPresets[]varint
 
 # unlocked_recipes gives the client a list of recipes that have been unlocked, restricting the recipes that appear in
 # the recipe book.
@@ -3956,9 +3994,58 @@ packet_unlocked_recipes:
 # camera_instruction gives a custom camera specific instructions to operate.
 packet_camera_instruction:
    !id: 0x12c
-   !bound:
-   # Data is a compound tag of the instructions to sent.
-   data: nbt
+   !bound: client
+   # Instruction Set is a camera instruction that sets the camera to a specified preset.
+   instruction_set?:
+      #  Preset is the index of the preset in the CameraPresets packet sent to the player.
+      runtime_id: li32
+      # Ease represents the easing function that is used by the instruction.
+      ease_data?:
+         type: u8 =>
+         - Linear
+         - Spring
+         - InQuad
+         - OutQuad
+         - InOutQuad
+         - InCubic
+         - OutCubic
+         - InOutCubic
+         - InQuart
+         - OutQuart
+         - InOutQuart
+         - InQuint
+         - OutQuint
+         - InOutQuint
+         - InSine
+         - OutSine
+         - InOutSine
+         - InExpo
+         - OutExpo
+         - InOutExpo
+         - InCirc
+         - OutCirc
+         - InOutCirc
+         - InBounce
+         - OutBounce
+         - InOutBounce
+         - InBack
+         - OutBack
+         - InOutBack
+         - InElastic
+         - OutElastic
+         - InOutElastic
+         duration: lf32
+      position?: vec3f
+      rotation?: vec2f
+      facing?: vec3f
+      default?: bool
+   clear?: bool
+   fade?:
+      fade_in_duration: lf32
+      wait_duration: lf32
+      fade_out_duration: lf32
+      color_rgb: vec3f
+
 
 packet_compressed_biome_definitions:
    !id: 0x12d
@@ -4000,3 +4087,45 @@ packet_agent_animation:
    # entity_runtime_id is the runtime ID of the entity. The runtime ID is unique for each world session, and
    # entities are generally identified in packets using this runtime ID.
    entity_runtime_id: varint64
+
+# RefreshEntitlements is sent by the client to the server to refresh the entitlements of the player.
+packet_refresh_entitlements:
+   !id: 0x131
+   !bound: server
+
+packet_toggle_crafter_slot_request:
+   !id: 0x132
+   position: vec3li
+   slot: u8
+   disabled: bool
+
+packet_set_player_inventory_options:
+   !id: 0x133
+   left_tab: zigzag32 =>
+   - none
+   - construction
+   - equipment
+   - items
+   - nature
+   - search
+   - survival
+   right_tab: zigzag32 =>
+   - none
+   - fullscreen
+   - crafting
+   - armor
+   filtering: bool
+   layout: zigzag32 =>
+   - none
+   - survival
+   - recipe_book
+   - creative
+   crafting_layout: zigzag32 =>
+   - none
+   - survival
+   - recipe_book
+   - creative
+
+packet_server_post_move:
+   !id: 0x10
+   position: vec3f

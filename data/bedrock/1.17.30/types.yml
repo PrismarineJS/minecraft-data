@@ -474,7 +474,7 @@ TransactionUseItem:
    face: zigzag32
    # HotBarSlot is the hot bar slot that the player was holding while clicking the block. It should be used
    # to ensure that the hot bar slot and held item are correctly synchronised with the server.
-   hotbar_slot: varint
+   hotbar_slot: zigzag32
    # HeldItem is the item that was held to interact with the block. The server should check if this item
    # is actually present in the HotBarSlot.
    held_item: Item
@@ -629,7 +629,7 @@ Recipes: []varint
       7: shaped_chemistry #'ENTRY_SHAPED_CHEMISTRY', //TODO
    recipe: type?
       if shapeless or shulker_box or shapeless_chemistry:
-         recipe_id: string
+         recipe_id: LatinString
          input: RecipeIngredient[]varint
          output: ItemLegacy[]varint
          uuid: uuid
@@ -637,7 +637,7 @@ Recipes: []varint
          priority: zigzag32
          network_id: varint
       if shaped or shaped_chemistry:
-         recipe_id: string
+         recipe_id: LatinString
          width: zigzag32
          height: zigzag32
          # 2D input array, size of width*height
@@ -787,7 +787,7 @@ StackRequestSlotInfo:
 ItemStackRequest:
    # RequestID is a unique ID for the request. This ID is used by the server to send a response for this
    # specific request in the ItemStackResponse packet.
-   request_id: varint
+   request_id: zigzag32
    actions: []varint
       type_id: u8 =>
          # TakeStackRequestAction is sent by the client to the server to take x amount of items from one slot in a
@@ -923,7 +923,7 @@ ItemStackResponses: []varint
       1: error
    # RequestID is the unique ID of the request that this response is in reaction to. If rejected, the client
    # will undo the actions from the request with this ID.
-   request_id: varint
+   request_id: zigzag32
    _: status ?
       if ok:
          # ContainerInfo holds information on the containers that had their contents changed as a result of the
@@ -944,7 +944,7 @@ ItemStackResponses: []varint
                # sent to the client.
                count: u8
                # StackNetworkID is the network ID of the new stack at a specific slot.
-               item_stack_id: varint
+               item_stack_id: zigzag32
                # CustomName is the custom name of the item stack. It is used in relation to text filtering.
                custom_name: string
                # DurabilityCorrection is the current durability of the item stack. This durability will be shown
@@ -1013,7 +1013,31 @@ TrackedObject:
 # MapDecoration is a fixed decoration on a map: Its position or other properties do not change automatically
 # client-side.
 MapDecoration:
-   type: u8
+   type: u8 =>
+   - marker_white
+   - marker_green
+   - marker_red
+   - marker_blue
+   - cross_white
+   - triangle_red
+   - square_white
+   - marker_sign
+   - marker_pink
+   - marker_orange
+   - marker_yellow
+   - marker_teal
+   - triangle_green
+   - small_square_white
+   - mansion
+   - monument
+   - no_draw
+   - village_desert
+   - village_plains
+   - village_savanna
+   - village_snowy
+   - village_taiga
+   - jungle_temple
+   - witch_hut
    # Rotation is the rotation of the map decoration. It is byte due to the 16 fixed directions that the
    # map decoration may face.
    rotation: u8

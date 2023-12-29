@@ -1,3 +1,79 @@
+## 3.53.0
+* [1.20.2 Protocol fixes (#812)](https://github.com/PrismarineJS/minecraft-data/commit/d4c6ab37e8257e0e74875ac8920e43377911ffe6) (thanks @wgaylord)
+
+## 3.52.0
+* [1.20.2: use new anonOptionalNbt and anonymousNbt types from prismarine-nbt, add loginPacket (#810)](https://github.com/PrismarineJS/minecraft-data/commit/15f860a55e2ea4c8a62c0eeeaaf05e30f9efb1ac) (thanks @extremeheat)
+
+## 3.51.0
+* [Fix bedrock recipe text encoding issue (#808)](https://github.com/PrismarineJS/minecraft-data/commit/900ebf212eb2b97fdbca3aa8527d2ec530a90f2b) (thanks @extremeheat)
+* [1.20.2 protocol: nbt data can have different root data types (#807)](https://github.com/PrismarineJS/minecraft-data/commit/37e288067964e403c29d1d2f72a4acc9a5b7ba52) (thanks @extremeheat)
+* [Add 23w51b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f851a09e3042247d42ab4f2775f986d39b45b39e) (thanks @github-actions[bot])
+* [Add 1.20.3 and 1.20.4 extract-able data (#803)](https://github.com/PrismarineJS/minecraft-data/commit/b1088724d565819f1f1c8ae4931ca3b2fe609b3a) (thanks @wgaylord)
+* [Improve correctness of 1.8 item varieties data (#772)](https://github.com/PrismarineJS/minecraft-data/commit/cf23a7fa2561cbbbbddaf4adc63449d835ac8f74) (thanks @kaduvert)
+* [Fix 1.20.2 Recipes and add test to check for flipped door Fixed #804 (#805)](https://github.com/PrismarineJS/minecraft-data/commit/0ee510f07de8c72efd3634494ab850c9b550c8be) (thanks @wgaylord)
+* [Add 1.20.4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a63198b3cecdd5397949c49aa123484cce77ceb5) (thanks @github-actions[bot])
+
+## 3.50.0
+* [Add bedrock 1.20.50 protocol data (#800)](https://github.com/PrismarineJS/minecraft-data/commit/3dd855a3c0e372daaa210fc698b8040dd693cae8) (thanks @extremeheat)
+
+## 3.49.1
+* Fix pc protocol web doc by removing stable-json-stringify
+* [Fixed inconsistency with 'unsignedChatContent' in 'player_chat' packet (#795)](https://github.com/PrismarineJS/minecraft-data/commit/6fc1bb638fb04afefab4ddfa7e736f3727a23004) (thanks @Ynfuien)
+
+## 3.49.0
+* [Add hasConfigurationState to features.json (#790)](https://github.com/PrismarineJS/minecraft-data/commit/4d190951873034034dfe9d7c7fb3d0475e24c33b) (thanks @wgaylord)
+* [Fix spelling issue and 1 packet field order change. (#793)](https://github.com/PrismarineJS/minecraft-data/commit/5a4d0a0834791b5b725923ac33c3532455539579) (thanks @wgaylord)
+* [Add 23w46a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fb58a7c3d068d281b9c4d18d2cd840410d0cd635) (thanks @github-actions[bot])
+* [Add 23w45a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/cf8333fce886587364e6f510bca72a6e9d555da4) (thanks @github-actions[bot])
+
+## 3.48.0
+* [Add 1.20.2 to readme](https://github.com/PrismarineJS/minecraft-data/commit/c156c97cf249f0b5f27999b5282395156c177e37) (thanks @rom1504)
+* [Add 1.20.2 data (#786)](https://github.com/PrismarineJS/minecraft-data/commit/e60570b5b567f0e802133f02bf2e4e3ea912dded) (thanks @wgaylord)
+* [Add 23w44a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6921a493648f721b9b2ebb3684464f11645d10b5) (thanks @github-actions[bot])
+* [Add 23w43b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7b486716da6775f39bbaf755d090f135012b127b) (thanks @github-actions[bot])
+
+## 3.47.0
+* [Add bedrock 1.20.40 protocol data (#784)](https://github.com/PrismarineJS/minecraft-data/commit/0c1d4e649a4755c3226dd93174249e9a75fde12c) (thanks @CreeperG16)
+
+## 3.46.2
+* [Fix bedrock protocol CameraPresets packet(#782)](https://github.com/PrismarineJS/minecraft-data/commit/4139610a241411296a47723d6d978047c52cc7cf) (thanks @MrDiamond64)
+* [Update Minecraft wiki references (#781)](https://github.com/PrismarineJS/minecraft-data/commit/16aaf99c002125749dbcbf165e3ead15e104f7e8) (thanks @Spongecade)
+* [Add bedrock 1.20.15 data mapping (#778)](https://github.com/PrismarineJS/minecraft-data/commit/a2df4110718476dd9e6997f99ac419d2308c19bd) (thanks @irkmandeer)
+
+## 3.46.1
+* [Revert "Change has_stack_id in bedrock Item to a boolean" (#776)](https://github.com/PrismarineJS/minecraft-data/commit/f7d70f0ee654e3d4f59354734b340ff00f794355) (thanks @extremeheat)
+
+## 3.46.0
+* [Add bedrock 1.20.30 protocol data (#774)](https://github.com/PrismarineJS/minecraft-data/commit/dd5f730dd8b930cc1d6dc6a7f464a020064f160d) (thanks @extremeheat)
+* [Update bedrock protocol data for has_stack_id in Item to a boolean (#770)](https://github.com/PrismarineJS/minecraft-data/commit/3928388ae32e44558cc342a888d95278a8a1ac70) (thanks @CreeperG16)
+* Update protocolVersions.json
+
+## 3.45.0
+* [add features for prismarine chunk (#763)](https://github.com/PrismarineJS/minecraft-data/commit/1b9380edb159721bef2342d4214b0ebb3128c812) (thanks @extremeheat)
+* [1.20 block data fixes (#766)](https://github.com/PrismarineJS/minecraft-data/commit/b130830580ea0cc5551cd736bdc139ac79d3eba7) (thanks @MathiasElgaard)
+* [Handle snapshots in update checking workflow (#767)](https://github.com/PrismarineJS/minecraft-data/commit/b5037850d0f3abf77b2197535b042e23d012aad6) (thanks @extremeheat)
+
+## 3.44.0
+* [Elytra support (#761)](https://github.com/PrismarineJS/minecraft-data/commit/72a267757b8fbb8462f3c3f25001754af9d1f7c4) (thanks @lkwilson)
+* [Bedrock stack and request network id fix for 1.16.220 to 1.20.10 (#762)](https://github.com/PrismarineJS/minecraft-data/commit/7f144de36862de3dfe16b8b6272fcbd286327e16) (thanks @irkmandeer)
+* [1.19.4 protocol fixes (#759)](https://github.com/PrismarineJS/minecraft-data/commit/5c7e7960270ef329f7c9e037d08adbf5ae2ba3d6) (thanks @frej4189)
+
+## 3.43.1
+* [Fix bedrock update_soft_enum packet missing encoding (#758)](https://github.com/PrismarineJS/minecraft-data/commit/d58b99fec41b8c23820168228cca9e86d1f45165) (thanks @JSbETms)
+
+## 3.43.0
+* [Add legacy.json flattening mappings for bedrock blocks (#755)](https://github.com/PrismarineJS/minecraft-data/commit/60682082d2dda5d5e7827ae908236dc1fbd8b79d) (thanks @Flonja)
+
+## 3.42.1
+* [Sync itemDrop object types in blockLoot_schema and entityLoot_schema (#753)](https://github.com/PrismarineJS/minecraft-data/commit/9fc22eeab83e41cedb2fc1bbb225d4d3368280bc) (thanks @extremeheat)
+
+## 3.42.0
+* [Fix bedrock packet_education_settings field (#751)](https://github.com/PrismarineJS/minecraft-data/commit/25496b14e0176850f39ceadc134962e5f08922e2) (thanks @extremeheat)
+* [Bedrock hotbar_slot type fix for 1.16.220 to 1.20.10 (#748)](https://github.com/PrismarineJS/minecraft-data/commit/1c5fb1f2517386b546c77b43e7f164943a338efa) (thanks @irkmandeer)
+* [Bedrock 1.20.0 block, biome and item data (#747)](https://github.com/PrismarineJS/minecraft-data/commit/fecc3e9e55a03ee84195099cf821140e56b65844) (thanks @CreeperG16)
+* [fix: correct schema types (#746)](https://github.com/PrismarineJS/minecraft-data/commit/7428c8522f23d6049d3246653fb2f366ae1faba9) (thanks @Eejit43)
+* [Add bedrock language data (#743)](https://github.com/PrismarineJS/minecraft-data/commit/d34a2f4654f5429aa36bc6be23f2b0acc7dfb2a9) (thanks @CreeperG16)
+
 ## 3.41.0
 * [Add explicitMaxDurability feature (#744)](https://github.com/PrismarineJS/minecraft-data/commit/e9bea106cda498671c11d62d2bb9d22accd7551a) (thanks @frej4189)
 * [Update attributes schema, add bedrock data (#692)](https://github.com/PrismarineJS/minecraft-data/commit/fa4c64ea7c144bced0560b9b06c6eee2a25991f6) (thanks @extremeheat)
