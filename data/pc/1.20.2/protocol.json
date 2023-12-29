@@ -222,7 +222,7 @@
               }
             ]
           ],
-          "25": [
+          "27": [
             "container",
             [
               {
@@ -231,7 +231,7 @@
               }
             ]
           ],
-          "31": [
+          "33": [
             "container",
             [
               {
@@ -240,7 +240,7 @@
               }
             ]
           ],
-          "40": [
+          "42": [
             "container",
             [
               {
@@ -249,7 +249,7 @@
               }
             ]
           ],
-          "41": [
+          "43": [
             "container",
             [
               {
@@ -301,7 +301,7 @@
               }
             ]
           ],
-          "93": [
+          "96": [
             "container",
             [
               {
@@ -415,10 +415,10 @@
           "long": "varlong",
           "float": "f32",
           "string": "string",
-          "component": "string",
+          "component": "anonymousNbt",
           "optional_component": [
             "option",
-            "string"
+            "anonymousNbt"
           ],
           "item_stack": "slot",
           "boolean": "bool",
@@ -1707,7 +1707,7 @@
           [
             {
               "name": "reason",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -1742,9 +1742,23 @@
             }
           ]
         ],
-        "packet_resource_pack_send": [
+        "packet_remove_resource_pack": [
           "container",
-          [
+          [{
+              "name": "uuid",
+              "type": [
+                "option",
+                "UUID"
+              ]
+            }
+          ]
+        ],
+        "packet_add_resource_pack": [
+          "container",
+          [{
+              "name": "uuid",
+              "type": "UUID"
+            },
             {
               "name": "url",
               "type": "string"
@@ -1761,7 +1775,7 @@
               "name": "promptMessage",
               "type": [
                 "option",
-                "string"
+                "anonymousNbt"
               ]
             }
           ]
@@ -1824,9 +1838,10 @@
                     "0x03": "keep_alive",
                     "0x04": "ping",
                     "0x05": "registry_data",
-                    "0x06": "resource_pack_send",
-                    "0x07": "feature_flags",
-                    "0x08": "tags"
+                    "0x06": "remove_resource_pack",
+                    "0x07": "add_resource_pack",
+                    "0x08": "feature_flags",
+                    "0x09": "tags"
                   }
                 }
               ]
@@ -1844,7 +1859,8 @@
                     "keep_alive": "packet_keep_alive",
                     "ping": "packet_ping",
                     "registry_data": "packet_registry_data",
-                    "resource_pack_send": "packet_resource_pack_send",
+                    "remove_resource_pack": "packet_remove_resource_pack",
+                    "add_resource_pack": "packet_add_resource_pack",
                     "feature_flags": "packet_feature_flags",
                     "tags": "packet_tags"
                   }
@@ -1931,7 +1947,10 @@
         ],
         "packet_resource_pack_receive": [
           "container",
-          [
+          [{
+              "name": "uuid",
+              "type": "UUID"
+            },
             {
               "name": "result",
               "type": "varint"
@@ -2150,11 +2169,11 @@
                                   [
                                     {
                                       "name": "title",
-                                      "type": "string"
+                                      "type": "anonymousNbt"
                                     },
                                     {
                                       "name": "description",
-                                      "type": "string"
+                                      "type": "anonymousNbt"
                                     },
                                     {
                                       "name": "icon",
@@ -2386,8 +2405,8 @@
                 {
                   "compareTo": "action",
                   "fields": {
-                    "0": "string",
-                    "3": "string"
+                    "0": "anonymousNbt",
+                    "3": "anonymousNbt"
                   },
                   "default": "void"
                 }
@@ -2509,7 +2528,7 @@
                         "name": "tooltip",
                         "type": [
                           "option",
-                          "string"
+                          "anonymousNbt"
                         ]
                       }
                     ]
@@ -2581,7 +2600,7 @@
                 {
                   "compareTo": "isEntity",
                   "fields": {
-                    "true": "string"
+                    "true": "varint"
                   },
                   "default": "void"
                 }
@@ -2662,7 +2681,7 @@
             },
             {
               "name": "windowTitle",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -2808,7 +2827,7 @@
           [
             {
               "name": "reason",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -2817,7 +2836,7 @@
           [
             {
               "name": "message",
-              "type": "string"
+              "type": "anonymousNbt"
             },
             {
               "name": "type",
@@ -2825,14 +2844,14 @@
             },
             {
               "name": "name",
-              "type": "string"
+              "type": "anonymousNbt"
             },
             {
               "name": "target",
               "type": [
                 "option",
-                "string"
-              ]
+                "anonymousNbt"
+              ]  
             }
           ]
         ],
@@ -2905,6 +2924,29 @@
             {
               "name": "playerMotionZ",
               "type": "f32"
+            },
+            {
+              "name": "block_interaction_type",
+              "type": "varint"
+            },
+            {
+              "name": "small_explosion_particle",
+              "type": "particle"
+            },
+            {
+              "name": "large_explosion_particle",
+              "type": "particle"
+            },
+            {
+              "name": "explosion_sound_name",
+              "type": "string"
+            },
+            {
+              "name": "sound_range",
+              "type": [
+                "option",
+                "f32"
+              ]
             }
           ]
         ],
@@ -3372,7 +3414,7 @@
                           "name": "displayName",
                           "type": [
                             "option",
-                            "string"
+                            "anonymousNbt"
                           ]
                         }
                       ]
@@ -3722,7 +3764,7 @@
               "name": "unsignedChatContent",
               "type": [
                 "option",
-                "string"
+                "anonymousNbt"
               ]
             },
             {
@@ -3754,13 +3796,13 @@
             },
             {
               "name": "networkName",
-              "type": "string"
+              "type": "anonymousNbt"
             },
             {
               "name": "networkTargetName",
               "type": [
                 "option",
-                "string"
+                "anonymousNbt"
               ]
             }
           ]
@@ -3787,7 +3829,7 @@
             },
             {
               "name": "message",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -4055,131 +4097,131 @@
                             "fields": {
                               "32": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "33": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "34": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "35": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "36": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "37": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "38": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "39": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "40": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "41": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "42": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "43": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "44": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "45": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "46": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "47": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "48": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "49": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "50": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "51": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "52": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "53": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "54": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "55": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "56": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "57": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "58": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "59": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "60": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "61": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "62": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ],
                               "63": [
                                 "option",
-                                "string"
+                                "anonymousNbt"
                               ]
                             },
                             "default": "void"
@@ -4324,9 +4366,42 @@
             }
           ]
         ],
-        "packet_resource_pack_send": [
+        "packet_reset_score": [
           "container",
           [
+            {
+              "name": "entity_name",
+              "type": "string"
+            },
+            {
+              "name": "objective_name",
+              "type": [
+                "option",
+                "string"
+              ]
+            }
+          
+          ]
+        ],
+        "packet_remove_resource_pack": [
+          "container",
+          [
+            {
+              "name": "uuid",
+              "type": [
+                "option",
+                "UUID"
+              ]
+            }
+          ]
+        ],
+        "packet_add_resource_pack": [
+          "container",
+          [
+            {
+              "name": "uuid",
+              "type": "UUID"
+            },
             {
               "name": "url",
               "type": "string"
@@ -4343,7 +4418,7 @@
               "name": "promptMessage",
               "type": [
                 "option",
-                "string"
+                "anonymousNbt"
               ]
             }
           ]
@@ -4603,8 +4678,8 @@
                 {
                   "compareTo": "action",
                   "fields": {
-                    "0": "string",
-                    "2": "string"
+                    "0": "anonymousNbt",
+                    "2": "anonymousNbt"
                   },
                   "default": "void"
                 }
@@ -4619,6 +4694,60 @@
                   "fields": {
                     "0": "varint",
                     "2": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "number_format",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": [
+                      "option",
+                      "varint"
+                    ],
+                    "2":[
+                      "option",
+                      "varint"
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "styling",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "action",
+                  "fields": {
+                    "0": [
+                      "switch",
+                      {
+                        "compareTo": "number_format",
+                        "fields": {
+                          "1": "anonymousNbt",
+                          "2": "anonymousNbt"
+                        },
+                        "default": "void"
+                      }
+                    ],
+                    "2":[
+                      "switch",
+                      {
+                        "compareTo": "number_format",
+                        "fields": {
+                          "1": "anonymousNbt",
+                          "2": "anonymousNbt"
+                        },
+                        "default": "void"
+                      }
+                    ]
                   },
                   "default": "void"
                 }
@@ -4663,8 +4792,8 @@
                 {
                   "compareTo": "mode",
                   "fields": {
-                    "0": "string",
-                    "2": "string"
+                    "0": "anonymousNbt",
+                    "2": "anonymousNbt"
                   },
                   "default": "void"
                 }
@@ -4733,8 +4862,8 @@
                 {
                   "compareTo": "mode",
                   "fields": {
-                    "0": "string",
-                    "2": "string"
+                    "0": "anonymousNbt",
+                    "2": "anonymousNbt"
                   },
                   "default": "void"
                 }
@@ -4747,8 +4876,8 @@
                 {
                   "compareTo": "mode",
                   "fields": {
-                    "0": "string",
-                    "2": "string"
+                    "0": "anonymousNbt",
+                    "2": "anonymousNbt"
                   },
                   "default": "void"
                 }
@@ -4797,24 +4926,25 @@
               "type": "string"
             },
             {
-              "name": "action",
-              "type": "varint"
-            },
-            {
               "name": "scoreName",
               "type": "string"
             },
             {
               "name": "value",
+              "type": "varint"
+            },
+            {
+              "name": "display_name",
               "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "1": "void"
-                  },
-                  "default": "varint"
-                }
+                "option",
+                "anonymousNbt"
+              ]
+            },
+            {
+              "name": "number_format",
+              "type": [
+                "option",
+                "varint"
               ]
             }
           ]
@@ -5009,7 +5139,7 @@
           [
             {
               "name": "content",
-              "type": "string"
+              "type": "anonymousNbt"
             },
             {
               "name": "isActionBar",
@@ -5022,11 +5152,11 @@
           [
             {
               "name": "header",
-              "type": "string"
+              "type": "anonymousNbt"
             },
             {
               "name": "footer",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -5186,7 +5316,7 @@
           [
             {
               "name": "motd",
-              "type": "string"
+              "type": "anonymousNbt"
             },
             {
               "name": "iconBytes",
@@ -5262,21 +5392,21 @@
                               ],
                               "minecraft:crafting_shaped": [
                                 "container",
-                                [
-                                  {
-                                    "name": "width",
-                                    "type": "varint"
-                                  },
-                                  {
-                                    "name": "height",
-                                    "type": "varint"
-                                  },
+                                [                                  
                                   {
                                     "name": "group",
                                     "type": "string"
                                   },
                                   {
                                     "name": "category",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "width",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "height",
                                     "type": "varint"
                                   },
                                   {
@@ -5477,7 +5607,7 @@
           [
             {
               "name": "text",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -5561,7 +5691,7 @@
           [
             {
               "name": "text",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -5570,7 +5700,7 @@
           [
             {
               "name": "text",
-              "type": "string"
+              "type": "anonymousNbt"
             }
           ]
         ],
@@ -5677,6 +5807,28 @@
           "container",
           []
         ],
+        "packet_set_ticking_state": [
+          "container",
+          [
+           {
+              "name": "tick_rate",
+              "type": "f32"
+            },
+            {
+              "name": "is_frozen",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_step_tick": [
+          "container",
+          [
+           {
+              "name": "tick_steps",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -5700,7 +5852,7 @@
                     "0x0a": "boss_bar",
                     "0x0b": "difficulty",
                     "0x0c": "chunk_batch_finished",
-                    "0x0d": "chunk_batch_start",
+                    "0x0d": "chunk_batch_start",                    
                     "0x0e": "chunk_biomes",
                     "0x0f": "clear_titles",
                     "0x10": "tab_complete",
@@ -5753,53 +5905,57 @@
                     "0x3f": "unlock_recipes",
                     "0x40": "entity_destroy",
                     "0x41": "remove_entity_effect",
-                    "0x42": "resource_pack_send",
-                    "0x43": "respawn",
-                    "0x44": "entity_head_rotation",
-                    "0x45": "multi_block_change",
-                    "0x46": "select_advancement_tab",
-                    "0x47": "server_data",
-                    "0x48": "action_bar",
-                    "0x49": "world_border_center",
-                    "0x4a": "world_border_lerp_size",
-                    "0x4b": "world_border_size",
-                    "0x4c": "world_border_warning_delay",
-                    "0x4d": "world_border_warning_reach",
-                    "0x4e": "camera",
-                    "0x4f": "held_item_slot",
-                    "0x50": "update_view_position",
-                    "0x51": "update_view_distance",
-                    "0x52": "spawn_position",
-                    "0x53": "scoreboard_display_objective",
-                    "0x54": "entity_metadata",
-                    "0x55": "attach_entity",
-                    "0x56": "entity_velocity",
-                    "0x57": "entity_equipment",
-                    "0x58": "experience",
-                    "0x59": "update_health",
-                    "0x5a": "scoreboard_objective",
-                    "0x5b": "set_passengers",
-                    "0x5c": "teams",
-                    "0x5d": "scoreboard_score",
-                    "0x5e": "simulation_distance",
-                    "0x5f": "set_title_subtitle",
-                    "0x60": "update_time",
-                    "0x61": "set_title_text",
-                    "0x62": "set_title_time",
-                    "0x63": "entity_sound_effect",
-                    "0x64": "sound_effect",
-                    "0x65": "start_configuration",
-                    "0x66": "stop_sound",
-                    "0x67": "system_chat",
-                    "0x68": "playerlist_header",
-                    "0x69": "nbt_query_response",
-                    "0x6a": "collect",
-                    "0x6b": "entity_teleport",
-                    "0x6c": "advancements",
-                    "0x6d": "entity_update_attributes",
-                    "0x6e": "entity_effect",
-                    "0x6f": "declare_recipes",
-                    "0x70": "tags"
+                    "0x42": "reset_score",
+                    "0x43": "remove_resource_pack",
+                    "0x44": "add_resource_pack",
+                    "0x45": "respawn",
+                    "0x46": "entity_head_rotation",
+                    "0x47": "multi_block_change",
+                    "0x48": "select_advancement_tab",
+                    "0x49": "server_data",
+                    "0x4a": "action_bar",
+                    "0x4b": "world_border_center",
+                    "0x4c": "world_border_lerp_size",
+                    "0x4d": "world_border_size",
+                    "0x4e": "world_border_warning_delay",
+                    "0x4f": "world_border_warning_reach",
+                    "0x50": "camera",
+                    "0x51": "held_item_slot",
+                    "0x52": "update_view_position",
+                    "0x53": "update_view_distance",
+                    "0x54": "spawn_position",
+                    "0x55": "scoreboard_display_objective",
+                    "0x56": "entity_metadata",
+                    "0x57": "attach_entity",
+                    "0x58": "entity_velocity",
+                    "0x59": "entity_equipment",
+                    "0x5a": "experience",
+                    "0x5b": "update_health",
+                    "0x5c": "scoreboard_objective",
+                    "0x5d": "set_passengers",
+                    "0x5e": "teams",
+                    "0x5f": "scoreboard_score",
+                    "0x60": "simulation_distance",
+                    "0x61": "set_title_subtitle",
+                    "0x62": "update_time",
+                    "0x63": "set_title_text",
+                    "0x64": "set_title_time",
+                    "0x65": "entity_sound_effect",
+                    "0x66": "sound_effect",
+                    "0x67": "start_configuration",
+                    "0x68": "stop_sound",
+                    "0x69": "system_chat",
+                    "0x6a": "playerlist_header",
+                    "0x6b": "nbt_query_response",
+                    "0x6c": "collect",
+                    "0x6d": "entity_teleport",
+                    "0x6e": "set_ticking_state",
+                    "0x6f": "step_tick",
+                    "0x70": "advancements",
+                    "0x71": "entity_update_attributes",
+                    "0x72": "entity_effect",
+                    "0x73": "declare_recipes",
+                    "0x74": "tags"
                   }
                 }
               ]
@@ -5877,7 +6033,9 @@
                     "unlock_recipes": "packet_unlock_recipes",
                     "entity_destroy": "packet_entity_destroy",
                     "remove_entity_effect": "packet_remove_entity_effect",
-                    "resource_pack_send": "packet_resource_pack_send",
+                    "reset_score": "packet_reset_score",
+                    "remove_resource_pack": "packet_remove_resource_pack",
+                    "add_resource_pack": "packet_add_resource_pack",
                     "respawn": "packet_respawn",
                     "entity_head_rotation": "packet_entity_head_rotation",
                     "multi_block_change": "packet_multi_block_change",
@@ -5923,7 +6081,9 @@
                     "entity_update_attributes": "packet_entity_update_attributes",
                     "entity_effect": "packet_entity_effect",
                     "declare_recipes": "packet_declare_recipes",
-                    "tags": "packet_tags"
+                    "tags": "packet_tags",
+                    "set_ticking_state": "packet_set_ticking_state",
+                    "step_tick": "packet_step_tick"
                   }
                 }
               ]
@@ -6740,6 +6900,10 @@
           "container",
           [
             {
+              "name": "uuid",
+              "type": "UUID"
+            },
+            {
               "name": "result",
               "type": "varint"
             }
@@ -6793,6 +6957,14 @@
             {
               "name": "jointType",
               "type": "string"
+            },
+            {
+              "name": "selection_priority",
+              "type": "varint"
+            },
+            {
+              "name": "placement_priority",
+              "type": "varint"
             }
           ]
         ],
@@ -6972,8 +7144,25 @@
           "container",
           [
             {
-              "name": "id",
-              "type": "i64"
+                "name": "id",
+                "type": "i64"
+            }
+          ]
+        ],
+        "packet_set_slot_state": [
+          "container",
+          [
+            {
+                "name": "slot_id",
+                "type": "varint"
+            },
+            {
+                "name": "window_id",
+                "type": "varint"
+            },
+            {
+                "name": "state",
+                "type": "bool"
             }
           ]
         ],
@@ -7002,45 +7191,46 @@
                     "0x0c": "enchant_item",
                     "0x0d": "window_click",
                     "0x0e": "close_window",
-                    "0x0f": "custom_payload",
-                    "0x10": "edit_book",
-                    "0x11": "query_entity_nbt",
-                    "0x12": "use_entity",
-                    "0x13": "generate_structure",
-                    "0x14": "keep_alive",
-                    "0x15": "lock_difficulty",
-                    "0x16": "position",
-                    "0x17": "position_look",
-                    "0x18": "look",
-                    "0x19": "flying",
-                    "0x1a": "vehicle_move",
-                    "0x1b": "steer_boat",
-                    "0x1c": "pick_item",
-                    "0x1d": "ping_request",
-                    "0x1e": "craft_recipe_request",
-                    "0x1f": "abilities",
-                    "0x20": "block_dig",
-                    "0x21": "entity_action",
-                    "0x22": "steer_vehicle",
-                    "0x23": "pong",
-                    "0x24": "recipe_book",
-                    "0x25": "displayed_recipe",
-                    "0x26": "name_item",
-                    "0x27": "resource_pack_receive",
-                    "0x28": "advancement_tab",
-                    "0x29": "select_trade",
-                    "0x2a": "set_beacon_effect",
-                    "0x2b": "held_item_slot",
-                    "0x2c": "update_command_block",
-                    "0x2d": "update_command_block_minecart",
-                    "0x2e": "set_creative_slot",
-                    "0x2f": "update_jigsaw_block",
-                    "0x30": "update_structure_block",
-                    "0x31": "update_sign",
-                    "0x32": "arm_animation",
-                    "0x33": "spectate",
-                    "0x34": "block_place",
-                    "0x35": "use_item"
+                    "0x0f": "set_slot_state",
+                    "0x10": "custom_payload",
+                    "0x11": "edit_book",
+                    "0x12": "query_entity_nbt",
+                    "0x13": "use_entity",
+                    "0x14": "generate_structure",
+                    "0x15": "keep_alive",
+                    "0x16": "lock_difficulty",
+                    "0x17": "position",
+                    "0x18": "position_look",
+                    "0x19": "look",
+                    "0x1a": "flying",
+                    "0x1b": "vehicle_move",
+                    "0x1c": "steer_boat",
+                    "0x1d": "pick_item",
+                    "0x1e": "ping_request",
+                    "0x1f": "craft_recipe_request",
+                    "0x20": "abilities",
+                    "0x21": "block_dig",
+                    "0x22": "entity_action",
+                    "0x23": "steer_vehicle",
+                    "0x24": "pong",
+                    "0x25": "recipe_book",
+                    "0x26": "displayed_recipe",
+                    "0x27": "name_item",
+                    "0x28": "resource_pack_receive",
+                    "0x29": "advancement_tab",
+                    "0x2a": "select_trade",
+                    "0x2b": "set_beacon_effect",
+                    "0x2c": "held_item_slot",
+                    "0x2d": "update_command_block",
+                    "0x2e": "update_command_block_minecart",
+                    "0x2f": "set_creative_slot",
+                    "0x30": "update_jigsaw_block",
+                    "0x31": "update_structure_block",
+                    "0x32": "update_sign",
+                    "0x33": "arm_animation",
+                    "0x34": "spectate",
+                    "0x35": "block_place",
+                    "0x36": "use_item"
                   }
                 }
               ]
@@ -7105,7 +7295,8 @@
                     "use_item": "packet_use_item",
                     "chunk_batch_received": "packet_chunk_batch_received",
                     "configuation_acknowledged": "packet_configuation_acknowledged",
-                    "ping_request": "packet_ping_request"
+                    "ping_request": "packet_ping_request",
+                    "set_slot_state": "packet_set_slot_state"
                   }
                 }
               ]
