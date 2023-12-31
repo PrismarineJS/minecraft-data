@@ -12,30 +12,42 @@ jobs:
     timeout-minutes: 14
 
     steps:
-    - name: Use Node.js 14.x
+    - name: Use Node.js 18.x
       uses: actions/setup-node@v1
       with:
-        node-version: 14.x
-    - uses: actions/checkout@v2
+        node-version: 18.x
+    - name: Checkout node-minecraft-data
+      uses: actions/checkout@v2
       with:
         repository: PrismarineJS/node-minecraft-data
         submodules: recursive
         path: node-mcdata
-    - run: rm -rf minecraft-data
-    - uses: actions/checkout@v2
+    # Erase the submodule for minecraft-data with a checkout of the current minecraft-data repo
+    - run: rm -rf node-mcdata/minecraft-data
+    - name: Checkout minecraft-data
+      uses: actions/checkout@v2
       with:
         path: node-mcdata/minecraft-data
-    - uses: actions/checkout@v2
+    # Now install local node-minecraft-data. Running "prepare" should gen data and types
+    - name: Install minecraft-data
+      run: |
+        cd node-mcdata
+        npm install
+        npm run prepare
+        npm link
+    - name: Checkout bedrock-protocol
+      uses: actions/checkout@v2
       with:
         repository: PrismarineJS/bedrock-protocol
         path: bedrock-protocol
     - run: ls -R .
-    - run: |
+    # I forget the correct install order, do both
+    - name: Install bedrock-protocol
+      run: |
         cd bedrock-protocol
-        npm uninstall minecraft-data
         npm install ../node-mcdata
         npm i
-        cd ../node-mcdata
-        npm run generate:data
-    - run: npm test
+        npm install ../node-mcdata
+    - name: Running bedrock-protocol tests
+      run: npm test
       working-directory: bedrock-protocol
