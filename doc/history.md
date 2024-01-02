@@ -1,3 +1,7 @@
+## 3.56.0
+* [Fix 1.20.2 and 1.20.3 metadata keys (#818)](https://github.com/PrismarineJS/minecraft-data/commit/7c65e2640ef7efad691ee9cbd22377c655e44c40) (thanks @wgaylord)
+* [node 18 (#709)](https://github.com/PrismarineJS/minecraft-data/commit/4360b8461f655b943271d8101660dfb544c477f9) (thanks @rom1504)
+
 ## 3.55.0
 * [Add missing seed field in 1.19 based on minecraft packet tests](https://github.com/PrismarineJS/minecraft-data/commit/5f9995a821311c9ac926a208f957bd76a468fe55) (thanks @rom1504)
 
