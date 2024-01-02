@@ -7,7 +7,7 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | protocol.json | No | Follow [Pre-release Protocol][3] |
 | blocks.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
 | items.json | Yes | Use [Burger][1], then use [burger-extractor][2], then use [turbo-invention][6] |
-| entities.json | Yes | Use [Burger][1], then use [burger-extractor][2] |
+| entities.json | Yes | Use [mcdata-generator][20] and run `extractPcEntityMetadata.js` script in tools/js to generate entity metadata in entities.json and protocol.json |
 | recipes.json | Yes | Use [Burger][1], then use [burger-extractor][2] | should eventually be changed to native data generators |
 | blockCollisionShapes.json | Yes | Use [McDataExtracting][4] |
 | commands.json | No? |Use [mc-data-command-generator][5] | link to jar files have to be manually added |
