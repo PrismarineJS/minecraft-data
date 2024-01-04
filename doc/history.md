@@ -1,3 +1,6 @@
+## 3.57.0
+* [Add loginPacket for 1.20 / 1.20.1 (#821)](https://github.com/PrismarineJS/minecraft-data/commit/c508b6f7eec91724a830a71d663f90a141155330) (thanks @wgaylord)
+
 ## 3.56.0
 * [Fix 1.20.2 and 1.20.3 metadata keys (#818)](https://github.com/PrismarineJS/minecraft-data/commit/7c65e2640ef7efad691ee9cbd22377c655e44c40) (thanks @wgaylord)
 * [node 18 (#709)](https://github.com/PrismarineJS/minecraft-data/commit/4360b8461f655b943271d8101660dfb544c477f9) (thanks @rom1504)
