@@ -1,3 +1,6 @@
+## 3.58.0
+* [Update flying-squid PC features (#823)](https://github.com/PrismarineJS/minecraft-data/commit/344619e053614d6ab5c97bf6477c99699ad57a46) (thanks @Pandapip1)
+
 ## 3.57.0
 * [Add loginPacket for 1.20 / 1.20.1 (#821)](https://github.com/PrismarineJS/minecraft-data/commit/c508b6f7eec91724a830a71d663f90a141155330) (thanks @wgaylord)
 
