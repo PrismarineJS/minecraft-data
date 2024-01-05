@@ -1,3 +1,6 @@
+## 3.59.0
+* [Fix breeze and wind charge being type player. (#826)](https://github.com/PrismarineJS/minecraft-data/commit/1792f0d8035aa275702b6080d4176ca14a3f578a) (thanks @wgaylord)
+
 ## 3.58.0
 * [Update flying-squid PC features (#823)](https://github.com/PrismarineJS/minecraft-data/commit/344619e053614d6ab5c97bf6477c99699ad57a46) (thanks @Pandapip1)
 
