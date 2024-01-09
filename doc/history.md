@@ -1,3 +1,6 @@
+## 3.59.2
+* [Fix pc dimensionDataIsAvailable feature range](https://github.com/PrismarineJS/minecraft-data/commit/afd576f9b3cbedc4c2f7cbca1e849dc3760027b1) (thanks @extremeheat)
+
 ## 3.59.1
 * [Add pc feature `unifiedPlayerAndEntitySpawnPacket`](https://github.com/PrismarineJS/minecraft-data/commit/bd3c9757d0f9d40c797024ed09c3a5e99e815b77) (thanks @extremeheat)
 * [Add an unicity test for features. (#824)](https://github.com/PrismarineJS/minecraft-data/commit/587a1341c83ef4fc1cf3353d35b09435a11f8217) (thanks @rom1504)
