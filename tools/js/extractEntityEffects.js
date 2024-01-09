@@ -66,7 +66,7 @@ const context = {
   }
 }
 
-if (versionGreaterOrEqual('1.20')) {
+if (versionGreaterOrEqual('1.20.2')) {
   context.register = function (name, effect) {
     const id = context.effects.length - 1
     const prismarineName = toTitleCaseFromSnakeCase(name)
@@ -138,6 +138,9 @@ for (let i = 0; i < context.effects.length; i++) {
     if (manualData[fail]) {
       console.log('Using manual data for', fail)
       generatedEffects[i] = manualData[fail]
+      if (versionGreaterOrEqual('1.20.2')) {
+        generatedEffects[i].id = i
+      }
     } else {
       throw new Error('Missing manual data for ' + fail)
     }
