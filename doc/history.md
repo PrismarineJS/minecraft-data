@@ -1,3 +1,7 @@
+## 3.59.1
+* [Add pc feature `unifiedPlayerAndEntitySpawnPacket`](https://github.com/PrismarineJS/minecraft-data/commit/bd3c9757d0f9d40c797024ed09c3a5e99e815b77) (thanks @extremeheat)
+* [Add an unicity test for features. (#824)](https://github.com/PrismarineJS/minecraft-data/commit/587a1341c83ef4fc1cf3353d35b09435a11f8217) (thanks @rom1504)
+
 ## 3.59.0
 * [Fix breeze and wind charge being type player. (#826)](https://github.com/PrismarineJS/minecraft-data/commit/1792f0d8035aa275702b6080d4176ca14a3f578a) (thanks @wgaylord)
 
