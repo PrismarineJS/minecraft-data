@@ -55,6 +55,7 @@ Data provided:
 | Foods | list of foods each with there id, saturation, foodpoints and more |
 | Commands | a tree structure for vanilla minecraft server commands, and some info needed to implement sub-parsers.
 | Legacy | mappings between legacy (1.12) and post-flattening (1.13+) blocks and items ids
+| More interaction shapes | Extended shapes in addition to the collision shapes, for example the torch or redstone cursor shapes.
 | Skin data | (bedrock edition) Skin geometry and texture data for steve skin
 | Features | This can be used to check is a specific feature is available in the current Minecraft version. This is usually only required for handling version-specific functionality.
 
