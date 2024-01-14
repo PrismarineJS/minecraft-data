@@ -7,7 +7,7 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | protocol.json | No | Follow [Pre-release Protocol][1] |
 | blocks.json | Yes | Use [minecraft-data-generator-server][2] |
 | items.json | Yes | Use [minecraft-data-generator-server][2] |
-| entities.json | Yes | Use [minecraft-data-generator-server][2] |
+| entities.json | Yes | Use [minecraft-data-generator-server][2]  and run `extractPcEntityMetadata.js` script in tools/js to generate entity metadata in entities.json and protocol.json |
 | recipes.json | Yes | Use [minecraft-data-generator-server][2] | make sure that `-1` in output are replaced with `null` |
 | blockCollisionShapes.json | Yes | Use [minecraft-data-generator-server][2] |
 | commands.json | No? |Use [mc-data-command-generator][3] | link to jar files have to be manually added |
