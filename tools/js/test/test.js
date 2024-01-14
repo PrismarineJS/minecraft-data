@@ -27,6 +27,7 @@ require('./version_iterator')(function (p, versionString) {
           if (dataName === 'protocol') {
             const validator = new Validator()
 
+            instance.types.LatinString = 'native' // TODO: Update protodef validator
             validator.addType('entityMetadataItem', require('../../../schemas/protocol_types/entity_metadata_item.json'))
             validator.addType('entityMetadataLoop', require('../../../schemas/protocol_types/entity_metadata_loop.json'))
             validator.validateProtocol(instance)
@@ -54,6 +55,23 @@ minecraftTypes.forEach(function (type) {
         const valid = v.validate(schema, instance)
         assert.ok(valid, JSON.stringify(v.errors, null, 2))
       })
+    })
+  })
+  describe('features.json quality is good', function () {
+    it('there is no duplicate feature in features.json', () => {
+      const features = require('../../../data/' + type + '/common/features.json')
+      const countPerFeature = {}
+      for (const feature of features) {
+        countPerFeature[feature.name] = countPerFeature[feature.name] ? countPerFeature[feature.name] + 1 : 1
+      }
+      let duplicateCount = 0
+      for (const [name, count] of Object.entries(countPerFeature)) {
+        if (count > 1) {
+          console.log(`feature ${name} is duplicated ${count} times, please remove ${count - 1}`)
+          duplicateCount += 1
+        }
+      }
+      assert.equal(duplicateCount, 0, `${duplicateCount} duplicates found. Please remove them.`)
     })
   })
 })

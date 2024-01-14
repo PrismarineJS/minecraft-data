@@ -1,3 +1,47 @@
+## 3.59.3
+* [pc: add `chatPacketsUseNbtComponents` feature for 1.20.3](https://github.com/PrismarineJS/minecraft-data/commit/42d7ecc1aa70dd0d7683aada09aea8c498d1a1a5) (thanks @extremeheat)
+
+## 3.59.2
+* [Fix pc dimensionDataIsAvailable feature range](https://github.com/PrismarineJS/minecraft-data/commit/afd576f9b3cbedc4c2f7cbca1e849dc3760027b1) (thanks @extremeheat)
+
+## 3.59.1
+* [Add pc feature `unifiedPlayerAndEntitySpawnPacket`](https://github.com/PrismarineJS/minecraft-data/commit/bd3c9757d0f9d40c797024ed09c3a5e99e815b77) (thanks @extremeheat)
+* [Add an unicity test for features. (#824)](https://github.com/PrismarineJS/minecraft-data/commit/587a1341c83ef4fc1cf3353d35b09435a11f8217) (thanks @rom1504)
+
+## 3.59.0
+* [Fix breeze and wind charge being type player. (#826)](https://github.com/PrismarineJS/minecraft-data/commit/1792f0d8035aa275702b6080d4176ca14a3f578a) (thanks @wgaylord)
+
+## 3.58.0
+* [Update flying-squid PC features (#823)](https://github.com/PrismarineJS/minecraft-data/commit/344619e053614d6ab5c97bf6477c99699ad57a46) (thanks @Pandapip1)
+
+## 3.57.0
+* [Add loginPacket for 1.20 / 1.20.1 (#821)](https://github.com/PrismarineJS/minecraft-data/commit/c508b6f7eec91724a830a71d663f90a141155330) (thanks @wgaylord)
+
+## 3.56.0
+* [Fix 1.20.2 and 1.20.3 metadata keys (#818)](https://github.com/PrismarineJS/minecraft-data/commit/7c65e2640ef7efad691ee9cbd22377c655e44c40) (thanks @wgaylord)
+* [node 18 (#709)](https://github.com/PrismarineJS/minecraft-data/commit/4360b8461f655b943271d8101660dfb544c477f9) (thanks @rom1504)
+
+## 3.55.0
+* [Add missing seed field in 1.19 based on minecraft packet tests](https://github.com/PrismarineJS/minecraft-data/commit/5f9995a821311c9ac926a208f957bd76a468fe55) (thanks @rom1504)
+
+## 3.54.0
+* [1.20.3-1.20.4 protocol (#806)](https://github.com/PrismarineJS/minecraft-data/commit/1aabc9c5fe190b41d12b08e10ff025c32b8107ed) (thanks @wgaylord)
+
+## 3.53.0
+* [1.20.2 Protocol fixes (#812)](https://github.com/PrismarineJS/minecraft-data/commit/d4c6ab37e8257e0e74875ac8920e43377911ffe6) (thanks @wgaylord)
+
+## 3.52.0
+* [1.20.2: use new anonOptionalNbt and anonymousNbt types from prismarine-nbt, add loginPacket (#810)](https://github.com/PrismarineJS/minecraft-data/commit/15f860a55e2ea4c8a62c0eeeaaf05e30f9efb1ac) (thanks @extremeheat)
+
+## 3.51.0
+* [Fix bedrock recipe text encoding issue (#808)](https://github.com/PrismarineJS/minecraft-data/commit/900ebf212eb2b97fdbca3aa8527d2ec530a90f2b) (thanks @extremeheat)
+* [1.20.2 protocol: nbt data can have different root data types (#807)](https://github.com/PrismarineJS/minecraft-data/commit/37e288067964e403c29d1d2f72a4acc9a5b7ba52) (thanks @extremeheat)
+* [Add 23w51b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f851a09e3042247d42ab4f2775f986d39b45b39e) (thanks @github-actions[bot])
+* [Add 1.20.3 and 1.20.4 extract-able data (#803)](https://github.com/PrismarineJS/minecraft-data/commit/b1088724d565819f1f1c8ae4931ca3b2fe609b3a) (thanks @wgaylord)
+* [Improve correctness of 1.8 item varieties data (#772)](https://github.com/PrismarineJS/minecraft-data/commit/cf23a7fa2561cbbbbddaf4adc63449d835ac8f74) (thanks @kaduvert)
+* [Fix 1.20.2 Recipes and add test to check for flipped door Fixed #804 (#805)](https://github.com/PrismarineJS/minecraft-data/commit/0ee510f07de8c72efd3634494ab850c9b550c8be) (thanks @wgaylord)
+* [Add 1.20.4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a63198b3cecdd5397949c49aa123484cce77ceb5) (thanks @github-actions[bot])
+
 ## 3.50.0
 * [Add bedrock 1.20.50 protocol data (#800)](https://github.com/PrismarineJS/minecraft-data/commit/3dd855a3c0e372daaa210fc698b8040dd693cae8) (thanks @extremeheat)
 

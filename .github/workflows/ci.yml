@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
       working-directory: tools/js
-    - run: npm build
+    - run: npm run build
       working-directory: tools/js
     - run: npm test
       working-directory: tools/js
