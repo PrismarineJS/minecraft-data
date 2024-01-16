@@ -23,9 +23,15 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | blockLoot.json | No | Use [minecraft-jar-extractor][7] | Currently no extractor seems to works for this
 | entityLoot.json | No | Use [minecraft-jar-extractor][7] | Currently no extractor seems to works for this
 | mapIcons.json | No | Icons data can be found in the Minecraft source directly. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][9] or from [wiki.vg][10]. | [minecraft-data pr mapIcons][11] | 
+| loginPacket.json | Yes | Running tests on [node-minecraft-protocol][12] |
+| sounds.json | Yes | Use [minecraft-jar-extractor][10] |
 
 
 * All files that say Yes for auto can be gotten from [minecraft-data-auto-updater][11] (that uses [minecraft-data-generator-server][2]). This is the preferred way to extract the data.
+
+After generating and creating the new files for the version in its own directory, the version must be added to dataPaths.json in the data folder.
+Additionally in data/pc/common the versions.json file needs to be updated with the new version.
+
   
 [1]: https://wiki.vg/Pre-release_protocol
 [2]: https://github.com/PrismarineJS/minecraft-data-generator-server
@@ -38,3 +44,4 @@ For bedrock edition see [bedrock.md](bedrock.md)
 [9]: https://minecraft.wiki/Map#Map_icons
 [10]: https://wiki.vg/Protocol#Map_Data
 [11]: https://github.com/PrismarineJS/minecraft-data-auto-updater
+[12]: https://github.com/PrismarineJS/node-minecraft-protocol
