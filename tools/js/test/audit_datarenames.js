@@ -22,12 +22,12 @@ describe('audit dataRenames', function () {
       let items
       let pFile = path.join(p, 'items.json')
       if (fs.existsSync(pFile)) {
-        items = require(pFile)
+        items = JSON.parse(fs.readFileSync(pFile))
       }
       let blocks
       pFile = path.join(p, 'blocks.json')
       if (fs.existsSync(pFile)) {
-        blocks = require(pFile)
+        blocks = JSON.parse(fs.readFileSync(pFile))
       }
 
       const pickData = {
