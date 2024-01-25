@@ -20,8 +20,8 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | enchantments.json | Yes  | Use [minecraft-data-generator-server][2] |
 | language.json | Yes | Use [minecraft-data-generator-server][2] |
 | particles.json | Yes | Use [minecraft-data-generator-server][2] |
-| blockLoot.json | No | Currently no extractor seems to works for this |
-| entityLoot.json | No |  Currently no extractor seems to works for this |
+| blockLoot.json | No | Use [minecraft-jar-extractor][11] | Extractor can be very be tempermental at times
+| entityLoot.json | No |  Use [minecraft-jar-extractor][11] | Extractor can be very be tempermental at times
 | mapIcons.json | No | Icons data can be found in the Minecraft source directly. Alternatively you might be able to look up the icons from the following page on the [Minecraft wiki][7] or from [wiki.vg][8]. | [minecraft-data pr mapIcons][9] | 
 | loginPacket.json | Yes | Running tests on [node-minecraft-protocol][10] |
 | sounds.json | Yes | Use [minecraft-data-generator-server][2] |
@@ -43,3 +43,4 @@ Additionally in data/pc/common the versions.json file needs to be updated with t
 [8]: https://wiki.vg/Protocol#Map_Data
 [9]: https://github.com/PrismarineJS/minecraft-data-auto-updater
 [10]: https://github.com/PrismarineJS/node-minecraft-protocol
+[11]:  https://github.com/PrismarineJS/minecraft-jar-extractor
