@@ -28,6 +28,7 @@ require('./version_iterator')(function (p, versionString) {
             const validator = new Validator()
 
             instance.types.LatinString = 'native' // TODO: Update protodef validator
+            instance.types.string = 'native' // TODO: Update protodef validator
             validator.addType('entityMetadataItem', require('../../../schemas/protocol_types/entity_metadata_item.json'))
             validator.addType('entityMetadataLoop', require('../../../schemas/protocol_types/entity_metadata_loop.json'))
             validator.validateProtocol(instance)
