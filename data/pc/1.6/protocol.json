@@ -305,106 +305,110 @@
       }
     },
     "toServer": {
-      "packet_encryption_key_response": [
-        "container",
-        [
-          {
-            "name": "sharedSecretLength",
-            "type": "i16"
-          },
-          {
-            "name": "sharedSecret",
-            "type": [
-              "array",
-              {
-                "countType": "i8",
-                "type": "i8"
-              }
-            ]
-          },
-          {
-            "name": "verifyTokenLength",
-            "type": "i16"
-          },
-          {
-            "name": "verifyTokenResponse",
-            "type": [
-              "array",
-              {
-                "countType": "i8",
-                "type": "i8"
-              }
-            ]
-          }
-        ]
-      ],
-      "packet_encryption_key_request": [
-        "container",
-        [
-          {
-            "name": "serverId",
-            "type": "string"
-          },
-          {
-            "name": "publicKey",
-            "type": [
-              "buffer",
-              {
-                "countType": "i16"
-              }
-            ]
-          },
-          {
-            "name": "verifyToken",
-            "type": [
-              "buffer",
-              {
-                "countType": "i16"
-              }
-            ]
-          }
-        ]
-      ],
-      "packet_disconnect": [
-        "container",
-        [
-          {
-            "name": "reason",
-            "type": "string"
-          }
-        ]
-      ],
-      "packet": [
-        "container",
-        [
-          {
-            "name": "name",
-            "type": [
-              "mapper",
-              {
-                "type": "varint",
-                "mappings": {
-                  "0xFD": "encryption_key_request",
-                  "0xFF": "disconnect"
+      "types": {
+        "packet_encryption_key_response": [
+          "container",
+          [
+            {
+              "name": "sharedSecretLength",
+              "type": "i16"
+            },
+            {
+              "name": "sharedSecret",
+              "type": [
+                "array",
+                {
+                  "countType": "i8",
+                  "type": "i8"
                 }
-              }
-            ]
-          },
-          {
-            "name": "params",
-            "type": [
-              "switch",
-              {
-                "compareTo": "name",
-                "fields": {
-                  "encryption_key_request": "packet_encryption_key_request",
-                  "disconnect": "packet_disconnect"
+              ]
+            },
+            {
+              "name": "verifyTokenLength",
+              "type": "i16"
+            },
+            {
+              "name": "verifyTokenResponse",
+              "type": [
+                "array",
+                {
+                  "countType": "i8",
+                  "type": "i8"
                 }
-              }
-            ]
-          }
+              ]
+            }
+          ]
+        ],
+        "packet_encryption_key_request": [
+          "container",
+          [
+            {
+              "name": "serverId",
+              "type": "string"
+            },
+            {
+              "name": "publicKey",
+              "type": [
+                "buffer",
+                {
+                  "countType": "i16"
+                }
+              ]
+            },
+            {
+              "name": "verifyToken",
+              "type": [
+                "buffer",
+                {
+                  "countType": "i16"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_disconnect": [
+          "container",
+          [
+            {
+              "name": "reason",
+              "type": "string"
+            }
+          ]
+        ],
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0xFC": "encryption_key_response",
+                    "0xFD": "encryption_key_request",
+                    "0xFF": "disconnect"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "encryption_key_response": "packet_encryption_key_response",
+                    "encryption_key_request": "packet_encryption_key_request",
+                    "disconnect": "packet_disconnect"
+                  }
+                }
+              ]
+            }
+          ]
         ]
-      ]
+      }
     }
   },
   "play": {
@@ -945,7 +949,7 @@
                     "tab_complete": "packet_tab_complete",
                     "client_settings": "packet_client_settings",
                     "client_statuses": "packet_client_statuses",
-                    "plugin_message": "packet_plugin_message",
+                    "plugin_message": "packet_plugin_message"
                   }
                 }
               ]
@@ -1629,6 +1633,63 @@
             {
               "name": "totalExperience",
               "type": "i16"
+            }
+          ]
+        ],
+        "packet_update_attributes": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "i32"
+            },
+            {
+              "name": "properties",
+              "type": [
+                "array",
+                {
+                  "countType": "i32",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "key",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": "f64"
+                      },
+                      {
+                        "name": "modifiers",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "i16",
+                            "type": [
+                              "container",
+                              [
+                                {
+                                  "name": "uuid",
+                                  "type": "UUID"
+                                },
+                                {
+                                  "name": "amount",
+                                  "type": "f64"
+                                },
+                                {
+                                  "name": "operation",
+                                  "type": "i8"
+                                }
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ],
@@ -2339,6 +2400,27 @@
             }
           ]
         ],
+        "packet_tile_editor_open": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "i8"
+            },
+            {
+              "name": "x",
+              "type": "i32"
+            },
+            {
+              "name": "y",
+              "type": "i32"
+            },
+            {
+              "name": "z",
+              "type": "i32"
+            }
+          ]
+        ],
         "packet_increment_statistic": [
           "container",
           [
@@ -2571,39 +2653,6 @@
             }
           ]
         ],
-        "packet_encryption_key_response": [
-          "container",
-          [
-            {
-              "name": "sharedSecretLength",
-              "type": "i16"
-            },
-            {
-              "name": "sharedSecret",
-              "type": [
-                "array",
-                {
-                  "countType": "i8",
-                  "type": "i8"
-                }
-              ]
-            },
-            {
-              "name": "verifyTokenLength",
-              "type": "i16"
-            },
-            {
-              "name": "verifyTokenResponse",
-              "type": [
-                "array",
-                {
-                  "countType": "i8",
-                  "type": "i8"
-                }
-              ]
-            }
-          ]
-        ],
         "packet": [
           "container",
           [
@@ -2640,7 +2689,44 @@
                     "0x22": "entity_teleport",
                     "0x23": "entity_head_rotation",
                     "0x26": "entity_status",
-                    "0x27": "attach_entity"
+                    "0x27": "attach_entity",
+                    "0x28": "entity_metadata",
+                    "0x29": "entity_effect",
+                    "0x2a": "remove_entity_effect",
+                    "0x2B": "experience",
+                    "0x2C": "update_attributes",
+                    "0x33": "map_chunk",
+                    "0x34": "multi_block_change",
+                    "0x35": "block_change",
+                    "0x36": "block_action",
+                    "0x37": "block_break_animation",
+                    "0x38": "map_chunk_bulk",
+                    "0x3C": "explosion",
+                    "0x3D": "world_event",
+                    "0x3E": "named_sound_effect",
+                    "0x3F": "world_particles",
+                    "0x46": "game_state_change",
+                    "0x47": "spawn_entity_weather",
+                    "0x64": "open_window",
+                    "0x65": "close_window",
+                    "0x67": "set_slot",
+                    "0x68": "window_items",
+                    "0x69": "window_property",
+                    "0x6A": "confirm_transaction",
+                    "0x6B": "creative_inventory_action",
+                    "0x82": "update_sign",
+                    "0x83": "item_data",
+                    "0x84": "tile_entity_data",
+                    "0x85": "tile_editor_open",
+                    "0xC8": "increment_statistic",
+                    "0xC9": "player_info",
+                    "0xCA": "abilities",
+                    "0xCB": "tab_complete",
+                    "0xCE": "scoreboard_objective",
+                    "0xCF": "scoreboard_score",
+                    "0xD0": "scoreboard_display_objective",
+                    "0xD1": "scoreboard_team",
+                    "0xFA": "plugin_message"
                   }
                 }
               ]
@@ -2677,7 +2763,44 @@
                     "entity_teleport": "packet_entity_teleport",
                     "entity_head_rotation": "packet_entity_head_rotation",
                     "entity_status": "packet_entity_status",
-                    "attach_entity": "packet_attach_entity"
+                    "attach_entity": "packet_attach_entity",
+                    "entity_metadata": "packet_entity_metadata",
+                    "entity_effect": "packet_entity_effect",
+                    "remove_entity_effect": "packet_remove_entity_effect",
+                    "experience": "packet_experience",
+                    "update_attributes": "packet_update_attributes",
+                    "map_chunk": "packet_map_chunk",
+                    "multi_block_change": "packet_multi_block_change",
+                    "block_change": "packet_block_change",
+                    "block_action": "packet_block_action",
+                    "block_break_animation": "packet_block_break_animation",
+                    "map_chunk_bulk": "packet_map_chunk_bulk",
+                    "explosion": "packet_explosion",
+                    "world_event": "packet_world_event",
+                    "named_sound_effect": "packet_named_sound_effect",
+                    "world_particles": "packet_world_particles",
+                    "game_state_change": "packet_game_state_change",
+                    "spawn_entity_weather": "packet_spawn_entity_weather",
+                    "open_window": "packet_open_window",
+                    "close_window": "packet_close_window",
+                    "set_slot": "packet_set_slot",
+                    "window_items": "packet_window_items",
+                    "window_property": "packet_window_property",
+                    "confirm_transaction": "packet_confirm_transaction",
+                    "creative_inventory_action": "packet_creative_inventory_action",
+                    "update_sign": "packet_update_sign",
+                    "item_data": "packet_item_data",
+                    "tile_entity_data": "packet_tile_entity_data",
+                    "tile_editor_open": "packet_tile_editor_open",
+                    "increment_statistic": "packet_increment_statistic",
+                    "player_info": "packet_player_info",
+                    "abilities": "packet_abilities",
+                    "tab_complete": "packet_tab_complete",
+                    "scoreboard_objective": "packet_scoreboard_objective",
+                    "scoreboard_score": "packet_scoreboard_score",
+                    "scoreboard_display_objective": "packet_scoreboard_display_objective",
+                    "scoreboard_team": "packet_scoreboard_team",
+                    "plugin_message": "packet_plugin_message"
                   }
                 }
               ]
