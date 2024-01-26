@@ -57,7 +57,7 @@ Data provided:
 | Legacy | mappings between legacy (1.12) and post-flattening (1.13+) blocks and items ids
 | Skin data | (bedrock edition) Skin geometry and texture data for steve skin
 | Features | This can be used to check is a specific feature is available in the current Minecraft version. This is usually only required for handling version-specific functionality.
-| Sounds | For versions that use a sound id over the network (1.9+) this provides mappings between sound id and sound name. 
+| Sounds | For versions that use a sound id over the network (1.9+) this provides mappings between network sound id and sound name. 
 
 See more information about this data in the [documentation](http://prismarinejs.github.io/minecraft-data/)
 
