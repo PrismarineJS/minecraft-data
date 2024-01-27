@@ -1,3 +1,10 @@
+## 3.60.0
+* [Fix spelling on packet_configuration_acknowledged in all locations in 1.20.2 protocol.json (#841)](https://github.com/PrismarineJS/minecraft-data/commit/4b0ac882a3900525dbf6cc0f0a4ffb9234d3b029) (thanks @wgaylord)
+* [Add New Data Version - Doc update (#835)](https://github.com/PrismarineJS/minecraft-data/commit/c1b5113fc402966550050c326589524e7e606626) (thanks @wgaylord)
+* [Add 24w04a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/1c4cacac6874d513e8725833aa53f0772b0e12b7) (thanks @github-actions[bot])
+* [Add 24w03b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/3e9e68884fcaac7a15e87361fd793eab1d2d11ac) (thanks @github-actions[bot])
+* [Add 24w03a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/edddc84ce25fb34c6c92aa995adf158272915a9e) (thanks @github-actions[bot])
+
 ## 3.59.3
 * [pc: add `chatPacketsUseNbtComponents` feature for 1.20.3](https://github.com/PrismarineJS/minecraft-data/commit/42d7ecc1aa70dd0d7683aada09aea8c498d1a1a5) (thanks @extremeheat)
 
