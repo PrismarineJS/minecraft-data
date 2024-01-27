@@ -8,7 +8,7 @@ For bedrock edition see [bedrock.md](bedrock.md)
 | blocks.json | Yes | Use [minecraft-data-generator-server][2] |
 | items.json | Yes | Use [minecraft-data-generator-server][2] |
 | entities.json | Yes | Use [minecraft-data-generator-server][2]  and run `extractPcEntityMetadata.js` script in tools/js to generate entity metadata in entities.json and protocol.json |
-| recipes.json | Yes | Use [minecraft-data-generator-server][2] | Make sure that `-1` in output are replaced with `null` |
+| recipes.json | Yes | Use [Burger][12], then use [burger-extractor][13] | should eventually be changed to native data generators |
 | blockCollisionShapes.json | Yes | Use [minecraft-data-generator-server][2] |
 | commands.json | No? |Use [mc-data-command-generator][3] | Link to jar files have to be manually added |
 | biomes.json | Yes | Use [minecraft-data-generator-server][2] |
@@ -44,3 +44,5 @@ Additionally in data/pc/common the versions.json file needs to be updated with t
 [9]: https://github.com/PrismarineJS/minecraft-data-auto-updater
 [10]: https://github.com/PrismarineJS/node-minecraft-protocol
 [11]:  https://github.com/PrismarineJS/minecraft-jar-extractor
+[12]: https://github.com/Pokechu22/Burger
+[13]: https://github.com/PrismarineJS/burger-extractor
