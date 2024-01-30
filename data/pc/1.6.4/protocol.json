@@ -128,6 +128,57 @@
           ]
         ]
       }
+    ],
+    "position_iii": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i32"
+        },
+        {
+          "name": "y",
+          "type": "i32"
+        },
+        {
+          "name": "z",
+          "type": "i32"
+        }
+      ]
+    ],
+    "position_ibi": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i32"
+        },
+        {
+          "name": "y",
+          "type": "i8"
+        },
+        {
+          "name": "z",
+          "type": "i32"
+        }
+      ]
+    ],
+    "position_isi": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i32"
+        },
+        {
+          "name": "y",
+          "type": "i16"
+        },
+        {
+          "name": "z",
+          "type": "i32"
+        }
+      ]
     ]
   },
   "protocol": {
@@ -238,16 +289,8 @@
         "container",
         [
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "location",
+            "type": "position_iii"
           }
         ]
       ],
@@ -273,7 +316,7 @@
         [
           {
             "name": "health",
-            "type": "i16"
+            "type": "f32"
           },
           {
             "name": "food",
@@ -402,16 +445,8 @@
             "type": "i8"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i8"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "location",
+            "type": "position_ibi"
           },
           {
             "name": "face",
@@ -477,16 +512,8 @@
             "type": "i8"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i8"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "location",
+            "type": "position_ibi"
           }
         ]
       ],
@@ -520,6 +547,56 @@
           }
         ]
       ],
+      "packet_named_entity_spawn": [
+        "container",
+        [
+          {
+            "name": "entityId",
+            "type": "varint"
+          },
+          {
+            "name": "playerUUID",
+            "type": "string"
+          },
+          {
+            "name": "playerName",
+            "type": "string"
+          },
+          {
+            "name": "position",
+            "type": "position_iii"
+          },
+          {
+            "name": "yaw",
+            "type": "i8"
+          },
+          {
+            "name": "pitch",
+            "type": "i8"
+          },
+          {
+            "name": "currentItem",
+            "type": "i16"
+          },
+          {
+            "name": "metadata",
+            "type": "entityMetadata"
+          }
+        ]
+      ],
+      "packet_collect": [
+        "container",
+        [
+          {
+            "name": "collectedEntityId",
+            "type": "i32"
+          },
+          {
+            "name": "collectorEntityId",
+            "type": "i32"
+          }
+        ]
+      ],
       "packet_spawn_entity": [
         "container",
         [
@@ -532,16 +609,8 @@
             "type": "i8"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           },
           {
             "name": "pitch",
@@ -616,16 +685,8 @@
             "type": "i8"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           },
           {
             "name": "pitch",
@@ -669,16 +730,8 @@
             "type": "string"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "location",
+            "type": "position_iii"
           },
           {
             "name": "direction",
@@ -694,16 +747,8 @@
             "type": "i32"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           },
           {
             "name": "count",
@@ -852,16 +897,8 @@
             "type": "i32"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           },
           {
             "name": "yaw",
@@ -909,6 +946,10 @@
           {
             "name": "vehicleId",
             "type": "i32"
+          },
+          {
+            "name": "leash",
+            "type": "u8"
           }
         ]
       ],
@@ -1152,16 +1193,8 @@
         "container",
         [
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i8"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_ibi"
           },
           {
             "name": "type",
@@ -1169,7 +1202,7 @@
           },
           {
             "name": "metadata",
-            "type": "u8"
+            "type": "i8"
           }
         ]
       ],
@@ -1177,16 +1210,8 @@
         "container",
         [
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i16"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "location",
+            "type": "position_isi"
           },
           {
             "name": "byte1",
@@ -1210,16 +1235,8 @@
             "type": "i32"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           },
           {
             "name": "destroyStage",
@@ -1400,16 +1417,8 @@
             "type": "i32"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i8"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_ibi"
           },
           {
             "name": "data",
@@ -1429,16 +1438,8 @@
             "type": "string"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           },
           {
             "name": "volume",
@@ -1516,16 +1517,8 @@
             "type": "i8"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           }
         ]
       ],
@@ -1551,6 +1544,10 @@
           {
             "name": "useProvidedTitle",
             "type": "bool"
+          },
+          {
+            "name": "entityId",
+            "type": "i32"
           }
         ]
       ],
@@ -1692,16 +1689,8 @@
         "container",
         [
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i16"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_isi"
           },
           {
             "name": "line1",
@@ -1747,16 +1736,8 @@
         "container",
         [
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i16"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_isi"
           },
           {
             "name": "action",
@@ -1776,16 +1757,8 @@
             "type": "i8"
           },
           {
-            "name": "x",
-            "type": "i32"
-          },
-          {
-            "name": "y",
-            "type": "i32"
-          },
-          {
-            "name": "z",
-            "type": "i32"
+            "name": "position",
+            "type": "position_iii"
           }
         ]
       ],
@@ -1798,7 +1771,7 @@
           },
           {
             "name": "amount",
-            "type": "i8"
+            "type": "i32"
           }
         ]
       ],
@@ -1828,11 +1801,11 @@
           },
           {
             "name": "flyingSpeed",
-            "type": "i8"
+            "type": "f32"
           },
           {
             "name": "walkingSpeed",
-            "type": "i8"
+            "type": "f32"
           }
         ]
       ],
@@ -2142,14 +2115,14 @@
                   "0x0B": "position",
                   "0x0C": "look",
                   "0x0D": "position_look",
-                  "0x0E": "player_digging",
-                  "0x0F": "player_block_placement",
+                  "0x0E": "block_dig",
+                  "0x0F": "block_place",
                   "0x10": "held_item_slot",
                   "0x11": "bed",
                   "0x12": "animation",
                   "0x13": "entity_action",
                   "0x14": "named_entity_spawn",
-                  "0x16": "packet_collect",
+                  "0x16": "collect",
                   "0x17": "spawn_entity",
                   "0x18": "spawn_entity_living",
                   "0x19": "spawn_entity_painting",
@@ -2241,7 +2214,7 @@
                   "bed": "packet_bed",
                   "animation": "packet_animation",
                   "entity_action": "packet_entity_action",
-                  "spawn_entity": "packet_spawn_entity",
+                  "named_entity_spawn": "packet_named_entity_spawn",
                   "spawn_entity_living": "packet_spawn_entity_living",
                   "spawn_entity_painting": "packet_spawn_entity_painting",
                   "spawn_entity_experience_orb": "packet_spawn_entity_experience_orb",
