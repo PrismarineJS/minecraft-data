@@ -319,48 +319,6 @@
           }
         ]
       ],
-      "packet_player_position": [
-        "container",
-        [
-          {
-            "name": "x",
-            "type": "f64"
-          },
-          {
-            "name": "y",
-            "type": "f64"
-          },
-          {
-            "name": "stance",
-            "type": "f64"
-          },
-          {
-            "name": "z",
-            "type": "f64"
-          },
-          {
-            "name": "onGround",
-            "type": "bool"
-          }
-        ]
-      ],
-      "packet_player_look": [
-        "container",
-        [
-          {
-            "name": "yaw",
-            "type": "f32"
-          },
-          {
-            "name": "pitch",
-            "type": "f32"
-          },
-          {
-            "name": "onGround",
-            "type": "bool"
-          }
-        ]
-      ],
       "packet_position": [
         "container",
         [
@@ -381,6 +339,15 @@
             "type": "f64"
           },
           {
+            "name": "onGround",
+            "type": "bool"
+          }
+        ]
+      ],
+      "packet_look": [
+        "container",
+        [
+          {
             "name": "yaw",
             "type": "f32"
           },
@@ -394,9 +361,46 @@
           }
         ]
       ],
-      "packet_player_digging": [
+      "packet_position_look": [
         "container",
         [
+          {
+            "name": "x",
+            "type": "f64"
+          },
+          {
+            "name": "y",
+            "type": "f64"
+          },
+          {
+            "name": "stance",
+            "type": "f64"
+          },
+          {
+            "name": "z",
+            "type": "f64"
+          },
+          {
+            "name": "yaw",
+            "type": "f32"
+          },
+          {
+            "name": "pitch",
+            "type": "f32"
+          },
+          {
+            "name": "onGround",
+            "type": "bool"
+          }
+        ]
+      ],
+      "packet_block_dig": [
+        "container",
+        [
+          {
+            "name": "status",
+            "type": "i8"
+          },
           {
             "name": "x",
             "type": "i32"
@@ -415,7 +419,7 @@
           }
         ]
       ],
-      "packet_player_block_placement": [
+      "packet_block_place": [
         "container",
         [
           {
@@ -439,15 +443,15 @@
             "type": "slot"
           },
           {
-            "name": "cursorPositionX",
+            "name": "cursorX",
             "type": "i8"
           },
           {
-            "name": "cursorPositionY",
+            "name": "cursorY",
             "type": "i8"
           },
           {
-            "name": "cursorPositionZ",
+            "name": "cursorZ",
             "type": "i8"
           }
         ]
@@ -467,6 +471,10 @@
           {
             "name": "entityId",
             "type": "i32"
+          },
+          {
+            "name": "unknown",
+            "type": "i8"
           },
           {
             "name": "x",
@@ -1564,7 +1572,7 @@
           }
         ]
       ],
-      "packet_click_window": [
+      "packet_window_click": [
         "container",
         [
           {
@@ -1576,11 +1584,11 @@
             "type": "i16"
           },
           {
-            "name": "button",
+            "name": "mouseButton",
             "type": "i8"
           },
           {
-            "name": "actionNumber",
+            "name": "action",
             "type": "i16"
           },
           {
@@ -1588,7 +1596,7 @@
             "type": "i8"
           },
           {
-            "name": "clickedItem",
+            "name": "item",
             "type": "slot"
           }
         ]
@@ -1633,7 +1641,7 @@
           }
         ]
       ],
-      "packet_window_property": [
+      "packet_craft_progress_bar": [
         "container",
         [
           {
@@ -1650,7 +1658,7 @@
           }
         ]
       ],
-      "packet_confirm_transaction": [
+      "packet_transaction": [
         "container",
         [
           {
@@ -1658,7 +1666,7 @@
             "type": "i8"
           },
           {
-            "name": "actionNumber",
+            "name": "action",
             "type": "i16"
           },
           {
@@ -1667,7 +1675,7 @@
           }
         ]
       ],
-      "packet_creative_inventory_action": [
+      "packet_set_creative_slot": [
         "container",
         [
           {
@@ -1855,7 +1863,7 @@
           }
         ]
       ],
-      "packet_client_settings": [
+      "packet_settings": [
         "container",
         [
           {
@@ -1880,7 +1888,7 @@
           }
         ]
       ],
-      "packet_client_statuses": [
+      "packet_client_command": [
         "container",
         [
           {
@@ -2042,7 +2050,7 @@
           }
         ]
       ],
-      "packet_plugin_message": [
+      "packet_custom_payload": [
         "container",
         [
           {
@@ -2106,20 +2114,30 @@
             "type": "string"
           },
           {
+            "name": "publicKeyLength",
+            "type": "i16"
+          },
+          {
             "name": "publicKey",
             "type": [
-              "buffer",
+              "array",
               {
-                "countType": "i16"
+                "countType": "i32",
+                "type": "i8"
               }
             ]
           },
           {
+            "name": "verifyTokenLength",
+            "type": "i16"
+          },
+          {
             "name": "verifyToken",
             "type": [
-              "buffer",
+              "array",
               {
-                "countType": "i16"
+                "countType": "i32",
+                "type": "i8"
               }
             ]
           }
@@ -2164,9 +2182,9 @@
                   "0x08": "update_health",
                   "0x09": "respawn",
                   "0x0A": "player",
-                  "0x0B": "player_position",
-                  "0x0C": "player_look",
-                  "0x0D": "position",
+                  "0x0B": "position",
+                  "0x0C": "look",
+                  "0x0D": "position_look",
                   "0x0E": "player_digging",
                   "0x0F": "player_block_placement",
                   "0x10": "held_item_slot",
@@ -2209,12 +2227,12 @@
                   "0x47": "spawn_entity_weather",
                   "0x64": "open_window",
                   "0x65": "close_window",
-                  "0x66": "click_window",
+                  "0x66": "window_click",
                   "0x67": "set_slot",
                   "0x68": "window_items",
-                  "0x69": "window_property",
-                  "0x6A": "confirm_transaction",
-                  "0x6B": "creative_inventory_action",
+                  "0x69": "craft_progress_bar",
+                  "0x6A": "transaction",
+                  "0x6B": "set_creative_slot",
                   "0x6C": "enchant_item",
                   "0x82": "update_sign",
                   "0x83": "item_data",
@@ -2224,13 +2242,13 @@
                   "0xC9": "player_info",
                   "0xCA": "abilities",
                   "0xCB": "tab_complete",
-                  "0xCC": "client_settings",
-                  "0xCD": "client_statuses",
+                  "0xCC": "settings",
+                  "0xCD": "client_command",
                   "0xCE": "scoreboard_objective",
                   "0xCF": "scoreboard_score",
                   "0xD0": "scoreboard_display_objective",
                   "0xD1": "scoreboard_team",
-                  "0xFA": "plugin_message",
+                  "0xFA": "custom_payload",
                   "0xFC": "encryption_key_response",
                   "0xFD": "encryption_key_request",
                   "0xfE": "legacy_server_list_ping",
@@ -2257,11 +2275,11 @@
                   "update_health": "packet_update_health",
                   "respawn": "packet_respawn",
                   "player": "packet_player",
-                  "player_position": "packet_player_position",
-                  "player_look": "packet_player_look",
                   "position": "packet_position",
-                  "player_digging": "packet_player_digging",
-                  "player_block_placement": "packet_player_block_placement",
+                  "look": "packet_look",
+                  "position_look": "packet_position_look",
+                  "block_dig": "packet_block_dig",
+                  "block_place": "packet_block_place",
                   "held_item_slot": "packet_held_item_slot",
                   "bed": "packet_bed",
                   "animation": "packet_animation",
@@ -2300,12 +2318,12 @@
                   "spawn_entity_weather": "packet_spawn_entity_weather",
                   "open_window": "packet_open_window",
                   "close_window": "packet_close_window",
-                  "click_window": "packet_click_window",
+                  "window_click": "packet_window_click",
                   "set_slot": "packet_set_slot",
                   "window_items": "packet_window_items",
-                  "window_property": "packet_window_property",
-                  "confirm_transaction": "packet_confirm_transaction",
-                  "creative_inventory_action": "packet_creative_inventory_action",
+                  "craft_progress_bar": "packet_craft_progress_bar",
+                  "transaction": "packet_transaction",
+                  "set_creative_slot": "packet_set_creative_slot",
                   "enchant_item": "packet_enchant_item",
                   "update_sign": "packet_update_sign",
                   "item_data": "packet_item_data",
@@ -2315,13 +2333,13 @@
                   "player_info": "packet_player_info",
                   "abilities": "packet_abilities",
                   "tab_complete": "packet_tab_complete",
-                  "client_settings": "packet_client_settings",
-                  "client_statuses": "packet_client_statuses",
+                  "settings": "packet_settings",
+                  "client_command": "packet_client_command",
                   "scoreboard_objective": "packet_scoreboard_objective",
                   "scoreboard_score": "packet_scoreboard_score",
                   "scoreboard_display_objective": "packet_scoreboard_display_objective",
                   "scoreboard_team": "packet_scoreboard_team",
-                  "plugin_message": "packet_plugin_message",
+                  "custom_payload": "packet_custom_payload",
                   "encryption_key_response": "packet_encryption_key_response",
                   "encryption_key_request": "packet_encryption_key_request",
                   "legacy_server_list_ping": "packet_legacy_server_list_ping",
