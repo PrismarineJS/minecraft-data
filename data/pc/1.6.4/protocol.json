@@ -20,14 +20,14 @@
       "pstring",
       {
         "encoding": "utf-16",
-        "countType": "varint"
+        "countType": "i16"
       }
     ],
     "slot": [
       "container",
       [
         {
-          "name": "blockId",
+          "name": "itemId",
           "type": "i16"
         },
         {
@@ -35,7 +35,7 @@
           "type": [
             "switch",
             {
-              "compareTo": "blockId",
+              "compareTo": "itemId",
               "fields": {
                 "-1": "void"
               },
@@ -217,7 +217,7 @@
             "type": "i8"
           },
           {
-            "name": "notUsed",
+            "name": "worldHeight",
             "type": "i8"
           },
           {
@@ -260,7 +260,7 @@
         "container",
         [
           {
-            "name": "age",
+            "name": "worldAge",
             "type": "i64"
           },
           {
@@ -308,7 +308,7 @@
           },
           {
             "name": "mouseButton",
-            "type": "bool"
+            "type": "u8"
           }
         ]
       ],
@@ -354,7 +354,7 @@
           }
         ]
       ],
-      "packet_player": [
+      "packet_flying": [
         "container",
         [
           {
@@ -472,7 +472,7 @@
           },
           {
             "name": "direction",
-            "type": "i8"
+            "type": "u8"
           },
           {
             "name": "heldItem",
@@ -553,11 +553,7 @@
         [
           {
             "name": "entityId",
-            "type": "varint"
-          },
-          {
-            "name": "playerUUID",
-            "type": "string"
+            "type": "i32"
           },
           {
             "name": "playerName",
@@ -690,15 +686,15 @@
             "type": "position_iii"
           },
           {
+            "name": "yaw",
+            "type": "i8"
+          },
+          {
             "name": "pitch",
             "type": "i8"
           },
           {
-            "name": "headPitch",
-            "type": "i8"
-          },
-          {
-            "name": "yaw",
+            "name": "headYaw",
             "type": "i8"
           },
           {
@@ -1131,7 +1127,7 @@
             ]
           },
           {
-            "name": "dataLength",
+            "name": "recordCount",
             "type": "i32"
           },
           {
@@ -1139,7 +1135,7 @@
             "type": [
               "array",
               {
-                "count": "recordCount",
+                "count": "dataLength",
                 "type": [
                   "container",
                   [
@@ -1194,8 +1190,16 @@
         "container",
         [
           {
-            "name": "position",
-            "type": "position_ibi"
+            "name": "x",
+            "type": "i32"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "z",
+            "type": "i32"
           },
           {
             "name": "type",
@@ -1448,7 +1452,7 @@
           },
           {
             "name": "pitch",
-            "type": "i8"
+            "type": "u8"
           }
         ]
       ],
@@ -2074,7 +2078,7 @@
           }
         ]
       ],
-      "packet_legacy_server_list_ping": [
+      "packet_server_list_ping": [
         "container",
         [
           {
@@ -2112,7 +2116,7 @@
                   "0x07": "use_entity",
                   "0x08": "update_health",
                   "0x09": "respawn",
-                  "0x0A": "player",
+                  "0x0A": "flying",
                   "0x0B": "position",
                   "0x0C": "look",
                   "0x0D": "position_look",
@@ -2205,7 +2209,7 @@
                   "use_entity": "packet_use_entity",
                   "update_health": "packet_update_health",
                   "respawn": "packet_respawn",
-                  "player": "packet_player",
+                  "flying": "packet_flying",
                   "position": "packet_position",
                   "look": "packet_look",
                   "position_look": "packet_position_look",
@@ -2273,7 +2277,7 @@
                   "custom_payload": "packet_custom_payload",
                   "encryption_key_response": "packet_encryption_key_response",
                   "encryption_key_request": "packet_encryption_key_request",
-                  "legacy_server_list_ping": "packet_legacy_server_list_ping",
+                  "legacy_server_list_ping": "packet_server_list_ping",
                   "disconnect": "packet_disconnect"
                 }
               }
