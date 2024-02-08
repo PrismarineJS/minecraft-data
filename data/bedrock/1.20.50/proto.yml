@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.20.61
+!version: 1.20.50
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -818,14 +818,9 @@ packet_level_event:
       3607: particle_punch_block_west
       3608: particle_punch_block_east
       3609: particle_shoot_white_smoke
-      3610: particle_wind_explosion
-      3611: particle_trial_spawner_detection
-      3612: particle_trial_spawner_spawning
-      3613: particle_trial_spawner_ejecting
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
-      9810: jump_prevented
       0x4000: add_particle_mask
       # 0x4000 | + particle ID
       16385: add_particle_bubble   # 1
@@ -1408,7 +1403,6 @@ packet_level_chunk:
    x: zigzag32
    # ChunkZ is the Z coordinate of the chunk sent. (To translate a block's Z to a chunk's Z: z >> 4)
    z: zigzag32
-   dimension: zigzag32
    # SubChunkCount is the amount of sub chunks that are part of the chunk sent. Depending on if the cache
    # is enabled, a list of blob hashes will be sent, or, if disabled, the sub chunk data.
    # On newer versions, if this is a negative value it indicates to use the Subchunk Polling mechanism
@@ -2778,6 +2772,27 @@ packet_video_stream_connect:
    resolution_x: li32
    resolution_y: li32
 
+# This is NOT a Minecraft entity, but an entity in the Entity Component System (ECS)
+# for the game engine Minecrat Bedrock uses. Internally, all 'Minecraft entities' are
+# known as Actors including in packet names and fields. However, these are irrelevant
+# internal details so we don't do the renames in these protocol definitions, for simplicity we just use Entity.
+# 
+# AddEntity is sent by the server to the client. Its function is not entirely clear: It does not add an
+# entity in the sense of an in-game entity, but has to do with the ECS that Minecraft uses.
+packet_add_ecs_entity:
+   !id: 0x7f
+   !bound: client
+   # EntityNetworkID is the network ID of the entity that should be added.
+   network_id: varint64
+
+# RemoveEntity is sent by the server to the client. Its function is not entirely clear: It does not remove an
+# entity in the sense of an in-game entity, but has to do with the ECS that Minecraft uses
+packet_remove_ecs_entity:
+   !id: 0x80
+   !bound: client
+   # EntityNetworkID is the network ID of the entity that should be removed.
+   network_id: varint64
+
 # ClientCacheStatus is sent by the client to the server at the start of the game. It is sent to let the
 # server know if it supports the client-side blob cache. Clients such as Nintendo Switch do not support the
 # cache, and attempting to use it anyway will fail.
@@ -3082,8 +3097,6 @@ packet_player_auth_input:
          data: TransactionUseItem
    item_stack_request: input_data.item_stack_request ?
       if true: ItemStackRequest
-   predicted_vehicle: input_data.item_stack_request ?
-      if true: zigzag64
    block_action: input_data.block_action ?
       if true: []zigzag32
          action: Action
@@ -3147,8 +3160,7 @@ InputFlag: [ "bitflags", {
       "stop_crawling",
       "start_flying",
       "stop_flying",
-      "received_server_data",
-      "client_predicted_vehicle"
+      "received_server_data"
    ]
 }]
 
@@ -4113,34 +4125,6 @@ packet_set_player_inventory_options:
    - survival
    - recipe_book
    - creative
-
-# SetHud is sent by the server to set the visibility of individual HUD elements on the client. It is
-# important to note that the client does not reset the state of the HUD elements after it leaves a server,
-# meaning they can leak into sessions on different servers. To be safe, you should reset the visibility of
-# all HUD elements when a player connects.
-packet_set_hud:
-   !id: 0x134
-   # Elements is a list of HUD elements that are being modified. The values can be any of the HudElement
-   # constants above.
-   elements: Element[]varint
-   # Visibility represents the new visibility of the specified Elements. It can be any of the HudVisibility
-   # constants above.
-   visibility: u8 =>
-   - hide
-   - reset
-
-Element: u8 =>
-- PaperDoll
-- Armour
-- ToolTips
-- TouchControls
-- Crosshair
-- HotBar
-- Health
-- ProgressBar
-- Hunger
-- AirBubbles
-- HourseHealth
 
 packet_server_post_move:
    !id: 0x10
