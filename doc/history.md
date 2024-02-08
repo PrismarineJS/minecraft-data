@@ -1,3 +1,9 @@
+## 3.61.0
+* [Add bedrock 1.20.61 protocol data (#845)](https://github.com/PrismarineJS/minecraft-data/commit/b38e5da05d345d3c3af52466cf74167a94b1bb1a) (thanks @extremeheat)
+* [Add 24w06a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5630ff7074903a6638dd6595315888d9585d0e59) (thanks @github-actions[bot])
+* [Add 24w05b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ff68bc8540e582042af86edc5bf8ca98f8017f1d) (thanks @github-actions[bot])
+* [Add 24w05a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f2bbe7b57103d4c0c274a6dbc06f34e1c3638fc1) (thanks @github-actions[bot])
+
 ## 3.60.0
 * [Fix spelling on packet_configuration_acknowledged in all locations in 1.20.2 protocol.json (#841)](https://github.com/PrismarineJS/minecraft-data/commit/4b0ac882a3900525dbf6cc0f0a4ffb9234d3b029) (thanks @wgaylord)
 * [Add New Data Version - Doc update (#835)](https://github.com/PrismarineJS/minecraft-data/commit/c1b5113fc402966550050c326589524e7e606626) (thanks @wgaylord)
