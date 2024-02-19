@@ -1,3 +1,7 @@
+## 3.61.1
+* [[bedrock] Fix issue with player auth input data (#848)](https://github.com/PrismarineJS/minecraft-data/commit/985b2bef89e9642da1be90b825969a4818d5e5e8) (thanks @MrDiamond64)
+* [Add 24w07a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4bf2ae5ccb7da0dc51898dbdd85cfbd04621fe07) (thanks @github-actions[bot])
+
 ## 3.61.0
 * [Add bedrock 1.20.61 protocol data (#845)](https://github.com/PrismarineJS/minecraft-data/commit/b38e5da05d345d3c3af52466cf74167a94b1bb1a) (thanks @extremeheat)
 * [Add 24w06a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5630ff7074903a6638dd6595315888d9585d0e59) (thanks @github-actions[bot])
