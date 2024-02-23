@@ -598,7 +598,7 @@
         "container",
         [
           {
-            "name": "entityId",
+            "name": "ownerId",
             "type": "i32"
           },
           {
@@ -1356,44 +1356,16 @@
                   "container",
                   [
                     {
-                      "anon": true,
-                      "type": [
-                        "bitfield",
-                        [
-                          {
-                            "name": "metadata",
-                            "size": 4,
-                            "signed": false
-                          },
-                          {
-                            "name": "blockId",
-                            "size": 12,
-                            "signed": false
-                          }
-                        ]
-                      ]
+                      "name": "x",
+                      "type": "i8"
                     },
                     {
                       "name": "y",
-                      "type": "u8"
+                      "type": "i8"
                     },
                     {
-                      "anon": true,
-                      "type": [
-                        "bitfield",
-                        [
-                          {
-                            "name": "z",
-                            "size": 4,
-                            "signed": false
-                          },
-                          {
-                            "name": "x",
-                            "size": 4,
-                            "signed": false
-                          }
-                        ]
-                      ]
+                      "name": "z",
+                      "type": "i8"
                     }
                   ]
                 ]
@@ -1552,7 +1524,16 @@
           },
           {
             "name": "entityId",
-            "type": "i32"
+            "type": [
+              "switch",
+              {
+                "compareTo": "inventoryType",
+                "fields": {
+                  "11": "i32"
+                },
+                "default": "void"
+              }
+            ]
           }
         ]
       ],
@@ -1715,7 +1696,7 @@
           }
         ]
       ],
-      "packet_item_data": [
+      "packet_map": [
         "container",
         [
           {
@@ -1888,11 +1869,29 @@
           },
           {
             "name": "scoreName",
-            "type": "string"
+            "type": [
+              "switch",
+              {
+                "compareTo": "action",
+                "fields": {
+                  "1": "void"
+                },
+                "default": "string"
+              }
+            ]
           },
           {
             "name": "value",
-            "type": "i32"
+            "type": [
+              "switch",
+              {
+                "compareTo": "action",
+                "fields": {
+                  "1": "void"
+                },
+                "default": "i32"
+              }
+            ]
           }
         ]
       ],
@@ -2171,7 +2170,7 @@
                   "0x6B": "set_creative_slot",
                   "0x6C": "enchant_item",
                   "0x82": "update_sign",
-                  "0x83": "item_data",
+                  "0x83": "map",
                   "0x84": "tile_entity_data",
                   "0x85": "tile_editor_open",
                   "0xC8": "increment_statistic",
@@ -2262,7 +2261,7 @@
                   "set_creative_slot": "packet_set_creative_slot",
                   "enchant_item": "packet_enchant_item",
                   "update_sign": "packet_update_sign",
-                  "item_data": "packet_item_data",
+                  "map": "packet_map",
                   "tile_entity_data": "packet_tile_entity_data",
                   "tile_editor_open": "packet_tile_editor_open",
                   "increment_statistic": "packet_increment_statistic",
