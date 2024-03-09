@@ -1,6 +1,6 @@
 const fs = require('fs')
 const cp = require('child_process')
-const helper = require('./github-helper')
+const helper = require('gh-helpers')
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
