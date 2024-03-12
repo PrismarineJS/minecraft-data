@@ -1,7 +1,6 @@
 ## minecraft-data architecture
 Key Details:
 * Langauge independent repository holding data for many Minecraft versions, including Java Edition versions after 1.7 and Bedrock Edition versions after 1.16
-  <!--* Some versions may be missing data or have data pointing to older versions.--> 
 * Has data on blocks, items, network protocol packet structures, entities and more
 * The data in this repo is generated using several tools as described in the `doc/add-data-new-version.md` file for Java Edition and `doc/bedrock.md` for Bedrock Edition
 
