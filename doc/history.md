@@ -1,7 +1,5 @@
 ## 3.63.0
 * [Add bedrock 1.20.71 protocol data (#858)](https://github.com/PrismarineJS/minecraft-data/commit/fc0aac53acb683cba83f3d692cbf053094f49108) (thanks @extremeheat)
-* [Update update helper for gh-helpers v0.1](https://github.com/PrismarineJS/minecraft-data/commit/5a46905b01e89256ffc7c4cad429de2891e4f8ce) (thanks @extremeheat)
-* [Move github-helper script to new gh-helpers (#855)](https://github.com/PrismarineJS/minecraft-data/commit/cee858b4367303b21dae7101cc7a8c6c34ec83da) (thanks @extremeheat)
 * [Add 24w10a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97b1bafc5aab20bdff0bd0b4422ce868530b8806) (thanks @github-actions[bot])
 * [Add 24w09a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/882319614133edc9fc7a93649e285f752a303401) (thanks @github-actions[bot])
 
