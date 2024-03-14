@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.20.70
+!version: 1.20.61
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -127,9 +127,6 @@ packet_resource_packs_info:
    !bound: client
    # If the resource pack requires the client accept it.
    must_accept: bool
-   # HasAddons specifies if any of the resource packs contain addons in them. If set to true, only clients
-   # that support addons will be able to download them.
-   has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
    # ForcingServerPacks is currently an unclear field.
@@ -821,18 +818,14 @@ packet_level_event:
       3607: particle_punch_block_west
       3608: particle_punch_block_east
       3609: particle_shoot_white_smoke
-      3610: particle_breeze_wind_explosion
+      3610: particle_wind_explosion
       3611: particle_trial_spawner_detection
       3612: particle_trial_spawner_spawning
       3613: particle_trial_spawner_ejecting
-      3614: particle_wind_explosion
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
       9810: jump_prevented
-      9811: animation_vault_activate
-      9812: animation_vault_deactivate
-      9813: animation_vault_eject_item
       0x4000: add_particle_mask
       # 0x4000 | + particle ID
       16385: add_particle_bubble   # 1
@@ -1011,7 +1004,6 @@ packet_mob_effect:
    amplifier: zigzag32
    particles: bool
    duration: zigzag32
-   tick: lu64
 
 packet_update_attributes:
    !id: 0x1d
@@ -1134,7 +1126,6 @@ packet_set_entity_motion:
    # Velocity is the new velocity the entity gets. This velocity will initiate the client-side movement of
    # the entity.
    velocity: vec3f
-   tick: varint64
 
 # SetActorLink is sent by the server to initiate an entity link client-side, meaning one entity will start
 # riding another.
@@ -1633,6 +1624,10 @@ packet_chunk_radius_update:
    # not have to be the same as the requested chunk radius.
    chunk_radius: zigzag32
 
+packet_item_frame_drop_item:
+   !id: 0x47
+   !bound: both
+   coordinates: BlockCoordinates
 
 packet_game_rules_changed:
    !id: 0x48
@@ -2769,6 +2764,7 @@ packet_lectern_update:
    # the packet should be ignored.
    position: vec3i
    # DropBook specifies if the book currently set on display in the lectern should be dropped server-side.
+   drop_book: bool
 
 # This packet was removed.
 packet_video_stream_connect:
@@ -3086,10 +3082,8 @@ packet_player_auth_input:
          data: TransactionUseItem
    item_stack_request: input_data.item_stack_request ?
       if true: ItemStackRequest
-   _: input_data.client_predicted_vehicle ?
-      if true:
-         vehicle_rotation: vec2f
-         predicted_vehicle: zigzag64
+   predicted_vehicle: input_data.client_predicted_vehicle ?
+      if true: zigzag64
    block_action: input_data.block_action ?
       if true: []zigzag32
          action: Action
@@ -3154,9 +3148,7 @@ InputFlag: [ "bitflags", {
       "start_flying",
       "stop_flying",
       "received_server_data",
-      "client_predicted_vehicle",
-      "paddling_left",
-      "paddling_right"
+      "client_predicted_vehicle"
    ]
 }]
 

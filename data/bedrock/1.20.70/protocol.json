@@ -554,6 +554,23 @@
         }
       ]
     ],
+    "vec3li": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "li32"
+        },
+        {
+          "name": "y",
+          "type": "li32"
+        },
+        {
+          "name": "z",
+          "type": "li32"
+        }
+      ]
+    ],
     "vec3u": [
       "container",
       [
@@ -2191,6 +2208,10 @@
                         {
                           "name": "is_host",
                           "type": "bool"
+                        },
+                        {
+                          "name": "is_subclient",
+                          "type": "bool"
                         }
                       ]
                     ],
@@ -3316,6 +3337,8 @@
           "32": "jigsaw_editor",
           "33": "smithing_table",
           "34": "chest_boat",
+          "35": "decorated_pot",
+          "36": "crafter",
           "-9": "none",
           "-1": "inventory"
         }
@@ -3387,7 +3410,8 @@
           "58": "barrel",
           "59": "cursor",
           "60": "creative_output",
-          "61": "smithing_table_template"
+          "61": "smithing_table_template",
+          "62": "crafter"
         }
       }
     ],
@@ -3872,7 +3896,40 @@
           "473": "PigDeath",
           "474": "HoglinZombified",
           "475": "AmbientUnderwaterEnter",
-          "476": "AmbientUnderwaterExit"
+          "476": "AmbientUnderwaterExit",
+          "477": "bottle_fill",
+          "478": "bottle_empty",
+          "479": "crafter_craft",
+          "480": "crafter_fail",
+          "481": "block_decorated_pot_insert",
+          "482": "block_decorated_pot_insert_fail",
+          "483": "crafter_disable_slot",
+          "484": "trial_spawner_open_shutter",
+          "485": "trial_spawner_eject_item",
+          "486": "trial_spawner_detect_player",
+          "487": "trial_spawner_spawn_mob",
+          "488": "trial_spawner_close_shutter",
+          "489": "trial_spawner_ambient",
+          "490": "block_copper_bulb_turn_on",
+          "491": "block_copper_bulb_turn_off",
+          "492": "ambient_in_air",
+          "493": "breeze_wind_charge_burst",
+          "494": "imitate_breeze",
+          "495": "mob_armadillo_brush",
+          "496": "mob_armadillo_scute_drop",
+          "497": "armor_equip_wolf",
+          "498": "armor_unequip_wolf",
+          "499": "reflect",
+          "500": "vault_open_shutter",
+          "501": "vault_close_shutter",
+          "502": "vault_eject_item",
+          "503": "vault_insert_item",
+          "504": "vault_insert_item_fail",
+          "505": "vault_ambient",
+          "506": "vault_activate",
+          "507": "vault_deactivate",
+          "508": "hurt_reduced",
+          "509": "wind_charge_burst"
         }
       }
     ],
@@ -4204,6 +4261,7 @@
                 "13": "add_entity",
                 "14": "remove_entity",
                 "15": "add_item_entity",
+                "16": "server_post_move",
                 "17": "take_item_entity",
                 "18": "move_entity",
                 "19": "move_player",
@@ -4257,7 +4315,6 @@
                 "68": "map_info_request",
                 "69": "request_chunk_radius",
                 "70": "chunk_radius_update",
-                "71": "item_frame_drop_item",
                 "72": "game_rules_changed",
                 "73": "camera",
                 "74": "boss_event",
@@ -4312,8 +4369,6 @@
                 "124": "level_event_generic",
                 "125": "lectern_update",
                 "126": "video_stream_connect",
-                "127": "add_ecs_entity",
-                "128": "remove_ecs_entity",
                 "129": "client_cache_status",
                 "130": "on_screen_texture_animation",
                 "131": "map_create_locked_copy",
@@ -4388,7 +4443,10 @@
                 "302": "trim_data",
                 "303": "open_sign",
                 "304": "agent_animation",
-                "305": "refresh_entitlements"
+                "305": "refresh_entitlements",
+                "306": "toggle_crafter_slot_request",
+                "307": "set_player_inventory_options",
+                "308": "set_hud"
               }
             }
           ]
@@ -4468,7 +4526,6 @@
                 "map_info_request": "packet_map_info_request",
                 "request_chunk_radius": "packet_request_chunk_radius",
                 "chunk_radius_update": "packet_chunk_radius_update",
-                "item_frame_drop_item": "packet_item_frame_drop_item",
                 "game_rules_changed": "packet_game_rules_changed",
                 "camera": "packet_camera",
                 "boss_event": "packet_boss_event",
@@ -4523,8 +4580,6 @@
                 "level_event_generic": "packet_level_event_generic",
                 "lectern_update": "packet_lectern_update",
                 "video_stream_connect": "packet_video_stream_connect",
-                "add_ecs_entity": "packet_add_ecs_entity",
-                "remove_ecs_entity": "packet_remove_ecs_entity",
                 "client_cache_status": "packet_client_cache_status",
                 "on_screen_texture_animation": "packet_on_screen_texture_animation",
                 "map_create_locked_copy": "packet_map_create_locked_copy",
@@ -4599,7 +4654,11 @@
                 "trim_data": "packet_trim_data",
                 "open_sign": "packet_open_sign",
                 "agent_animation": "packet_agent_animation",
-                "refresh_entitlements": "packet_refresh_entitlements"
+                "refresh_entitlements": "packet_refresh_entitlements",
+                "toggle_crafter_slot_request": "packet_toggle_crafter_slot_request",
+                "set_player_inventory_options": "packet_set_player_inventory_options",
+                "set_hud": "packet_set_hud",
+                "server_post_move": "packet_server_post_move"
               },
               "default": "void"
             }
@@ -4700,6 +4759,10 @@
       [
         {
           "name": "must_accept",
+          "type": "bool"
+        },
+        {
+          "name": "has_addons",
           "type": "bool"
         },
         {
@@ -5844,6 +5907,7 @@
                 "2037": "sculk_charge",
                 "2038": "sculk_charge_pop",
                 "2039": "sonic_explosion",
+                "2040": "dust_plume",
                 "3001": "start_rain",
                 "3002": "start_thunder",
                 "3003": "stop_rain",
@@ -5870,9 +5934,19 @@
                 "3606": "particle_punch_block_south",
                 "3607": "particle_punch_block_west",
                 "3608": "particle_punch_block_east",
+                "3609": "particle_shoot_white_smoke",
+                "3610": "particle_breeze_wind_explosion",
+                "3611": "particle_trial_spawner_detection",
+                "3612": "particle_trial_spawner_spawning",
+                "3613": "particle_trial_spawner_ejecting",
+                "3614": "particle_wind_explosion",
                 "4000": "set_data",
                 "9800": "players_sleeping",
                 "9801": "sleeping_players",
+                "9810": "jump_prevented",
+                "9811": "animation_vault_activate",
+                "9812": "animation_vault_deactivate",
+                "9813": "animation_vault_eject_item",
                 "16384": "add_particle_mask",
                 "16385": "add_particle_bubble",
                 "16386": "add_particle_bubble_manual",
@@ -6112,6 +6186,10 @@
         {
           "name": "duration",
           "type": "zigzag32"
+        },
+        {
+          "name": "tick",
+          "type": "lu64"
         }
       ]
     ],
@@ -6344,6 +6422,10 @@
         {
           "name": "velocity",
           "type": "vec3f"
+        },
+        {
+          "name": "tick",
+          "type": "varint64"
         }
       ]
     ],
@@ -6738,6 +6820,10 @@
           "type": "zigzag32"
         },
         {
+          "name": "dimension",
+          "type": "zigzag32"
+        },
+        {
           "name": "sub_chunk_count",
           "type": "varint"
         },
@@ -7123,15 +7209,6 @@
         {
           "name": "chunk_radius",
           "type": "zigzag32"
-        }
-      ]
-    ],
-    "packet_item_frame_drop_item": [
-      "container",
-      [
-        {
-          "name": "coordinates",
-          "type": "BlockCoordinates"
         }
       ]
     ],
@@ -8135,8 +8212,18 @@
           "type": "string"
         },
         {
-          "name": "show_all",
-          "type": "bool"
+          "name": "redirect_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "marketplace",
+                "1": "dressing_room",
+                "2": "third_party_server_page"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -9090,10 +9177,6 @@
         {
           "name": "position",
           "type": "vec3i"
-        },
-        {
-          "name": "drop_book",
-          "type": "bool"
         }
       ]
     ],
@@ -9128,24 +9211,6 @@
         {
           "name": "resolution_y",
           "type": "li32"
-        }
-      ]
-    ],
-    "packet_add_ecs_entity": [
-      "container",
-      [
-        {
-          "name": "network_id",
-          "type": "varint64"
-        }
-      ]
-    ],
-    "packet_remove_ecs_entity": [
-      "container",
-      [
-        {
-          "name": "network_id",
-          "type": "varint64"
         }
       ]
     ],
@@ -9706,6 +9771,31 @@
               "compareTo": "input_data.item_stack_request",
               "fields": {
                 "true": "ItemStackRequest"
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "input_data.client_predicted_vehicle",
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "vehicle_rotation",
+                      "type": "vec2f"
+                    },
+                    {
+                      "name": "predicted_vehicle",
+                      "type": "zigzag64"
+                    }
+                  ]
+                ]
               },
               "default": "void"
             }
@@ -11521,6 +11611,151 @@
       "container",
       []
     ],
+    "packet_toggle_crafter_slot_request": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "vec3li"
+        },
+        {
+          "name": "slot",
+          "type": "u8"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_set_player_inventory_options": [
+      "container",
+      [
+        {
+          "name": "left_tab",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "construction",
+                "2": "equipment",
+                "3": "items",
+                "4": "nature",
+                "5": "search",
+                "6": "survival"
+              }
+            }
+          ]
+        },
+        {
+          "name": "right_tab",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "fullscreen",
+                "2": "crafting",
+                "3": "armor"
+              }
+            }
+          ]
+        },
+        {
+          "name": "filtering",
+          "type": "bool"
+        },
+        {
+          "name": "layout",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "survival",
+                "2": "recipe_book",
+                "3": "creative"
+              }
+            }
+          ]
+        },
+        {
+          "name": "crafting_layout",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "survival",
+                "2": "recipe_book",
+                "3": "creative"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_set_hud": [
+      "container",
+      [
+        {
+          "name": "elements",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "Element"
+            }
+          ]
+        },
+        {
+          "name": "visibility",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "hide",
+                "1": "reset"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "Element": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "PaperDoll",
+          "1": "Armour",
+          "2": "ToolTips",
+          "3": "TouchControls",
+          "4": "Crosshair",
+          "5": "HotBar",
+          "6": "Health",
+          "7": "ProgressBar",
+          "8": "Hunger",
+          "9": "AirBubbles",
+          "10": "HourseHealth"
+        }
+      }
+    ],
+    "packet_server_post_move": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "vec3f"
+        }
+      ]
+    ],
     "string": [
       "pstring",
       {
@@ -11883,7 +12118,10 @@
           "stop_crawling",
           "start_flying",
           "stop_flying",
-          "received_server_data"
+          "received_server_data",
+          "client_predicted_vehicle",
+          "paddling_left",
+          "paddling_right"
         ]
       }
     ],
