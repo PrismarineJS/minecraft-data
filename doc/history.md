@@ -1,3 +1,10 @@
+## 3.64.0
+* [Fixed 1.20.3 and 1.20.4 loginPacket version was set incorrectly on data/dataPaths.json (#853)](https://github.com/PrismarineJS/minecraft-data/commit/73679065860242acb6b8bf2692718700a1bd5c37) (thanks @n-qber)
+* [Added a resource pack UUID feature that 1.20.3 and later versions use. (#854)](https://github.com/PrismarineJS/minecraft-data/commit/90d6ddac514232e2b609ad6f71012d052210a833) (thanks @TerminalCalamitas)
+* [Add sounds files for majority of versions. (#839)](https://github.com/PrismarineJS/minecraft-data/commit/d9f4a0654fa980423ba4f182e443df15e70d018e) (thanks @wgaylord)
+* [Create ARCHITECTURE.md (#856)](https://github.com/PrismarineJS/minecraft-data/commit/03107f89d1d70df42f568fc4a2da33af48404d38) (thanks @extremeheat)
+* [Add 24w11a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fe8ed241a4b141ed1fae58dd361597c9ee4581d9) (thanks @github-actions[bot])
+
 ## 3.63.0
 * [Add bedrock 1.20.71 protocol data (#858)](https://github.com/PrismarineJS/minecraft-data/commit/fc0aac53acb683cba83f3d692cbf053094f49108) (thanks @extremeheat)
 * [Add 24w10a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97b1bafc5aab20bdff0bd0b4422ce868530b8806) (thanks @github-actions[bot])
