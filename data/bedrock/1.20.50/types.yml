@@ -150,6 +150,11 @@ vec3i:
    y: zigzag32
    z: zigzag32
 
+vec3li:
+   x: li32
+   y: li32
+   z: li32
+
 vec3u:
    x: varint
    y: varint
@@ -163,6 +168,15 @@ vec3f:
 vec2f:
    x: lf32
    z: lf32
+
+Vec3fopts:
+   x?: lf32
+   y?: lf32
+   z?: lf32
+
+Vec2fopts:
+   x?: lf32
+   y?: lf32
 
 MetadataDictionary: []varint
    # https://github.com/pmmp/PocketMine-MP/blob/stable/src/pocketmine/entity/Entity.php#L101
@@ -296,6 +310,7 @@ MetadataDictionary: []varint
       128: player_last_death_position
       129: player_last_death_dimension
       130: player_has_died
+      131: collision_box
    type: varint =>
       0: byte
       1: short
@@ -440,7 +455,15 @@ MetadataFlags2: [ "bitflags", {
       "digging",
       "sonic_boom",
       "has_dash_cooldown",
-      "push_towards_closest_space"
+      "push_towards_closest_space",
+      "scenting",
+      "rising",
+      "feeling_happy",
+      "searching",
+      "crawling",
+      "timer_flag_1",
+      "timer_flag_2",
+      "timer_flag_3",
    ]
 }]
 
@@ -641,6 +664,9 @@ RecipeIngredient:
       # DeferredItemDescriptor represents an item descriptor that uses a namespace and metadata value to identify the item.
       # There is no clear benefit of using this item descriptor.
       4: string_id_meta
+      # ComplexAliasItemDescriptor represents an item descriptor that uses a single name to identify the item. There is no
+      # clear benefit of using this item descriptor and only seem to be used for specific recipes.
+      5: complex_alias
    _: type ?
       if int_id_meta:
          # NetworkID is the numerical network ID of the item. This is sometimes a positive ID, and sometimes a
@@ -663,6 +689,9 @@ RecipeIngredient:
          # MetadataValue is the metadata value of the item. For some items, this is the damage value, whereas for
          # other items it is simply an identifier of a variant of the item.
          metadata: li16
+      if complex_alias:
+         # Name is the name of the item, which is a name like 'minecraft:stick'.
+         name: string
    count: zigzag32
 
 PotionTypeRecipes: []varint
@@ -693,6 +722,7 @@ Recipes: []varint
       # SmithingTransformRecipe is a recipe specifically used for smithing tables. It has two input items and adds them
       # together, resulting in a new item.
       8: smithing_transform
+      9: smithing_trim
    recipe: type?
       if shapeless or shulker_box or shapeless_chemistry:
          recipe_id: LatinString
@@ -730,6 +760,7 @@ Recipes: []varint
          # RecipeID is a unique ID of the recipe. This ID must be unique amongst all other types of recipes too,
          # but its functionality is not exactly known.
          recipe_id: LatinString
+         template: RecipeIngredient
          # Base is the item that the Addition is being applied to in the smithing table.
          base: RecipeIngredient
          # Addition is the item that is being added to the Base item to result in a modified item.
@@ -741,6 +772,13 @@ Recipes: []varint
          # RecipeNetworkID is a unique ID used to identify the recipe over network. Each recipe must have a unique
          # network ID. Recommended is to just increment a variable for each unique recipe registered.
          # This field must never be 0.
+         network_id: varint
+      if smithing_trim:
+         recipe_id: LatinString
+         template: RecipeIngredient
+         input: RecipeIngredient
+         addition: RecipeIngredient
+         block: string
          network_id: varint
 
 SkinImage:
@@ -782,6 +820,7 @@ Skin:
    # on a classic skin.
    cape_on_classic: bool
    primary_user: bool
+   overriding_player_appearance: bool
 
 PlayerRecords:
    type: u8 =>
@@ -852,6 +891,12 @@ Action: zigzag32 =>
    28: start_item_use_on
    29: stop_item_use_on
    30: handled_teleport
+   31: missed_swing
+   32: start_crawling
+   33: stop_crawling
+   34: start_flying
+   35: stop_flying
+   36: received_server_data
 
 # Source and Destination point to the source slot from which Count of the item stack were taken and the
 # destination slot to which this item was moved.
@@ -1028,9 +1073,9 @@ ItemStackRequest:
      - leave_event_text
      - slash_command_chat
      - cartography_text
-     - slash_command_non_chat
-     - scoreboard_text
-     - ticking_area_text
+     - kick_command
+     - title_command
+     - summon_command
 
 
 # ItemStackResponse is a response to an individual ItemStackRequest.
@@ -1136,6 +1181,30 @@ TrackedObject:
 # client-side.
 MapDecoration:
    type: u8 =>
+   - marker_white
+   - marker_green
+   - marker_red
+   - marker_blue
+   - cross_white
+   - triangle_red
+   - square_white
+   - marker_sign
+   - marker_pink
+   - marker_orange
+   - marker_yellow
+   - marker_teal
+   - triangle_green
+   - small_square_white
+   - mansion
+   - monument
+   - no_draw
+   - village_desert
+   - village_plains
+   - village_savanna
+   - village_snowy
+   - village_taiga
+   - jungle_temple
+   - witch_hut =>
    - marker_white
    - marker_green
    - marker_red
@@ -1391,6 +1460,8 @@ WindowType: i8 =>
    32: jigsaw_editor
    33: smithing_table
    34: chest_boat
+   35: decorated_pot
+   36: crafter
 
 # Used in inventory transactions. 
 ContainerSlotType: u8 =>
@@ -1455,6 +1526,8 @@ ContainerSlotType: u8 =>
    - barrel
    - cursor
    - creative_output
+   - smithing_table_template
+   - crafter
 
 SoundType: varint =>
    - ItemUseOn
@@ -1919,6 +1992,30 @@ SoundType: varint =>
    - Pickup
    - InsertEnchanted
    - PickupEnchanted
+   - Brush
+   - BrushCompleted
+   - ShatterDecoratedPot
+   - BreakDecoratedPot
+   - SnifferEggCrack
+   - SnifferEggHatched
+   - WaxedSignInteractFail
+   - RecordRelic
+   - Bump
+   - PumpkinCarve
+   - ConvertHuskToZombie
+   - PigDeath
+   - HoglinZombified
+   - AmbientUnderwaterEnter
+   - AmbientUnderwaterExit
+   - bottle_fill
+   - bottle_empty
+   - crafter_craft
+   - crafter_fail
+   - block_decorated_pot_insert
+   - block_decorated_pot_insert_fail
+   - crafter_disable_slot
+   - block_copper_bulb_turn_on
+   - block_copper_bulb_turn_off
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2064,6 +2161,7 @@ AbilitySet: ["bitflags",
          "muted",
          "world_builder",
          "no_clip",
+         "privileged_builder",
          "count"
       ]
    }
@@ -2086,3 +2184,107 @@ AbilityLayers:
    fly_speed: lf32
    # WalkSpeed is the default walk speed of the layer.
    walk_speed: lf32
+
+CameraPresets:
+   # Name is the name of the preset. Each preset must have their own unique name.
+   name: string
+   # Parent is the name of the preset that this preset extends upon. This can be left empty.
+   parent: string
+   position: Vec3fopts
+   rotation: Vec2fopts
+   ## TODO: make this an enum afer adding proper optional support inside pdefyaml
+   audio_listener?: u8
+   player_effects?: bool
+
+DisconnectFailReason: zigzag32 =>
+   - unknown
+   - cant_connect_no_internet
+   - no_permissions
+   - unrecoverable_error
+   - third_party_blocked
+   - third_party_no_internet
+   - third_party_bad_ip
+   - third_party_no_server_or_server_locked
+   - version_mismatch
+   - skin_issue
+   - invite_session_not_found
+   - edu_level_settings_missing
+   - local_server_not_found
+   - legacy_disconnect
+   - user_leave_game_attempted
+   - platform_locked_skins_error
+   - realms_world_unassigned
+   - realms_server_cant_connect
+   - realms_server_hidden
+   - realms_server_disabled_beta
+   - realms_server_disabled
+   - cross_platform_disallowed
+   - cant_connect
+   - session_not_found
+   - client_settings_incompatible_with_server
+   - server_full
+   - invalid_platform_skin
+   - edition_version_mismatch
+   - edition_mismatch
+   - level_newer_than_exe_version
+   - no_fail_occurred
+   - banned_skin
+   - timeout
+   - server_not_found
+   - outdated_server
+   - outdated_client
+   - no_premium_platform
+   - multiplayer_disabled
+   - no_wifi
+   - world_corruption
+   - no_reason
+   - disconnected
+   - invalid_player
+   - logged_in_other_location
+   - server_id_conflict
+   - not_allowed
+   - not_authenticated
+   - invalid_tenant
+   - unknown_packet
+   - unexpected_packet
+   - invalid_command_request_packet
+   - host_suspended
+   - login_packet_no_request
+   - login_packet_no_cert
+   - missing_client
+   - kicked
+   - kicked_for_exploit
+   - kicked_for_idle
+   - resource_pack_problem
+   - incompatible_pack
+   - out_of_storage
+   - invalid_level
+   - disconnect_packet_deprecated
+   - block_mismatch
+   - invalid_heights
+   - invalid_widths
+   - connection_lost
+   - zombie_connection
+   - shutdown
+   - reason_not_set
+   - loading_state_timeout
+   - resource_pack_loading_failed
+   - searching_for_session_loading_screen_failed
+   - conn_protocol_version
+   - subsystem_status_error
+   - empty_auth_from_discovery
+   - empty_url_from_discovery
+   - expired_auth_from_discovery
+   - unknown_signal_service_sign_in_failure
+   - xbl_join_lobby_failure
+   - unspecified_client_instance_disconnection
+   - conn_session_not_found
+   - conn_create_peer_connection
+   - conn_ice
+   - conn_connect_request
+   - conn_connect_response
+   - conn_negotiation_timeout
+   - conn_inactivity_timeout
+   - stale_connection_being_replaced
+   - realms_session_not_found
+   - bad_packet

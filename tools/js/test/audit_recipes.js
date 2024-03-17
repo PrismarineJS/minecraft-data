@@ -117,5 +117,17 @@ require('./version_iterator')(function (p, versionString) {
         ])
       }
     })
+    it('crafting benches has multiple recipes', () => {
+      const recipes = getIfExist(path.join(p, 'recipes.json'))
+      const items = getIfExist(path.join(p, 'items.json'))
+      if (recipes && items) {
+        const craftingTable = items.find(x => x.name === 'crafting_table')
+        const oakPlanks = items.find(x => x.name === 'oak_planks')
+        if (!oakPlanks) return // Bail if version doesn't have seperately defined planks, this prevents the test failing on versions that use metadata
+        const recipe = recipes[craftingTable.id]
+        if (!recipe[0]) return
+        assert.notEqual(recipe.length, 1) // Check that crafting table has multiple recipes.
+      }
+    })
   })
 })
