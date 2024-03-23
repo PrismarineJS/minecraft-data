@@ -1,3 +1,7 @@
+## 3.64.1
+* [Update bedrock features.json to add `blockHashes`](https://github.com/PrismarineJS/minecraft-data/commit/bf994a81894ab47cf031ecdc9dff7165ac89e56e) (thanks @extremeheat)
+* [Add 24w12a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8a914067da3998bc8b84f41c33e3cf5fb8980599) (thanks @github-actions[bot])
+
 ## 3.64.0
 * [Fixed 1.20.3 and 1.20.4 loginPacket version was set incorrectly on data/dataPaths.json (#853)](https://github.com/PrismarineJS/minecraft-data/commit/73679065860242acb6b8bf2692718700a1bd5c37) (thanks @n-qber)
 * [Added a resource pack UUID feature that 1.20.3 and later versions use. (#854)](https://github.com/PrismarineJS/minecraft-data/commit/90d6ddac514232e2b609ad6f71012d052210a833) (thanks @TerminalCalamitas)
