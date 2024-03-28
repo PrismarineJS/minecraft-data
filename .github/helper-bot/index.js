@@ -51,7 +51,7 @@ async function updateManifestPC () {
   const latestVersionIsSnapshot = latestVersionData.type !== 'release'
 
   const title = `Support Minecraft PC ${latestVersion}`
-  const issueStatus = await helper.getIssueStatus({ title })
+  const issueStatus = await helper.findIssue({ titleIncludes }) || {}
 
   if (latestVersionIsSnapshot) {
     // don't make issues for snapshots
@@ -61,7 +61,7 @@ async function updateManifestPC () {
     }
   } else {
     if (supportedVersions.pc.includes(latestVersion)) {
-      if (issueStatus.open) {
+      if (issueStatus.isOpen) {
         helper.close(issueStatus.id, `Closing as PC ${latestVersion} is now supported`)
       }
       console.log('Latest PC version is supported.')
@@ -92,7 +92,7 @@ async function updateManifestPC () {
     }
   }
 
-  if (!latestVersionIsSnapshot && !issueStatus.open && !issueStatus.closed) {
+  if (!latestVersionIsSnapshot && !issueStatus.isOpen && !issueStatus.isClosed) {
     console.log('Opening issue', versionJson)
     const issuePayload = buildFirstIssue(title, latestVersionData, versionJson)
 
