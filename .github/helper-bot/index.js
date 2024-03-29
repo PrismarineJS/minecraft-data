@@ -51,7 +51,7 @@ async function updateManifestPC () {
   const latestVersionIsSnapshot = latestVersionData.type !== 'release'
 
   const title = `Support Minecraft PC ${latestVersion}`
-  const issueStatus = await helper.findIssue({ titleIncludes }) || {}
+  const issueStatus = await helper.findIssue({ titleIncludes: title }) || {}
 
   if (latestVersionIsSnapshot) {
     // don't make issues for snapshots
