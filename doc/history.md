@@ -1,3 +1,9 @@
+## 3.65.0
+* [Add bedrock 1.20.80 protocol data (#873)](https://github.com/PrismarineJS/minecraft-data/commit/7c216d876417eb3fe27c317700b38f0e638ee47a) (thanks @extremeheat)
+* Update pc protocolVersions.json with 1.20.5 and new snapshots
+* [Add bedrock 1.19.80-1.20.71 blocks data (#864)](https://github.com/PrismarineJS/minecraft-data/commit/e34bced290112d8fe7c3935369eec969b8453a71) (thanks @FreezeEngine)
+* [Update bedrock protocol to fix `command_executed` and `player_movement_corrected` typos (#871)](https://github.com/PrismarineJS/minecraft-data/commit/0f86acc3b91279743fcc991ad2c9c313b8ebda57) (thanks @kotinash)
+
 ## 3.64.1
 * [Update bedrock features.json to add `blockHashes`](https://github.com/PrismarineJS/minecraft-data/commit/bf994a81894ab47cf031ecdc9dff7165ac89e56e) (thanks @extremeheat)
 * [Add 24w12a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8a914067da3998bc8b84f41c33e3cf5fb8980599) (thanks @github-actions[bot])
