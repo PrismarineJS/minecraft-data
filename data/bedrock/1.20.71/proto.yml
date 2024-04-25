@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.20.80
+!version: 1.20.71
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -158,7 +158,6 @@ packet_resource_pack_stack:
    game_version: string
    experiments: Experiments # ??? such random fields
    experiments_previously_used: bool
-   has_editor_packs: bool
 
 packet_resource_pack_client_response:
    !id: 0x08
@@ -266,9 +265,6 @@ packet_start_game:
    # The world game mode that a player gets when it first spawns in the world. It is shown in the
    # settings and is used if the Player Gamemode is set to 5.
    world_gamemode: GameMode
-   # Specifies if the game is locked to "hardcore" mode or not, meaning the world will be unplayable
-   # after player dies in survival game mode. Persists even after switching player or world game modes.
-   hardcore: bool
    # Difficulty is the difficulty of the world. It is a value from 0-3, with 0 being peaceful,
    # 1 being easy, 2 being normal and 3 being hard.
    difficulty: zigzag32
@@ -830,7 +826,6 @@ packet_level_event:
       3612: particle_trial_spawner_spawning
       3613: particle_trial_spawner_ejecting
       3614: particle_wind_explosion
-      3615: particle_wolf_armor_break
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
@@ -3253,7 +3248,6 @@ packet_update_player_game_type:
    # PlayerUniqueID is the entity unique ID of the player that should have its game mode updated. If this
    # packet is sent to other clients with the player unique ID of another player, nothing happens.
    player_unique_id: zigzag64
-   tick: varint
 
 
 # EmoteList is sent by the client every time it joins the server and when it equips new emotes. It may be
@@ -3412,8 +3406,6 @@ packet_correct_player_move_prediction:
    position: vec3f
    # Delta is the change in position compared to what the client sent as its position at that specific tick.
    delta: vec3f
-   vehicle_rotation: prediction_type ?
-      if vehicle: vec2f
    # OnGround specifies if the player was on the ground at the time of the tick below.
    on_ground: bool
    # Tick is the tick of the movement which was corrected by this packet.
@@ -4155,9 +4147,7 @@ Element: u8 =>
 - ProgressBar
 - Hunger
 - AirBubbles
-- VehicleHealth
-- EffectsBar
-- ItemTextPopup
+- HourseHealth
 
 packet_server_post_move:
    !id: 0x10
