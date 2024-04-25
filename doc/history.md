@@ -1,21 +1,8 @@
 ## 3.65.0
 * [Add bedrock 1.20.80 protocol data (#873)](https://github.com/PrismarineJS/minecraft-data/commit/7c216d876417eb3fe27c317700b38f0e638ee47a) (thanks @extremeheat)
-* [Add 1.20.5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/2235e822fd3963b18ea0341e219b446810fe119b) (thanks @github-actions[bot])
-* [Add 1.20.5-rc3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6aad257c4496c000394c5ffcdf8e4b479f60210c) (thanks @github-actions[bot])
-* [Add 1.20.5-rc2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ed163852f7d75ef6f064cff733f5e047698d2c58) (thanks @github-actions[bot])
-* [Add 1.20.5-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/be7fcdc2a3a8afdca8eda9b827e60fffeb2e7544) (thanks @github-actions[bot])
+* Update pc protocolVersions.json with 1.20.5 and new snapshots
 * [Add bedrock 1.19.80-1.20.71 blocks data (#864)](https://github.com/PrismarineJS/minecraft-data/commit/e34bced290112d8fe7c3935369eec969b8453a71) (thanks @FreezeEngine)
 * [Update bedrock protocol to fix `command_executed` and `player_movement_corrected` typos (#871)](https://github.com/PrismarineJS/minecraft-data/commit/0f86acc3b91279743fcc991ad2c9c313b8ebda57) (thanks @kotinash)
-* [Add 1.20.5-pre4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9e8a78629145eaa171d81ae5b2cfd65da7484c2b) (thanks @github-actions[bot])
-* [Update ci.yml to remove npm run build](https://github.com/PrismarineJS/minecraft-data/commit/964d09956724a5beb6cd40ade929d1cfe0ee2fd2) (thanks @extremeheat)
-* [Add 1.20.5-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/59b1550cf2ebf32470df1e4358052939fa2488ee) (thanks @github-actions[bot])
-* [Add 1.20.5-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c0d3b68298181e9910de3e90e31c36fbc6b6b0ce) (thanks @github-actions[bot])
-* [Add 1.20.5-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9dba14d7d09539ee0e46f0bf08a23d6309553b8e) (thanks @github-actions[bot])
-* [Add 24w14a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/d4998b55781eb62ac0293f47c876555de9d413f8) (thanks @github-actions[bot])
-* [Add 24w14potato to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8ed40942bc29c6fccf7a0be074bccf8a6a88ff54) (thanks @github-actions[bot])
-* [helper-bot fix](https://github.com/PrismarineJS/minecraft-data/commit/dad01c95df86f792de6ececa921172f5ec287fc4) (thanks @extremeheat)
-* [update helper-bot action for gh-helpers v0.2](https://github.com/PrismarineJS/minecraft-data/commit/8f77520c23631de94aafe25a51b7b31a6d3dd4aa) (thanks @extremeheat)
-* [Add 24w13a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/05ecf365f8f02b892c228ac5454c6650d633efc8) (thanks @github-actions[bot])
 
 ## 3.64.1
 * [Update bedrock features.json to add `blockHashes`](https://github.com/PrismarineJS/minecraft-data/commit/bf994a81894ab47cf031ecdc9dff7165ac89e56e) (thanks @extremeheat)
