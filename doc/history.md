@@ -1,3 +1,58 @@
+## 3.65.0
+* [Add bedrock 1.20.80 protocol data (#873)](https://github.com/PrismarineJS/minecraft-data/commit/7c216d876417eb3fe27c317700b38f0e638ee47a) (thanks @extremeheat)
+* Update pc protocolVersions.json with 1.20.5 and new snapshots
+* [Add bedrock 1.19.80-1.20.71 blocks data (#864)](https://github.com/PrismarineJS/minecraft-data/commit/e34bced290112d8fe7c3935369eec969b8453a71) (thanks @FreezeEngine)
+* [Update bedrock protocol to fix `command_executed` and `player_movement_corrected` typos (#871)](https://github.com/PrismarineJS/minecraft-data/commit/0f86acc3b91279743fcc991ad2c9c313b8ebda57) (thanks @kotinash)
+
+## 3.64.1
+* [Update bedrock features.json to add `blockHashes`](https://github.com/PrismarineJS/minecraft-data/commit/bf994a81894ab47cf031ecdc9dff7165ac89e56e) (thanks @extremeheat)
+* [Add 24w12a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8a914067da3998bc8b84f41c33e3cf5fb8980599) (thanks @github-actions[bot])
+
+## 3.64.0
+* [Fixed 1.20.3 and 1.20.4 loginPacket version was set incorrectly on data/dataPaths.json (#853)](https://github.com/PrismarineJS/minecraft-data/commit/73679065860242acb6b8bf2692718700a1bd5c37) (thanks @n-qber)
+* [Added a resource pack UUID feature that 1.20.3 and later versions use. (#854)](https://github.com/PrismarineJS/minecraft-data/commit/90d6ddac514232e2b609ad6f71012d052210a833) (thanks @TerminalCalamitas)
+* [Add sounds files for majority of versions. (#839)](https://github.com/PrismarineJS/minecraft-data/commit/d9f4a0654fa980423ba4f182e443df15e70d018e) (thanks @wgaylord)
+* [Create ARCHITECTURE.md (#856)](https://github.com/PrismarineJS/minecraft-data/commit/03107f89d1d70df42f568fc4a2da33af48404d38) (thanks @extremeheat)
+* [Add 24w11a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fe8ed241a4b141ed1fae58dd361597c9ee4581d9) (thanks @github-actions[bot])
+
+## 3.63.0
+* [Add bedrock 1.20.71 protocol data (#858)](https://github.com/PrismarineJS/minecraft-data/commit/fc0aac53acb683cba83f3d692cbf053094f49108) (thanks @extremeheat)
+* [Add 24w10a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97b1bafc5aab20bdff0bd0b4422ce868530b8806) (thanks @github-actions[bot])
+* [Add 24w09a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/882319614133edc9fc7a93649e285f752a303401) (thanks @github-actions[bot])
+
+## 3.62.0
+* [Fix 1.20.2 and 1.20.3 Recipes, change docs to say to use Burger inste… (#843)](https://github.com/PrismarineJS/minecraft-data/commit/d47396ed1e8962fa0310bb603fc3ff4a4521b4f4) (thanks @wgaylord)
+
+## 3.61.2
+* [Add style to command param type enum in pc 1.20.3 protocol (#850)](https://github.com/PrismarineJS/minecraft-data/commit/4acaa9bd255951873eb11b12aca15a1079680d67) (thanks @extremeheat)
+
+## 3.61.1
+* [[bedrock] Fix issue with player auth input data (#848)](https://github.com/PrismarineJS/minecraft-data/commit/985b2bef89e9642da1be90b825969a4818d5e5e8) (thanks @MrDiamond64)
+* [Add 24w07a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4bf2ae5ccb7da0dc51898dbdd85cfbd04621fe07) (thanks @github-actions[bot])
+
+## 3.61.0
+* [Add bedrock 1.20.61 protocol data (#845)](https://github.com/PrismarineJS/minecraft-data/commit/b38e5da05d345d3c3af52466cf74167a94b1bb1a) (thanks @extremeheat)
+* [Add 24w06a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5630ff7074903a6638dd6595315888d9585d0e59) (thanks @github-actions[bot])
+* [Add 24w05b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ff68bc8540e582042af86edc5bf8ca98f8017f1d) (thanks @github-actions[bot])
+* [Add 24w05a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f2bbe7b57103d4c0c274a6dbc06f34e1c3638fc1) (thanks @github-actions[bot])
+
+## 3.60.0
+* [Fix spelling on packet_configuration_acknowledged in all locations in 1.20.2 protocol.json (#841)](https://github.com/PrismarineJS/minecraft-data/commit/4b0ac882a3900525dbf6cc0f0a4ffb9234d3b029) (thanks @wgaylord)
+* [Add New Data Version - Doc update (#835)](https://github.com/PrismarineJS/minecraft-data/commit/c1b5113fc402966550050c326589524e7e606626) (thanks @wgaylord)
+* [Add 24w04a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/1c4cacac6874d513e8725833aa53f0772b0e12b7) (thanks @github-actions[bot])
+* [Add 24w03b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/3e9e68884fcaac7a15e87361fd793eab1d2d11ac) (thanks @github-actions[bot])
+* [Add 24w03a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/edddc84ce25fb34c6c92aa995adf158272915a9e) (thanks @github-actions[bot])
+
+## 3.59.3
+* [pc: add `chatPacketsUseNbtComponents` feature for 1.20.3](https://github.com/PrismarineJS/minecraft-data/commit/42d7ecc1aa70dd0d7683aada09aea8c498d1a1a5) (thanks @extremeheat)
+
+## 3.59.2
+* [Fix pc dimensionDataIsAvailable feature range](https://github.com/PrismarineJS/minecraft-data/commit/afd576f9b3cbedc4c2f7cbca1e849dc3760027b1) (thanks @extremeheat)
+
+## 3.59.1
+* [Add pc feature `unifiedPlayerAndEntitySpawnPacket`](https://github.com/PrismarineJS/minecraft-data/commit/bd3c9757d0f9d40c797024ed09c3a5e99e815b77) (thanks @extremeheat)
+* [Add an unicity test for features. (#824)](https://github.com/PrismarineJS/minecraft-data/commit/587a1341c83ef4fc1cf3353d35b09435a11f8217) (thanks @rom1504)
+
 ## 3.59.0
 * [Fix breeze and wind charge being type player. (#826)](https://github.com/PrismarineJS/minecraft-data/commit/1792f0d8035aa275702b6080d4176ca14a3f578a) (thanks @wgaylord)
 

@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.20.50
+!version: 1.20.80
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -127,6 +127,9 @@ packet_resource_packs_info:
    !bound: client
    # If the resource pack requires the client accept it.
    must_accept: bool
+   # HasAddons specifies if any of the resource packs contain addons in them. If set to true, only clients
+   # that support addons will be able to download them.
+   has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
    # ForcingServerPacks is currently an unclear field.
@@ -155,6 +158,7 @@ packet_resource_pack_stack:
    game_version: string
    experiments: Experiments # ??? such random fields
    experiments_previously_used: bool
+   has_editor_packs: bool
 
 packet_resource_pack_client_response:
    !id: 0x08
@@ -262,6 +266,9 @@ packet_start_game:
    # The world game mode that a player gets when it first spawns in the world. It is shown in the
    # settings and is used if the Player Gamemode is set to 5.
    world_gamemode: GameMode
+   # Specifies if the game is locked to "hardcore" mode or not, meaning the world will be unplayable
+   # after player dies in survival game mode. Persists even after switching player or world game modes.
+   hardcore: bool
    # Difficulty is the difficulty of the world. It is a value from 0-3, with 0 being peaceful,
    # 1 being easy, 2 being normal and 3 being hard.
    difficulty: zigzag32
@@ -818,9 +825,19 @@ packet_level_event:
       3607: particle_punch_block_west
       3608: particle_punch_block_east
       3609: particle_shoot_white_smoke
+      3610: particle_breeze_wind_explosion
+      3611: particle_trial_spawner_detection
+      3612: particle_trial_spawner_spawning
+      3613: particle_trial_spawner_ejecting
+      3614: particle_wind_explosion
+      3615: particle_wolf_armor_break
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
+      9810: jump_prevented
+      9811: animation_vault_activate
+      9812: animation_vault_deactivate
+      9813: animation_vault_eject_item
       0x4000: add_particle_mask
       # 0x4000 | + particle ID
       16385: add_particle_bubble   # 1
@@ -999,6 +1016,7 @@ packet_mob_effect:
    amplifier: zigzag32
    particles: bool
    duration: zigzag32
+   tick: lu64
 
 packet_update_attributes:
    !id: 0x1d
@@ -1121,6 +1139,7 @@ packet_set_entity_motion:
    # Velocity is the new velocity the entity gets. This velocity will initiate the client-side movement of
    # the entity.
    velocity: vec3f
+   tick: varint64
 
 # SetActorLink is sent by the server to initiate an entity link client-side, meaning one entity will start
 # riding another.
@@ -1403,6 +1422,7 @@ packet_level_chunk:
    x: zigzag32
    # ChunkZ is the Z coordinate of the chunk sent. (To translate a block's Z to a chunk's Z: z >> 4)
    z: zigzag32
+   dimension: zigzag32
    # SubChunkCount is the amount of sub chunks that are part of the chunk sent. Depending on if the cache
    # is enabled, a list of blob hashes will be sent, or, if disabled, the sub chunk data.
    # On newer versions, if this is a negative value it indicates to use the Subchunk Polling mechanism
@@ -1487,7 +1507,7 @@ packet_event:
       8: agent_command 
       9: agent_created 
       10: banner_pattern_removed
-      11: commaned_executed 
+      11: command_executed 
       12: fish_bucketed
       13: mob_born 
       14: pet_died 
@@ -1497,7 +1517,7 @@ packet_event:
       18: actor_definition
       19: raid_update
       20: player_movement_anomaly
-      21: player_moement_corrected
+      21: player_movement_corrected
       22: honey_harvested
       23: target_block_hit
       24: piglin_barter
@@ -1618,10 +1638,6 @@ packet_chunk_radius_update:
    # not have to be the same as the requested chunk radius.
    chunk_radius: zigzag32
 
-packet_item_frame_drop_item:
-   !id: 0x47
-   !bound: both
-   coordinates: BlockCoordinates
 
 packet_game_rules_changed:
    !id: 0x48
@@ -2757,8 +2773,6 @@ packet_lectern_update:
    # Position is the position of the lectern that was updated. If no lectern is at the block position,
    # the packet should be ignored.
    position: vec3i
-   # DropBook specifies if the book currently set on display in the lectern should be dropped server-side.
-   drop_book: bool
 
 # This packet was removed.
 packet_video_stream_connect:
@@ -2771,27 +2785,6 @@ packet_video_stream_connect:
       2: close
    resolution_x: li32
    resolution_y: li32
-
-# This is NOT a Minecraft entity, but an entity in the Entity Component System (ECS)
-# for the game engine Minecrat Bedrock uses. Internally, all 'Minecraft entities' are
-# known as Actors including in packet names and fields. However, these are irrelevant
-# internal details so we don't do the renames in these protocol definitions, for simplicity we just use Entity.
-# 
-# AddEntity is sent by the server to the client. Its function is not entirely clear: It does not add an
-# entity in the sense of an in-game entity, but has to do with the ECS that Minecraft uses.
-packet_add_ecs_entity:
-   !id: 0x7f
-   !bound: client
-   # EntityNetworkID is the network ID of the entity that should be added.
-   network_id: varint64
-
-# RemoveEntity is sent by the server to the client. Its function is not entirely clear: It does not remove an
-# entity in the sense of an in-game entity, but has to do with the ECS that Minecraft uses
-packet_remove_ecs_entity:
-   !id: 0x80
-   !bound: client
-   # EntityNetworkID is the network ID of the entity that should be removed.
-   network_id: varint64
 
 # ClientCacheStatus is sent by the client to the server at the start of the game. It is sent to let the
 # server know if it supports the client-side blob cache. Clients such as Nintendo Switch do not support the
@@ -3097,6 +3090,10 @@ packet_player_auth_input:
          data: TransactionUseItem
    item_stack_request: input_data.item_stack_request ?
       if true: ItemStackRequest
+   _: input_data.client_predicted_vehicle ?
+      if true:
+         vehicle_rotation: vec2f
+         predicted_vehicle: zigzag64
    block_action: input_data.block_action ?
       if true: []zigzag32
          action: Action
@@ -3160,7 +3157,10 @@ InputFlag: [ "bitflags", {
       "stop_crawling",
       "start_flying",
       "stop_flying",
-      "received_server_data"
+      "received_server_data",
+      "client_predicted_vehicle",
+      "paddling_left",
+      "paddling_right"
    ]
 }]
 
@@ -3253,6 +3253,7 @@ packet_update_player_game_type:
    # PlayerUniqueID is the entity unique ID of the player that should have its game mode updated. If this
    # packet is sent to other clients with the player unique ID of another player, nothing happens.
    player_unique_id: zigzag64
+   tick: varint
 
 
 # EmoteList is sent by the client every time it joins the server and when it equips new emotes. It may be
@@ -3411,6 +3412,8 @@ packet_correct_player_move_prediction:
    position: vec3f
    # Delta is the change in position compared to what the client sent as its position at that specific tick.
    delta: vec3f
+   vehicle_rotation: prediction_type ?
+      if vehicle: vec2f
    # OnGround specifies if the player was on the ground at the time of the tick below.
    on_ground: bool
    # Tick is the tick of the movement which was corrected by this packet.
@@ -4125,6 +4128,36 @@ packet_set_player_inventory_options:
    - survival
    - recipe_book
    - creative
+
+# SetHud is sent by the server to set the visibility of individual HUD elements on the client. It is
+# important to note that the client does not reset the state of the HUD elements after it leaves a server,
+# meaning they can leak into sessions on different servers. To be safe, you should reset the visibility of
+# all HUD elements when a player connects.
+packet_set_hud:
+   !id: 0x134
+   # Elements is a list of HUD elements that are being modified. The values can be any of the HudElement
+   # constants above.
+   elements: Element[]varint
+   # Visibility represents the new visibility of the specified Elements. It can be any of the HudVisibility
+   # constants above.
+   visibility: u8 =>
+   - hide
+   - reset
+
+Element: u8 =>
+- PaperDoll
+- Armour
+- ToolTips
+- TouchControls
+- Crosshair
+- HotBar
+- Health
+- ProgressBar
+- Hunger
+- AirBubbles
+- VehicleHealth
+- EffectsBar
+- ItemTextPopup
 
 packet_server_post_move:
    !id: 0x10

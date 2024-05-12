@@ -464,6 +464,7 @@ MetadataFlags2: [ "bitflags", {
       "timer_flag_1",
       "timer_flag_2",
       "timer_flag_3",
+      "body_rotation_blocked"
    ]
 }]
 
@@ -743,6 +744,7 @@ Recipes: []varint
          uuid: uuid
          block: string
          priority: zigzag32
+         assume_symmetry: bool
          network_id: varint
       if furnace:
          input_id: zigzag32
@@ -839,6 +841,7 @@ PlayerRecords:
             skin_data: Skin
             is_teacher: bool
             is_host: bool
+            is_subclient: bool
          if remove:
             uuid: uuid
    verified: type ?
@@ -1972,8 +1975,6 @@ SoundType: varint =>
    - Record5
    - ConvertToFrog
    - RecordPlaying
-   - DrinkMilk
-   - RecordPlaying
    - EnchantingTableUse
    - StepSand
    - DashReady
@@ -2016,8 +2017,32 @@ SoundType: varint =>
    - block_decorated_pot_insert
    - block_decorated_pot_insert_fail
    - crafter_disable_slot
+   - trial_spawner_open_shutter
+   - trial_spawner_eject_item
+   - trial_spawner_detect_player
+   - trial_spawner_spawn_mob
+   - trial_spawner_close_shutter
+   - trial_spawner_ambient
    - block_copper_bulb_turn_on
    - block_copper_bulb_turn_off
+   - ambient_in_air
+   - breeze_wind_charge_burst
+   - imitate_breeze
+   - mob_armadillo_brush
+   - mob_armadillo_scute_drop
+   - armor_equip_wolf
+   - armor_unequip_wolf
+   - reflect
+   - vault_open_shutter
+   - vault_close_shutter
+   - vault_eject_item
+   - vault_insert_item
+   - vault_insert_item_fail
+   - vault_ambient
+   - vault_activate
+   - vault_deactivate
+   - hurt_reduced
+   - wind_charge_burst
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2290,3 +2315,21 @@ DisconnectFailReason: zigzag32 =>
    - stale_connection_being_replaced
    - realms_session_not_found
    - bad_packet
+   - conn_failed_to_create_offer
+   - conn_failed_to_create_answer
+   - conn_failed_to_set_local_description
+   - conn_failed_to_set_remote_description
+   - conn_negotiation_timeout_waiting_for_response
+   - conn_negotiation_timeout_waiting_for_accept
+   - conn_incoming_connection_ignored
+   - conn_signaling_parsing_failure
+   - conn_signaling_unknown_error
+   - conn_signaling_unicast_delivery_failed
+   - conn_signaling_broadcast_delivery_failed
+   - conn_signaling_generic_delivery_failed
+   - editor_mismatch_editor_world
+   - editor_mismatch_vanilla_world
+   - world_transfer_not_primary_client
+   - server_shutdown
+   - game_setup_cancelled
+   - game_setup_failed
