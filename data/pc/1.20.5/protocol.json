@@ -1817,12 +1817,8 @@
                                 "type": "bool"
                             },
                             [
-                                "switch",
-                                {
-                                    "compareTo": "hasData",
-                                    "type": "anonymousNbt",
-                                    "default": "void"
-                                }
+                                "option",
+                                "compound_tag"
                             ]
                         ]
                     }
@@ -1870,6 +1866,35 @@
               }
             ]
           ],
+          "packet_store_cookie": [
+            "container",
+            {
+                "name": "key",
+                "type": "string"
+            },
+            {
+                "name": "payload",
+                "type": [
+                    "buffer",
+                    {
+                        "count": 5120
+                    }
+                ]
+            }
+          ],
+          "packet_transfer": [
+            "container",
+            [
+                {
+                    "name": "host",
+                    "type": "string"
+                },
+                {
+                    "name": "port",
+                    "type": "varint"
+                }
+            ]
+          ],
           "packet_feature_flags": [
             "container",
             [
@@ -1912,6 +1937,30 @@
               }
             ]
           ],
+          "packet_known_packs": [
+            "container",
+            [
+                "array",
+                {
+                    "countType": "varint",
+                    "type": [
+                        "container",
+                        {
+                            "name": "namespace",
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "version",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+          ],
           "packet": [
             "container",
             [
@@ -1922,16 +1971,20 @@
                   {
                     "type": "varint",
                     "mappings": {
-                      "0x00": "custom_payload",
-                      "0x01": "disconnect",
-                      "0x02": "finish_configuration",
-                      "0x03": "keep_alive",
-                      "0x04": "ping",
-                      "0x05": "registry_data",
-                      "0x06": "remove_resource_pack",
-                      "0x07": "add_resource_pack",
-                      "0x08": "feature_flags",
-                      "0x09": "tags"
+                      "0x00": "cookie_request",
+                      "0x01": "custom_payload",
+                      "0x02": "disconnect",
+                      "0x03": "finish_configuration",
+                      "0x04": "keep_alive",
+                      "0x05": "ping",
+                      "0x06": "reset_chat",
+                      "0x07": "registry_data",
+                      "0x08": "remove_resource_pack",
+                      "0x09": "add_resource_pack",
+                      "0x0A": "store_cookie",
+                      "0x0B": "transfer",
+                      "0x0C": "feature_flags",
+                      "0x0D": "tags"
                     }
                   }
                 ]
@@ -1943,16 +1996,21 @@
                   {
                     "compareTo": "name",
                     "fields": {
+                      "cookie_request": "packet_cookie_request",
                       "custom_payload": "packet_custom_payload",
                       "disconnect": "packet_disconnect",
                       "finish_configuration": "packet_finish_configuration",
                       "keep_alive": "packet_keep_alive",
                       "ping": "packet_ping",
+                      "reset_chat": "packet_reset_chat",
                       "registry_data": "packet_registry_data",
                       "remove_resource_pack": "packet_remove_resource_pack",
                       "add_resource_pack": "packet_add_resource_pack",
+                      "store_cookie": "packet_store_cookie",
+                      "transfer": "packet_transfer",
                       "feature_flags": "packet_feature_flags",
-                      "tags": "packet_tags"
+                      "tags": "packet_tags",
+                      "known_packs": "packet_known_packs"
                     }
                   }
                 ]
