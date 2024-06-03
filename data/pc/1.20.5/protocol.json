@@ -1676,10 +1676,6 @@
                     "type": "string"
                 },
                 {
-                    "name": "hasPayload",
-                    "type": "bool"
-                },
-                {
                     "name": "payload",
                     "type": [
                         "option",
@@ -1868,19 +1864,21 @@
           ],
           "packet_store_cookie": [
             "container",
-            {
-                "name": "key",
-                "type": "string"
-            },
-            {
-                "name": "payload",
-                "type": [
-                    "buffer",
-                    {
-                        "count": 5120
-                    }
-                ]
-            }
+            [
+                {
+                    "name": "key",
+                    "type": "string"
+                },
+                {
+                    "name": "payload",
+                    "type": [
+                        "buffer",
+                        {
+                            "count": 5120
+                        }
+                    ]
+                }
+            ]
           ],
           "packet_transfer": [
             "container",
@@ -2021,6 +2019,27 @@
       },
       "toServer": {
         "types": {
+            "packet_cookie_response": [
+                "container",
+                [
+                    {
+                        "name": "key",
+                        "type": "string"
+                    },
+                    {
+                        "name": "payload",
+                        "type": [
+                            "option",
+                            [
+                                "buffer",
+                                {
+                                    "count": 5120
+                                }
+                            ]
+                        ]
+                    }
+                ]
+            ],
           "packet_settings": [
             "container",
             [
@@ -5231,6 +5250,24 @@
               }
             ]
           ],
+          "packet_store_cookie": [
+            "container",
+            [
+                {
+                    "name": "key",
+                    "type": "string"
+                },
+                {
+                    "name": "payload",
+                    "type": [
+                        "buffer",
+                        {
+                            "count": 5120
+                        }
+                    ]
+                }
+            ]
+          ],
           "packet_sound_effect": [
             "container",
             [
@@ -5952,6 +5989,25 @@
               }
             ]
           ],
+          "packet_debug_sample": [
+            "container",
+            [
+                {
+                    "name": "sample",
+                    "type": [
+                        "array",
+                        {
+                            "countType": "varint",
+                            "type": "i64"
+                        }
+                    ]
+                },
+                {
+                    "name": "sampleType",
+                    "type": "varint"
+                }
+            ]
+          ],
           "packet_hurt_animation": [
             "container",
             [
@@ -5989,6 +6045,19 @@
                 "name": "tick_steps",
                 "type": "varint"
               }
+            ]
+          ],
+          "packet_transfer": [
+            "container",
+            [
+                {
+                    "name": "host",
+                    "type": "string"
+                },
+                {
+                    "name": "port",
+                    "type": "varint"
+                }
             ]
           ],
           "packet": [
