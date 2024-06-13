@@ -732,7 +732,6 @@ Recipes: []varint
          uuid: uuid
          block: string
          priority: zigzag32
-         unlocking_requirement: RecipeUnlockingRequirement
          network_id: varint
       if shaped or shaped_chemistry:
          recipe_id: LatinString
@@ -746,7 +745,6 @@ Recipes: []varint
          block: string
          priority: zigzag32
          assume_symmetry: bool
-         unlocking_requirement: RecipeUnlockingRequirement
          network_id: varint
       if furnace:
          input_id: zigzag32
@@ -784,15 +782,6 @@ Recipes: []varint
          addition: RecipeIngredient
          block: string
          network_id: varint
-
-RecipeUnlockingRequirement:
-   context: u8 =>
-      - none
-      - always_unlocked
-      - player_in_water
-      - player_has_many_items
-   ingredients: context?
-      if none: RecipeIngredient[]varint
 
 SkinImage:
    width: li32
