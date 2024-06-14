@@ -1,21 +1,7 @@
 ## 3.66.0
 * [Add Bedrock 1.21.0 protocol data (#882)](https://github.com/PrismarineJS/minecraft-data/commit/67a392d204775473ce28b37db0bcfa01218624bb) (thanks @CreeperG16)
-* [Add 1.21 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7e0ca06c7f42f223679ff869a0d4a22dd90b7fad) (thanks @github-actions[bot])
+* [Add pc 1.18+ Book editing feature (#876)](https://github.com/PrismarineJS/minecraft-data/commit/af0ce69e3c212c1bd06e544b94049ae8bf11f321) (thanks @unlimitedcoder2) 
 * [Update steve skin for bedrock (#880)](https://github.com/PrismarineJS/minecraft-data/commit/141dc91ad21b0713bd5ca56b7f79aa4874a3c128) (thanks @yowzaoppo)
-* [Add 1.21-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/aa9b10aef662118479512a573ecdb270b5415eef) (thanks @github-actions[bot])
-* [Add 1.21-pre4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4cf92d4eccd3e6bb6848c18bcfa2e573bb41757d) (thanks @github-actions[bot])
-* [Add 1.21-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/323cb6f22ccb131eb9b8974b5246a99adf646719) (thanks @github-actions[bot])
-* [Add 1.21-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/773b8493026b1b12acdef14b832758fba0587022) (thanks @github-actions[bot])
-* [Add 1.21-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6079539a38f86eddcc295f2f7953ecd566f426b5) (thanks @github-actions[bot])
-* [Add 24w21b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4f731056e9571e6fc395ee70880a06a7095d1778) (thanks @github-actions[bot])
-* [Add 24w21a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/66ffa7216349a158359cdb985260ffc6c1845dc2) (thanks @github-actions[bot])
-* [Add 24w20a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0002da967286e6ac23e8fa95d0c899a830657030) (thanks @github-actions[bot])
-* [Add 24w19b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5e85051f38dc4e6db09d94e65dccbeb4acb21192) (thanks @github-actions[bot])
-* [Add 24w19a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c658e8be5c2ce1b4e0478bbfc9f96c3b832fcbce) (thanks @github-actions[bot])
-* [Add 24w18a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/27e91e9679243982dfd8edf4e9a050ee6b544baa) (thanks @github-actions[bot])
-* [Add 1.20.6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/96e5fb041c6dca5ee86ba8f2d3f3582766f055cd) (thanks @github-actions[bot])
-* [Add 1.20.6-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/116ae1dbcbd83ae511f464fc9a73836c43748cba) (thanks @github-actions[bot])
-* [Update README.md add bedrock 1.20.80](https://github.com/PrismarineJS/minecraft-data/commit/86041850c98fc50a99e72d13b2d01ca667c5f04c) (thanks @extremeheat)
 
 ## 3.65.0
 * [Add bedrock 1.20.80 protocol data (#873)](https://github.com/PrismarineJS/minecraft-data/commit/7c216d876417eb3fe27c317700b38f0e638ee47a) (thanks @extremeheat)
