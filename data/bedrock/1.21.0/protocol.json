@@ -806,7 +806,8 @@
                     "128": "player_last_death_position",
                     "129": "player_last_death_dimension",
                     "130": "player_has_died",
-                    "131": "collision_box"
+                    "131": "collision_box",
+                    "132": "visible_mob_effects"
                   }
                 }
               ]
@@ -1622,6 +1623,10 @@
                           "type": "zigzag32"
                         },
                         {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
                           "name": "network_id",
                           "type": "varint"
                         }
@@ -1667,6 +1672,10 @@
                           "type": "zigzag32"
                         },
                         {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
                           "name": "network_id",
                           "type": "varint"
                         }
@@ -1710,6 +1719,10 @@
                         {
                           "name": "priority",
                           "type": "zigzag32"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
                         },
                         {
                           "name": "network_id",
@@ -1775,6 +1788,10 @@
                           "type": "bool"
                         },
                         {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
                           "name": "network_id",
                           "type": "varint"
                         }
@@ -1836,6 +1853,10 @@
                         {
                           "name": "assume_symmetry",
                           "type": "bool"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
                         },
                         {
                           "name": "network_id",
@@ -1964,6 +1985,45 @@
           ]
         ]
       }
+    ],
+    "RecipeUnlockingRequirement": [
+      "container",
+      [
+        {
+          "name": "context",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "always_unlocked",
+                "2": "player_in_water",
+                "3": "player_has_many_items"
+              }
+            }
+          ]
+        },
+        {
+          "name": "ingredients",
+          "type": [
+            "switch",
+            {
+              "compareTo": "context",
+              "fields": {
+                "none": [
+                  "array",
+                  {
+                    "countType": "varint",
+                    "type": "RecipeIngredient"
+                  }
+                ]
+              },
+              "default": "void"
+            }
+          ]
+        }
+      ]
     ],
     "SkinImage": [
       "container",
@@ -3948,7 +4008,16 @@
           "517": "trail_spawner_ambient_ominous",
           "518": "ominous_item_spawner_spawn_item",
           "519": "ominous_bottle_end_use",
-          "520": "mace_smash_heavy_ground"
+          "520": "mace_smash_heavy_ground",
+          "521": "ominous_item_spawner_spawn_item_begin",
+          "522": "_",
+          "523": "apply_effect_bad_omen",
+          "524": "apply_effect_raid_omen",
+          "525": "apply_effect_trial_omen",
+          "526": "ominous_item_spawner_about_to_spawn_item",
+          "527": "record_creator",
+          "528": "record_creator_music_box",
+          "529": "record_precipice"
         }
       }
     ],
@@ -4483,7 +4552,8 @@
                 "305": "refresh_entitlements",
                 "306": "toggle_crafter_slot_request",
                 "307": "set_player_inventory_options",
-                "308": "set_hud"
+                "308": "set_hud",
+                "309": "award_achievement"
               }
             }
           ]
@@ -4695,6 +4765,7 @@
                 "toggle_crafter_slot_request": "packet_toggle_crafter_slot_request",
                 "set_player_inventory_options": "packet_set_player_inventory_options",
                 "set_hud": "packet_set_hud",
+                "award_achievement": "packet_award_achievement",
                 "server_post_move": "packet_server_post_move"
               },
               "default": "void"
@@ -5099,6 +5170,10 @@
         {
           "name": "platform_chat_id",
           "type": "string"
+        },
+        {
+          "name": "filtered_message",
+          "type": "string"
         }
       ]
     ],
@@ -5367,6 +5442,18 @@
         {
           "name": "disable_player_interactions",
           "type": "bool"
+        },
+        {
+          "name": "server_identifier",
+          "type": "string"
+        },
+        {
+          "name": "world_identifier",
+          "type": "string"
+        },
+        {
+          "name": "scenario_identifier",
+          "type": "string"
         },
         {
           "name": "level_id",
@@ -5993,6 +6080,7 @@
                 "9811": "animation_vault_activate",
                 "9812": "animation_vault_deactivate",
                 "9813": "animation_vault_eject_item",
+                "9814": "animation_spawn_cobweb",
                 "16384": "add_particle_mask",
                 "16385": "add_particle_bubble",
                 "16386": "add_particle_bubble_manual",
@@ -6627,6 +6715,10 @@
           "type": "WindowID"
         },
         {
+          "name": "window_type",
+          "type": "WindowType"
+        },
+        {
           "name": "server",
           "type": "bool"
         }
@@ -7040,7 +7132,8 @@
                 "27": "code_builder_scoreboard",
                 "28": "strider_ridden_in_lava_in_overworld",
                 "29": "sneak_close_to_sculk_sensor",
-                "30": "careful_restoration"
+                "30": "careful_restoration",
+                "31": "item_used"
               }
             }
           ]
@@ -9640,7 +9733,8 @@
                 "12": "retrieved",
                 "13": "dyed",
                 "14": "traded",
-                "15": "brushing_completed"
+                "15": "brushing_completed",
+                "16": "opened_vault"
               }
             }
           ]
@@ -10919,8 +11013,21 @@
           ]
         },
         {
-          "name": "value",
-          "type": "string"
+          "name": "code_status",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "not_started",
+                "2": "in_progress",
+                "3": "paused",
+                "4": "error",
+                "5": "succeeded"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -11812,6 +11919,15 @@
         }
       }
     ],
+    "packet_award_achievement": [
+      "container",
+      [
+        {
+          "name": "achievement_id",
+          "type": "li32"
+        }
+      ]
+    ],
     "packet_server_post_move": [
       "container",
       [
@@ -12187,7 +12303,8 @@
           "received_server_data",
           "client_predicted_vehicle",
           "paddling_left",
-          "paddling_right"
+          "paddling_right",
+          "block_breaking_delay_enabled"
         ]
       }
     ],

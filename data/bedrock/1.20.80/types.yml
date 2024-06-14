@@ -311,7 +311,6 @@ MetadataDictionary: []varint
       129: player_last_death_dimension
       130: player_has_died
       131: collision_box
-      132: visible_mob_effects
    type: varint =>
       0: byte
       1: short
@@ -733,7 +732,6 @@ Recipes: []varint
          uuid: uuid
          block: string
          priority: zigzag32
-         unlocking_requirement: RecipeUnlockingRequirement
          network_id: varint
       if shaped or shaped_chemistry:
          recipe_id: LatinString
@@ -747,7 +745,6 @@ Recipes: []varint
          block: string
          priority: zigzag32
          assume_symmetry: bool
-         unlocking_requirement: RecipeUnlockingRequirement
          network_id: varint
       if furnace:
          input_id: zigzag32
@@ -785,15 +782,6 @@ Recipes: []varint
          addition: RecipeIngredient
          block: string
          network_id: varint
-
-RecipeUnlockingRequirement:
-   context: u8 =>
-      - none
-      - always_unlocked
-      - player_in_water
-      - player_has_many_items
-   ingredients: context?
-      if none: RecipeIngredient[]varint
 
 SkinImage:
    width: li32
@@ -2066,15 +2054,6 @@ SoundType: varint =>
    - ominous_item_spawner_spawn_item
    - ominous_bottle_end_use
    - mace_smash_heavy_ground
-   - ominous_item_spawner_spawn_item_begin
-   - _
-   - apply_effect_bad_omen
-   - apply_effect_raid_omen
-   - apply_effect_trial_omen
-   - ominous_item_spawner_about_to_spawn_item
-   - record_creator
-   - record_creator_music_box
-   - record_precipice
 
 # TODO: remove?
 LegacyEntityType: li32 =>

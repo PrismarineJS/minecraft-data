@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.0
+!version: 1.20.80
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -213,7 +213,6 @@ packet_text:
    # Nintendo Switch). It is otherwise an empty string, and is used to decide which players are able to
    # chat with each other.
    platform_chat_id: string
-   filtered_message: string
 # For additional information and examples of all the chat types above, see here: https://imgur.com/a/KhcFscg
 
 
@@ -381,9 +380,6 @@ packet_start_game:
       2: disabled
    # DisablePlayerInteractions is true if the client should ignore other players when interacting with the world.
    disable_player_interactions: bool
-   server_identifier: string
-   world_identifier: string
-   scenario_identifier: string
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -842,7 +838,6 @@ packet_level_event:
       9811: animation_vault_activate
       9812: animation_vault_deactivate
       9813: animation_vault_eject_item
-      9814: animation_spawn_cobweb
       0x4000: add_particle_mask
       # 0x4000 | + particle ID
       16385: add_particle_bubble   # 1
@@ -1222,10 +1217,6 @@ packet_container_close:
    # WindowID is the ID representing the window of the container that should be closed. It must be equal to
    # the one sent in the ContainerOpen packet to close the designated window.
    window_id: WindowID
-   # ContainerType is the type ID of the container that is being opened when opening the container at the
-   # position of the packet. It depends on the block/entity, and could, for example, be the window type of
-   # a chest or a hopper, but also a horse inventory.
-   window_type: WindowType
    # ServerSide determines whether or not the container was force-closed by the server. If this value is
    # not set correctly, the client may ignore the packet and respond with a PacketViolationWarning.
    server: bool
@@ -1536,7 +1527,6 @@ packet_event:
       28: strider_ridden_in_lava_in_overworld
       29: sneak_close_to_sculk_sensor
       30: careful_restoration
-      31: item_used
    use_player_id: u8
    event_data: restBuffer # Unknown data, TODO: add
 
@@ -3012,7 +3002,6 @@ packet_completed_using_item:
       13: dyed
       14: traded
       15: brushing_completed
-      16: opened_vault
 
 # NetworkSettings is sent by the server to update a variety of network settings. These settings modify the
 # way packets are sent over the network stack.
@@ -3171,8 +3160,7 @@ InputFlag: [ "bitflags", {
       "received_server_data",
       "client_predicted_vehicle",
       "paddling_left",
-      "paddling_right",
-      "block_breaking_delay_enabled"
+      "paddling_right"
    ]
 }]
 
@@ -3674,13 +3662,8 @@ packet_code_builder_source:
    - none
    - code_status
    - instantiation
-   code_status: u8 =>
-      - none
-      - not_started
-      - in_progress
-      - paused
-      - error
-      - succeeded
+   # Value contains extra data about the operation performed. It is always empty unless the operation is
+   value: string
 
 # TickingAreasLoadStatus is sent by the server to the client to notify the client of a ticking area's loading status.
 packet_ticking_areas_load_status:
@@ -4175,11 +4158,6 @@ Element: u8 =>
 - VehicleHealth
 - EffectsBar
 - ItemTextPopup
-
-packet_award_achievement:
-   !id: 0x135
-   !bound: client
-   achievement_id: li32
 
 packet_server_post_move:
    !id: 0x10
