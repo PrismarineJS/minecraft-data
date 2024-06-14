@@ -1,3 +1,8 @@
+## 3.66.0
+* [Add Bedrock 1.21.0 protocol data (#882)](https://github.com/PrismarineJS/minecraft-data/commit/67a392d204775473ce28b37db0bcfa01218624bb) (thanks @CreeperG16)
+* [Add pc 1.18+ Book editing feature (#876)](https://github.com/PrismarineJS/minecraft-data/commit/af0ce69e3c212c1bd06e544b94049ae8bf11f321) (thanks @unlimitedcoder2) 
+* [Update steve skin for bedrock (#880)](https://github.com/PrismarineJS/minecraft-data/commit/141dc91ad21b0713bd5ca56b7f79aa4874a3c128) (thanks @yowzaoppo)
+
 ## 3.65.0
 * [Add bedrock 1.20.80 protocol data (#873)](https://github.com/PrismarineJS/minecraft-data/commit/7c216d876417eb3fe27c317700b38f0e638ee47a) (thanks @extremeheat)
 * Update pc protocolVersions.json with 1.20.5 and new snapshots
