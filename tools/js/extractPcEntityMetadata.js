@@ -1,7 +1,7 @@
 const fs = require('fs')
 const cp = require('child_process')
 const { globSync } = require('glob')
-const version = process.argv[2] || '1.19.4'
+const version = process.argv[2]
 if (!version) {
   console.log('Usage: node extractEntityMetadata.js <version>')
   process.exit(1)
