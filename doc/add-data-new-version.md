@@ -28,6 +28,7 @@ For bedrock edition see [bedrock.md](bedrock.md)
 
 
 * All files that say Yes for auto can be gotten from [minecraft-data-auto-updater][9] (that uses [minecraft-data-generator-server][2]). This is the preferred way to extract the data.
+* **Note**, there is a script inside the `tools/js` folder that can be run with `npm run version` with usage of `npm run version <bedrock|pc> {version} {protocol_version}` to automatically copy over old data including the protocol in support for a new version and update entries in the dataPaths.json.
 
 After generating and creating the new files for the version in its own directory, the version must be added to dataPaths.json in the data folder.
 Additionally in data/pc/common the versions.json file needs to be updated with the new version.

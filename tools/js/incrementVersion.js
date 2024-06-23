@@ -50,13 +50,19 @@ function updateProtocol (edition, version, protocolVersionNumber) {
     didUpdateProtocol = true
     // Update references to the old version in the dataPaths.json file
     alterJSON(join(data, 'dataPaths.json'), dataPaths => {
+      let latestVersionData
       for (const v in dataPaths[edition]) {
         const e = dataPaths[edition][v]
         // if .proto points to latest, update it to the old version
         if (e.proto === `${edition}/latest`) {
           e.proto = `${edition}/${oldProtoVersion}`
         }
+        latestVersionData = e
       }
+      if (!dataPaths[edition][version]) {
+        dataPaths[edition][version] = latestVersionData
+      }
+      latestVersionData.proto = `${edition}/latest`
     })
   }
 
