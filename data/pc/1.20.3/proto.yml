@@ -1,4 +1,4 @@
-!version: 1.20.5
+!version: 1.20.3
 !StartDocs: true
 
 ^types:
@@ -30,7 +30,6 @@
    restBuffer: native
    anonymousNbt: native
    anonOptionalNbt: native
-   ByteArray: ["buffer", { "countType": "varint" }]
    string: [
       "pstring",
       {
@@ -602,26 +601,6 @@
             suggestionType: ../flags/has_custom_suggestions ?
                if 1: string
                default: void
-   # # Shared Packets
-   # These are packets that are shared between multiple states.
-   # They are defined here to avoid duplication.
-   # =====
-   # MC: ClientboundCookieRequestPacket
-   packet_common_cookie_request:
-      cookie: string
-   # MC: ClientboundStoreCookiePacket
-   packet_common_store_cookie:
-      key: string
-      value: ByteArray
-   # MC: ClientboundTransferPacket
-   packet_common_transfer:
-      host: string
-      port: varint
-   # MC: ServerboundCookieResponsePacket
-   packet_common_cookie_response:
-      key: string
-      value: ByteArray
-
 ^handshaking.toClient.types:
    packet:
       name: varint =>
@@ -688,7 +667,6 @@
             "countType": "varint"
          }
       ]
-      shouldAuthenticate: bool
    # MC: ClientboundGameProfilePacket
    packet_success:
       uuid: UUID
@@ -697,7 +675,6 @@
          name: string
          value: string
          signature?: string
-      strictErrorHandling: bool
    # MC: ClientboundLoginCompressionPacket
    packet_compress:
       threshold: varint
@@ -706,7 +683,6 @@
       messageId: varint
       channel: string
       data: restBuffer
-   ## (Cookie Response is Common) ##
    packet:
       name: varint =>
       - disconnect
@@ -714,14 +690,12 @@
       - success
       - compress
       - login_plugin_request
-      - cookie_request
       params: name ?
          if disconnect: packet_disconnect
          if encryption_begin: packet_encryption_begin
          if success: packet_success
          if compress: packet_compress
          if login_plugin_request: packet_login_plugin_request
-         if cookie_request: packet_common_cookie_request
 ^login.toServer.types:
    # MC: ServerboundHelloPacket
    packet_login_start:
@@ -748,20 +722,17 @@
    # MC: ServerboundLoginAcknowledgedPacket
    packet_login_acknowledged:
       # Empty
-   ## (Cookie Response is Common) ##
    packet:
       name: varint =>
       - login_start
       - encryption_begin
       - login_plugin_response
       - login_acknowledged
-      - cookie_response
       params: name ?
          if login_start: packet_login_start
          if encryption_begin: packet_encryption_begin
          if login_plugin_response: packet_login_plugin_response
          if login_acknowledged: packet_login_acknowledged
-         if cookie_response: packet_common_cookie_response
 ^configuration.toClient.types:
    # MC: ClientboundCustomPayloadPacket
    packet_custom_payload:
@@ -779,16 +750,9 @@
    # MC: ClientboundPingPacket
    packet_ping:
       id: i32
-   # MC: ClientboundResetChatPacket
-   packet_reset_chat:
-      # Empty
    # MC: ClientboundRegistryDataPacket
    packet_registry_data:
-      # The server can send multiple registries
-      id: string
-      entries: []varint
-         key: string
-         value?: anonymousNbt
+      codec: anonymousNbt
    # MC: ClientboundResourcePackPopPacket
    packet_remove_resource_pack:
       uuid?: UUID
@@ -799,7 +763,6 @@
       hash: string
       forced: bool
       promptMessage?: anonymousNbt
-   ## (Store cookie and Transfer are Common) ##
    # MC: ClientboundUpdateEnabledFeaturesPacket
    packet_feature_flags:
       features: string[]varint
@@ -808,12 +771,6 @@
       tags: []varint
          tagType: string
          tags: tags
-   # MC: ClientboundSelectKnownPacks
-   packet_select_known_packs:
-      packs: []varint
-         namespace: string
-         id: string
-         version: string
    packet:
       name: varint =>
       - custom_payload
@@ -821,30 +778,22 @@
       - finish_configuration
       - keep_alive
       - ping
-      - reset_chat
       - registry_data
       - remove_resource_pack
       - add_resource_pack
-      - store_cookie
-      - transfer
       - feature_flags
       - tags
-      - select_known_packs
       params: name ?
          if custom_payload: packet_custom_payload
          if disconnect: packet_disconnect
          if finish_configuration: packet_finish_configuration
          if keep_alive: packet_keep_alive
          if ping: packet_ping
-         if reset_chat: packet_reset_chat
          if registry_data: packet_registry_data
          if remove_resource_pack: packet_remove_resource_pack
          if add_resource_pack: packet_add_resource_pack
-         if store_cookie: packet_common_store_cookie
-         if transfer: packet_common_transfer
          if feature_flags: packet_feature_flags
          if tags: packet_tags
-         if select_known_packs: packet_select_known_packs
 ^configuration.toServer.types:
    # MC: ServerboundClientInformationPacket
    packet_settings:
@@ -856,7 +805,6 @@
       mainHand: varint
       enableTextFiltering: bool
       enableServerListing: bool
-   ## (Cookie Response is Common) ##
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
@@ -877,7 +825,6 @@
    packet:
       name: varint =>
       - settings
-      - cookie_response
       - custom_payload
       - finish_configuration
       - keep_alive
@@ -885,7 +832,6 @@
       - resource_pack_receive
       params: name ?
          if settings: packet_settings
-         if cookie_response: packet_common_cookie_response
          if custom_payload: packet_custom_payload
          if finish_configuration: packet_finish_configuration
          if keep_alive: packet_keep_alive
@@ -924,9 +870,57 @@
          categoryId: varint
          statisticId: varint
          value: varint
-   # MC: ClientboundBlockChangedAckPacket
-   packet_acknowledge_player_digging:
-      sequenceId: varint
+   # MC: ClientboundUpdateAdvancementsPacket
+   packet_advancements:
+      reset: bool
+      advancementMapping: []varint
+         key: string
+         value:
+            parentId?: string
+            displayData?:
+               title: anonymousNbt
+               description: anonymousNbt
+               icon: slot
+               frameType: varint
+               flags: [
+                  "bitfield",
+                  [
+                     {
+                        "name": "_unused",
+                        "size": 29,
+                        "signed": false
+                     },
+                     {
+                        "name": "hidden",
+                        "size": 1,
+                        "signed": false
+                     },
+                     {
+                        "name": "show_toast",
+                        "size": 1,
+                        "signed": false
+                     },
+                     {
+                        "name": "has_background_texture",
+                        "size": 1,
+                        "signed": false
+                     }
+                  ]
+               ]
+               backgroundTexture: flags/has_background_texture ?
+                  if 1: string
+                  default: void
+               xCord: f32
+               yCord: f32
+            requirements: []varint
+               _: string[]varint
+            sendsTelemtryData: bool
+      identifiers: string[]varint
+      progressMapping: []varint
+         key: string
+         value: []varint
+            criterionIdentifier: string
+            criterionProgress?: i64
    # MC: ClientboundBlockDestructionPacket
    packet_block_break_animation:
       entityId: varint
@@ -981,19 +975,6 @@
    # MC: ClientboundChunkBatchStartPacket
    packet_chunk_batch_start:
       # Empty
-   # MC: ClientboundChunksBiomesPacket
-   packet_chunk_biomes:
-      biomes: []varint
-         position: packedChunkPos
-         data: [
-            "buffer",
-            {
-               "countType": "varint"
-            }
-         ]
-   # MC: ClientboundClearTitlesPacket
-   packet_clear_titles:
-      reset: bool
    # MC: ClientboundCommandSuggestionsPacket
    packet_tab_complete:
       transactionId: varint
@@ -1006,9 +987,54 @@
    packet_declare_commands:
       nodes: command_node[]varint
       rootIndex: varint
+   # MC: ClientboundPlayerLookAtPacket
+   packet_face_player:
+      feet_eyes: varint
+      x: f64
+      y: f64
+      z: f64
+      isEntity: bool
+      entityId: isEntity ?
+         if true: varint
+         default: void
+      entity_feet_eyes: isEntity ?
+         if true: varint
+         default: void
+   # MC: ClientboundTagQueryPacket
+   packet_nbt_query_response:
+      transactionId: varint
+      nbt: anonOptionalNbt
+   # MC: ClientboundSectionBlocksUpdatePacket
+   packet_multi_block_change:
+      chunkCoordinates: [
+         "bitfield",
+         [
+            {
+               "name": "x",
+               "size": 22,
+               "signed": true
+            },
+            {
+               "name": "z",
+               "size": 22,
+               "signed": true
+            },
+            {
+               "name": "y",
+               "size": 20,
+               "signed": true
+            }
+         ]
+      ]
+      records: varint[]varint
    # MC: ClientboundContainerClosePacket
    packet_close_window:
       windowId: u8
+   # MC: ClientboundOpenScreenPacket
+   packet_open_window:
+      windowId: varint
+      inventoryType: varint
+      windowTitle: anonymousNbt
    # MC: ClientboundContainerSetContentPacket
    packet_window_items:
       windowId: u8
@@ -1026,7 +1052,6 @@
       stateId: varint
       slot: i16
       item: slot
-   ## (Cookie Request is Common)
    # MC: ClientboundCooldownPacket
    packet_set_cooldown:
       itemID: varint
@@ -1039,17 +1064,6 @@
    packet_custom_payload:
       channel: string
       data: restBuffer
-   # MC: ClientboundDamageEventPacket
-   packet_damage_event:
-      entityId: varint
-      sourceTypeId: varint
-      sourceCauseId: varint
-      sourceDirectId: varint
-      sourcePosition?: vec3f64
-   # MC: ClientboundDebugSamplePacket
-   packet_debug_sample:
-      sample: i64[]varint
-      type: varint
    # MC: ClientboundDeleteChatPacket
    packet_hide_message:
       id: varint
@@ -1105,20 +1119,6 @@
       windowId: u8
       nbSlots: varint
       entityId: i32
-   # MC: ClientboundHurtAnimationPacket
-   packet_hurt_animation:
-      entityId: varint
-      yaw: f32
-   # MC: ClientboundInitializeBorderPacket
-   packet_initialize_world_border:
-      x: f64
-      z: f64
-      oldDiameter: f64
-      newDiameter: f64
-      speed: varint
-      portalTeleportBoundary: varint
-      warningBlocks: varint
-      warningTime: varint
    # MC: ClientboundKeepAlivePacket
    packet_keep_alive:
       keepAliveId: i64
@@ -1150,6 +1150,7 @@
       global: bool
    # MC: ClientboundLevelParticlesPacket
    packet_world_particles:
+      particleId: varint
       longDistance: bool
       x: f64
       y: f64
@@ -1158,9 +1159,7 @@
       offsetY: f32
       offsetZ: f32
       particleData: f32
-      # Amount of particles to spawn
       particles: i32
-      particleId: varint
       data: [
          "particleData",
          {
@@ -1190,7 +1189,7 @@
       reducedDebugInfo: bool
       enableRespawnScreen: bool
       doLimitedCrafting: bool
-      dimension: varint
+      worldType: string
       worldName: string
       hashedSeed: i64
       gameMode: u8
@@ -1201,7 +1200,6 @@
          dimensionName: string
          location: position
       portalCooldown: varint
-      enforcesSecureChat: bool
    # MC: ClientboundMapItemDataPacket
    packet_map:
       itemDamage: varint
@@ -1234,7 +1232,6 @@
    # MC: ClientboundMerchantOffersPacket
    packet_trade_list:
       windowId: varint
-      ## https://github.com/extremeheat/extracted_minecraft_data/blob/client1.20.5/client/net/minecraft/world/item/trading/MerchantOffer.java#L210
       trades: []varint
          inputItem1: slot
          outputItem: slot
@@ -1282,21 +1279,10 @@
    # MC: ClientboundOpenBookPacket
    packet_open_book:
       hand: varint
-   # MC: ClientboundOpenScreenPacket
-   packet_open_window:
-      windowId: varint
-      inventoryType: varint
-      windowTitle: anonymousNbt
    # MC: ClientboundOpenSignEditorPacket
    packet_open_sign_entity:
       location: position
       isFrontText: bool
-   # MC: ClientboundPingPacket
-   packet_ping:
-      id: i32
-   # MC: ClientboundPongResponsePacket
-   packet_ping_response:
-      id: i64
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
       windowId: i8
@@ -1646,19 +1632,6 @@
                "anonymousNbt"
             ]
             default: void
-   # MC: ClientboundPlayerLookAtPacket
-   packet_face_player:
-      feet_eyes: varint
-      x: f64
-      y: f64
-      z: f64
-      isEntity: bool
-      entityId: isEntity ?
-         if true: varint
-         default: void
-      entity_feet_eyes: isEntity ?
-         if true: varint
-         default: void
    # MC: ClientboundPlayerPositionPacket
    packet_position:
       x: f64
@@ -1722,62 +1695,6 @@
    packet_entity_head_rotation:
       entityId: varint
       headYaw: i8
-   # MC: ClientboundSectionBlocksUpdatePacket
-   packet_multi_block_change:
-      chunkCoordinates: [
-         "bitfield",
-         [
-            {
-               "name": "x",
-               "size": 22,
-               "signed": true
-            },
-            {
-               "name": "z",
-               "size": 22,
-               "signed": true
-            },
-            {
-               "name": "y",
-               "size": 20,
-               "signed": true
-            }
-         ]
-      ]
-      records: varint[]varint
-   # MC: ClientboundSelectAdvancementsTabPacket
-   packet_select_advancement_tab:
-      id?: string
-   # MC: ClientboundServerDataPacket
-   packet_server_data:
-      motd: anonymousNbt
-      iconBytes?: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-   # MC: ClientboundSetActionBarTextPacket
-   packet_action_bar:
-      text: anonymousNbt
-   # MC: ClientboundSetBorderCenterPacket
-   packet_world_border_center:
-      x: f64
-      z: f64
-   # MC: ClientboundSetBorderLerpSizePacket
-   packet_world_border_lerp_size:
-      oldDiameter: f64
-      newDiameter: f64
-      speed: varint
-   # MC: ClientboundSetBorderSizePacket
-   packet_world_border_size:
-      diameter: f64
-   # MC: ClientboundSetBorderWarningDelayPacket
-   packet_world_border_warning_delay:
-      warningTime: varint
-   # MC: ClientboundSetBorderWarningDistancePacket
-   packet_world_border_warning_reach:
-      warningBlocks: varint
    # MC: ClientboundSetCameraPacket
    packet_camera:
       cameraId: varint
@@ -1791,10 +1708,6 @@
    # MC: ClientboundSetChunkCacheRadiusPacket
    packet_update_view_distance:
       viewDistance: varint
-   # MC: ClientboundSetDefaultSpawnPositionPacket
-   packet_spawn_position:
-      location: position
-      angle: f32
    # MC: ClientboundSetDisplayObjectivePacket
    packet_scoreboard_display_objective:
       position: varint
@@ -1928,24 +1841,14 @@
          if 1: anonymousNbt
          if 2: anonymousNbt
          default: void
-   # MC: ClientboundSetSimulationDistancePacket
-   packet_simulation_distance:
-      distance: varint
-   # MC: ClientboundSetSubtitleTextPacket
-   packet_set_title_subtitle:
-      text: anonymousNbt
+   # MC: ClientboundSetDefaultSpawnPositionPacket
+   packet_spawn_position:
+      location: position
+      angle: f32
    # MC: ClientboundSetTimePacket
    packet_update_time:
       age: i64
       time: i64
-   # MC: ClientboundSetTitleTextPacket
-   packet_set_title_text:
-      text: anonymousNbt
-   # MC: ClientboundSetTitlesAnimationPacket
-   packet_set_title_time:
-      fadeIn: i32
-      stay: i32
-      fadeOut: i32
    # MC: ClientboundSoundEntityPacket
    packet_entity_sound_effect:
       soundId: varint
@@ -1959,6 +1862,17 @@
       volume: f32
       pitch: f32
       seed: i64
+   # MC: ClientboundStopSoundPacket
+   packet_stop_sound:
+      flags: i8
+      source: flags ?
+         if 1: varint
+         if 3: varint
+         default: void
+      sound: flags ?
+         if 2: string
+         if 3: string
+         default: void
    # MC: ClientboundSoundPacket
    packet_sound_effect:
       soundId: varint
@@ -1974,21 +1888,6 @@
       volume: f32
       pitch: f32
       seed: i64
-   # MC: ClientboundStartConfigurationPacket
-   packet_start_configuration:
-      # Empty
-   # MC: ClientboundStopSoundPacket
-   packet_stop_sound:
-      flags: i8
-      source: flags ?
-         if 1: varint
-         if 3: varint
-         default: void
-      sound: flags ?
-         if 2: string
-         if 3: string
-         default: void
-   ## (Store Cookie is Common)
    # MC: ClientboundSystemChatPacket
    packet_system_chat:
       content: anonymousNbt
@@ -1997,10 +1896,6 @@
    packet_playerlist_header:
       header: anonymousNbt
       footer: anonymousNbt
-   # MC: ClientboundTagQueryPacket
-   packet_nbt_query_response:
-      transactionId: varint
-      nbt: anonOptionalNbt
    # MC: ClientboundTakeItemEntityPacket
    packet_collect:
       collectedEntityId: varint
@@ -2015,70 +1910,11 @@
       yaw: i8
       pitch: i8
       onGround: bool
-   # MC: ClientboundTickingStatePacket
-   packet_set_ticking_state:
-      tick_rate: f32
-      is_frozen: bool
-   # MC: ClientboundTickingStepPacket
-   packet_step_tick:
-      tick_steps: varint
-   ## (Transfer is common)
-   # MC: ClientboundUpdateAdvancementsPacket
-   packet_advancements:
-      reset: bool
-      advancementMapping: []varint
-         key: string
-         value:
-            parentId?: string
-            displayData?:
-               title: anonymousNbt
-               description: anonymousNbt
-               icon: slot
-               frameType: varint
-               flags: [
-                  "bitfield",
-                  [
-                     {
-                        "name": "_unused",
-                        "size": 29,
-                        "signed": false
-                     },
-                     {
-                        "name": "hidden",
-                        "size": 1,
-                        "signed": false
-                     },
-                     {
-                        "name": "show_toast",
-                        "size": 1,
-                        "signed": false
-                     },
-                     {
-                        "name": "has_background_texture",
-                        "size": 1,
-                        "signed": false
-                     }
-                  ]
-               ]
-               backgroundTexture: flags/has_background_texture ?
-                  if 1: string
-                  default: void
-               xCord: f32
-               yCord: f32
-            requirements: []varint
-               _: string[]varint
-            sendsTelemtryData: bool
-      identifiers: string[]varint
-      progressMapping: []varint
-         key: string
-         value: []varint
-            criterionIdentifier: string
-            criterionProgress?: i64
    # MC: ClientboundUpdateAttributesPacket
    packet_entity_update_attributes:
       entityId: varint
       properties: []varint
-         key: varint
+         key: string
          value: f64
          modifiers: []varint
             uuid: UUID
@@ -2088,21 +1924,28 @@
    packet_entity_effect:
       entityId: varint
       effectId: varint
-      amplifier: varint
+      amplifier: i8
       duration: varint
-      # a bitfield of 0x01 for ambient, 0x02 for show particles
-      flags: ["bitfield", [
-         { "name": "unused", "size": 4 },
-         { "name": "ambient", "size": 1 },
-         { "name": "showParticles", "size": 1 },
-         { "name": "showIcon", "size": 1 },
-         { "name": "blend", "size": 1 }
-      ]]
+      hideParticles: i8
+      factorCodec?: anonymousNbt
+   # MC: ClientboundSelectAdvancementsTabPacket
+   packet_select_advancement_tab:
+      id?: string
+   # MC: ClientboundServerDataPacket
+   packet_server_data:
+      motd: anonymousNbt
+      iconBytes?: [
+         "buffer",
+         {
+            "countType": "varint"
+         }
+      ]
+      enforcesSecureChat: bool
    # MC: ClientboundUpdateRecipesPacket
    packet_declare_recipes:
       recipes: []varint
          type: string
-         recipeId: varint
+         recipeId: string
          data: type ?
             if minecraft:crafting_shapeless:
                group: string
@@ -2155,11 +1998,94 @@
       tags: []varint
          tagType: string
          tags: tags
-   # MC: ClientboundProjectilePowerPacket
-   packet_set_projectile_power:
-      id: varint
-      power: vec3f64
-
+   # MC: ClientboundBlockChangedAckPacket
+   packet_acknowledge_player_digging:
+      sequenceId: varint
+   # MC: ClientboundClearTitlesPacket
+   packet_clear_titles:
+      reset: bool
+   # MC: ClientboundInitializeBorderPacket
+   packet_initialize_world_border:
+      x: f64
+      z: f64
+      oldDiameter: f64
+      newDiameter: f64
+      speed: varint
+      portalTeleportBoundary: varint
+      warningBlocks: varint
+      warningTime: varint
+   # MC: ClientboundSetActionBarTextPacket
+   packet_action_bar:
+      text: anonymousNbt
+   # MC: ClientboundSetBorderCenterPacket
+   packet_world_border_center:
+      x: f64
+      z: f64
+   # MC: ClientboundSetBorderLerpSizePacket
+   packet_world_border_lerp_size:
+      oldDiameter: f64
+      newDiameter: f64
+      speed: varint
+   # MC: ClientboundSetBorderSizePacket
+   packet_world_border_size:
+      diameter: f64
+   # MC: ClientboundSetBorderWarningDelayPacket
+   packet_world_border_warning_delay:
+      warningTime: varint
+   # MC: ClientboundSetBorderWarningDistancePacket
+   packet_world_border_warning_reach:
+      warningBlocks: varint
+   # MC: ClientboundPingPacket
+   packet_ping:
+      id: i32
+   # MC: ClientboundPongResponsePacket
+   packet_ping_response:
+      id: i64
+   # MC: ClientboundSetSubtitleTextPacket
+   packet_set_title_subtitle:
+      text: anonymousNbt
+   # MC: ClientboundSetTitleTextPacket
+   packet_set_title_text:
+      text: anonymousNbt
+   # MC: ClientboundSetTitlesAnimationPacket
+   packet_set_title_time:
+      fadeIn: i32
+      stay: i32
+      fadeOut: i32
+   # MC: ClientboundSetSimulationDistancePacket
+   packet_simulation_distance:
+      distance: varint
+   # MC: ClientboundChunksBiomesPacket
+   packet_chunk_biomes:
+      biomes: []varint
+         position: packedChunkPos
+         data: [
+            "buffer",
+            {
+               "countType": "varint"
+            }
+         ]
+   # MC: ClientboundDamageEventPacket
+   packet_damage_event:
+      entityId: varint
+      sourceTypeId: varint
+      sourceCauseId: varint
+      sourceDirectId: varint
+      sourcePosition?: vec3f64
+   # MC: ClientboundHurtAnimationPacket
+   packet_hurt_animation:
+      entityId: varint
+      yaw: f32
+   # MC: ClientboundStartConfigurationPacket
+   packet_start_configuration:
+      # Empty
+   # MC: ClientboundTickingStatePacket
+   packet_set_ticking_state:
+      tick_rate: f32
+      is_frozen: bool
+   # MC: ClientboundTickingStepPacket
+   packet_step_tick:
+      tick_steps: varint
    packet:
       name: varint =>
       - bundle_delimiter
@@ -2184,12 +2110,10 @@
       - window_items
       - craft_progress_bar
       - set_slot
-      - cookie_request
       - set_cooldown
       - chat_suggestions
       - custom_payload
       - damage_event
-      - debug_sample
       - hide_message
       - kick_disconnect
       - profileless_chat
@@ -2198,10 +2122,9 @@
       - unload_chunk
       - game_state_change
       - open_horse_window
-
       - hurt_animation
       - initialize_world_border
-      - keep_alive #
+      - keep_alive
       - map_chunk
       - world_event
       - world_particles
@@ -2270,7 +2193,6 @@
       - sound_effect
       - start_configuration
       - stop_sound
-      - store_cookie
       - system_chat
       - playerlist_header
       - nbt_query_response
@@ -2278,7 +2200,6 @@
       - entity_teleport
       - set_ticking_state
       - step_tick
-      - transfer
       - advancements
       - entity_update_attributes
       - entity_effect
@@ -2307,12 +2228,10 @@
          if window_items: packet_window_items
          if craft_progress_bar: packet_craft_progress_bar
          if set_slot: packet_set_slot
-         if cookie_request: packet_common_cookie_request
          if set_cooldown: packet_set_cooldown
          if chat_suggestions: packet_chat_suggestions
          if custom_payload: packet_custom_payload
          if damage_event: packet_damage_event
-         if debug_sample: packet_debug_sample
          if hide_message: packet_hide_message
          if kick_disconnect: packet_kick_disconnect
          if profileless_chat: packet_profileless_chat
@@ -2392,40 +2311,28 @@
          if sound_effect: packet_sound_effect
          if start_configuration: packet_start_configuration
          if stop_sound: packet_stop_sound
-         if store_cookie: packet_common_store_cookie
          if system_chat: packet_system_chat
          if playerlist_header: packet_playerlist_header
          if nbt_query_response: packet_nbt_query_response
          if collect: packet_collect
          if entity_teleport: packet_entity_teleport
-         if set_ticking_state: packet_set_ticking_state
-         if step_tick: packet_step_tick
-         if transfer: packet_common_transfer
          if advancements: packet_advancements
          if entity_update_attributes: packet_entity_update_attributes
          if entity_effect: packet_entity_effect
          if declare_recipes: packet_declare_recipes
          if tags: packet_tags
-
+         if set_ticking_state: packet_set_ticking_state
+         if step_tick: packet_step_tick
 ^play.toServer.types:
    # MC: ServerboundAcceptTeleportationPacket
    packet_teleport_confirm:
       teleportId: varint
-   # MC: ServerboundBlockEntityTagQueryPacket
+   # MC: ServerboundBlockEntityTagQuery
    packet_query_block_nbt:
       transactionId: varint
       location: position
-   # MC: ServerboundChangeDifficultyPacket
-   packet_set_difficulty:
-      newDifficulty: u8
-   # MC: ServerboundChatAckPacket
-   packet_message_acknowledgement:
-      count: varint
    # MC: ServerboundChatCommandPacket
    packet_chat_command:
-      command: string
-   # MC: ServerboundChatCommandSignedPacket
-   packet_chat_command_signed:
       command: string
       timestamp: i64
       salt: i64
@@ -2462,25 +2369,67 @@
             "count": 3
          }
       ]
-   # MC: ServerboundChatSessionUpdatePacket
-   packet_chat_session_update:
-      sessionUUID: UUID
-      expireTime: i64
-      publicKey: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-      signature: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-   # MC: ServerboundChunkBatchReceivedPacket
-   packet_chunk_batch_received:
-      chunksPerTick: f32
+   # MC: ServerboundChangeDifficultyPacket
+   packet_set_difficulty:
+      newDifficulty: u8
+   # MC: ServerboundChatAckPacket
+   packet_message_acknowledgement:
+      count: varint
+   # MC: ServerboundEditBookPacket
+   packet_edit_book:
+      hand: varint
+      pages: string[]varint
+      title?: string
+   # MC: ServerboundEntityTagQuery
+   packet_query_entity_nbt:
+      transactionId: varint
+      entityId: varint
+   # MC: ServerboundPickItemPacket
+   packet_pick_item:
+      slot: varint
+   # MC: ServerboundRenameItemPacket
+   packet_name_item:
+      name: string
+   # MC: ServerboundSelectTradePacket
+   packet_select_trade:
+      slot: varint
+   # MC: ServerboundSetBeaconPacket
+   packet_set_beacon_effect:
+      primary_effect?: varint
+      secondary_effect?: varint
+   # MC: ServerboundSetCommandBlockPacket
+   packet_update_command_block:
+      location: position
+      command: string
+      mode: varint
+      flags: u8
+   # MC: ServerboundSetCommandMinecartPacket
+   packet_update_command_block_minecart:
+      entityId: varint
+      command: string
+      track_output: bool
+   # MC: ServerboundSetStructureBlockPacket
+   packet_update_structure_block:
+      location: position
+      action: varint
+      mode: varint
+      name: string
+      offset_x: i8
+      offset_y: i8
+      offset_z: i8
+      size_x: i8
+      size_y: i8
+      size_z: i8
+      mirror: varint
+      rotation: varint
+      metadata: string
+      integrity: f32
+      seed: varint
+      flags: u8
+   # MC: ServerboundCommandSuggestionPacket
+   packet_tab_complete:
+      transactionId: varint
+      text: string
    # MC: ServerboundClientCommandPacket
    packet_client_command:
       actionId: varint
@@ -2494,13 +2443,6 @@
       mainHand: varint
       enableTextFiltering: bool
       enableServerListing: bool
-   # MC: ServerboundCommandSuggestionPacket
-   packet_tab_complete:
-      transactionId: varint
-      text: string
-   # MC: ServerboundConfigurationAcknowledgedPacket
-   packet_configuration_acknowledged:
-      # Empty
    # MC: ServerboundContainerButtonClickPacket
    packet_enchant_item:
       windowId: i8
@@ -2519,27 +2461,10 @@
    # MC: ServerboundContainerClosePacket
    packet_close_window:
       windowId: u8
-   # MC: ServerboundContainerSlotStateChangedPacket
-   packet_set_slot_state:
-      slot_id: varint
-      window_id: varint
-      state: bool
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
       data: restBuffer
-   # MC: ServerboundDebugSampleSubscriptionPacket
-   packet_debug_sample_subscription:
-      type: varint
-   # MC: ServerboundEditBookPacket
-   packet_edit_book:
-      hand: varint
-      pages: string[]varint
-      title?: string
-   # MC: ServerboundEntityTagQuery
-   packet_query_entity_nbt:
-      transactionId: varint
-      entityId: varint
    # MC: ServerboundInteractPacket
    packet_use_entity:
       target: varint
@@ -2602,12 +2527,6 @@
    packet_steer_boat:
       leftPaddle: bool
       rightPaddle: bool
-   # MC: ServerboundPickItemPacket
-   packet_pick_item:
-      slot: varint
-   # MC: ServerboundPingRequestPacket
-   packet_ping_request:
-      id: i64
    # MC: ServerboundPlaceRecipePacket
    packet_craft_recipe_request:
       windowId: i8
@@ -2632,51 +2551,21 @@
       sideways: f32
       forward: f32
       jump: u8
-   # MC: ServerboundPongPacket
-   packet_pong:
-      id: i32
+   # MC: ServerboundRecipeBookSeenRecipePacket
+   packet_displayed_recipe:
+      recipeId: string
    # MC: ServerboundRecipeBookChangeSettingsPacket
    packet_recipe_book:
       bookId: varint
       bookOpen: bool
       filterActive: bool
-   # MC: ServerboundRecipeBookSeenRecipePacket
-   packet_displayed_recipe:
-      recipeId: string
-   # MC: ServerboundRenameItemPacket
-   packet_name_item:
-      name: string
    # MC: ServerboundResourcePackPacket
    packet_resource_pack_receive:
       uuid: UUID
       result: varint
-   # MC: ServerboundSeenAdvancementsPacket
-   packet_advancement_tab:
-      action: varint
-      tabId: action ?
-         if 0: string
-         if 1: void
-   # MC: ServerboundSelectTradePacket
-   packet_select_trade:
-      slot: varint
-   # MC: ServerboundSetBeaconPacket
-   packet_set_beacon_effect:
-      primary_effect?: varint
-      secondary_effect?: varint
    # MC: ServerboundSetCarriedItemPacket
    packet_held_item_slot:
       slotId: i16
-   # MC: ServerboundSetCommandBlockPacket
-   packet_update_command_block:
-      location: position
-      command: string
-      mode: varint
-      flags: u8
-   # MC: ServerboundSetCommandMinecartPacket
-   packet_update_command_block_minecart:
-      entityId: varint
-      command: string
-      track_output: bool
    # MC: ServerboundSetCreativeModeSlotPacket
    packet_set_creative_slot:
       slot: i16
@@ -2691,24 +2580,6 @@
       jointType: string
       selection_priority: varint
       placement_priority: varint
-   # MC: ServerboundSetStructureBlockPacket
-   packet_update_structure_block:
-      location: position
-      action: varint
-      mode: varint
-      name: string
-      offset_x: i8
-      offset_y: i8
-      offset_z: i8
-      size_x: i8
-      size_y: i8
-      size_z: i8
-      mirror: varint
-      rotation: varint
-      metadata: string
-      integrity: f32
-      seed: varint
-      flags: u8
    # MC: ServerboundSignUpdatePacket
    packet_update_sign:
       location: position
@@ -2737,14 +2608,45 @@
    packet_use_item:
       hand: varint
       sequence: varint
-
-   # MC: ServerboundSelectKnownPacks
-   packet_select_known_packs:
-      packs: []varint
-         namespace: string
-         id: string
-         version: string
-
+   # MC: ServerboundSeenAdvancementsPacket
+   packet_advancement_tab:
+      action: varint
+      tabId: action ?
+         if 0: string
+         if 1: void
+   # MC: ServerboundPongPacket
+   packet_pong:
+      id: i32
+   # MC: ServerboundChatSessionUpdatePacket
+   packet_chat_session_update:
+      sessionUUID: UUID
+      expireTime: i64
+      publicKey: [
+         "buffer",
+         {
+            "countType": "varint"
+         }
+      ]
+      signature: [
+         "buffer",
+         {
+            "countType": "varint"
+         }
+      ]
+   # MC: ServerboundChunkBatchReceivedPacket
+   packet_chunk_batch_received:
+      chunksPerTick: f32
+   # MC: ServerboundConfigurationAcknowledgedPacket
+   packet_configuration_acknowledged:
+      # Empty
+   # MC: ServerboundPingRequestPacket
+   packet_ping_request:
+      id: i64
+   # MC: ServerboundContainerSlotStateChangedPacket
+   packet_set_slot_state:
+      slot_id: varint
+      window_id: varint
+      state: bool
    packet:
       name: varint =>
       - teleport_confirm
@@ -2752,7 +2654,6 @@
       - set_difficulty
       - message_acknowledgement
       - chat_command
-      - chat_command_signed
       - chat_message
       - chat_session_update
       - chunk_batch_received
@@ -2764,9 +2665,7 @@
       - window_click
       - close_window
       - set_slot_state
-      - cookie_response
       - custom_payload
-      - debug_sample_subscription
       - edit_book
       - query_entity_nbt
       - use_entity
@@ -2806,60 +2705,58 @@
       - block_place
       - use_item
       params: name ?
-        if teleport_confirm: packet_teleport_confirm
-        if query_block_nbt: packet_query_block_nbt
-        if set_difficulty: packet_set_difficulty
-        if message_acknowledgement: packet_message_acknowledgement
-        if chat_command: packet_chat_command
-        if chat_command_signed: packet_chat_command_signed
-        if chat_message: packet_chat_message
-        if chat_session_update: packet_chat_session_update
-        if chunk_batch_received: packet_chunk_batch_received
-        if client_command: packet_client_command
-        if settings: packet_settings
-        if tab_complete: packet_tab_complete
-        if configuration_acknowledged: packet_configuration_acknowledged
-        if enchant_item: packet_enchant_item
-        if window_click: packet_window_click
-        if close_window: packet_close_window
-        if set_slot_state: packet_set_slot_state
-        if cookie_response: packet_common_cookie_response
-        if custom_payload: packet_custom_payload
-        if edit_book: packet_edit_book
-        if query_entity_nbt: packet_query_entity_nbt
-        if use_entity: packet_use_entity
-        if generate_structure: packet_generate_structure
-        if keep_alive: packet_keep_alive
-        if lock_difficulty: packet_lock_difficulty
-        if position: packet_position
-        if position_look: packet_position_look
-        if look: packet_look
-        if flying: packet_flying
-        if vehicle_move: packet_vehicle_move
-        if steer_boat: packet_steer_boat
-        if pick_item: packet_pick_item
-        if ping_request: packet_ping_request
-        if craft_recipe_request: packet_craft_recipe_request
-        if abilities: packet_abilities
-        if block_dig: packet_block_dig
-        if entity_action: packet_entity_action
-        if steer_vehicle: packet_steer_vehicle
-        if pong: packet_pong
-        if recipe_book: packet_recipe_book
-        if displayed_recipe: packet_displayed_recipe
-        if name_item: packet_name_item
-        if resource_pack_receive: packet_resource_pack_receive
-        if advancement_tab: packet_advancement_tab
-        if select_trade: packet_select_trade
-        if set_beacon_effect: packet_set_beacon_effect
-        if held_item_slot: packet_held_item_slot
-        if update_command_block: packet_update_command_block
-        if update_command_block_minecart: packet_update_command_block_minecart
-        if set_creative_slot: packet_set_creative_slot
-        if update_jigsaw_block: packet_update_jigsaw_block
-        if update_structure_block: packet_update_structure_block
-        if update_sign: packet_update_sign
-        if arm_animation: packet_arm_animation
-        if spectate: packet_spectate
-        if block_place: packet_block_place
-        if use_item: packet_use_item
+         if teleport_confirm: packet_teleport_confirm
+         if query_block_nbt: packet_query_block_nbt
+         if set_difficulty: packet_set_difficulty
+         if message_acknowledgement: packet_message_acknowledgement
+         if chat_command: packet_chat_command
+         if chat_message: packet_chat_message
+         if client_command: packet_client_command
+         if settings: packet_settings
+         if tab_complete: packet_tab_complete
+         if enchant_item: packet_enchant_item
+         if window_click: packet_window_click
+         if close_window: packet_close_window
+         if custom_payload: packet_custom_payload
+         if edit_book: packet_edit_book
+         if query_entity_nbt: packet_query_entity_nbt
+         if use_entity: packet_use_entity
+         if generate_structure: packet_generate_structure
+         if keep_alive: packet_keep_alive
+         if lock_difficulty: packet_lock_difficulty
+         if position: packet_position
+         if position_look: packet_position_look
+         if look: packet_look
+         if flying: packet_flying
+         if vehicle_move: packet_vehicle_move
+         if steer_boat: packet_steer_boat
+         if pick_item: packet_pick_item
+         if craft_recipe_request: packet_craft_recipe_request
+         if abilities: packet_abilities
+         if block_dig: packet_block_dig
+         if entity_action: packet_entity_action
+         if steer_vehicle: packet_steer_vehicle
+         if pong: packet_pong
+         if chat_session_update: packet_chat_session_update
+         if recipe_book: packet_recipe_book
+         if displayed_recipe: packet_displayed_recipe
+         if name_item: packet_name_item
+         if resource_pack_receive: packet_resource_pack_receive
+         if advancement_tab: packet_advancement_tab
+         if select_trade: packet_select_trade
+         if set_beacon_effect: packet_set_beacon_effect
+         if held_item_slot: packet_held_item_slot
+         if update_command_block: packet_update_command_block
+         if update_command_block_minecart: packet_update_command_block_minecart
+         if set_creative_slot: packet_set_creative_slot
+         if update_jigsaw_block: packet_update_jigsaw_block
+         if update_structure_block: packet_update_structure_block
+         if update_sign: packet_update_sign
+         if arm_animation: packet_arm_animation
+         if spectate: packet_spectate
+         if block_place: packet_block_place
+         if use_item: packet_use_item
+         if chunk_batch_received: packet_chunk_batch_received
+         if configuration_acknowledged: packet_configuration_acknowledged
+         if ping_request: packet_ping_request
+         if set_slot_state: packet_set_slot_state
