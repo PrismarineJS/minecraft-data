@@ -1,5 +1,48 @@
 {
   "types": {
+    "string": [
+      "pstring",
+      {
+        "countType": "varint"
+      }
+    ],
+    "ByteArray": [
+      "buffer",
+      {
+        "countType": "varint"
+      }
+    ],
+    "SignedByteArray": [
+      "buffer",
+      {
+        "countType": "zigzag32"
+      }
+    ],
+    "LittleString": [
+      "pstring",
+      {
+        "countType": "li32"
+      }
+    ],
+    "LatinString": [
+      "pstring",
+      {
+        "countType": "varint",
+        "encoding": "latin1"
+      }
+    ],
+    "ShortArray": [
+      "buffer",
+      {
+        "countType": "li16"
+      }
+    ],
+    "ShortString": [
+      "pstring",
+      {
+        "countType": "li16"
+      }
+    ],
     "varint64": "native",
     "zigzag32": "native",
     "zigzag64": "native",
@@ -793,6 +836,122 @@
               ]
             }
           ]
+        ]
+      }
+    ],
+    "MetadataFlags1": [
+      "bitflags",
+      {
+        "type": "zigzag64",
+        "big": true,
+        "flags": [
+          "onfire",
+          "sneaking",
+          "riding",
+          "sprinting",
+          "action",
+          "invisible",
+          "tempted",
+          "inlove",
+          "saddled",
+          "powered",
+          "ignited",
+          "baby",
+          "converting",
+          "critical",
+          "can_show_nametag",
+          "always_show_nametag",
+          "no_ai",
+          "silent",
+          "wallclimbing",
+          "can_climb",
+          "swimmer",
+          "can_fly",
+          "walker",
+          "resting",
+          "sitting",
+          "angry",
+          "interested",
+          "charged",
+          "tamed",
+          "orphaned",
+          "leashed",
+          "sheared",
+          "gliding",
+          "elder",
+          "moving",
+          "breathing",
+          "chested",
+          "stackable",
+          "showbase",
+          "rearing",
+          "vibrating",
+          "idling",
+          "evoker_spell",
+          "charge_attack",
+          "wasd_controlled",
+          "can_power_jump",
+          "linger",
+          "has_collision",
+          "affected_by_gravity",
+          "fire_immune",
+          "dancing",
+          "enchanted",
+          "show_trident_rope",
+          "container_private",
+          "transforming",
+          "spin_attack",
+          "swimming",
+          "bribed",
+          "pregnant",
+          "laying_egg",
+          "rider_can_pick",
+          "transition_sitting",
+          "eating",
+          "laying_down"
+        ]
+      }
+    ],
+    "MetadataFlags2": [
+      "bitflags",
+      {
+        "type": "zigzag64",
+        "big": true,
+        "flags": [
+          "sneezing",
+          "trusting",
+          "rolling",
+          "scared",
+          "in_scaffolding",
+          "over_scaffolding",
+          "fall_through_scaffolding",
+          "blocking",
+          "transition_blocking",
+          "blocked_using_shield",
+          "blocked_using_damaged_shield",
+          "sleeping",
+          "wants_to_wake",
+          "trade_interest",
+          "door_breaker",
+          "breaking_obstruction",
+          "door_opener",
+          "illager_captain",
+          "stunned",
+          "roaring",
+          "delayed_attacking",
+          "avoiding_mobs",
+          "avoiding_block",
+          "facing_target_to_range_attack",
+          "hidden_when_invisible",
+          "is_in_ui",
+          "stalking",
+          "emoting",
+          "celebrating",
+          "admiring",
+          "celebrating_special",
+          "unknown95",
+          "ram_attack",
+          "playing_dead"
         ]
       }
     ],
@@ -4820,6 +4979,19 @@
         }
       ]
     ],
+    "UpdateBlockFlags": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "neighbors": 1,
+          "network": 2,
+          "no_graphic": 4,
+          "unused": 8,
+          "priority": 16
+        }
+      }
+    ],
     "packet_add_painting": [
       "container",
       [
@@ -5818,6 +5990,39 @@
         }
       ]
     ],
+    "AdventureFlags": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "world_immutable": 1,
+          "no_pvp": 2,
+          "auto_jump": 32,
+          "allow_flight": 64,
+          "no_clip": 128,
+          "world_builder": 256,
+          "flying": 512,
+          "muted": 1024
+        }
+      }
+    ],
+    "ActionPermissions": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "mine": 65537,
+          "doors_and_switches": 65538,
+          "open_containers": 65540,
+          "attack_players": 65544,
+          "attack_mobs": 65552,
+          "operator": 65568,
+          "teleport": 65664,
+          "build": 65792,
+          "default": 66048
+        }
+      }
+    ],
     "packet_block_entity_data": [
       "container",
       [
@@ -6043,6 +6248,18 @@
           "type": "zigzag32"
         }
       ]
+    ],
+    "UpdateMapFlags": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": [
+          "void",
+          "texture",
+          "decoration",
+          "initialisation"
+        ]
+      }
     ],
     "packet_clientbound_map_item_data": [
       "container",
@@ -6641,6 +6858,36 @@
               ]
             }
           ]
+        }
+      ]
+    ],
+    "CommandFlags": [
+      "bitfield",
+      [
+        {
+          "name": "unused",
+          "size": 1,
+          "signed": false
+        },
+        {
+          "name": "collapse_enum",
+          "size": 1,
+          "signed": false
+        },
+        {
+          "name": "has_semantic_constraint",
+          "size": 1,
+          "signed": false
+        },
+        {
+          "name": "as_chained_command",
+          "size": 1,
+          "signed": false
+        },
+        {
+          "name": "unknown2",
+          "size": 4,
+          "signed": false
         }
       ]
     ],
@@ -7753,6 +8000,23 @@
         }
       ]
     ],
+    "DeltaMoveFlags": [
+      "bitflags",
+      {
+        "type": "lu16",
+        "flags": {
+          "has_x": 1,
+          "has_y": 2,
+          "has_z": 4,
+          "has_rot_x": 8,
+          "has_rot_y": 16,
+          "has_rot_z": 32,
+          "on_ground": 64,
+          "teleport": 128,
+          "force_move": 256
+        }
+      }
+    ],
     "packet_set_scoreboard_identity": [
       "container",
       [
@@ -8675,6 +8939,52 @@
         }
       ]
     ],
+    "InputFlag": [
+      "bitflags",
+      {
+        "type": "varint64",
+        "big": true,
+        "flags": [
+          "ascend",
+          "descend",
+          "north_jump",
+          "jump_down",
+          "sprint_down",
+          "change_height",
+          "jumping",
+          "auto_jumping_in_water",
+          "sneaking",
+          "sneak_down",
+          "up",
+          "down",
+          "left",
+          "right",
+          "up_left",
+          "up_right",
+          "want_up",
+          "want_down",
+          "want_down_slow",
+          "want_up_slow",
+          "sprinting",
+          "ascend_block",
+          "descend_block",
+          "sneak_toggle_down",
+          "persist_sneak",
+          "start_sprinting",
+          "stop_sprinting",
+          "start_sneaking",
+          "stop_sneaking",
+          "start_swimming",
+          "stop_swimming",
+          "start_jumping",
+          "start_gliding",
+          "stop_gliding",
+          "item_interact",
+          "block_action",
+          "item_stack_request"
+        ]
+      }
+    ],
     "packet_creative_content": [
       "container",
       [
@@ -8801,6 +9111,18 @@
           ]
         }
       ]
+    ],
+    "ArmorDamageType": [
+      "bitflags",
+      {
+        "type": "u8",
+        "flags": {
+          "head": 1,
+          "chest": 2,
+          "legs": 4,
+          "feet": 8
+        }
+      }
     ],
     "packet_update_player_game_type": [
       "container",
@@ -9406,328 +9728,6 @@
           "type": "zigzag32"
         }
       ]
-    ],
-    "string": [
-      "pstring",
-      {
-        "countType": "varint"
-      }
-    ],
-    "ByteArray": [
-      "buffer",
-      {
-        "countType": "varint"
-      }
-    ],
-    "SignedByteArray": [
-      "buffer",
-      {
-        "countType": "zigzag32"
-      }
-    ],
-    "LittleString": [
-      "pstring",
-      {
-        "countType": "li32"
-      }
-    ],
-    "LatinString": [
-      "pstring",
-      {
-        "countType": "varint",
-        "encoding": "latin1"
-      }
-    ],
-    "ShortArray": [
-      "buffer",
-      {
-        "countType": "li16"
-      }
-    ],
-    "ShortString": [
-      "pstring",
-      {
-        "countType": "li16"
-      }
-    ],
-    "MetadataFlags1": [
-      "bitflags",
-      {
-        "type": "zigzag64",
-        "big": true,
-        "flags": [
-          "onfire",
-          "sneaking",
-          "riding",
-          "sprinting",
-          "action",
-          "invisible",
-          "tempted",
-          "inlove",
-          "saddled",
-          "powered",
-          "ignited",
-          "baby",
-          "converting",
-          "critical",
-          "can_show_nametag",
-          "always_show_nametag",
-          "no_ai",
-          "silent",
-          "wallclimbing",
-          "can_climb",
-          "swimmer",
-          "can_fly",
-          "walker",
-          "resting",
-          "sitting",
-          "angry",
-          "interested",
-          "charged",
-          "tamed",
-          "orphaned",
-          "leashed",
-          "sheared",
-          "gliding",
-          "elder",
-          "moving",
-          "breathing",
-          "chested",
-          "stackable",
-          "showbase",
-          "rearing",
-          "vibrating",
-          "idling",
-          "evoker_spell",
-          "charge_attack",
-          "wasd_controlled",
-          "can_power_jump",
-          "linger",
-          "has_collision",
-          "affected_by_gravity",
-          "fire_immune",
-          "dancing",
-          "enchanted",
-          "show_trident_rope",
-          "container_private",
-          "transforming",
-          "spin_attack",
-          "swimming",
-          "bribed",
-          "pregnant",
-          "laying_egg",
-          "rider_can_pick",
-          "transition_sitting",
-          "eating",
-          "laying_down"
-        ]
-      }
-    ],
-    "MetadataFlags2": [
-      "bitflags",
-      {
-        "type": "zigzag64",
-        "big": true,
-        "flags": [
-          "sneezing",
-          "trusting",
-          "rolling",
-          "scared",
-          "in_scaffolding",
-          "over_scaffolding",
-          "fall_through_scaffolding",
-          "blocking",
-          "transition_blocking",
-          "blocked_using_shield",
-          "blocked_using_damaged_shield",
-          "sleeping",
-          "wants_to_wake",
-          "trade_interest",
-          "door_breaker",
-          "breaking_obstruction",
-          "door_opener",
-          "illager_captain",
-          "stunned",
-          "roaring",
-          "delayed_attacking",
-          "avoiding_mobs",
-          "avoiding_block",
-          "facing_target_to_range_attack",
-          "hidden_when_invisible",
-          "is_in_ui",
-          "stalking",
-          "emoting",
-          "celebrating",
-          "admiring",
-          "celebrating_special",
-          "unknown95",
-          "ram_attack",
-          "playing_dead"
-        ]
-      }
-    ],
-    "UpdateBlockFlags": [
-      "bitflags",
-      {
-        "type": "varint",
-        "flags": {
-          "neighbors": 1,
-          "network": 2,
-          "no_graphic": 4,
-          "unused": 8,
-          "priority": 16
-        }
-      }
-    ],
-    "AdventureFlags": [
-      "bitflags",
-      {
-        "type": "varint",
-        "flags": {
-          "world_immutable": 1,
-          "no_pvp": 2,
-          "auto_jump": 32,
-          "allow_flight": 64,
-          "no_clip": 128,
-          "world_builder": 256,
-          "flying": 512,
-          "muted": 1024
-        }
-      }
-    ],
-    "ActionPermissions": [
-      "bitflags",
-      {
-        "type": "varint",
-        "flags": {
-          "mine": 65537,
-          "doors_and_switches": 65538,
-          "open_containers": 65540,
-          "attack_players": 65544,
-          "attack_mobs": 65552,
-          "operator": 65568,
-          "teleport": 65664,
-          "build": 65792,
-          "default": 66048
-        }
-      }
-    ],
-    "UpdateMapFlags": [
-      "bitflags",
-      {
-        "type": "varint",
-        "flags": [
-          "void",
-          "texture",
-          "decoration",
-          "initialisation"
-        ]
-      }
-    ],
-    "CommandFlags": [
-      "bitfield",
-      [
-        {
-          "name": "unused",
-          "size": 1,
-          "signed": false
-        },
-        {
-          "name": "collapse_enum",
-          "size": 1,
-          "signed": false
-        },
-        {
-          "name": "has_semantic_constraint",
-          "size": 1,
-          "signed": false
-        },
-        {
-          "name": "as_chained_command",
-          "size": 1,
-          "signed": false
-        },
-        {
-          "name": "unknown2",
-          "size": 4,
-          "signed": false
-        }
-      ]
-    ],
-    "DeltaMoveFlags": [
-      "bitflags",
-      {
-        "type": "lu16",
-        "flags": {
-          "has_x": 1,
-          "has_y": 2,
-          "has_z": 4,
-          "has_rot_x": 8,
-          "has_rot_y": 16,
-          "has_rot_z": 32,
-          "on_ground": 64,
-          "teleport": 128,
-          "force_move": 256
-        }
-      }
-    ],
-    "InputFlag": [
-      "bitflags",
-      {
-        "type": "varint64",
-        "big": true,
-        "flags": [
-          "ascend",
-          "descend",
-          "north_jump",
-          "jump_down",
-          "sprint_down",
-          "change_height",
-          "jumping",
-          "auto_jumping_in_water",
-          "sneaking",
-          "sneak_down",
-          "up",
-          "down",
-          "left",
-          "right",
-          "up_left",
-          "up_right",
-          "want_up",
-          "want_down",
-          "want_down_slow",
-          "want_up_slow",
-          "sprinting",
-          "ascend_block",
-          "descend_block",
-          "sneak_toggle_down",
-          "persist_sneak",
-          "start_sprinting",
-          "stop_sprinting",
-          "start_sneaking",
-          "stop_sneaking",
-          "start_swimming",
-          "stop_swimming",
-          "start_jumping",
-          "start_gliding",
-          "stop_gliding",
-          "item_interact",
-          "block_action",
-          "item_stack_request"
-        ]
-      }
-    ],
-    "ArmorDamageType": [
-      "bitflags",
-      {
-        "type": "u8",
-        "flags": {
-          "head": 1,
-          "chest": 2,
-          "legs": 4,
-          "feet": 8
-        }
-      }
     ]
   }
 }
