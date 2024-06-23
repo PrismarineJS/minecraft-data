@@ -19,7 +19,10 @@ function convert (version) {
       text += genYAML(data.toServer.types, 1)
     }
   }
-  fs.writeFileSync(`../../data/pc/${version}/proto.yml`, text)
+  const outFile = `../../data/pc/${version}/proto.yml`
+  const absPath = fs.realpathSync(`../../data/pc/${version}/`) + '/proto.yml'
+  console.log(`Wrote to ${absPath}`)
+  fs.writeFileSync(outFile, text)
 }
 
 if (process.argv.length < 3) {

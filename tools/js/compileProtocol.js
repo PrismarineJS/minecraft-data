@@ -42,7 +42,7 @@ function genProtoSchema (createPacketMap) {
   }
 
   const json = compile('./proto.yml')
-  fs.unlinkSync('./packet_map.yml', { force: true }) // temp file
+  fs.rmSync('./packet_map.yml', { force: true }) // temp file
   return [version, json]
 }
 
@@ -68,7 +68,7 @@ function validate (edition, ver, path) {
     : JSON.stringify(json, null, 2)
 
   // If you crash here, no protocol.json was generated - run `npm run build`
-  const actual = JSON.stringify(getJSON(`../${version}/protocol.json`))
+  const actual = JSON.stringify(getJSON(`../${version}/protocol.json`), null, 2)
 
   // Make sure the protocol_expected.json file equals the protocol.json file; otherwise the JSON must be rebuilt
   if (expected !== actual) {

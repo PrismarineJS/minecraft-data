@@ -92,14 +92,17 @@
          positionType: string
          entityId: positionType ?
             if minecraft:entity: varint
+            default: void
          entityEyeHeight: positionType ?
             if minecraft:entity: varint
+            default: void
          destination: positionType ?
             if minecraft:block: position
             if minecraft:entity: varint
          ticks: varint
       if 96:      
          delayInTicksBeforeShown: varint
+      default: void
    ingredient: slot[]varint
    position: [
       "bitfield",
@@ -144,6 +147,7 @@
                "count": 256
             }
          ]
+         default: void
    entityMetadataItem: $compareTo ?
       if byte: i8
       if int: varint
@@ -341,6 +345,7 @@
       children: varint[]varint
       redirectNode: flags/has_redirect_node ?
          if 1: varint
+         default: void
       extraNodeData: flags/command_node_type ?
          if 0: void
          if 1:         
@@ -423,8 +428,10 @@
                   ]
                   min: flags/min_present ?
                      if 1: f32
+                     default: void
                   max: flags/max_present ?
                      if 1: f32
+                     default: void
                if brigadier:double:               
                   flags: [
                      "bitfield",
@@ -448,8 +455,10 @@
                   ]
                   min: flags/min_present ?
                      if 1: f64
+                     default: void
                   max: flags/max_present ?
                      if 1: f64
+                     default: void
                if brigadier:integer:               
                   flags: [
                      "bitfield",
@@ -473,8 +482,10 @@
                   ]
                   min: flags/min_present ?
                      if 1: i32
+                     default: void
                   max: flags/max_present ?
                      if 1: i32
+                     default: void
                if brigadier:long:               
                   flags: [
                      "bitfield",
@@ -498,8 +509,10 @@
                   ]
                   min: flags/min_present ?
                      if 1: i64
+                     default: void
                   max: flags/max_present ?
                      if 1: i64
+                     default: void
                if brigadier:string: varint =>
                   0: SINGLE_WORD
                   1: QUOTABLE_PHRASE
@@ -586,6 +599,7 @@
                if minecraft:uuid: void
             suggestionType: ../flags/has_custom_suggestions ?
                if 1: string
+               default: void
 ^handshaking.toClient.types:
    packet:   
       name: varint =>
@@ -860,6 +874,7 @@
                ]
                backgroundTexture: flags/has_background_texture ?
                   if 1: string
+                  default: void
                xCord: f32
                yCord: f32
             requirements: []varint
@@ -893,18 +908,23 @@
       title: action ?
          if 0: anonymousNbt
          if 3: anonymousNbt
+         default: void
       health: action ?
          if 0: f32
          if 2: f32
+         default: void
       color: action ?
          if 0: varint
          if 4: varint
+         default: void
       dividers: action ?
          if 0: varint
          if 4: varint
+         default: void
       flags: action ?
          if 0: u8
          if 5: u8
+         default: void
    packet_difficulty:   
       difficulty: u8
       difficultyLocked: bool
@@ -930,8 +950,10 @@
       isEntity: bool
       entityId: isEntity ?
          if true: varint
+         default: void
       entity_feet_eyes: isEntity ?
          if true: varint
+         default: void
    packet_nbt_query_response:   
       transactionId: varint
       nbt: anonOptionalNbt
@@ -995,6 +1017,7 @@
                "count": 256
             }
          ]
+         default: void
    packet_kick_disconnect:   
       reason: anonymousNbt
    packet_profileless_chat:   
@@ -1120,12 +1143,21 @@
       columns: u8
       rows: columns ?
          if 0: void
+         default: u8
       x: columns ?
          if 0: void
+         default: u8
       y: columns ?
          if 0: void
+         default: u8
       data: columns ?
          if 0: void
+         default: [
+            "buffer",
+            {
+               "countType": "varint"
+            }
+         ]
    packet_trade_list:   
       windowId: varint
       trades: []varint
@@ -1197,6 +1229,7 @@
       filterType: varint
       filterTypeMask: filterType ?
          if 2: i64[]varint
+         default: void
       type: varint
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
@@ -1246,6 +1279,7 @@
             if 59: game_profile
             if 61: game_profile
             if 63: game_profile
+            default: void
          chatSession: ../action ?
             if 2: chat_session
             if 3: chat_session
@@ -1279,6 +1313,7 @@
             if 59: chat_session
             if 62: chat_session
             if 63: chat_session
+            default: void
          gamemode: ../action ?
             if 4: varint
             if 5: varint
@@ -1312,6 +1347,7 @@
             if 61: varint
             if 62: varint
             if 63: varint
+            default: void
          listed: ../action ?
             if 8: bool
             if 9: bool
@@ -1345,6 +1381,7 @@
             if 61: bool
             if 62: bool
             if 63: bool
+            default: void
          latency: ../action ?
             if 16: varint
             if 17: varint
@@ -1378,6 +1415,7 @@
             if 61: varint
             if 62: varint
             if 63: varint
+            default: void
          displayName: ../action ?
             if 32: [
                "option",
@@ -1507,6 +1545,7 @@
                "option",
                "anonymousNbt"
             ]
+            default: void
    packet_position:   
       x: f64
       y: f64
@@ -1528,6 +1567,7 @@
       recipes1: string[]varint
       recipes2: action ?
          if 0: string[]varint
+         default: void
    packet_entity_destroy:   
       entityIds: varint[]varint
    packet_remove_entity_effect:   
@@ -1617,9 +1657,11 @@
       displayText: action ?
          if 0: anonymousNbt
          if 2: anonymousNbt
+         default: void
       type: action ?
          if 0: varint
          if 2: varint
+         default: void
       number_format: action ?
          if 0: [
             "option",
@@ -1629,13 +1671,17 @@
             "option",
             "varint"
          ]
+         default: void
       styling: action ?
          if 0: number_format ?
             if 1: anonymousNbt
             if 2: anonymousNbt
+            default: void
          if 2: number_format ?
             if 1: anonymousNbt
             if 2: anonymousNbt
+            default: void
+         default: void
    packet_set_passengers:   
       entityId: varint
       passengers: varint[]varint
@@ -1645,28 +1691,36 @@
       name: mode ?
          if 0: anonymousNbt
          if 2: anonymousNbt
+         default: void
       friendlyFire: mode ?
          if 0: i8
          if 2: i8
+         default: void
       nameTagVisibility: mode ?
          if 0: string
          if 2: string
+         default: void
       collisionRule: mode ?
          if 0: string
          if 2: string
+         default: void
       formatting: mode ?
          if 0: varint
          if 2: varint
+         default: void
       prefix: mode ?
          if 0: anonymousNbt
          if 2: anonymousNbt
+         default: void
       suffix: mode ?
          if 0: anonymousNbt
          if 2: anonymousNbt
+         default: void
       players: mode ?
          if 0: string[]varint
          if 3: string[]varint
          if 4: string[]varint
+         default: void
    packet_scoreboard_score:   
       itemName: string
       scoreName: string
@@ -1676,6 +1730,7 @@
       styling: number_format ?
          if 1: anonymousNbt
          if 2: anonymousNbt
+         default: void
    packet_spawn_position:   
       location: position
       angle: f32
@@ -1688,6 +1743,7 @@
          if 0:         
             resource: string
             range?: f32
+         default: void
       soundCategory: soundSource
       entityId: varint
       volume: f32
@@ -1698,15 +1754,18 @@
       source: flags ?
          if 1: varint
          if 3: varint
+         default: void
       sound: flags ?
          if 2: string
          if 3: string
+         default: void
    packet_sound_effect:   
       soundId: varint
       soundEvent: soundId ?
          if 0:         
             resource: string
             range?: f32
+         default: void
       soundCategory: soundSource
       x: i32
       y: i32
@@ -2243,13 +2302,17 @@
       mouse: varint
       x: mouse ?
          if 2: f32
+         default: void
       y: mouse ?
          if 2: f32
+         default: void
       z: mouse ?
          if 2: f32
+         default: void
       hand: mouse ?
          if 0: varint
          if 2: varint
+         default: void
       sneaking: bool
    packet_generate_structure:   
       location: position
