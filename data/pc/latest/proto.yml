@@ -770,7 +770,7 @@
       messageId: varint
       channel: string
       data: restBuffer
-   ## (Cookie Response is Common) ##
+   ## (Cookie Request is Common) ##
    packet:
       name: varint =>
       - disconnect
@@ -956,6 +956,24 @@
          if pong: packet_pong
          if resource_pack_receive: packet_resource_pack_receive
 ^play.toClient.types:
+   # World state information for spawn and respawn packets
+   SpawnInfo:
+      dimension: varint
+      name: string
+      hashedSeed: i64
+      gamemode: i8 =>
+      - survival
+      - creative
+      - adventure
+      - spectator
+      previousGamemode: u8
+      isDebug: bool
+      isFlat: bool
+      death?:
+         dimensionName: string
+         location: position
+      portalCooldown: varint
+
    # MC: ClientboundAddEntityPacket
    packet_spawn_entity:
       entityId: varint
@@ -1049,12 +1067,7 @@
    packet_chunk_biomes:
       biomes: []varint
          position: packedChunkPos
-         data: [
-            "buffer",
-            {
-               "countType": "varint"
-            }
-         ]
+         data: ByteArray
    # MC: ClientboundClearTitlesPacket
    packet_clear_titles:
       reset: bool
@@ -1254,17 +1267,7 @@
       reducedDebugInfo: bool
       enableRespawnScreen: bool
       doLimitedCrafting: bool
-      dimension: varint
-      worldName: string
-      hashedSeed: i64
-      gameMode: u8
-      previousGameMode: i8
-      isDebug: bool
-      isFlat: bool
-      death?:
-         dimensionName: string
-         location: position
-      portalCooldown: varint
+      worldState: SpawnInfo
       enforcesSecureChat: bool
    # MC: ClientboundMapItemDataPacket
    packet_map:
@@ -1770,17 +1773,7 @@
       promptMessage?: anonymousNbt
    # MC: ClientboundRespawnPacket
    packet_respawn:
-      dimension: string
-      worldName: string
-      hashedSeed: i64
-      gamemode: i8
-      previousGamemode: u8
-      isDebug: bool
-      isFlat: bool
-      death?:
-         dimensionName: string
-         location: position
-      portalCooldown: varint
+      worldState: SpawnInfo
       copyMetadata: bool
    # MC: ClientboundRotateHeadPacket
    packet_entity_head_rotation:
@@ -1788,26 +1781,11 @@
       headYaw: i8
    # MC: ClientboundSectionBlocksUpdatePacket
    packet_multi_block_change:
-      chunkCoordinates: [
-         "bitfield",
-         [
-            {
-               "name": "x",
-               "size": 22,
-               "signed": true
-            },
-            {
-               "name": "z",
-               "size": 22,
-               "signed": true
-            },
-            {
-               "name": "y",
-               "size": 20,
-               "signed": true
-            }
-         ]
-      ]
+      chunkCoordinates: [ "bitfield", [
+         { "name": "x", "size": 22, "signed": true },
+         { "name": "z", "size": 22, "signed": true },
+         { "name": "y", "size": 20, "signed": true }
+      ]]
       records: varint[]varint
    # MC: ClientboundSelectAdvancementsTabPacket
    packet_select_advancement_tab:
@@ -1815,12 +1793,7 @@
    # MC: ClientboundServerDataPacket
    packet_server_data:
       motd: anonymousNbt
-      iconBytes?: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
+      iconBytes?: ByteArray
    # MC: ClientboundSetActionBarTextPacket
    packet_action_bar:
       text: anonymousNbt
@@ -2099,31 +2072,12 @@
                description: anonymousNbt
                icon: slot
                frameType: varint
-               flags: [
-                  "bitfield",
-                  [
-                     {
-                        "name": "_unused",
-                        "size": 29,
-                        "signed": false
-                     },
-                     {
-                        "name": "hidden",
-                        "size": 1,
-                        "signed": false
-                     },
-                     {
-                        "name": "show_toast",
-                        "size": 1,
-                        "signed": false
-                     },
-                     {
-                        "name": "has_background_texture",
-                        "size": 1,
-                        "signed": false
-                     }
-                  ]
-               ]
+               flags: ["bitfield", [
+                  { "name": "unused", "size": 29, "signed": false },
+                  { "name": "hidden", "size": 1, "signed": false },
+                  { "name": "show_toast", "size": 1, "signed": false },
+                  { "name": "has_background_texture", "size": 1, "signed": false }
+               ]]
                backgroundTexture: flags/has_background_texture ?
                   if 1: string
                   default: void
@@ -2529,18 +2483,8 @@
    packet_chat_session_update:
       sessionUUID: UUID
       expireTime: i64
-      publicKey: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-      signature: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
+      publicKey: ByteArray
+      signature: ByteArray
    # MC: ServerboundChunkBatchReceivedPacket
    packet_chunk_batch_received:
       chunksPerTick: f32

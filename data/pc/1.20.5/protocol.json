@@ -2185,6 +2185,73 @@
   "play": {
     "toClient": {
       "types": {
+        "SpawnInfo": [
+          "container",
+          [
+            {
+              "name": "dimension",
+              "type": "varint"
+            },
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "hashedSeed",
+              "type": "i64"
+            },
+            {
+              "name": "gamemode",
+              "type": [
+                "mapper",
+                {
+                  "type": "i8",
+                  "mappings": {
+                    "0": "survival",
+                    "1": "creative",
+                    "2": "adventure",
+                    "3": "spectator"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "previousGamemode",
+              "type": "u8"
+            },
+            {
+              "name": "isDebug",
+              "type": "bool"
+            },
+            {
+              "name": "isFlat",
+              "type": "bool"
+            },
+            {
+              "name": "death",
+              "type": [
+                "option",
+                [
+                  "container",
+                  [
+                    {
+                      "name": "dimensionName",
+                      "type": "string"
+                    },
+                    {
+                      "name": "location",
+                      "type": "position"
+                    }
+                  ]
+                ]
+              ]
+            },
+            {
+              "name": "portalCooldown",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet_spawn_entity": [
           "container",
           [
@@ -2515,12 +2582,7 @@
                       },
                       {
                         "name": "data",
-                        "type": [
-                          "buffer",
-                          {
-                            "countType": "varint"
-                          }
-                        ]
+                        "type": "ByteArray"
                       }
                     ]
                   ]
@@ -3336,55 +3398,8 @@
               "type": "bool"
             },
             {
-              "name": "dimension",
-              "type": "varint"
-            },
-            {
-              "name": "worldName",
-              "type": "string"
-            },
-            {
-              "name": "hashedSeed",
-              "type": "i64"
-            },
-            {
-              "name": "gameMode",
-              "type": "u8"
-            },
-            {
-              "name": "previousGameMode",
-              "type": "i8"
-            },
-            {
-              "name": "isDebug",
-              "type": "bool"
-            },
-            {
-              "name": "isFlat",
-              "type": "bool"
-            },
-            {
-              "name": "death",
-              "type": [
-                "option",
-                [
-                  "container",
-                  [
-                    {
-                      "name": "dimensionName",
-                      "type": "string"
-                    },
-                    {
-                      "name": "location",
-                      "type": "position"
-                    }
-                  ]
-                ]
-              ]
-            },
-            {
-              "name": "portalCooldown",
-              "type": "varint"
+              "name": "worldState",
+              "type": "SpawnInfo"
             },
             {
               "name": "enforcesSecureChat",
@@ -4536,55 +4551,8 @@
           "container",
           [
             {
-              "name": "dimension",
-              "type": "string"
-            },
-            {
-              "name": "worldName",
-              "type": "string"
-            },
-            {
-              "name": "hashedSeed",
-              "type": "i64"
-            },
-            {
-              "name": "gamemode",
-              "type": "i8"
-            },
-            {
-              "name": "previousGamemode",
-              "type": "u8"
-            },
-            {
-              "name": "isDebug",
-              "type": "bool"
-            },
-            {
-              "name": "isFlat",
-              "type": "bool"
-            },
-            {
-              "name": "death",
-              "type": [
-                "option",
-                [
-                  "container",
-                  [
-                    {
-                      "name": "dimensionName",
-                      "type": "string"
-                    },
-                    {
-                      "name": "location",
-                      "type": "position"
-                    }
-                  ]
-                ]
-              ]
-            },
-            {
-              "name": "portalCooldown",
-              "type": "varint"
+              "name": "worldState",
+              "type": "SpawnInfo"
             },
             {
               "name": "copyMetadata",
@@ -4666,12 +4634,7 @@
               "name": "iconBytes",
               "type": [
                 "option",
-                [
-                  "buffer",
-                  {
-                    "countType": "varint"
-                  }
-                ]
+                "ByteArray"
               ]
             }
           ]
@@ -5614,7 +5577,7 @@
                                         "bitfield",
                                         [
                                           {
-                                            "name": "_unused",
+                                            "name": "unused",
                                             "size": 29,
                                             "signed": false
                                           },
@@ -6510,21 +6473,11 @@
             },
             {
               "name": "publicKey",
-              "type": [
-                "buffer",
-                {
-                  "countType": "varint"
-                }
-              ]
+              "type": "ByteArray"
             },
             {
               "name": "signature",
-              "type": [
-                "buffer",
-                {
-                  "countType": "varint"
-                }
-              ]
+              "type": "ByteArray"
             }
           ]
         ],
