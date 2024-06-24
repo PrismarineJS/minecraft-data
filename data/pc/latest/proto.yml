@@ -191,7 +191,7 @@
             green: f32
             blue: f32
             scale: f32
-          if dust_color_transition:
+         if dust_color_transition:
             fromRed: f32
             fromGreen: f32
             fromBlue: f32
@@ -2262,10 +2262,9 @@
       - unload_chunk
       - game_state_change
       - open_horse_window
-
       - hurt_animation
       - initialize_world_border
-      - keep_alive #
+      - keep_alive
       - map_chunk
       - world_event
       - world_particles
@@ -2801,7 +2800,6 @@
    packet_use_item:
       hand: varint
       sequence: varint
-
    # MC: ServerboundSelectKnownPacks
    packet_select_known_packs:
       packs: []varint
@@ -2869,6 +2867,7 @@
       - spectate
       - block_place
       - use_item
+      - select_known_packs
       params: name ?
         if teleport_confirm: packet_teleport_confirm
         if query_block_nbt: packet_query_block_nbt
@@ -2927,3 +2926,4 @@
         if spectate: packet_spectate
         if block_place: packet_block_place
         if use_item: packet_use_item
+        if select_known_packs: packet_select_known_packs
