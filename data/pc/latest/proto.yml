@@ -59,52 +59,153 @@
             itemCount: i8
             nbtData: anonOptionalNbt
    particle:
-      particleId: varint
-      data: [
-         "particleData",
-         {
-            "compareTo": "particleId"
-         }
-      ]
-   particleData: $compareTo ?
-      if 2:
-         blockState: varint
-      if 3:
-         blockState: varint
-      if 14:
-         red: f32
-         green: f32
-         blue: f32
-         scale: f32
-      if 15:
-         fromRed: f32
-         fromGreen: f32
-         fromBlue: f32
-         scale: f32
-         toRed: f32
-         toGreen: f32
-         toBlue: f32
-      if 27:
-         blockState: varint
-      if 33:
-         rotation: f32
-      if 42:
-         item: slot
-      if 43:
-         positionType: string
-         entityId: positionType ?
-            if minecraft:entity: varint
-            default: void
-         entityEyeHeight: positionType ?
-            if minecraft:entity: varint
-            default: void
-         destination: positionType ?
-            if minecraft:block: position
-            if minecraft:entity: varint
-         ticks: varint
-      if 96:
-         delayInTicksBeforeShown: varint
-      default: void
+      # See client/net/minecraft/core/particles/ParticleTypes.java
+      type: varint =>
+      - angry_villager
+      - block
+      - block_marker
+      - bubble
+      - cloud
+      - crit
+      - damage_indicator
+      - dragon_breath
+      - dripping_lava
+      - falling_lava
+      - landing_lava
+      - dripping_water
+      - falling_water
+      - dust
+      - dust_color_transition
+      - effect
+      - elder_guardian
+      - enchanted_hit
+      - enchant
+      - end_rod
+      - entity_effect
+      - explosion_emitter
+      - explosion
+      - gust
+      - small_gust
+      - gust_emitter_large
+      - gust_emitter_small
+      - sonic_boom
+      - falling_dust
+      - firework
+      - fishing
+      - flame
+      - infested
+      - cherry_leaves
+      - sculk_soul
+      - sculk_charge
+      - sculk_charge_pop
+      - soul_fire_flame
+      - soul
+      - flash
+      - happy_villager
+      - composter
+      - heart
+      - instant_effect
+      - item
+      - vibration
+      - item_slime
+      - item_cobweb
+      - item_snowball
+      - large_smoke
+      - lava
+      - mycelium
+      - note
+      - poof
+      - portal
+      - rain
+      - smoke
+      - white_smoke
+      - sneeze
+      - spit
+      - squid_ink
+      - sweep_attack
+      - totem_of_undying
+      - underwater
+      - splash
+      - witch
+      - bubble_pop
+      - current_down
+      - bubble_column_up
+      - nautilus
+      - dolphin
+      - campfire_cosy_smoke
+      - campfire_signal_smoke
+      - dripping_honey
+      - falling_honey
+      - landing_honey
+      - falling_nectar
+      - falling_spore_blossom
+      - ash
+      - crimson_spore
+      - warped_spore
+      - spore_blossom_air
+      - dripping_obsidian_tear
+      - falling_obsidian_tear
+      - landing_obsidian_tear
+      - reverse_portal
+      - white_ash
+      - small_flame
+      - snowflake
+      - dripping_dripstone_lava
+      - falling_dripstone_lava
+      - dripping_dripstone_water
+      - falling_dripstone_water
+      - glow_squid_ink
+      - glow
+      - wax_on
+      - wax_off
+      - electric_spark
+      - scrape
+      - shriek
+      - egg_crack
+      - dust_plume
+      - trial_spawner_detected_player
+      - trial_spawner_detected_player_ominous
+      - vault_connection
+      - dust_pillar
+      - ominous_spawning
+      - raid_omen
+      - trial_omen
+      ## ## Tips for reviewing particle data (as of 1.20.5)
+      ## Inside the registry code, each particle can have an associated "options" type and
+      ## each options type can add additional data to be encoded.
+      ## For example, this line
+      ##    public static final ParticleType<BlockParticleOption> BLOCK = register("block", false, BlockParticleOption::codec, BlockParticleOption::streamCodec);
+      ## will read the stream codec from BlockParticleOption.java's streamCodec member; then we see
+      ##       return ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY).map(var1 -> new BlockParticleOption(var0, var1), var0x -> var0x.state);
+      ## this encodes with the ByteBufCodecs.idMapper function. Inside this function we find
+      ##      public void encode(ByteBuf var1x, T var2) {
+      ##          int var3 = var1.applyAsInt(var2);
+      ##          VarInt.write(var1x, var3);
+      ##       }
+      ## which as we can see writes the varint to the buffer.
+      ## If you want to see all the serializers try regexp searching "StreamCodec.*Particle"
+      data: type ?
+         if block or block_marker or falling_dust or dust_pillar: varint
+         if dust:
+            red: f32
+            green: f32
+            blue: f32
+            scale: f32
+          if dust_color_transition:
+            fromRed: f32
+            fromGreen: f32
+            fromBlue: f32
+            scale: f32
+            toRed: f32
+            toGreen: f32
+            toBlue: f32
+         if entity_effect: i32
+         if item: slot
+         if sculk_charge: f32
+         if shriek: varint
+         if vibration:
+            position: string
+            entityId: varint
    ingredient: slot[]varint
    position: [
       "bitfield",
@@ -150,116 +251,79 @@
             }
          ]
          default: void
-   entityMetadataItem: $compareTo ?
-      if byte: i8
-      if int: varint
-      if long: varlong
-      if float: f32
-      if string: string
-      if component: anonymousNbt
-      if optional_component: [
-         "option",
-         "anonymousNbt"
-      ]
-      if item_stack: slot
-      if boolean: bool
-      if rotations:
-         pitch: f32
-         yaw: f32
-         roll: f32
-      if block_pos: position
-      if optional_block_pos: [
-         "option",
-         "position"
-      ]
-      if direction: varint
-      if optional_uuid: [
-         "option",
-         "UUID"
-      ]
-      if block_state: varint
-      if optional_block_state: optvarint
-      if compound_tag: anonymousNbt
-      if particle: particle
-      if villager_data:
-         villagerType: varint
-         villagerProfession: varint
-         level: varint
-      if optional_unsigned_int: optvarint
-      if pose: varint
-      if cat_variant: varint
-      if frog_variant: varint
-      if optional_global_pos: [
-         "option",
-         "string"
-      ]
-      if painting_variant: varint
-      if sniffer_state: varint
-      if vector3: vec3f
-      if quaternion: vec4f
-   entityMetadata: [
-      "entityMetadataLoop",
-      {
-         "endVal": 255,
-         "type": [
-            "container",
-            [
-               {
-                  "name": "key",
-                  "type": "u8"
-               },
-               {
-                  "name": "type",
-                  "type": [
-                     "mapper",
-                     {
-                        "type": "varint",
-                        "mappings": {
-                           "0": "byte",
-                           "1": "int",
-                           "2": "long",
-                           "3": "float",
-                           "4": "string",
-                           "5": "component",
-                           "6": "optional_component",
-                           "7": "item_stack",
-                           "8": "boolean",
-                           "9": "rotations",
-                           "10": "block_pos",
-                           "11": "optional_block_pos",
-                           "12": "direction",
-                           "13": "optional_uuid",
-                           "14": "block_state",
-                           "15": "optional_block_state",
-                           "16": "compound_tag",
-                           "17": "particle",
-                           "18": "villager_data",
-                           "19": "optional_unsigned_int",
-                           "20": "pose",
-                           "21": "cat_variant",
-                           "22": "frog_variant",
-                           "23": "optional_global_pos",
-                           "24": "painting_variant",
-                           "25": "sniffer_state",
-                           "26": "vector3",
-                           "27": "quaternion"
-                        }
-                     }
-                  ]
-               },
-               {
-                  "name": "value",
-                  "type": [
-                     "entityMetadataItem",
-                     {
-                        "compareTo": "type"
-                     }
-                  ]
-               }
-            ]
-         ]
-      }
-   ]
+   entityMetadataEntry:
+      key: u8
+      type: varint =>
+      - byte
+      - int
+      - long
+      - float
+      - string
+      - component
+      - optional_component
+      - item_stack
+      - boolean
+      - rotations
+      - block_pos
+      - optional_block_pos
+      - direction
+      - optional_uuid
+      - block_state
+      - optional_block_state
+      - compound_tag
+      - particle
+      - particles
+      - villager_data
+      - optional_unsigned_int
+      - pose
+      - cat_variant
+      - wolf_variant
+      - frog_variant
+      - optional_global_pos
+      - painting_variant
+      - sniffer_state
+      - armadillo_state
+      - vector3
+      - quaternion
+      value: type ?
+         if byte: i8
+         if int: varint
+         if long: varlong
+         if float: f32
+         if string: string
+         if component: anonymousNbt
+         if optional_component: ["option", "anonymousNbt"]
+         if item_stack: slot
+         if boolean: bool
+         if rotations:
+            pitch: f32
+            yaw: f32
+            roll: f32
+         if block_pos: position
+         if optional_block_pos: ["option", "position"]
+         if direction: varint
+         if optional_uuid: ["option", "UUID"]
+         if block_state: varint
+         if optional_block_state: optvarint
+         if compound_tag: anonymousNbt
+         if particle: particle
+         if particles: particle[]varint
+         if villager_data:
+            villagerType: varint
+            villagerProfession: varint
+            level: varint
+         if optional_unsigned_int: optvarint
+         if pose: varint
+         if cat_variant: varint
+         if wolf_variant: varint
+         if frog_variant: varint
+         if optional_global_pos: ["option", "string"]
+         if painting_variant: varint
+         if sniffer_state: varint
+         if armadillo_state: varint
+         if vector3: vec3f
+         if quaternion: vec4f
+   entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    minecraft_simple_recipe_format:
       category: varint
    minecraft_smelting_format:
