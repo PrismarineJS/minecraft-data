@@ -58,7 +58,7 @@
             itemId: varint
             itemCount: i8
             nbtData: anonOptionalNbt
-   particle:
+   Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
       type: varint =>
       - angry_villager
@@ -306,8 +306,8 @@
          if block_state: varint
          if optional_block_state: optvarint
          if compound_tag: anonymousNbt
-         if particle: particle
-         if particles: particle[]varint
+         if particle: Particle
+         if particles: Particle[]varint
          if villager_data:
             villagerType: varint
             villagerProfession: varint
@@ -1165,8 +1165,8 @@
       playerMotionY: f32
       playerMotionZ: f32
       block_interaction_type: varint
-      small_explosion_particle: particle
-      large_explosion_particle: particle
+      small_explosion_particle: Particle
+      large_explosion_particle: Particle
       explosion_sound_name: string
       sound_range?: f32
    # MC: ClientboundForgetLevelChunkPacket
@@ -1234,16 +1234,9 @@
       offsetX: f32
       offsetY: f32
       offsetZ: f32
-      particleData: f32
-      # Amount of particles to spawn
-      particles: i32
-      particleId: varint
-      data: [
-         "particleData",
-         {
-            "compareTo": "particleId"
-         }
-      ]
+      velocityOffset: f32
+      amount: i32
+      particle: Particle
    # MC: ClientboundLightUpdatePacket
    packet_update_light:
       chunkX: varint
