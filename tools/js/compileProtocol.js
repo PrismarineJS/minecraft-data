@@ -98,7 +98,7 @@ if (!module.parent) {
   if (!process.argv[2]) {
     all(convert)
   } else { // build the specified version
-    convert(process.argv[2])
+    convert(process.argv[2], process.argv[3])
   }
 }
 

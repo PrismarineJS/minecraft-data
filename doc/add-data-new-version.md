@@ -33,6 +33,8 @@ For bedrock edition see [bedrock.md](bedrock.md)
 After generating and creating the new files for the version in its own directory, the version must be added to dataPaths.json in the data folder.
 Additionally in data/pc/common the versions.json file needs to be updated with the new version.
 
+## Protocol data
+* See [protocol.md] for information on the protocol and how to update the data
   
 [1]: https://wiki.vg/Pre-release_protocol
 [2]: https://github.com/PrismarineJS/minecraft-data-generator-server
