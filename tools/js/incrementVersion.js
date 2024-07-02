@@ -63,6 +63,8 @@ function updateProtocol (edition, version, protocolVersionNumber) {
         dataPaths[edition][version] = latestVersionData
       }
       latestVersionData.proto = `${edition}/latest`
+      latestVersionData.protocol = `${edition}/${version}`
+      latestVersionData.version = `${edition}/${version}`
     })
   }
 
