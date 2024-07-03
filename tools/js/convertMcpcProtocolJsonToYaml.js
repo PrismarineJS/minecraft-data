@@ -1,5 +1,5 @@
 const { genYAML } = require('protodef-yaml')
-const {join} = require('path')
+const { join } = require('path')
 const fs = require('fs')
 
 function addDataPath (version, key, value) {
@@ -21,11 +21,11 @@ function convert (version) {
     }
     // 0.30c (stateless)
     if (state === 'toClient') {
-      text += `\n^toClient.types:\n`
+      text += '\n^toClient.types:\n'
       text += genYAML(data.types, 1)
     }
     if (state === 'toServer') {
-      text += `\n^toServer.types:\n`
+      text += '\n^toServer.types:\n'
       text += genYAML(data.types, 1)
     }
     // Rest of versions have states
