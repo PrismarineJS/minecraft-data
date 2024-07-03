@@ -48,7 +48,6 @@
                 "true": [
                   "container",
                   [
-
                     {
                       "name": "itemId",
                       "type": "varint"
@@ -63,7 +62,8 @@
                     }
                   ]
                 ]
-              }
+              },
+              "default": "void"
             }
           ]
         }
@@ -93,7 +93,8 @@
         "compareTo": "$compareTo",
         "fields": {
           "3": [
-            "container", [
+            "container",
+            [
               {
                 "name": "blockState",
                 "type": "varint"
@@ -101,7 +102,8 @@
             ]
           ],
           "11": [
-            "container", [
+            "container",
+            [
               {
                 "name": "red",
                 "type": "f32"
@@ -121,15 +123,17 @@
             ]
           ],
           "20": [
-            "container", [
+            "container",
+            [
               {
                 "name": "blockState",
                 "type": "varint"
               }
             ]
           ],
-          "27":  [
-            "container", [
+          "27": [
+            "container",
+            [
               {
                 "name": "item",
                 "type": "slot"
@@ -213,7 +217,8 @@
           "13": "varint",
           "14": "nbt",
           "15": "particle"
-        }
+        },
+        "default": "void"
       }
     ],
     "entityMetadata": [
@@ -672,7 +677,8 @@
                               ]
                             ],
                             "minecraft:uuid": "void"
-                          }
+                          },
+                          "default": "void"
                         }
                       ]
                     },
@@ -691,7 +697,8 @@
                     }
                   ]
                 ]
-              }
+              },
+              "default": "void"
             }
           ]
         }
@@ -770,8 +777,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "set_protocol",
-                    "0xfe": "legacy_server_list_ping"
+                    "0": "set_protocol",
+                    "254": "legacy_server_list_ping"
                   }
                 }
               ]
@@ -785,7 +792,8 @@
                   "fields": {
                     "set_protocol": "packet_set_protocol",
                     "legacy_server_list_ping": "packet_legacy_server_list_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -825,8 +833,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "server_info",
-                    "0x01": "ping"
+                    "0": "server_info",
+                    "1": "ping"
                   }
                 }
               ]
@@ -840,7 +848,8 @@
                   "fields": {
                     "server_info": "packet_server_info",
                     "ping": "packet_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -873,8 +882,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "ping_start",
-                    "0x01": "ping"
+                    "0": "ping_start",
+                    "1": "ping"
                   }
                 }
               ]
@@ -888,7 +897,8 @@
                   "fields": {
                     "ping_start": "packet_ping_start",
                     "ping": "packet_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -985,11 +995,11 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "disconnect",
-                    "0x01": "encryption_begin",
-                    "0x02": "success",
-                    "0x03": "compress",
-                    "0x04": "login_plugin_request"
+                    "0": "disconnect",
+                    "1": "encryption_begin",
+                    "2": "success",
+                    "3": "compress",
+                    "4": "login_plugin_request"
                   }
                 }
               ]
@@ -1006,7 +1016,8 @@
                     "success": "packet_success",
                     "compress": "packet_compress",
                     "login_plugin_request": "packet_login_plugin_request"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -1074,9 +1085,9 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "login_start",
-                    "0x01": "encryption_begin",
-                    "0x02": "login_plugin_response"
+                    "0": "login_start",
+                    "1": "encryption_begin",
+                    "2": "login_plugin_response"
                   }
                 }
               ]
@@ -1091,7 +1102,8 @@
                     "login_start": "packet_login_start",
                     "encryption_begin": "packet_encryption_begin",
                     "login_plugin_response": "packet_login_plugin_response"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -1429,10 +1441,26 @@
                                       "type": [
                                         "bitfield",
                                         [
-                                          { "name": "_unused", "size": 29, "signed": false },
-                                          { "name": "hidden", "size": 1, "signed": false },
-                                          { "name": "show_toast", "size": 1, "signed": false },
-                                          { "name": "has_background_texture", "size": 1, "signed": false }
+                                          {
+                                            "name": "_unused",
+                                            "size": 29,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "hidden",
+                                            "size": 1,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "show_toast",
+                                            "size": 1,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "has_background_texture",
+                                            "size": 1,
+                                            "signed": false
+                                          }
                                         ]
                                       ]
                                     },
@@ -1743,19 +1771,22 @@
                 "array",
                 {
                   "countType": "varint",
-                  "type": ["container",[
-                    {
-                      "name": "match",
-                      "type": "string"
-                    },
-                    {
-                      "name": "tooltip",
-                      "type": [
-                        "option",
-                        "string"
-                      ]
-                    }
-                  ]]
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "match",
+                        "type": "string"
+                      },
+                      {
+                        "name": "tooltip",
+                        "type": [
+                          "option",
+                          "string"
+                        ]
+                      }
+                    ]
+                  ]
                 }
               ]
             }
@@ -2215,9 +2246,10 @@
             {
               "name": "blockEntities",
               "type": [
-                "array",{
-                  "countType":"varint",
-                  "type":"nbt"
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "nbt"
                 }
               ]
             }
@@ -2373,7 +2405,10 @@
                       },
                       {
                         "name": "displayName",
-                        "type": ["option", "string"]
+                        "type": [
+                          "option",
+                          "string"
+                        ]
                       }
                     ]
                   ]
@@ -2853,18 +2888,18 @@
               "type": "bool"
             },
             {
-              "name":"recipes1",
-              "type":[
+              "name": "recipes1",
+              "type": [
                 "array",
                 {
-                  "countType":"varint",
-                  "type":"string"
+                  "countType": "varint",
+                  "type": "string"
                 }
               ]
             },
             {
-              "name":"recipes2",
-              "type":[
+              "name": "recipes2",
+              "type": [
                 "switch",
                 {
                   "compareTo": "action",
@@ -2872,8 +2907,8 @@
                     "0": [
                       "array",
                       {
-                        "countType":"varint",
-                        "type":"string"
+                        "countType": "varint",
+                        "type": "string"
                       }
                     ]
                   },
@@ -3548,25 +3583,31 @@
             },
             {
               "name": "source",
-              "type": ["switch",{
-                "compareTo":"flags",
-                "fields": {
-                  "3": "varint",
-                  "1": "varint"
-                },
-                "default": "void"
-              }]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "flags",
+                  "fields": {
+                    "1": "varint",
+                    "3": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
             },
             {
               "name": "sound",
-              "type": ["switch",{
-                "compareTo":"flags",
-                "fields": {
-                  "3": "string",
-                  "2": "string"
-                },
-                "default": "void"
-              }]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "flags",
+                  "fields": {
+                    "2": "string",
+                    "3": "string"
+                  },
+                  "default": "void"
+                }
+              ]
             }
           ]
         ],
@@ -3765,126 +3806,163 @@
           [
             {
               "name": "recipes",
-              "type": ["array",{
-                "countType": "varint",
-                "type":["container",[
-                  {
-                    "name": "recipeId",
-                    "type": "string"
-                  },
-                  {
-                    "name": "type",
-                    "type": "string"
-                  },
-                  {
-                    "name": "data",
-                    "type": ["switch", {
-                      "compareTo": "type",
-                      "fields": {
-                        "crafting_shapeless": ["container",[
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "recipeId",
+                        "type": "string"
+                      },
+                      {
+                        "name": "type",
+                        "type": "string"
+                      },
+                      {
+                        "name": "data",
+                        "type": [
+                          "switch",
                           {
-                            "name": "group",
-                            "type": "string"
-                          },
-                          {
-                            "name": "ingredients",
-                            "type": ["array",{
-                              "countType": "varint",
-                              "type": "ingredient"
-                            }]
-                          },
-                          {
-                            "name": "result",
-                            "type": "slot"
+                            "compareTo": "type",
+                            "fields": {
+                              "crafting_shapeless": [
+                                "container",
+                                [
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredients",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": "ingredient"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "crafting_shaped": [
+                                "container",
+                                [
+                                  {
+                                    "name": "width",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "height",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredients",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "count": "width",
+                                        "type": [
+                                          "array",
+                                          {
+                                            "count": "height",
+                                            "type": "ingredient"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "crafting_special_armordye": "void",
+                              "crafting_special_bookcloning": "void",
+                              "crafting_special_mapcloning": "void",
+                              "crafting_special_mapextending": "void",
+                              "crafting_special_firework_rocket": "void",
+                              "crafting_special_firework_star": "void",
+                              "crafting_special_firework_star_fade": "void",
+                              "crafting_special_repairitem": "void",
+                              "crafting_special_tippedarrow": "void",
+                              "crafting_special_bannerduplicate": "void",
+                              "crafting_special_banneraddpattern": "void",
+                              "crafting_special_shielddecoration": "void",
+                              "crafting_special_shulkerboxcoloring": "void",
+                              "smelting": [
+                                "container",
+                                [
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredient",
+                                    "type": "ingredient"
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  },
+                                  {
+                                    "name": "experience",
+                                    "type": "f32"
+                                  },
+                                  {
+                                    "name": "cookTime",
+                                    "type": "varint"
+                                  }
+                                ]
+                              ]
+                            },
+                            "default": "void"
                           }
-                        ]],
-                        "crafting_shaped": ["container",[
-                          {
-                            "name": "width",
-                            "type": "varint"
-                          },
-                          {
-                            "name": "height",
-                            "type": "varint"
-                          },
-                          {
-                            "name": "group",
-                            "type": "string"
-                          },
-                          {
-                            "name": "ingredients",
-                            "type": ["array",{
-                              "count": "width",
-                              "type": ["array",{
-                                "count": "height",
-                                "type": "ingredient"
-                              }]
-                            }]
-                          },
-                          {
-                            "name": "result",
-                            "type": "slot"
-                          }
-                        ]],
-                        "crafting_special_armordye": "void",
-                        "crafting_special_bookcloning": "void",
-                        "crafting_special_mapcloning": "void",
-                        "crafting_special_mapextending": "void",
-                        "crafting_special_firework_rocket": "void",
-                        "crafting_special_firework_star": "void",
-                        "crafting_special_firework_star_fade": "void",
-                        "crafting_special_repairitem": "void",
-                        "crafting_special_tippedarrow": "void",
-                        "crafting_special_bannerduplicate": "void",
-                        "crafting_special_banneraddpattern": "void",
-                        "crafting_special_shielddecoration": "void",
-                        "crafting_special_shulkerboxcoloring": "void",
-                        "smelting": ["container",[
-                          {
-                            "name": "group",
-                            "type": "string"
-                          },
-                          {
-                            "name": "ingredient",
-                            "type": "ingredient"
-                          },
-                          {
-                            "name": "result",
-                            "type": "slot"
-                          },
-                          {
-                            "name": "experience",
-                            "type": "f32"
-                          },
-                          {
-                            "name": "cookTime",
-                            "type": "varint"
-                          }
-                        ]]
+                        ]
                       }
-                    }]
-                  }
-                ]]
-              }]
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ],
-        "tags":["array",{
-          "countType": "varint",
-          "type": ["container", [
-            {
-              "name": "tagName",
-              "type": "string"
-            },
-            {
-              "name": "entries",
-              "type": ["array",{
-                "countType": "varint",
-                "type": "varint"
-              }]
-            }
-          ]]
-        }],
+        "tags": [
+          "array",
+          {
+            "countType": "varint",
+            "type": [
+              "container",
+              [
+                {
+                  "name": "tagName",
+                  "type": "string"
+                },
+                {
+                  "name": "entries",
+                  "type": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "varint"
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        ],
         "packet_tags": [
           "container",
           [
@@ -3912,92 +3990,92 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "spawn_entity",
-                    "0x01": "spawn_entity_experience_orb",
-                    "0x02": "spawn_entity_weather",
-                    "0x03": "spawn_entity_living",
-                    "0x04": "spawn_entity_painting",
-                    "0x05": "named_entity_spawn",
-                    "0x06": "animation",
-                    "0x07": "statistics",
-                    "0x08": "block_break_animation",
-                    "0x09": "tile_entity_data",
-                    "0x0a": "block_action",
-                    "0x0b": "block_change",
-                    "0x0c": "boss_bar",
-                    "0x0d": "difficulty",
-                    "0x0e": "chat",
-                    "0x0f": "multi_block_change",
-                    "0x10": "tab_complete",
-                    "0x11": "declare_commands",
-                    "0x12": "transaction",
-                    "0x13": "close_window",
-                    "0x14": "open_window",
-                    "0x15": "window_items",
-                    "0x16": "craft_progress_bar",
-                    "0x17": "set_slot",
-                    "0x18": "set_cooldown",
-                    "0x19": "custom_payload",
-                    "0x1a": "named_sound_effect",
-                    "0x1b": "kick_disconnect",
-                    "0x1c": "entity_status",
-                    "0x1d": "nbt_query_response",
-                    "0x1e": "explosion",
-                    "0x1f": "unload_chunk",
-                    "0x20": "game_state_change",
-                    "0x21": "keep_alive",
-                    "0x22": "map_chunk",
-                    "0x23": "world_event",
-                    "0x24": "world_particles",
-                    "0x25": "login",
-                    "0x26": "map",
-                    "0x27": "entity",
-                    "0x28": "rel_entity_move",
-                    "0x29": "entity_move_look",
-                    "0x2a": "entity_look",
-                    "0x2b": "vehicle_move",
-                    "0x2c": "open_sign_entity",
-                    "0x2d": "craft_recipe_response",
-                    "0x2e": "abilities",
-                    "0x2f": "combat_event",
-                    "0x30": "player_info",
-                    "0x31": "face_player",
-                    "0x32": "position",
-                    "0x33": "bed",
-                    "0x34": "unlock_recipes",
-                    "0x35": "entity_destroy",
-                    "0x36": "remove_entity_effect",
-                    "0x37": "resource_pack_send",
-                    "0x38": "respawn",
-                    "0x39": "entity_head_rotation",
-                    "0x3a": "select_advancement_tab",
-                    "0x3b": "world_border",
-                    "0x3c": "camera",
-                    "0x3d": "held_item_slot",
-                    "0x3e": "scoreboard_display_objective",
-                    "0x3f": "entity_metadata",
-                    "0x40": "attach_entity",
-                    "0x41": "entity_velocity",
-                    "0x42": "entity_equipment",
-                    "0x43": "experience",
-                    "0x44": "update_health",
-                    "0x45": "scoreboard_objective",
-                    "0x46": "set_passengers",
-                    "0x47": "teams",
-                    "0x48": "scoreboard_score",
-                    "0x49": "spawn_position",
-                    "0x4a": "update_time",
-                    "0x4b": "title",
-                    "0x4c": "stop_sound",
-                    "0x4d": "sound_effect",
-                    "0x4e": "playerlist_header",
-                    "0x4f": "collect",
-                    "0x50": "entity_teleport",
-                    "0x51": "advancements",
-                    "0x52": "entity_update_attributes",
-                    "0x53": "entity_effect",
-                    "0x54": "declare_recipes",
-                    "0x55": "tags"
+                    "0": "spawn_entity",
+                    "1": "spawn_entity_experience_orb",
+                    "2": "spawn_entity_weather",
+                    "3": "spawn_entity_living",
+                    "4": "spawn_entity_painting",
+                    "5": "named_entity_spawn",
+                    "6": "animation",
+                    "7": "statistics",
+                    "8": "block_break_animation",
+                    "9": "tile_entity_data",
+                    "10": "block_action",
+                    "11": "block_change",
+                    "12": "boss_bar",
+                    "13": "difficulty",
+                    "14": "chat",
+                    "15": "multi_block_change",
+                    "16": "tab_complete",
+                    "17": "declare_commands",
+                    "18": "transaction",
+                    "19": "close_window",
+                    "20": "open_window",
+                    "21": "window_items",
+                    "22": "craft_progress_bar",
+                    "23": "set_slot",
+                    "24": "set_cooldown",
+                    "25": "custom_payload",
+                    "26": "named_sound_effect",
+                    "27": "kick_disconnect",
+                    "28": "entity_status",
+                    "29": "nbt_query_response",
+                    "30": "explosion",
+                    "31": "unload_chunk",
+                    "32": "game_state_change",
+                    "33": "keep_alive",
+                    "34": "map_chunk",
+                    "35": "world_event",
+                    "36": "world_particles",
+                    "37": "login",
+                    "38": "map",
+                    "39": "entity",
+                    "40": "rel_entity_move",
+                    "41": "entity_move_look",
+                    "42": "entity_look",
+                    "43": "vehicle_move",
+                    "44": "open_sign_entity",
+                    "45": "craft_recipe_response",
+                    "46": "abilities",
+                    "47": "combat_event",
+                    "48": "player_info",
+                    "49": "face_player",
+                    "50": "position",
+                    "51": "bed",
+                    "52": "unlock_recipes",
+                    "53": "entity_destroy",
+                    "54": "remove_entity_effect",
+                    "55": "resource_pack_send",
+                    "56": "respawn",
+                    "57": "entity_head_rotation",
+                    "58": "select_advancement_tab",
+                    "59": "world_border",
+                    "60": "camera",
+                    "61": "held_item_slot",
+                    "62": "scoreboard_display_objective",
+                    "63": "entity_metadata",
+                    "64": "attach_entity",
+                    "65": "entity_velocity",
+                    "66": "entity_equipment",
+                    "67": "experience",
+                    "68": "update_health",
+                    "69": "scoreboard_objective",
+                    "70": "set_passengers",
+                    "71": "teams",
+                    "72": "scoreboard_score",
+                    "73": "spawn_position",
+                    "74": "update_time",
+                    "75": "title",
+                    "76": "stop_sound",
+                    "77": "sound_effect",
+                    "78": "playerlist_header",
+                    "79": "collect",
+                    "80": "entity_teleport",
+                    "81": "advancements",
+                    "82": "entity_update_attributes",
+                    "83": "entity_effect",
+                    "84": "declare_recipes",
+                    "85": "tags"
                   }
                 }
               ]
@@ -4095,7 +4173,8 @@
                     "select_advancement_tab": "packet_select_advancement_tab",
                     "declare_recipes": "packet_declare_recipes",
                     "tags": "packet_tags"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -4228,8 +4307,7 @@
             {
               "name": "command",
               "type": "string"
-            }
-          ,
+            },
             {
               "name": "track_output",
               "type": "bool"
@@ -4728,13 +4806,13 @@
               "type": "varint"
             },
             {
-              "anon":true,
-              "type":[
+              "anon": true,
+              "type": [
                 "switch",
                 {
-                  "compareTo":"type",
-                  "fields":{
-                    "0":[
+                  "compareTo": "type",
+                  "fields": {
+                    "0": [
                       "container",
                       [
                         {
@@ -4764,7 +4842,8 @@
                         }
                       ]
                     ]
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -4894,11 +4973,12 @@
               "type": [
                 "switch",
                 {
-                  "compareTo":"action",
+                  "compareTo": "action",
                   "fields": {
                     "0": "string",
                     "1": "void"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -4914,49 +4994,49 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "teleport_confirm",
-                    "0x01": "query_block_nbt",
-                    "0x02": "chat",
-                    "0x03": "client_command",
-                    "0x04": "settings",
-                    "0x05": "tab_complete",
-                    "0x06": "transaction",
-                    "0x07": "enchant_item",
-                    "0x08": "window_click",
-                    "0x09": "close_window",
-                    "0x0a": "custom_payload",
-                    "0x0b": "edit_book",
-                    "0x0c": "query_entity_nbt",
-                    "0x0d": "use_entity",
-                    "0x0e": "keep_alive",
-                    "0x0f": "flying",
-                    "0x10": "position",
-                    "0x11": "position_look",
-                    "0x12": "look",
-                    "0x13": "vehicle_move",
-                    "0x14": "steer_boat",
-                    "0x15": "pick_item",
-                    "0x16": "craft_recipe_request",
-                    "0x17": "abilities",
-                    "0x18": "block_dig",
-                    "0x19": "entity_action",
-                    "0x1a": "steer_vehicle",
-                    "0x1b": "crafting_book_data",
-                    "0x1c": "name_item",
-                    "0x1d": "resource_pack_receive",
-                    "0x1e": "advancement_tab",
-                    "0x1f": "select_trade",
-                    "0x20": "set_beacon_effect",
-                    "0x21": "held_item_slot",
-                    "0x22": "update_command_block",
-                    "0x23": "update_command_block_minecart",
-                    "0x24": "set_creative_slot",
-                    "0x25": "update_structure_block",
-                    "0x26": "update_sign",
-                    "0x27": "arm_animation",
-                    "0x28": "spectate",
-                    "0x29": "block_place",
-                    "0x2a": "use_item"
+                    "0": "teleport_confirm",
+                    "1": "query_block_nbt",
+                    "2": "chat",
+                    "3": "client_command",
+                    "4": "settings",
+                    "5": "tab_complete",
+                    "6": "transaction",
+                    "7": "enchant_item",
+                    "8": "window_click",
+                    "9": "close_window",
+                    "10": "custom_payload",
+                    "11": "edit_book",
+                    "12": "query_entity_nbt",
+                    "13": "use_entity",
+                    "14": "keep_alive",
+                    "15": "flying",
+                    "16": "position",
+                    "17": "position_look",
+                    "18": "look",
+                    "19": "vehicle_move",
+                    "20": "steer_boat",
+                    "21": "pick_item",
+                    "22": "craft_recipe_request",
+                    "23": "abilities",
+                    "24": "block_dig",
+                    "25": "entity_action",
+                    "26": "steer_vehicle",
+                    "27": "crafting_book_data",
+                    "28": "name_item",
+                    "29": "resource_pack_receive",
+                    "30": "advancement_tab",
+                    "31": "select_trade",
+                    "32": "set_beacon_effect",
+                    "33": "held_item_slot",
+                    "34": "update_command_block",
+                    "35": "update_command_block_minecart",
+                    "36": "set_creative_slot",
+                    "37": "update_structure_block",
+                    "38": "update_sign",
+                    "39": "arm_animation",
+                    "40": "spectate",
+                    "41": "block_place",
+                    "42": "use_item"
                   }
                 }
               ]
@@ -5011,7 +5091,8 @@
                     "block_place": "packet_block_place",
                     "use_item": "packet_use_item",
                     "advancement_tab": "packet_advancement_tab"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }

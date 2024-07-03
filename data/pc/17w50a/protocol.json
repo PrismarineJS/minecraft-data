@@ -125,7 +125,8 @@
           ],
           "12": "varint",
           "13": "nbt"
-        }
+        },
+        "default": "void"
       }
     ],
     "entityMetadata": [
@@ -237,8 +238,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "set_protocol",
-                    "0xfe": "legacy_server_list_ping"
+                    "0": "set_protocol",
+                    "254": "legacy_server_list_ping"
                   }
                 }
               ]
@@ -252,7 +253,8 @@
                   "fields": {
                     "set_protocol": "packet_set_protocol",
                     "legacy_server_list_ping": "packet_legacy_server_list_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -292,8 +294,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "server_info",
-                    "0x01": "ping"
+                    "0": "server_info",
+                    "1": "ping"
                   }
                 }
               ]
@@ -307,7 +309,8 @@
                   "fields": {
                     "server_info": "packet_server_info",
                     "ping": "packet_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -340,8 +343,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "ping_start",
-                    "0x01": "ping"
+                    "0": "ping_start",
+                    "1": "ping"
                   }
                 }
               ]
@@ -355,7 +358,8 @@
                   "fields": {
                     "ping_start": "packet_ping_start",
                     "ping": "packet_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -435,10 +439,10 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "disconnect",
-                    "0x01": "encryption_begin",
-                    "0x02": "success",
-                    "0x03": "compress"
+                    "0": "disconnect",
+                    "1": "encryption_begin",
+                    "2": "success",
+                    "3": "compress"
                   }
                 }
               ]
@@ -454,7 +458,8 @@
                     "encryption_begin": "packet_encryption_begin",
                     "success": "packet_success",
                     "compress": "packet_compress"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -506,8 +511,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "login_start",
-                    "0x01": "encryption_begin"
+                    "0": "login_start",
+                    "1": "encryption_begin"
                   }
                 }
               ]
@@ -521,7 +526,8 @@
                   "fields": {
                     "login_start": "packet_login_start",
                     "encryption_begin": "packet_encryption_begin"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -859,10 +865,26 @@
                                       "type": [
                                         "bitfield",
                                         [
-                                          { "name": "_unused", "size": 29, "signed": false },
-                                          { "name": "hidden", "size": 1, "signed": false },
-                                          { "name": "show_toast", "size": 1, "signed": false },
-                                          { "name": "has_background_texture", "size": 1, "signed": false }
+                                          {
+                                            "name": "_unused",
+                                            "size": 29,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "hidden",
+                                            "size": 1,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "show_toast",
+                                            "size": 1,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "has_background_texture",
+                                            "size": 1,
+                                            "signed": false
+                                          }
                                         ]
                                       ]
                                     },
@@ -1184,219 +1206,345 @@
           [
             {
               "name": "nodes",
-              "type": ["array", {
-                "countType": "varint",
-                "type": ["container",[
-                  {
-                    "name": "flags",
-                    "type": [
-                      "bitfield",
-                      [
-                        { "name": "unused", "size": 3, "signed": false },
-                        { "name": "has_custom_suggestions", "size": 1, "signed": false },
-                        { "name": "has_redirect_node", "size": 1, "signed": false },
-                        { "name": "has_command", "size": 1, "signed": false },
-                        { "name": "command_node_type", "size": 2, "signed": false }
-                      ]
-                    ]
-                  },
-                  {
-                    "name": "children",
-                    "type": ["array",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
                       {
-                        "countType": "varint",
-                        "type": "varint"
-                      }]
-                  },
-                  {
-                    "name": "redirectNode",
-                    "type": ["switch",
-                      {
-                        "compareTo": "flags/has_redirect_node",
-                        "fields": {
-                          "1":"varint"
-                        },
-                        "default": "void"
-                      }]
-                  },
-                  {
-                    "name": "extraNodeData",
-                    "type": ["switch",
-                      {
-                        "compareTo": "flags/command_node_type",
-                        "fields": {
-                          "0": "void",
-                          "1": "string",
-                          "2": ["container", [
+                        "name": "flags",
+                        "type": [
+                          "bitfield",
+                          [
                             {
-                              "name": "name",
-                              "type": "string"
+                              "name": "unused",
+                              "size": 3,
+                              "signed": false
                             },
                             {
-                              "name": "parser",
-                              "type": "string"
+                              "name": "has_custom_suggestions",
+                              "size": 1,
+                              "signed": false
                             },
                             {
-                              "name": "properties",
-                              "type": ["switch",{
-                                "compareTo": "parser",
-                                "fields": {
-                                  "brigadier:double": ["container", [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          { "name": "unused", "size": 6, "signed": false },
-                                          { "name": "max_present", "size": 1, "signed": false },
-                                          { "name": "min_present", "size": 1, "signed": false }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type":["switch",{
-                                        "compareTo":"flags/min_present",
-                                        "fields":{
-                                          "1":"f64"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type":["switch",{
-                                        "compareTo":"flags/max_present",
-                                        "fields":{
-                                          "1":"f64"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    }
-                                  ]],
-                                  "brigadier:float": ["container", [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          { "name": "unused", "size": 6, "signed": false },
-                                          { "name": "max_present", "size": 1, "signed": false },
-                                          { "name": "min_present", "size": 1, "signed": false }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type":["switch",{
-                                        "compareTo":"flags/min_present",
-                                        "fields":{
-                                          "1":"f32"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type":["switch",{
-                                        "compareTo":"flags/max_present",
-                                        "fields":{
-                                          "1":"f32"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    }
-                                  ]],
-                                  "brigadier:integer": ["container", [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          { "name": "unused", "size": 6, "signed": false },
-                                          { "name": "max_present", "size": 1, "signed": false },
-                                          { "name": "min_present", "size": 1, "signed": false }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type":["switch",{
-                                        "compareTo":"flags/min_present",
-                                        "fields":{
-                                          "1":"i32"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type":["switch",{
-                                        "compareTo":"flags/max_present",
-                                        "fields":{
-                                          "1":"i32"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    }
-                                  ]],
-                                  "brigadier:long": ["container", [
-                                    {
-                                      "name": "flags",
-                                      "type": [
-                                        "bitfield",
-                                        [
-                                          { "name": "unused", "size": 6, "signed": false },
-                                          { "name": "max_present", "size": 1, "signed": false },
-                                          { "name": "min_present", "size": 1, "signed": false }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "name": "min",
-                                      "type": ["switch",{
-                                        "compareTo": "flags/min_present",
-                                        "fields": {
-                                          "1": "i64"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    },
-                                    {
-                                      "name": "max",
-                                      "type": ["switch",{
-                                        "compareTo": "flags/max_present",
-                                        "fields": {
-                                          "1": "i64"
-                                        },
-                                        "default": "void"
-                                      }]
-                                    }
-                                  ]],
-                                  "brigadier:string": "varint",
-                                  "minecraft:entity": "i8",
-                                  "minecraft:score_holder": "i8",
-                                  "minecraft:range": "bool"
-                                },
-                                "default": "void"
-                              }]
+                              "name": "has_redirect_node",
+                              "size": 1,
+                              "signed": false
                             },
                             {
-                              "name": "suggests",
-                              "type": ["switch", {
-                                "compareTo": "../flags/has_custom_suggestions",
-                                "fields": {
-                                  "1": "string"
-                                },
-                                "default": "void"
-                              }]
+                              "name": "has_command",
+                              "size": 1,
+                              "signed": false
+                            },
+                            {
+                              "name": "command_node_type",
+                              "size": 2,
+                              "signed": false
                             }
-                          ]]
-                        }
-                      }]
-                  }
-                ]]
-              }]
+                          ]
+                        ]
+                      },
+                      {
+                        "name": "children",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": "varint"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "redirectNode",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "flags/has_redirect_node",
+                            "fields": {
+                              "1": "varint"
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "extraNodeData",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "flags/command_node_type",
+                            "fields": {
+                              "0": "void",
+                              "1": "string",
+                              "2": [
+                                "container",
+                                [
+                                  {
+                                    "name": "name",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "parser",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "properties",
+                                    "type": [
+                                      "switch",
+                                      {
+                                        "compareTo": "parser",
+                                        "fields": {
+                                          "brigadier:double": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "flags",
+                                                "type": [
+                                                  "bitfield",
+                                                  [
+                                                    {
+                                                      "name": "unused",
+                                                      "size": 6,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "max_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "min_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    }
+                                                  ]
+                                                ]
+                                              },
+                                              {
+                                                "name": "min",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/min_present",
+                                                    "fields": {
+                                                      "1": "f64"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "name": "max",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/max_present",
+                                                    "fields": {
+                                                      "1": "f64"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          ],
+                                          "brigadier:float": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "flags",
+                                                "type": [
+                                                  "bitfield",
+                                                  [
+                                                    {
+                                                      "name": "unused",
+                                                      "size": 6,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "max_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "min_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    }
+                                                  ]
+                                                ]
+                                              },
+                                              {
+                                                "name": "min",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/min_present",
+                                                    "fields": {
+                                                      "1": "f32"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "name": "max",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/max_present",
+                                                    "fields": {
+                                                      "1": "f32"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          ],
+                                          "brigadier:integer": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "flags",
+                                                "type": [
+                                                  "bitfield",
+                                                  [
+                                                    {
+                                                      "name": "unused",
+                                                      "size": 6,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "max_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "min_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    }
+                                                  ]
+                                                ]
+                                              },
+                                              {
+                                                "name": "min",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/min_present",
+                                                    "fields": {
+                                                      "1": "i32"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "name": "max",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/max_present",
+                                                    "fields": {
+                                                      "1": "i32"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          ],
+                                          "brigadier:long": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "flags",
+                                                "type": [
+                                                  "bitfield",
+                                                  [
+                                                    {
+                                                      "name": "unused",
+                                                      "size": 6,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "max_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    },
+                                                    {
+                                                      "name": "min_present",
+                                                      "size": 1,
+                                                      "signed": false
+                                                    }
+                                                  ]
+                                                ]
+                                              },
+                                              {
+                                                "name": "min",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/min_present",
+                                                    "fields": {
+                                                      "1": "i64"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "name": "max",
+                                                "type": [
+                                                  "switch",
+                                                  {
+                                                    "compareTo": "flags/max_present",
+                                                    "fields": {
+                                                      "1": "i64"
+                                                    },
+                                                    "default": "void"
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          ],
+                                          "brigadier:string": "varint",
+                                          "minecraft:entity": "i8",
+                                          "minecraft:score_holder": "i8",
+                                          "minecraft:range": "bool"
+                                        },
+                                        "default": "void"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "suggests",
+                                    "type": [
+                                      "switch",
+                                      {
+                                        "compareTo": "../flags/has_custom_suggestions",
+                                        "fields": {
+                                          "1": "string"
+                                        },
+                                        "default": "void"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              ]
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
             },
             {
               "name": "rootIndex",
@@ -1775,9 +1923,10 @@
             {
               "name": "blockEntities",
               "type": [
-                "array",{
-                  "countType":"varint",
-                  "type":"nbt"
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "nbt"
                 }
               ]
             }
@@ -1849,16 +1998,18 @@
             },
             {
               "name": "data",
-              "type": ["switch",{
-                "compareTo":"particleId",
-                "fields":{
-                  "36":"slot",
-                  "37":"varint",
-                  "38":"varint",
-                  "46":"varint"
-                },
-                "default":"void"
-              }
+              "type": [
+                "switch",
+                {
+                  "compareTo": "particleId",
+                  "fields": {
+                    "36": "slot",
+                    "37": "varint",
+                    "38": "varint",
+                    "46": "varint"
+                  },
+                  "default": "void"
+                }
               ]
             }
           ]
@@ -2402,18 +2553,18 @@
               "type": "bool"
             },
             {
-              "name":"recipes1",
-              "type":[
+              "name": "recipes1",
+              "type": [
                 "array",
                 {
-                  "countType":"varint",
-                  "type":"string"
+                  "countType": "varint",
+                  "type": "string"
                 }
               ]
             },
             {
-              "name":"recipes2",
-              "type":[
+              "name": "recipes2",
+              "type": [
                 "switch",
                 {
                   "compareTo": "action",
@@ -2421,8 +2572,8 @@
                     "0": [
                       "array",
                       {
-                        "countType":"varint",
-                        "type":"string"
+                        "countType": "varint",
+                        "type": "string"
                       }
                     ]
                   },
@@ -3097,25 +3248,31 @@
             },
             {
               "name": "source",
-              "type": ["switch",{
-                "compareTo":"flags",
-                "fields": {
-                  "3": "varint",
-                  "1": "varint"
-                },
-                "default": "void"
-              }]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "flags",
+                  "fields": {
+                    "1": "varint",
+                    "3": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
             },
             {
               "name": "sound",
-              "type": ["switch",{
-                "compareTo":"flags",
-                "fields": {
-                  "3": "string",
-                  "2": "string"
-                },
-                "default": "void"
-              }]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "flags",
+                  "fields": {
+                    "2": "string",
+                    "3": "string"
+                  },
+                  "default": "void"
+                }
+              ]
             }
           ]
         ],
@@ -3314,110 +3471,150 @@
           [
             {
               "name": "recipes",
-              "type": ["array",{
-                "countType": "varint",
-                "type":["container",[
-                  {
-                    "name": "recipeId",
-                    "type": "string"
-                  },
-                  {
-                    "name": "type",
-                    "type": "string"
-                  },
-                  {
-                    "name": "data",
-                    "type": ["switch", {
-                      "compareTo": "type",
-                      "fields": {
-                        "crafting_shapeless": ["container",[
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "recipeId",
+                        "type": "string"
+                      },
+                      {
+                        "name": "type",
+                        "type": "string"
+                      },
+                      {
+                        "name": "data",
+                        "type": [
+                          "switch",
                           {
-                            "name": "group",
-                            "type": "string"
-                          },
-                          {
-                            "name": "ingredients",
-                            "type": ["array",{
-                              "countType": "varint",
-                              "type": ["array",{
-                                "countType":"varint",
-                                "type": "slot"
-                              }]
-                            }]
-                          },
-                          {
-                            "name": "result",
-                            "type": "slot"
+                            "compareTo": "type",
+                            "fields": {
+                              "crafting_shapeless": [
+                                "container",
+                                [
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredients",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "array",
+                                          {
+                                            "countType": "varint",
+                                            "type": "slot"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "crafting_shaped": [
+                                "container",
+                                [
+                                  {
+                                    "name": "width",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "height",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredients",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "count": "width",
+                                        "type": [
+                                          "array",
+                                          {
+                                            "count": "height",
+                                            "type": [
+                                              "array",
+                                              {
+                                                "countType": "varint",
+                                                "type": "slot"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "crafting_special_armordye": "void",
+                              "crafting_special_bookcloning": "void",
+                              "crafting_special_mapcloning": "void",
+                              "crafting_special_mapextending": "void",
+                              "crafting_special_firework_rocket": "void",
+                              "crafting_special_firework_star": "void",
+                              "crafting_special_firework_star_fade": "void",
+                              "crafting_special_repairitem": "void",
+                              "crafting_special_tippedarrow": "void",
+                              "crafting_special_bannerduplicate": "void",
+                              "crafting_special_banneraddpattern": "void",
+                              "crafting_special_shielddecoration": "void",
+                              "crafting_special_shulkerboxcoloring": "void"
+                            },
+                            "default": "void"
                           }
-                        ]],
-                        "crafting_shaped": ["container",[
-                          {
-                            "name": "width",
-                            "type": "varint"
-                          },
-                          {
-                            "name": "height",
-                            "type": "varint"
-                          },
-                          {
-                            "name": "group",
-                            "type": "string"
-                          },
-                          {
-                            "name": "ingredients",
-                            "type": ["array",{
-                              "count": "width",
-                              "type": ["array",{
-                                "count": "height",
-                                "type": ["array",{
-                                  "countType":"varint",
-                                  "type": "slot"
-                                }]
-                              }]
-                            }]
-                          },
-                          {
-                            "name": "result",
-                            "type": "slot"
-                          }
-                        ]],
-                        "crafting_special_armordye": "void",
-                        "crafting_special_bookcloning": "void",
-                        "crafting_special_mapcloning": "void",
-                        "crafting_special_mapextending": "void",
-                        "crafting_special_firework_rocket": "void",
-                        "crafting_special_firework_star": "void",
-                        "crafting_special_firework_star_fade": "void",
-                        "crafting_special_repairitem": "void",
-                        "crafting_special_tippedarrow": "void",
-                        "crafting_special_bannerduplicate": "void",
-                        "crafting_special_banneraddpattern": "void",
-                        "crafting_special_shielddecoration": "void",
-                        "crafting_special_shulkerboxcoloring": "void"
+                        ]
                       }
-                    }]
-                  }
-                ]]
-              }]
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ],
-        "tags":["array",{
-          "countType": "varint",
-          "type": ["container", [
-            {
-              "name": "tagName",
-              "type": "string"
-            },
-            {
-              "name": "entries",
-              "type": ["array",{
-                "countType": "varint",
-                "type": "varint"
-              }]
-            }
-          ]]
-        }],
+        "tags": [
+          "array",
+          {
+            "countType": "varint",
+            "type": [
+              "container",
+              [
+                {
+                  "name": "tagName",
+                  "type": "string"
+                },
+                {
+                  "name": "entries",
+                  "type": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "varint"
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        ],
         "packet_tags": [
           "container",
           [
@@ -3441,90 +3638,90 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "spawn_entity",
-                    "0x01": "spawn_entity_experience_orb",
-                    "0x02": "spawn_entity_weather",
-                    "0x03": "spawn_entity_living",
-                    "0x04": "spawn_entity_painting",
-                    "0x05": "named_entity_spawn",
-                    "0x06": "animation",
-                    "0x07": "statistics",
-                    "0x08": "block_break_animation",
-                    "0x09": "tile_entity_data",
-                    "0x0a": "block_action",
-                    "0x0b": "block_change",
-                    "0x0c": "boss_bar",
-                    "0x0d": "difficulty",
-                    "0x0e": "chat",
-                    "0x0f": "multi_block_change",
-                    "0x10": "tab_complete",
-                    "0x11": "declare_commands",
-                    "0x12": "transaction",
-                    "0x13": "close_window",
-                    "0x14": "open_window",
-                    "0x15": "window_items",
-                    "0x16": "craft_progress_bar",
-                    "0x17": "set_slot",
-                    "0x18": "set_cooldown",
-                    "0x19": "custom_payload",
-                    "0x1a": "named_sound_effect",
-                    "0x1b": "kick_disconnect",
-                    "0x1c": "entity_status",
-                    "0x1d": "explosion",
-                    "0x1e": "unload_chunk",
-                    "0x1f": "game_state_change",
-                    "0x20": "keep_alive",
-                    "0x21": "map_chunk",
-                    "0x22": "world_event",
-                    "0x23": "world_particles",
-                    "0x24": "login",
-                    "0x25": "map",
-                    "0x26": "entity",
-                    "0x27": "rel_entity_move",
-                    "0x28": "entity_move_look",
-                    "0x29": "entity_look",
-                    "0x2a": "vehicle_move",
-                    "0x2b": "open_sign_entity",
-                    "0x2c": "craft_recipe_response",
-                    "0x2d": "abilities",
-                    "0x2e": "combat_event",
-                    "0x2f": "player_info",
-                    "0x30": "position",
-                    "0x31": "bed",
-                    "0x32": "unlock_recipes",
-                    "0x33": "entity_destroy",
-                    "0x34": "remove_entity_effect",
-                    "0x35": "resource_pack_send",
-                    "0x36": "respawn",
-                    "0x37": "entity_head_rotation",
-                    "0x38": "select_advancement_tab",
-                    "0x39": "world_border",
-                    "0x3a": "camera",
-                    "0x3b": "held_item_slot",
-                    "0x3c": "scoreboard_display_objective",
-                    "0x3d": "entity_metadata",
-                    "0x3e": "attach_entity",
-                    "0x3f": "entity_velocity",
-                    "0x40": "entity_equipment",
-                    "0x41": "experience",
-                    "0x42": "update_health",
-                    "0x43": "scoreboard_objective",
-                    "0x44": "set_passengers",
-                    "0x45": "teams",
-                    "0x46": "scoreboard_score",
-                    "0x47": "spawn_position",
-                    "0x48": "update_time",
-                    "0x49": "title",
-                    "0x4a": "stop_sound",
-                    "0x4b": "sound_effect",
-                    "0x4c": "playerlist_header",
-                    "0x4d": "collect",
-                    "0x4e": "entity_teleport",
-                    "0x4f": "advancements",
-                    "0x50": "entity_update_attributes",
-                    "0x51": "entity_effect",
-                    "0x52": "declare_recipes",
-                    "0x53": "tags"
+                    "0": "spawn_entity",
+                    "1": "spawn_entity_experience_orb",
+                    "2": "spawn_entity_weather",
+                    "3": "spawn_entity_living",
+                    "4": "spawn_entity_painting",
+                    "5": "named_entity_spawn",
+                    "6": "animation",
+                    "7": "statistics",
+                    "8": "block_break_animation",
+                    "9": "tile_entity_data",
+                    "10": "block_action",
+                    "11": "block_change",
+                    "12": "boss_bar",
+                    "13": "difficulty",
+                    "14": "chat",
+                    "15": "multi_block_change",
+                    "16": "tab_complete",
+                    "17": "declare_commands",
+                    "18": "transaction",
+                    "19": "close_window",
+                    "20": "open_window",
+                    "21": "window_items",
+                    "22": "craft_progress_bar",
+                    "23": "set_slot",
+                    "24": "set_cooldown",
+                    "25": "custom_payload",
+                    "26": "named_sound_effect",
+                    "27": "kick_disconnect",
+                    "28": "entity_status",
+                    "29": "explosion",
+                    "30": "unload_chunk",
+                    "31": "game_state_change",
+                    "32": "keep_alive",
+                    "33": "map_chunk",
+                    "34": "world_event",
+                    "35": "world_particles",
+                    "36": "login",
+                    "37": "map",
+                    "38": "entity",
+                    "39": "rel_entity_move",
+                    "40": "entity_move_look",
+                    "41": "entity_look",
+                    "42": "vehicle_move",
+                    "43": "open_sign_entity",
+                    "44": "craft_recipe_response",
+                    "45": "abilities",
+                    "46": "combat_event",
+                    "47": "player_info",
+                    "48": "position",
+                    "49": "bed",
+                    "50": "unlock_recipes",
+                    "51": "entity_destroy",
+                    "52": "remove_entity_effect",
+                    "53": "resource_pack_send",
+                    "54": "respawn",
+                    "55": "entity_head_rotation",
+                    "56": "select_advancement_tab",
+                    "57": "world_border",
+                    "58": "camera",
+                    "59": "held_item_slot",
+                    "60": "scoreboard_display_objective",
+                    "61": "entity_metadata",
+                    "62": "attach_entity",
+                    "63": "entity_velocity",
+                    "64": "entity_equipment",
+                    "65": "experience",
+                    "66": "update_health",
+                    "67": "scoreboard_objective",
+                    "68": "set_passengers",
+                    "69": "teams",
+                    "70": "scoreboard_score",
+                    "71": "spawn_position",
+                    "72": "update_time",
+                    "73": "title",
+                    "74": "stop_sound",
+                    "75": "sound_effect",
+                    "76": "playerlist_header",
+                    "77": "collect",
+                    "78": "entity_teleport",
+                    "79": "advancements",
+                    "80": "entity_update_attributes",
+                    "81": "entity_effect",
+                    "82": "declare_recipes",
+                    "83": "tags"
                   }
                 }
               ]
@@ -3620,7 +3817,8 @@
                     "select_advancement_tab": "packet_select_advancement_tab",
                     "declare_recipes": "packet_declare_recipes",
                     "tags": "packet_tags"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -4062,13 +4260,13 @@
               "type": "varint"
             },
             {
-              "anon":true,
-              "type":[
+              "anon": true,
+              "type": [
                 "switch",
                 {
-                  "compareTo":"type",
-                  "fields":{
-                    "0":[
+                  "compareTo": "type",
+                  "fields": {
+                    "0": [
                       "container",
                       [
                         {
@@ -4090,7 +4288,8 @@
                         }
                       ]
                     ]
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -4220,11 +4419,12 @@
               "type": [
                 "switch",
                 {
-                  "compareTo":"action",
+                  "compareTo": "action",
                   "fields": {
                     "0": "string",
                     "1": "void"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -4240,39 +4440,39 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "teleport_confirm",
-                    "0x01": "chat",
-                    "0x02": "client_command",
-                    "0x03": "settings",
-                    "0x04": "tab_complete",
-                    "0x05": "transaction",
-                    "0x06": "enchant_item",
-                    "0x07": "window_click",
-                    "0x08": "close_window",
-                    "0x09": "custom_payload",
-                    "0x0a": "use_entity",
-                    "0x0b": "keep_alive",
-                    "0x0c": "flying",
-                    "0x0d": "position",
-                    "0x0e": "position_look",
-                    "0x0f": "look",
-                    "0x10": "vehicle_move",
-                    "0x11": "steer_boat",
-                    "0x12": "craft_recipe_request",
-                    "0x13": "abilities",
-                    "0x14": "block_dig",
-                    "0x15": "entity_action",
-                    "0x16": "steer_vehicle",
-                    "0x17": "crafting_book_data",
-                    "0x18": "resource_pack_receive",
-                    "0x19": "advancement_tab",
-                    "0x1a": "held_item_slot",
-                    "0x1b": "set_creative_slot",
-                    "0x1c": "update_sign",
-                    "0x1d": "arm_animation",
-                    "0x1e": "spectate",
-                    "0x1f": "block_place",
-                    "0x20": "use_item"
+                    "0": "teleport_confirm",
+                    "1": "chat",
+                    "2": "client_command",
+                    "3": "settings",
+                    "4": "tab_complete",
+                    "5": "transaction",
+                    "6": "enchant_item",
+                    "7": "window_click",
+                    "8": "close_window",
+                    "9": "custom_payload",
+                    "10": "use_entity",
+                    "11": "keep_alive",
+                    "12": "flying",
+                    "13": "position",
+                    "14": "position_look",
+                    "15": "look",
+                    "16": "vehicle_move",
+                    "17": "steer_boat",
+                    "18": "craft_recipe_request",
+                    "19": "abilities",
+                    "20": "block_dig",
+                    "21": "entity_action",
+                    "22": "steer_vehicle",
+                    "23": "crafting_book_data",
+                    "24": "resource_pack_receive",
+                    "25": "advancement_tab",
+                    "26": "held_item_slot",
+                    "27": "set_creative_slot",
+                    "28": "update_sign",
+                    "29": "arm_animation",
+                    "30": "spectate",
+                    "31": "block_place",
+                    "32": "use_item"
                   }
                 }
               ]
@@ -4317,7 +4517,8 @@
                     "block_place": "packet_block_place",
                     "use_item": "packet_use_item",
                     "advancement_tab": "packet_advancement_tab"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }

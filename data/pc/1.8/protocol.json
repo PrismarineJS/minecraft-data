@@ -133,7 +133,8 @@
               }
             ]
           ]
-        }
+        },
+        "default": "void"
       }
     ],
     "entityMetadata": [
@@ -247,8 +248,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "set_protocol",
-                    "0xfe": "legacy_server_list_ping"
+                    "0": "set_protocol",
+                    "254": "legacy_server_list_ping"
                   }
                 }
               ]
@@ -262,7 +263,8 @@
                   "fields": {
                     "set_protocol": "packet_set_protocol",
                     "legacy_server_list_ping": "packet_legacy_server_list_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -302,8 +304,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "server_info",
-                    "0x01": "ping"
+                    "0": "server_info",
+                    "1": "ping"
                   }
                 }
               ]
@@ -317,7 +319,8 @@
                   "fields": {
                     "server_info": "packet_server_info",
                     "ping": "packet_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -350,8 +353,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "ping_start",
-                    "0x01": "ping"
+                    "0": "ping_start",
+                    "1": "ping"
                   }
                 }
               ]
@@ -365,7 +368,8 @@
                   "fields": {
                     "ping_start": "packet_ping_start",
                     "ping": "packet_ping"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -445,10 +449,10 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "disconnect",
-                    "0x01": "encryption_begin",
-                    "0x02": "success",
-                    "0x03": "compress"
+                    "0": "disconnect",
+                    "1": "encryption_begin",
+                    "2": "success",
+                    "3": "compress"
                   }
                 }
               ]
@@ -464,7 +468,8 @@
                     "encryption_begin": "packet_encryption_begin",
                     "success": "packet_success",
                     "compress": "packet_compress"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -516,8 +521,8 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "login_start",
-                    "0x01": "encryption_begin"
+                    "0": "login_start",
+                    "1": "encryption_begin"
                   }
                 }
               ]
@@ -531,7 +536,8 @@
                   "fields": {
                     "login_start": "packet_login_start",
                     "encryption_begin": "packet_encryption_begin"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -1614,14 +1620,34 @@
             },
             {
               "name": "data",
-              "type": ["switch",{
-                  "compareTo":"particleId",
-                  "fields":{
-                    "36":["array",{"count":2,"type":"varint"}],
-                    "37":["array",{"count":1,"type":"varint"}],
-                    "38":["array",{"count":1,"type":"varint"}]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "particleId",
+                  "fields": {
+                    "36": [
+                      "array",
+                      {
+                        "count": "2",
+                        "type": "varint"
+                      }
+                    ],
+                    "37": [
+                      "array",
+                      {
+                        "count": "1",
+                        "type": "varint"
+                      }
+                    ],
+                    "38": [
+                      "array",
+                      {
+                        "count": "1",
+                        "type": "varint"
+                      }
+                    ]
                   },
-                  "default":"void"
+                  "default": "void"
                 }
               ]
             }
@@ -2683,80 +2709,80 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "keep_alive",
-                    "0x01": "login",
-                    "0x02": "chat",
-                    "0x03": "update_time",
-                    "0x04": "entity_equipment",
-                    "0x05": "spawn_position",
-                    "0x06": "update_health",
-                    "0x07": "respawn",
-                    "0x08": "position",
-                    "0x09": "held_item_slot",
-                    "0x0a": "bed",
-                    "0x0b": "animation",
-                    "0x0c": "named_entity_spawn",
-                    "0x0d": "collect",
-                    "0x0e": "spawn_entity",
-                    "0x0f": "spawn_entity_living",
-                    "0x10": "spawn_entity_painting",
-                    "0x11": "spawn_entity_experience_orb",
-                    "0x12": "entity_velocity",
-                    "0x13": "entity_destroy",
-                    "0x14": "entity",
-                    "0x15": "rel_entity_move",
-                    "0x16": "entity_look",
-                    "0x17": "entity_move_look",
-                    "0x18": "entity_teleport",
-                    "0x19": "entity_head_rotation",
-                    "0x1a": "entity_status",
-                    "0x1b": "attach_entity",
-                    "0x1c": "entity_metadata",
-                    "0x1d": "entity_effect",
-                    "0x1e": "remove_entity_effect",
-                    "0x1f": "experience",
-                    "0x20": "update_attributes",
-                    "0x21": "map_chunk",
-                    "0x22": "multi_block_change",
-                    "0x23": "block_change",
-                    "0x24": "block_action",
-                    "0x25": "block_break_animation",
-                    "0x26": "map_chunk_bulk",
-                    "0x27": "explosion",
-                    "0x28": "world_event",
-                    "0x29": "named_sound_effect",
-                    "0x2a": "world_particles",
-                    "0x2b": "game_state_change",
-                    "0x2c": "spawn_entity_weather",
-                    "0x2d": "open_window",
-                    "0x2e": "close_window",
-                    "0x2f": "set_slot",
-                    "0x30": "window_items",
-                    "0x31": "craft_progress_bar",
-                    "0x32": "transaction",
-                    "0x33": "update_sign",
-                    "0x34": "map",
-                    "0x35": "tile_entity_data",
-                    "0x36": "open_sign_entity",
-                    "0x37": "statistics",
-                    "0x38": "player_info",
-                    "0x39": "abilities",
-                    "0x3a": "tab_complete",
-                    "0x3b": "scoreboard_objective",
-                    "0x3c": "scoreboard_score",
-                    "0x3d": "scoreboard_display_objective",
-                    "0x3e": "scoreboard_team",
-                    "0x3f": "custom_payload",
-                    "0x40": "kick_disconnect",
-                    "0x41": "difficulty",
-                    "0x42": "combat_event",
-                    "0x43": "camera",
-                    "0x44": "world_border",
-                    "0x45": "title",
-                    "0x46": "set_compression",
-                    "0x47": "playerlist_header",
-                    "0x48": "resource_pack_send",
-                    "0x49": "update_entity_nbt"
+                    "0": "keep_alive",
+                    "1": "login",
+                    "2": "chat",
+                    "3": "update_time",
+                    "4": "entity_equipment",
+                    "5": "spawn_position",
+                    "6": "update_health",
+                    "7": "respawn",
+                    "8": "position",
+                    "9": "held_item_slot",
+                    "10": "bed",
+                    "11": "animation",
+                    "12": "named_entity_spawn",
+                    "13": "collect",
+                    "14": "spawn_entity",
+                    "15": "spawn_entity_living",
+                    "16": "spawn_entity_painting",
+                    "17": "spawn_entity_experience_orb",
+                    "18": "entity_velocity",
+                    "19": "entity_destroy",
+                    "20": "entity",
+                    "21": "rel_entity_move",
+                    "22": "entity_look",
+                    "23": "entity_move_look",
+                    "24": "entity_teleport",
+                    "25": "entity_head_rotation",
+                    "26": "entity_status",
+                    "27": "attach_entity",
+                    "28": "entity_metadata",
+                    "29": "entity_effect",
+                    "30": "remove_entity_effect",
+                    "31": "experience",
+                    "32": "update_attributes",
+                    "33": "map_chunk",
+                    "34": "multi_block_change",
+                    "35": "block_change",
+                    "36": "block_action",
+                    "37": "block_break_animation",
+                    "38": "map_chunk_bulk",
+                    "39": "explosion",
+                    "40": "world_event",
+                    "41": "named_sound_effect",
+                    "42": "world_particles",
+                    "43": "game_state_change",
+                    "44": "spawn_entity_weather",
+                    "45": "open_window",
+                    "46": "close_window",
+                    "47": "set_slot",
+                    "48": "window_items",
+                    "49": "craft_progress_bar",
+                    "50": "transaction",
+                    "51": "update_sign",
+                    "52": "map",
+                    "53": "tile_entity_data",
+                    "54": "open_sign_entity",
+                    "55": "statistics",
+                    "56": "player_info",
+                    "57": "abilities",
+                    "58": "tab_complete",
+                    "59": "scoreboard_objective",
+                    "60": "scoreboard_score",
+                    "61": "scoreboard_display_objective",
+                    "62": "scoreboard_team",
+                    "63": "custom_payload",
+                    "64": "kick_disconnect",
+                    "65": "difficulty",
+                    "66": "combat_event",
+                    "67": "camera",
+                    "68": "world_border",
+                    "69": "title",
+                    "70": "set_compression",
+                    "71": "playerlist_header",
+                    "72": "resource_pack_send",
+                    "73": "update_entity_nbt"
                   }
                 }
               ]
@@ -2842,7 +2868,8 @@
                     "playerlist_header": "packet_playerlist_header",
                     "resource_pack_send": "packet_resource_pack_send",
                     "update_entity_nbt": "packet_update_entity_nbt"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
@@ -3309,32 +3336,32 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0x00": "keep_alive",
-                    "0x01": "chat",
-                    "0x02": "use_entity",
-                    "0x03": "flying",
-                    "0x04": "position",
-                    "0x05": "look",
-                    "0x06": "position_look",
-                    "0x07": "block_dig",
-                    "0x08": "block_place",
-                    "0x09": "held_item_slot",
-                    "0x0a": "arm_animation",
-                    "0x0b": "entity_action",
-                    "0x0c": "steer_vehicle",
-                    "0x0d": "close_window",
-                    "0x0e": "window_click",
-                    "0x0f": "transaction",
-                    "0x10": "set_creative_slot",
-                    "0x11": "enchant_item",
-                    "0x12": "update_sign",
-                    "0x13": "abilities",
-                    "0x14": "tab_complete",
-                    "0x15": "settings",
-                    "0x16": "client_command",
-                    "0x17": "custom_payload",
-                    "0x18": "spectate",
-                    "0x19": "resource_pack_receive"
+                    "0": "keep_alive",
+                    "1": "chat",
+                    "2": "use_entity",
+                    "3": "flying",
+                    "4": "position",
+                    "5": "look",
+                    "6": "position_look",
+                    "7": "block_dig",
+                    "8": "block_place",
+                    "9": "held_item_slot",
+                    "10": "arm_animation",
+                    "11": "entity_action",
+                    "12": "steer_vehicle",
+                    "13": "close_window",
+                    "14": "window_click",
+                    "15": "transaction",
+                    "16": "set_creative_slot",
+                    "17": "enchant_item",
+                    "18": "update_sign",
+                    "19": "abilities",
+                    "20": "tab_complete",
+                    "21": "settings",
+                    "22": "client_command",
+                    "23": "custom_payload",
+                    "24": "spectate",
+                    "25": "resource_pack_receive"
                   }
                 }
               ]
@@ -3372,7 +3399,8 @@
                     "custom_payload": "packet_custom_payload",
                     "spectate": "packet_spectate",
                     "resource_pack_receive": "packet_resource_pack_receive"
-                  }
+                  },
+                  "default": "void"
                 }
               ]
             }
