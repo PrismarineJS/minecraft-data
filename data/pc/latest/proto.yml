@@ -685,6 +685,13 @@
    packet_common_cookie_response:
       key: string
       value: ByteArray
+   # MC: ServerboundSelectKnownPacks
+   # MC: ClientboundSelectKnownPacks
+   packet_common_select_known_packs:
+      packs: []varint
+         namespace: string
+         id: string
+         version: string
 
 ^handshaking.toClient.types:
    packet:
@@ -827,6 +834,7 @@
          if login_acknowledged: packet_login_acknowledged
          if cookie_response: packet_common_cookie_response
 ^configuration.toClient.types:
+   ## (Cookie Request is common)
    # MC: ClientboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
@@ -872,14 +880,10 @@
       tags: []varint
          tagType: string
          tags: tags
-   # MC: ClientboundSelectKnownPacks
-   packet_select_known_packs:
-      packs: []varint
-         namespace: string
-         id: string
-         version: string
+   ## (Select known packs is common)
    packet:
       name: varint =>
+      - cookie_request
       - custom_payload
       - disconnect
       - finish_configuration
@@ -895,6 +899,7 @@
       - tags
       - select_known_packs
       params: name ?
+         if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
          if disconnect: packet_disconnect
          if finish_configuration: packet_finish_configuration
@@ -908,7 +913,7 @@
          if transfer: packet_common_transfer
          if feature_flags: packet_feature_flags
          if tags: packet_tags
-         if select_known_packs: packet_select_known_packs
+         if select_known_packs: packet_common_select_known_packs
 ^configuration.toServer.types:
    # MC: ServerboundClientInformationPacket
    packet_settings:
@@ -947,6 +952,7 @@
       - keep_alive
       - pong
       - resource_pack_receive
+      - select_known_packs
       params: name ?
          if settings: packet_settings
          if cookie_response: packet_common_cookie_response
@@ -955,6 +961,7 @@
          if keep_alive: packet_keep_alive
          if pong: packet_pong
          if resource_pack_receive: packet_resource_pack_receive
+         if select_known_packs: packet_common_select_known_packs
 ^play.toClient.types:
    # World state information for spawn and respawn packets
    SpawnInfo:
@@ -2759,12 +2766,6 @@
    packet_use_item:
       hand: varint
       sequence: varint
-   # MC: ServerboundSelectKnownPacks
-   packet_select_known_packs:
-      packs: []varint
-         namespace: string
-         id: string
-         version: string
 
    packet:
       name: varint =>
@@ -2826,7 +2827,6 @@
       - spectate
       - block_place
       - use_item
-      - select_known_packs
       params: name ?
         if teleport_confirm: packet_teleport_confirm
         if query_block_nbt: packet_query_block_nbt
@@ -2885,4 +2885,3 @@
         if spectate: packet_spectate
         if block_place: packet_block_place
         if use_item: packet_use_item
-        if select_known_packs: packet_select_known_packs

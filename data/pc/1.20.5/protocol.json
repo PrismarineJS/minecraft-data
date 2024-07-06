@@ -1334,6 +1334,37 @@
           "type": "ByteArray"
         }
       ]
+    ],
+    "packet_common_select_known_packs": [
+      "container",
+      [
+        {
+          "name": "packs",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "namespace",
+                    "type": "string"
+                  },
+                  {
+                    "name": "id",
+                    "type": "string"
+                  },
+                  {
+                    "name": "version",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
     ]
   },
   "handshaking": {
@@ -1961,37 +1992,6 @@
             }
           ]
         ],
-        "packet_select_known_packs": [
-          "container",
-          [
-            {
-              "name": "packs",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "namespace",
-                        "type": "string"
-                      },
-                      {
-                        "name": "id",
-                        "type": "string"
-                      },
-                      {
-                        "name": "version",
-                        "type": "string"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        ],
         "packet": [
           "container",
           [
@@ -2002,20 +2002,21 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0": "custom_payload",
-                    "1": "disconnect",
-                    "2": "finish_configuration",
-                    "3": "keep_alive",
-                    "4": "ping",
-                    "5": "reset_chat",
-                    "6": "registry_data",
-                    "7": "remove_resource_pack",
-                    "8": "add_resource_pack",
-                    "9": "store_cookie",
-                    "10": "transfer",
-                    "11": "feature_flags",
-                    "12": "tags",
-                    "13": "select_known_packs"
+                    "0": "cookie_request",
+                    "1": "custom_payload",
+                    "2": "disconnect",
+                    "3": "finish_configuration",
+                    "4": "keep_alive",
+                    "5": "ping",
+                    "6": "reset_chat",
+                    "7": "registry_data",
+                    "8": "remove_resource_pack",
+                    "9": "add_resource_pack",
+                    "10": "store_cookie",
+                    "11": "transfer",
+                    "12": "feature_flags",
+                    "13": "tags",
+                    "14": "select_known_packs"
                   }
                 }
               ]
@@ -2027,6 +2028,7 @@
                 {
                   "compareTo": "name",
                   "fields": {
+                    "cookie_request": "packet_common_cookie_request",
                     "custom_payload": "packet_custom_payload",
                     "disconnect": "packet_disconnect",
                     "finish_configuration": "packet_finish_configuration",
@@ -2040,7 +2042,7 @@
                     "transfer": "packet_common_transfer",
                     "feature_flags": "packet_feature_flags",
                     "tags": "packet_tags",
-                    "select_known_packs": "packet_select_known_packs"
+                    "select_known_packs": "packet_common_select_known_packs"
                   },
                   "default": "void"
                 }
@@ -2153,7 +2155,8 @@
                     "3": "finish_configuration",
                     "4": "keep_alive",
                     "5": "pong",
-                    "6": "resource_pack_receive"
+                    "6": "resource_pack_receive",
+                    "7": "select_known_packs"
                   }
                 }
               ]
@@ -2171,7 +2174,8 @@
                     "finish_configuration": "packet_finish_configuration",
                     "keep_alive": "packet_keep_alive",
                     "pong": "packet_pong",
-                    "resource_pack_receive": "packet_resource_pack_receive"
+                    "resource_pack_receive": "packet_resource_pack_receive",
+                    "select_known_packs": "packet_common_select_known_packs"
                   },
                   "default": "void"
                 }
@@ -3503,14 +3507,14 @@
                 {
                   "compareTo": "columns",
                   "fields": {
-                    "0": [
-                      "buffer",
-                      {
-                        "countType": "varint"
-                      }
-                    ]
+                    "0": "void"
                   },
-                  "default": "void"
+                  "default": [
+                    "buffer",
+                    {
+                      "countType": "varint"
+                    }
+                  ]
                 }
               ]
             }
@@ -7413,37 +7417,6 @@
             }
           ]
         ],
-        "packet_select_known_packs": [
-          "container",
-          [
-            {
-              "name": "packs",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "namespace",
-                        "type": "string"
-                      },
-                      {
-                        "name": "id",
-                        "type": "string"
-                      },
-                      {
-                        "name": "version",
-                        "type": "string"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        ],
         "packet": [
           "container",
           [
@@ -7511,8 +7484,7 @@
                     "54": "arm_animation",
                     "55": "spectate",
                     "56": "block_place",
-                    "57": "use_item",
-                    "58": "select_known_packs"
+                    "57": "use_item"
                   }
                 }
               ]
@@ -7580,8 +7552,7 @@
                     "arm_animation": "packet_arm_animation",
                     "spectate": "packet_spectate",
                     "block_place": "packet_block_place",
-                    "use_item": "packet_use_item",
-                    "select_known_packs": "packet_select_known_packs"
+                    "use_item": "packet_use_item"
                   },
                   "default": "void"
                 }
