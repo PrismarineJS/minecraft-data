@@ -46,14 +46,27 @@ function genProtoSchema (createPacketMap) {
   return [version, json]
 }
 
+function visitor (key, value) {
+  // Convert decimal to hex in protocol.json for packet mapper fields
+  if ((key === 'packet') && (value?.[1]?.[0]?.name === 'name')) {
+    const mapper = value[1][0].type[1].mappings
+    for (const key in mapper) {
+      if (key.startsWith('0x')) continue
+      mapper['0x' + Number(key).toString(16).padStart(2, '0')] = mapper[key]
+      delete mapper[key]
+    }
+  }
+  return value
+}
+
 function convert (edition, ver, path) {
   process.chdir(path || join(__dirname, `../../data/${edition}/${ver}`))
   const [version, json] = genProtoSchema(edition === 'bedrock')
   fs.mkdirSync(`../${version}`, { recursive: true })
   if (edition === 'bedrock') {
-    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: json }, null, 2))
+    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: json }, visitor, 2))
   } else if (edition === 'pc') {
-    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify(json, null, 2))
+    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify(json, visitor, 2))
   }
   return version
 }
