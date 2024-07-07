@@ -77,8 +77,8 @@ function validate (edition, ver, path) {
   const [version, json] = genProtoSchema(edition === 'bedrock')
 
   const expected = edition === 'bedrock'
-    ? JSON.stringify({ types: json }, null, 2)
-    : JSON.stringify(json, null, 2)
+    ? JSON.stringify({ types: json }, visitor, 2)
+    : JSON.stringify(json, visitor, 2)
 
   // If you crash here, no protocol.json was generated - run `npm run build`
   const actual = JSON.stringify(getJSON(`../${version}/protocol.json`), null, 2)
