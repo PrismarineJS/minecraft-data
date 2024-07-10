@@ -871,7 +871,7 @@ ItemStackRequest:
          # crafting, where the old item is consumed.
          - results_deprecated
       _: type_id ?
-         if take or place:
+         if take or place or place_in_container or take_out_container:
             count: u8
             source: StackRequestSlotInfo
             destination: StackRequestSlotInfo
@@ -903,19 +903,24 @@ ItemStackRequest:
             primary_effect: zigzag32
             secondary_effect: zigzag32
          if mine_block:
-            # // Unknown1 ... TODO: Find out what this is for
-            unknown1: zigzag32
+            # Current hotbar slot
+            hotbar_slot: zigzag32
             # PredictedDurability is the durability of the item that the client assumes to be present at the time
             predicted_durability: zigzag32
             # StackNetworkID is the unique stack ID that the client assumes to be present at the time. The server
             # must check if these IDs match. If they do not match, servers should reject the stack request that the
             # action holding this info was in.
             network_id: zigzag32 
-         if craft_recipe or craft_recipe_auto:
+         if craft_recipe:
             # RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
             # one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
             # of 1.16.
             recipe_network_id: varint
+         if craft_recipe_auto:
+            # RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
+            # one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
+            recipe_network_id: varint
+            times_crafted: u8
          if craft_creative:
             # The stack ID of the creative item that is being created. This is one of the
             # creative item stack IDs sent in the CreativeContent packet.
