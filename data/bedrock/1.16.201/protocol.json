@@ -1,5 +1,36 @@
 {
   "types": {
+    "string": [
+      "pstring",
+      {
+        "countType": "varint"
+      }
+    ],
+    "ByteArray": [
+      "buffer",
+      {
+        "countType": "varint"
+      }
+    ],
+    "SignedByteArray": [
+      "buffer",
+      {
+        "countType": "zigzag32"
+      }
+    ],
+    "LittleString": [
+      "pstring",
+      {
+        "countType": "li32"
+      }
+    ],
+    "LatinString": [
+      "pstring",
+      {
+        "countType": "varint",
+        "encoding": "latin1"
+      }
+    ],
     "varint64": "native",
     "zigzag32": "native",
     "zigzag64": "native",
@@ -4859,6 +4890,37 @@
         }
       ]
     ],
+    "AdventureFlags": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "world_immutable": 1,
+          "no_pvp": 2,
+          "auto_jump": 32,
+          "allow_flight": 64,
+          "no_clip": 128,
+          "world_builder": 256,
+          "flying": 512,
+          "muted": 1024
+        }
+      }
+    ],
+    "ActionPermissions": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "build_and_mine": 65537,
+          "doors_and_switches": 65538,
+          "open_containers": 65540,
+          "attack_players": 65544,
+          "attack_mobs": 65552,
+          "operator": 65568,
+          "teleport": 65664
+        }
+      }
+    ],
     "packet_block_entity_data": [
       "container",
       [
@@ -5528,6 +5590,26 @@
               ]
             }
           ]
+        }
+      ]
+    ],
+    "CommandFlags": [
+      "bitfield",
+      [
+        {
+          "name": "unused",
+          "size": 6,
+          "signed": false
+        },
+        {
+          "name": "has_semantic_constraint",
+          "size": 1,
+          "signed": false
+        },
+        {
+          "name": "collapse_enum",
+          "size": 1,
+          "signed": false
         }
       ]
     ],
@@ -6389,6 +6471,23 @@
         }
       ]
     ],
+    "DeltaMoveFlags": [
+      "bitflags",
+      {
+        "type": "lu16",
+        "flags": {
+          "has_x": 1,
+          "has_y": 2,
+          "has_z": 4,
+          "has_rot_x": 8,
+          "has_rot_y": 16,
+          "has_rot_z": 32,
+          "on_ground": 64,
+          "teleport": 128,
+          "force_move": 256
+        }
+      }
+    ],
     "packet_set_scoreboard_identity": [
       "container",
       [
@@ -6974,6 +7073,39 @@
         }
       ]
     ],
+    "InputFlag": [
+      "bitflags",
+      {
+        "type": "varint",
+        "flags": {
+          "ascend": 1,
+          "descend": 2,
+          "north_jump": 4,
+          "jump_down": 8,
+          "sprint_down": 16,
+          "change_height": 32,
+          "jumping": 64,
+          "auto_jumping_in_water": 128,
+          "sneaking": 256,
+          "sneak_down": 512,
+          "up": 1024,
+          "down": 2048,
+          "left": 4096,
+          "right": 8192,
+          "up_left": 16384,
+          "up_right": 32768,
+          "want_up": 65536,
+          "want_down": 131072,
+          "want_down_slow": 262144,
+          "want_up_slow": 524288,
+          "sprinting": 1048576,
+          "ascend_scaffolding": 2097152,
+          "descend_scaffolding": 4194304,
+          "sneak_toggle_down": 8388608,
+          "persist_sneak": 16777216
+        }
+      }
+    ],
     "packet_creative_content": [
       "container",
       [
@@ -7070,6 +7202,18 @@
           ]
         }
       ]
+    ],
+    "ArmorDamageType": [
+      "bitflags",
+      {
+        "type": "u8",
+        "flags": {
+          "head": 1,
+          "chest": 2,
+          "legs": 4,
+          "feet": 8
+        }
+      }
     ],
     "packet_update_player_game_type": [
       "container",
@@ -7316,150 +7460,6 @@
           "type": "bool"
         }
       ]
-    ],
-    "string": [
-      "pstring",
-      {
-        "countType": "varint"
-      }
-    ],
-    "ByteArray": [
-      "buffer",
-      {
-        "countType": "varint"
-      }
-    ],
-    "SignedByteArray": [
-      "buffer",
-      {
-        "countType": "zigzag32"
-      }
-    ],
-    "LittleString": [
-      "pstring",
-      {
-        "countType": "li32"
-      }
-    ],
-    "LatinString": [
-      "pstring",
-      {
-        "countType": "varint",
-        "encoding": "latin1"
-      }
-    ],
-    "AdventureFlags": [
-      "bitflags",
-      {
-        "type": "varint",
-        "flags": {
-          "world_immutable": 1,
-          "no_pvp": 2,
-          "auto_jump": 32,
-          "allow_flight": 64,
-          "no_clip": 128,
-          "world_builder": 256,
-          "flying": 512,
-          "muted": 1024
-        }
-      }
-    ],
-    "ActionPermissions": [
-      "bitflags",
-      {
-        "type": "varint",
-        "flags": {
-          "build_and_mine": 65537,
-          "doors_and_switches": 65538,
-          "open_containers": 65540,
-          "attack_players": 65544,
-          "attack_mobs": 65552,
-          "operator": 65568,
-          "teleport": 65664
-        }
-      }
-    ],
-    "CommandFlags": [
-      "bitfield",
-      [
-        {
-          "name": "unused",
-          "size": 6,
-          "signed": false
-        },
-        {
-          "name": "has_semantic_constraint",
-          "size": 1,
-          "signed": false
-        },
-        {
-          "name": "collapse_enum",
-          "size": 1,
-          "signed": false
-        }
-      ]
-    ],
-    "DeltaMoveFlags": [
-      "bitflags",
-      {
-        "type": "lu16",
-        "flags": {
-          "has_x": 1,
-          "has_y": 2,
-          "has_z": 4,
-          "has_rot_x": 8,
-          "has_rot_y": 16,
-          "has_rot_z": 32,
-          "on_ground": 64,
-          "teleport": 128,
-          "force_move": 256
-        }
-      }
-    ],
-    "InputFlag": [
-      "bitflags",
-      {
-        "type": "varint",
-        "flags": {
-          "ascend": 1,
-          "descend": 2,
-          "north_jump": 4,
-          "jump_down": 8,
-          "sprint_down": 16,
-          "change_height": 32,
-          "jumping": 64,
-          "auto_jumping_in_water": 128,
-          "sneaking": 256,
-          "sneak_down": 512,
-          "up": 1024,
-          "down": 2048,
-          "left": 4096,
-          "right": 8192,
-          "up_left": 16384,
-          "up_right": 32768,
-          "want_up": 65536,
-          "want_down": 131072,
-          "want_down_slow": 262144,
-          "want_up_slow": 524288,
-          "sprinting": 1048576,
-          "ascend_scaffolding": 2097152,
-          "descend_scaffolding": 4194304,
-          "sneak_toggle_down": 8388608,
-          "persist_sneak": 16777216
-        }
-      }
-    ],
-    "ArmorDamageType": [
-      "bitflags",
-      {
-        "type": "u8",
-        "flags": {
-          "head": 1,
-          "chest": 2,
-          "legs": 4,
-          "feet": 8
-        }
-      }
     ]
   }
 }
