@@ -50,13 +50,12 @@
       x: f64
       y: f64
       z: f64
-   slot:
-      present: bool
-      _: present ?
-         if false: void
-         if true:
+   Slot:
+      itemCount: i8
+      _: itemCount ?
+         if 0: void
+         default:
             itemId: varint
-            itemCount: i8
             nbtData: anonOptionalNbt
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
@@ -200,13 +199,13 @@
             toGreen: f32
             toBlue: f32
          if entity_effect: i32
-         if item: slot
+         if item: Slot
          if sculk_charge: f32
          if shriek: varint
          if vibration:
             position: string
             entityId: varint
-   ingredient: slot[]varint
+   ingredient: Slot[]varint
    position: [
       "bitfield",
       [
@@ -293,7 +292,7 @@
          if string: string
          if component: anonymousNbt
          if optional_component: ["option", "anonymousNbt"]
-         if item_stack: slot
+         if item_stack: Slot
          if boolean: bool
          if rotations:
             pitch: f32
@@ -330,7 +329,7 @@
       group: string
       category: varint
       ingredient: ingredient
-      result: slot
+      result: Slot
       experience: f32
       cookTime: varint
    tags: []varint
@@ -1097,8 +1096,8 @@
    packet_window_items:
       windowId: u8
       stateId: varint
-      items: slot[]varint
-      carriedItem: slot
+      items: Slot[]varint
+      carriedItem: Slot
    # MC: ClientboundContainerSetDataPacket
    packet_craft_progress_bar:
       windowId: u8
@@ -1109,7 +1108,7 @@
       windowId: i8
       stateId: varint
       slot: i16
-      item: slot
+      item: Slot
    ## (Cookie Request is Common)
    # MC: ClientboundCooldownPacket
    packet_set_cooldown:
@@ -1303,9 +1302,9 @@
       windowId: varint
       ## https://github.com/extremeheat/extracted_minecraft_data/blob/client1.20.5/client/net/minecraft/world/item/trading/MerchantOffer.java#L210
       trades: []varint
-         inputItem1: slot
-         outputItem: slot
-         inputItem2: slot
+         inputItem1: Slot
+         outputItem: Slot
+         inputItem2: Slot
          tradeDisabled: bool
          nbTradeUses: i32
          maximumNbTradeUses: i32
@@ -2070,7 +2069,7 @@
             displayData?:
                title: anonymousNbt
                description: anonymousNbt
-               icon: slot
+               icon: Slot
                frameType: varint
                flags: ["bitfield", [
                   { "name": "unused", "size": 29, "signed": false },
@@ -2149,7 +2148,7 @@
                group: string
                category: varint
                ingredients: ingredient[]varint
-               result: slot
+               result: Slot
             if minecraft:crafting_shaped:
                group: string
                category: varint
@@ -2157,7 +2156,7 @@
                height: varint
                ingredients: []$width
                   _: ingredient[]$height
-               result: slot
+               result: Slot
                showNotification: bool
             if minecraft:crafting_special_armordye: minecraft_simple_recipe_format
             if minecraft:crafting_special_bookcloning: minecraft_simple_recipe_format
@@ -2180,12 +2179,12 @@
             if minecraft:stonecutting:
                group: string
                ingredient: ingredient
-               result: slot
+               result: Slot
             if minecraft:smithing_transform:
                template: ingredient
                base: ingredient
                addition: ingredient
-               result: slot
+               result: Slot
             if minecraft:smithing_trim:
                template: ingredient
                base: ingredient
@@ -2544,8 +2543,8 @@
       mode: varint
       changedSlots: []varint
          location: i16
-         item: slot
-      cursorItem: slot
+         item: Slot
+      cursorItem: Slot
    # MC: ServerboundContainerClosePacket
    packet_close_window:
       windowId: u8
@@ -2710,7 +2709,7 @@
    # MC: ServerboundSetCreativeModeSlotPacket
    packet_set_creative_slot:
       slot: i16
-      item: slot
+      item: Slot
    # MC: ServerboundSetJigsawBlockPacket
    packet_update_jigsaw_block:
       location: position
