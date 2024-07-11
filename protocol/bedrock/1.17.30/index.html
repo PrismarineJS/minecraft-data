@@ -57,6 +57,8 @@ table table {
 thead td { font-weight: bold; background-color: #E0E0E0; }
 a { text-decoration: none; }
 .name { text-transform: capitalize; }
+.sitkcy-container { position: relative; }
+.sticky-header { position: sticky; top: 0; text-align: center; font-size: 1.5rem; }
 </style>
 </head><div class='container'><h3>Table of Contents</h3>
   <table class='table table-bordered table-striped' style='width:50%'>
@@ -1750,16 +1752,21 @@ placed.</p></td></tr>
 <tr><td class='field-name name'>secondary effect </td><td>zigzag32</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name'><span class='fake'>is mine block</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>unknown1 </td><td>zigzag32</td><td><p>// Unknown1 … TODO: Find out what this is for</p></td></tr>
+<tr><td class='field-name name'>hotbar slot </td><td>zigzag32</td><td><p>Current hotbar slot</p></td></tr>
 <tr><td class='field-name name'>predicted durability </td><td>zigzag32</td><td><p>PredictedDurability is the durability of the item that the client assumes to be present at the time</p></td></tr>
 <tr><td class='field-name name'>network id </td><td>zigzag32</td><td><p>StackNetworkID is the unique stack ID that the client assumes to be present at the time. The server
 must check if these IDs match. If they do not match, servers should reject the stack request that the
 action holding this info was in.</p></td></tr>
 </table></td></tr>
-<tr><td class='name'><span class='fake'>is craft recipe or craft recipe auto</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='name'><span class='fake'>is craft recipe</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>recipe network id </td><td>varint</td><td><p>RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
 one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
 of 1.16.</p></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is craft recipe auto</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>recipe network id </td><td>varint</td><td><p>RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
+one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as</p></td></tr>
+<tr><td class='field-name name'>times crafted </td><td>u8</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name'><span class='fake'>is craft creative</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>item id </td><td>varint</td><td><p>The stack ID of the creative item that is being created. This is one of the

@@ -57,6 +57,8 @@ table table {
 thead td { font-weight: bold; background-color: #E0E0E0; }
 a { text-decoration: none; }
 .name { text-transform: capitalize; }
+.sitkcy-container { position: relative; }
+.sticky-header { position: sticky; top: 0; text-align: center; font-size: 1.5rem; }
 </style>
 </head><div class='container'><h3>Table of Contents</h3>
   <table class='table table-bordered table-striped' style='width:50%'>
@@ -1437,7 +1439,7 @@ a { text-decoration: none; }
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>request id </td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>request id </td><td>zigzag32</td><td></td></tr>
 <tr><td class='field-name'><span class='name'>actions</span> length</td><td>varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>actions</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='name field-name'>type id </td><td colspan=2>u8 <span class='tag tag-enum'>enum</span><hr/> <table style='width:100%'>
@@ -1485,12 +1487,16 @@ a { text-decoration: none; }
 <tr><td class='field-name name'>secondary effect </td><td>zigzag32</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name'><span class='fake'>is mine block</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>unknown1 </td><td>zigzag32</td><td></td></tr>
+<tr><td class='field-name name'>hotbar slot </td><td>zigzag32</td><td></td></tr>
 <tr><td class='field-name name'>predicted durability </td><td>zigzag32</td><td></td></tr>
 <tr><td class='field-name name'>network id </td><td>zigzag32</td><td></td></tr>
 </table></td></tr>
-<tr><td class='name'><span class='fake'>is craft recipe or craft recipe auto</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='name'><span class='fake'>is craft recipe</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>recipe network id </td><td>varint</td><td></td></tr>
+</table></td></tr>
+<tr><td class='name'><span class='fake'>is craft recipe auto</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>recipe network id </td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>times crafted </td><td>u8</td><td></td></tr>
 </table></td></tr>
 <tr><td class='name'><span class='fake'>is craft creative</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>item id </td><td>varint</td><td></td></tr>
