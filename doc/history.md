@@ -1,3 +1,9 @@
+## 3.67.0
+* [Add bedrock 1.21.2 protocol data (#895)](https://github.com/PrismarineJS/minecraft-data/commit/35a8033e1ad4daba7e0d1c9a3112ab0b882251d6) (thanks @CreeperG16)
+* [Correction to bedrock ItemStackRequests packet auto craft (#894)](https://github.com/PrismarineJS/minecraft-data/commit/ddd0700d1fe0c654a9f889b7263eeeaba48b0511) (thanks @extremeheat)
+* [Bedrock 1.21.0 blocks data (#892)](https://github.com/PrismarineJS/minecraft-data/commit/d84b2283dc64fb246d6239e4b9fa8487c6f420eb) (thanks @bedrock-bot)
+* [Add some 1.20.5 data (#879)](https://github.com/PrismarineJS/minecraft-data/commit/4ca8db1dd3d45302de3c33d01cfcc75464afdba1) (thanks @qwqtoday)
+
 ## 3.66.0
 * [Add Bedrock 1.21.0 protocol data (#882)](https://github.com/PrismarineJS/minecraft-data/commit/67a392d204775473ce28b37db0bcfa01218624bb) (thanks @CreeperG16)
 * [Add pc 1.18+ Book editing feature (#876)](https://github.com/PrismarineJS/minecraft-data/commit/af0ce69e3c212c1bd06e544b94049ae8bf11f321) (thanks @unlimitedcoder2) 

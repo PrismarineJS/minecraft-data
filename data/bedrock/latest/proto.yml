@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.0
+!version: 1.21.2
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -4184,3 +4184,9 @@ packet_award_achievement:
 packet_server_post_move:
    !id: 0x10
    position: vec3f
+
+# clientbound_close_form is sent by the server to clear the entire form stack of the client. This means that all
+# forms that are currently open will be closed. This does not affect inventories and other containers.
+packet_clientbound_close_form:
+   !id: 0x136
+   !bound: client
