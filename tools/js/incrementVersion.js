@@ -11,6 +11,7 @@ function writeJSON (path, data) {
   fs.writeFileSync(path, JSON.stringify(data, null, 2), 'utf-8')
 }
 
+// Reads and updates the JSON after processing in callback
 function alterJSON (path, callback) {
   const jsonContents = getJSON(path)
   if (callback(jsonContents) !== false) {
@@ -18,70 +19,84 @@ function alterJSON (path, callback) {
   }
 }
 
-function pcProtocol (version, protocol) {
-  throw new Error('Not Implemented')
-}
+function updateProtocol (edition, version, protocolVersionNumber) {
+  const dataRoot = join(data, edition)
+  const protocolVersionsPath = join(dataRoot, 'common', 'protocolVersions.json')
+  const versionsPath = join(dataRoot, 'common', 'versions.json')
+  const versionPath = join(dataRoot, version, 'version.json')
 
-function bedrockProtocol (version, protocol) {
-  const dataRoot = join(data, 'bedrock')
-  if (fs.existsSync(join(data, 'bedrock', version))) {
-    console.log(`data/bedrock/${version} already exists`)
-    process.exit(1)
-  }
-
-  const protocolVersion = {
-    version: parseInt(protocol),
+  const protocolVersionsEntry = {
+    version: parseInt(protocolVersionNumber),
     minecraftVersion: version,
     majorVersion: version.split('.').slice(0, 2).join('.'),
     releaseType: 'release'
   }
 
-  alterJSON(join(data, 'dataPaths.json'), dataPaths => {
-    let latest = null
-    const paths = dataPaths.bedrock
-    Object.entries(paths).forEach(([ver, values]) => {
-      if (values.proto === 'bedrock/latest') {
-        latest = ver
-      }
-    })
+  let didUpdateProtocol = false
 
-    if (latest === null) {
-      console.log('Unable to determine previous version.')
-      process.exit(1)
+  // Move the latest/proto.yml to its associated folder defined in the !version meta field
+  const latestProtoPath = join(dataRoot, 'latest', 'proto.yml')
+  const protoYml = fs.readFileSync(latestProtoPath, 'utf-8')
+  const oldProtoVersion = protoYml.match(/!version: ([0-9.]+)/)[1]
+  // Check if $oldVersion/proto.yml already exists
+  const oldProtoPath = join(dataRoot, oldProtoVersion, 'proto.yml')
+  if (fs.existsSync(oldProtoPath)) {
+    console.log(`Can't move ${latestProtoPath} to ${oldProtoPath} because the file already exists.`)
+  } else {
+    fs.copyFileSync(latestProtoPath, oldProtoPath)
+    if (edition === 'bedrock') {
+      fs.copyFileSync(join(dataRoot, 'latest', 'types.yml'), join(dataRoot, oldProtoPath, 'types.yml'))
     }
+    didUpdateProtocol = true
+    // Update references to the old version in the dataPaths.json file
+    alterJSON(join(data, 'dataPaths.json'), dataPaths => {
+      let latestVersionData
+      for (const v in dataPaths[edition]) {
+        const e = dataPaths[edition][v]
+        // if .proto points to latest, update it to the old version
+        if (e.proto === `${edition}/latest`) {
+          e.proto = `${edition}/${oldProtoVersion}`
+        }
+        latestVersionData = e
+      }
+      if (!dataPaths[edition][version]) {
+        dataPaths[edition][version] = latestVersionData
+      }
+      latestVersionData.proto = `${edition}/latest`
+      latestVersionData.protocol = `${edition}/${version}`
+      latestVersionData.version = `${edition}/${version}`
+    })
+  }
 
-    paths[version] = Object.assign({}, paths[latest])
-    paths[version].version = `bedrock/${version}`
-    paths[version].protocol = `bedrock/${version}`
-    paths[latest].proto = `bedrock/${latest}`
-    paths[latest].types = `bedrock/${latest}`
-    fs.copyFileSync(
-      join(dataRoot, 'latest', 'proto.yml'),
-      join(dataRoot, latest, 'proto.yml'))
-    fs.copyFileSync(
-      join(dataRoot, 'latest', 'types.yml'),
-      join(dataRoot, latest, 'types.yml'))
+  // Update commons/protocolVersions.json (pc does this auto with cron)
+  alterJSON(protocolVersionsPath, protoVers => {
+    if (!protoVers.find(v => v.version === protocolVersionsEntry.version)) {
+      protoVers.unshift(protocolVersionsEntry)
+    }
+  })
+  // Update commons/version.json
+  alterJSON(versionsPath, versions => {
+    if (!versions.includes(version)) {
+      versions.push(version)
+    }
   })
 
-  alterJSON(join(dataRoot, 'common', 'protocolVersions.json'), protoVers => {
-    protoVers.unshift(protocolVersion)
-  })
+  // Update the $version/version.json file
+  fs.mkdirSync(join(dataRoot, version), { recursive: true })
+  if (!fs.existsSync(versionPath)) {
+    writeJSON(versionPath, protocolVersionsEntry)
+  }
 
-  alterJSON(join(dataRoot, 'common', 'versions.json'), versions => {
-    versions.push(version)
-  })
-
-  fs.mkdirSync(join(dataRoot, version))
-  writeJSON(join(dataRoot, version, 'version.json'), protocolVersion)
-
-  const protoYml = fs.readFileSync(join(dataRoot, 'latest', 'proto.yml'), 'utf-8')
-  const protoYmlUpdate = protoYml.replace(/!version: [0-9.]+/, `!version: ${version}`)
-  fs.writeFileSync(join(dataRoot, 'latest', 'proto.yml'), protoYmlUpdate, 'utf-8')
+  // Update the '!version' meta field in the latest/proto.yml
+  if (didUpdateProtocol) {
+    const protoYmlUpdate = protoYml.replace(/!version: [0-9.]+/, `!version: ${version}`)
+    fs.writeFileSync(join(dataRoot, 'latest', 'proto.yml'), protoYmlUpdate, 'utf-8')
+  }
 }
 
 const platforms = {
-  bedrock: bedrockProtocol,
-  pc: pcProtocol
+  bedrock: updateProtocol,
+  pc: updateProtocol
 }
 
 if (process.argv.length !== 5) {
@@ -96,4 +111,4 @@ if (platforms[platform] === undefined) {
   process.exit(1)
 }
 
-platforms[platform](version, protocol)
+platforms[platform](platform, version, protocol)

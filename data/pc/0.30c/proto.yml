@@ -1,0 +1,138 @@
+!version: 0.30c
+
+^types:
+   u8: native
+   string: native
+   i8: native
+   i16: native
+   byte_array: native
+
+^toServer.types:
+   packet_player_identification:   
+      protocol_version: u8
+      username: string
+      verification_key: string
+      unused: i8
+   packet_set_block:   
+      x: i16
+      y: i16
+      z: i16
+      mode: u8
+      block_type: u8
+   packet_position:   
+      player_id: u8
+      x: i16
+      y: i16
+      z: i16
+      yaw: u8
+      pitch: u8
+   packet_message:   
+      unused: u8
+      message: string
+   packet:   
+      name: u8 =>
+         0x00: player_identification
+         0x05: set_block
+         0x08: position
+         0x0d: message
+      params: name ?
+         if player_identification: packet_player_identification
+         if set_block: packet_set_block
+         if position: packet_position
+         if message: packet_message
+
+^toClient.types:
+   packet_server_identification:   
+      protocol_version: u8
+      server_name: string
+      server_motd: string
+      user_type: i8
+   packet_ping:   
+      # Empty
+   packet_level_initialize:   
+      # Empty
+   packet_level_data_chunk:   
+      chunk_data: byte_array
+      percent_complete: u8
+   packet_level_finalize:   
+      x_size: i16
+      y_size: i16
+      z_size: i16
+   packet_set_block:   
+      x: i16
+      y: i16
+      z: i16
+      block_type: u8
+   packet_spawn_player:   
+      player_id: i8
+      player_name: string
+      x: i16
+      y: i16
+      z: i16
+      yaw: u8
+      pitch: u8
+   packet_player_teleport:   
+      player_id: i8
+      x: i16
+      y: i16
+      z: i16
+      yaw: u8
+      pitch: u8
+   packet_position_and_orientation_update:   
+      player_id: i8
+      change_in_x: i8
+      change_in_y: i8
+      change_in_z: i8
+      yaw: i8
+      pitch: i8
+   packet_position_update:   
+      player_id: i8
+      change_in_x: i8
+      change_in_y: i8
+      change_in_z: i8
+   packet_orientation_update:   
+      player_id: i8
+      yaw: u8
+      pitch: u8
+   packet_despawn_player:   
+      player_id: i8
+   packet_message:   
+      player_id: i8
+      message: string
+   packet_disconnect_player:   
+      disconnect_reason: string
+   packet_update_user_type:   
+      user_type: u8
+   packet:   
+      name: u8 =>
+         0x00: server_identification
+         0x01: ping
+         0x02: level_initialize
+         0x03: level_data_chunk
+         0x04: level_finalize
+         0x06: set_block
+         0x07: spawn_player
+         0x08: player_teleport
+         0x09: position_and_orientation_update
+         0x0a: position_update
+         0x0b: orientation_update
+         0x0c: despawn_player
+         0x0d: message
+         0x0e: disconnect_player
+         0x0f: update_user_type
+      params: name ?
+         if server_identification: packet_server_identification
+         if ping: packet_ping
+         if level_initialize: packet_level_initialize
+         if level_data_chunk: packet_level_data_chunk
+         if level_finalize: packet_level_finalize
+         if set_block: packet_set_block
+         if spawn_player: packet_spawn_player
+         if player_teleport: packet_player_teleport
+         if position_and_orientation_update: packet_position_and_orientation_update
+         if position_update: packet_position_update
+         if orientation_update: packet_orientation_update
+         if despawn_player: packet_despawn_player
+         if message: packet_message
+         if disconnect_player: packet_disconnect_player
+         if update_user_type: packet_update_user_type

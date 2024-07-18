@@ -83,58 +83,62 @@
       ]
     ],
     "particleData": [
-        "switch",
-        {
-          "compareTo": "$compareTo",
-          "fields": {
-            "3": [
-                "container", [
-                    {
-                        "name": "blockState",
-                        "type": "varint"
-                    }
-                ]
-            ],
-            "11": [
-                "container", [
-                    {
-                        "name": "red",
-                        "type": "f32"
-                    },
-                    {
-                        "name": "green",
-                        "type": "f32"
-                    },
-                    {
-                        "name": "blue",
-                        "type": "f32"
-                    },
-                    {
-                        "name": "scale",
-                        "type": "f32"
-                    }
-                ]
-            ],
-            "20": [
-                "container", [
-                    {
-                        "name": "blockState",
-                        "type": "varint"
-                    }
-                ]
-            ],
-            "27":  [
-                "container", [
-                    {
-                        "name": "item",
-                        "type": "slot"
-                    }
-                ]
+      "switch",
+      {
+        "compareTo": "$compareTo",
+        "fields": {
+          "3": [
+            "container",
+            [
+              {
+                "name": "blockState",
+                "type": "varint"
+              }
             ]
-          },
-          "default": "void"
-        }
-      ],
+          ],
+          "11": [
+            "container",
+            [
+              {
+                "name": "red",
+                "type": "f32"
+              },
+              {
+                "name": "green",
+                "type": "f32"
+              },
+              {
+                "name": "blue",
+                "type": "f32"
+              },
+              {
+                "name": "scale",
+                "type": "f32"
+              }
+            ]
+          ],
+          "20": [
+            "container",
+            [
+              {
+                "name": "blockState",
+                "type": "varint"
+              }
+            ]
+          ],
+          "27": [
+            "container",
+            [
+              {
+                "name": "item",
+                "type": "slot"
+              }
+            ]
+          ]
+        },
+        "default": "void"
+      }
+    ],
     "ingredient": [
       "array",
       {
@@ -1044,21 +1048,21 @@
           ]
         ],
         "packet_login_plugin_response": [
-            "container",
-            [
-              {
-                "name": "messageId",
-                "type": "varint"
-              },
-              {
-                "name": "data",
-                "type": [
-                  "option",
-                  "restBuffer"
-                ]
-              }
-            ]
-          ],
+          "container",
+          [
+            {
+              "name": "messageId",
+              "type": "varint"
+            },
+            {
+              "name": "data",
+              "type": [
+                "option",
+                "restBuffer"
+              ]
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -1424,10 +1428,26 @@
                                       "type": [
                                         "bitfield",
                                         [
-                                          { "name": "_unused", "size": 29, "signed": false },
-                                          { "name": "hidden", "size": 1, "signed": false },
-                                          { "name": "show_toast", "size": 1, "signed": false },
-                                          { "name": "has_background_texture", "size": 1, "signed": false }
+                                          {
+                                            "name": "_unused",
+                                            "size": 29,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "hidden",
+                                            "size": 1,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "show_toast",
+                                            "size": 1,
+                                            "signed": false
+                                          },
+                                          {
+                                            "name": "has_background_texture",
+                                            "size": 1,
+                                            "signed": false
+                                          }
                                         ]
                                       ]
                                     },
@@ -1738,19 +1758,22 @@
                 "array",
                 {
                   "countType": "varint",
-                  "type": ["container",[
-                    {
-                      "name": "match",
-                      "type": "string"
-                    },
-                    {
-                      "name": "tooltip",
-                      "type": [
-                        "option",
-                        "string"
-                      ]
-                    }
-                  ]]
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "match",
+                        "type": "string"
+                      },
+                      {
+                        "name": "tooltip",
+                        "type": [
+                          "option",
+                          "string"
+                        ]
+                      }
+                    ]
+                  ]
                 }
               ]
             }
@@ -1776,68 +1799,68 @@
           ]
         ],
         "packet_face_player": [
-            "container",
-            [
-              {
-                "name": "feet_eyes",
-                "type": "varint"
-              },
-              {
-                "name": "x",
-                "type": "f64"
-              },
-              {
-                "name": "y",
-                "type": "f64"
-              },
-              {
-                "name": "z",
-                "type": "f64"
-              },
-              {
-                "name": "isEntity",
-                "type": "bool"
-              },
-              {
-                "name": "entityId",
-                "type": [
-                  "switch",
-                  {
-                    "compareTo": "isEntity",
-                    "fields": {
-                      "true": "varint"
-                    },
-                    "default": "void"
-                  }
-                ]
-              },
-              {
-                "name": "entity_feet_eyes",
-                "type": [
-                  "switch",
-                  {
-                    "compareTo": "isEntity",
-                    "fields": {
-                      "true": "string"
-                    },
-                    "default": "void"
-                  }
-                ]
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "feet_eyes",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "isEntity",
+              "type": "bool"
+            },
+            {
+              "name": "entityId",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "isEntity",
+                  "fields": {
+                    "true": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "entity_feet_eyes",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "isEntity",
+                  "fields": {
+                    "true": "string"
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
         ],
         "packet_nbt_query_response": [
-            "container",
-            [
-              {
-                "name": "transactionId",
-                "type": "varint"
-              },
-              {
-                "name": "nbt",
-                "type": "optionalNbt"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "transactionId",
+              "type": "varint"
+            },
+            {
+              "name": "nbt",
+              "type": "optionalNbt"
+            }
+          ]
         ],
         "packet_chat": [
           "container",
@@ -2210,9 +2233,10 @@
             {
               "name": "blockEntities",
               "type": [
-                "array",{
-                  "countType":"varint",
-                  "type":"nbt"
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "nbt"
                 }
               ]
             }
@@ -2285,10 +2309,10 @@
             {
               "name": "data",
               "type": [
-                  "particleData",
-                  {
-                      "compareTo": "particleId"
-                  }
+                "particleData",
+                {
+                  "compareTo": "particleId"
+                }
               ]
             }
           ]
@@ -2368,7 +2392,10 @@
                       },
                       {
                         "name": "displayName",
-                        "type": ["option", "string"]
+                        "type": [
+                          "option",
+                          "string"
+                        ]
                       }
                     ]
                   ]
@@ -2848,18 +2875,18 @@
               "type": "bool"
             },
             {
-              "name":"recipes1",
-              "type":[
+              "name": "recipes1",
+              "type": [
                 "array",
                 {
-                  "countType":"varint",
-                  "type":"string"
+                  "countType": "varint",
+                  "type": "string"
                 }
               ]
             },
             {
-              "name":"recipes2",
-              "type":[
+              "name": "recipes2",
+              "type": [
                 "switch",
                 {
                   "compareTo": "action",
@@ -2867,8 +2894,8 @@
                     "0": [
                       "array",
                       {
-                        "countType":"varint",
-                        "type":"string"
+                        "countType": "varint",
+                        "type": "string"
                       }
                     ]
                   },
@@ -3543,25 +3570,31 @@
             },
             {
               "name": "source",
-              "type": ["switch",{
-                "compareTo":"flags",
-                "fields": {
-                  "3": "varint",
-                  "1": "varint"
-                },
-                "default": "void"
-              }]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "flags",
+                  "fields": {
+                    "1": "varint",
+                    "3": "varint"
+                  },
+                  "default": "void"
+                }
+              ]
             },
             {
               "name": "sound",
-              "type": ["switch",{
-                "compareTo":"flags",
-                "fields": {
-                  "3": "string",
-                  "2": "string"
-                },
-                "default": "void"
-              }]
+              "type": [
+                "switch",
+                {
+                  "compareTo": "flags",
+                  "fields": {
+                    "2": "string",
+                    "3": "string"
+                  },
+                  "default": "void"
+                }
+              ]
             }
           ]
         ],
@@ -3760,126 +3793,162 @@
           [
             {
               "name": "recipes",
-              "type": ["array",{
-                "countType": "varint",
-                "type":["container",[
-                  {
-                    "name": "recipeId",
-                    "type": "string"
-                  },
-                  {
-                    "name": "type",
-                    "type": "string"
-                  },
-                  {
-                    "name": "data",
-                    "type": ["switch", {
-                      "compareTo": "type",
-                      "fields": {
-                        "crafting_shapeless": ["container",[
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "recipeId",
+                        "type": "string"
+                      },
+                      {
+                        "name": "type",
+                        "type": "string"
+                      },
+                      {
+                        "name": "data",
+                        "type": [
+                          "switch",
                           {
-                            "name": "group",
-                            "type": "string"
-                          },
-                          {
-                            "name": "ingredients",
-                            "type": ["array",{
-                              "countType": "varint",
-                              "type": "ingredient"
-                            }]
-                          },
-                          {
-                            "name": "result",
-                            "type": "slot"
-                          }
-                        ]],
-                        "crafting_shaped": ["container",[
-                          {
-                            "name": "width",
-                            "type": "varint"
-                          },
-                          {
-                            "name": "height",
-                            "type": "varint"
-                          },
-                          {
-                            "name": "group",
-                            "type": "string"
-                          },
-                          {
-                            "name": "ingredients",
-                            "type": ["array",{
-                              "count": "width",
-                              "type": ["array",{
-                                "count": "height",
-                                "type": "ingredient"
-                              }]
-                            }]
-                          },
-                          {
-                            "name": "result",
-                            "type": "slot"
-                          }
-                        ]],
-                        "crafting_special_armordye": "void",
-                        "crafting_special_bookcloning": "void",
-                        "crafting_special_mapcloning": "void",
-                        "crafting_special_mapextending": "void",
-                        "crafting_special_firework_rocket": "void",
-                        "crafting_special_firework_star": "void",
-                        "crafting_special_firework_star_fade": "void",
-                        "crafting_special_repairitem": "void",
-                        "crafting_special_tippedarrow": "void",
-                        "crafting_special_bannerduplicate": "void",
-                        "crafting_special_banneraddpattern": "void",
-                        "crafting_special_shielddecoration": "void",
-                        "crafting_special_shulkerboxcoloring": "void",
-                        "smelting": ["container",[
-                            {
-                              "name": "group",
-                              "type": "string"
-                            },
-                            {
-                              "name": "ingredient",
-                              "type": "ingredient"
-                            },
-                            {
-                              "name": "result",
-                              "type": "slot"
-                            },
-                            {
-                              "name": "experience",
-                              "type": "f32"
-                            },
-                            {
-                              "name": "cookTime",
-                              "type": "varint"
+                            "compareTo": "type",
+                            "fields": {
+                              "crafting_shapeless": [
+                                "container",
+                                [
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredients",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": "ingredient"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "crafting_shaped": [
+                                "container",
+                                [
+                                  {
+                                    "name": "width",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "height",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredients",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "count": "width",
+                                        "type": [
+                                          "array",
+                                          {
+                                            "count": "height",
+                                            "type": "ingredient"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  }
+                                ]
+                              ],
+                              "crafting_special_armordye": "void",
+                              "crafting_special_bookcloning": "void",
+                              "crafting_special_mapcloning": "void",
+                              "crafting_special_mapextending": "void",
+                              "crafting_special_firework_rocket": "void",
+                              "crafting_special_firework_star": "void",
+                              "crafting_special_firework_star_fade": "void",
+                              "crafting_special_repairitem": "void",
+                              "crafting_special_tippedarrow": "void",
+                              "crafting_special_bannerduplicate": "void",
+                              "crafting_special_banneraddpattern": "void",
+                              "crafting_special_shielddecoration": "void",
+                              "crafting_special_shulkerboxcoloring": "void",
+                              "smelting": [
+                                "container",
+                                [
+                                  {
+                                    "name": "group",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "ingredient",
+                                    "type": "ingredient"
+                                  },
+                                  {
+                                    "name": "result",
+                                    "type": "slot"
+                                  },
+                                  {
+                                    "name": "experience",
+                                    "type": "f32"
+                                  },
+                                  {
+                                    "name": "cookTime",
+                                    "type": "varint"
+                                  }
+                                ]
+                              ]
                             }
-                        ]]
+                          }
+                        ]
                       }
-                    }]
-                  }
-                ]]
-              }]
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ],
-        "tags":["array",{
-          "countType": "varint",
-          "type": ["container", [
-            {
-              "name": "tagName",
-              "type": "string"
-            },
-            {
-              "name": "entries",
-              "type": ["array",{
-                "countType": "varint",
-                "type": "varint"
-              }]
-            }
-          ]]
-        }],
+        "tags": [
+          "array",
+          {
+            "countType": "varint",
+            "type": [
+              "container",
+              [
+                {
+                  "name": "tagName",
+                  "type": "string"
+                },
+                {
+                  "name": "entries",
+                  "type": [
+                    "array",
+                    {
+                      "countType": "varint",
+                      "type": "varint"
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        ],
         "packet_tags": [
           "container",
           [
@@ -4110,191 +4179,190 @@
           ]
         ],
         "packet_query_block_nbt": [
-            "container",
-            [
-              {
-                "name": "transactionId",
-                "type": "varint"
-              },
-              {
-                "name": "location",
-                "type": "position"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "transactionId",
+              "type": "varint"
+            },
+            {
+              "name": "location",
+              "type": "position"
+            }
+          ]
         ],
         "packet_edit_book": [
-            "container",
-            [
-              {
-                "name": "new_book",
-                "type": "slot"
-              },
-              {
-                "name": "signing",
-                "type": "bool"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "new_book",
+              "type": "slot"
+            },
+            {
+              "name": "signing",
+              "type": "bool"
+            }
+          ]
         ],
         "packet_query_entity_nbt": [
-            "container",
-            [
-              {
-                "name": "transactionId",
-                "type": "varint"
-              },
-              {
-                "name": "entityId",
-                "type": "varint"
-              }
-            ]
+          "container",
+          [
+            {
+              "name": "transactionId",
+              "type": "varint"
+            },
+            {
+              "name": "entityId",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_pick_item": [
-            "container",
-            [
-                {
-                    "name": "slot",
-                    "type": "varint"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "slot",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_name_item": [
-            "container",
-            [
-                {
-                    "name": "name",
-                    "type": "string"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "name",
+              "type": "string"
+            }
+          ]
         ],
         "packet_select_trade": [
-            "container",
-            [
-                {
-                    "name": "slot",
-                    "type": "varint"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "slot",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_set_beacon_effect": [
-            "container",
-            [
-                {
-                    "name": "primary_effect",
-                    "type": "varint"
-                },
-                {
-                    "name": "secondary_effect",
-                    "type": "varint"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "primary_effect",
+              "type": "varint"
+            },
+            {
+              "name": "secondary_effect",
+              "type": "varint"
+            }
+          ]
         ],
         "packet_update_command_block": [
-            "container",
-            [
-                {
-                    "name": "location",
-                    "type": "position"
-                },
-                {
-                    "name": "command",
-                    "type": "string"
-                },
-                {
-                    "name": "mode",
-                    "type": "varint"
-                },
-                {
-                    "name": "flags",
-                    "type": "u8"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "command",
+              "type": "string"
+            },
+            {
+              "name": "mode",
+              "type": "varint"
+            },
+            {
+              "name": "flags",
+              "type": "u8"
+            }
+          ]
         ],
         "packet_update_command_block_minecart": [
-            "container",
-            [
-                {
-                    "name": "entityId",
-                    "type": "varint"
-                },
-                {
-                    "name": "command",
-                    "type": "string"
-                }
-                ,
-                {
-                    "name": "track_output",
-                    "type": "bool"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "command",
+              "type": "string"
+            },
+            {
+              "name": "track_output",
+              "type": "bool"
+            }
+          ]
         ],
         "packet_update_structure_block": [
-            "container",
-            [
-                {
-                    "name": "location",
-                    "type": "position"
-                },
-                {
-                    "name": "action",
-                    "type": "varint"
-                },
-                {
-                    "name": "mode",
-                    "type": "varint"
-                },
-                {
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "name": "offset_x",
-                    "type": "i8"
-                },
-                {
-                    "name": "offset_y",
-                    "type": "i8"
-                },
-                {
-                    "name": "offset_z",
-                    "type": "i8"
-                },
-                {
-                    "name": "size_x",
-                    "type": "i8"
-                },
-                {
-                    "name": "size_y",
-                    "type": "i8"
-                },
-                {
-                    "name": "size_z",
-                    "type": "i8"
-                },
-                {
-                    "name": "mirror",
-                    "type": "varint"
-                },
-                {
-                    "name": "rotation",
-                    "type": "varint"
-                },
-                {
-                    "name": "metadata",
-                    "type": "string"
-                },
-                {
-                    "name": "integrity",
-                    "type": "f32"
-                },
-                {
-                    "name": "seed",
-                    "type": "varlong"
-                },
-                {
-                    "name": "flags",
-                    "type": "u8"
-                }
-            ]
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "action",
+              "type": "varint"
+            },
+            {
+              "name": "mode",
+              "type": "varint"
+            },
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "offset_x",
+              "type": "i8"
+            },
+            {
+              "name": "offset_y",
+              "type": "i8"
+            },
+            {
+              "name": "offset_z",
+              "type": "i8"
+            },
+            {
+              "name": "size_x",
+              "type": "i8"
+            },
+            {
+              "name": "size_y",
+              "type": "i8"
+            },
+            {
+              "name": "size_z",
+              "type": "i8"
+            },
+            {
+              "name": "mirror",
+              "type": "varint"
+            },
+            {
+              "name": "rotation",
+              "type": "varint"
+            },
+            {
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "name": "integrity",
+              "type": "f32"
+            },
+            {
+              "name": "seed",
+              "type": "varlong"
+            },
+            {
+              "name": "flags",
+              "type": "u8"
+            }
+          ]
         ],
         "packet_tab_complete": [
           "container",
@@ -4719,13 +4787,13 @@
               "type": "varint"
             },
             {
-              "anon":true,
-              "type":[
+              "anon": true,
+              "type": [
                 "switch",
                 {
-                  "compareTo":"type",
-                  "fields":{
-                    "0":[
+                  "compareTo": "type",
+                  "fields": {
+                    "0": [
                       "container",
                       [
                         {
@@ -4885,7 +4953,7 @@
               "type": [
                 "switch",
                 {
-                  "compareTo":"action",
+                  "compareTo": "action",
                   "fields": {
                     "0": "string",
                     "1": "void"
