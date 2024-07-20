@@ -56,7 +56,150 @@
          if 0: void
          default:
             itemId: varint
-            nbtData: anonOptionalNbt
+# https://wiki.vg/Slot_Data#Structured_components
+# +    public static final DataComponentType<CompoundTag> CUSTOM_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+# +    public static final IntComponentType MAX_STACK_SIZE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final IntComponentType MAX_DAMAGE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final IntComponentType DAMAGE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final BooleanComponentType UNBREAKABLE = new BooleanComponentType(ByteBuf::readBoolean, ByteBuf::writeBoolean, BooleanDataComponent::new);
+# +    public static final DataComponentType<Component> CUSTOM_NAME = new DataComponentType<>(ItemCodecHelper::readComponent, ItemCodecHelper::writeComponent, ObjectDataComponent::new);
+# +    public static final DataComponentType<Component> ITEM_NAME = new DataComponentType<>(ItemCodecHelper::readComponent, ItemCodecHelper::writeComponent, ObjectDataComponent::new);
+# +    public static final DataComponentType<List<Component>> LORE = new DataComponentType<>(listReader(ItemCodecHelper::readComponent), listWriter(ItemCodecHelper::writeComponent), ObjectDataComponent::new);
+# +    public static final IntComponentType RARITY = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final DataComponentType<ItemEnchantments> ENCHANTMENTS = new DataComponentType<>(ItemCodecHelper::readItemEnchantments, ItemCodecHelper::writeItemEnchantments, ObjectDataComponent::new);
+# +    public static final DataComponentType<AdventureModePredicate> CAN_PLACE_ON = new DataComponentType<>(ItemCodecHelper::readAdventureModePredicate, ItemCodecHelper::writeAdventureModePredicate, ObjectDataComponent::new);
+# +    public static final DataComponentType<AdventureModePredicate> CAN_BREAK = new DataComponentType<>(ItemCodecHelper::readAdventureModePredicate, ItemCodecHelper::writeAdventureModePredicate, ObjectDataComponent::new);
+# +    public static final DataComponentType<ItemAttributeModifiers> ATTRIBUTE_MODIFIERS = new DataComponentType<>(ItemCodecHelper::readItemAttributeModifiers, ItemCodecHelper::writeItemAttributeModifiers, ObjectDataComponent::new);
+# +    public static final IntComponentType CUSTOM_MODEL_DATA = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final DataComponentType<Unit> HIDE_ADDITIONAL_TOOLTIP = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
+# +    public static final DataComponentType<Unit> HIDE_TOOLTIP = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
+# +    public static final IntComponentType REPAIR_COST = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final DataComponentType<Unit> CREATIVE_SLOT_LOCK = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
+# +    public static final BooleanComponentType ENCHANTMENT_GLINT_OVERRIDE = new BooleanComponentType(ByteBuf::readBoolean, ByteBuf::writeBoolean, BooleanDataComponent::new);
+# +    public static final DataComponentType<CompoundTag> INTANGIBLE_PROJECTILE = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+# +    public static final DataComponentType<FoodProperties> FOOD = new DataComponentType<>(ItemCodecHelper::readFoodProperties, ItemCodecHelper::writeFoodProperties, ObjectDataComponent::new);
+# +    public static final DataComponentType<Unit> FIRE_RESISTANT = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
+# +    public static final DataComponentType<ToolData> TOOL = new DataComponentType<>(ItemCodecHelper::readToolData, ItemCodecHelper::writeToolData, ObjectDataComponent::new);
+# +    public static final DataComponentType<ItemEnchantments> STORED_ENCHANTMENTS = new DataComponentType<>(ItemCodecHelper::readItemEnchantments, ItemCodecHelper::writeItemEnchantments, ObjectDataComponent::new);
+# +    public static final DataComponentType<DyedItemColor> DYED_COLOR = new DataComponentType<>(ItemCodecHelper::readDyedItemColor, ItemCodecHelper::writeDyedItemColor, ObjectDataComponent::new);
+# +    public static final IntComponentType MAP_COLOR = new IntComponentType((helper, input) -> input.readInt(), (helper, output, value) -> output.writeInt(value), IntDataComponent::new);
+# +    public static final IntComponentType MAP_ID = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final DataComponentType<CompoundTag> MAP_DECORATIONS = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+# +    public static final IntComponentType MAP_POST_PROCESSING = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final DataComponentType<List<ItemStack>> CHARGED_PROJECTILES = new DataComponentType<>(listReader(ItemCodecHelper::readItemStack), listWriter(ItemCodecHelper::writeItemStack), ObjectDataComponent::new);
+# +    public static final DataComponentType<List<ItemStack>> BUNDLE_CONTENTS = new DataComponentType<>(listReader(ItemCodecHelper::readItemStack), listWriter(ItemCodecHelper::writeItemStack), ObjectDataComponent::new);
+# +    public static final DataComponentType<PotionContents> POTION_CONTENTS = new DataComponentType<>(ItemCodecHelper::readPotionContents, ItemCodecHelper::writePotionContents, ObjectDataComponent::new);
+# +    public static final DataComponentType<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = new DataComponentType<>(listReader(ItemCodecHelper::readStewEffect), listWriter(ItemCodecHelper::writeStewEffect), ObjectDataComponent::new);
+# +    public static final DataComponentType<WritableBookContent> WRITABLE_BOOK_CONTENT = new DataComponentType<>(ItemCodecHelper::readWritableBookContent, ItemCodecHelper::writeWritableBookContent, ObjectDataComponent::new);
+# +    public static final DataComponentType<WrittenBookContent> WRITTEN_BOOK_CONTENT = new DataComponentType<>(ItemCodecHelper::readWrittenBookContent, ItemCodecHelper::writeWrittenBookContent, ObjectDataComponent::new);
+# +    public static final DataComponentType<ArmorTrim> TRIM = new DataComponentType<>(ItemCodecHelper::readArmorTrim, ItemCodecHelper::writeArmorTrim, ObjectDataComponent::new);
+# +    public static final DataComponentType<CompoundTag> DEBUG_STICK_STATE = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+# +    public static final DataComponentType<CompoundTag> ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+# +    public static final DataComponentType<CompoundTag> BUCKET_ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+# +    public static final DataComponentType<CompoundTag> BLOCK_ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+# +    public static final DataComponentType<Holder<Instrument>> INSTRUMENT = new DataComponentType<>(ItemCodecHelper::readInstrument, ItemCodecHelper::writeInstrument, ObjectDataComponent::new);
+# +    public static final IntComponentType OMINOUS_BOTTLE_AMPLIFIER = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final DataComponentType<ListTag> RECIPES = new DataComponentType<>(ItemCodecHelper::readRecipes, ItemCodecHelper::writeRecipes, ObjectDataComponent::new);
+# +    public static final DataComponentType<LodestoneTracker> LODESTONE_TRACKER = new DataComponentType<>(ItemCodecHelper::readLodestoneTarget, ItemCodecHelper::writeLodestoneTarget, ObjectDataComponent::new);
+# +    public static final DataComponentType<Fireworks.FireworkExplosion> FIREWORK_EXPLOSION = new DataComponentType<>(ItemCodecHelper::readFireworkExplosion, ItemCodecHelper::writeFireworkExplosion, ObjectDataComponent::new);
+# +    public static final DataComponentType<Fireworks> FIREWORKS = new DataComponentType<>(ItemCodecHelper::readFireworks, ItemCodecHelper::writeFireworks, ObjectDataComponent::new);
+# +    public static final DataComponentType<GameProfile> PROFILE = new DataComponentType<>(ItemCodecHelper::readResolvableProfile, ItemCodecHelper::writeResolvableProfile, ObjectDataComponent::new);
+# +    public static final DataComponentType<String> NOTE_BLOCK_SOUND = new DataComponentType<>(ItemCodecHelper::readResourceLocation, ItemCodecHelper::writeResourceLocation, ObjectDataComponent::new);
+# +    public static final DataComponentType<List<BannerPatternLayer>> BANNER_PATTERNS = new DataComponentType<>(listReader(ItemCodecHelper::readBannerPatternLayer), listWriter(ItemCodecHelper::writeBannerPatternLayer), ObjectDataComponent::new);
+# +    public static final IntComponentType BASE_COLOR = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
+# +    public static final DataComponentType<List<Integer>> POT_DECORATIONS = new DataComponentType<>(listReader(ItemCodecHelper::readVarInt), listWriter(ItemCodecHelper::writeVarInt), ObjectDataComponent::new);
+# +    public static final DataComponentType<List<ItemStack>> CONTAINER = new DataComponentType<>(listReader(ItemCodecHelper::readOptionalItemStack), listWriter(MinecraftCodecHelper::writeOptionalItemStack), ObjectDataComponent::new);
+# +    public static final DataComponentType<BlockStateProperties> BLOCK_STATE = new DataComponentType<>(ItemCodecHelper::readBlockStateProperties, ItemCodecHelper::writeBlockStateProperties, ObjectDataComponent::new);
+# +    public static final DataComponentType<List<BeehiveOccupant>> BEES = new DataComponentType<>(listReader(ItemCodecHelper::readBeehiveOccupant), listWriter(ItemCodecHelper::writeBeehiveOccupant), ObjectDataComponent::new);
+# +    public static final DataComponentType<StringTag> LOCK = new DataComponentType<>(ItemCodecHelper::readLock, ItemCodecHelper::writeLock, ObjectDataComponent::new);
+# +    public static final DataComponentType<CompoundTag> CONTAINER_LOOT = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+            components: []varint
+               type: varint =>
+                  - custom_data
+                  - max_stack_size
+                  - max_damage
+                  - damage
+                  - unbreakable
+                  - custom_name
+                  - item_name
+                  - lore
+                  - rarity
+                  - enchantments
+                  - can_place_on
+                  - can_break
+                  - attribute_modifiers
+                  - custom_model_data
+                  - hide_additional_tooltip
+                  - hide_tooltip
+                  - creative_slot_lock
+                  - enchantment_glint_override
+                  - intangible_projectile
+                  - food
+                  - fire_resistant
+                  - tool
+                  - stored_enchantments
+                  - dyed_color
+                  - map_color
+                  - map_id
+                  - map_decorations
+                  - map_post_processing
+                  - charged_projectiles
+                  - bundle_contents
+                  - potion_contents
+                  - suspicious_stew_effects
+                  - writable_book_content
+                  - written_book_content
+                  - trim
+                  - debug_stick_state
+                  - entity_data
+                  - bucket_entity_data
+                  - block_entity_data
+                  - instrument
+                  - ominous_bottle_amplifier
+                  - jukebox_playable
+                  - recipes
+                  - lodestone_tracker
+                  - firework_explosion
+                  - fireworks
+                  - profile
+                  - note_block_sound
+                  - banner_patterns
+                  - base_color
+                  - pot_decorations
+                  - container
+                  - block_state
+                  - bees
+                  - lock
+                  - container_loot
+               data: type ?
+                  # TODO: look into how nbt works here
+                  if custom_data: anonOptionalNbt
+                  if max_stack_size: varint
+                  if max_damage: varint
+                  if damage: varint
+                  if unbreakable: bool
+                  if custom_name: anonOptionalNbt
+                  if item_name: anonOptionalNbt
+                  if lore: anonOptionalNbt[]varint
+                  if rarity: varint
+                  if enchantments:
+                     enchantments: []varint
+                        id: varint
+                        level: varint
+                     showTooltip: bool
+                  if can_place_on:
+                     predicates: []varint
+                        hasBlocks: bool
+                        blockSet?: []varint
+                           type: varint
+                           name: type ?
+                              if 0: string
+                              default: void
+                           # TODO: This will require a custom type ; we need type - 1 length of blockIds
+                           blockIds: type ?
+                              if 0: void
+                              default: varint[]varint
+
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
       type: varint =>
