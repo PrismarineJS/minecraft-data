@@ -85,7 +85,16 @@ These are the projects that use minecraft-data:
 
 ## Extraction
 
+### Java Edition
+
 The recommended way to extract the data is documented at [add-data-new-version.md](https://github.com/PrismarineJS/minecraft-data/blob/master/doc/add-data-new-version.md).
+
+The [minecraft-data-auto-updater](https://github.com/PrismarineJS/minecraft-data-auto-updater) calls [minecraft-data-generator-server](https://github.com/PrismarineJS/minecraft-data-generator-server).
+
+### Bedrock Edition
+
+See [bedrock.md](./doc/bedrock.md) for information on updating data.
+
 Specifically, [minecraft-data-auto-updater](https://github.com/PrismarineJS/minecraft-data-auto-updater) calls [minecraft-data-generator-server](https://github.com/PrismarineJS/minecraft-data-generator-server)
 
 Projects that provide data:
