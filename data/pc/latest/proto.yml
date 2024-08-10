@@ -189,16 +189,72 @@
                      showTooltip: bool
                   if can_place_on:
                      predicates: []varint
-                        hasBlocks: bool
-                        blockSet?: []varint
-                           type: varint
-                           name: type ?
-                              if 0: string
-                              default: void
-                           # TODO: This will require a custom type ; we need type - 1 length of blockIds
-                           blockIds: type ?
-                              if 0: void
-                              default: varint[]varint
+                        blockSet?: BlockSet[]varint
+                        properties?: BlockProperty[]varint
+                        nbt: anonOptionalNbt
+                     showTooltip: bool
+                  if can_break:
+                     predicates: []varint
+                        blockSet?: BlockSet[]varint
+                        properties?: BlockProperty[]varint
+                        nbt: anonOptionalNbt
+                     showTooltip: bool
+                  if attribute_modifiers:
+                     attributes: []varint
+                        typeId: varint
+                        uniqueId: uuid
+                        name: string
+                        value: f64
+                        operation: varint =>
+                        - add
+                        - multiply_base
+                        - multiply_total
+                        slot: varint =>
+                        - any
+                        - main_hand
+                        - off_hand
+                        - hand
+                        - feet
+                        - legs
+                        - chest
+                        - head
+                        - armor
+                        - body
+                     showTooltip: bool
+                  if custom_model_data: varint
+                  if hide_additional_tooltip: void
+                  if hide_tooltip: void
+                  if repair_cost: varint
+                  if creative_slot_lock: void
+                  if enchantment_glint_override: bool
+                  if intangible_projectile: void
+                  
+
+
+                        
+
+   BlockSet:
+      type: varint
+      name: type ?
+         if 0: string
+         default: void
+      # TODO: This will require a custom type ; we need type - 1 length of blockIds
+      blockIds: type ?
+         if 0: void
+         #default: varint[]varint
+         default: ["arrayWithLengthOffset", {"count": "type", "type": "varint"}]
+
+   BlockProperty:
+      # Name of the block state property.
+      name: string
+      # Whether this is an exact value match, as opposed to ranged.
+      isExactMatch: bool
+      # Value of the block state property. Only present in exact match mode.
+      exactValue?: string
+      # Minimum value of the block state property range. Only present in ranged match mode.
+      minValue?: string
+      # Maximum value of the block state property range. Only present in ranged match mode.
+      maxValue?: string
 
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
