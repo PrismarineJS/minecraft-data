@@ -8,7 +8,6 @@ BehaviourPackInfos: []li16
    sub_pack_name: string
    content_identity: string
    has_scripts: bool
-   addon_pack: bool
 
 TexturePackInfos: []li16
    uuid: string
@@ -18,7 +17,6 @@ TexturePackInfos: []li16
    sub_pack_name: string
    content_identity: string
    has_scripts: bool
-   addon_pack: bool
    rtx_enabled: bool
 
 ResourcePackIdVersions: []varint
@@ -477,8 +475,6 @@ Link:
    type: u8
    immediate: bool
    rider_initiated: bool
-   # angular velocity of the vehicle that the rider is riding.
-   angular_velocity: lf32
 
 Links: Link[]varint
 
@@ -529,14 +525,6 @@ TransactionUseItem:
       0: click_block
       1: click_air
       2: break_block
-   # TriggerType is the type of the trigger that caused the inventory transaction. It is one of the trigger
-   # types found in the constants above. If TriggerType is TriggerTypePlayerInput, the transaction is from
-   # the initial input of the player. If it is TriggerTypeSimulationTick, the transaction is from a simulation
-   # tick when the player is holding down the input.
-   trigger_type: varint =>
-   - unknown
-   - player_input
-   - simulation_tick
    # BlockPosition is the position of the block that was interacted with. This is only really a correct
    # block position if ActionType is not UseItemActionClickAir.
    block_position: BlockCoordinates
@@ -558,10 +546,6 @@ TransactionUseItem:
    # BlockRuntimeID is the runtime ID of the block that was clicked. It may be used by the server to verify
    # that the player's world client-side is synchronised with the server's.
    block_runtime_id: varint
-   # ClientPrediction is the client's prediction on the output of the transaction.
-   client_prediction: varint =>
-   - failure
-   - success
 
 # Actions is a list of actions that took place, that form the inventory transaction together. Each of
 # these actions hold one slot in which one item was changed to another. In general, the combination of
@@ -934,8 +918,6 @@ Action: zigzag32 =>
 StackRequestSlotInfo:
    # ContainerID is the ID of the container that the slot was in.
    slot_type: ContainerSlotType
-   # DynamicContainerID is the ID of the container if it is dynamic. If the container is not dynamic, this field is set to 0.
-   dynamic_container_id: lu32
    # Slot is the index of the slot within the container with the ContainerID above. 
    slot: u8
    # StackNetworkID is the unique stack ID that the client assumes to be present in this slot. The server
@@ -1067,24 +1049,19 @@ ItemStackRequest:
             # one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
             # of 1.16.
             recipe_network_id: varint
-            times_crafted: u8
          if craft_recipe_auto:
             # RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
             # one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
             recipe_network_id: varint
-            # TODO: Duplicate field?
-            times_crafted_2: u8
             times_crafted: u8
             ingredients: RecipeIngredient[]varint
          if craft_creative:
             # The stack ID of the creative item that is being created. This is one of the
             # creative item stack IDs sent in the CreativeContent packet.
             item_id: varint
-            times_crafted: u8
          if optional:
             # For the cartography table, if a certain MULTI recipe is being called, this points to the network ID that was assigned.
             recipe_network_id: varint
-            times_crafted: u8
             # Most likely the index in the request's filter strings that this action is using
             filtered_string_index: li32
          if craft_grindstone_request:
@@ -1572,7 +1549,6 @@ ContainerSlotType: u8 =>
    - creative_output
    - smithing_table_template
    - crafter
-   - dynamic
 
 SoundType: varint =>
    - ItemUseOn
@@ -2265,7 +2241,6 @@ AbilityLayers:
    - spectator
    - commands
    - editor
-   - loading_screen
    # The abilities that can be toggled between
    allowed: AbilitySet
    # The abilities that are currently active
@@ -2282,12 +2257,6 @@ CameraPresets:
    parent: string
    position: Vec3fopts
    rotation: Vec2fopts
-   # ViewOffset is only used in a follow_orbit camera and controls an offset based on a pivot point to the
-   # player, causing it to be shifted in a certain direction.
-   offset?: vec2f
-   # Radius is only used in a follow_orbit camera and controls how far away from the player the camera should
-   # be rendered.
-   radius?: f32
    ## TODO: make this an enum afer adding proper optional support inside pdefyaml
    audio_listener?: u8
    player_effects?: bool
