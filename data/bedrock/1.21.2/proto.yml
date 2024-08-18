@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.20
+!version: 1.21.2
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -118,12 +118,8 @@ packet_disconnect:
    # Specifies if the disconnection screen should be hidden when the client is disconnected, 
    # meaning it will be sent directly to the main menu.
    hide_disconnect_reason: bool
-   _: hide_disconnect_reason ?
-      if true: void
-      default:
-         # An optional message to show when disconnected.
-         message: string
-         filtered_message: string
+   # An optional message to show when disconnected.
+   message: string
 
 
 packet_resource_packs_info:
@@ -1060,7 +1056,6 @@ packet_mob_armor_equipment:
    chestplate: Item
    leggings: Item
    boots: Item
-   body: Item
 
 # Interact is sent by the client when it interacts with another entity in some way. It used to be used for
 # normal entity and block interaction, but this is no longer the case now.
@@ -1258,7 +1253,6 @@ packet_inventory_content:
    # Content is the new content of the inventory. The length of this slice must be equal to the full size of
    # the inventory window updated.
    input: ItemStacks
-   dynamic_window_id: varint
 
 # InventorySlot is sent by the server to update a single slot in one of the inventory windows that the client
 # currently has opened. Usually this is the main inventory, but it may also be the off hand or, for example,
@@ -1272,7 +1266,6 @@ packet_inventory_slot:
    # Slot is the index of the slot that the packet modifies. The new item will be set to the slot at this
    # index.
    slot: varint
-   dynamic_window_id: varint
    # NewItem is the item to be put in the slot at Slot. It will overwrite any item that may currently
    # be present in that slot.
    item: Item
@@ -1481,7 +1474,6 @@ packet_change_dimension:
    dimension: zigzag32
    position: vec3f
    respawn: bool
-   loading_screen_id?: lu32
 
 # SetPlayerGameType is sent by the server to update the game type (game mode) of the player
 packet_set_player_game_type:
@@ -2116,7 +2108,6 @@ packet_stop_sound:
    !bound: client
    name: string
    stop_all: bool
-   stop_music_legacy: bool
 
 # SetTitle is sent by the server to make a title, subtitle or action bar shown to a player. It has several
 # fields that allow setting the duration of the titles.
@@ -2152,7 +2143,6 @@ packet_set_title:
    xuid: string
    # PlatformOnlineID is either a uint64 or an empty string.
    platform_online_id: string
-   filtered_message: string
 
 packet_add_behavior_tree:
    !id: 0x59
@@ -3250,8 +3240,6 @@ packet_player_armor_damage:
       if true: zigzag32
    boots_damage: type.feet ?
       if true: zigzag32
-   body_damage: type.body ?
-      if true: zigzag32
 
 ArmorDamageType: [ "bitflags",
    {
@@ -3260,8 +3248,7 @@ ArmorDamageType: [ "bitflags",
          "head": 0b1,
          "chest": 0b10,
          "legs": 0b100,
-         "feet": 0b1000,
-         "body": 0b10000
+         "feet": 0b1000
       }
    }
 ]
@@ -3441,9 +3428,7 @@ packet_correct_player_move_prediction:
    # Delta is the change in position compared to what the client sent as its position at that specific tick.
    delta: vec3f
    vehicle_rotation: prediction_type ?
-      if vehicle:
-         rotation: vec2f
-         angular_velocity?: lf32
+      if vehicle: vec2f
    # OnGround specifies if the player was on the ground at the time of the tick below.
    on_ground: bool
    # Tick is the tick of the movement which was corrected by this packet.
@@ -3907,7 +3892,6 @@ packet_death_info:
 packet_editor_network:
    !id: 0xbe
    !bound: client
-   route_to_manager: bool
    # Payload is a network little endian compound tag holding data relevant to the editor.
    payload: nbt
 
@@ -4077,10 +4061,6 @@ packet_camera_instruction:
       position?: vec3f
       rotation?: vec2f
       facing?: vec3f
-      # TODO: Investigate when this was added
-      # ViewOffset is only used in a follow_orbit camera and controls an offset based on a pivot point to the
-      # player, causing it to be shifted in a certain direction.
-      offset?: vec2f
       default?: bool
    clear?: bool
    fade?:
@@ -4088,10 +4068,6 @@ packet_camera_instruction:
       wait_duration: lf32
       fade_out_duration: lf32
       color_rgb: vec3f
-   target?:
-      offset?: vec3f
-      entity_unique_id: li64
-   remove_target?: bool
 
 
 packet_compressed_biome_definitions:
@@ -4103,7 +4079,7 @@ packet_compressed_biome_definitions:
    # generation.
    # 
    # The data is compressed with a cursed home-brewed compression format, and it's a miracle it even works.
-   raw_payload: ByteArray
+   raw_payload: string
 
 packet_trim_data:
    !id: 0x12e

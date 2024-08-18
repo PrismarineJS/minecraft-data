@@ -90,6 +90,10 @@
             {
               "name": "has_scripts",
               "type": "bool"
+            },
+            {
+              "name": "addon_pack",
+              "type": "bool"
             }
           ]
         ]
@@ -128,6 +132,10 @@
             },
             {
               "name": "has_scripts",
+              "type": "bool"
+            },
+            {
+              "name": "addon_pack",
               "type": "bool"
             },
             {
@@ -1067,6 +1075,10 @@
         {
           "name": "rider_initiated",
           "type": "bool"
+        },
+        {
+          "name": "angular_velocity",
+          "type": "lf32"
         }
       ]
     ],
@@ -1274,6 +1286,20 @@
           ]
         },
         {
+          "name": "trigger_type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "unknown",
+                "1": "player_input",
+                "2": "simulation_tick"
+              }
+            }
+          ]
+        },
+        {
           "name": "block_position",
           "type": "BlockCoordinates"
         },
@@ -1300,6 +1326,19 @@
         {
           "name": "block_runtime_id",
           "type": "varint"
+        },
+        {
+          "name": "client_prediction",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "failure",
+                "1": "success"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -2609,6 +2648,10 @@
           "type": "ContainerSlotType"
         },
         {
+          "name": "dynamic_container_id",
+          "type": "lu32"
+        },
+        {
           "name": "slot",
           "type": "u8"
         },
@@ -2841,6 +2884,10 @@
                               {
                                 "name": "recipe_network_id",
                                 "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted",
+                                "type": "u8"
                               }
                             ]
                           ],
@@ -2850,6 +2897,10 @@
                               {
                                 "name": "recipe_network_id",
                                 "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted_2",
+                                "type": "u8"
                               },
                               {
                                 "name": "times_crafted",
@@ -2873,6 +2924,10 @@
                               {
                                 "name": "item_id",
                                 "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted",
+                                "type": "u8"
                               }
                             ]
                           ],
@@ -2882,6 +2937,10 @@
                               {
                                 "name": "recipe_network_id",
                                 "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted",
+                                "type": "u8"
                               },
                               {
                                 "name": "filtered_string_index",
@@ -3694,7 +3753,8 @@
           "59": "cursor",
           "60": "creative_output",
           "61": "smithing_table_template",
-          "62": "crafter"
+          "62": "crafter",
+          "63": "dynamic"
         }
       }
     ],
@@ -4410,7 +4470,8 @@
                 "1": "base",
                 "2": "spectator",
                 "3": "commands",
-                "4": "editor"
+                "4": "editor",
+                "5": "loading_screen"
               }
             }
           ]
@@ -4451,6 +4512,20 @@
         {
           "name": "rotation",
           "type": "Vec2fopts"
+        },
+        {
+          "name": "offset",
+          "type": [
+            "option",
+            "vec2f"
+          ]
+        },
+        {
+          "name": "radius",
+          "type": [
+            "option",
+            "f32"
+          ]
         },
         {
           "name": "audio_listener",
@@ -4796,7 +4871,8 @@
                 "306": "toggle_crafter_slot_request",
                 "307": "set_player_inventory_options",
                 "308": "set_hud",
-                "309": "award_achievement"
+                "309": "award_achievement",
+                "310": "clientbound_close_form"
               }
             }
           ]
@@ -5009,7 +5085,8 @@
                 "set_player_inventory_options": "packet_set_player_inventory_options",
                 "set_hud": "packet_set_hud",
                 "award_achievement": "packet_award_achievement",
-                "server_post_move": "packet_server_post_move"
+                "server_post_move": "packet_server_post_move",
+                "clientbound_close_form": "packet_clientbound_close_form"
               }
             }
           ]
@@ -5099,8 +5176,29 @@
           "type": "bool"
         },
         {
-          "name": "message",
-          "type": "string"
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "hide_disconnect_reason",
+              "fields": {
+                "true": "void"
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "message",
+                    "type": "string"
+                  },
+                  {
+                    "name": "filtered_message",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -6653,6 +6751,10 @@
         {
           "name": "boots",
           "type": "Item"
+        },
+        {
+          "name": "body",
+          "type": "Item"
         }
       ]
     ],
@@ -7002,6 +7104,10 @@
         {
           "name": "input",
           "type": "ItemStacks"
+        },
+        {
+          "name": "dynamic_window_id",
+          "type": "varint"
         }
       ]
     ],
@@ -7014,6 +7120,10 @@
         },
         {
           "name": "slot",
+          "type": "varint"
+        },
+        {
+          "name": "dynamic_window_id",
           "type": "varint"
         },
         {
@@ -7329,6 +7439,13 @@
         {
           "name": "respawn",
           "type": "bool"
+        },
+        {
+          "name": "loading_screen_id",
+          "type": [
+            "option",
+            "lu32"
+          ]
         }
       ]
     ],
@@ -8554,6 +8671,10 @@
         {
           "name": "stop_all",
           "type": "bool"
+        },
+        {
+          "name": "stop_music_legacy",
+          "type": "bool"
         }
       ]
     ],
@@ -8602,6 +8723,10 @@
         },
         {
           "name": "platform_online_id",
+          "type": "string"
+        },
+        {
+          "name": "filtered_message",
           "type": "string"
         }
       ]
@@ -10541,6 +10666,18 @@
               }
             }
           ]
+        },
+        {
+          "name": "body_damage",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type.body",
+              "fields": {
+                "true": "zigzag32"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -10552,7 +10689,8 @@
           "head": 1,
           "chest": 2,
           "legs": 4,
-          "feet": 8
+          "feet": 8,
+          "body": 16
         }
       }
     ],
@@ -10811,7 +10949,22 @@
             {
               "compareTo": "prediction_type",
               "fields": {
-                "vehicle": "vec2f"
+                "vehicle": [
+                  "container",
+                  [
+                    {
+                      "name": "rotation",
+                      "type": "vec2f"
+                    },
+                    {
+                      "name": "angular_velocity",
+                      "type": [
+                        "option",
+                        "lf32"
+                      ]
+                    }
+                  ]
+                ]
               }
             }
           ]
@@ -11740,6 +11893,10 @@
       "container",
       [
         {
+          "name": "route_to_manager",
+          "type": "bool"
+        },
+        {
           "name": "payload",
           "type": "nbt"
         }
@@ -12050,6 +12207,13 @@
                   ]
                 },
                 {
+                  "name": "offset",
+                  "type": [
+                    "option",
+                    "vec2f"
+                  ]
+                },
+                {
                   "name": "default",
                   "type": [
                     "option",
@@ -12093,6 +12257,35 @@
               ]
             ]
           ]
+        },
+        {
+          "name": "target",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "offset",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
+                  "name": "entity_unique_id",
+                  "type": "li64"
+                }
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "remove_target",
+          "type": [
+            "option",
+            "bool"
+          ]
         }
       ]
     ],
@@ -12101,7 +12294,7 @@
       [
         {
           "name": "raw_payload",
-          "type": "string"
+          "type": "ByteArray"
         }
       ]
     ],
@@ -12352,6 +12545,10 @@
           "type": "vec3f"
         }
       ]
+    ],
+    "packet_clientbound_close_form": [
+      "container",
+      []
     ]
   }
 }

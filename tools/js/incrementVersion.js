@@ -45,7 +45,7 @@ function updateProtocol (edition, version, protocolVersionNumber) {
   } else {
     fs.copyFileSync(latestProtoPath, oldProtoPath)
     if (edition === 'bedrock') {
-      fs.copyFileSync(join(dataRoot, 'latest', 'types.yml'), join(dataRoot, oldProtoPath, 'types.yml'))
+      fs.copyFileSync(join(dataRoot, 'latest', 'types.yml'), join(dataRoot, oldProtoVersion, 'types.yml'))
     }
     didUpdateProtocol = true
     // Update references to the old version in the dataPaths.json file
