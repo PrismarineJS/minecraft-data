@@ -1,10 +1,6 @@
 ## 3.68.0
 * [Add bedrock 1.21.20 protocol data (#902)](https://github.com/PrismarineJS/minecraft-data/commit/854446ec2b05cab0d252469e4d94c43492019f3e) (thanks @extremeheat)
-* [Add 24w33a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/979825ac748ea5ab5a60a33456b9c824b5db6bc4) (thanks @github-actions[bot])
-* [Add 1.21.1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/776e15c26713f6718d6f7f9101bc0de883f86a5b) (thanks @github-actions[bot])
-* [Add 1.21.1-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/499f8b22e1f528bd9bfd41ab986b28f7ecad6d26) (thanks @github-actions[bot])
 * [Implement protodef-yaml for mcpc (#886)](https://github.com/PrismarineJS/minecraft-data/commit/a748994fe231c356ffece37c533bcda5816b3d7a) (thanks @extremeheat)
-* [Update README.md](https://github.com/PrismarineJS/minecraft-data/commit/8a8c811c71790d75ec405429e5b50343cb77f88b) (thanks @extremeheat)
 
 ## 3.67.0
 * [Add bedrock 1.21.2 protocol data (#895)](https://github.com/PrismarineJS/minecraft-data/commit/35a8033e1ad4daba7e0d1c9a3112ab0b882251d6) (thanks @CreeperG16)
