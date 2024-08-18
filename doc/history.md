@@ -1,3 +1,7 @@
+## 3.68.0
+* [Add bedrock 1.21.20 protocol data (#902)](https://github.com/PrismarineJS/minecraft-data/commit/854446ec2b05cab0d252469e4d94c43492019f3e) (thanks @extremeheat)
+* [Implement protodef-yaml for mcpc (#886)](https://github.com/PrismarineJS/minecraft-data/commit/a748994fe231c356ffece37c533bcda5816b3d7a) (thanks @extremeheat)
+
 ## 3.67.0
 * [Add bedrock 1.21.2 protocol data (#895)](https://github.com/PrismarineJS/minecraft-data/commit/35a8033e1ad4daba7e0d1c9a3112ab0b882251d6) (thanks @CreeperG16)
 * [Correction to bedrock ItemStackRequests packet auto craft (#894)](https://github.com/PrismarineJS/minecraft-data/commit/ddd0700d1fe0c654a9f889b7263eeeaba48b0511) (thanks @extremeheat)
