@@ -1,6 +1,5 @@
 ## 3.36.1
-* [Update bedrock 1.21.2 protocol.json](https://github.com/PrismarineJS/minecraft-data/commit/f2ac2c94540ad911d98c9e523c3ba09a0b9eb6cd) (thanks @extremeheat)
-* [Update dataPaths.json fix bedrock 1.21.2](https://github.com/PrismarineJS/minecraft-data/commit/d196f9208db6844e584d17f00d80379ab81eada0) (thanks @extremeheat)
+* [Fix dataPaths.json for bedrock 1.21.2](https://github.com/PrismarineJS/minecraft-data/commit/d196f9208db6844e584d17f00d80379ab81eada0) (thanks @extremeheat)
 
 ## 3.68.0
 * [Add bedrock 1.21.20 protocol data (#902)](https://github.com/PrismarineJS/minecraft-data/commit/854446ec2b05cab0d252469e4d94c43492019f3e) (thanks @extremeheat)
