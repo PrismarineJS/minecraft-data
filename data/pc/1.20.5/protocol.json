@@ -119,13 +119,1271 @@
                     "type": "varint"
                   },
                   {
-                    "name": "nbtData",
-                    "type": "anonOptionalNbt"
+                    "name": "components",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "type",
+                              "type": [
+                                "mapper",
+                                {
+                                  "type": "varint",
+                                  "mappings": {
+                                    "0": "custom_data",
+                                    "1": "max_stack_size",
+                                    "2": "max_damage",
+                                    "3": "damage",
+                                    "4": "unbreakable",
+                                    "5": "custom_name",
+                                    "6": "item_name",
+                                    "7": "lore",
+                                    "8": "rarity",
+                                    "9": "enchantments",
+                                    "10": "can_place_on",
+                                    "11": "can_break",
+                                    "12": "attribute_modifiers",
+                                    "13": "custom_model_data",
+                                    "14": "hide_additional_tooltip",
+                                    "15": "hide_tooltip",
+                                    "16": "creative_slot_lock",
+                                    "17": "enchantment_glint_override",
+                                    "18": "intangible_projectile",
+                                    "19": "food",
+                                    "20": "fire_resistant",
+                                    "21": "tool",
+                                    "22": "stored_enchantments",
+                                    "23": "dyed_color",
+                                    "24": "map_color",
+                                    "25": "map_id",
+                                    "26": "map_decorations",
+                                    "27": "map_post_processing",
+                                    "28": "charged_projectiles",
+                                    "29": "bundle_contents",
+                                    "30": "potion_contents",
+                                    "31": "suspicious_stew_effects",
+                                    "32": "writable_book_content",
+                                    "33": "written_book_content",
+                                    "34": "trim",
+                                    "35": "debug_stick_state",
+                                    "36": "entity_data",
+                                    "37": "bucket_entity_data",
+                                    "38": "block_entity_data",
+                                    "39": "instrument",
+                                    "40": "ominous_bottle_amplifier",
+                                    "41": "jukebox_playable",
+                                    "42": "recipes",
+                                    "43": "lodestone_tracker",
+                                    "44": "firework_explosion",
+                                    "45": "fireworks",
+                                    "46": "profile",
+                                    "47": "note_block_sound",
+                                    "48": "banner_patterns",
+                                    "49": "base_color",
+                                    "50": "pot_decorations",
+                                    "51": "container",
+                                    "52": "block_state",
+                                    "53": "bees",
+                                    "54": "lock",
+                                    "55": "container_loot"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "data",
+                              "type": [
+                                "switch",
+                                {
+                                  "compareTo": "type",
+                                  "fields": {
+                                    "custom_data": "anonymousNbt",
+                                    "max_stack_size": "varint",
+                                    "max_damage": "varint",
+                                    "damage": "varint",
+                                    "unbreakable": "bool",
+                                    "custom_name": "anonymousNbt",
+                                    "item_name": "anonymousNbt",
+                                    "lore": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": "anonOptionalNbt"
+                                      }
+                                    ],
+                                    "rarity": "varint",
+                                    "enchantments": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "enchantments",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "id",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "name": "level",
+                                                    "type": "varint"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "showTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "can_place_on": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "predicates",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "BlockPredicate"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "showTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "can_break": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "predicates",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "BlockPredicate"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "showTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "attribute_modifiers": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "attributes",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "typeId",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "name": "uniqueId",
+                                                    "type": "uuid"
+                                                  },
+                                                  {
+                                                    "name": "name",
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "name": "value",
+                                                    "type": "f64"
+                                                  },
+                                                  {
+                                                    "name": "operation",
+                                                    "type": [
+                                                      "mapper",
+                                                      {
+                                                        "type": "varint",
+                                                        "mappings": {
+                                                          "0": "add",
+                                                          "1": "multiply_base",
+                                                          "2": "multiply_total"
+                                                        }
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "name": "slot",
+                                                    "type": [
+                                                      "mapper",
+                                                      {
+                                                        "type": "varint",
+                                                        "mappings": {
+                                                          "0": "any",
+                                                          "1": "main_hand",
+                                                          "2": "off_hand",
+                                                          "3": "hand",
+                                                          "4": "feet",
+                                                          "5": "legs",
+                                                          "6": "chest",
+                                                          "7": "head",
+                                                          "8": "armor",
+                                                          "9": "body"
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "showTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "custom_model_data": "varint",
+                                    "hide_additional_tooltip": "void",
+                                    "hide_tooltip": "void",
+                                    "repair_cost": "varint",
+                                    "creative_slot_lock": "void",
+                                    "enchantment_glint_override": "bool",
+                                    "intangible_projectile": "void",
+                                    "food": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "nutrition",
+                                          "type": "varint"
+                                        },
+                                        {
+                                          "name": "saturationModifier",
+                                          "type": "f32"
+                                        },
+                                        {
+                                          "name": "canAlwaysEat",
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "secondsToEat",
+                                          "type": "f32"
+                                        },
+                                        {
+                                          "name": "usingConvertsTo",
+                                          "type": "Slot"
+                                        },
+                                        {
+                                          "name": "effects",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "effect",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "name": "probability",
+                                                    "type": "f32"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "fire_resistant": "void",
+                                    "tool": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "rules",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "blocks",
+                                                    "type": [
+                                                      "array",
+                                                      {
+                                                        "countType": "varint",
+                                                        "type": "BlockSet"
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "name": "hasSpeed",
+                                                    "type": "bool"
+                                                  },
+                                                  {
+                                                    "name": "speed",
+                                                    "type": "f32"
+                                                  },
+                                                  {
+                                                    "name": "hasCorrectDropForBlocks",
+                                                    "type": "bool"
+                                                  },
+                                                  {
+                                                    "name": "correctDropForBlocks",
+                                                    "type": "bool"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "defaultMiningSpeed",
+                                          "type": "f32"
+                                        },
+                                        {
+                                          "name": "damagePerBlock",
+                                          "type": "varint"
+                                        }
+                                      ]
+                                    ],
+                                    "stored_enchantments": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "enchantments",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "id",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "name": "level",
+                                                    "type": "varint"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "showInTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "dyed_color": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "color",
+                                          "type": "varint"
+                                        },
+                                        {
+                                          "name": "showTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "map_color": "varint",
+                                    "map_id": "varint",
+                                    "map_decorations": "anonOptionalNbt",
+                                    "map_post_processing": "varint",
+                                    "charged_projectiles": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "projectiles",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "Slot"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "bundle_contents": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "contents",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "Slot"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "potion_contents": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "hasPotionId",
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "potionId",
+                                          "type": "optvarint"
+                                        },
+                                        {
+                                          "name": "hasCustomColor",
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "customColor",
+                                          "type": "optvarint"
+                                        },
+                                        {
+                                          "name": "customEffects",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "effect",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "name": "details",
+                                                    "type": "EffectDetail"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "suspicious_stew_effects": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "effects",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "effect",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "name": "duration",
+                                                    "type": "varint"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "writable_book_content": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "pages",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "BookPage"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "written_book_content": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "rawTitle",
+                                          "type": "string"
+                                        },
+                                        {
+                                          "name": "filteredTitle",
+                                          "type": [
+                                            "option",
+                                            "string"
+                                          ]
+                                        },
+                                        {
+                                          "name": "author",
+                                          "type": "string"
+                                        },
+                                        {
+                                          "name": "generation",
+                                          "type": "varint"
+                                        },
+                                        {
+                                          "name": "pages",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "BookPage"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "resolved",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "trim": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "materialType",
+                                          "type": "varint"
+                                        },
+                                        {
+                                          "anon": true,
+                                          "type": [
+                                            "switch",
+                                            {
+                                              "compareTo": "materialType",
+                                              "fields": {
+                                                "0": [
+                                                  "container",
+                                                  [
+                                                    {
+                                                      "name": "assetName",
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "name": "ingredientId",
+                                                      "type": "varint"
+                                                    },
+                                                    {
+                                                      "name": "itemModelIndex",
+                                                      "type": "f32"
+                                                    },
+                                                    {
+                                                      "name": "numberOfOverrides",
+                                                      "type": "optvarint"
+                                                    },
+                                                    {
+                                                      "name": "override",
+                                                      "type": [
+                                                        "array",
+                                                        {
+                                                          "countType": "varint",
+                                                          "type": [
+                                                            "container",
+                                                            [
+                                                              {
+                                                                "name": "armorMaterialType",
+                                                                "type": "varint"
+                                                              },
+                                                              {
+                                                                "name": "overridenAssetName",
+                                                                "type": "string"
+                                                              }
+                                                            ]
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "name": "description",
+                                                      "type": "string"
+                                                    }
+                                                  ]
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "trimPatternType",
+                                          "type": "varint"
+                                        },
+                                        {
+                                          "anon": true,
+                                          "type": [
+                                            "switch",
+                                            {
+                                              "compareTo": "trimPatternType",
+                                              "fields": {
+                                                "0": [
+                                                  "container",
+                                                  [
+                                                    {
+                                                      "name": "assetName",
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "name": "templateItem",
+                                                      "type": "varint"
+                                                    },
+                                                    {
+                                                      "name": "description",
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "name": "decal",
+                                                      "type": "bool"
+                                                    }
+                                                  ]
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "showInTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "debug_stick_state": "anonymousNbt",
+                                    "entity_data": "anonymousNbt",
+                                    "bucket_entity_data": "anonymousNbt",
+                                    "block_entity_data": "anonymousNbt",
+                                    "instrument": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "instrumentType",
+                                          "type": "varint"
+                                        },
+                                        {
+                                          "anon": true,
+                                          "type": [
+                                            "switch",
+                                            {
+                                              "compareTo": "instrumentType",
+                                              "fields": {
+                                                "0": [
+                                                  "container",
+                                                  [
+                                                    {
+                                                      "name": "soundEvent",
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "name": "useDuration",
+                                                      "type": "f32"
+                                                    },
+                                                    {
+                                                      "name": "range",
+                                                      "type": "f32"
+                                                    }
+                                                  ]
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "ominous_bottle_amplifier": "varint",
+                                    "jukebox_playable": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "directMode",
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "anon": true,
+                                          "type": [
+                                            "switch",
+                                            {
+                                              "compareTo": "directMode",
+                                              "fields": {
+                                                "false": [
+                                                  "container",
+                                                  [
+                                                    {
+                                                      "name": "jukeboxSongName",
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "name": "jukeboxSongType",
+                                                      "type": "varint"
+                                                    },
+                                                    {
+                                                      "anon": true,
+                                                      "type": [
+                                                        "switch",
+                                                        {
+                                                          "compareTo": "jukeboxSongType",
+                                                          "fields": {
+                                                            "0": [
+                                                              "container",
+                                                              [
+                                                                {
+                                                                  "name": "soundEvent",
+                                                                  "type": [
+                                                                    "container",
+                                                                    [
+                                                                      {
+                                                                        "name": "soundEventType",
+                                                                        "type": "varint"
+                                                                      },
+                                                                      {
+                                                                        "anon": true,
+                                                                        "type": [
+                                                                          "switch",
+                                                                          {
+                                                                            "compareTo": "soundEventType",
+                                                                            "fields": {
+                                                                              "0": [
+                                                                                "container",
+                                                                                [
+                                                                                  {
+                                                                                    "name": "soundName",
+                                                                                    "type": "string"
+                                                                                  },
+                                                                                  {
+                                                                                    "name": "fixedRange",
+                                                                                    "type": [
+                                                                                      "option",
+                                                                                      "f32"
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              ]
+                                                                            }
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  ]
+                                                                },
+                                                                {
+                                                                  "name": "description",
+                                                                  "type": "anonymousNbt"
+                                                                },
+                                                                {
+                                                                  "name": "duration",
+                                                                  "type": "f32"
+                                                                },
+                                                                {
+                                                                  "name": "output",
+                                                                  "type": "varint"
+                                                                }
+                                                              ]
+                                                            ]
+                                                          }
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "name": "showInTooltip",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "recipes": "anonymousNbt",
+                                    "lodestone_tracker": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "globalPosition",
+                                          "type": [
+                                            "option",
+                                            [
+                                              "container",
+                                              [
+                                                {
+                                                  "name": "dimension",
+                                                  "type": "string"
+                                                },
+                                                {
+                                                  "name": "position",
+                                                  "type": "vec3f"
+                                                }
+                                              ]
+                                            ]
+                                          ]
+                                        },
+                                        {
+                                          "name": "tracked",
+                                          "type": "bool"
+                                        }
+                                      ]
+                                    ],
+                                    "firework_explosion": "FireworkExplosion",
+                                    "fireworks": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "flightDuration",
+                                          "type": "varint"
+                                        },
+                                        {
+                                          "name": "explosions",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "FireworkExplosion"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "profile": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "hasName",
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "name",
+                                          "type": "string"
+                                        },
+                                        {
+                                          "name": "hasUniqueId",
+                                          "type": "bool"
+                                        },
+                                        {
+                                          "name": "uniqueId",
+                                          "type": "UUID"
+                                        },
+                                        {
+                                          "name": "properties",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "property",
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "name": "value",
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "name": "hasSignature",
+                                                    "type": "bool"
+                                                  },
+                                                  {
+                                                    "name": "signature",
+                                                    "type": "string"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "note_block_sound": "string",
+                                    "banner_patterns": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "layers",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "patternType",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "anon": true,
+                                                    "type": [
+                                                      "switch",
+                                                      {
+                                                        "compareTo": "patternType",
+                                                        "fields": {
+                                                          "0": [
+                                                            "container",
+                                                            [
+                                                              {
+                                                                "name": "assetId",
+                                                                "type": "string"
+                                                              },
+                                                              {
+                                                                "name": "translationKey",
+                                                                "type": "string"
+                                                              }
+                                                            ]
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "name": "color",
+                                                    "type": "varint"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "base_color": "varint",
+                                    "pot_decorations": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "decorations",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "varint"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "container": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "contents",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": "Slot"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "block_state": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "properties",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "property",
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "name": "value",
+                                                    "type": "string"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "bees": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "bees",
+                                          "type": [
+                                            "array",
+                                            {
+                                              "countType": "varint",
+                                              "type": [
+                                                "container",
+                                                [
+                                                  {
+                                                    "name": "nbtData",
+                                                    "type": "anonymousNbt"
+                                                  },
+                                                  {
+                                                    "name": "ticksInHive",
+                                                    "type": "varint"
+                                                  },
+                                                  {
+                                                    "name": "minTicksInHive",
+                                                    "type": "varint"
+                                                  }
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    ],
+                                    "lock": "anonymousNbt",
+                                    "container_loot": "anonymousNbt"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ]
                   }
                 ]
               ]
             }
           ]
+        }
+      ]
+    ],
+    "FireworkExplosion": [
+      "container",
+      [
+        {
+          "name": "shape",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "small_ball",
+                "1": "large_ball",
+                "2": "star",
+                "3": "creeper",
+                "4": "burst"
+              }
+            }
+          ]
+        },
+        {
+          "name": "colors",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "i32"
+            }
+          ]
+        },
+        {
+          "name": "fadeColors",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "i32"
+            }
+          ]
+        },
+        {
+          "name": "hasTrail",
+          "type": "bool"
+        },
+        {
+          "name": "hasTwinkle",
+          "type": "bool"
+        }
+      ]
+    ],
+    "BookPage": [
+      "container",
+      [
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "filteredContent",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "EffectDetail": [
+      "container",
+      [
+        {
+          "name": "amplifier",
+          "type": "varint"
+        },
+        {
+          "name": "duration",
+          "type": "varint"
+        },
+        {
+          "name": "ambient",
+          "type": "bool"
+        },
+        {
+          "name": "showParticles",
+          "type": "bool"
+        },
+        {
+          "name": "showIcon",
+          "type": "bool"
+        },
+        {
+          "name": "hiddenEffect",
+          "type": [
+            "option",
+            "EffectDetail"
+          ]
+        }
+      ]
+    ],
+    "BlockSet": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": "varint"
+        },
+        {
+          "name": "name",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "0": "string"
+              },
+              "default": "void"
+            }
+          ]
+        },
+        {
+          "name": "blockIds",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "0": "void"
+              },
+              "default": [
+                "arrayWithLengthOffset",
+                {
+                  "count": "type",
+                  "type": "varint"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "BlockProperty": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "isExactMatch",
+          "type": "bool"
+        },
+        {
+          "name": "exactValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "minValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "maxValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "BlockPredicate": [
+      "container",
+      [
+        {
+          "name": "blockSet",
+          "type": [
+            "option",
+            [
+              "array",
+              {
+                "countType": "varint",
+                "type": "BlockSet"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "properties",
+          "type": [
+            "option",
+            [
+              "array",
+              {
+                "countType": "varint",
+                "type": "BlockProperty"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "nbt",
+          "type": "anonOptionalNbt"
         }
       ]
     ],
