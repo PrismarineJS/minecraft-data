@@ -96,6 +96,70 @@
         }
       ]
     ],
+    "SlotComponentType": [
+      "mapper",
+      {
+        "type": "varint",
+        "mappings": {
+          "0": "custom_data",
+          "1": "max_stack_size",
+          "2": "max_damage",
+          "3": "damage",
+          "4": "unbreakable",
+          "5": "custom_name",
+          "6": "item_name",
+          "7": "lore",
+          "8": "rarity",
+          "9": "enchantments",
+          "10": "can_place_on",
+          "11": "can_break",
+          "12": "attribute_modifiers",
+          "13": "custom_model_data",
+          "14": "hide_additional_tooltip",
+          "15": "hide_tooltip",
+          "16": "creative_slot_lock",
+          "17": "enchantment_glint_override",
+          "18": "intangible_projectile",
+          "19": "food",
+          "20": "fire_resistant",
+          "21": "tool",
+          "22": "stored_enchantments",
+          "23": "dyed_color",
+          "24": "map_color",
+          "25": "map_id",
+          "26": "map_decorations",
+          "27": "map_post_processing",
+          "28": "charged_projectiles",
+          "29": "bundle_contents",
+          "30": "potion_contents",
+          "31": "suspicious_stew_effects",
+          "32": "writable_book_content",
+          "33": "written_book_content",
+          "34": "trim",
+          "35": "debug_stick_state",
+          "36": "entity_data",
+          "37": "bucket_entity_data",
+          "38": "block_entity_data",
+          "39": "instrument",
+          "40": "ominous_bottle_amplifier",
+          "41": "jukebox_playable",
+          "42": "recipes",
+          "43": "lodestone_tracker",
+          "44": "firework_explosion",
+          "45": "fireworks",
+          "46": "profile",
+          "47": "note_block_sound",
+          "48": "banner_patterns",
+          "49": "base_color",
+          "50": "pot_decorations",
+          "51": "container",
+          "52": "block_state",
+          "53": "bees",
+          "54": "lock",
+          "55": "container_loot"
+        }
+      }
+    ],
     "Slot": [
       "container",
       [
@@ -120,80 +184,25 @@
                     "type": "varint"
                   },
                   {
+                    "name": "addedComponentCount",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "removedComponentCount",
+                    "type": "varint"
+                  },
+                  {
                     "name": "components",
                     "type": [
                       "array",
                       {
-                        "countType": "varint",
+                        "count": "addedComponentCount",
                         "type": [
                           "container",
                           [
                             {
                               "name": "type",
-                              "type": [
-                                "mapper",
-                                {
-                                  "type": "varint",
-                                  "mappings": {
-                                    "0": "custom_data",
-                                    "1": "max_stack_size",
-                                    "2": "max_damage",
-                                    "3": "damage",
-                                    "4": "unbreakable",
-                                    "5": "custom_name",
-                                    "6": "item_name",
-                                    "7": "lore",
-                                    "8": "rarity",
-                                    "9": "enchantments",
-                                    "10": "can_place_on",
-                                    "11": "can_break",
-                                    "12": "attribute_modifiers",
-                                    "13": "custom_model_data",
-                                    "14": "hide_additional_tooltip",
-                                    "15": "hide_tooltip",
-                                    "16": "creative_slot_lock",
-                                    "17": "enchantment_glint_override",
-                                    "18": "intangible_projectile",
-                                    "19": "food",
-                                    "20": "fire_resistant",
-                                    "21": "tool",
-                                    "22": "stored_enchantments",
-                                    "23": "dyed_color",
-                                    "24": "map_color",
-                                    "25": "map_id",
-                                    "26": "map_decorations",
-                                    "27": "map_post_processing",
-                                    "28": "charged_projectiles",
-                                    "29": "bundle_contents",
-                                    "30": "potion_contents",
-                                    "31": "suspicious_stew_effects",
-                                    "32": "writable_book_content",
-                                    "33": "written_book_content",
-                                    "34": "trim",
-                                    "35": "debug_stick_state",
-                                    "36": "entity_data",
-                                    "37": "bucket_entity_data",
-                                    "38": "block_entity_data",
-                                    "39": "instrument",
-                                    "40": "ominous_bottle_amplifier",
-                                    "41": "jukebox_playable",
-                                    "42": "recipes",
-                                    "43": "lodestone_tracker",
-                                    "44": "firework_explosion",
-                                    "45": "fireworks",
-                                    "46": "profile",
-                                    "47": "note_block_sound",
-                                    "48": "banner_patterns",
-                                    "49": "base_color",
-                                    "50": "pot_decorations",
-                                    "51": "container",
-                                    "52": "block_state",
-                                    "53": "bees",
-                                    "54": "lock",
-                                    "55": "container_loot"
-                                  }
-                                }
-                              ]
+                              "type": "SlotComponentType"
                             },
                             {
                               "name": "data",
@@ -1168,6 +1177,24 @@
                                   }
                                 }
                               ]
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "removeComponents",
+                    "type": [
+                      "array",
+                      {
+                        "count": "removedComponentCount",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "type",
+                              "type": "SlotComponentType"
                             }
                           ]
                         ]
