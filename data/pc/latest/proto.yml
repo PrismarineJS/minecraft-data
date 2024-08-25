@@ -30,6 +30,7 @@
    restBuffer: native
    anonymousNbt: native
    anonOptionalNbt: native
+   arrayWithLengthOffset: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: [
       "pstring",
@@ -194,7 +195,7 @@
                   if attribute_modifiers:
                      attributes: []varint
                         typeId: varint
-                        uniqueId: uuid
+                        uniqueId: UUID
                         name: string
                         value: f64
                         operation: varint =>
@@ -242,11 +243,11 @@
 # Name	Type	Description
 # Number of Rules	VarInt	The number of elements in the following array.
 # Rule
-   # Blocks	Array	Block Set	The block this rule applies to. See Block Set.
-   # Has Speed	Boolean	
-   # Speed	Optional Float	The speed at which the tool breaks this rules' blocks. Only present if Has Speed is true.
-   # Has Correct Drop For Blocks	Boolean	
-   # Correct Drop For Blocks	Optional Boolean	Whether items should drop only if this is the correct tool. Only present if Has Correct Drop For Blocks is true.
+#  Blocks	Array	Block Set	The block this rule applies to. See Block Set.
+#  Has Speed	Boolean	
+#  Speed	Optional Float	The speed at which the tool breaks this rules' blocks. Only present if Has Speed is true.
+#  Has Correct Drop For Blocks	Boolean	
+#  Correct Drop For Blocks	Optional Boolean	Whether items should drop only if this is the correct tool. Only present if Has Correct Drop For Blocks is true.
 # Default Mining Speed	Float	The mining speed in case none of the previous rule were matched.
 # Damage Per Block	VarInt	The amount of damage the item takes per block break.
                   if tool:
@@ -503,7 +504,7 @@
 # Number of Bees	VarInt	Number of elements in the following array.
 # Bee	Entity Data	Array	NBT	Custom data for the entity, always a Compound Tag. Same structure as the minecraft:custom_data component.
 # Ticks In Hive	VarInt	
-# Min Ticks In Hive	VarInt	
+# Min Ticks In Hive	VarInt
                   if bees:
                      bees: []varint
                         nbtData: anonymousNbt
