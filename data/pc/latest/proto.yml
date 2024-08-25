@@ -934,56 +934,60 @@
          if 2:
             name: string
             parser: varint =>
-               0: brigadier:bool
-               1: brigadier:float
-               2: brigadier:double
-               3: brigadier:integer
-               4: brigadier:long
-               5: brigadier:string
-               6: minecraft:entity
-               7: minecraft:game_profile
-               8: minecraft:block_pos
-               9: minecraft:column_pos
-               10: minecraft:vec3
-               11: minecraft:vec2
-               12: minecraft:block_state
-               13: minecraft:block_predicate
-               14: minecraft:item_stack
-               15: minecraft:item_predicate
-               16: minecraft:color
-               17: minecraft:component
-               18: minecraft:style
-               19: minecraft:message
-               20: minecraft:nbt
-               21: minecraft:nbt_tag
-               22: minecraft:nbt_path
-               23: minecraft:objective
-               24: minecraft:objective_criteria
-               25: minecraft:operation
-               26: minecraft:particle
-               27: minecraft:angle
-               28: minecraft:rotation
-               29: minecraft:scoreboard_slot
-               30: minecraft:score_holder
-               31: minecraft:swizzle
-               32: minecraft:team
-               33: minecraft:item_slot
-               34: minecraft:resource_location
-               35: minecraft:function
-               36: minecraft:entity_anchor
-               37: minecraft:int_range
-               38: minecraft:float_range
-               39: minecraft:dimension
-               40: minecraft:gamemode
-               41: minecraft:time
-               42: minecraft:resource_or_tag
-               43: minecraft:resource_or_tag_key
-               44: minecraft:resource
-               45: minecraft:resource_key
-               46: minecraft:template_mirror
-               47: minecraft:template_rotation
-               48: minecraft:heightmap
-               49: minecraft:uuid
+            - brigadier:bool
+            - brigadier:float
+            - brigadier:double
+            - brigadier:integer
+            - brigadier:long
+            - brigadier:string
+            - minecraft:entity
+            - minecraft:game_profile
+            - minecraft:block_pos
+            - minecraft:column_pos
+            - minecraft:vec3
+            - minecraft:vec2
+            - minecraft:block_state
+            - minecraft:block_predicate
+            - minecraft:item_stack
+            - minecraft:item_predicate
+            - minecraft:color
+            - minecraft:component
+            - minecraft:style
+            - minecraft:message
+            - minecraft:nbt
+            - minecraft:nbt_tag
+            - minecraft:nbt_path
+            - minecraft:objective
+            - minecraft:objective_criteria
+            - minecraft:operation
+            - minecraft:particle
+            - minecraft:angle
+            - minecraft:rotation
+            - minecraft:scoreboard_slot
+            - minecraft:score_holder
+            - minecraft:swizzle
+            - minecraft:team
+            - minecraft:item_slot
+            - minecraft:item_slots # 1.20.5
+            - minecraft:resource_location
+            - minecraft:function
+            - minecraft:entity_anchor
+            - minecraft:int_range
+            - minecraft:float_range
+            - minecraft:dimension
+            - minecraft:gamemode
+            - minecraft:time
+            - minecraft:resource_or_tag
+            - minecraft:resource_or_tag_key
+            - minecraft:resource
+            - minecraft:resource_key
+            - minecraft:template_mirror
+            - minecraft:template_rotation
+            - minecraft:heightmap
+            - minecraft:loot_table # 1.20.5
+            - minecraft:loot_predicate # 1.20.5
+            - minecraft:loot_modifier # 1.20.5
+            - minecraft:uuid
             properties: parser ?
                if brigadier:bool: void
                if brigadier:float:
@@ -2657,8 +2661,31 @@
    # MC: ClientboundUpdateRecipesPacket
    packet_declare_recipes:
       recipes: []varint
-         type: string
-         recipeId: varint
+         name: string
+         type: varint =>
+         - minecraft:crafting_shaped
+         - minecraft:crafting_shapeless
+         - minecraft:crafting_special_armordye
+         - minecraft:crafting_special_bookcloning
+         - minecraft:crafting_special_mapcloning
+         - minecraft:crafting_special_mapextending
+         - minecraft:crafting_special_firework_rocket
+         - minecraft:crafting_special_firework_star
+         - minecraft:crafting_special_firework_star_fade
+         - minecraft:crafting_special_tippedarrow
+         - minecraft:crafting_special_bannerduplicate
+         - minecraft:crafting_special_shielddecoration
+         - minecraft:crafting_special_shulkerboxcoloring
+         - minecraft:crafting_special_suspiciousstew
+         - minecraft:crafting_special_repairitem
+         - minecraft:smelting
+         - minecraft:blasting
+         - minecraft:smoking
+         - minecraft:campfire_cooking
+         - minecraft:stonecutting
+         - minecraft:smithing_transform
+         - minecraft:smithing_trim
+         - minecraft:crafting_decorated_pot
          data: type ?
             if minecraft:crafting_shapeless:
                group: string
