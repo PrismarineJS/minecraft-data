@@ -4217,3 +4217,45 @@ packet_server_post_move:
 packet_clientbound_close_form:
    !id: 0x136
    !bound: client
+
+# ServerBoundLoadingScreen is sent by the client to tell the server about the state of the loading
+# screen that the client is currently displaying.
+packet_serverbound_loading_screen:
+   !id: 0x138
+   !bound: server
+   # The type of the loading screen event.
+   type: zigzag32
+   loading_screen_id?: varint
+
+# JigsawStructureData is sent by the server to let the client know all the rules for jigsaw structures.
+packet_jigsaw_structure_data:
+   !id: 0x139
+   !bound: client
+   # StructureData is a network NBT serialised compound of all the jigsaw structure rules defined
+   # on the server.
+   structure_data: string
+
+# CurrentStructureFeature is sent by the server to let the client know the name of the structure feature
+# that the player is currently occupying.
+packet_current_structure_feature:
+   !id: 0x13A
+   !bound: client
+   # CurrentFeature is the identifier of the structure feature that the player is currently occupying.
+   # If the player is not occupying any structure feature, this field is empty.
+   current_feature: string
+
+# ServerBoundDiagnostics is sent by the client to tell the server about the performance diagnostics
+# of the client. It is sent by the client roughly every 500ms or 10 in-game ticks when the
+# "Creator > Enable Client Diagnostics" setting is enabled.
+packet_serverbound_diagnostics:
+   !id: 0x13B
+   !bound: server
+   average_frames_per_second: lf32
+   average_server_sim_tick_time: lf32
+   average_client_sim_tick_time: lf32
+   average_begin_frame_time: lf32
+   average_input_time: lf32
+   average_render_time: lf32
+   average_end_frame_time: lf32
+   average_remainder_time_percent: lf32
+   average_unaccounted_time_percent: lf32
