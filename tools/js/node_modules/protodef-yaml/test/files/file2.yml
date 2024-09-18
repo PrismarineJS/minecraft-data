@@ -1,0 +1,24 @@
+mcpe_packet:
+  name: varint =>
+    0x01: login
+    0x02: play_status
+
+  params: name?
+    if login: packet_login
+
+# this is invalid but compiles, TODO: throw an error
+packet_map:
+  packet
+
+packet_text:
+  chat_type: byte =>
+    0: raw
+    1: chat
+    2: translation
+
+
+packet_disconnect:
+  !packet_id: 0x09
+  !server: true
+  !online: false
+  !docs: Disconnects a player
