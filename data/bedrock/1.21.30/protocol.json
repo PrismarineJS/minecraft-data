@@ -56,6 +56,49 @@
     "nbtLoop": "native",
     "enum_size_based_on_values_len": "native",
     "MapInfo": "native",
+    "BehaviourPackInfos": [
+      "array",
+      {
+        "countType": "li16",
+        "type": [
+          "container",
+          [
+            {
+              "name": "uuid",
+              "type": "string"
+            },
+            {
+              "name": "version",
+              "type": "string"
+            },
+            {
+              "name": "size",
+              "type": "lu64"
+            },
+            {
+              "name": "content_key",
+              "type": "string"
+            },
+            {
+              "name": "sub_pack_name",
+              "type": "string"
+            },
+            {
+              "name": "content_identity",
+              "type": "string"
+            },
+            {
+              "name": "has_scripts",
+              "type": "bool"
+            },
+            {
+              "name": "addon_pack",
+              "type": "bool"
+            }
+          ]
+        ]
+      }
+    ],
     "TexturePackInfos": [
       "array",
       {
@@ -4877,8 +4920,12 @@
                 "308": "set_hud",
                 "309": "award_achievement",
                 "310": "clientbound_close_form",
-                "311": "camera_aim_assist",
-                "312": "container_registry_cleanup"
+                "311": "serverbound_loading_screen",
+                "312": "camera_aim_assist",
+                "313": "jigsaw_structure_data",
+                "314": "current_structure_feature",
+                "315": "serverbound_diagnostics",
+                "320": "container_registry_cleanup"
               }
             }
           ]
@@ -5093,7 +5140,11 @@
                 "award_achievement": "packet_award_achievement",
                 "server_post_move": "packet_server_post_move",
                 "clientbound_close_form": "packet_clientbound_close_form",
+                "serverbound_loading_screen": "packet_serverbound_loading_screen",
                 "camera_aim_assist": "packet_camera_aim_assist",
+                "jigsaw_structure_data": "packet_jigsaw_structure_data",
+                "current_structure_feature": "packet_current_structure_feature",
+                "serverbound_diagnostics": "packet_serverbound_diagnostics",
                 "container_registry_cleanup": "packet_container_registry_cleanup"
               }
             }
@@ -5224,6 +5275,14 @@
         {
           "name": "has_scripts",
           "type": "bool"
+        },
+        {
+          "name": "force_server_packs",
+          "type": "bool"
+        },
+        {
+          "name": "behaviour_packs",
+          "type": "BehaviourPackInfos"
         },
         {
           "name": "texture_packs",
@@ -12570,9 +12629,24 @@
       "container",
       []
     ],
+    "packet_serverbound_loading_screen": [
+      "container",
+      []
+    ],
     "packet_camera_aim_assist": [
       "container",
       [
+        {
+          "name": "type",
+          "type": "zigzag32"
+        },
+        {
+          "name": "loading_screen_id",
+          "type": [
+            "option",
+            "varint"
+          ]
+        },
         {
           "name": "view_angle",
           "type": "vec2f"
@@ -12591,9 +12665,67 @@
         }
       ]
     ],
+    "packet_jigsaw_structure_data": [
+      "container",
+      [
+        {
+          "name": "structure_data",
+          "type": "nbt"
+        }
+      ]
+    ],
+    "packet_current_structure_feature": [
+      "container",
+      [
+        {
+          "name": "current_feature",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_serverbound_diagnostics": [
+      "container",
+      []
+    ],
     "packet_container_registry_cleanup": [
       "container",
       [
+        {
+          "name": "average_frames_per_second",
+          "type": "lf32"
+        },
+        {
+          "name": "average_server_sim_tick_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_client_sim_tick_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_begin_frame_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_input_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_render_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_end_frame_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_remainder_time_percent",
+          "type": "lf32"
+        },
+        {
+          "name": "average_unaccounted_time_percent",
+          "type": "lf32"
+        },
         {
           "name": "removed_containers",
           "type": [

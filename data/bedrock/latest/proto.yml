@@ -136,6 +136,11 @@ packet_resource_packs_info:
    has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
+   # ForcingServerPacks is currently an unclear field.
+   force_server_packs: bool
+   # A list of behaviour packs that the client needs to download before joining the server. 
+   # All of these behaviour packs will be applied together.
+   behaviour_packs: BehaviourPackInfos
    # A list of resource packs that the client needs to download before joining the server. 
    # The order of these resource packs is not relevant in this packet. It is however important in the Resource Pack Stack packet.
    texture_packs: TexturePackInfos
@@ -4224,10 +4229,18 @@ packet_server_post_move:
 packet_clientbound_close_form:
    !id: 0x136
    !bound: client
+
+# ServerBoundLoadingScreen is sent by the client to tell the server about the state of the loading
+# screen that the client is currently displaying.
+packet_serverbound_loading_screen:
+   !id: 0x137
 # CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
 packet_camera_aim_assist:
-   !id: 0x137 
+   !id: 0x138
    !bound: server
+   # The type of the loading screen event.
+   type: zigzag32
+   loading_screen_id?: varint
    # CameraAimAssistTargetModeAngle.
    view_angle: vec2f
    # Distance is the distance that the camera should keep from the target, if TargetMode is set to
@@ -4238,9 +4251,41 @@ packet_camera_aim_assist:
    # Action is the action that should be performed with the aim assist. This is one of the constants above.
    action: u8
 
+# JigsawStructureData is sent by the server to let the client know all the rules for jigsaw structures.
+packet_jigsaw_structure_data:
+   !id: 0x139
+   !bound: client
+   # StructureData is a network NBT serialised compound of all the jigsaw structure rules defined
+   # on the server.
+   structure_data: nbt
+
+# CurrentStructureFeature is sent by the server to let the client know the name of the structure feature
+# that the player is currently occupying.
+packet_current_structure_feature:
+   !id: 0x13A
+   !bound: client
+   # CurrentFeature is the identifier of the structure feature that the player is currently occupying.
+   # If the player is not occupying any structure feature, this field is empty.
+   current_feature: string
+
+# ServerBoundDiagnostics is sent by the client to tell the server about the performance diagnostics
+# of the client. It is sent by the client roughly every 500ms or 10 in-game ticks when the
+# "Creator > Enable Client Diagnostics" setting is enabled.
+packet_serverbound_diagnostics:
+   !id: 0x13B
+
 # ContainerRegistryCleanup is sent by the server to trigger a client-side cleanup of the dynamic container registry.
 packet_container_registry_cleanup:
-   !id: 0x138 
+   !id: 0x140 
    !bound: server
+   average_frames_per_second: lf32
+   average_server_sim_tick_time: lf32
+   average_client_sim_tick_time: lf32
+   average_begin_frame_time: lf32
+   average_input_time: lf32
+   average_render_time: lf32
+   average_end_frame_time: lf32
+   average_remainder_time_percent: lf32
+   average_unaccounted_time_percent: lf32
    # RemovedContainers is a list of protocol.FullContainerName's that should be removed from the client-side container registry.
    removed_containers: varint[]FullContainerName
