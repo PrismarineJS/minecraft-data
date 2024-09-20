@@ -199,6 +199,7 @@ a { text-decoration: none; }
 <tr><td><a href="#AbilityLayers">Type</a><td class='name'><a href="#AbilityLayers">AbilityLayers</a></td></tr>
 <tr><td><a href="#CameraPresets">Type</a><td class='name'><a href="#CameraPresets">CameraPresets</a></td></tr>
 <tr><td><a href="#DisconnectFailReason">Type</a><td class='name'><a href="#DisconnectFailReason">DisconnectFailReason</a></td></tr>
+<tr><td><a href="#FullContainerName">Type</a><td class='name'><a href="#FullContainerName">FullContainerName</a></td></tr>
 
 
 
@@ -815,6 +816,19 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#packet_clientbound_close_form">0x136</a></td><td><a href="#packet_clientbound_close_form">packet_clientbound_close_form</a></td></tr>
+
+
+
+<tr><td><a href="#packet_serverbound_loading_screen">0x138</a></td><td><a href="#packet_serverbound_loading_screen">packet_serverbound_loading_screen</a></td></tr>
+
+<tr><td><a href="#packet_jigsaw_structure_data">0x139</a></td><td><a href="#packet_jigsaw_structure_data">packet_jigsaw_structure_data</a></td></tr>
+
+
+<tr><td><a href="#packet_current_structure_feature">0x13a</a></td><td><a href="#packet_current_structure_feature">packet_current_structure_feature</a></td></tr>
+
+
+
+<tr><td><a href="#packet_serverbound_diagnostics">0x13b</a></td><td><a href="#packet_serverbound_diagnostics">packet_serverbound_diagnostics</a></td></tr>
   </tbody>
   </table><br/><hr/>
     <div class="packet-header" id="BehaviourPackInfos">
@@ -1916,8 +1930,7 @@ on a classic skin.</p></td></tr>
 <p><p>Source and Destination point to the source slot from which Count of the item stack were taken and the
 destination slot to which this item was moved.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>slot type </td><td><a href="#ContainerSlotType">ContainerSlotType</a></td><td><p>ContainerID is the ID of the container that the slot was in.</p></td></tr>
-<tr><td class='field-name name'>dynamic container id </td><td>lu32</td><td><p>DynamicContainerID is the ID of the container if it is dynamic. If the container is not dynamic, this field is set to 0.</p></td></tr>
+<tr><td class='field-name name'>slot type </td><td><a href="#FullContainerName">FullContainerName</a></td><td><p>ContainerID is the ID of the container that the slot was in.</p></td></tr>
 <tr><td class='field-name name'>slot </td><td>u8</td><td><p>Slot is the index of the slot within the container with the ContainerID above. </p></td></tr>
 <tr><td class='field-name name'>stack id </td><td>zigzag32</td><td><p>StackNetworkID is the unique stack ID that the client assumes to be present in this slot. The server
 must check if these IDs match. If they do not match, servers should reject the stack request that the
@@ -2110,7 +2123,7 @@ will undo the actions from the request with this ID.</p></td></tr>
 <tr><td class='field-name'><span class='name'>containers</span> length</td><td>varint</td><td ><p>ContainerInfo holds information on the containers that had their contents changed as a result of the
 request.</p></td></tr>
 <tr><td class='field-name'><span class='name'>containers</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name name'>slot type </td><td><a href="#ContainerSlotType">ContainerSlotType</a></td><td><p>ContainerID is the container ID of the container that the slots that follow are in. For the main
+<tr><td class='field-name name'>slot type </td><td><a href="#FullContainerName">FullContainerName</a></td><td><p>ContainerID is the container ID of the container that the slots that follow are in. For the main
 inventory, this value seems to be 0x1b. For the cursor, this value seems to be 0x3a. For the crafting
 grid, this value seems to be 0x0d.</p>
 <ul>
@@ -3389,6 +3402,16 @@ be rendered.</p></td></tr>
   <tr><td class='name'>107</td><td class='name'>game setup cancelled</td><td></td></tr>
   <tr><td class='name'>108</td><td class='name'>game setup failed</td><td></td></tr>
 </table></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="FullContainerName">
+    <a href="#FullContainerName"><div class='packet-id datatype'>Type</div><div class='packet-name name'>FullContainerName</div></a>
+      <small style='vertical-align:middle;float:right'>Datatype</small>
+    </div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>container id </td><td><a href="#ContainerSlotType">ContainerSlotType</a></td><td></td></tr>
+<tr><td class='field-name name'>dynamic container id </td><td>u32</td><td></td></tr>
 </table><br/><hr/><br/><p><h1 id="loginsequence">Login Sequence</h1>
 <p>The login process is as follows:</p>
 <ul>
@@ -7575,4 +7598,56 @@ constants above.</p></p>
 <p><p>clientbound<em>close</em>form is sent by the server to clear the entire form stack of the client. This means that all
 forms that are currently open will be closed. This does not affect inventories and other containers.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_serverbound_loading_screen">
+    <a href="#packet_serverbound_loading_screen"><div class='packet-id server'>312</div><div class='packet-name name'>packet serverbound loading screen</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
+    </div><br/>
+    
+<p><p>skip 0x137
+ServerBoundLoadingScreen is sent by the client to tell the server about the state of the loading
+screen that the client is currently displaying.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>type </td><td>zigzag32</td><td><p>The type of the loading screen event.</p></td></tr>
+<tr><td class='field-name name'>loading screen id <div class='tag tag-optional'>optional</div></td><td>varint</td><td></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_jigsaw_structure_data">
+    <a href="#packet_jigsaw_structure_data"><div class='packet-id client'>313</div><div class='packet-name name'>packet jigsaw structure data</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>JigsawStructureData is sent by the server to let the client know all the rules for jigsaw structures.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>structure data </td><td>nbt</td><td><p>StructureData is a network NBT serialised compound of all the jigsaw structure rules defined
+on the server.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_current_structure_feature">
+    <a href="#packet_current_structure_feature"><div class='packet-id client'>314</div><div class='packet-name name'>packet current structure feature</div></a>
+      <small style='vertical-align:middle;float:right'>Clientbound</small>
+    </div><br/>
+    
+<p><p>CurrentStructureFeature is sent by the server to let the client know the name of the structure feature
+that the player is currently occupying.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>current feature </td><td>string</td><td><p>CurrentFeature is the identifier of the structure feature that the player is currently occupying.
+If the player is not occupying any structure feature, this field is empty.</p></td></tr>
+</table><br/><hr/><br/>
+    <div class="packet-header" id="packet_serverbound_diagnostics">
+    <a href="#packet_serverbound_diagnostics"><div class='packet-id server'>315</div><div class='packet-name name'>packet serverbound diagnostics</div></a>
+      <small style='vertical-align:middle;float:right'>Serverbound</small>
+    </div><br/>
+    
+<p><p>ServerBoundDiagnostics is sent by the client to tell the server about the performance diagnostics
+of the client. It is sent by the client roughly every 500ms or 10 in-game ticks when the
+"Creator &gt; Enable Client Diagnostics" setting is enabled.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>average frames per second </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average server sim tick time </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average client sim tick time </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average begin frame time </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average input time </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average render time </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average end frame time </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average remainder time percent </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>average unaccounted time percent </td><td>lf32</td><td></td></tr>
 </table><br/><hr/><br/></div>
