@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.30
+!version: 1.21.20
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -136,6 +136,11 @@ packet_resource_packs_info:
    has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
+   # ForcingServerPacks is currently an unclear field.
+   force_server_packs: bool
+   # A list of behaviour packs that the client needs to download before joining the server. 
+   # All of these behaviour packs will be applied together.
+   behaviour_packs: BehaviourPackInfos
    # A list of resource packs that the client needs to download before joining the server. 
    # The order of these resource packs is not relevant in this packet. It is however important in the Resource Pack Stack packet.
    texture_packs: TexturePackInfos
@@ -1253,10 +1258,7 @@ packet_inventory_content:
    # Content is the new content of the inventory. The length of this slice must be equal to the full size of
    # the inventory window updated.
    input: ItemStacks
-   # Container is the protocol.FullContainerName that describes the container that the content is for.
-   container: FullContainerName
-   # DynamicContainerSize is the size of the container, if the container is dynamic.
-   dynamic_container_size: varint
+   dynamic_window_id: varint
 
 # InventorySlot is sent by the server to update a single slot in one of the inventory windows that the client
 # currently has opened. Usually this is the main inventory, but it may also be the off hand or, for example,
@@ -1267,12 +1269,10 @@ packet_inventory_slot:
    # WindowID is the ID of the window that the packet modifies. It must point to one of the windows that the
    # client currently has opened.
    window_id: WindowIDVarint
-   # Slot is the index of the slot that the packet modifies. The new item will be set to the slot at this index.
+   # Slot is the index of the slot that the packet modifies. The new item will be set to the slot at this
+   # index.
    slot: varint
-   # Container is the protocol.FullContainerName that describes the container that the content is for.
-   container: FullContainerName
-   # DynamicContainerSize is the size of the container, if the container is dynamic.
-   dynamic_container_size: varint
+   dynamic_window_id: varint
    # NewItem is the item to be put in the slot at Slot. It will overwrite any item that may currently
    # be present in that slot.
    item: Item
@@ -2102,7 +2102,6 @@ packet_transfer:
    !bound: client
    server_address: string
    port: lu16
-   reload_world: bool
 
 packet_play_sound:
    !id: 0x56
@@ -2947,8 +2946,6 @@ packet_emote:
    entity_id: varint64
    # EmoteID is the ID of the emote to send.
    emote_id: string
-   # EmoteLength is the number of ticks that the emote lasts for.
-   emote_length_ticks: varint
    # XUID is the Xbox User ID of the player that sent the emote. It is only set when the emote is used by a player that
    # is authenticated with Xbox Live.
    xuid: string
@@ -3185,11 +3182,7 @@ InputFlag: [ "bitflags", {
       "client_predicted_vehicle",
       "paddling_left",
       "paddling_right",
-      "block_breaking_delay_enabled",
-      "horizontal_collision",
-      "vertical_collision",
-      "down_left",
-      "down_right", 
+      "block_breaking_delay_enabled"
    ]
 }]
 
@@ -4268,24 +4261,3 @@ packet_serverbound_diagnostics:
    average_end_frame_time: lf32
    average_remainder_time_percent: lf32
    average_unaccounted_time_percent: lf32
-
-# CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
-packet_camera_aim_assist:
-   !id: 0x13C
-   !bound: server
-   # CameraAimAssistTargetModeAngle.
-   view_angle: vec2f
-   # Distance is the distance that the camera should keep from the target, if TargetMode is set to
-   # CameraAimAssistTargetModeDistance.
-   distance: lf32
-   # TargetMode is the mode that the camera should use to aim at the target. This is one of the constants above.
-   target_mode: u8
-   # Action is the action that should be performed with the aim assist. This is one of the constants above.
-   action: u8
-
-# ContainerRegistryCleanup is sent by the server to trigger a client-side cleanup of the dynamic container registry.
-packet_container_registry_cleanup:
-   !id: 0x13D
-   !bound: client
-   # RemovedContainers is a list of protocol.FullContainerName's that should be removed from the client-side container registry.
-   removed_containers: FullContainerName[]varint

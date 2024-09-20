@@ -1,5 +1,15 @@
 !StartDocs: Types
 
+BehaviourPackInfos: []li16
+   uuid: string
+   version: string
+   size: lu64
+   content_key: string
+   sub_pack_name: string
+   content_identity: string
+   has_scripts: bool
+   addon_pack: bool
+
 TexturePackInfos: []li16
    uuid: string
    version: string
@@ -500,8 +510,6 @@ PlayerAttributes: []varint
    min: lf32
    max: lf32
    current: lf32
-   default_min: lf32
-   default_max: lf32
    default: lf32
    name: string
    modifiers: []varint
@@ -2075,8 +2083,6 @@ SoundType: varint =>
    - vault_deactivate
    - hurt_reduced
    - wind_charge_burst
-   - imitate_drowned
-   - bundle_insert_failed
    - _
    - armor_crack_wolf
    - armor_break_wolf
@@ -2274,15 +2280,9 @@ CameraPresets:
    parent: string
    position: Vec3fopts
    rotation: Vec2fopts
-   # RotationSpeed is the speed at which the camera should rotate.
-   rotation_speed?: f32
-   # SnapToTarget determines whether the camera should snap to the target entity or not.
-   snap_to_target?: bool
    # ViewOffset is only used in a follow_orbit camera and controls an offset based on a pivot point to the
    # player, causing it to be shifted in a certain direction.
    offset?: vec2f
-   # EntityOffset controls the offset from the entity that the camera should be rendered at.
-   entity_offset?: vec3f
    # Radius is only used in a follow_orbit camera and controls how far away from the player the camera should
    # be rendered.
    radius?: f32
@@ -2403,4 +2403,4 @@ DisconnectFailReason: zigzag32 =>
 
 FullContainerName:
    container_id: ContainerSlotType
-   dynamic_container_id?: u32
+   dynamic_container_id: u32
