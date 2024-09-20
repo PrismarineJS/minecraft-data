@@ -1,3 +1,7 @@
+## 3.37.0
+* [1.21.30 support (#911)](https://github.com/PrismarineJS/minecraft-data/commit/b8282714565b2405ac946d72840239f88f9edb28) (thanks @pokecosimo)
+* [[bedrock] Add missing 1.21.20 packets (#908)](https://github.com/PrismarineJS/minecraft-data/commit/aa82dcc0cd5afe0a8feebf8ac626c0836b98b929) (thanks @MrDiamond64)
+
 ## 3.36.1
 * [Fix dataPaths.json for bedrock 1.21.2](https://github.com/PrismarineJS/minecraft-data/commit/d196f9208db6844e584d17f00d80379ab81eada0) (thanks @extremeheat)
 
