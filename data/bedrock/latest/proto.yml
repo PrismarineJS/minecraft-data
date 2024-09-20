@@ -4225,28 +4225,16 @@ packet_clientbound_close_form:
    !id: 0x136
    !bound: client
 
+# skip 0x137
+
 # ServerBoundLoadingScreen is sent by the client to tell the server about the state of the loading
 # screen that the client is currently displaying.
 packet_serverbound_loading_screen:
-   !id: 0x137
+   !id: 0x138
    !bound: server
    # The type of the loading screen event.
    type: zigzag32
    loading_screen_id?: varint
-
-# CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
-packet_camera_aim_assist:
-   !id: 0x138
-   !bound: server
-   # CameraAimAssistTargetModeAngle.
-   view_angle: vec2f
-   # Distance is the distance that the camera should keep from the target, if TargetMode is set to
-   # CameraAimAssistTargetModeDistance.
-   distance: lf32
-   # TargetMode is the mode that the camera should use to aim at the target. This is one of the constants above.
-   target_mode: u8
-   # Action is the action that should be performed with the aim assist. This is one of the constants above.
-   action: u8
 
 # JigsawStructureData is sent by the server to let the client know all the rules for jigsaw structures.
 packet_jigsaw_structure_data:
@@ -4281,9 +4269,23 @@ packet_serverbound_diagnostics:
    average_remainder_time_percent: lf32
    average_unaccounted_time_percent: lf32
 
+# CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
+packet_camera_aim_assist:
+   !id: 0x13C
+   !bound: server
+   # CameraAimAssistTargetModeAngle.
+   view_angle: vec2f
+   # Distance is the distance that the camera should keep from the target, if TargetMode is set to
+   # CameraAimAssistTargetModeDistance.
+   distance: lf32
+   # TargetMode is the mode that the camera should use to aim at the target. This is one of the constants above.
+   target_mode: u8
+   # Action is the action that should be performed with the aim assist. This is one of the constants above.
+   action: u8
+
 # ContainerRegistryCleanup is sent by the server to trigger a client-side cleanup of the dynamic container registry.
 packet_container_registry_cleanup:
-   !id: 0x140
+   !id: 0x13D
    !bound: client
    # RemovedContainers is a list of protocol.FullContainerName's that should be removed from the client-side container registry.
    removed_containers: FullContainerName[]varint
