@@ -1,11 +1,6 @@
 ## 3.37.0
 * [1.21.30 support (#911)](https://github.com/PrismarineJS/minecraft-data/commit/b8282714565b2405ac946d72840239f88f9edb28) (thanks @pokecosimo)
-* [Add 24w38a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0504e4ffa123841c42446c05e4b62ba85569cdc1) (thanks @github-actions[bot])
-* [Add 24w37a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0275ede28eda7ecb804e4133d0ed98ffc1679f27) (thanks @github-actions[bot])
 * [[bedrock] Add missing 1.21.20 packets (#908)](https://github.com/PrismarineJS/minecraft-data/commit/aa82dcc0cd5afe0a8feebf8ac626c0836b98b929) (thanks @MrDiamond64)
-* [Add 24w36a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f1b6d440a0fcaf6a65e964b0c5844cadec2a7c55) (thanks @github-actions[bot])
-* [Add 24w35a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8fc7c59c1a27f90a31db748dae2a16c7fb4ecf88) (thanks @github-actions[bot])
-* [Add 24w34a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/343a3c1c4b414a353e1a19d08144c5be699a6015) (thanks @github-actions[bot])
 
 ## 3.36.1
 * [Fix dataPaths.json for bedrock 1.21.2](https://github.com/PrismarineJS/minecraft-data/commit/d196f9208db6844e584d17f00d80379ab81eada0) (thanks @extremeheat)
