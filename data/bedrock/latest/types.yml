@@ -925,9 +925,7 @@ Action: zigzag32 =>
 # destination slot to which this item was moved.
 StackRequestSlotInfo:
    # ContainerID is the ID of the container that the slot was in.
-   slot_type: ContainerSlotType
-   # DynamicContainerID is the ID of the container if it is dynamic. If the container is not dynamic, this field is set to 0.
-   dynamic_container_id: lu32
+   slot_type: FullContainerName
    # Slot is the index of the slot within the container with the ContainerID above. 
    slot: u8
    # StackNetworkID is the unique stack ID that the client assumes to be present in this slot. The server
@@ -1135,7 +1133,7 @@ ItemStackResponses: []varint
             # inventory, this value seems to be 0x1b. For the cursor, this value seems to be 0x3a. For the crafting
             # grid, this value seems to be 0x0d.
             # * actually, this is ContainerSlotType - used by the inventory system that specifies the type of slot
-            slot_type: ContainerSlotType
+            slot_type: FullContainerName
             # SlotInfo holds information on what item stack should be present in specific slots in the container.
             slots: []varint
                # Slot and HotbarSlot seem to be the same value every time: The slot that was actually changed. I'm not
@@ -2404,5 +2402,5 @@ DisconnectFailReason: zigzag32 =>
    - game_setup_failed
 
 FullContainerName:
-   container_name: u8
+   container_id: ContainerSlotType
    dynamic_container_id?: u32

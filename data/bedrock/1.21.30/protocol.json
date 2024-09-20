@@ -2610,11 +2610,7 @@
       [
         {
           "name": "slot_type",
-          "type": "ContainerSlotType"
-        },
-        {
-          "name": "dynamic_container_id",
-          "type": "lu32"
+          "type": "FullContainerName"
         },
         {
           "name": "slot",
@@ -3046,7 +3042,7 @@
                                 [
                                   {
                                     "name": "slot_type",
-                                    "type": "ContainerSlotType"
+                                    "type": "FullContainerName"
                                   },
                                   {
                                     "name": "slots",
@@ -4652,8 +4648,8 @@
       "container",
       [
         {
-          "name": "container_name",
-          "type": "u8"
+          "name": "container_id",
+          "type": "ContainerSlotType"
         },
         {
           "name": "dynamic_container_id",
@@ -7110,12 +7106,12 @@
           "type": "WindowIDVarint"
         },
         {
-          "name": "container",
-          "type": "FullContainerName"
-        },
-        {
           "name": "input",
           "type": "ItemStacks"
+        },
+        {
+          "name": "container",
+          "type": "FullContainerName"
         },
         {
           "name": "dynamic_container_size",
@@ -7131,12 +7127,12 @@
           "type": "WindowIDVarint"
         },
         {
-          "name": "container",
-          "type": "FullContainerName"
-        },
-        {
           "name": "slot",
           "type": "varint"
+        },
+        {
+          "name": "container",
+          "type": "FullContainerName"
         },
         {
           "name": "dynamic_container_size",
@@ -12580,10 +12576,6 @@
     ],
     "packet_serverbound_loading_screen": [
       "container",
-      []
-    ],
-    "packet_camera_aim_assist": [
-      "container",
       [
         {
           "name": "type",
@@ -12595,7 +12587,12 @@
             "option",
             "varint"
           ]
-        },
+        }
+      ]
+    ],
+    "packet_camera_aim_assist": [
+      "container",
+      [
         {
           "name": "view_angle",
           "type": "vec2f"
@@ -12634,10 +12631,6 @@
     ],
     "packet_serverbound_diagnostics": [
       "container",
-      []
-    ],
-    "packet_container_registry_cleanup": [
-      "container",
       [
         {
           "name": "average_frames_per_second",
@@ -12674,14 +12667,19 @@
         {
           "name": "average_unaccounted_time_percent",
           "type": "lf32"
-        },
+        }
+      ]
+    ],
+    "packet_container_registry_cleanup": [
+      "container",
+      [
         {
           "name": "removed_containers",
           "type": [
             "array",
             {
-              "countType": "FullContainerName",
-              "type": "varint"
+              "countType": "varint",
+              "type": "FullContainerName"
             }
           ]
         }
