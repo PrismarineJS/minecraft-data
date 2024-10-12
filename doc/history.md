@@ -1,3 +1,6 @@
+## 3.75.0
+* [use login data of 1.20.5 in 1.20.6](https://github.com/PrismarineJS/minecraft-data/commit/b5d1b0bfa18d3c9f41d289c285d2b54827f22004) (thanks @rom1504)
+
 ## 3.74.0
 * [update recipes for 1.20.6](https://github.com/PrismarineJS/minecraft-data/commit/636d3a7e027e75ab1deeb4cd214b73306a836473) (thanks @rom1504)
 
