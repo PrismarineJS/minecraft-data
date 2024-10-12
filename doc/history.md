@@ -1,3 +1,7 @@
+## 3.71.0
+* [Fix protocol.json array count after protodef yaml fix.](https://github.com/PrismarineJS/minecraft-data/commit/7bae37d8bb4a367a38395b30393c9df62e839984) (thanks @rom1504)
+* [Add 1.20.5 in version list in readme](https://github.com/PrismarineJS/minecraft-data/commit/7f34231c97b2af16478abb2b66d9ecbc8e053d63) (thanks @rom1504)
+
 ## 3.70.0
 * [Pc1.20.5 protocol (#898)](https://github.com/PrismarineJS/minecraft-data/commit/a240b84d2690f1c05d2a64a8bf1b152b3682ded5) (thanks @extremeheat)
 * [Add 1.21.2-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/34bba2ce95af635a5d5e79359009fa779c135d42) (thanks @github-actions[bot])
