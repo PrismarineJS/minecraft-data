@@ -127,7 +127,7 @@ require('./version_iterator')(function (p, versionString) {
         const recipe = recipes[craftingTable.id]
         if (!recipe[0]) return
         // remove the if after fixing https://github.com/PrismarineJS/minecraft-data/issues/917
-        if (versionString !== 'pc 1.20.5') {
+        if (versionString !== 'pc 1.20.5' && versionString !== 'pc 1.20.6') {
           assert.notEqual(recipe.length, 1) // Check that crafting table has multiple recipes.
         }
       }
