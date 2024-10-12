@@ -110,6 +110,348 @@
    - lock
    - container_loot
 
+   SlotComponent:
+      type: SlotComponentType
+      data: type ?
+         # TODO: look into how nbt works here
+         if custom_data: anonymousNbt
+         if max_stack_size: varint
+         if max_damage: varint
+         if damage: varint
+         if unbreakable: bool
+         if custom_name: anonymousNbt
+         if item_name: anonymousNbt
+         if lore: anonOptionalNbt[]varint
+         if rarity: varint
+         if enchantments:
+            enchantments: []varint
+               id: varint
+               level: varint
+            showTooltip: bool
+         if can_place_on or can_break:
+            predicates: BlockPredicate[]varint
+            showTooltip: bool
+         if attribute_modifiers:
+            attributes: []varint
+               typeId: varint
+               uniqueId: UUID
+               name: string
+               value: f64
+               operation: varint =>
+               - add
+               - multiply_base
+               - multiply_total
+               slot: varint =>
+               - any
+               - main_hand
+               - off_hand
+               - hand
+               - feet
+               - legs
+               - chest
+               - head
+               - armor
+               - body
+            showTooltip: bool
+         if custom_model_data: varint
+         if hide_additional_tooltip: void
+         if hide_tooltip: void
+         if repair_cost: varint
+         if creative_slot_lock: void
+         if enchantment_glint_override: bool
+         if intangible_projectile: void
+         # Name	Type	Description
+         # Nutrition	VarInt	Non-negative
+         # Saturation Modifier	Float	How much saturation will be given after consuming the item.
+         # Can Always Eat	Boolean	Whether the item can always be eaten, even at full hunger.
+         # Seconds To Eat	Float	How long it takes to consume the item.
+         # Using converts to	Slot Data	This specifies the item produced after consuming the current item. In the Notchian server, this is used for stews, which turn into bowls. Set this to Air if the item should be consumed normally without leaving any other item after.
+         # Number of effects	VarInt	Number of elements in the following array.
+         # Effect	Type ID	Array	Potion Effect	The potion effect. See Potion Effect.
+         # Probability	Float	The probability for this effect to be chosen.
+         if food: 
+            nutrition: varint
+            saturationModifier: f32
+            canAlwaysEat: bool
+            secondsToEat: f32
+            usingConvertsTo: Slot
+            effects: []varint
+               effect: varint
+               probability: f32
+         if fire_resistant: void
+         # Name	Type	Description
+         # Number of Rules	VarInt	The number of elements in the following array.
+         # Rule
+         #  Blocks	Array	Block Set	The block this rule applies to. See Block Set.
+         #  Has Speed	Boolean	
+         #  Speed	Optional Float	The speed at which the tool breaks this rules' blocks. Only present if Has Speed is true.
+         #  Has Correct Drop For Blocks	Boolean	
+         #  Correct Drop For Blocks	Optional Boolean	Whether items should drop only if this is the correct tool. Only present if Has Correct Drop For Blocks is true.
+         # Default Mining Speed	Float	The mining speed in case none of the previous rule were matched.
+         # Damage Per Block	VarInt	The amount of damage the item takes per block break.
+         if tool:
+            rules: []varint
+               blocks: BlockSet[]varint
+               hasSpeed: bool
+               speed: f32
+               hasCorrectDropForBlocks: bool
+               correctDropForBlocks: bool
+            defaultMiningSpeed: f32
+            damagePerBlock: varint
+         # Name	Type	Description
+         # Number of enchantments	VarInt	Number of elements in the following array.
+         # Enchantment	Type ID	Array	VarInt Enum	The ID of the enchantment in the enchantment registry.
+         # Level	VarInt	The level of the enchantment.
+         # Show In Tooltip	Boolean	Whether the list of enchantments should be shown on the item's tooltip.
+         if stored_enchantments:
+            enchantments: []varint
+               id: varint
+               level: varint
+            showInTooltip: bool
+         if dyed_color:
+            color: varint
+            showTooltip: bool
+         if map_color: varint
+         if map_id: varint
+         if map_decorations: anonOptionalNbt
+         if map_post_processing: varint
+         if charged_projectiles:
+            projectiles: Slot[]varint
+         if bundle_contents:
+            contents: Slot[]varint
+         # Name	Type	Description
+         # Has Potion ID	Boolean	Whether this potion has an ID in the potion registry. If true, it has the default effects associated with the potion type.
+         # Potion ID	Optional VarInt	The ID of the potion type in the potion registry. Only present if Has Potion ID is true.
+         # Has Custom Color	Boolean	Whether this potion has a custom color. If false, it uses the default color associated with the potion type.
+         # Custom Color	Optional Int	The RGB components of the color, encoded as an integer. Only present if Has Custom Color is true.
+         # Number Of Custom Effects	VarInt	The number of elements in the following array.
+         # Custom Effects	Array of Potion Effect	Any custom effects the potion might have. See Potion Effect.
+         if potion_contents:
+            hasPotionId: bool
+            potionId: optvarint
+            hasCustomColor: bool
+            customColor: optvarint
+            customEffects: []varint
+               effect: varint
+               details: EffectDetail
+         # Name	Type	Description
+         # Number Of Effects	VarInt	Number of elements in the following array.
+         # Effect	Type ID	Array	VarInt Enum	The ID of the effect in the potion effect type registry.
+         # Duration	VarInt	The duration of the effect.
+         if suspicious_stew_effects:
+            effects: []varint
+               effect: varint
+               duration: varint
+         # Name	Type	Description
+         # Number Of Pages	VarInt	Number of elements in the following array.
+         # Page	Raw Content	Array (100)	String (1024)	The raw text of the page.
+         # Has Filtered Content	Boolean	
+         # Filtered Content	Optional String (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
+         if writable_book_content:
+            pages: BookPage[]varint
+         # Name	Type	Description
+         # Raw Title	String (32)	The raw title of the book.
+         # Has Filtered Title	Boolean	
+         # Filtered Title	Optional String (32)	The title after going through chat filters. Only present if Has Filtered Title is true.
+         # Author	String	
+         # Generation	VarInt	
+         # Number Of Pages	VarInt	Number of elements in the following array.
+         # Page	Raw Content	Array (100)	TextComponent (1024)	The raw text of the page.
+         # Has Filtered Content	Boolean	
+         # Filtered Content	Optional Text Component (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
+         # Resolved	Boolean	Whether entity selectors have already been resolved.
+         if written_book_content:
+            rawTitle: string
+            filteredTitle?: string
+            author: string
+            generation: varint
+            pages: BookPage[]varint
+            # Whether entity selectors have already been resolved.
+            resolved: bool
+         # Name	Type	Description
+         # Trim Material Type	VarInt	Identifier used to determine the data that follows. It can be either:
+         # 0 - Directly represents a trim material, with the necessary data following.
+         # Anything else - References a trim material in its registry, by the ID of Trim Material Type - 1.
+         # Asset Name	Optional String	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
+         # Ingredient	Optional VarInt	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
+         # Item Model Index	Optional Float	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
+         # Number of Overrides	Optional VarInt	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
+         # Override	Armor Material Type	Optional Array	VarInt Enum	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
+         # Overriden Asset Name	String	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
+         # Description	Optional Text Component	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
+         # Trim Pattern Type	VarInt	Identifier used to determine the data that follows. It can be either:
+         # 0 - Directly represents a trim pattern, with the necessary data following.
+         # Anything else - References a trim pattern in its registry, by the ID of Trim Pattern Type - 1.
+         # Asset Name	Optional String	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
+         # Template Item	Optional VarInt	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
+         # Description	Optional Text Component	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
+         # Decal	Optional Boolean	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
+         # Show In Tooltip	Boolean	Whether the trim information should be shown on the item's tooltip.
+         if trim:
+            # Identifier used to determine the data that follows. It can be either:
+            # 0 - Directly represents a trim material, with the necessary data following.
+            # Anything else - References a trim material in its registry, by the ID of Trim Material Type - 1.
+            materialType: varint
+            _: materialType ?
+               if 0:
+                  assetName: string
+                  ingredientId: varint
+                  itemModelIndex: f32
+                  numberOfOverrides: optvarint
+                  override: []varint
+                     armorMaterialType: varint
+                     overridenAssetName: string
+                  description: string
+            trimPatternType: varint
+            _: trimPatternType ?
+               if 0:
+                  assetName: string
+                  templateItem: varint
+                  description: string
+                  decal: bool
+            showInTooltip: bool
+         if debug_stick_state: anonymousNbt
+         if entity_data: anonymousNbt
+         if bucket_entity_data: anonymousNbt
+         if block_entity_data: anonymousNbt
+         # Name	Type	Description
+         # Instrument Type	VarInt	Identifier used to determine the data that follows. It can be either:
+         # 0 - Directly represents an instrument, with the necessary data following.
+         # Anything else - References an instrument in its registry, by the ID of Instrument Type - 1.
+         # Sound Event	Optional Sound Event	The sound to be played. Only present if Instrument Type is 0.
+         # Use duration	Optional Float	The maximum range of the sound. Only present if Instrument Type is 0.
+         # Range	Optional Float	The range of the instrument. Only present if Instrument Type is 0.
+         if instrument:
+            instrumentType: varint
+            _: instrumentType ?
+               if 0:
+                  soundEvent: string
+                  useDuration: f32
+                  range: f32
+         if ominous_bottle_amplifier: varint
+         # Name	Type	Description
+         # Direct Mode	Boolean	Whether the jukebox song is specified directly, or just referenced by name.
+         # Jukebox Song Name	Optional Identifier	The name of the jukebox song in its respective registry. Only present if Direct Mode is false.
+         # Jukebox Song Type	Optional VarInt	Identifier used to determine the data that follows. It can be either:
+         # 0 - Directly represents a jukebox song, with the necessary data following.
+         # Anything else - References a jukebox song in its registry, by the ID of Jukebox Song Type - 1.
+         # Only present if Direct Mode is true.  
+         # Sound Event	Optional Sound Event	The sound to be played. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Description	Optional Text Component	The description shown in the item lore. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Duration	Optional Float	The duration the songs should play for, in seconds. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Output	Optional VarInt	The output strength given by a comparator. Between 0 and 15. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Show In Tooltip	Boolean	Whether the song should be shown on the item's tooltip.
+         if jukebox_playable:
+            directMode: bool
+            _: directMode ?
+               if false:
+                  jukeboxSongName: string
+                  jukeboxSongType: varint
+                  _: jukeboxSongType ?
+                     if 0:
+                        soundEvent:
+                           soundEventType: varint
+                           _: soundEventType ?
+                              if 0:
+                                 soundName: string
+                                 fixedRange?: f32
+                        description: anonymousNbt
+                        duration: f32
+                        output: varint
+            showInTooltip: bool
+         if recipes: anonymousNbt
+         # Name	Type	Description
+         # Has Global Position	Boolean	Whether this lodestone points to a position, otherwise it spins randomly.
+         # Dimension	Identifier	The dimension the compass points to. Only present if Has Global Position is true.
+         # Position	Position	The position the compass points to. Only present if Has Global Position is true.
+         # Tracked	Boolean	Whether the component is removed when the associated lodestone is broken.
+         if lodestone_tracker:
+            globalPosition?:
+               dimension: string
+               position: vec3f
+            tracked: bool
+         # Name	Type	Description
+         # Shape	VarInt Enum	Can be one of the following:
+         # 0 - Small ball
+         # 1 - Large ball
+         # 2 - Star
+         # 3 - Creeper
+         # 4 - Burst
+         # Number Of Colors	VarInt	The number of elements in the following array.
+         # Colors	Array of Int	The RGB components of the color, encoded as an integer.
+         # Number Of Fade Colors	VarInt	The number of elements in the following array.
+         # Fade Colors	Array of Int	The RGB components of the color, encoded as an integer.
+         # Has Trail	Boolean	
+         # Has Twinkle	Boolean	
+         if firework_explosion: FireworkExplosion
+         if fireworks:
+            flightDuration: varint
+            explosions: FireworkExplosion[]varint
+         # Name	Type	Description
+         # Has Name	Boolean	
+         # Name	Optional String (16)	Only present if Has Name is true.
+         # Has Unique ID	Boolean	
+         # Unique ID	Optional UUID	Only present if Has Unique ID is true.
+         # Number of Properties	VarInt	Number of elements in the following array.
+         # Property	Name	Array	String (64)	
+         # Value	String	
+         # Has Signature	Boolean	
+         # Signature	String (1024)	Only present if Has Signature is true.
+         if profile:
+            hasName: bool
+            name: string
+            hasUniqueId: bool
+            uniqueId: UUID
+            properties: []varint
+               property: string
+               value: string
+               hasSignature: bool
+               signature: string
+         if note_block_sound: string
+         # Name	Type	Description
+         # Number of Layers	VarInt	Number of elements in the following array.
+         # Layer	Pattern Type	Array	VarInt	Identifier used to determine the data that follows. It can be either:
+         # 0 - Directly represents a pattern, with the necessary data following.
+         # Anything else - References a pattern in its registry, by the ID of Pattern Type - 1.
+         # Asset ID	Optional Identifier	Identifier of the asset. Only present if Pattern Type is 0.
+         # Translation Key	Optional String	Only present if Pattern Type is 0.
+         # Color	Dye Color	See Dye Color.
+         if banner_patterns:
+            layers: []varint
+               patternType: varint
+               _: patternType ?
+                  if 0:
+                     assetId: string
+                     translationKey: string
+               color: varint
+         if base_color: varint
+         if pot_decorations:
+            # The ID of the items in the item registry.
+            decorations: varint[]varint
+         if container:
+            contents: Slot[]varint
+         # Name	Type	Description
+         # Number of Properties	VarInt	Number of elements in the following array.
+         # Property	Name	Array	String	
+         # Value	String	
+         if block_state:
+            properties: []varint
+               property: string
+               value: string
+         # Name	Type	Description
+         # Number of Bees	VarInt	Number of elements in the following array.
+         # Bee	Entity Data	Array	NBT	
+         # Ticks In Hive	VarInt	
+         # Min Ticks In Hive	VarInt
+         if bees:
+            bees: []varint
+               # Custom data for the entity, always a Compound Tag. Same structure as the minecraft:custom_data component.
+               nbtData: anonymousNbt
+               ticksInHive: varint
+               minTicksInHive: varint
+         if lock: anonymousNbt
+         if container_loot: anonymousNbt
+
    Slot:
       itemCount: i8
       _: itemCount ?
@@ -175,351 +517,9 @@
 # +    public static final DataComponentType<CompoundTag> CONTAINER_LOOT = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
             addedComponentCount: varint
             removedComponentCount: varint
-            components: []$addedComponentCount
-               type: SlotComponentType
-               data: type ?
-                  # TODO: look into how nbt works here
-                  if custom_data: anonymousNbt
-                  if max_stack_size: varint
-                  if max_damage: varint
-                  if damage: varint
-                  if unbreakable: bool
-                  if custom_name: anonymousNbt
-                  if item_name: anonymousNbt
-                  if lore: anonOptionalNbt[]varint
-                  if rarity: varint
-                  if enchantments:
-                     enchantments: []varint
-                        id: varint
-                        level: varint
-                     showTooltip: bool
-                  if can_place_on or can_break:
-                     predicates: BlockPredicate[]varint
-                     showTooltip: bool
-                  if attribute_modifiers:
-                     attributes: []varint
-                        typeId: varint
-                        uniqueId: UUID
-                        name: string
-                        value: f64
-                        operation: varint =>
-                        - add
-                        - multiply_base
-                        - multiply_total
-                        slot: varint =>
-                        - any
-                        - main_hand
-                        - off_hand
-                        - hand
-                        - feet
-                        - legs
-                        - chest
-                        - head
-                        - armor
-                        - body
-                     showTooltip: bool
-                  if custom_model_data: varint
-                  if hide_additional_tooltip: void
-                  if hide_tooltip: void
-                  if repair_cost: varint
-                  if creative_slot_lock: void
-                  if enchantment_glint_override: bool
-                  if intangible_projectile: void
-                  # Name	Type	Description
-                  # Nutrition	VarInt	Non-negative
-                  # Saturation Modifier	Float	How much saturation will be given after consuming the item.
-                  # Can Always Eat	Boolean	Whether the item can always be eaten, even at full hunger.
-                  # Seconds To Eat	Float	How long it takes to consume the item.
-                  # Using converts to	Slot Data	This specifies the item produced after consuming the current item. In the Notchian server, this is used for stews, which turn into bowls. Set this to Air if the item should be consumed normally without leaving any other item after.
-                  # Number of effects	VarInt	Number of elements in the following array.
-                  # Effect	Type ID	Array	Potion Effect	The potion effect. See Potion Effect.
-                  # Probability	Float	The probability for this effect to be chosen.
-                  if food: 
-                     nutrition: varint
-                     saturationModifier: f32
-                     canAlwaysEat: bool
-                     secondsToEat: f32
-                     usingConvertsTo: Slot
-                     effects: []varint
-                        effect: varint
-                        probability: f32
-                  if fire_resistant: void
-                  # Name	Type	Description
-                  # Number of Rules	VarInt	The number of elements in the following array.
-                  # Rule
-                  #  Blocks	Array	Block Set	The block this rule applies to. See Block Set.
-                  #  Has Speed	Boolean	
-                  #  Speed	Optional Float	The speed at which the tool breaks this rules' blocks. Only present if Has Speed is true.
-                  #  Has Correct Drop For Blocks	Boolean	
-                  #  Correct Drop For Blocks	Optional Boolean	Whether items should drop only if this is the correct tool. Only present if Has Correct Drop For Blocks is true.
-                  # Default Mining Speed	Float	The mining speed in case none of the previous rule were matched.
-                  # Damage Per Block	VarInt	The amount of damage the item takes per block break.
-                  if tool:
-                     rules: []varint
-                        blocks: BlockSet[]varint
-                        hasSpeed: bool
-                        speed: f32
-                        hasCorrectDropForBlocks: bool
-                        correctDropForBlocks: bool
-                     defaultMiningSpeed: f32
-                     damagePerBlock: varint
-                  # Name	Type	Description
-                  # Number of enchantments	VarInt	Number of elements in the following array.
-                  # Enchantment	Type ID	Array	VarInt Enum	The ID of the enchantment in the enchantment registry.
-                  # Level	VarInt	The level of the enchantment.
-                  # Show In Tooltip	Boolean	Whether the list of enchantments should be shown on the item's tooltip.
-                  if stored_enchantments:
-                     enchantments: []varint
-                        id: varint
-                        level: varint
-                     showInTooltip: bool
-                  if dyed_color:
-                     color: varint
-                     showTooltip: bool
-                  if map_color: varint
-                  if map_id: varint
-                  if map_decorations: anonOptionalNbt
-                  if map_post_processing: varint
-                  if charged_projectiles:
-                     projectiles: Slot[]varint
-                  if bundle_contents:
-                     contents: Slot[]varint
-                  # Name	Type	Description
-                  # Has Potion ID	Boolean	Whether this potion has an ID in the potion registry. If true, it has the default effects associated with the potion type.
-                  # Potion ID	Optional VarInt	The ID of the potion type in the potion registry. Only present if Has Potion ID is true.
-                  # Has Custom Color	Boolean	Whether this potion has a custom color. If false, it uses the default color associated with the potion type.
-                  # Custom Color	Optional Int	The RGB components of the color, encoded as an integer. Only present if Has Custom Color is true.
-                  # Number Of Custom Effects	VarInt	The number of elements in the following array.
-                  # Custom Effects	Array of Potion Effect	Any custom effects the potion might have. See Potion Effect.
-                  if potion_contents:
-                     hasPotionId: bool
-                     potionId: optvarint
-                     hasCustomColor: bool
-                     customColor: optvarint
-                     customEffects: []varint
-                        effect: varint
-                        details: EffectDetail
-                  # Name	Type	Description
-                  # Number Of Effects	VarInt	Number of elements in the following array.
-                  # Effect	Type ID	Array	VarInt Enum	The ID of the effect in the potion effect type registry.
-                  # Duration	VarInt	The duration of the effect.
-                  if suspicious_stew_effects:
-                     effects: []varint
-                        effect: varint
-                        duration: varint
-                  # Name	Type	Description
-                  # Number Of Pages	VarInt	Number of elements in the following array.
-                  # Page	Raw Content	Array (100)	String (1024)	The raw text of the page.
-                  # Has Filtered Content	Boolean	
-                  # Filtered Content	Optional String (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
-                  if writable_book_content:
-                     pages: BookPage[]varint
-                  # Name	Type	Description
-                  # Raw Title	String (32)	The raw title of the book.
-                  # Has Filtered Title	Boolean	
-                  # Filtered Title	Optional String (32)	The title after going through chat filters. Only present if Has Filtered Title is true.
-                  # Author	String	
-                  # Generation	VarInt	
-                  # Number Of Pages	VarInt	Number of elements in the following array.
-                  # Page	Raw Content	Array (100)	TextComponent (1024)	The raw text of the page.
-                  # Has Filtered Content	Boolean	
-                  # Filtered Content	Optional Text Component (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
-                  # Resolved	Boolean	Whether entity selectors have already been resolved.
-                  if written_book_content:
-                     rawTitle: string
-                     filteredTitle?: string
-                     author: string
-                     generation: varint
-                     pages: BookPage[]varint
-                     # Whether entity selectors have already been resolved.
-                     resolved: bool
-                  # Name	Type	Description
-                  # Trim Material Type	VarInt	Identifier used to determine the data that follows. It can be either:
-                  # 0 - Directly represents a trim material, with the necessary data following.
-                  # Anything else - References a trim material in its registry, by the ID of Trim Material Type - 1.
-                  # Asset Name	Optional String	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
-                  # Ingredient	Optional VarInt	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
-                  # Item Model Index	Optional Float	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
-                  # Number of Overrides	Optional VarInt	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
-                  # Override	Armor Material Type	Optional Array	VarInt Enum	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
-                  # Overriden Asset Name	String	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
-                  # Description	Optional Text Component	See Armor Trim Material Registry. Only present if Trim Material Type is 0.
-                  # Trim Pattern Type	VarInt	Identifier used to determine the data that follows. It can be either:
-                  # 0 - Directly represents a trim pattern, with the necessary data following.
-                  # Anything else - References a trim pattern in its registry, by the ID of Trim Pattern Type - 1.
-                  # Asset Name	Optional String	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
-                  # Template Item	Optional VarInt	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
-                  # Description	Optional Text Component	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
-                  # Decal	Optional Boolean	See Armor Trim Pattern Registry. Only present if Trim Pattern Type is 0.
-                  # Show In Tooltip	Boolean	Whether the trim information should be shown on the item's tooltip.
-                  if trim:
-                     # Identifier used to determine the data that follows. It can be either:
-                     # 0 - Directly represents a trim material, with the necessary data following.
-                     # Anything else - References a trim material in its registry, by the ID of Trim Material Type - 1.
-                     materialType: varint
-                     _: materialType ?
-                        if 0:
-                           assetName: string
-                           ingredientId: varint
-                           itemModelIndex: f32
-                           numberOfOverrides: optvarint
-                           override: []varint
-                              armorMaterialType: varint
-                              overridenAssetName: string
-                           description: string
-                     trimPatternType: varint
-                     _: trimPatternType ?
-                        if 0:
-                           assetName: string
-                           templateItem: varint
-                           description: string
-                           decal: bool
-                     showInTooltip: bool
-                  if debug_stick_state: anonymousNbt
-                  if entity_data: anonymousNbt
-                  if bucket_entity_data: anonymousNbt
-                  if block_entity_data: anonymousNbt
-                  # Name	Type	Description
-                  # Instrument Type	VarInt	Identifier used to determine the data that follows. It can be either:
-                  # 0 - Directly represents an instrument, with the necessary data following.
-                  # Anything else - References an instrument in its registry, by the ID of Instrument Type - 1.
-                  # Sound Event	Optional Sound Event	The sound to be played. Only present if Instrument Type is 0.
-                  # Use duration	Optional Float	The maximum range of the sound. Only present if Instrument Type is 0.
-                  # Range	Optional Float	The range of the instrument. Only present if Instrument Type is 0.
-                  if instrument:
-                     instrumentType: varint
-                     _: instrumentType ?
-                        if 0:
-                           soundEvent: string
-                           useDuration: f32
-                           range: f32
-                  if ominous_bottle_amplifier: varint
-                  # Name	Type	Description
-                  # Direct Mode	Boolean	Whether the jukebox song is specified directly, or just referenced by name.
-                  # Jukebox Song Name	Optional Identifier	The name of the jukebox song in its respective registry. Only present if Direct Mode is false.
-                  # Jukebox Song Type	Optional VarInt	Identifier used to determine the data that follows. It can be either:
-                  # 0 - Directly represents a jukebox song, with the necessary data following.
-                  # Anything else - References a jukebox song in its registry, by the ID of Jukebox Song Type - 1.
-                  # Only present if Direct Mode is true.
-
-                  # Sound Event	Optional Sound Event	The sound to be played. Only present if Direct Mode is true and Jukebox Song Type is 0.
-                  # Description	Optional Text Component	The description shown in the item lore. Only present if Direct Mode is true and Jukebox Song Type is 0.
-                  # Duration	Optional Float	The duration the songs should play for, in seconds. Only present if Direct Mode is true and Jukebox Song Type is 0.
-                  # Output	Optional VarInt	The output strength given by a comparator. Between 0 and 15. Only present if Direct Mode is true and Jukebox Song Type is 0.
-                  # Show In Tooltip	Boolean	Whether the song should be shown on the item's tooltip.
-                  if jukebox_playable:
-                     directMode: bool
-                     _: directMode ?
-                        if false:
-                           jukeboxSongName: string
-                           jukeboxSongType: varint
-                           _: jukeboxSongType ?
-                              if 0:
-                                 soundEvent:
-                                    soundEventType: varint
-                                    _: soundEventType ?
-                                       if 0:
-                                          soundName: string
-                                          fixedRange?: f32
-                                 description: anonymousNbt
-                                 duration: f32
-                                 output: varint
-                     showInTooltip: bool
-                  if recipes: anonymousNbt
-                  # Name	Type	Description
-                  # Has Global Position	Boolean	Whether this lodestone points to a position, otherwise it spins randomly.
-                  # Dimension	Identifier	The dimension the compass points to. Only present if Has Global Position is true.
-                  # Position	Position	The position the compass points to. Only present if Has Global Position is true.
-                  # Tracked	Boolean	Whether the component is removed when the associated lodestone is broken.
-                  if lodestone_tracker:
-                     globalPosition?:
-                        dimension: string
-                        position: vec3f
-                     tracked: bool
-                  # Name	Type	Description
-                  # Shape	VarInt Enum	Can be one of the following:
-                  # 0 - Small ball
-                  # 1 - Large ball
-                  # 2 - Star
-                  # 3 - Creeper
-                  # 4 - Burst
-                  # Number Of Colors	VarInt	The number of elements in the following array.
-                  # Colors	Array of Int	The RGB components of the color, encoded as an integer.
-                  # Number Of Fade Colors	VarInt	The number of elements in the following array.
-                  # Fade Colors	Array of Int	The RGB components of the color, encoded as an integer.
-                  # Has Trail	Boolean	
-                  # Has Twinkle	Boolean	
-                  if firework_explosion: FireworkExplosion
-                  if fireworks:
-                     flightDuration: varint
-                     explosions: FireworkExplosion[]varint
-                  # Name	Type	Description
-                  # Has Name	Boolean	
-                  # Name	Optional String (16)	Only present if Has Name is true.
-                  # Has Unique ID	Boolean	
-                  # Unique ID	Optional UUID	Only present if Has Unique ID is true.
-                  # Number of Properties	VarInt	Number of elements in the following array.
-                  # Property	Name	Array	String (64)	
-                  # Value	String	
-                  # Has Signature	Boolean	
-                  # Signature	String (1024)	Only present if Has Signature is true.
-                  if profile:
-                     hasName: bool
-                     name: string
-                     hasUniqueId: bool
-                     uniqueId: UUID
-                     properties: []varint
-                        property: string
-                        value: string
-                        hasSignature: bool
-                        signature: string
-                  if note_block_sound: string
-                  # Name	Type	Description
-                  # Number of Layers	VarInt	Number of elements in the following array.
-                  # Layer	Pattern Type	Array	VarInt	Identifier used to determine the data that follows. It can be either:
-                  # 0 - Directly represents a pattern, with the necessary data following.
-                  # Anything else - References a pattern in its registry, by the ID of Pattern Type - 1.
-                  # Asset ID	Optional Identifier	Identifier of the asset. Only present if Pattern Type is 0.
-                  # Translation Key	Optional String	Only present if Pattern Type is 0.
-                  # Color	Dye Color	See Dye Color.
-                  if banner_patterns:
-                     layers: []varint
-                        patternType: varint
-                        _: patternType ?
-                           if 0:
-                              assetId: string
-                              translationKey: string
-                        color: varint
-                  if base_color: varint
-                  if pot_decorations:
-                     # The ID of the items in the item registry.
-                     decorations: varint[]varint
-                  if container:
-                     contents: Slot[]varint
-                  # Name	Type	Description
-                  # Number of Properties	VarInt	Number of elements in the following array.
-                  # Property	Name	Array	String	
-                  # Value	String	
-                  if block_state:
-                     properties: []varint
-                        property: string
-                        value: string
-                  # Name	Type	Description
-                  # Number of Bees	VarInt	Number of elements in the following array.
-                  # Bee	Entity Data	Array	NBT	
-                  # Ticks In Hive	VarInt	
-                  # Min Ticks In Hive	VarInt
-                  if bees:
-                     bees: []varint
-                        # Custom data for the entity, always a Compound Tag. Same structure as the minecraft:custom_data component.
-                        nbtData: anonymousNbt
-                        ticksInHive: varint
-                        minTicksInHive: varint
-                  if lock: anonymousNbt
-                  if container_loot: anonymousNbt
+            components: SlotComponent[]$addedComponentCount
             removeComponents: []$removedComponentCount
                type: SlotComponentType
-
 
    FireworkExplosion:
       shape: varint =>
@@ -1822,9 +1822,17 @@
       windowId: varint
       ## https://github.com/extremeheat/extracted_minecraft_data/blob/client1.20.5/client/net/minecraft/world/item/trading/MerchantOffer.java#L210
       trades: []varint
-         inputItem1: Slot
+         inputItem1:
+            itemId: varint
+            itemCount: varint
+            addedComponentCount: varint
+            components: SlotComponent[]$addedComponentCount
          outputItem: Slot
-         inputItem2: Slot
+         inputItem2?:
+            itemId: varint
+            itemCount: varint
+            addedComponentCount: varint
+            components: SlotComponent[]$addedComponentCount
          tradeDisabled: bool
          nbTradeUses: i32
          maximumNbTradeUses: i32
