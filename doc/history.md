@@ -1,3 +1,6 @@
+## 3.73.0
+* [add missing 1.20.6 in versions.json](https://github.com/PrismarineJS/minecraft-data/commit/214ae40d2d2c383cf5ef5050529be1693961930b) (thanks @rom1504)
+
 ## 3.72.0
 * [Add 1.20.6 support assuming no change from 1.20.5.](https://github.com/PrismarineJS/minecraft-data/commit/9e9e84df7890b1a59f2f074fb1b0c0eb0885ca74) (thanks @rom1504)
 
