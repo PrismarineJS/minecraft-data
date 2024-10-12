@@ -1,3 +1,6 @@
+## 3.74.0
+* [update recipes for 1.20.6](https://github.com/PrismarineJS/minecraft-data/commit/636d3a7e027e75ab1deeb4cd214b73306a836473) (thanks @rom1504)
+
 ## 3.73.0
 * [add missing 1.20.6 in versions.json](https://github.com/PrismarineJS/minecraft-data/commit/214ae40d2d2c383cf5ef5050529be1693961930b) (thanks @rom1504)
 
