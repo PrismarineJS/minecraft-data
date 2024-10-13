@@ -1,3 +1,6 @@
+## 3.76.0
+* [add has execute command feature](https://github.com/PrismarineJS/minecraft-data/commit/20f34ae536e30370ecdb6fde6412ddba4d67d9a0) (thanks @rom1504)
+
 ## 3.75.0
 * [use login data of 1.20.5 in 1.20.6](https://github.com/PrismarineJS/minecraft-data/commit/b5d1b0bfa18d3c9f41d289c285d2b54827f22004) (thanks @rom1504)
 
