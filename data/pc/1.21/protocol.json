@@ -41,6 +41,19 @@
         "countType": "varint"
       }
     ],
+    "vec2f": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "f32"
+        },
+        {
+          "name": "y",
+          "type": "f32"
+        }
+      ]
+    ],
     "vec3f": [
       "container",
       [
@@ -1854,13 +1867,81 @@
                 "optional_unsigned_int": "optvarint",
                 "pose": "varint",
                 "cat_variant": "varint",
-                "wolf_variant": "varint",
+                "wolf_variant": [
+                  "container",
+                  [
+                    {
+                      "name": "wildTexture",
+                      "type": "string"
+                    },
+                    {
+                      "name": "tameTexture",
+                      "type": "string"
+                    },
+                    {
+                      "name": "angryTexture",
+                      "type": "string"
+                    },
+                    {
+                      "name": "maybeInputLength",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "biomeLocation",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "maybeInputLength",
+                          "fields": {
+                            "0": "string"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "biomeHolders",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "maybeInputLength",
+                          "fields": {
+                            "0": "void"
+                          },
+                          "default": [
+                            "arrayWithLengthOffset",
+                            {
+                              "count": "type",
+                              "type": "varint",
+                              "lengthOffset": -1
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                ],
                 "frog_variant": "varint",
                 "optional_global_pos": [
                   "option",
                   "string"
                 ],
-                "painting_variant": "varint",
+                "painting_variant": [
+                  "container",
+                  [
+                    {
+                      "name": "width",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "height",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "assetId",
+                      "type": "string"
+                    }
+                  ]
+                ],
                 "sniffer_state": "varint",
                 "armadillo_state": "varint",
                 "vector3": "vec3f",
@@ -2657,6 +2738,96 @@
           ]
         }
       ]
+    ],
+    "packet_common_custom_report_details": [
+      "container",
+      [
+        {
+          "name": "details",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "key",
+                    "type": "string"
+                  },
+                  {
+                    "name": "value",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "ServerLinkType": [
+      "bug_report",
+      "community_guidelines",
+      "support",
+      "status",
+      "feedback",
+      "community",
+      "website",
+      "forums",
+      "news",
+      "announcements"
+    ],
+    "packet_common_server_links": [
+      "container",
+      [
+        {
+          "name": "links",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "hasKnownType",
+                    "type": "bool"
+                  },
+                  {
+                    "name": "knownType",
+                    "type": [
+                      "switch",
+                      {
+                        "compareTo": "hasKnownType",
+                        "fields": {
+                          "true": "ServerLinkType"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "unknownType",
+                    "type": [
+                      "switch",
+                      {
+                        "compareTo": "hasKnownType",
+                        "fields": {
+                          "false": "anonymousNbt"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "link",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
     ]
   },
   "handshaking": {
@@ -3303,7 +3474,9 @@
                     "0x0b": "transfer",
                     "0x0c": "feature_flags",
                     "0x0d": "tags",
-                    "0x0e": "select_known_packs"
+                    "0x0e": "select_known_packs",
+                    "0x0f": "custom_report_details",
+                    "0x10": "server_links"
                   }
                 }
               ]
@@ -3329,7 +3502,9 @@
                     "transfer": "packet_common_transfer",
                     "feature_flags": "packet_feature_flags",
                     "tags": "packet_tags",
-                    "select_known_packs": "packet_common_select_known_packs"
+                    "select_known_packs": "packet_common_select_known_packs",
+                    "custom_report_details": "packet_common_custom_report_details",
+                    "server_links": "packet_common_server_links"
                   }
                 }
               ]
@@ -3442,7 +3617,9 @@
                     "0x04": "keep_alive",
                     "0x05": "pong",
                     "0x06": "resource_pack_receive",
-                    "0x07": "select_known_packs"
+                    "0x07": "select_known_packs",
+                    "0x08": "custom_report_details",
+                    "0x09": "server_links"
                   }
                 }
               ]
@@ -3461,7 +3638,9 @@
                     "keep_alive": "packet_keep_alive",
                     "pong": "packet_pong",
                     "resource_pack_receive": "packet_resource_pack_receive",
-                    "select_known_packs": "packet_common_select_known_packs"
+                    "select_known_packs": "packet_common_select_known_packs",
+                    "custom_report_details": "packet_common_custom_report_details",
+                    "server_links": "packet_common_server_links"
                   }
                 }
               ]
@@ -4152,6 +4331,59 @@
             }
           ]
         ],
+        "ChatTypeParameterType": [
+          "container",
+          [
+            {
+              "name": "0",
+              "type": "content"
+            },
+            {
+              "name": "1",
+              "type": "sender"
+            },
+            {
+              "name": "2",
+              "type": "target"
+            }
+          ]
+        ],
+        "ChatType": [
+          "container",
+          [
+            {
+              "name": "translationKey",
+              "type": "string"
+            },
+            {
+              "name": "parameters",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "ChatTypeParameterType"
+                }
+              ]
+            },
+            {
+              "name": "style",
+              "type": "anonymousNbt"
+            }
+          ]
+        ],
+        "ChatTypes": [
+          "container",
+          [
+            {
+              "name": "chat",
+              "type": "ChatType"
+            },
+            {
+              "name": "narration",
+              "type": "ChatType"
+            }
+          ]
+        ],
         "packet_profileless_chat": [
           "container",
           [
@@ -4161,7 +4393,7 @@
             },
             {
               "name": "type",
-              "type": "varint"
+              "type": "ChatTypes"
             },
             {
               "name": "name",
@@ -5201,7 +5433,7 @@
             },
             {
               "name": "type",
-              "type": "varint"
+              "type": "ChatTypes"
             },
             {
               "name": "networkName",
@@ -5891,7 +6123,7 @@
             },
             {
               "name": "copyMetadata",
-              "type": "bool"
+              "type": "u8"
             }
           ]
         ],
@@ -7106,7 +7338,7 @@
                               [
                                 {
                                   "name": "uuid",
-                                  "type": "UUID"
+                                  "type": "string"
                                 },
                                 {
                                   "name": "amount",
@@ -7402,8 +7634,8 @@
               "type": "varint"
             },
             {
-              "name": "power",
-              "type": "vec3f64"
+              "name": "accelerationPower",
+              "type": "f64"
             }
           ]
         ],
@@ -8757,6 +8989,10 @@
             {
               "name": "sequence",
               "type": "varint"
+            },
+            {
+              "name": "rotation",
+              "type": "vec2f"
             }
           ]
         ],

@@ -1,4 +1,4 @@
-!version: 1.21
+!version: 1.20.5
 !StartDocs: true
 
 ^types:
@@ -38,9 +38,6 @@
          "countType": "varint"
       }
    ]
-   vec2f:
-      x: f32
-      y: f32
    vec3f:
       x: f32
       y: f32
@@ -834,22 +831,10 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if wolf_variant:
-            wildTexture: string
-            tameTexture: string
-            angryTexture: string
-            maybeInputLength: varint
-            biomeLocation: maybeInputLength ?
-               if 0: string
-            biomeHolders: maybeInputLength ?
-               if 0: void
-               default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
+         if wolf_variant: varint
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
-         if painting_variant:
-            width: varint
-            height: varint
-            assetId: string
+         if painting_variant: varint
          if sniffer_state: varint
          if armadillo_state: varint
          if vector3: vec3f
@@ -1227,34 +1212,6 @@
          namespace: string
          id: string
          version: string
-   # MC: ClientboundCustomReportDetailsPacket
-   packet_common_custom_report_details:
-      details: []varint
-         key: string
-         value: string
-
-   ServerLinkType:
-   - bug_report
-   - community_guidelines
-   - support
-   - status
-   - feedback
-   - community
-   - website
-   - forums
-   - news
-   - announcements
-   # MC: ClientboundServerLinksPacket
-   # This packet contains a list of links that the Notchian client will display in the menu 
-   # available from the pause menu. Link labels can be built-in or custom (i.e., any text).
-   packet_common_server_links:
-      links: []varint
-         hasKnownType: bool
-         knownType: hasKnownType ?
-            if true: ServerLinkType
-         unknownType: hasKnownType ?
-            if false: anonymousNbt
-         link: string
 
 ^handshaking.toClient.types:
    packet:
@@ -1461,8 +1418,6 @@
       - feature_flags
       - tags
       - select_known_packs
-      - custom_report_details
-      - server_links
       params: name ?
          if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
@@ -1479,8 +1434,6 @@
          if feature_flags: packet_feature_flags
          if tags: packet_tags
          if select_known_packs: packet_common_select_known_packs
-         if custom_report_details: packet_common_custom_report_details
-         if server_links: packet_common_server_links
 ^configuration.toServer.types:
    # MC: ServerboundClientInformationPacket
    packet_settings:
@@ -1520,8 +1473,6 @@
       - pong
       - resource_pack_receive
       - select_known_packs
-      - custom_report_details
-      - server_links
       params: name ?
          if settings: packet_settings
          if cookie_response: packet_common_cookie_response
@@ -1531,10 +1482,7 @@
          if pong: packet_pong
          if resource_pack_receive: packet_resource_pack_receive
          if select_known_packs: packet_common_select_known_packs
-         if custom_report_details: packet_common_custom_report_details
-         if server_links: packet_common_server_links
 ^play.toClient.types:
-   # World state information for spawn and respawn packets
    # World state information for spawn and respawn packets
    SpawnInfo:
       dimension: varint
@@ -1720,25 +1668,10 @@
    # MC: ClientboundDisconnectPacket
    packet_kick_disconnect:
       reason: anonymousNbt
-
-   ## client\net\minecraft\network\chat\ChatTypeDecoration.java
-   ## via client\net\minecraft\network\chat\ChatType.java
-   ChatTypeParameterType:
-      - content
-      - sender
-      - target
-   ChatType:
-      translationKey: string
-      parameters: ChatTypeParameterType[]varint
-      style: anonymousNbt
-   ChatTypes:
-      chat: ChatType
-      narration: ChatType
-
    # MC: ClientboundDisguisedChatPacket
    packet_profileless_chat:
       message: anonymousNbt
-      type: ChatTypes
+      type: varint
       name: anonymousNbt
       target?: anonymousNbt
    # MC: ClientboundEntityEventPacket
@@ -1987,7 +1920,7 @@
       filterTypeMask: filterType ?
          if 2: i64[]varint
          default: void
-      type: ChatTypes
+      type: varint
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
    # MC: ClientboundPlayerCombatEndPacket
@@ -2369,8 +2302,7 @@
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
-      # Bit field: 0b1 - KEEP_ATTRIBUTE_MODIFIERS, 0b10 - KEEP_ENTITY_DATA
-      copyMetadata: u8
+      copyMetadata: bool
    # MC: ClientboundRotateHeadPacket
    packet_entity_head_rotation:
       entityId: varint
@@ -2717,7 +2649,7 @@
          - generic.step_height
          value: f64
          modifiers: []varint
-            uuid: string
+            uuid: UUID
             amount: f64
             operation: i8
    # MC: ClientboundUpdateMobEffectPacket
@@ -2818,7 +2750,7 @@
    # MC: ClientboundProjectilePowerPacket
    packet_set_projectile_power:
       id: varint
-      accelerationPower: f64
+      power: vec3f64
 
    packet:
       name: varint =>
@@ -3386,7 +3318,6 @@
    packet_use_item:
       hand: varint
       sequence: varint
-      rotation: vec2f
 
    packet:
       name: varint =>
