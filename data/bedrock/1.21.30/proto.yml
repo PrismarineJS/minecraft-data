@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.40
+!version: 1.21.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -141,6 +141,9 @@ packet_resource_packs_info:
    texture_packs: TexturePackInfos
    # Resource Pack Links contains a list of URLs where the client can download required
    # resource packs, as opposed to the current Minecraft sever sending the data over
+   resource_pack_links: []varint
+      id: string
+      url: string
 
 packet_resource_pack_stack:
    !id: 0x07
@@ -647,9 +650,9 @@ packet_move_player:
          # TeleportSourceEntityType is the entity type that caused the teleportation, for example an ender pearl.
          # TODO: is this still a integer and not a string?
          source_entity_type: LegacyEntityType
-   tick: PlayerInputTick
+   tick: varint64
 
-packet_passenger_jump:
+packet_rider_jump:
    !id: 0x14
    !bound: both
    jump_strength: zigzag32
@@ -1017,14 +1020,14 @@ packet_mob_effect:
    amplifier: zigzag32
    particles: bool
    duration: zigzag32
-   tick: PlayerInputTick
+   tick: lu64
 
 packet_update_attributes:
    !id: 0x1d
    !bound: client
    runtime_entity_id: varint64
    attributes: PlayerAttributes
-   tick: PlayerInputTick
+   tick: varint64
 
 # InventoryTransaction is a packet sent by the client. It essentially exists out of multiple sub-packets,
 # each of which have something to do with the inventory in one way or another. Some of these sub-packets
@@ -1128,7 +1131,7 @@ packet_set_entity_data:
    # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
    # vanilla server does not use these properties, however they are still supported by the protocol.
    properties: EntityProperties
-   tick: PlayerInputTick
+   tick: varint64
 
 # SetActorMotion is sent by the server to change the client-side velocity of an entity. It is usually used
 # in combination with server-side movement calculation.
@@ -1141,7 +1144,7 @@ packet_set_entity_motion:
    # Velocity is the new velocity the entity gets. This velocity will initiate the client-side movement of
    # the entity.
    velocity: vec3f
-   tick: PlayerInputTick
+   tick: varint64
 
 # SetActorLink is sent by the server to initiate an entity link client-side, meaning one entity will start
 # riding another.
@@ -1252,10 +1255,8 @@ packet_inventory_content:
    input: ItemStacks
    # Container is the protocol.FullContainerName that describes the container that the content is for.
    container: FullContainerName
-   # storage_item is the item that is acting as the storage container for the inventory. If the inventory is
-   # not a dynamic container then this field should be left empty. When set, only the item type is used by
-   # the client and none of the other stack info.
-   storage_item: Item
+   # DynamicContainerSize is the size of the container, if the container is dynamic.
+   dynamic_container_size: varint
 
 # InventorySlot is sent by the server to update a single slot in one of the inventory windows that the client
 # currently has opened. Usually this is the main inventory, but it may also be the off hand or, for example,
@@ -1270,10 +1271,8 @@ packet_inventory_slot:
    slot: varint
    # Container is the protocol.FullContainerName that describes the container that the content is for.
    container: FullContainerName
-   # storage_item is the item that is acting as the storage container for the inventory. If the inventory is
-   # not a dynamic container then this field should be left empty. When set, only the item type is used by
-   # the client and none of the other stack info.
-   storage_item: Item
+   # DynamicContainerSize is the size of the container, if the container is dynamic.
+   dynamic_container_size: varint
    # NewItem is the item to be put in the slot at Slot. It will overwrite any item that may currently
    # be present in that slot.
    item: Item
@@ -1492,8 +1491,6 @@ packet_set_player_game_type:
    # Some of these game types require additional flags to be set in an AdventureSettings packet for 
    # the game mode to obtain its full functionality.
    gamemode: GameMode
-   target_player: varint64
-   tick: PlayerInputTick
 
 packet_player_list:
    !id: 0x3f
@@ -3100,10 +3097,10 @@ packet_player_auth_input:
    - touch
    - crosshair
    - classic
-   # interact_rotation is the rotation the player is looking that they intend to use for
-   # interactions. This is only different to Pitch and Yaw in cases such as VR or when custom cameras
-   # being used.
-   interact_rotation: vec2f
+   # GazeDirection is the direction in which the player is gazing, when the PlayMode is PlayModeReality: In
+   # other words, when the player is playing in virtual reality.
+   gaze_direction: play_mode ?
+      if reality: vec3f
    # Tick is the server tick at which the packet was sent. It is used in relation to
    # CorrectPlayerMovePrediction.
    tick: varint64
@@ -3135,7 +3132,6 @@ packet_player_auth_input:
    # AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
    # values which are created using an analogue input.
    analogue_move_vector: vec2f
-   camera_orientation: vec3f
 
 #TODO: update to use the new `shift` option in bitflags
 InputFlag: [ "bitflags", {
@@ -3193,11 +3189,7 @@ InputFlag: [ "bitflags", {
       "horizontal_collision",
       "vertical_collision",
       "down_left",
-      "down_right",
-      "camera_relative_movement_enabled",
-      "rot_controlled_by_move_direction",
-      "start_spin_attack",
-      "stop_spin_attack"
+      "down_right", 
    ]
 }]
 
@@ -3462,7 +3454,7 @@ packet_correct_player_move_prediction:
    # OnGround specifies if the player was on the ground at the time of the tick below.
    on_ground: bool
    # Tick is the tick of the movement which was corrected by this packet.
-   tick: PlayerInputTick
+   tick: varint64
 
 # ItemComponent is sent by the server to attach client-side components to a custom item.
 packet_item_component:
@@ -4297,33 +4289,3 @@ packet_container_registry_cleanup:
    !bound: client
    # RemovedContainers is a list of protocol.FullContainerName's that should be removed from the client-side container registry.
    removed_containers: FullContainerName[]varint
-
-# MovementEffect is sent by the server to the client to update specific movement effects to allow the client
-# to predict its movement. For example, fireworks used during gliding will send this packet to tell the
-# client the exact duration of the boost.
-packet_movement_effect:
-   !id: 0x13E
-   !bound: client
-   # runtime_id is the runtime ID of the entity. The runtime ID is unique for each world session, and
-   # entities are generally identified in packets using this runtime ID.
-   runtime_id: varint64
-   # effect_type is the type of movement effect being updated.
-   effect_type: MovementEffectType
-   # effect_duration is the duration of the effect, measured in ticks.
-   effect_duration: varint
-   # tick is the server tick at which the packet was sent. It is used in relation to CorrectPlayerMovePrediction.
-   tick: PlayerInputTick
-
-# SetMovementAuthority is sent by the server to the client to change its movement mode.
-packet_set_movement_authority:
-   !id: 0x13F
-   !bound: client
-   # movement_authority specifies the way the server handles player movement. Available options are
-   # PlayerMovementModeClient, PlayerMovementModeServer and
-   # PlayerMovementModeServerWithRewind, where the server authoritative types result
-   # in the client sending PlayerAuthInput packets instead of MovePlayer packets and the rewind mode
-   # requires sending the tick of movement and several actions.
-   movement_authority: u8 =>
-      0: client
-      1: server
-      2: server_with_rewind
