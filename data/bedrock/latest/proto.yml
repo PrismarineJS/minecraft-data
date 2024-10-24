@@ -647,7 +647,7 @@ packet_move_player:
          # TeleportSourceEntityType is the entity type that caused the teleportation, for example an ender pearl.
          # TODO: is this still a integer and not a string?
          source_entity_type: LegacyEntityType
-   tick: PlayerInputTick
+   tick: varint64
 
 packet_passenger_jump:
    !id: 0x14
@@ -1017,14 +1017,14 @@ packet_mob_effect:
    amplifier: zigzag32
    particles: bool
    duration: zigzag32
-   tick: PlayerInputTick
+   tick: varint64
 
 packet_update_attributes:
    !id: 0x1d
    !bound: client
    runtime_entity_id: varint64
    attributes: PlayerAttributes
-   tick: PlayerInputTick
+   tick: varint64
 
 # InventoryTransaction is a packet sent by the client. It essentially exists out of multiple sub-packets,
 # each of which have something to do with the inventory in one way or another. Some of these sub-packets
@@ -1128,7 +1128,7 @@ packet_set_entity_data:
    # EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
    # vanilla server does not use these properties, however they are still supported by the protocol.
    properties: EntityProperties
-   tick: PlayerInputTick
+   tick: varint64
 
 # SetActorMotion is sent by the server to change the client-side velocity of an entity. It is usually used
 # in combination with server-side movement calculation.
@@ -1141,7 +1141,7 @@ packet_set_entity_motion:
    # Velocity is the new velocity the entity gets. This velocity will initiate the client-side movement of
    # the entity.
    velocity: vec3f
-   tick: PlayerInputTick
+   tick: varint64
 
 # SetActorLink is sent by the server to initiate an entity link client-side, meaning one entity will start
 # riding another.
@@ -1492,8 +1492,6 @@ packet_set_player_game_type:
    # Some of these game types require additional flags to be set in an AdventureSettings packet for 
    # the game mode to obtain its full functionality.
    gamemode: GameMode
-   target_player: varint64
-   tick: PlayerInputTick
 
 packet_player_list:
    !id: 0x3f
@@ -3290,6 +3288,8 @@ packet_update_player_game_type:
    # set_player_game_type.go. Some of these game types require additional flags to be set in an
    # AdventureSettings packet for the game mode to obtain its full functionality.
    gamemode: GameMode
+   target_player: varint64
+   tick: varint64
 
 # EmoteList is sent by the client every time it joins the server and when it equips new emotes. It may be
 # used by the server to find out which emotes the client has available. If the player has no emotes equipped,
@@ -3457,7 +3457,7 @@ packet_correct_player_move_prediction:
    # OnGround specifies if the player was on the ground at the time of the tick below.
    on_ground: bool
    # Tick is the tick of the movement which was corrected by this packet.
-   tick: PlayerInputTick
+   tick: varint64
 
 # ItemComponent is sent by the server to attach client-side components to a custom item.
 packet_item_component:
@@ -4307,7 +4307,7 @@ packet_movement_effect:
    # effect_duration is the duration of the effect, measured in ticks.
    effect_duration: varint
    # tick is the server tick at which the packet was sent. It is used in relation to CorrectPlayerMovePrediction.
-   tick: PlayerInputTick
+   tick: varint64
 
 # SetMovementAuthority is sent by the server to the client to change its movement mode.
 packet_set_movement_authority:
