@@ -57,7 +57,7 @@ function updateProtocol (edition, version, protocolVersionNumber) {
         if (e.proto === `${edition}/latest`) {
           e.proto = `${edition}/${oldProtoVersion}`
         }
-        latestVersionData = e
+        latestVersionData = structuredClone(e) // eslint-disable-line
       }
       if (!dataPaths[edition][version]) {
         dataPaths[edition][version] = latestVersionData

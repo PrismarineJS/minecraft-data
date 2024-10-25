@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.42
+!version: 1.21.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -139,6 +139,11 @@ packet_resource_packs_info:
    # A list of resource packs that the client needs to download before joining the server. 
    # The order of these resource packs is not relevant in this packet. It is however important in the Resource Pack Stack packet.
    texture_packs: TexturePackInfos
+   # Resource Pack Links contains a list of URLs where the client can download required
+   # resource packs, as opposed to the current Minecraft sever sending the data over
+   resource_pack_links: []varint
+      id: string
+      url: string
 
 packet_resource_pack_stack:
    !id: 0x07
@@ -1015,7 +1020,7 @@ packet_mob_effect:
    amplifier: zigzag32
    particles: bool
    duration: zigzag32
-   tick: varint64
+   tick: lu64
 
 packet_update_attributes:
    !id: 0x1d
@@ -1250,10 +1255,8 @@ packet_inventory_content:
    input: ItemStacks
    # Container is the protocol.FullContainerName that describes the container that the content is for.
    container: FullContainerName
-   # storage_item is the item that is acting as the storage container for the inventory. If the inventory is
-   # not a dynamic container then this field should be left empty. When set, only the item type is used by
-   # the client and none of the other stack info.
-   storage_item: Item
+   # DynamicContainerSize is the size of the container, if the container is dynamic.
+   dynamic_container_size: varint
 
 # InventorySlot is sent by the server to update a single slot in one of the inventory windows that the client
 # currently has opened. Usually this is the main inventory, but it may also be the off hand or, for example,
@@ -1268,10 +1271,8 @@ packet_inventory_slot:
    slot: varint
    # Container is the protocol.FullContainerName that describes the container that the content is for.
    container: FullContainerName
-   # storage_item is the item that is acting as the storage container for the inventory. If the inventory is
-   # not a dynamic container then this field should be left empty. When set, only the item type is used by
-   # the client and none of the other stack info.
-   storage_item: Item
+   # DynamicContainerSize is the size of the container, if the container is dynamic.
+   dynamic_container_size: varint
    # NewItem is the item to be put in the slot at Slot. It will overwrite any item that may currently
    # be present in that slot.
    item: Item
@@ -1489,7 +1490,6 @@ packet_set_player_game_type:
    # The new gamemode for the player. 
    # Some of these game types require additional flags to be set in an AdventureSettings packet for 
    # the game mode to obtain its full functionality.
-   ## Note: this is actually encoded 64-bit varint, but realistically won't exceed a few bits
    gamemode: GameMode
 
 packet_player_list:
@@ -3097,10 +3097,10 @@ packet_player_auth_input:
    - touch
    - crosshair
    - classic
-   # interact_rotation is the rotation the player is looking that they intend to use for
-   # interactions. This is only different to Pitch and Yaw in cases such as VR or when custom cameras
-   # being used.
-   interact_rotation: vec2f
+   # GazeDirection is the direction in which the player is gazing, when the PlayMode is PlayModeReality: In
+   # other words, when the player is playing in virtual reality.
+   gaze_direction: play_mode ?
+      if reality: vec3f
    # Tick is the server tick at which the packet was sent. It is used in relation to
    # CorrectPlayerMovePrediction.
    tick: varint64
@@ -3132,7 +3132,6 @@ packet_player_auth_input:
    # AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
    # values which are created using an analogue input.
    analogue_move_vector: vec2f
-   camera_orientation: vec3f
 
 #TODO: update to use the new `shift` option in bitflags
 InputFlag: [ "bitflags", {
@@ -3190,11 +3189,7 @@ InputFlag: [ "bitflags", {
       "horizontal_collision",
       "vertical_collision",
       "down_left",
-      "down_right",
-      "camera_relative_movement_enabled",
-      "rot_controlled_by_move_direction",
-      "start_spin_attack",
-      "stop_spin_attack"
+      "down_right", 
    ]
 }]
 
@@ -3290,7 +3285,8 @@ packet_update_player_game_type:
    # PlayerUniqueID is the entity unique ID of the player that should have its game mode updated. If this
    # packet is sent to other clients with the player unique ID of another player, nothing happens.
    player_unique_id: zigzag64
-   tick: varint64
+   tick: varint
+
 
 # EmoteList is sent by the client every time it joins the server and when it equips new emotes. It may be
 # used by the server to find out which emotes the client has available. If the player has no emotes equipped,
@@ -4293,33 +4289,3 @@ packet_container_registry_cleanup:
    !bound: client
    # RemovedContainers is a list of protocol.FullContainerName's that should be removed from the client-side container registry.
    removed_containers: FullContainerName[]varint
-
-# movement_effect is sent by the server to the client to update specific movement effects to allow the client
-# to predict its movement. For example, fireworks used during gliding will send this packet to tell the
-# client the exact duration of the boost.
-packet_movement_effect:
-   !id: 0x13E
-   !bound: client
-   # runtime_id is the runtime ID of the entity. The runtime ID is unique for each world session, and
-   # entities are generally identified in packets using this runtime ID.
-   runtime_id: varint64
-   # effect_type is the type of movement effect being updated.
-   effect_type: MovementEffectType
-   # effect_duration is the duration of the effect, measured in ticks.
-   effect_duration: varint
-   # tick is the server tick at which the packet was sent. It is used in relation to CorrectPlayerMovePrediction.
-   tick: varint64
-
-# set_movement_authority is sent by the server to the client to change its movement mode.
-packet_set_movement_authority:
-   !id: 0x13F
-   !bound: client
-   # movement_authority specifies the way the server handles player movement. Available options are
-   # PlayerMovementModeClient, PlayerMovementModeServer and
-   # PlayerMovementModeServerWithRewind, where the server authoritative types result
-   # in the client sending PlayerAuthInput packets instead of MovePlayer packets and the rewind mode
-   # requires sending the tick of movement and several actions.
-   movement_authority: u8 =>
-      0: client
-      1: server
-      2: server_with_rewind
