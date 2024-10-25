@@ -1,3 +1,6 @@
+## 3.77.0
+* [Add bedrock 1.21.42 protocol data (#930)](https://github.com/PrismarineJS/minecraft-data/commit/dee9f10b667a31d7bef66e7c5b6c9bdc9d6a7232) (thanks @CreeperG16)
+
 ## 3.76.0
 * [add has execute command feature](https://github.com/PrismarineJS/minecraft-data/commit/20f34ae536e30370ecdb6fde6412ddba4d67d9a0) (thanks @rom1504)
 
