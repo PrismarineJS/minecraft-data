@@ -1,3 +1,12 @@
+## 3.77.0
+* [Add bedrock 1.21.42 protocol data (#930)](https://github.com/PrismarineJS/minecraft-data/commit/dee9f10b667a31d7bef66e7c5b6c9bdc9d6a7232) (thanks @CreeperG16)
+* [Add 1.21.3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f050eaaa5e6df8c9009b9af90c54773fad66f001) (thanks @github-actions[bot])
+* [Add 1.21.2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/3c845e9bf8dddf7ce270de86bc4cdfb5ad19322f) (thanks @github-actions[bot])
+* [Add 1.21.2-rc2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/2fa63f9aaec809cbe63295f4778d391ccab1ae8b) (thanks @github-actions[bot])
+* [Add 1.21.2-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/996530496b5fa3880f80d8f296a4d3baa1d143d1) (thanks @github-actions[bot])
+* [Add 1.21.2-pre5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0ae87dd62165e442e105d580ca19e3c262eb7427) (thanks @github-actions[bot])
+* [Add 1.21.2-pre4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/d938aa6f492dd8d77af6273afd31f9a5f8e153ee) (thanks @github-actions[bot])
+
 ## 3.76.0
 * [add has execute command feature](https://github.com/PrismarineJS/minecraft-data/commit/20f34ae536e30370ecdb6fde6412ddba4d67d9a0) (thanks @rom1504)
 
