@@ -1,3 +1,7 @@
+## 3.78.0
+* [Add pc 1.21.1 data (#925)](https://github.com/PrismarineJS/minecraft-data/commit/d56346a4e32defcd28d9ba6750957c12001e78d6) (thanks @extremeheat)
+* [Add incrementedChatType feature (#932)](https://github.com/PrismarineJS/minecraft-data/commit/8ef58b15fec74c6a276d0c83cfc741d6fb4e072a) (thanks @SuperGamerTron)
+
 ## 3.77.0
 * [Add bedrock 1.21.42 protocol data (#930)](https://github.com/PrismarineJS/minecraft-data/commit/dee9f10b667a31d7bef66e7c5b6c9bdc9d6a7232) (thanks @CreeperG16)
 
