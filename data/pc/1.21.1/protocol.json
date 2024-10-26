@@ -4375,12 +4375,33 @@
           "container",
           [
             {
-              "name": "chat",
-              "type": "ChatType"
+              "name": "registryIndex",
+              "type": "varint"
             },
             {
-              "name": "narration",
-              "type": "ChatType"
+              "anon": true,
+              "type": [
+                "switch",
+                {
+                  "compareTo": "registryIndex",
+                  "fields": {
+                    "0": [
+                      "container",
+                      [
+                        {
+                          "name": "chat",
+                          "type": "ChatType"
+                        },
+                        {
+                          "name": "narration",
+                          "type": "ChatType"
+                        }
+                      ]
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
             }
           ]
         ],

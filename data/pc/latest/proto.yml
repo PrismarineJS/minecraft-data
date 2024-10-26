@@ -1732,8 +1732,13 @@
       parameters: ChatTypeParameterType[]varint
       style: anonymousNbt
    ChatTypes:
-      chat: ChatType
-      narration: ChatType
+      # Either the extra data is retrieved from the registry (via this ID+1 if non-zero), or it's supplied inline in the chat packet
+      registryIndex: varint
+      _: registryIndex ?
+         if 0:
+            chat: ChatType
+            narration: ChatType
+         default: void
 
    # MC: ClientboundDisguisedChatPacket
    packet_profileless_chat:
