@@ -2942,14 +2942,38 @@
               "type": "particle"
             },
             {
-              "name": "explosion_sound_name",
-              "type": "string"
+              "name": "soundId",
+              "type": "varint"
             },
             {
-              "name": "sound_range",
+              "anon": true,
               "type": [
-                "option",
-                "f32"
+                "switch",
+                {
+                  "compareTo": "soundId",
+                  "fields": {
+                    "0": [
+                      "container",
+                      [
+                        {
+                          "name": "soundName",
+                          "type": "string"
+                        },
+                        {
+                          "name": "range",
+                          "type": [
+                            "option",
+                            "f32"
+                          ]
+                        }
+                      ]
+                    ]
+                  },
+                  "default": [
+                    "container",
+                    []
+                  ]
+                }
               ]
             }
           ]

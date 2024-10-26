@@ -1,4 +1,4 @@
-!version: 1.20.5
+!version: 1.21.1
 !StartDocs: true
 
 ^types:
@@ -38,6 +38,9 @@
          "countType": "varint"
       }
    ]
+   vec2f:
+      x: f32
+      y: f32
    vec3f:
       x: f32
       y: f32
@@ -69,6 +72,7 @@
    - custom_model_data
    - hide_additional_tooltip
    - hide_tooltip
+   - repair_cost
    - creative_slot_lock
    - enchantment_glint_override
    - intangible_projectile
@@ -344,7 +348,7 @@
          if jukebox_playable:
             directMode: bool
             _: directMode ?
-               if false:
+               if true:
                   jukeboxSongName: string
                   jukeboxSongType: varint
                   _: jukeboxSongType ?
@@ -355,9 +359,11 @@
                               if 0:
                                  soundName: string
                                  fixedRange?: f32
-                        description: anonymousNbt
-                        duration: f32
-                        output: varint
+                  description: anonymousNbt
+                  duration: f32
+                  output: varint
+               if false:
+                  songLocation: string
             showInTooltip: bool
          if recipes: anonymousNbt
          # Name	Type	Description
@@ -553,8 +559,7 @@
       # TODO: This will require a custom type ; we need type - 1 length of blockIds
       blockIds: type ?
          if 0: void
-         #default: varint[]varint
-         default: ["arrayWithLengthOffset", {"count": "type", "type": "varint"}]
+         default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
 
    BlockProperty:
       # Name of the block state property.
@@ -719,8 +724,15 @@
          if sculk_charge: f32
          if shriek: varint
          if vibration:
-            position: string
-            entityId: varint
+            position_type: varint =>
+            - block
+            - entity
+            position: position_type ?
+               if block: position
+               if entity:
+                  entityId: varint
+                  entity_eye_height: f32
+            ticks: varint
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -830,10 +842,22 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if wolf_variant: varint
+         if wolf_variant:
+            wildTexture: string
+            tameTexture: string
+            angryTexture: string
+            maybeInputLength: varint
+            biomeLocation: maybeInputLength ?
+               if 0: string
+            biomeHolders: maybeInputLength ?
+               if 0: void
+               default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
-         if painting_variant: varint
+         if painting_variant:
+            width: varint
+            height: varint
+            assetId: string
          if sniffer_state: varint
          if armadillo_state: varint
          if vector3: vec3f
@@ -1211,6 +1235,34 @@
          namespace: string
          id: string
          version: string
+   # MC: ClientboundCustomReportDetailsPacket
+   packet_common_custom_report_details:
+      details: []varint
+         key: string
+         value: string
+
+   ServerLinkType: varint =>
+   - bug_report
+   - community_guidelines
+   - support
+   - status
+   - feedback
+   - community
+   - website
+   - forums
+   - news
+   - announcements
+   # MC: ClientboundServerLinksPacket
+   # This packet contains a list of links that the Notchian client will display in the menu 
+   # available from the pause menu. Link labels can be built-in or custom (i.e., any text).
+   packet_common_server_links:
+      links: []varint
+         hasKnownType: bool
+         knownType: hasKnownType ?
+            if true: ServerLinkType
+         unknownType: hasKnownType ?
+            if false: anonymousNbt
+         link: string
 
 ^handshaking.toClient.types:
    packet:
@@ -1417,6 +1469,8 @@
       - feature_flags
       - tags
       - select_known_packs
+      - custom_report_details
+      - server_links
       params: name ?
          if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
@@ -1433,6 +1487,8 @@
          if feature_flags: packet_feature_flags
          if tags: packet_tags
          if select_known_packs: packet_common_select_known_packs
+         if custom_report_details: packet_common_custom_report_details
+         if server_links: packet_common_server_links
 ^configuration.toServer.types:
    # MC: ServerboundClientInformationPacket
    packet_settings:
@@ -1472,6 +1528,8 @@
       - pong
       - resource_pack_receive
       - select_known_packs
+      - custom_report_details
+      - server_links
       params: name ?
          if settings: packet_settings
          if cookie_response: packet_common_cookie_response
@@ -1481,7 +1539,10 @@
          if pong: packet_pong
          if resource_pack_receive: packet_resource_pack_receive
          if select_known_packs: packet_common_select_known_packs
+         if custom_report_details: packet_common_custom_report_details
+         if server_links: packet_common_server_links
 ^play.toClient.types:
+   # World state information for spawn and respawn packets
    # World state information for spawn and respawn packets
    SpawnInfo:
       dimension: varint
@@ -1667,10 +1728,30 @@
    # MC: ClientboundDisconnectPacket
    packet_kick_disconnect:
       reason: anonymousNbt
+
+   ## client\net\minecraft\network\chat\ChatTypeDecoration.java
+   ## via client\net\minecraft\network\chat\ChatType.java
+   ChatTypeParameterType: varint =>
+      - content
+      - sender
+      - target
+   ChatType:
+      translationKey: string
+      parameters: ChatTypeParameterType[]varint
+      style: anonymousNbt
+   ChatTypes:
+      # Either the extra data is retrieved from the registry (via this ID+1 if non-zero), or it's supplied inline in the chat packet
+      registryIndex: varint
+      _: registryIndex ?
+         if 0:
+            chat: ChatType
+            narration: ChatType
+         default: void
+
    # MC: ClientboundDisguisedChatPacket
    packet_profileless_chat:
       message: anonymousNbt
-      type: varint
+      type: ChatTypes
       name: anonymousNbt
       target?: anonymousNbt
    # MC: ClientboundEntityEventPacket
@@ -1693,8 +1774,13 @@
       block_interaction_type: varint
       small_explosion_particle: Particle
       large_explosion_particle: Particle
-      explosion_sound_name: string
-      sound_range?: f32
+      soundId: varint
+      _: soundId ?
+         if 0:
+            soundName: string
+            range?: f32
+         default:
+            
    # MC: ClientboundForgetLevelChunkPacket
    packet_unload_chunk:
       chunkZ: i32
@@ -1919,7 +2005,7 @@
       filterTypeMask: filterType ?
          if 2: i64[]varint
          default: void
-      type: varint
+      type: ChatTypes
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
    # MC: ClientboundPlayerCombatEndPacket
@@ -2301,7 +2387,8 @@
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
-      copyMetadata: bool
+      # Bit field: 0b1 - KEEP_ATTRIBUTE_MODIFIERS, 0b10 - KEEP_ENTITY_DATA
+      copyMetadata: u8
    # MC: ClientboundRotateHeadPacket
    packet_entity_head_rotation:
       entityId: varint
@@ -2648,7 +2735,7 @@
          - generic.step_height
          value: f64
          modifiers: []varint
-            uuid: UUID
+            uuid: string
             amount: f64
             operation: i8
    # MC: ClientboundUpdateMobEffectPacket
@@ -2749,7 +2836,7 @@
    # MC: ClientboundProjectilePowerPacket
    packet_set_projectile_power:
       id: varint
-      power: vec3f64
+      accelerationPower: f64
 
    packet:
       name: varint =>
@@ -3317,6 +3404,7 @@
    packet_use_item:
       hand: varint
       sequence: varint
+      rotation: vec2f
 
    packet:
       name: varint =>
