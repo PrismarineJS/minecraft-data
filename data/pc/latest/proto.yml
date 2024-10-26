@@ -724,8 +724,15 @@
          if sculk_charge: f32
          if shriek: varint
          if vibration:
-            position: string
-            entityId: varint
+            position_type: varint =>
+            - block
+            - entity
+            position: position_type ?
+               if block: position
+               if entity:
+                  entityId: varint
+                  entity_eye_height: f32
+            ticks: varint
    ingredient: Slot[]varint
    position: [
       "bitfield",
