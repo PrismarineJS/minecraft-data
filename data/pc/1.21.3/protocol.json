@@ -3152,10 +3152,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "name": "strictErrorHandling",
-              "type": "bool"
             }
           ]
         ],
@@ -3590,6 +3586,10 @@
             {
               "name": "enableServerListing",
               "type": "bool"
+            },
+            {
+              "name": "particles",
+              "type": "varint"
             }
           ]
         ],
@@ -7992,6 +7992,23 @@
     },
     "toServer": {
       "types": {
+        "packet_select_bundle_item": [
+          "container",
+          [
+            {
+              "name": "slotId",
+              "type": "varint"
+            },
+            {
+              "name": "selectedItemIndex",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_tick_end": [
+          "container",
+          []
+        ],
         "packet_teleport_confirm": [
           "container",
           [
@@ -9088,62 +9105,64 @@
                   "mappings": {
                     "0x00": "teleport_confirm",
                     "0x01": "query_block_nbt",
-                    "0x02": "set_difficulty",
-                    "0x03": "message_acknowledgement",
-                    "0x04": "chat_command",
-                    "0x05": "chat_command_signed",
-                    "0x06": "chat_message",
-                    "0x07": "chat_session_update",
-                    "0x08": "chunk_batch_received",
-                    "0x09": "client_command",
-                    "0x0a": "settings",
-                    "0x0b": "tab_complete",
-                    "0x0c": "configuration_acknowledged",
-                    "0x0d": "enchant_item",
-                    "0x0e": "window_click",
-                    "0x0f": "close_window",
-                    "0x10": "set_slot_state",
-                    "0x11": "cookie_response",
-                    "0x12": "custom_payload",
-                    "0x13": "debug_sample_subscription",
-                    "0x14": "edit_book",
-                    "0x15": "query_entity_nbt",
-                    "0x16": "use_entity",
-                    "0x17": "generate_structure",
-                    "0x18": "keep_alive",
-                    "0x19": "lock_difficulty",
-                    "0x1a": "position",
-                    "0x1b": "position_look",
-                    "0x1c": "look",
-                    "0x1d": "flying",
-                    "0x1e": "vehicle_move",
-                    "0x1f": "steer_boat",
-                    "0x20": "pick_item",
-                    "0x21": "ping_request",
-                    "0x22": "craft_recipe_request",
-                    "0x23": "abilities",
-                    "0x24": "block_dig",
-                    "0x25": "entity_action",
-                    "0x26": "steer_vehicle",
-                    "0x27": "pong",
-                    "0x28": "recipe_book",
-                    "0x29": "displayed_recipe",
-                    "0x2a": "name_item",
-                    "0x2b": "resource_pack_receive",
-                    "0x2c": "advancement_tab",
-                    "0x2d": "select_trade",
-                    "0x2e": "set_beacon_effect",
-                    "0x2f": "held_item_slot",
-                    "0x30": "update_command_block",
-                    "0x31": "update_command_block_minecart",
-                    "0x32": "set_creative_slot",
-                    "0x33": "update_jigsaw_block",
-                    "0x34": "update_structure_block",
-                    "0x35": "update_sign",
-                    "0x36": "arm_animation",
-                    "0x37": "spectate",
-                    "0x38": "block_place",
-                    "0x39": "use_item"
+                    "0x02": "select_bundle_item",
+                    "0x03": "set_difficulty",
+                    "0x04": "message_acknowledgement",
+                    "0x05": "chat_command",
+                    "0x06": "chat_command_signed",
+                    "0x07": "chat_message",
+                    "0x08": "chat_session_update",
+                    "0x09": "chunk_batch_received",
+                    "0x0a": "client_command",
+                    "0x0b": "tick_end",
+                    "0x0c": "settings",
+                    "0x0d": "tab_complete",
+                    "0x0e": "configuration_acknowledged",
+                    "0x0f": "enchant_item",
+                    "0x10": "window_click",
+                    "0x11": "close_window",
+                    "0x12": "set_slot_state",
+                    "0x13": "cookie_response",
+                    "0x14": "custom_payload",
+                    "0x15": "debug_sample_subscription",
+                    "0x16": "edit_book",
+                    "0x17": "query_entity_nbt",
+                    "0x18": "use_entity",
+                    "0x19": "generate_structure",
+                    "0x1a": "keep_alive",
+                    "0x1b": "lock_difficulty",
+                    "0x1c": "position",
+                    "0x1d": "position_look",
+                    "0x1e": "look",
+                    "0x1f": "flying",
+                    "0x20": "vehicle_move",
+                    "0x21": "steer_boat",
+                    "0x22": "pick_item",
+                    "0x23": "ping_request",
+                    "0x24": "craft_recipe_request",
+                    "0x25": "abilities",
+                    "0x26": "block_dig",
+                    "0x27": "entity_action",
+                    "0x28": "steer_vehicle",
+                    "0x29": "pong",
+                    "0x2a": "recipe_book",
+                    "0x2b": "displayed_recipe",
+                    "0x2c": "name_item",
+                    "0x2d": "resource_pack_receive",
+                    "0x2e": "advancement_tab",
+                    "0x2f": "select_trade",
+                    "0x30": "set_beacon_effect",
+                    "0x31": "held_item_slot",
+                    "0x32": "update_command_block",
+                    "0x33": "update_command_block_minecart",
+                    "0x34": "set_creative_slot",
+                    "0x35": "update_jigsaw_block",
+                    "0x36": "update_structure_block",
+                    "0x37": "update_sign",
+                    "0x38": "arm_animation",
+                    "0x39": "spectate",
+                    "0x3a": "block_place",
+                    "0x3b": "use_item"
                   }
                 }
               ]
@@ -9157,6 +9176,7 @@
                   "fields": {
                     "teleport_confirm": "packet_teleport_confirm",
                     "query_block_nbt": "packet_query_block_nbt",
+                    "select_bundle_item": "packet_select_bundle_item",
                     "set_difficulty": "packet_set_difficulty",
                     "message_acknowledgement": "packet_message_acknowledgement",
                     "chat_command": "packet_chat_command",
@@ -9165,6 +9185,7 @@
                     "chat_session_update": "packet_chat_session_update",
                     "chunk_batch_received": "packet_chunk_batch_received",
                     "client_command": "packet_client_command",
+                    "tick_end": "packet_tick_end",
                     "settings": "packet_settings",
                     "tab_complete": "packet_tab_complete",
                     "configuration_acknowledged": "packet_configuration_acknowledged",

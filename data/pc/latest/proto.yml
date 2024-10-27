@@ -1339,7 +1339,6 @@
          name: string
          value: string
          signature?: string
-      strictErrorHandling: bool
    # MC: ClientboundLoginCompressionPacket
    packet_compress:
       threshold: varint
@@ -1490,6 +1489,9 @@
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
 ^configuration.toServer.types:
+   packet_move_minecart:
+      entityId: varint
+      steps: TODO
    # MC: ServerboundClientInformationPacket
    packet_settings:
       locale: string
@@ -1500,6 +1502,7 @@
       mainHand: varint
       enableTextFiltering: bool
       enableServerListing: bool
+      particles: varint
    ## (Cookie Response is Common) ##
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
@@ -2840,6 +2843,7 @@
 
    packet:
       name: varint =>
+      - bundle
       - bundle_delimiter
       - spawn_entity
       - spawn_entity_experience_orb
@@ -2888,6 +2892,7 @@
       - trade_list
       - rel_entity_move
       - entity_move_look
+      - move_minecart
       - entity_look
       - vehicle_move
       - open_book
@@ -2962,6 +2967,7 @@
       - declare_recipes
       - tags
       params: name ?
+         if bundle: void
          if bundle_delimiter: void
          if spawn_entity: packet_spawn_entity
          if spawn_entity_experience_orb: packet_spawn_entity_experience_orb
@@ -3010,6 +3016,7 @@
          if trade_list: packet_trade_list
          if rel_entity_move: packet_rel_entity_move
          if entity_move_look: packet_entity_move_look
+         if move_minecart: packet_move_minecart
          if entity_look: packet_entity_look
          if vehicle_move: packet_vehicle_move
          if open_book: packet_open_book
@@ -3085,6 +3092,13 @@
          if tags: packet_tags
 
 ^play.toServer.types:
+   # MC: ServerboundSelectBundleItemPacket
+   packet_select_bundle_item:
+      slotId: varint
+      selectedItemIndex: varint
+   # MC: ServerboundClientTickEndPacket
+   packet_tick_end:
+      # Empty
    # MC: ServerboundAcceptTeleportationPacket
    packet_teleport_confirm:
       teleportId: varint
@@ -3161,6 +3175,7 @@
       mainHand: varint
       enableTextFiltering: bool
       enableServerListing: bool
+      particles: varint
    # MC: ServerboundCommandSuggestionPacket
    packet_tab_complete:
       transactionId: varint
@@ -3410,6 +3425,7 @@
       name: varint =>
       - teleport_confirm
       - query_block_nbt
+      - select_bundle_item
       - set_difficulty
       - message_acknowledgement
       - chat_command
@@ -3418,6 +3434,7 @@
       - chat_session_update
       - chunk_batch_received
       - client_command
+      - tick_end
       - settings
       - tab_complete
       - configuration_acknowledged
@@ -3469,6 +3486,7 @@
       params: name ?
          if teleport_confirm: packet_teleport_confirm
          if query_block_nbt: packet_query_block_nbt
+         if select_bundle_item: packet_select_bundle_item
          if set_difficulty: packet_set_difficulty
          if message_acknowledgement: packet_message_acknowledgement
          if chat_command: packet_chat_command
@@ -3477,6 +3495,7 @@
          if chat_session_update: packet_chat_session_update
          if chunk_batch_received: packet_chunk_batch_received
          if client_command: packet_client_command
+         if tick_end: packet_tick_end
          if settings: packet_settings
          if tab_complete: packet_tab_complete
          if configuration_acknowledged: packet_configuration_acknowledged
