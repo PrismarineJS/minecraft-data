@@ -1432,10 +1432,10 @@
          key: string
          value?: anonymousNbt
    # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
+   packet_remove_resource_pack: # TODO move to common
       uuid?: UUID
    # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
+   packet_add_resource_pack: # TODO move to common
       uuid: UUID
       url: string
       hash: string
@@ -1489,9 +1489,6 @@
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
 ^configuration.toServer.types:
-   packet_move_minecart:
-      entityId: varint
-      steps: TODO
    # MC: ServerboundClientInformationPacket
    packet_settings:
       locale: string
@@ -1545,7 +1542,23 @@
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
 ^play.toClient.types:
-   # World state information for spawn and respawn packets
+   packet_sync_entity_position:
+      entityId: varint
+      x: f64
+      y: f64
+      z: f64
+      velocity: vec3f64
+      yaw: i8
+      pitch: i8
+      onGround: bool
+   # MC: ClientboundMoveMinecartPacket
+   packet_move_minecart:
+      entityId: varint
+      steps: []varint
+         position: position
+         movement: position
+         yRot: f32
+         weight: f32
    # World state information for spawn and respawn packets
    SpawnInfo:
       dimension: varint
@@ -2876,6 +2889,7 @@
       - kick_disconnect
       - profileless_chat
       - entity_status
+      - sync_entity_position
       - explosion
       - unload_chunk
       - game_state_change
@@ -2910,7 +2924,10 @@
       - player_info
       - face_player
       - position
+      - player_rotation # TODO
       - unlock_recipes
+      - remove_recipes # TODO
+      - recipe_book_settings # TODO
       - entity_destroy
       - remove_entity_effect
       - reset_score
@@ -2928,9 +2945,9 @@
       - world_border_warning_delay
       - world_border_warning_reach
       - camera
-      - held_item_slot
       - update_view_position
       - update_view_distance
+      - set_cursor_item # TODO
       - spawn_position
       - scoreboard_display_objective
       - entity_metadata
@@ -2939,6 +2956,7 @@
       - entity_equipment
       - experience
       - update_health
+      - held_item_slot # TODO Check if it changed
       - scoreboard_objective
       - set_passengers
       - teams
@@ -2966,6 +2984,9 @@
       - entity_effect
       - declare_recipes
       - tags
+      - projectile_power # TODO
+      - custom_report_details
+      - server_links
       params: name ?
          if bundle: void
          if bundle_delimiter: void
@@ -3000,6 +3021,7 @@
          if kick_disconnect: packet_kick_disconnect
          if profileless_chat: packet_profileless_chat
          if entity_status: packet_entity_status
+         if sync_entity_position: packet_sync_entity_position
          if explosion: packet_explosion
          if unload_chunk: packet_unload_chunk
          if game_state_change: packet_game_state_change
@@ -3090,6 +3112,8 @@
          if entity_effect: packet_entity_effect
          if declare_recipes: packet_declare_recipes
          if tags: packet_tags
+         if custom_report_details: packet_common_custom_report_details
+         if server_links: packet_common_server_links
 
 ^play.toServer.types:
    # MC: ServerboundSelectBundleItemPacket
