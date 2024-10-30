@@ -2,8 +2,9 @@ const fs = require('fs')
 const cp = require('child_process')
 const { globSync } = require('glob')
 const version = process.argv[2]
+const mcdataVersion = process.argv[3] || process.argv[2]
 if (!version) {
-  console.log('Usage: node extractEntityMetadata.js <version>')
+  console.log('Usage: node extractEntityMetadata.js <codeVersion> [mcdataVersion]')
   process.exit(1)
 }
 
@@ -11,15 +12,34 @@ if (!fs.existsSync(version)) {
   cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${version} --depth 1`, { stdio: 'inherit' })
 }
 
+// decompiler may either put static defs inline (static varname = value) or keep decl and def in seperate blocks (static varname; static{varname = val, ..}) so normalize it
+function prepLines (raw) {
+  const lines = raw.replaceAll(' {\n', ' {;\n').split(';')
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim()
+    if (line.includes('static final') && !line.includes(' = ')) {
+      const varName = line.split(' ').pop()
+      for (let j = 0; j < lines.length; j++) {
+        const line2 = lines[j].trim()
+        if (line2.startsWith(varName + ' = ')) {
+          lines[i] = line.replace(varName, line2)
+          lines[j] = ''
+        }
+      }
+    }
+  }
+  return lines
+}
+
 function getEntityTypes () {
   const entityTypes = fs.readFileSync(`./${version}/client/net/minecraft/world/entity/EntityType.java`, 'utf8')
-  const entityTypesLines = entityTypes.split(';')
+  const entityTypesLines = prepLines(entityTypes)
   const classNameTo = {}
   for (const line of entityTypesLines) {
     if (line.includes('= register(')) {
       // Given the line: public static final EntityType<Allay> ALLAY = register( "allay", EntityType.Builder.<Allay>of(Allay::new, MobCategory.CREATURE).sized(0.35F, 0.6F).clientTrackingRange(8).updateInterval(2) );
       // we extract Allay and "allay"
-      const regex = line.match(/EntityType<(.*)> (.*) = register\(\W+"([a-z0-9_]+)"/)
+      const regex = line.match(/EntityType<(.*)> (.*) = register\(\W*"([a-z0-9_]+)"/)
       if (regex) {
         const [, type, , name] = regex
         classNameTo[type] = name
@@ -32,7 +52,7 @@ function getEntityTypes () {
 function getEntityMetadataSerializers () {
   const output = []
   const entityTypes = fs.readFileSync(`./${version}/client/net/minecraft/network/syncher/EntityDataSerializers.java`, 'utf8')
-  const entityTypesLines = entityTypes.split(';')
+  const entityTypesLines = prepLines(entityTypes)
   for (const line of entityTypesLines) {
     if (line.includes('registerSerializer')) {
       // From:       registerSerializer(BYTE);
@@ -61,7 +81,7 @@ const metadatas = {}
 
 for (const file in allEntityFileCodes) {
   const code = allEntityFileCodes[file]
-  const lines = code.split(';')
+  const lines = prepLines(code)
   let lastClass
   for (const line of lines) {
     let lineWithoutGenerics = line.replace(/<.*>/g, '')
@@ -117,7 +137,7 @@ for (const key in classNameToRegistryName) {
 }
 
 function updateMcDataEntitiesJSON () {
-  const presentMcDataPath = `../../data/pc/${version}/entities.json`
+  const presentMcDataPath = `../../data/pc/${mcdataVersion}/entities.json`
   const presentMcData = require(presentMcDataPath)
   for (const entry of presentMcData) {
     entry.metadataKeys = flat[entry.name].map(e => e[0].replace('DATA_', '').replace('_ID', '').replace('ID_', '').toLowerCase())
@@ -126,7 +146,7 @@ function updateMcDataEntitiesJSON () {
 }
 
 function updateMcDataProtocolJSON () {
-  const presentMcDataPath = `../../data/pc/${version}/protocol.json`
+  const presentMcDataPath = `../../data/pc/${mcdataVersion}/protocol.json`
   const mcdata = require(presentMcDataPath)
   const mapper = { type: 'varint', mappings: {} }
   for (let i = 0; i < serializers.length; i++) {
