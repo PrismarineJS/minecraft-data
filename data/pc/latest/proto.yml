@@ -1240,6 +1240,16 @@
       details: []varint
          key: string
          value: string
+   # MC: ClientboundResourcePackPopPacket
+   packet_common_remove_resource_pack:
+      uuid?: UUID
+   # MC: ClientboundResourcePackPushPacket
+   packet_common_add_resource_pack:
+      uuid: UUID
+      url: string
+      hash: string
+      forced: bool
+      promptMessage?: anonymousNbt
 
    ServerLinkType: varint =>
    - bug_report
@@ -1431,16 +1441,6 @@
       entries: []varint
          key: string
          value?: anonymousNbt
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack: # TODO move to common
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack: # TODO move to common
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    ## (Store cookie and Transfer are Common) ##
    # MC: ClientboundUpdateEnabledFeaturesPacket
    packet_feature_flags:
@@ -1479,8 +1479,8 @@
          if ping: packet_ping
          if reset_chat: packet_reset_chat
          if registry_data: packet_registry_data
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if store_cookie: packet_common_store_cookie
          if transfer: packet_common_transfer
          if feature_flags: packet_feature_flags
@@ -2749,16 +2749,6 @@
    packet_reset_score:
       entity_name: string
       objective_name?: string
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
@@ -3284,9 +3274,9 @@
       - face_player
       - position
       - player_rotation # TODO
-      - unlock_recipes
+      - unlock_recipes # TODO
       - remove_recipes # TODO
-      - recipe_book_settings # TODO
+      - recipe_book_settings
       - entity_destroy
       - remove_entity_effect
       - reset_score
@@ -3420,8 +3410,8 @@
          if entity_destroy: packet_entity_destroy
          if remove_entity_effect: packet_remove_entity_effect
          if reset_score: packet_reset_score
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if respawn: packet_respawn
          if entity_head_rotation: packet_entity_head_rotation
          if multi_block_change: packet_multi_block_change
