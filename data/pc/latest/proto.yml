@@ -1548,8 +1548,8 @@
       y: f64
       z: f64
       velocity: vec3f64
-      yaw: i8
-      pitch: i8
+      yaw: f32
+      pitch: f32
       onGround: bool
    # MC: ClientboundMoveMinecartPacket
    packet_move_minecart:
@@ -2605,6 +2605,7 @@
    packet_update_time:
       age: i64
       time: i64
+      tickDayTime: bool
    # MC: ClientboundSetTitleTextPacket
    packet_set_title_text:
       text: anonymousNbt
@@ -2856,7 +2857,6 @@
 
    packet:
       name: varint =>
-      - bundle
       - bundle_delimiter
       - spawn_entity
       - spawn_entity_experience_orb
@@ -2959,6 +2959,7 @@
       - held_item_slot # TODO Check if it changed
       - scoreboard_objective
       - set_passengers
+      - set_player_inventory # TODO
       - teams
       - scoreboard_score
       - simulation_distance
@@ -2988,7 +2989,6 @@
       - custom_report_details
       - server_links
       params: name ?
-         if bundle: void
          if bundle_delimiter: void
          if spawn_entity: packet_spawn_entity
          if spawn_entity_experience_orb: packet_spawn_entity_experience_orb

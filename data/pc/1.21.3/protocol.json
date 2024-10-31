@@ -3694,6 +3694,82 @@
   "play": {
     "toClient": {
       "types": {
+        "packet_sync_entity_position": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
+            },
+            {
+              "name": "velocity",
+              "type": "vec3f64"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_move_minecart": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "steps",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "position",
+                        "type": "position"
+                      },
+                      {
+                        "name": "movement",
+                        "type": "position"
+                      },
+                      {
+                        "name": "yRot",
+                        "type": "f32"
+                      },
+                      {
+                        "name": "weight",
+                        "type": "f32"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
         "SpawnInfo": [
           "container",
           [
@@ -6860,6 +6936,10 @@
             {
               "name": "time",
               "type": "i64"
+            },
+            {
+              "name": "tickDayTime",
+              "type": "bool"
             }
           ]
         ],
@@ -7761,95 +7841,105 @@
                     "0x1d": "kick_disconnect",
                     "0x1e": "profileless_chat",
                     "0x1f": "entity_status",
-                    "0x20": "explosion",
-                    "0x21": "unload_chunk",
-                    "0x22": "game_state_change",
-                    "0x23": "open_horse_window",
-                    "0x24": "hurt_animation",
-                    "0x25": "initialize_world_border",
-                    "0x26": "keep_alive",
-                    "0x27": "map_chunk",
-                    "0x28": "world_event",
-                    "0x29": "world_particles",
-                    "0x2a": "update_light",
-                    "0x2b": "login",
-                    "0x2c": "map",
-                    "0x2d": "trade_list",
-                    "0x2e": "rel_entity_move",
-                    "0x2f": "entity_move_look",
-                    "0x30": "entity_look",
-                    "0x31": "vehicle_move",
-                    "0x32": "open_book",
-                    "0x33": "open_window",
-                    "0x34": "open_sign_entity",
-                    "0x35": "ping",
-                    "0x36": "ping_response",
-                    "0x37": "craft_recipe_response",
-                    "0x38": "abilities",
-                    "0x39": "player_chat",
-                    "0x3a": "end_combat_event",
-                    "0x3b": "enter_combat_event",
-                    "0x3c": "death_combat_event",
-                    "0x3d": "player_remove",
-                    "0x3e": "player_info",
-                    "0x3f": "face_player",
-                    "0x40": "position",
-                    "0x41": "unlock_recipes",
-                    "0x42": "entity_destroy",
-                    "0x43": "remove_entity_effect",
-                    "0x44": "reset_score",
-                    "0x45": "remove_resource_pack",
-                    "0x46": "add_resource_pack",
-                    "0x47": "respawn",
-                    "0x48": "entity_head_rotation",
-                    "0x49": "multi_block_change",
-                    "0x4a": "select_advancement_tab",
-                    "0x4b": "server_data",
-                    "0x4c": "action_bar",
-                    "0x4d": "world_border_center",
-                    "0x4e": "world_border_lerp_size",
-                    "0x4f": "world_border_size",
-                    "0x50": "world_border_warning_delay",
-                    "0x51": "world_border_warning_reach",
-                    "0x52": "camera",
-                    "0x53": "held_item_slot",
-                    "0x54": "update_view_position",
-                    "0x55": "update_view_distance",
-                    "0x56": "spawn_position",
-                    "0x57": "scoreboard_display_objective",
-                    "0x58": "entity_metadata",
-                    "0x59": "attach_entity",
-                    "0x5a": "entity_velocity",
-                    "0x5b": "entity_equipment",
-                    "0x5c": "experience",
-                    "0x5d": "update_health",
-                    "0x5e": "scoreboard_objective",
-                    "0x5f": "set_passengers",
-                    "0x60": "teams",
-                    "0x61": "scoreboard_score",
-                    "0x62": "simulation_distance",
-                    "0x63": "set_title_subtitle",
-                    "0x64": "update_time",
-                    "0x65": "set_title_text",
-                    "0x66": "set_title_time",
-                    "0x67": "entity_sound_effect",
-                    "0x68": "sound_effect",
-                    "0x69": "start_configuration",
-                    "0x6a": "stop_sound",
-                    "0x6b": "store_cookie",
-                    "0x6c": "system_chat",
-                    "0x6d": "playerlist_header",
-                    "0x6e": "nbt_query_response",
-                    "0x6f": "collect",
-                    "0x70": "entity_teleport",
-                    "0x71": "set_ticking_state",
-                    "0x72": "step_tick",
-                    "0x73": "transfer",
-                    "0x74": "advancements",
-                    "0x75": "entity_update_attributes",
-                    "0x76": "entity_effect",
-                    "0x77": "declare_recipes",
-                    "0x78": "tags"
+                    "0x20": "sync_entity_position",
+                    "0x21": "explosion",
+                    "0x22": "unload_chunk",
+                    "0x23": "game_state_change",
+                    "0x24": "open_horse_window",
+                    "0x25": "hurt_animation",
+                    "0x26": "initialize_world_border",
+                    "0x27": "keep_alive",
+                    "0x28": "map_chunk",
+                    "0x29": "world_event",
+                    "0x2a": "world_particles",
+                    "0x2b": "update_light",
+                    "0x2c": "login",
+                    "0x2d": "map",
+                    "0x2e": "trade_list",
+                    "0x2f": "rel_entity_move",
+                    "0x30": "entity_move_look",
+                    "0x31": "move_minecart",
+                    "0x32": "entity_look",
+                    "0x33": "vehicle_move",
+                    "0x34": "open_book",
+                    "0x35": "open_window",
+                    "0x36": "open_sign_entity",
+                    "0x37": "ping",
+                    "0x38": "ping_response",
+                    "0x39": "craft_recipe_response",
+                    "0x3a": "abilities",
+                    "0x3b": "player_chat",
+                    "0x3c": "end_combat_event",
+                    "0x3d": "enter_combat_event",
+                    "0x3e": "death_combat_event",
+                    "0x3f": "player_remove",
+                    "0x40": "player_info",
+                    "0x41": "face_player",
+                    "0x42": "position",
+                    "0x43": "player_rotation",
+                    "0x44": "unlock_recipes",
+                    "0x45": "remove_recipes",
+                    "0x46": "recipe_book_settings",
+                    "0x47": "entity_destroy",
+                    "0x48": "remove_entity_effect",
+                    "0x49": "reset_score",
+                    "0x4a": "remove_resource_pack",
+                    "0x4b": "add_resource_pack",
+                    "0x4c": "respawn",
+                    "0x4d": "entity_head_rotation",
+                    "0x4e": "multi_block_change",
+                    "0x4f": "select_advancement_tab",
+                    "0x50": "server_data",
+                    "0x51": "action_bar",
+                    "0x52": "world_border_center",
+                    "0x53": "world_border_lerp_size",
+                    "0x54": "world_border_size",
+                    "0x55": "world_border_warning_delay",
+                    "0x56": "world_border_warning_reach",
+                    "0x57": "camera",
+                    "0x58": "update_view_position",
+                    "0x59": "update_view_distance",
+                    "0x5a": "set_cursor_item",
+                    "0x5b": "spawn_position",
+                    "0x5c": "scoreboard_display_objective",
+                    "0x5d": "entity_metadata",
+                    "0x5e": "attach_entity",
+                    "0x5f": "entity_velocity",
+                    "0x60": "entity_equipment",
+                    "0x61": "experience",
+                    "0x62": "update_health",
+                    "0x63": "held_item_slot",
+                    "0x64": "scoreboard_objective",
+                    "0x65": "set_passengers",
+                    "0x66": "set_player_inventory",
+                    "0x67": "teams",
+                    "0x68": "scoreboard_score",
+                    "0x69": "simulation_distance",
+                    "0x6a": "set_title_subtitle",
+                    "0x6b": "update_time",
+                    "0x6c": "set_title_text",
+                    "0x6d": "set_title_time",
+                    "0x6e": "entity_sound_effect",
+                    "0x6f": "sound_effect",
+                    "0x70": "start_configuration",
+                    "0x71": "stop_sound",
+                    "0x72": "store_cookie",
+                    "0x73": "system_chat",
+                    "0x74": "playerlist_header",
+                    "0x75": "nbt_query_response",
+                    "0x76": "collect",
+                    "0x77": "entity_teleport",
+                    "0x78": "set_ticking_state",
+                    "0x79": "step_tick",
+                    "0x7a": "transfer",
+                    "0x7b": "advancements",
+                    "0x7c": "entity_update_attributes",
+                    "0x7d": "entity_effect",
+                    "0x7e": "declare_recipes",
+                    "0x7f": "tags",
+                    "0x80": "projectile_power",
+                    "0x81": "custom_report_details",
+                    "0x82": "server_links"
                   }
                 }
               ]
@@ -7893,6 +7983,7 @@
                     "kick_disconnect": "packet_kick_disconnect",
                     "profileless_chat": "packet_profileless_chat",
                     "entity_status": "packet_entity_status",
+                    "sync_entity_position": "packet_sync_entity_position",
                     "explosion": "packet_explosion",
                     "unload_chunk": "packet_unload_chunk",
                     "game_state_change": "packet_game_state_change",
@@ -7909,6 +8000,7 @@
                     "trade_list": "packet_trade_list",
                     "rel_entity_move": "packet_rel_entity_move",
                     "entity_move_look": "packet_entity_move_look",
+                    "move_minecart": "packet_move_minecart",
                     "entity_look": "packet_entity_look",
                     "vehicle_move": "packet_vehicle_move",
                     "open_book": "packet_open_book",
@@ -7981,7 +8073,9 @@
                     "entity_update_attributes": "packet_entity_update_attributes",
                     "entity_effect": "packet_entity_effect",
                     "declare_recipes": "packet_declare_recipes",
-                    "tags": "packet_tags"
+                    "tags": "packet_tags",
+                    "custom_report_details": "packet_common_custom_report_details",
+                    "server_links": "packet_common_server_links"
                   }
                 }
               ]
@@ -8230,6 +8324,10 @@
             {
               "name": "enableServerListing",
               "type": "bool"
+            },
+            {
+              "name": "particles",
+              "type": "varint"
             }
           ]
         ],
