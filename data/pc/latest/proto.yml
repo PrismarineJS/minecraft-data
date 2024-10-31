@@ -1542,6 +1542,11 @@
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
 ^play.toClient.types:
+   packet_set_cursor_item:
+      stack?: Slot
+   packet_player_rotation:
+      yRot: float
+      xRot: float
    packet_recipe_book_settings:
       # Hardcoded, number of tabs in the crafting book
       recipeTypes: []$4
@@ -3273,7 +3278,7 @@
       - player_info
       - face_player
       - position
-      - player_rotation # TODO
+      - player_rotation
       - unlock_recipes # TODO
       - remove_recipes # TODO
       - recipe_book_settings
@@ -3296,7 +3301,7 @@
       - camera
       - update_view_position
       - update_view_distance
-      - set_cursor_item # TODO
+      - set_cursor_item
       - spawn_position
       - scoreboard_display_objective
       - entity_metadata
@@ -3405,6 +3410,7 @@
          if player_info: packet_player_info
          if face_player: packet_face_player
          if position: packet_position
+         if player_rotation: packet_player_rotation
          if unlock_recipes: packet_unlock_recipes
          if recipe_book_settings: packet_recipe_book_settings
          if entity_destroy: packet_entity_destroy
@@ -3427,6 +3433,7 @@
          if held_item_slot: packet_held_item_slot
          if update_view_position: packet_update_view_position
          if update_view_distance: packet_update_view_distance
+         if set_cursor_item: packet_set_cursor_item
          if spawn_position: packet_spawn_position
          if scoreboard_display_objective: packet_scoreboard_display_objective
          if entity_metadata: packet_entity_metadata
