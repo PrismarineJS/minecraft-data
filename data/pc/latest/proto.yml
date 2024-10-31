@@ -1543,7 +1543,8 @@
          if server_links: packet_common_server_links
 ^play.toClient.types:
    packet_recipe_book_settings:
-      recipeTypes: []$4 # Hardcoded, number of tabs in the crafting book
+      # Hardcoded, number of tabs in the crafting book
+      recipeTypes: []$4
          guiOpen: bool
          filteringCraftable: bool
    packet_sync_entity_position:
@@ -3314,7 +3315,7 @@
       - entity_equipment
       - experience
       - update_health
-      - held_item_slot # TODO Check if it changed
+      - held_item_slot
       - scoreboard_objective
       - set_passengers
       - set_player_inventory # TODO
@@ -3343,7 +3344,7 @@
       - entity_effect
       - declare_recipes
       - tags
-      - projectile_power # TODO
+      - set_projectile_power
       - custom_report_details
       - server_links
       params: name ?
@@ -3471,6 +3472,7 @@
          if entity_effect: packet_entity_effect
          if declare_recipes: packet_declare_recipes
          if tags: packet_tags
+         if set_projectile_power: packet_set_projectile_power
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
 
