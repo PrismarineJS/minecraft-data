@@ -3571,8 +3571,8 @@
       # Empty
    # MC: ServerboundContainerButtonClickPacket
    packet_enchant_item:
-      windowId: i8
-      enchantment: i8
+      windowId: varint
+      enchantment: varint
    # MC: ServerboundContainerClickPacket
    packet_window_click:
       windowId: u8
@@ -3696,10 +3696,8 @@
       actionId: varint
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
-   packet_steer_vehicle:
-      sideways: f32
-      forward: f32
-      jump: u8
+   packet_player_inputs:
+      inputsBitset: u8
    # MC: ServerboundPongPacket
    packet_pong:
       id: i32
@@ -3824,6 +3822,7 @@
       - settings
       - tab_complete
       - configuration_acknowledged
+      # Maybe rename enchant_item if it is used for other things too
       - enchant_item
       - window_click
       - close_window
@@ -3849,7 +3848,7 @@
       - abilities
       - block_dig
       - entity_action
-      - steer_vehicle
+      - player_inputs
       - pong
       - recipe_book
       - displayed_recipe
@@ -3909,7 +3908,7 @@
          if abilities: packet_abilities
          if block_dig: packet_block_dig
          if entity_action: packet_entity_action
-         if steer_vehicle: packet_steer_vehicle
+         if player_inputs: packet_player_inputs
          if pong: packet_pong
          if recipe_book: packet_recipe_book
          if displayed_recipe: packet_displayed_recipe
