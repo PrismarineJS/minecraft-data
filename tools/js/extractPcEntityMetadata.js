@@ -35,6 +35,7 @@ function getEntityTypes () {
   const entityTypes = fs.readFileSync(`./${version}/client/net/minecraft/world/entity/EntityType.java`, 'utf8')
   const entityTypesLines = prepLines(entityTypes)
   const classNameTo = {}
+  const nameToClass = {}
   for (const line of entityTypesLines) {
     if (line.includes('= register(')) {
       // Given the line: public static final EntityType<Allay> ALLAY = register( "allay", EntityType.Builder.<Allay>of(Allay::new, MobCategory.CREATURE).sized(0.35F, 0.6F).clientTrackingRange(8).updateInterval(2) );
@@ -43,10 +44,11 @@ function getEntityTypes () {
       if (regex) {
         const [, type, , name] = regex
         classNameTo[type] = name
+        nameToClass[name] = type
       }
     }
   }
-  return classNameTo
+  return [classNameTo, nameToClass]
 }
 
 function getEntityMetadataSerializers () {
@@ -68,7 +70,7 @@ function getEntityMetadataSerializers () {
 }
 
 const serializers = getEntityMetadataSerializers()
-const classNameToRegistryName = getEntityTypes()
+const [classNameToRegistryName, entityNameToClass] = getEntityTypes()
 
 const allEntityFiles = globSync(`${version}/**/entity/**/*.java`)
 const allEntityFileCodes = Object.fromEntries(allEntityFiles.map(file => [
@@ -140,7 +142,7 @@ function updateMcDataEntitiesJSON () {
   const presentMcDataPath = `../../data/pc/${mcdataVersion}/entities.json`
   const presentMcData = require(presentMcDataPath)
   for (const entry of presentMcData) {
-    entry.metadataKeys = flat[entry.name].map(e => e[0].replace('DATA_', '').replace('_ID', '').replace('ID_', '').toLowerCase())
+    entry.metadataKeys = flat[classNameToRegistryName[entityNameToClass[entry.name]]].map(e => e[0].replace('DATA_', '').replace('_ID', '').replace('ID_', '').toLowerCase())
   }
   fs.writeFileSync(presentMcDataPath, JSON.stringify(presentMcData, null, 2))
 }
