@@ -627,6 +627,7 @@
       - instant_effect
       - item
       - vibration
+      - trail
       - item_slime
       - item_cobweb
       - item_snowball
@@ -690,6 +691,7 @@
       - ominous_spawning
       - raid_omen
       - trial_omen
+      - block_crumble
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.
@@ -705,7 +707,7 @@
       ## which as we can see writes the varint to the buffer.
       ## If you want to see all the serializers try regexp searching "StreamCodec.*Particle"
       data: type ?
-         if block or block_marker or falling_dust or dust_pillar: varint
+         if block or block_marker or falling_dust or dust_pillar or block_crumble: varint
          if dust:
             red: f32
             green: f32
@@ -733,6 +735,9 @@
                   entityId: varint
                   entity_eye_height: f32
             ticks: varint
+         if trail:
+            target: vec3f64
+            color: u8
    ingredient: Slot[]varint
    position: [
       "bitfield",
