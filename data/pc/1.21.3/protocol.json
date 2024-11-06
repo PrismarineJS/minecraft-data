@@ -109,6 +109,46 @@
         }
       ]
     ],
+    "SoundEvent": [
+      "container",
+      [
+        {
+          "name": "soundId",
+          "type": "varint"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "soundId",
+              "fields": {
+                "0": [
+                  "container",
+                  [
+                    {
+                      "name": "soundName",
+                      "type": "string"
+                    },
+                    {
+                      "name": "range",
+                      "type": [
+                        "option",
+                        "f32"
+                      ]
+                    }
+                  ]
+                ]
+              },
+              "default": [
+                "container",
+                []
+              ]
+            }
+          ]
+        }
+      ]
+    ],
     "SlotComponentType": [
       "mapper",
       {
@@ -121,56 +161,66 @@
           "4": "unbreakable",
           "5": "custom_name",
           "6": "item_name",
-          "7": "lore",
-          "8": "rarity",
-          "9": "enchantments",
-          "10": "can_place_on",
-          "11": "can_break",
-          "12": "attribute_modifiers",
-          "13": "custom_model_data",
-          "14": "hide_additional_tooltip",
-          "15": "hide_tooltip",
-          "16": "repair_cost",
-          "17": "creative_slot_lock",
-          "18": "enchantment_glint_override",
-          "19": "intangible_projectile",
-          "20": "food",
-          "21": "fire_resistant",
-          "22": "tool",
-          "23": "stored_enchantments",
-          "24": "dyed_color",
-          "25": "map_color",
-          "26": "map_id",
-          "27": "map_decorations",
-          "28": "map_post_processing",
-          "29": "charged_projectiles",
-          "30": "bundle_contents",
-          "31": "potion_contents",
-          "32": "suspicious_stew_effects",
-          "33": "writable_book_content",
-          "34": "written_book_content",
-          "35": "trim",
-          "36": "debug_stick_state",
-          "37": "entity_data",
-          "38": "bucket_entity_data",
-          "39": "block_entity_data",
-          "40": "instrument",
-          "41": "ominous_bottle_amplifier",
-          "42": "jukebox_playable",
-          "43": "recipes",
-          "44": "lodestone_tracker",
-          "45": "firework_explosion",
-          "46": "fireworks",
-          "47": "profile",
-          "48": "note_block_sound",
-          "49": "banner_patterns",
-          "50": "base_color",
-          "51": "pot_decorations",
-          "52": "container",
-          "53": "block_state",
-          "54": "bees",
-          "55": "lock",
-          "56": "container_loot"
+          "7": "item_model",
+          "8": "lore",
+          "9": "rarity",
+          "10": "enchantments",
+          "11": "can_place_on",
+          "12": "can_break",
+          "13": "attribute_modifiers",
+          "14": "custom_model_data",
+          "15": "hide_additional_tooltip",
+          "16": "hide_tooltip",
+          "17": "repair_cost",
+          "18": "creative_slot_lock",
+          "19": "enchantment_glint_override",
+          "20": "intangible_projectile",
+          "21": "food",
+          "22": "consumable",
+          "23": "use_remainder",
+          "24": "use_cooldown",
+          "25": "damage_resistant",
+          "26": "tool",
+          "27": "enchantable",
+          "28": "equippable",
+          "29": "repairable",
+          "30": "glider",
+          "31": "tooltip_style",
+          "32": "death_protection",
+          "33": "stored_enchantments",
+          "34": "dyed_color",
+          "35": "map_color",
+          "36": "map_id",
+          "37": "map_decorations",
+          "38": "map_post_processing",
+          "39": "charged_projectiles",
+          "40": "bundle_contents",
+          "41": "potion_contents",
+          "42": "suspicious_stew_effects",
+          "43": "writable_book_content",
+          "44": "written_book_content",
+          "45": "trim",
+          "46": "debug_stick_state",
+          "47": "entity_data",
+          "48": "bucket_entity_data",
+          "49": "block_entity_data",
+          "50": "instrument",
+          "51": "ominous_bottle_amplifier",
+          "52": "jukebox_playable",
+          "53": "recipes",
+          "54": "lodestone_tracker",
+          "55": "firework_explosion",
+          "56": "fireworks",
+          "57": "profile",
+          "58": "note_block_sound",
+          "59": "banner_patterns",
+          "60": "base_color",
+          "61": "pot_decorations",
+          "62": "container",
+          "63": "block_state",
+          "64": "bees",
+          "65": "lock",
+          "66": "container_loot"
         }
       }
     ],
@@ -195,6 +245,7 @@
                 "unbreakable": "bool",
                 "custom_name": "anonymousNbt",
                 "item_name": "anonymousNbt",
+                "item_model": "string",
                 "lore": [
                   "array",
                   {
@@ -400,7 +451,72 @@
                     }
                   ]
                 ],
-                "fire_resistant": "void",
+                "consumable": [
+                  "container",
+                  [
+                    {
+                      "name": "consume_seconds",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "animation",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "varint",
+                          "mappings": {
+                            "0": "none",
+                            "1": "eat",
+                            "2": "drink",
+                            "3": "block",
+                            "4": "bow",
+                            "5": "spear",
+                            "6": "crossbow",
+                            "7": "spyglass",
+                            "8": "toot_horn",
+                            "9": "brush"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "sound",
+                      "type": "SoundEvent"
+                    },
+                    {
+                      "name": "makes_particles",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "effects",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "use_remainder": "Slot",
+                "use_cooldown": [
+                  "container",
+                  [
+                    {
+                      "name": "seconds",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "cooldownGroup",
+                      "type": [
+                        "option",
+                        "string"
+                      ]
+                    }
+                  ]
+                ],
+                "damage_resistant": "string",
                 "tool": [
                   "container",
                   [
@@ -6561,69 +6677,98 @@
           "container",
           [
             {
-              "name": "action",
-              "type": "varint"
-            },
-            {
-              "name": "craftingBookOpen",
-              "type": "bool"
-            },
-            {
-              "name": "filteringCraftable",
-              "type": "bool"
-            },
-            {
-              "name": "smeltingBookOpen",
-              "type": "bool"
-            },
-            {
-              "name": "filteringSmeltable",
-              "type": "bool"
-            },
-            {
-              "name": "blastFurnaceOpen",
-              "type": "bool"
-            },
-            {
-              "name": "filteringBlastFurnace",
-              "type": "bool"
-            },
-            {
-              "name": "smokerBookOpen",
-              "type": "bool"
-            },
-            {
-              "name": "filteringSmoker",
-              "type": "bool"
-            },
-            {
-              "name": "recipes1",
+              "name": "entries",
               "type": [
                 "array",
                 {
                   "countType": "varint",
-                  "type": "string"
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "contents",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "recipeId",
+                              "type": "varint"
+                            },
+                            {
+                              "name": "display",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "type",
+                                    "type": [
+                                      "mapper",
+                                      {
+                                        "type": "varint",
+                                        "mappings": {
+                                          "0": "unknown",
+                                          "1": "crafting_table",
+                                          "2": "furnace"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "data",
+                                    "type": [
+                                      "switch",
+                                      {
+                                        "compareTo": "type",
+                                        "fields": {
+                                          "furnace": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "item",
+                                                "type": "Slot"
+                                              }
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              ]
+                            },
+                            {
+                              "name": "group",
+                              "type": [
+                                "option",
+                                "i32"
+                              ]
+                            },
+                            {
+                              "name": "category",
+                              "type": "varint"
+                            },
+                            {
+                              "name": "requirements",
+                              "type": [
+                                "option",
+                                "void"
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        "name": "flags",
+                        "type": "i8"
+                      }
+                    ]
+                  ]
                 }
               ]
             },
             {
-              "name": "recipes2",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "action",
-                  "fields": {
-                    "0": [
-                      "array",
-                      {
-                        "countType": "varint",
-                        "type": "string"
-                      }
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "replace",
+              "type": "bool"
             }
           ]
         ],
