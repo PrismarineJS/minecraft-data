@@ -1702,21 +1702,21 @@
       rootIndex: varint
    # MC: ClientboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: varint
    # MC: ClientboundContainerSetContentPacket
    packet_window_items:
-      windowId: u8
+      windowId: varint
       stateId: varint
       items: Slot[]varint
       carriedItem: Slot
    # MC: ClientboundContainerSetDataPacket
    packet_craft_progress_bar:
-      windowId: u8
+      windowId: varint
       property: i16
       value: i16
    # MC: ClientboundContainerSetSlotPacket
    packet_set_slot:
-      windowId: i8
+      windowId: varint
       stateId: varint
       slot: i16
       item: Slot
@@ -1821,7 +1821,7 @@
       gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
    packet_open_horse_window:
-      windowId: u8
+      windowId: varint
       nbSlots: varint
       entityId: i32
    # MC: ClientboundHurtAnimationPacket
@@ -2007,10 +2007,11 @@
    # MC: ClientboundPongResponsePacket
    packet_ping_response:
       id: i64
-   # MC: ClientboundPlaceGhostRecipePacket
+   # MC: ClientboundPlaceGhostRecipePacket TODO recipe display details
    packet_craft_recipe_response:
-      windowId: i8
-      recipe: string
+      windowId: varint
+      recipe: varint
+      details: void
    # MC: ClientboundPlayerAbilitiesPacket
    packet_abilities:
       flags: i8
@@ -3575,7 +3576,7 @@
       enchantment: varint
    # MC: ServerboundContainerClickPacket
    packet_window_click:
-      windowId: u8
+      windowId: varint
       stateId: varint
       slot: i16
       mouseButton: i8
@@ -3586,7 +3587,7 @@
       cursorItem: Slot
    # MC: ServerboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: varint
    # MC: ServerboundContainerSlotStateChangedPacket
    packet_set_slot_state:
       slot_id: varint
@@ -3678,8 +3679,8 @@
       id: i64
    # MC: ServerboundPlaceRecipePacket
    packet_craft_recipe_request:
-      windowId: i8
-      recipe: string
+      windowId: varint
+      recipe: varint
       makeAll: bool
    # MC: ServerboundPlayerAbilitiesPacket
    packet_abilities:
