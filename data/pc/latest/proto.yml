@@ -212,7 +212,7 @@
             effects: string[]varint
             # TODO weird registry magic
          if use_remainder: Slot
-         if use_cooldown: 
+         if use_cooldown:
             seconds: f32
             # TODO ResourceLocation
             cooldownGroup?: string
@@ -229,7 +229,7 @@
          # Damage Per Block	VarInt	The amount of damage the item takes per block break.
          if tool:
             rules: []varint
-               blocks: BlockSet[]varint
+               blocks: IdSet[]varint
                hasSpeed: bool
                speed: f32
                hasCorrectDropForBlocks: bool
@@ -529,13 +529,12 @@
       showIcon: bool
       hiddenEffect?: EffectDetail
 
-   BlockSet:
+   IdSet:
       type: varint
       name: type ?
          if 0: string
          default: void
-      # TODO: This will require a custom type ; we need type - 1 length of blockIds
-      blockIds: type ?
+      identifier: type ?
          if 0: void
          default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
 
@@ -552,7 +551,7 @@
       maxValue?: string
 
    BlockPredicate:
-      blockSet?: BlockSet[]varint
+      blockSet?: IdSet[]varint
       properties?: BlockProperty[]varint
       nbt: anonOptionalNbt
 
