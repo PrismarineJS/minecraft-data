@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.50
+!version: 1.21.42
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -136,9 +136,6 @@ packet_resource_packs_info:
    has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
-   world_template:
-      id: uuid
-      version: string
    # A list of resource packs that the client needs to download before joining the server. 
    # The order of these resource packs is not relevant in this packet. It is however important in the Resource Pack Stack packet.
    texture_packs: TexturePackInfos
@@ -3194,18 +3191,10 @@ InputFlag: [ "bitflags", {
       "vertical_collision",
       "down_left",
       "down_right",
-      "start_using_item",
       "camera_relative_movement_enabled",
       "rot_controlled_by_move_direction",
       "start_spin_attack",
-      "stop_spin_attack",
-      "hotbar_only_touch",
-      "jump_released_raw",
-      "jump_pressed_raw",
-      "jump_current_raw",
-      "sneak_released_raw",
-      "sneak_pressed_raw",
-      "sneak_current_raw"
+      "stop_spin_attack"
    ]
 }]
 
@@ -4288,7 +4277,6 @@ packet_serverbound_diagnostics:
 packet_camera_aim_assist:
    !id: 0x13C
    !bound: server
-   preset_id: string
    # CameraAimAssistTargetModeAngle.
    view_angle: vec2f
    # Distance is the distance that the camera should keep from the target, if TargetMode is set to
@@ -4335,20 +4323,3 @@ packet_set_movement_authority:
       0: client
       1: server
       2: server_with_rewind
-
-packet_camera_aim_assist_presets:
-   !id: 0x140
-   !bound: client
-   categories: []varint
-      id: string
-      categories: CameraAimAssistCategory[]varint
-   presets: []varint
-      id: string
-      categories: string
-      exclude_blocks: string[]varint
-      target_liquids: string[]varint
-      item_settings: []varint
-         id: string
-         category: string
-      default_item_settings?: string
-      hand_settings?: string
