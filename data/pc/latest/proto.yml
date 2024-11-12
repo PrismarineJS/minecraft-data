@@ -193,7 +193,7 @@
             # Set this to Air if the item should be consumed normally without leaving any other item after.
             usingConvertsTo: Slot
             effects: []varint
-               effect: varint
+               effect: PotionEffect
                probability: f32
          if consumable:
             consume_seconds: f32
@@ -213,7 +213,7 @@
                "otherwise": { name: "data", type: "SoundEvent" }
             }]
             makes_particles: bool
-            effects: string[]varint
+            effects: PotionEffect[]varint
             # TODO weird registry magic
          if use_remainder: Slot
          if use_cooldown:
@@ -257,9 +257,7 @@
             potionId?: varint
             # The RGB components of the color, encoded as an integer.
             customColor?: varint
-            customEffects: []varint
-               effect: varint
-               details: EffectDetail
+            customEffects: PotionEffect[]varint
          # Name	Type	Description
          # Number Of Effects	VarInt	Number of elements in the following array.
          # Effect	Type ID	Array	VarInt Enum	The ID of the effect in the potion effect type registry.
@@ -516,6 +514,10 @@
       showParticles: bool
       showIcon: bool
       hiddenEffect?: EffectDetail
+
+   PotionEffect:
+      id: varint
+      details: EffectDetail
 
    BlockProperty:
       # Name of the block state property.
