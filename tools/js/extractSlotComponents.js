@@ -1,7 +1,7 @@
 const fs = require('fs')
 const cp = require('child_process')
 const version = process.argv[2]
-const extractTypes = process.argv[3] == '-types'
+const extractTypes = process.argv[3] === '-types'
 
 if (!version) {
   console.log('Usage: node extractEntityMetadata.js <codeVersion> [-types]')
@@ -18,6 +18,6 @@ const typeRe = /\((.+?)\).*?;/gm
 const nameMatches = componentsFile.matchAll(nameRe)
 const typeMatches = componentsFile.matchAll(typeRe)
 typeMatches.next()
-for (const match of nameMatches) {    
-    console.log(`- ${match[1]}${extractTypes ? " : " + typeMatches.next().value?.[1]: ""}`);
+for (const match of nameMatches) {
+  console.log(`- ${match[1]}${extractTypes ? ' : ' + typeMatches.next().value?.[1] : ''}`)
 }
