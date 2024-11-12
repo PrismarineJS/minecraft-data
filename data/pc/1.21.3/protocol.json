@@ -28,7 +28,6 @@
     "restBuffer": "native",
     "anonymousNbt": "native",
     "anonOptionalNbt": "native",
-    "arrayWithLengthOffset": "native",
     "ByteArray": [
       "buffer",
       {
@@ -109,42 +108,19 @@
         }
       ]
     ],
+    "ContainerID": "varint",
     "SoundEvent": [
       "container",
       [
         {
-          "name": "soundId",
-          "type": "varint"
+          "name": "soundName",
+          "type": "string"
         },
         {
-          "anon": true,
+          "name": "fixedRange",
           "type": [
-            "switch",
-            {
-              "compareTo": "soundId",
-              "fields": {
-                "0": [
-                  "container",
-                  [
-                    {
-                      "name": "soundName",
-                      "type": "string"
-                    },
-                    {
-                      "name": "range",
-                      "type": [
-                        "option",
-                        "f32"
-                      ]
-                    }
-                  ]
-                ]
-              },
-              "default": [
-                "container",
-                []
-              ]
-            }
+            "option",
+            "f32"
           ]
         }
       ]
@@ -481,7 +457,19 @@
                     },
                     {
                       "name": "sound",
-                      "type": "SoundEvent"
+                      "type": [
+                        "registryEntryHolder",
+                        {
+                          "base": {
+                            "name": "soundId",
+                            "type": "varint"
+                          },
+                          "otherwise": {
+                            "name": "data",
+                            "type": "SoundEvent"
+                          }
+                        }
+                      ]
                     },
                     {
                       "name": "makes_particles",
@@ -532,28 +520,32 @@
                               {
                                 "name": "blocks",
                                 "type": [
-                                  "array",
+                                  "registryEntryHolderSet",
                                   {
-                                    "countType": "varint",
-                                    "type": "IdSet"
+                                    "base": {
+                                      "name": "name",
+                                      "type": "string"
+                                    },
+                                    "otherwise": {
+                                      "name": "ids",
+                                      "type": "varint"
+                                    }
                                   }
                                 ]
                               },
                               {
-                                "name": "hasSpeed",
-                                "type": "bool"
-                              },
-                              {
                                 "name": "speed",
-                                "type": "f32"
-                              },
-                              {
-                                "name": "hasCorrectDropForBlocks",
-                                "type": "bool"
+                                "type": [
+                                  "option",
+                                  "f32"
+                                ]
                               },
                               {
                                 "name": "correctDropForBlocks",
-                                "type": "bool"
+                                "type": [
+                                  "option",
+                                  "bool"
+                                ]
                               }
                             ]
                           ]
@@ -652,20 +644,18 @@
                   "container",
                   [
                     {
-                      "name": "hasPotionId",
-                      "type": "bool"
-                    },
-                    {
                       "name": "potionId",
-                      "type": "optvarint"
-                    },
-                    {
-                      "name": "hasCustomColor",
-                      "type": "bool"
+                      "type": [
+                        "option",
+                        "varint"
+                      ]
                     },
                     {
                       "name": "customColor",
-                      "type": "optvarint"
+                      "type": [
+                        "option",
+                        "varint"
+                      ]
                     },
                     {
                       "name": "customEffects",
@@ -1445,48 +1435,6 @@
         }
       ]
     ],
-    "IdSet": [
-      "container",
-      [
-        {
-          "name": "type",
-          "type": "varint"
-        },
-        {
-          "name": "name",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "0": "string"
-              },
-              "default": "void"
-            }
-          ]
-        },
-        {
-          "name": "identifier",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "0": "void"
-              },
-              "default": [
-                "arrayWithLengthOffset",
-                {
-                  "count": "type",
-                  "type": "varint",
-                  "lengthOffset": -1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    ],
     "BlockProperty": [
       "container",
       [
@@ -1529,10 +1477,16 @@
           "type": [
             "option",
             [
-              "array",
+              "registryEntryHolderSet",
               {
-                "countType": "varint",
-                "type": "IdSet"
+                "base": {
+                  "name": "name",
+                  "type": "string"
+                },
+                "otherwise": {
+                  "name": "blockIds",
+                  "type": "varint"
+                }
               }
             ]
           ]
@@ -2035,57 +1989,17 @@
                 "pose": "varint",
                 "cat_variant": "varint",
                 "wolf_variant": [
-                  "container",
-                  [
-                    {
-                      "name": "wildTexture",
-                      "type": "string"
-                    },
-                    {
-                      "name": "tameTexture",
-                      "type": "string"
-                    },
-                    {
-                      "name": "angryTexture",
-                      "type": "string"
-                    },
-                    {
-                      "name": "maybeInputLength",
+                  "registryEntryHolder",
+                  {
+                    "base": {
+                      "name": "variantId",
                       "type": "varint"
                     },
-                    {
-                      "name": "biomeLocation",
-                      "type": [
-                        "switch",
-                        {
-                          "compareTo": "maybeInputLength",
-                          "fields": {
-                            "0": "string"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "name": "biomeHolders",
-                      "type": [
-                        "switch",
-                        {
-                          "compareTo": "maybeInputLength",
-                          "fields": {
-                            "0": "void"
-                          },
-                          "default": [
-                            "arrayWithLengthOffset",
-                            {
-                              "count": "type",
-                              "type": "varint",
-                              "lengthOffset": -1
-                            }
-                          ]
-                        }
-                      ]
+                    "otherwise": {
+                      "name": "variantData",
+                      "type": "EntityMetadataWolfVariant"
                     }
-                  ]
+                  }
                 ],
                 "frog_variant": "varint",
                 "optional_global_pos": [
@@ -2113,6 +2027,39 @@
                 "armadillo_state": "varint",
                 "vector3": "vec3f",
                 "quaternion": "vec4f"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "EntityMetadataWolfVariant": [
+      "container",
+      [
+        {
+          "name": "wildTexture",
+          "type": "string"
+        },
+        {
+          "name": "tameTexture",
+          "type": "string"
+        },
+        {
+          "name": "angryTexture",
+          "type": "string"
+        },
+        {
+          "name": "biome",
+          "type": [
+            "registryEntryHolderSet",
+            {
+              "base": {
+                "name": "name",
+                "type": "string"
+              },
+              "otherwise": {
+                "name": "ids",
+                "type": "varint"
               }
             }
           ]
@@ -2929,46 +2876,6 @@
                 ]
               ]
             }
-          ]
-        }
-      ]
-    ],
-    "packet_common_remove_resource_pack": [
-      "container",
-      [
-        {
-          "name": "uuid",
-          "type": [
-            "option",
-            "UUID"
-          ]
-        }
-      ]
-    ],
-    "packet_common_add_resource_pack": [
-      "container",
-      [
-        {
-          "name": "uuid",
-          "type": "UUID"
-        },
-        {
-          "name": "url",
-          "type": "string"
-        },
-        {
-          "name": "hash",
-          "type": "string"
-        },
-        {
-          "name": "forced",
-          "type": "bool"
-        },
-        {
-          "name": "promptMessage",
-          "type": [
-            "option",
-            "anonymousNbt"
           ]
         }
       ]
@@ -3826,160 +3733,6 @@
   "play": {
     "toClient": {
       "types": {
-        "packet_set_player_inventory": [
-          "container",
-          [
-            {
-              "name": "slot",
-              "type": "varint"
-            },
-            {
-              "name": "stack",
-              "type": [
-                "option",
-                "Slot"
-              ]
-            }
-          ]
-        ],
-        "packet_set_cursor_item": [
-          "container",
-          [
-            {
-              "name": "stack",
-              "type": [
-                "option",
-                "Slot"
-              ]
-            }
-          ]
-        ],
-        "packet_player_rotation": [
-          "container",
-          [
-            {
-              "name": "yRot",
-              "type": "f32"
-            },
-            {
-              "name": "xRot",
-              "type": "f32"
-            }
-          ]
-        ],
-        "packet_recipe_book_settings": [
-          "container",
-          [
-            {
-              "name": "craftingGuiOpen",
-              "type": "bool"
-            },
-            {
-              "name": "craftingFilteringCraftable",
-              "type": "bool"
-            },
-            {
-              "name": "smeltingGuiOpen",
-              "type": "bool"
-            },
-            {
-              "name": "smeltingFilteringCraftable",
-              "type": "bool"
-            },
-            {
-              "name": "blastGuiOpen",
-              "type": "bool"
-            },
-            {
-              "name": "blastFilteringCraftable",
-              "type": "bool"
-            },
-            {
-              "name": "smokerGuiOpen",
-              "type": "bool"
-            },
-            {
-              "name": "smokerFilteringCraftable",
-              "type": "bool"
-            }
-          ]
-        ],
-        "packet_sync_entity_position": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": "varint"
-            },
-            {
-              "name": "x",
-              "type": "f64"
-            },
-            {
-              "name": "y",
-              "type": "f64"
-            },
-            {
-              "name": "z",
-              "type": "f64"
-            },
-            {
-              "name": "velocity",
-              "type": "vec3f64"
-            },
-            {
-              "name": "yaw",
-              "type": "f32"
-            },
-            {
-              "name": "pitch",
-              "type": "f32"
-            },
-            {
-              "name": "onGround",
-              "type": "bool"
-            }
-          ]
-        ],
-        "packet_move_minecart": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": "varint"
-            },
-            {
-              "name": "steps",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "position",
-                        "type": "position"
-                      },
-                      {
-                        "name": "movement",
-                        "type": "position"
-                      },
-                      {
-                        "name": "yRot",
-                        "type": "f32"
-                      },
-                      {
-                        "name": "weight",
-                        "type": "f32"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        ],
         "SpawnInfo": [
           "container",
           [
@@ -4465,7 +4218,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             }
           ]
         ],
@@ -4474,7 +4227,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -4501,7 +4254,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "property",
@@ -4518,7 +4271,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -4538,8 +4291,8 @@
           "container",
           [
             {
-              "name": "itemID",
-              "type": "varint"
+              "name": "cooldownGroup",
+              "type": "string"
             },
             {
               "name": "cooldownTicks",
@@ -4767,9 +4520,13 @@
             }
           ]
         ],
-        "packet_explosion": [
+        "packet_sync_entity_position": [
           "container",
           [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
             {
               "name": "x",
               "type": "f64"
@@ -4783,30 +4540,47 @@
               "type": "f64"
             },
             {
-              "name": "playerMotion",
+              "name": "dx",
+              "type": "f64"
+            },
+            {
+              "name": "dy",
+              "type": "f64"
+            },
+            {
+              "name": "dz",
+              "type": "f64"
+            },
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_explosion": [
+          "container",
+          [
+            {
+              "name": "center",
+              "type": "vec3f"
+            },
+            {
+              "name": "playerKnockback",
               "type": [
                 "option",
-                [
-                  "container",
-                  [
-                    {
-                      "name": "x",
-                      "type": "f64"
-                    },
-                    {
-                      "name": "y",
-                      "type": "f64"
-                    },
-                    {
-                      "name": "z",
-                      "type": "f64"
-                    }
-                  ]
-                ]
+                "vec3f"
               ]
             },
             {
-              "name": "explosion_particle",
+              "name": "explosionParticle",
               "type": "Particle"
             },
             {
@@ -4877,7 +4651,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "nbSlots",
@@ -5385,7 +5159,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "trades",
@@ -5572,6 +5346,49 @@
             }
           ]
         ],
+        "packet_move_minecart": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "steps",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "position",
+                        "type": "vec3f"
+                      },
+                      {
+                        "name": "movement",
+                        "type": "vec3f"
+                      },
+                      {
+                        "name": "yaw",
+                        "type": "f32"
+                      },
+                      {
+                        "name": "pitch",
+                        "type": "f32"
+                      },
+                      {
+                        "name": "weight",
+                        "type": "f32"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
         "packet_entity_look": [
           "container",
           [
@@ -5680,15 +5497,11 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "recipe",
-              "type": "varint"
-            },
-            {
-              "name": "details",
-              "type": "void"
+              "type": "TODO"
             }
           ]
         ],
@@ -5841,7 +5654,46 @@
           [
             {
               "name": "action",
-              "type": "i8"
+              "type": [
+                "bitfield",
+                [
+                  {
+                    "name": "unused",
+                    "size": 1,
+                    "signed": false
+                  },
+                  {
+                    "name": "update_list_order",
+                    "size": 1,
+                    "signed": false
+                  },
+                  {
+                    "name": "update_display_name",
+                    "size": 1,
+                    "signed": false
+                  },
+                  {
+                    "name": "update_latency",
+                    "size": 1,
+                    "signed": false
+                  },
+                  {
+                    "name": "update_listed",
+                    "size": 1,
+                    "signed": false
+                  },
+                  {
+                    "name": "initialize_chat",
+                    "size": 1,
+                    "signed": false
+                  },
+                  {
+                    "name": "add_player",
+                    "size": 1,
+                    "signed": false
+                  }
+                ]
+              ]
             },
             {
               "name": "data",
@@ -5861,72 +5713,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/add_player",
                             "fields": {
-                              "1": "game_profile",
-                              "3": "game_profile",
-                              "5": "game_profile",
-                              "7": "game_profile",
-                              "9": "game_profile",
-                              "11": "game_profile",
-                              "13": "game_profile",
-                              "15": "game_profile",
-                              "17": "game_profile",
-                              "19": "game_profile",
-                              "21": "game_profile",
-                              "23": "game_profile",
-                              "25": "game_profile",
-                              "27": "game_profile",
-                              "29": "game_profile",
-                              "31": "game_profile",
-                              "33": "game_profile",
-                              "35": "game_profile",
-                              "37": "game_profile",
-                              "39": "game_profile",
-                              "41": "game_profile",
-                              "43": "game_profile",
-                              "45": "game_profile",
-                              "47": "game_profile",
-                              "49": "game_profile",
-                              "51": "game_profile",
-                              "53": "game_profile",
-                              "55": "game_profile",
-                              "57": "game_profile",
-                              "59": "game_profile",
-                              "61": "game_profile",
-                              "63": "game_profile",
-                              "65": "game_profile",
-                              "67": "game_profile",
-                              "69": "game_profile",
-                              "71": "game_profile",
-                              "73": "game_profile",
-                              "75": "game_profile",
-                              "77": "game_profile",
-                              "79": "game_profile",
-                              "81": "game_profile",
-                              "83": "game_profile",
-                              "85": "game_profile",
-                              "87": "game_profile",
-                              "89": "game_profile",
-                              "91": "game_profile",
-                              "93": "game_profile",
-                              "95": "game_profile",
-                              "97": "game_profile",
-                              "99": "game_profile",
-                              "101": "game_profile",
-                              "103": "game_profile",
-                              "105": "game_profile",
-                              "107": "game_profile",
-                              "109": "game_profile",
-                              "111": "game_profile",
-                              "113": "game_profile",
-                              "115": "game_profile",
-                              "117": "game_profile",
-                              "119": "game_profile",
-                              "121": "game_profile",
-                              "123": "game_profile",
-                              "125": "game_profile",
-                              "127": "game_profile"
+                              "1": "game_profile"
                             },
                             "default": "void"
                           }
@@ -5937,72 +5726,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/initialize_chat",
                             "fields": {
-                              "2": "chat_session",
-                              "3": "chat_session",
-                              "6": "chat_session",
-                              "7": "chat_session",
-                              "10": "chat_session",
-                              "11": "chat_session",
-                              "14": "chat_session",
-                              "15": "chat_session",
-                              "18": "chat_session",
-                              "19": "chat_session",
-                              "22": "chat_session",
-                              "23": "chat_session",
-                              "26": "chat_session",
-                              "27": "chat_session",
-                              "30": "chat_session",
-                              "31": "chat_session",
-                              "34": "chat_session",
-                              "35": "chat_session",
-                              "38": "chat_session",
-                              "39": "chat_session",
-                              "42": "chat_session",
-                              "43": "chat_session",
-                              "46": "chat_session",
-                              "47": "chat_session",
-                              "50": "chat_session",
-                              "51": "chat_session",
-                              "54": "chat_session",
-                              "55": "chat_session",
-                              "58": "chat_session",
-                              "59": "chat_session",
-                              "62": "chat_session",
-                              "63": "chat_session",
-                              "66": "chat_session",
-                              "67": "chat_session",
-                              "70": "chat_session",
-                              "71": "chat_session",
-                              "74": "chat_session",
-                              "75": "chat_session",
-                              "78": "chat_session",
-                              "79": "chat_session",
-                              "82": "chat_session",
-                              "83": "chat_session",
-                              "86": "chat_session",
-                              "87": "chat_session",
-                              "90": "chat_session",
-                              "91": "chat_session",
-                              "94": "chat_session",
-                              "95": "chat_session",
-                              "98": "chat_session",
-                              "99": "chat_session",
-                              "102": "chat_session",
-                              "103": "chat_session",
-                              "106": "chat_session",
-                              "107": "chat_session",
-                              "110": "chat_session",
-                              "111": "chat_session",
-                              "114": "chat_session",
-                              "115": "chat_session",
-                              "118": "chat_session",
-                              "119": "chat_session",
-                              "122": "chat_session",
-                              "123": "chat_session",
-                              "126": "chat_session",
-                              "127": "chat_session"
+                              "1": "chat_session"
                             },
                             "default": "void"
                           }
@@ -6013,72 +5739,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_game_mode",
                             "fields": {
-                              "4": "varint",
-                              "5": "varint",
-                              "6": "varint",
-                              "7": "varint",
-                              "12": "varint",
-                              "13": "varint",
-                              "14": "varint",
-                              "15": "varint",
-                              "20": "varint",
-                              "21": "varint",
-                              "22": "varint",
-                              "23": "varint",
-                              "28": "varint",
-                              "29": "varint",
-                              "30": "varint",
-                              "31": "varint",
-                              "36": "varint",
-                              "37": "varint",
-                              "38": "varint",
-                              "39": "varint",
-                              "44": "varint",
-                              "45": "varint",
-                              "46": "varint",
-                              "47": "varint",
-                              "52": "varint",
-                              "53": "varint",
-                              "54": "varint",
-                              "55": "varint",
-                              "60": "varint",
-                              "61": "varint",
-                              "62": "varint",
-                              "63": "varint",
-                              "68": "varint",
-                              "69": "varint",
-                              "70": "varint",
-                              "71": "varint",
-                              "76": "varint",
-                              "77": "varint",
-                              "78": "varint",
-                              "79": "varint",
-                              "84": "varint",
-                              "85": "varint",
-                              "86": "varint",
-                              "87": "varint",
-                              "92": "varint",
-                              "93": "varint",
-                              "94": "varint",
-                              "95": "varint",
-                              "100": "varint",
-                              "101": "varint",
-                              "102": "varint",
-                              "103": "varint",
-                              "108": "varint",
-                              "109": "varint",
-                              "110": "varint",
-                              "111": "varint",
-                              "116": "varint",
-                              "117": "varint",
-                              "118": "varint",
-                              "119": "varint",
-                              "124": "varint",
-                              "125": "varint",
-                              "126": "varint",
-                              "127": "varint"
+                              "1": "varint"
                             },
                             "default": "void"
                           }
@@ -6089,72 +5752,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_listed",
                             "fields": {
-                              "8": "bool",
-                              "9": "bool",
-                              "10": "bool",
-                              "11": "bool",
-                              "12": "bool",
-                              "13": "bool",
-                              "14": "bool",
-                              "15": "bool",
-                              "24": "bool",
-                              "25": "bool",
-                              "26": "bool",
-                              "27": "bool",
-                              "28": "bool",
-                              "29": "bool",
-                              "30": "bool",
-                              "31": "bool",
-                              "40": "bool",
-                              "41": "bool",
-                              "42": "bool",
-                              "43": "bool",
-                              "44": "bool",
-                              "45": "bool",
-                              "46": "bool",
-                              "47": "bool",
-                              "56": "bool",
-                              "57": "bool",
-                              "58": "bool",
-                              "59": "bool",
-                              "60": "bool",
-                              "61": "bool",
-                              "62": "bool",
-                              "63": "bool",
-                              "72": "bool",
-                              "73": "bool",
-                              "74": "bool",
-                              "75": "bool",
-                              "76": "bool",
-                              "77": "bool",
-                              "78": "bool",
-                              "79": "bool",
-                              "88": "bool",
-                              "89": "bool",
-                              "90": "bool",
-                              "91": "bool",
-                              "92": "bool",
-                              "93": "bool",
-                              "94": "bool",
-                              "95": "bool",
-                              "104": "bool",
-                              "105": "bool",
-                              "106": "bool",
-                              "107": "bool",
-                              "108": "bool",
-                              "109": "bool",
-                              "110": "bool",
-                              "111": "bool",
-                              "120": "bool",
-                              "121": "bool",
-                              "122": "bool",
-                              "123": "bool",
-                              "124": "bool",
-                              "125": "bool",
-                              "126": "bool",
-                              "127": "bool"
+                              "1": "varint"
                             },
                             "default": "void"
                           }
@@ -6165,71 +5765,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_latency",
                             "fields": {
-                              "16": "varint",
-                              "17": "varint",
-                              "18": "varint",
-                              "19": "varint",
-                              "20": "varint",
-                              "21": "varint",
-                              "22": "varint",
-                              "23": "varint",
-                              "24": "varint",
-                              "25": "varint",
-                              "26": "varint",
-                              "27": "varint",
-                              "28": "varint",
-                              "29": "varint",
-                              "30": "varint",
-                              "31": "varint",
-                              "48": "varint",
-                              "49": "varint",
-                              "50": "varint",
-                              "51": "varint",
-                              "52": "varint",
-                              "53": "varint",
-                              "54": "varint",
-                              "55": "varint",
-                              "56": "varint",
-                              "57": "varint",
-                              "58": "varint",
-                              "59": "varint",
-                              "60": "varint",
-                              "61": "varint",
-                              "62": "varint",
-                              "63": "varint",
-                              "80": "varint",
-                              "81": "varint",
-                              "82": "varint",
-                              "83": "varint",
-                              "84": "varint",
-                              "85": "varint",
-                              "86": "varint",
-                              "87": "varint",
-                              "88": "varint",
-                              "89": "varint",
-                              "90": "varint",
-                              "91": "varint",
-                              "92": "varint",
-                              "93": "varint",
-                              "94": "varint",
-                              "112": "varint",
-                              "113": "varint",
-                              "114": "varint",
-                              "115": "varint",
-                              "116": "varint",
-                              "117": "varint",
-                              "118": "varint",
-                              "119": "varint",
-                              "120": "varint",
-                              "121": "varint",
-                              "122": "varint",
-                              "123": "varint",
-                              "124": "varint",
-                              "125": "varint",
-                              "126": "varint",
-                              "127": "varint"
+                              "1": "varint"
                             },
                             "default": "void"
                           }
@@ -6240,261 +5778,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_display_name",
                             "fields": {
-                              "32": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "33": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "34": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "35": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "36": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "37": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "38": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "39": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "40": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "41": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "42": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "43": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "44": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "45": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "46": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "47": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "48": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "49": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "50": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "51": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "52": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "53": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "54": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "55": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "56": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "57": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "58": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "59": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "60": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "61": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "62": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "63": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "96": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "97": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "98": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "99": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "100": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "101": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "102": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "103": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "104": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "105": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "106": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "107": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "108": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "109": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "110": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "111": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "112": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "113": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "114": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "115": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "116": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "117": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "118": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "119": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "120": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "121": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "122": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "123": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "124": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "125": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "126": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "127": [
+                              "1": [
                                 "option",
                                 "anonymousNbt"
                               ]
@@ -6504,75 +5790,13 @@
                         ]
                       },
                       {
-                        "name": "list_order",
+                        "name": "listOrder",
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_list_order",
                             "fields": {
-                              "64": "varint",
-                              "65": "varint",
-                              "66": "varint",
-                              "67": "varint",
-                              "68": "varint",
-                              "69": "varint",
-                              "70": "varint",
-                              "71": "varint",
-                              "72": "varint",
-                              "73": "varint",
-                              "74": "varint",
-                              "75": "varint",
-                              "76": "varint",
-                              "77": "varint",
-                              "78": "varint",
-                              "79": "varint",
-                              "80": "varint",
-                              "81": "varint",
-                              "82": "varint",
-                              "83": "varint",
-                              "84": "varint",
-                              "85": "varint",
-                              "87": "varint",
-                              "88": "varint",
-                              "89": "varint",
-                              "90": "varint",
-                              "91": "varint",
-                              "92": "varint",
-                              "93": "varint",
-                              "94": "varint",
-                              "95": "varint",
-                              "96": "varint",
-                              "97": "varint",
-                              "98": "varint",
-                              "99": "varint",
-                              "100": "varint",
-                              "101": "varint",
-                              "102": "varint",
-                              "103": "varint",
-                              "104": "varint",
-                              "105": "varint",
-                              "106": "varint",
-                              "107": "varint",
-                              "108": "varint",
-                              "109": "varint",
-                              "110": "varint",
-                              "111": "varint",
-                              "112": "varint",
-                              "113": "varint",
-                              "114": "varint",
-                              "115": "varint",
-                              "116": "varint",
-                              "117": "varint",
-                              "118": "varint",
-                              "119": "varint",
-                              "120": "varint",
-                              "121": "varint",
-                              "122": "varint",
-                              "123": "varint",
-                              "124": "varint",
-                              "125": "varint",
-                              "126": "varint",
-                              "127": "varint"
+                              "1": "varint"
                             },
                             "default": "void"
                           }
@@ -6636,6 +5860,23 @@
             }
           ]
         ],
+        "PositionUpdateRelatives": [
+          "bitflags",
+          {
+            "type": "u32",
+            "flags": [
+              "x",
+              "y",
+              "z",
+              "yaw",
+              "pitch",
+              "dx",
+              "dy",
+              "dz",
+              "yawDelta"
+            ]
+          }
+        ],
         "packet_position": [
           "container",
           [
@@ -6656,8 +5897,16 @@
               "type": "f64"
             },
             {
-              "name": "velocity",
-              "type": "vec3f64"
+              "name": "dx",
+              "type": "f32"
+            },
+            {
+              "name": "dy",
+              "type": "f32"
+            },
+            {
+              "name": "dz",
+              "type": "f32"
             },
             {
               "name": "yaw",
@@ -6669,11 +5918,24 @@
             },
             {
               "name": "flags",
-              "type": "i32"
+              "type": "PositionUpdateRelatives"
             }
           ]
         ],
-        "packet_unlock_recipes": [
+        "packet_player_rotation": [
+          "container",
+          [
+            {
+              "name": "yaw",
+              "type": "f32"
+            },
+            {
+              "name": "pitch",
+              "type": "f32"
+            }
+          ]
+        ],
+        "packet_recipe_book_add": [
           "container",
           [
             {
@@ -6692,55 +5954,17 @@
                           [
                             {
                               "name": "recipeId",
-                              "type": "varint"
+                              "type": "string"
                             },
                             {
                               "name": "display",
-                              "type": [
-                                "container",
-                                [
-                                  {
-                                    "name": "type",
-                                    "type": [
-                                      "mapper",
-                                      {
-                                        "type": "varint",
-                                        "mappings": {
-                                          "0": "unknown",
-                                          "1": "crafting_table",
-                                          "2": "furnace"
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "name": "data",
-                                    "type": [
-                                      "switch",
-                                      {
-                                        "compareTo": "type",
-                                        "fields": {
-                                          "furnace": [
-                                            "container",
-                                            [
-                                              {
-                                                "name": "item",
-                                                "type": "Slot"
-                                              }
-                                            ]
-                                          ]
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ]
-                              ]
+                              "type": "todo"
                             },
                             {
                               "name": "group",
                               "type": [
                                 "option",
-                                "i32"
+                                "varint"
                               ]
                             },
                             {
@@ -6748,10 +5972,22 @@
                               "type": "varint"
                             },
                             {
-                              "name": "requirements",
+                              "name": "craftingRequirements",
                               "type": [
                                 "option",
-                                "void"
+                                [
+                                  "registryEntryHolderSet",
+                                  {
+                                    "base": {
+                                      "name": "name",
+                                      "type": "string"
+                                    },
+                                    "otherwise": {
+                                      "name": "ids",
+                                      "type": "varint"
+                                    }
+                                  }
+                                ]
                               ]
                             }
                           ]
@@ -6759,15 +5995,58 @@
                       },
                       {
                         "name": "flags",
-                        "type": "i8"
+                        "type": [
+                          "bitflags",
+                          {
+                            "type": "u8",
+                            "flags": [
+                              "notification",
+                              "highlight"
+                            ]
+                          }
+                        ]
                       }
                     ]
                   ]
                 }
               ]
+            }
+          ]
+        ],
+        "packet_recipe_book_remove": "TODO",
+        "packet_recipe_book_settings": [
+          "container",
+          [
+            {
+              "name": "craftingGuiOpen",
+              "type": "bool"
             },
             {
-              "name": "replace",
+              "name": "craftingFilteringCraftable",
+              "type": "bool"
+            },
+            {
+              "name": "smeltingGuiOpen",
+              "type": "bool"
+            },
+            {
+              "name": "smeltingFilteringCraftable",
+              "type": "bool"
+            },
+            {
+              "name": "blastGuiOpen",
+              "type": "bool"
+            },
+            {
+              "name": "blastFilteringCraftable",
+              "type": "bool"
+            },
+            {
+              "name": "smokerGuiOpen",
+              "type": "bool"
+            },
+            {
+              "name": "smokerFilteringCraftable",
               "type": "bool"
             }
           ]
@@ -6812,6 +6091,46 @@
               "type": [
                 "option",
                 "string"
+              ]
+            }
+          ]
+        ],
+        "packet_remove_resource_pack": [
+          "container",
+          [
+            {
+              "name": "uuid",
+              "type": [
+                "option",
+                "UUID"
+              ]
+            }
+          ]
+        ],
+        "packet_add_resource_pack": [
+          "container",
+          [
+            {
+              "name": "uuid",
+              "type": "UUID"
+            },
+            {
+              "name": "url",
+              "type": "string"
+            },
+            {
+              "name": "hash",
+              "type": "string"
+            },
+            {
+              "name": "forced",
+              "type": "bool"
+            },
+            {
+              "name": "promptMessage",
+              "type": [
+                "option",
+                "anonymousNbt"
               ]
             }
           ]
@@ -6983,15 +6302,6 @@
             }
           ]
         ],
-        "packet_held_item_slot": [
-          "container",
-          [
-            {
-              "name": "slot",
-              "type": "i8"
-            }
-          ]
-        ],
         "packet_update_view_position": [
           "container",
           [
@@ -7011,6 +6321,18 @@
             {
               "name": "viewDistance",
               "type": "varint"
+            }
+          ]
+        ],
+        "packet_set_cursor_item": [
+          "container",
+          [
+            {
+              "name": "contents",
+              "type": [
+                "option",
+                "Slot"
+              ]
             }
           ]
         ],
@@ -7151,6 +6473,15 @@
             }
           ]
         ],
+        "packet_held_item_slot": [
+          "container",
+          [
+            {
+              "name": "slotId",
+              "type": "i8"
+            }
+          ]
+        ],
         "packet_scoreboard_objective": [
           "container",
           [
@@ -7261,6 +6592,22 @@
                   "countType": "varint",
                   "type": "varint"
                 }
+              ]
+            }
+          ]
+        ],
+        "packet_set_player_inventory": [
+          "container",
+          [
+            {
+              "name": "slotId",
+              "type": "varint"
+            },
+            {
+              "name": "contents",
+              "type": [
+                "option",
+                "Slot"
               ]
             }
           ]
@@ -8423,8 +7770,8 @@
                     "0x41": "face_player",
                     "0x42": "position",
                     "0x43": "player_rotation",
-                    "0x44": "unlock_recipes",
-                    "0x45": "remove_recipes",
+                    "0x44": "recipe_book_add",
+                    "0x45": "recipe_book_remove",
                     "0x46": "recipe_book_settings",
                     "0x47": "entity_destroy",
                     "0x48": "remove_entity_effect",
@@ -8565,13 +7912,14 @@
                     "face_player": "packet_face_player",
                     "position": "packet_position",
                     "player_rotation": "packet_player_rotation",
-                    "unlock_recipes": "packet_unlock_recipes",
+                    "recipe_book_add": "packet_recipe_book_add",
+                    "recipe_book_remove": "packet_recipe_book_remove",
                     "recipe_book_settings": "packet_recipe_book_settings",
                     "entity_destroy": "packet_entity_destroy",
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "reset_score": "packet_reset_score",
-                    "remove_resource_pack": "packet_common_remove_resource_pack",
-                    "add_resource_pack": "packet_common_add_resource_pack",
+                    "remove_resource_pack": "packet_remove_resource_pack",
+                    "add_resource_pack": "packet_add_resource_pack",
                     "respawn": "packet_respawn",
                     "entity_head_rotation": "packet_entity_head_rotation",
                     "multi_block_change": "packet_multi_block_change",
@@ -8584,10 +7932,10 @@
                     "world_border_warning_delay": "packet_world_border_warning_delay",
                     "world_border_warning_reach": "packet_world_border_warning_reach",
                     "camera": "packet_camera",
-                    "held_item_slot": "packet_held_item_slot",
                     "update_view_position": "packet_update_view_position",
                     "update_view_distance": "packet_update_view_distance",
                     "set_cursor_item": "packet_set_cursor_item",
+                    "held_item_slot": "packet_held_item_slot",
                     "spawn_position": "packet_spawn_position",
                     "scoreboard_display_objective": "packet_scoreboard_display_objective",
                     "entity_metadata": "packet_entity_metadata",
@@ -8637,23 +7985,6 @@
     },
     "toServer": {
       "types": {
-        "packet_select_bundle_item": [
-          "container",
-          [
-            {
-              "name": "slotId",
-              "type": "varint"
-            },
-            {
-              "name": "selectedItemIndex",
-              "type": "varint"
-            }
-          ]
-        ],
-        "packet_tick_end": [
-          "container",
-          []
-        ],
         "packet_teleport_confirm": [
           "container",
           [
@@ -8673,6 +8004,19 @@
             {
               "name": "location",
               "type": "position"
+            }
+          ]
+        ],
+        "packet_select_bundle_item": [
+          "container",
+          [
+            {
+              "name": "slotId",
+              "type": "varint"
+            },
+            {
+              "name": "selectedItemIndex",
+              "type": "varint"
             }
           ]
         ],
@@ -8841,6 +8185,10 @@
             }
           ]
         ],
+        "packet_tick_end": [
+          "container",
+          []
+        ],
         "packet_settings": [
           "container",
           [
@@ -8877,8 +8225,18 @@
               "type": "bool"
             },
             {
-              "name": "particles",
-              "type": "varint"
+              "name": "particleStatus",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "all",
+                    "1": "decreased",
+                    "2": "minimal"
+                  }
+                }
+              ]
             }
           ]
         ],
@@ -8904,11 +8262,11 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "enchantment",
-              "type": "varint"
+              "type": "i8"
             }
           ]
         ],
@@ -8917,7 +8275,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -8968,7 +8326,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             }
           ]
         ],
@@ -8981,7 +8339,7 @@
             },
             {
               "name": "window_id",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "state",
@@ -9155,6 +8513,16 @@
             }
           ]
         ],
+        "MovementFlags": [
+          "bitflags",
+          {
+            "type": "u8",
+            "flags": [
+              "onGround",
+              "hasHorizontalCollision"
+            ]
+          }
+        ],
         "packet_position": [
           "container",
           [
@@ -9171,8 +8539,8 @@
               "type": "f64"
             },
             {
-              "name": "onGround",
-              "type": "bool"
+              "name": "flags",
+              "type": "MovementFlags"
             }
           ]
         ],
@@ -9200,8 +8568,8 @@
               "type": "f32"
             },
             {
-              "name": "onGround",
-              "type": "bool"
+              "name": "flags",
+              "type": "MovementFlags"
             }
           ]
         ],
@@ -9217,8 +8585,8 @@
               "type": "f32"
             },
             {
-              "name": "onGround",
-              "type": "bool"
+              "name": "flags",
+              "type": "MovementFlags"
             }
           ]
         ],
@@ -9226,8 +8594,8 @@
           "container",
           [
             {
-              "name": "onGround",
-              "type": "bool"
+              "name": "flags",
+              "type": "MovementFlags"
             }
           ]
         ],
@@ -9292,10 +8660,10 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
-              "name": "recipe",
+              "name": "recipeId",
               "type": "varint"
             },
             {
@@ -9351,12 +8719,26 @@
             }
           ]
         ],
-        "packet_player_inputs": [
+        "packet_steer_vehicle": [
           "container",
           [
             {
-              "name": "inputsBitset",
-              "type": "u8"
+              "name": "inputs",
+              "type": [
+                "bitflags",
+                {
+                  "type": "u8",
+                  "flags": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "jump",
+                    "sneak",
+                    "sprint"
+                  ]
+                }
+              ]
             }
           ]
         ],
@@ -9712,6 +9094,10 @@
               "type": "bool"
             },
             {
+              "name": "worldBorderHit",
+              "type": "bool"
+            },
+            {
               "name": "sequence",
               "type": "varint"
             }
@@ -9784,7 +9170,7 @@
                     "0x25": "abilities",
                     "0x26": "block_dig",
                     "0x27": "entity_action",
-                    "0x28": "player_inputs",
+                    "0x28": "steer_vehicle",
                     "0x29": "pong",
                     "0x2a": "recipe_book",
                     "0x2b": "displayed_recipe",
@@ -9854,7 +9240,7 @@
                     "abilities": "packet_abilities",
                     "block_dig": "packet_block_dig",
                     "entity_action": "packet_entity_action",
-                    "player_inputs": "packet_player_inputs",
+                    "steer_vehicle": "packet_steer_vehicle",
                     "pong": "packet_pong",
                     "recipe_book": "packet_recipe_book",
                     "displayed_recipe": "packet_displayed_recipe",
