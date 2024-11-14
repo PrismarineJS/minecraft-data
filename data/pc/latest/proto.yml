@@ -30,6 +30,8 @@
    restBuffer: native
    anonymousNbt: native
    anonOptionalNbt: native
+   registryEntryHolder: native
+   registryEntryHolderSet: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: [
       "pstring",
@@ -1210,6 +1212,16 @@
       details: []varint
          key: string
          value: string
+   # MC: ClientboundResourcePackPopPacket
+   packet_common_remove_resource_pack:
+      uuid?: UUID
+   # MC: ClientboundResourcePackPushPacket
+   packet_common_add_resource_pack:
+      uuid: UUID
+      url: string
+      hash: string
+      forced: bool
+      promptMessage?: anonymousNbt
 
    ServerLinkType: varint =>
    - bug_report
@@ -2121,16 +2133,6 @@
    packet_reset_score:
       entity_name: string
       objective_name?: string
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
@@ -2803,8 +2805,8 @@
          if entity_destroy: packet_entity_destroy
          if remove_entity_effect: packet_remove_entity_effect
          if reset_score: packet_reset_score
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if respawn: packet_respawn
          if entity_head_rotation: packet_entity_head_rotation
          if multi_block_change: packet_multi_block_change
