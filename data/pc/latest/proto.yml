@@ -1962,10 +1962,10 @@
    packet_ping_response:
       id: i64
    # MC: ClientboundPlaceGhostRecipePacket
-   # TODO
    packet_craft_recipe_response:
       windowId: ContainerID
-      recipe: TODO
+      recipeDisplayId: varint
+      data: void # TODO
    # MC: ClientboundPlayerAbilitiesPacket
    packet_abilities:
       flags: i8
@@ -2011,10 +2011,11 @@
       # action is a bitfield of the above
       action: ["bitfield", [
          { "name": "unused", "size": 1, "signed": false },
-         { "name": "update_list_order", "size": 1, "signed": false },
+         { "name": "update_priority", "size": 1, "signed": false },
          { "name": "update_display_name", "size": 1, "signed": false },
          { "name": "update_latency", "size": 1, "signed": false },
          { "name": "update_listed", "size": 1, "signed": false },
+         { "name": "update_game_mode", "size": 1, "signed": false },
          { "name": "initialize_chat", "size": 1, "signed": false },
          { "name": "add_player", "size": 1, "signed": false }
       ]]
@@ -2038,7 +2039,7 @@
          displayName: ../action/update_display_name ?
             if 1: ["option", "anonymousNbt"]
             default: void
-         listOrder: ../action/update_list_order ?
+         listPriority: ../action/update_priority ?
             if 1: varint
             default: void
 
@@ -2080,9 +2081,9 @@
       x: f64
       y: f64
       z: f64
-      dx: f32
-      dy: f32
-      dz: f32
+      dx: f64
+      dy: f64
+      dz: f64
       yaw: f32
       pitch: f32
       flags: PositionUpdateRelatives
@@ -2098,7 +2099,7 @@
          # RecipeDisplayEntry
          contents:
             recipeId: string
-            display: todo
+            display: void # TODO
             group?: varint
             # This ID corresponds to the "recipe_book_category" registry
             category: varint
@@ -2111,7 +2112,8 @@
             "flags": ["notification", "highlight"]
          }]
    # MC: ClientboundRecipeBookRemovePacket
-   packet_recipe_book_remove: TODO
+   packet_recipe_book_remove:
+      recipeIds: varint[]varint
    # MC: ClientboundRecipeBookSettingsPacket
    packet_recipe_book_settings:
       craftingGuiOpen: bool
@@ -2800,7 +2802,7 @@
          if position: packet_position
          if player_rotation: packet_player_rotation
          if recipe_book_add: packet_recipe_book_add
-         if recipe_book_remove: packet_recipe_book_remove # TODO
+         if recipe_book_remove: packet_recipe_book_remove
          if recipe_book_settings: packet_recipe_book_settings
          if entity_destroy: packet_entity_destroy
          if remove_entity_effect: packet_remove_entity_effect

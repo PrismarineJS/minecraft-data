@@ -5537,8 +5537,12 @@
               "type": "ContainerID"
             },
             {
-              "name": "recipe",
-              "type": "TODO"
+              "name": "recipeDisplayId",
+              "type": "varint"
+            },
+            {
+              "name": "data",
+              "type": "void"
             }
           ]
         ],
@@ -5700,7 +5704,7 @@
                     "signed": false
                   },
                   {
-                    "name": "update_list_order",
+                    "name": "update_priority",
                     "size": 1,
                     "signed": false
                   },
@@ -5716,6 +5720,11 @@
                   },
                   {
                     "name": "update_listed",
+                    "size": 1,
+                    "signed": false
+                  },
+                  {
+                    "name": "update_game_mode",
                     "size": 1,
                     "signed": false
                   },
@@ -5827,11 +5836,11 @@
                         ]
                       },
                       {
-                        "name": "listOrder",
+                        "name": "listPriority",
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action/update_list_order",
+                            "compareTo": "../action/update_priority",
                             "fields": {
                               "1": "varint"
                             },
@@ -5935,15 +5944,15 @@
             },
             {
               "name": "dx",
-              "type": "f32"
+              "type": "f64"
             },
             {
               "name": "dy",
-              "type": "f32"
+              "type": "f64"
             },
             {
               "name": "dz",
-              "type": "f32"
+              "type": "f64"
             },
             {
               "name": "yaw",
@@ -5995,7 +6004,7 @@
                             },
                             {
                               "name": "display",
-                              "type": "todo"
+                              "type": "void"
                             },
                             {
                               "name": "group",
@@ -6050,7 +6059,21 @@
             }
           ]
         ],
-        "packet_recipe_book_remove": "TODO",
+        "packet_recipe_book_remove": [
+          "container",
+          [
+            {
+              "name": "recipeIds",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "varint"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_recipe_book_settings": [
           "container",
           [
