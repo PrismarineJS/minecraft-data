@@ -95,7 +95,6 @@
    - block_entity_data
    - instrument
    - ominous_bottle_amplifier
-   - jukebox_playable
    - recipes
    - lodestone_tracker
    - firework_explosion
@@ -330,38 +329,6 @@
                   useDuration: f32
                   range: f32
          if ominous_bottle_amplifier: varint
-         # Name	Type	Description
-         # Direct Mode	Boolean	Whether the jukebox song is specified directly, or just referenced by name.
-         # Jukebox Song Name	Optional Identifier	The name of the jukebox song in its respective registry. Only present if Direct Mode is false.
-         # Jukebox Song Type	Optional VarInt	Identifier used to determine the data that follows. It can be either:
-         # 0 - Directly represents a jukebox song, with the necessary data following.
-         # Anything else - References a jukebox song in its registry, by the ID of Jukebox Song Type - 1.
-         # Only present if Direct Mode is true.  
-         # Sound Event	Optional Sound Event	The sound to be played. Only present if Direct Mode is true and Jukebox Song Type is 0.
-         # Description	Optional Text Component	The description shown in the item lore. Only present if Direct Mode is true and Jukebox Song Type is 0.
-         # Duration	Optional Float	The duration the songs should play for, in seconds. Only present if Direct Mode is true and Jukebox Song Type is 0.
-         # Output	Optional VarInt	The output strength given by a comparator. Between 0 and 15. Only present if Direct Mode is true and Jukebox Song Type is 0.
-         # Show In Tooltip	Boolean	Whether the song should be shown on the item's tooltip.
-         if jukebox_playable:
-            directMode: bool
-            _: directMode ?
-               if true:
-                  jukeboxSongName: string
-                  jukeboxSongType: varint
-                  _: jukeboxSongType ?
-                     if 0:
-                        soundEvent:
-                           soundEventType: varint
-                           _: soundEventType ?
-                              if 0:
-                                 soundName: string
-                                 fixedRange?: f32
-                  description: anonymousNbt
-                  duration: f32
-                  output: varint
-               if false:
-                  songLocation: string
-            showInTooltip: bool
          if recipes: anonymousNbt
          # Name	Type	Description
          # Has Global Position	Boolean	Whether this lodestone points to a position, otherwise it spins randomly.
