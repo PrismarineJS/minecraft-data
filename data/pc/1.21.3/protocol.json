@@ -231,7 +231,18 @@
                     "type": "anonOptionalNbt"
                   }
                 ],
-                "rarity": "varint",
+                "rarity": [
+                  "mapper",
+                  {
+                    "type": "varint",
+                    "mappings": {
+                      "0": "common",
+                      "1": "uncommon",
+                      "2": "rare",
+                      "3": "epic"
+                    }
+                  }
+                ],
                 "enchantments": [
                   "container",
                   [
@@ -318,10 +329,6 @@
                                 "type": "varint"
                               },
                               {
-                                "name": "uniqueId",
-                                "type": "UUID"
-                              },
-                              {
                                 "name": "name",
                                 "type": "string"
                               },
@@ -396,36 +403,6 @@
                     {
                       "name": "canAlwaysEat",
                       "type": "bool"
-                    },
-                    {
-                      "name": "secondsToEat",
-                      "type": "f32"
-                    },
-                    {
-                      "name": "usingConvertsTo",
-                      "type": "Slot"
-                    },
-                    {
-                      "name": "effects",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": [
-                            "container",
-                            [
-                              {
-                                "name": "effect",
-                                "type": "PotionEffect"
-                              },
-                              {
-                                "name": "probability",
-                                "type": "f32"
-                              }
-                            ]
-                          ]
-                        }
-                      ]
                     }
                   ]
                 ],
@@ -1027,7 +1004,7 @@
                             },
                             {
                               "name": "position",
-                              "type": "vec3f"
+                              "type": "position"
                             }
                           ]
                         ]

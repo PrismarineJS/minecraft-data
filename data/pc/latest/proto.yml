@@ -141,10 +141,13 @@
          if unbreakable: bool
          if custom_name: anonymousNbt
          if item_name: anonymousNbt
-         ## TODO this is a ResourceLocation, check if it behaves as the sound identifier in the explosion packet
          if item_model: string
          if lore: anonOptionalNbt[]varint
-         if rarity: varint
+         if rarity: varint =>
+         - common
+         - uncommon
+         - rare
+         - epic
          if enchantments:
             enchantments: []varint
                id: varint
@@ -156,7 +159,6 @@
          if attribute_modifiers:
             attributes: []varint
                typeId: varint
-               uniqueId: UUID
                name: string
                value: f64
                operation: varint =>
@@ -188,15 +190,6 @@
             saturationModifier: f32
             # Whether the item can always be eaten, even at full hunger.
             canAlwaysEat: bool
-            # How long it takes to consume the item.
-            secondsToEat: f32
-            # This specifies the item produced after consuming the current item.
-            # In the Notchian server, this is used for stews, which turn into bowls.
-            # Set this to Air if the item should be consumed normally without leaving any other item after.
-            usingConvertsTo: Slot
-            effects: []varint
-               effect: PotionEffect
-               probability: f32
          if consumable:
             consume_seconds: f32
             animation: varint =>
@@ -216,11 +209,9 @@
             }]
             makes_particles: bool
             effects: PotionEffect[]varint
-            # TODO weird registry magic
          if use_remainder: Slot
          if use_cooldown:
             seconds: f32
-            # TODO ResourceLocation
             cooldownGroup?: string
          if damage_resistant: string
          if tool:
@@ -396,7 +387,7 @@
          if lodestone_tracker:
             globalPosition?:
                dimension: string
-               position: vec3f
+               position: position
             tracked: bool
          # Name	Type	Description
          # Shape	VarInt Enum	Can be one of the following:
