@@ -59,7 +59,33 @@
    SoundEvent:
       soundName: string
       fixedRange?: f32
-
+   dummy: ["registryEntryHolder", {
+               "baseName": "id",
+               "otherwise": { name: "name", type: "string" }
+            }]
+   SlotDisplay:
+      type: varint =>
+      - empty
+      - any_fuel
+      - item
+      - item_stack
+      - tag
+      - smithing_trim
+      - with_remainder
+      - composite
+      data: type ?
+         if empty or any_fuel: void
+         if item: varint
+         if item_stack: Slot
+         if tag: string
+         if simthing_trim:
+            base: SlotDisplay
+            material: SlotDisplay
+            pattern: SlotDisplay
+         if with_remainder:
+            input: SlotDisplay
+            remainder: SlotDisplay
+         if composite: SlotDisplay[]varint
    SlotComponentType: varint =>
    - custom_data
    - max_stack_size
@@ -472,11 +498,14 @@
          if container_loot: anonymousNbt
 
    Slot:
-      itemCount: i8
+      itemCount: varint
       _: itemCount ?
          if 0: void
          default:
-            itemId: varint
+            item: ["registryEntryHolder", {
+               "baseName": "id",
+               "otherwise": { name: "name", type: "string" }
+            }]
 # https://wiki.vg/Slot_Data#Structured_components
             addedComponentCount: varint
             removedComponentCount: varint
@@ -826,15 +855,6 @@
       }]
 
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
-   minecraft_simple_recipe_format:
-      category: varint
-   minecraft_smelting_format:
-      group: string
-      category: varint
-      ingredient: ingredient
-      result: Slot
-      experience: f32
-      cookTime: varint
    tags: []varint
       tagName: string
       entries: varint[]varint
@@ -2508,77 +2528,14 @@
    packet_declare_recipes:
       recipes: []varint
          name: string
-         type: varint =>
-         - minecraft:crafting_shaped
-         - minecraft:crafting_shapeless
-         - minecraft:crafting_special_armordye
-         - minecraft:crafting_special_bookcloning
-         - minecraft:crafting_special_mapcloning
-         - minecraft:crafting_special_mapextending
-         - minecraft:crafting_special_firework_rocket
-         - minecraft:crafting_special_firework_star
-         - minecraft:crafting_special_firework_star_fade
-         - minecraft:crafting_special_tippedarrow
-         - minecraft:crafting_special_bannerduplicate
-         - minecraft:crafting_special_shielddecoration
-         - minecraft:crafting_special_shulkerboxcoloring
-         - minecraft:crafting_special_suspiciousstew
-         - minecraft:crafting_special_repairitem
-         - minecraft:smelting
-         - minecraft:blasting
-         - minecraft:smoking
-         - minecraft:campfire_cooking
-         - minecraft:stonecutting
-         - minecraft:smithing_transform
-         - minecraft:smithing_trim
-         - minecraft:crafting_decorated_pot
-         data: type ?
-            if minecraft:crafting_shapeless:
-               group: string
-               category: varint
-               ingredients: ingredient[]varint
-               result: Slot
-            if minecraft:crafting_shaped:
-               group: string
-               category: varint
-               width: varint
-               height: varint
-               ingredients: []$width
-                  _: ingredient[]$height
-               result: Slot
-               showNotification: bool
-            if minecraft:crafting_special_armordye: minecraft_simple_recipe_format
-            if minecraft:crafting_special_bookcloning: minecraft_simple_recipe_format
-            if minecraft:crafting_special_mapcloning: minecraft_simple_recipe_format
-            if minecraft:crafting_special_mapextending: minecraft_simple_recipe_format
-            if minecraft:crafting_special_firework_rocket: minecraft_simple_recipe_format
-            if minecraft:crafting_special_firework_star: minecraft_simple_recipe_format
-            if minecraft:crafting_special_firework_star_fade: minecraft_simple_recipe_format
-            if minecraft:crafting_special_repairitem: minecraft_simple_recipe_format
-            if minecraft:crafting_special_tippedarrow: minecraft_simple_recipe_format
-            if minecraft:crafting_special_bannerduplicate: minecraft_simple_recipe_format
-            if minecraft:crafting_special_banneraddpattern: minecraft_simple_recipe_format
-            if minecraft:crafting_special_shielddecoration: minecraft_simple_recipe_format
-            if minecraft:crafting_special_shulkerboxcoloring: minecraft_simple_recipe_format
-            if minecraft:crafting_special_suspiciousstew: minecraft_simple_recipe_format
-            if minecraft:smelting: minecraft_smelting_format
-            if minecraft:blasting: minecraft_smelting_format
-            if minecraft:smoking: minecraft_smelting_format
-            if minecraft:campfire_cooking: minecraft_smelting_format
-            if minecraft:stonecutting:
-               group: string
-               ingredient: ingredient
-               result: Slot
-            if minecraft:smithing_transform:
-               template: ingredient
-               base: ingredient
-               addition: ingredient
-               result: Slot
-            if minecraft:smithing_trim:
-               template: ingredient
-               base: ingredient
-               addition: ingredient
-            if minecraft:crafting_decorated_pot: minecraft_simple_recipe_format
+         items: varint[]varint
+      stoneCutterRecipes: []varint
+         input: ["registryEntryHolderSet", {
+                  "base": { name: "name", type: "string" },
+                  "otherwise": { name: "ids", type: "dummy" }
+               }]
+         slotDisplay: SlotDisplay
+
    # MC: ClientboundUpdateTagsPacket
    packet_tags:
       tags: []varint
