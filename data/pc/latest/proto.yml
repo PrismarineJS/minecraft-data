@@ -230,7 +230,7 @@
                "otherwise": { name: "data", type: "SoundEvent" }
             }]
             makes_particles: bool
-            effects: PotionEffect[]varint
+            effects: ConsumeEffect[]varint
          if use_remainder: Slot
          if use_cooldown:
             seconds: f32
@@ -249,6 +249,38 @@
             # The mining speed in case none of the previous rule were matched.
             defaultMiningSpeed: f32
             damagePerBlock: varint
+         # Enchantment cost up to which the item can be enchanted
+         if enchantable: varint
+         if equippable:
+            slot: varint =>
+            - main_hand
+            - off_hand
+            - feet
+            - legs
+            - chest
+            - head
+            - body
+            sound: ["registryEntryHolder", {
+               "baseName": "soundId",
+               "otherwise": { name: "data", type: "SoundEvent" }
+            }]
+            model?: string
+            cameraOverlay?: string
+            allowedEntities?: ["registryEntryHolderSet", {
+               "base": { name: "name", type: "string" },
+               "otherwise": { name: "id", type: "varint" }
+            }]
+            dispensable: bool
+            swappable: bool
+            damageable: bool
+         if repairable:
+            items: ["registryEntryHolderSet", {
+               "base": { name: "name", type: "string" },
+               "otherwise": { name: "id", type: "varint" }
+            }]
+         if tooltip_style: string
+         if death_protection:
+            effects: ConsumeEffect[]varint
          if stored_enchantments:
             enchantments: []varint
                # The ID of the enchantment in the enchantment registry.
@@ -498,10 +530,7 @@
       _: itemCount ?
          if 0: void
          default:
-            item: ["registryEntryHolder", {
-               "baseName": "id",
-               "otherwise": { name: "name", type: "string" }
-            }]
+            item: varint
 # https://wiki.vg/Slot_Data#Structured_components
             addedComponentCount: varint
             removedComponentCount: varint
@@ -536,6 +565,31 @@
    PotionEffect:
       id: varint
       details: EffectDetail
+
+   ConsumeEffect:
+      type: varint =>
+      - apply_effects
+      - remove_effects
+      - clear_all_effects
+      - teleport_randomly
+      - play_sound
+      _: type ?
+         if apply_effects:
+            effects: PotionEffect[]varint
+            probability: f32
+         if remove_effects:
+            effects: ["registryEntryHolderSet", {
+               "base": { name: "name", type: "string" },
+               "otherwise": { name: "id", type: "varint" }
+            }]
+         if clear_all_effects: void
+         if teleport_randomly:
+            diameter: f32
+         if play_sound:
+            sound: ["registryEntryHolder", {
+               "baseName": "soundId",
+               "otherwise": { name: "data", type: "SoundEvent" }
+            }]
 
    BlockProperty:
       # Name of the block state property.

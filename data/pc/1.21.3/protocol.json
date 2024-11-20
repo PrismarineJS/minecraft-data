@@ -534,7 +534,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "PotionEffect"
+                          "type": "ConsumeEffect"
                         }
                       ]
                     }
@@ -612,6 +612,125 @@
                     {
                       "name": "damagePerBlock",
                       "type": "varint"
+                    }
+                  ]
+                ],
+                "enchantable": "varint",
+                "equippable": [
+                  "container",
+                  [
+                    {
+                      "name": "slot",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "varint",
+                          "mappings": {
+                            "0": "main_hand",
+                            "1": "off_hand",
+                            "2": "feet",
+                            "3": "legs",
+                            "4": "chest",
+                            "5": "head",
+                            "6": "body"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "sound",
+                      "type": [
+                        "registryEntryHolder",
+                        {
+                          "baseName": "soundId",
+                          "otherwise": {
+                            "name": "data",
+                            "type": "SoundEvent"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "model",
+                      "type": [
+                        "option",
+                        "string"
+                      ]
+                    },
+                    {
+                      "name": "cameraOverlay",
+                      "type": [
+                        "option",
+                        "string"
+                      ]
+                    },
+                    {
+                      "name": "allowedEntities",
+                      "type": [
+                        "option",
+                        [
+                          "registryEntryHolderSet",
+                          {
+                            "base": {
+                              "name": "name",
+                              "type": "string"
+                            },
+                            "otherwise": {
+                              "name": "id",
+                              "type": "varint"
+                            }
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "name": "dispensable",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "swappable",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "damageable",
+                      "type": "bool"
+                    }
+                  ]
+                ],
+                "repairable": [
+                  "container",
+                  [
+                    {
+                      "name": "items",
+                      "type": [
+                        "registryEntryHolderSet",
+                        {
+                          "base": {
+                            "name": "name",
+                            "type": "string"
+                          },
+                          "otherwise": {
+                            "name": "id",
+                            "type": "varint"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "tooltip_style": "string",
+                "death_protection": [
+                  "container",
+                  [
+                    {
+                      "name": "effects",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "ConsumeEffect"
+                        }
+                      ]
                     }
                   ]
                 ],
@@ -1334,16 +1453,7 @@
                 [
                   {
                     "name": "item",
-                    "type": [
-                      "registryEntryHolder",
-                      {
-                        "baseName": "id",
-                        "otherwise": {
-                          "name": "name",
-                          "type": "string"
-                        }
-                      }
-                    ]
+                    "type": "varint"
                   },
                   {
                     "name": "addedComponentCount",
@@ -1495,6 +1605,106 @@
         {
           "name": "details",
           "type": "EffectDetail"
+        }
+      ]
+    ],
+    "ConsumeEffect": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "apply_effects",
+                "1": "remove_effects",
+                "2": "clear_all_effects",
+                "3": "teleport_randomly",
+                "4": "play_sound"
+              }
+            }
+          ]
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "apply_effects": [
+                  "container",
+                  [
+                    {
+                      "name": "effects",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "PotionEffect"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "probability",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "remove_effects": [
+                  "container",
+                  [
+                    {
+                      "name": "effects",
+                      "type": [
+                        "registryEntryHolderSet",
+                        {
+                          "base": {
+                            "name": "name",
+                            "type": "string"
+                          },
+                          "otherwise": {
+                            "name": "id",
+                            "type": "varint"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "clear_all_effects": "void",
+                "teleport_randomly": [
+                  "container",
+                  [
+                    {
+                      "name": "diameter",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "play_sound": [
+                  "container",
+                  [
+                    {
+                      "name": "sound",
+                      "type": [
+                        "registryEntryHolder",
+                        {
+                          "baseName": "soundId",
+                          "otherwise": {
+                            "name": "data",
+                            "type": "SoundEvent"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
         }
       ]
     ],
