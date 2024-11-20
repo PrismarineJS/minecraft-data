@@ -59,10 +59,6 @@
    SoundEvent:
       soundName: string
       fixedRange?: f32
-   dummy: ["registryEntryHolder", {
-               "baseName": "id",
-               "otherwise": { name: "name", type: "string" }
-            }]
    SlotDisplay:
       type: varint =>
       - empty
@@ -2109,11 +2105,58 @@
       entries: []varint
          # RecipeDisplayEntry
          contents:
-            recipeId: string
-            display: void # TODO
+            displayId: varint
+            display:
+               type: varint =>
+               - crafting_shapeless
+               - crafting_shaped
+               - furnace
+               - stonecutter
+               - smithing
+               data: type ?
+                  if crafting_shapeless:
+                     ingredients: SlotDisplay[]varint
+                     result: SlotDisplay
+                     craftingStation: SlotDisplay
+                  if crafting_shaped:
+                     width: varint
+                     height: varint
+                     ingredients: SlotDisplay[]varint
+                     result: SlotDisplay
+                     craftingStation: SlotDisplay
+                  if furnace:
+                     ingredient: SlotDisplay
+                     fuel: SlotDisplay
+                     result: SlotDisplay
+                     craftingStation: SlotDisplay
+                     duration: varint
+                     experience: f32
+                  if stonecutter:
+                     ingredient: SlotDisplay
+                     result: SlotDisplay
+                     craftingStation: SlotDisplay
+                  if smithing:
+                     template: SlotDisplay
+                     base: SlotDisplay
+                     addition: SlotDisplay
+                     result: SlotDisplay
+                     craftingStation: SlotDisplay
             group?: varint
             # This ID corresponds to the "recipe_book_category" registry
-            category: varint
+            category: varint =>
+            - crafting_building_blocks
+            - crafting_redstone
+            - crafting_equipment
+            - crafting_misc
+            - furnace_food
+            - furnace_blocks
+            - furnace_misc
+            - blast_furnace_blocks
+            - blast_furnace_misc
+            - smoker_food
+            - stonecutter
+            - smithing
+            - campfire
             craftingRequirements?: ["registryEntryHolderSet", {
                "base": { name: "name", type: "string" },
                "otherwise": { name: "ids", type: "varint" }
@@ -2122,6 +2165,7 @@
             "type": "u8",
             "flags": ["notification", "highlight"]
          }]
+      replace: bool
    # MC: ClientboundRecipeBookRemovePacket
    packet_recipe_book_remove:
       recipeIds: varint[]varint
@@ -2532,7 +2576,7 @@
       stoneCutterRecipes: []varint
          input: ["registryEntryHolderSet", {
                   "base": { name: "name", type: "string" },
-                  "otherwise": { name: "ids", type: "dummy" }
+                  "otherwise": { name: "ids", type: "varint" }
                }]
          slotDisplay: SlotDisplay
 

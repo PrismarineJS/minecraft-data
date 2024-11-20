@@ -127,16 +127,6 @@
         }
       ]
     ],
-    "dummy": [
-      "registryEntryHolder",
-      {
-        "baseName": "id",
-        "otherwise": {
-          "name": "name",
-          "type": "string"
-        }
-      }
-    ],
     "SlotDisplay": [
       "container",
       [
@@ -6034,12 +6024,168 @@
                           "container",
                           [
                             {
-                              "name": "recipeId",
-                              "type": "string"
+                              "name": "displayId",
+                              "type": "varint"
                             },
                             {
                               "name": "display",
-                              "type": "void"
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "type",
+                                    "type": [
+                                      "mapper",
+                                      {
+                                        "type": "varint",
+                                        "mappings": {
+                                          "0": "crafting_shapeless",
+                                          "1": "crafting_shaped",
+                                          "2": "furnace",
+                                          "3": "stonecutter",
+                                          "4": "smithing"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "data",
+                                    "type": [
+                                      "switch",
+                                      {
+                                        "compareTo": "type",
+                                        "fields": {
+                                          "crafting_shapeless": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "ingredients",
+                                                "type": [
+                                                  "array",
+                                                  {
+                                                    "countType": "varint",
+                                                    "type": "SlotDisplay"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "name": "result",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "craftingStation",
+                                                "type": "SlotDisplay"
+                                              }
+                                            ]
+                                          ],
+                                          "crafting_shaped": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "width",
+                                                "type": "varint"
+                                              },
+                                              {
+                                                "name": "height",
+                                                "type": "varint"
+                                              },
+                                              {
+                                                "name": "ingredients",
+                                                "type": [
+                                                  "array",
+                                                  {
+                                                    "countType": "varint",
+                                                    "type": "SlotDisplay"
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "name": "result",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "craftingStation",
+                                                "type": "SlotDisplay"
+                                              }
+                                            ]
+                                          ],
+                                          "furnace": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "ingredient",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "fuel",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "result",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "craftingStation",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "duration",
+                                                "type": "varint"
+                                              },
+                                              {
+                                                "name": "experience",
+                                                "type": "f32"
+                                              }
+                                            ]
+                                          ],
+                                          "stonecutter": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "ingredient",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "result",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "craftingStation",
+                                                "type": "SlotDisplay"
+                                              }
+                                            ]
+                                          ],
+                                          "smithing": [
+                                            "container",
+                                            [
+                                              {
+                                                "name": "template",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "base",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "addition",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "result",
+                                                "type": "SlotDisplay"
+                                              },
+                                              {
+                                                "name": "craftingStation",
+                                                "type": "SlotDisplay"
+                                              }
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              ]
                             },
                             {
                               "name": "group",
@@ -6050,7 +6196,27 @@
                             },
                             {
                               "name": "category",
-                              "type": "varint"
+                              "type": [
+                                "mapper",
+                                {
+                                  "type": "varint",
+                                  "mappings": {
+                                    "0": "crafting_building_blocks",
+                                    "1": "crafting_redstone",
+                                    "2": "crafting_equipment",
+                                    "3": "crafting_misc",
+                                    "4": "furnace_food",
+                                    "5": "furnace_blocks",
+                                    "6": "furnace_misc",
+                                    "7": "blast_furnace_blocks",
+                                    "8": "blast_furnace_misc",
+                                    "9": "smoker_food",
+                                    "10": "stonecutter",
+                                    "11": "smithing",
+                                    "12": "campfire"
+                                  }
+                                }
+                              ]
                             },
                             {
                               "name": "craftingRequirements",
@@ -6091,6 +6257,10 @@
                   ]
                 }
               ]
+            },
+            {
+              "name": "replace",
+              "type": "bool"
             }
           ]
         ],
@@ -7544,7 +7714,7 @@
                             },
                             "otherwise": {
                               "name": "ids",
-                              "type": "dummy"
+                              "type": "varint"
                             }
                           }
                         ]
