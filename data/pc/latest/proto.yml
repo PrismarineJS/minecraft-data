@@ -63,6 +63,41 @@
    SoundEvent:
       soundName: string
       fixedRange?: f32
+   RecipeDisplay:
+      type: varint =>
+      - crafting_shapeless
+      - crafting_shaped
+      - furnace
+      - stonecutter
+      - smithing
+      data: type ?
+         if crafting_shapeless:
+            ingredients: SlotDisplay[]varint
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if crafting_shaped:
+            width: varint
+            height: varint
+            ingredients: SlotDisplay[]varint
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if furnace:
+            ingredient: SlotDisplay
+            fuel: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+            duration: varint
+            experience: f32
+         if stonecutter:
+            ingredient: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if smithing:
+            template: SlotDisplay
+            base: SlotDisplay
+            addition: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
    SlotDisplay:
       type: varint =>
       - empty
@@ -2015,8 +2050,7 @@
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
       windowId: ContainerID
-      recipeDisplayId: varint
-      data: void # TODO
+      recipeDisplay: RecipeDisplay
    # MC: ClientboundPlayerAbilitiesPacket
    packet_abilities:
       flags: i8
@@ -2144,47 +2178,12 @@
       pitch: f32
 
    # MC: ClientboundRecipeBookAddPacket
-   # TODO
    packet_recipe_book_add:
       entries: []varint
          # RecipeDisplayEntry
          recipe:
             displayId: varint
-            display:
-               type: varint =>
-               - crafting_shapeless
-               - crafting_shaped
-               - furnace
-               - stonecutter
-               - smithing
-               data: type ?
-                  if crafting_shapeless:
-                     ingredients: SlotDisplay[]varint
-                     result: SlotDisplay
-                     craftingStation: SlotDisplay
-                  if crafting_shaped:
-                     width: varint
-                     height: varint
-                     ingredients: SlotDisplay[]varint
-                     result: SlotDisplay
-                     craftingStation: SlotDisplay
-                  if furnace:
-                     ingredient: SlotDisplay
-                     fuel: SlotDisplay
-                     result: SlotDisplay
-                     craftingStation: SlotDisplay
-                     duration: varint
-                     experience: f32
-                  if stonecutter:
-                     ingredient: SlotDisplay
-                     result: SlotDisplay
-                     craftingStation: SlotDisplay
-                  if smithing:
-                     template: SlotDisplay
-                     base: SlotDisplay
-                     addition: SlotDisplay
-                     result: SlotDisplay
-                     craftingStation: SlotDisplay
+            display: RecipeDisplay
             group: optvarint
             # This ID corresponds to the "recipe_book_category" registry
             category: varint =>
@@ -2609,7 +2608,6 @@
       # ]]
       flags: u8
    # MC: ClientboundUpdateRecipesPacket
-   # TODO: update packet
    packet_declare_recipes:
       recipes: []varint
          name: string

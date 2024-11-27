@@ -140,6 +140,163 @@
         }
       ]
     ],
+    "RecipeDisplay": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "crafting_shapeless",
+                "1": "crafting_shaped",
+                "2": "furnace",
+                "3": "stonecutter",
+                "4": "smithing"
+              }
+            }
+          ]
+        },
+        {
+          "name": "data",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "crafting_shapeless": [
+                  "container",
+                  [
+                    {
+                      "name": "ingredients",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "crafting_shaped": [
+                  "container",
+                  [
+                    {
+                      "name": "width",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "height",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "ingredients",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "furnace": [
+                  "container",
+                  [
+                    {
+                      "name": "ingredient",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "fuel",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "duration",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "experience",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "stonecutter": [
+                  "container",
+                  [
+                    {
+                      "name": "ingredient",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "smithing": [
+                  "container",
+                  [
+                    {
+                      "name": "template",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "base",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "addition",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
     "SlotDisplay": [
       "container",
       [
@@ -5729,12 +5886,8 @@
               "type": "ContainerID"
             },
             {
-              "name": "recipeDisplayId",
-              "type": "varint"
-            },
-            {
-              "name": "data",
-              "type": "void"
+              "name": "recipeDisplay",
+              "type": "RecipeDisplay"
             }
           ]
         ],
@@ -6196,163 +6349,7 @@
                             },
                             {
                               "name": "display",
-                              "type": [
-                                "container",
-                                [
-                                  {
-                                    "name": "type",
-                                    "type": [
-                                      "mapper",
-                                      {
-                                        "type": "varint",
-                                        "mappings": {
-                                          "0": "crafting_shapeless",
-                                          "1": "crafting_shaped",
-                                          "2": "furnace",
-                                          "3": "stonecutter",
-                                          "4": "smithing"
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "name": "data",
-                                    "type": [
-                                      "switch",
-                                      {
-                                        "compareTo": "type",
-                                        "fields": {
-                                          "crafting_shapeless": [
-                                            "container",
-                                            [
-                                              {
-                                                "name": "ingredients",
-                                                "type": [
-                                                  "array",
-                                                  {
-                                                    "countType": "varint",
-                                                    "type": "SlotDisplay"
-                                                  }
-                                                ]
-                                              },
-                                              {
-                                                "name": "result",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "craftingStation",
-                                                "type": "SlotDisplay"
-                                              }
-                                            ]
-                                          ],
-                                          "crafting_shaped": [
-                                            "container",
-                                            [
-                                              {
-                                                "name": "width",
-                                                "type": "varint"
-                                              },
-                                              {
-                                                "name": "height",
-                                                "type": "varint"
-                                              },
-                                              {
-                                                "name": "ingredients",
-                                                "type": [
-                                                  "array",
-                                                  {
-                                                    "countType": "varint",
-                                                    "type": "SlotDisplay"
-                                                  }
-                                                ]
-                                              },
-                                              {
-                                                "name": "result",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "craftingStation",
-                                                "type": "SlotDisplay"
-                                              }
-                                            ]
-                                          ],
-                                          "furnace": [
-                                            "container",
-                                            [
-                                              {
-                                                "name": "ingredient",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "fuel",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "result",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "craftingStation",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "duration",
-                                                "type": "varint"
-                                              },
-                                              {
-                                                "name": "experience",
-                                                "type": "f32"
-                                              }
-                                            ]
-                                          ],
-                                          "stonecutter": [
-                                            "container",
-                                            [
-                                              {
-                                                "name": "ingredient",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "result",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "craftingStation",
-                                                "type": "SlotDisplay"
-                                              }
-                                            ]
-                                          ],
-                                          "smithing": [
-                                            "container",
-                                            [
-                                              {
-                                                "name": "template",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "base",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "addition",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "result",
-                                                "type": "SlotDisplay"
-                                              },
-                                              {
-                                                "name": "craftingStation",
-                                                "type": "SlotDisplay"
-                                              }
-                                            ]
-                                          ]
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ]
-                              ]
+                              "type": "RecipeDisplay"
                             },
                             {
                               "name": "group",
