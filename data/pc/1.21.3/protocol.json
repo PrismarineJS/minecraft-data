@@ -110,6 +110,19 @@
         }
       ]
     ],
+    "IDSet": [
+      "registryEntryHolderSet",
+      {
+        "base": {
+          "name": "name",
+          "type": "string"
+        },
+        "otherwise": {
+          "name": "ids",
+          "type": "varint"
+        }
+      }
+    ],
     "ContainerID": "varint",
     "SoundEvent": [
       "container",
@@ -572,19 +585,7 @@
                             [
                               {
                                 "name": "blocks",
-                                "type": [
-                                  "registryEntryHolderSet",
-                                  {
-                                    "base": {
-                                      "name": "name",
-                                      "type": "string"
-                                    },
-                                    "otherwise": {
-                                      "name": "ids",
-                                      "type": "varint"
-                                    }
-                                  }
-                                ]
+                                "type": "IDSet"
                               },
                               {
                                 "name": "speed",
@@ -668,19 +669,7 @@
                       "name": "allowedEntities",
                       "type": [
                         "option",
-                        [
-                          "registryEntryHolderSet",
-                          {
-                            "base": {
-                              "name": "name",
-                              "type": "string"
-                            },
-                            "otherwise": {
-                              "name": "id",
-                              "type": "varint"
-                            }
-                          }
-                        ]
+                        "IDSet"
                       ]
                     },
                     {
@@ -702,19 +691,7 @@
                   [
                     {
                       "name": "items",
-                      "type": [
-                        "registryEntryHolderSet",
-                        {
-                          "base": {
-                            "name": "name",
-                            "type": "string"
-                          },
-                          "otherwise": {
-                            "name": "id",
-                            "type": "varint"
-                          }
-                        }
-                      ]
+                      "type": "IDSet"
                     }
                   ]
                 ],
@@ -1662,19 +1639,7 @@
                   [
                     {
                       "name": "effects",
-                      "type": [
-                        "registryEntryHolderSet",
-                        {
-                          "base": {
-                            "name": "name",
-                            "type": "string"
-                          },
-                          "otherwise": {
-                            "name": "id",
-                            "type": "varint"
-                          }
-                        }
-                      ]
+                      "type": "IDSet"
                     }
                   ]
                 ],
@@ -2324,19 +2289,7 @@
         },
         {
           "name": "biome",
-          "type": [
-            "registryEntryHolderSet",
-            {
-              "base": {
-                "name": "name",
-                "type": "string"
-              },
-              "otherwise": {
-                "name": "ids",
-                "type": "varint"
-              }
-            }
-          ]
+          "type": "IDSet"
         }
       ]
     ],
@@ -6233,7 +6186,7 @@
                     "container",
                     [
                       {
-                        "name": "contents",
+                        "name": "recipe",
                         "type": [
                           "container",
                           [
@@ -6434,16 +6387,10 @@
                               "type": [
                                 "option",
                                 [
-                                  "registryEntryHolderSet",
+                                  "array",
                                   {
-                                    "base": {
-                                      "name": "name",
-                                      "type": "string"
-                                    },
-                                    "otherwise": {
-                                      "name": "ids",
-                                      "type": "varint"
-                                    }
+                                    "countType": "varint",
+                                    "type": "IDSet"
                                   }
                                 ]
                               ]
@@ -7916,19 +7863,7 @@
                     [
                       {
                         "name": "input",
-                        "type": [
-                          "registryEntryHolderSet",
-                          {
-                            "base": {
-                              "name": "name",
-                              "type": "string"
-                            },
-                            "otherwise": {
-                              "name": "ids",
-                              "type": "varint"
-                            }
-                          }
-                        ]
+                        "type": "IDSet"
                       },
                       {
                         "name": "slotDisplay",

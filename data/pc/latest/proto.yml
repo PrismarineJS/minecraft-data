@@ -55,6 +55,10 @@
       x: f64
       y: f64
       z: f64
+   IDSet: ["registryEntryHolderSet", {
+      "base": { name: "name", type: "string" },
+      "otherwise": { name: "ids", type: "varint" }
+   }]
    ContainerID: varint
    SoundEvent:
       soundName: string
@@ -238,10 +242,7 @@
          if damage_resistant: string
          if tool:
             rules: []varint
-               blocks: ["registryEntryHolderSet", {
-                  "base": { name: "name", type: "string" },
-                  "otherwise": { name: "ids", type: "varint" }
-               }]
+               blocks: IDSet
                # The speed at which the tool breaks this rules' blocks.
                speed?: f32
                # Whether items should drop only if this is the correct tool.
@@ -266,18 +267,12 @@
             }]
             model?: string
             cameraOverlay?: string
-            allowedEntities?: ["registryEntryHolderSet", {
-               "base": { name: "name", type: "string" },
-               "otherwise": { name: "id", type: "varint" }
-            }]
+            allowedEntities?: IDSet
             dispensable: bool
             swappable: bool
             damageable: bool
          if repairable:
-            items: ["registryEntryHolderSet", {
-               "base": { name: "name", type: "string" },
-               "otherwise": { name: "id", type: "varint" }
-            }]
+            items: IDSet
          if tooltip_style: string
          if death_protection:
             effects: ConsumeEffect[]varint
@@ -579,10 +574,7 @@
             effects: PotionEffect[]varint
             probability: f32
          if remove_effects:
-            effects: ["registryEntryHolderSet", {
-               "base": { name: "name", type: "string" },
-               "otherwise": { name: "id", type: "varint" }
-            }]
+            effects: IDSet
          if clear_all_effects: void
          if teleport_randomly:
             diameter: f32
@@ -900,10 +892,7 @@
       wildTexture: string
       tameTexture: string
       angryTexture: string
-      biome: ["registryEntryHolderSet", {
-         "base": { name: "name", type: "string" },
-         "otherwise": { name: "ids", type: "varint" }
-      }]
+      biome: IDSet
 
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    tags: []varint
@@ -2159,7 +2148,7 @@
    packet_recipe_book_add:
       entries: []varint
          # RecipeDisplayEntry
-         contents:
+         recipe:
             displayId: varint
             display:
                type: varint =>
@@ -2212,10 +2201,7 @@
             - stonecutter
             - smithing
             - campfire
-            craftingRequirements?: ["registryEntryHolderSet", {
-               "base": { name: "name", type: "string" },
-               "otherwise": { name: "ids", type: "varint" }
-            }]
+            craftingRequirements?: IDSet[]varint
          flags: ["bitflags", {
             "type": "u8",
             "flags": ["notification", "highlight"]
@@ -2629,10 +2615,7 @@
          name: string
          items: varint[]varint
       stoneCutterRecipes: []varint
-         input: ["registryEntryHolderSet", {
-                  "base": { name: "name", type: "string" },
-                  "otherwise": { name: "ids", type: "varint" }
-               }]
+         input: IDSet
          slotDisplay: SlotDisplay
 
    # MC: ClientboundUpdateTagsPacket
