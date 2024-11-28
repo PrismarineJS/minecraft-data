@@ -30,6 +30,7 @@
    restBuffer: native
    anonymousNbt: native
    anonOptionalNbt: native
+   registryEntryHolderSet: native
    arrayWithLengthOffset: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: [
@@ -54,7 +55,10 @@
       x: f64
       y: f64
       z: f64
-
+   IDSet: ["registryEntryHolderSet", {
+      "base": { name: "name", type: "string" },
+      "otherwise": { name: "ids", type: "varint" }
+   }]
    SlotComponentType: varint =>
    - custom_data
    - max_stack_size
@@ -842,16 +846,7 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if wolf_variant:
-            wildTexture: string
-            tameTexture: string
-            angryTexture: string
-            maybeInputLength: varint
-            biomeLocation: maybeInputLength ?
-               if 0: string
-            biomeHolders: maybeInputLength ?
-               if 0: void
-               default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
+         if wolf_variant: EntityMetadataWolfVariant
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
          if painting_variant:
@@ -862,6 +857,11 @@
          if armadillo_state: varint
          if vector3: vec3f
          if quaternion: vec4f
+   EntityMetadataWolfVariant:
+      wildTexture: string
+      tameTexture: string
+      angryTexture: string
+      biome: IDSet
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    minecraft_simple_recipe_format:
       category: varint
