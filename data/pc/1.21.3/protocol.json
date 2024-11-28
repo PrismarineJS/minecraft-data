@@ -2404,21 +2404,14 @@
                   "string"
                 ],
                 "painting_variant": [
-                  "container",
-                  [
-                    {
-                      "name": "width",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "height",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "assetId",
-                      "type": "string"
+                  "registryEntryHolder",
+                  {
+                    "baseName": "variantId",
+                    "otherwise": {
+                      "name": "variantData",
+                      "type": "EntityMetadataPaintingVariant"
                     }
-                  ]
+                  }
                 ],
                 "sniffer_state": "varint",
                 "armadillo_state": "varint",
@@ -2426,6 +2419,37 @@
                 "quaternion": "vec4f"
               }
             }
+          ]
+        }
+      ]
+    ],
+    "EntityMetadataPaintingVariant": [
+      "container",
+      [
+        {
+          "name": "width",
+          "type": "i32"
+        },
+        {
+          "name": "height",
+          "type": "i32"
+        },
+        {
+          "name": "assetId",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": [
+            "option",
+            "anonymousNbt"
+          ]
+        },
+        {
+          "name": "author",
+          "type": [
+            "option",
+            "anonymousNbt"
           ]
         }
       ]

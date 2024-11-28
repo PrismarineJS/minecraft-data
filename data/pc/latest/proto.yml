@@ -915,15 +915,20 @@
          }]
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
-         if painting_variant:
-            width: varint
-            height: varint
-            assetId: string
+         if painting_variant: ["registryEntryHolder", {
+            "baseName": "variantId",
+            "otherwise": { name: "variantData", type: "EntityMetadataPaintingVariant" }
+         }]
          if sniffer_state: varint
          if armadillo_state: varint
          if vector3: vec3f
          if quaternion: vec4f
-
+   EntityMetadataPaintingVariant:
+      width: i32
+      height: i32
+      assetId: string
+      title?: anonymousNbt
+      author?: anonymousNbt
    EntityMetadataWolfVariant:
       wildTexture: string
       tameTexture: string

@@ -846,7 +846,10 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if wolf_variant: EntityMetadataWolfVariant
+         if wolf_variant: ["registryEntryHolder", {
+            "baseName": "variantId",
+            "otherwise": { name: "variantData", type: "EntityMetadataWolfVariant" }
+         }]
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
          if painting_variant:
