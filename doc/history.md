@@ -1,3 +1,17 @@
+## 3.79.0
+* [Java 1.21.3 Support (#936)](https://github.com/PrismarineJS/minecraft-data/commit/2442f47dc991c587c8090a9469170dd86cfa0ee4) (thanks @GroobleDierne)
+* [Add 1.21.4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f88f2699c43dc48a12a2bdf5fd0109dc0ebc94b7) (thanks @github-actions[bot])
+* [Add 1.21.4-rc3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e0e23d27777f5e9d64d9797fd5dd69616875cf63) (thanks @github-actions[bot])
+* [Add 1.21.4-rc2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/564c0a6c1765d1462a33b2f65f74c77bff50144c) (thanks @github-actions[bot])
+* [Add 1.21.4-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ccbaf7685dc1239ffbd2129a66ae76ea276d8bb4) (thanks @github-actions[bot])
+* [Add 1.21.4-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bb89a33f423dab1bf6f64a59aad12c547c369a99) (thanks @github-actions[bot])
+* [Add 1.21.4-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/42a2f3806fd6a22f8ed79f98fb0757f906cf0266) (thanks @github-actions[bot])
+* [Add 1.21.4-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9cfa6ea955af24d6f481484ebe5d8221a2265421) (thanks @github-actions[bot])
+* [Add 24w46a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/dd1c067ce05464831dd2855a06cf0ed74bc48cd0) (thanks @github-actions[bot])
+* [Add 24w45a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/27e699e134a5dcc39c3a94ae7735d27f8ea3040f) (thanks @github-actions[bot])
+* [Add 24w44a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fc60c49b07c937cb31d617b7ec7e6abcf78a8ce8) (thanks @github-actions[bot])
+* [Add 1.21 data (protocol compliant w/ 1.21.1) (#935)](https://github.com/PrismarineJS/minecraft-data/commit/f1130aea931b948d2ecaecf34ecfe0116bfd4172) (thanks @GroobleDierne)
+
 ## 3.78.0
 * [Add pc 1.21.1 data (#925)](https://github.com/PrismarineJS/minecraft-data/commit/d56346a4e32defcd28d9ba6750957c12001e78d6) (thanks @extremeheat)
 * [Add incrementedChatType feature (#932)](https://github.com/PrismarineJS/minecraft-data/commit/8ef58b15fec74c6a276d0c83cfc741d6fb4e072a) (thanks @SuperGamerTron)
