@@ -1,4 +1,4 @@
-!version: 1.20.5
+!version: 1.21.1
 !StartDocs: true
 
 ^types:
@@ -30,6 +30,8 @@
    restBuffer: native
    anonymousNbt: native
    anonOptionalNbt: native
+   registryEntryHolder: native
+   registryEntryHolderSet: native
    arrayWithLengthOffset: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: [
@@ -38,6 +40,9 @@
          "countType": "varint"
       }
    ]
+   vec2f:
+      x: f32
+      y: f32
    vec3f:
       x: f32
       y: f32
@@ -51,7 +56,10 @@
       x: f64
       y: f64
       z: f64
-
+   IDSet: ["registryEntryHolderSet", {
+      "base": { name: "name", type: "string" },
+      "otherwise": { name: "ids", type: "varint" }
+   }]
    SlotComponentType: varint =>
    - custom_data
    - max_stack_size
@@ -95,6 +103,7 @@
    - block_entity_data
    - instrument
    - ominous_bottle_amplifier
+   - jukebox_playable
    - recipes
    - lodestone_tracker
    - firework_explosion
@@ -333,6 +342,38 @@
                   useDuration: f32
                   range: f32
          if ominous_bottle_amplifier: varint
+         # Name	Type	Description
+         # Direct Mode	Boolean	Whether the jukebox song is specified directly, or just referenced by name.
+         # Jukebox Song Name	Optional Identifier	The name of the jukebox song in its respective registry. Only present if Direct Mode is false.
+         # Jukebox Song Type	Optional VarInt	Identifier used to determine the data that follows. It can be either:
+         # 0 - Directly represents a jukebox song, with the necessary data following.
+         # Anything else - References a jukebox song in its registry, by the ID of Jukebox Song Type - 1.
+         # Only present if Direct Mode is true.  
+         # Sound Event	Optional Sound Event	The sound to be played. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Description	Optional Text Component	The description shown in the item lore. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Duration	Optional Float	The duration the songs should play for, in seconds. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Output	Optional VarInt	The output strength given by a comparator. Between 0 and 15. Only present if Direct Mode is true and Jukebox Song Type is 0.
+         # Show In Tooltip	Boolean	Whether the song should be shown on the item's tooltip.
+         if jukebox_playable:
+            directMode: bool
+            _: directMode ?
+               if true:
+                  jukeboxSongName: string
+                  jukeboxSongType: varint
+                  _: jukeboxSongType ?
+                     if 0:
+                        soundEvent:
+                           soundEventType: varint
+                           _: soundEventType ?
+                              if 0:
+                                 soundName: string
+                                 fixedRange?: f32
+                  description: anonymousNbt
+                  duration: f32
+                  output: varint
+               if false:
+                  songLocation: string
+            showInTooltip: bool
          if recipes: anonymousNbt
          # Name	Type	Description
          # Has Global Position	Boolean	Whether this lodestone points to a position, otherwise it spins randomly.
@@ -692,8 +733,15 @@
          if sculk_charge: f32
          if shriek: varint
          if vibration:
-            position: string
-            entityId: varint
+            position_type: varint =>
+            - block
+            - entity
+            position: position_type ?
+               if block: position
+               if entity:
+                  entityId: varint
+                  entity_eye_height: f32
+            ticks: varint
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -803,14 +851,25 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if wolf_variant: varint
+         if wolf_variant: ["registryEntryHolder", {
+            "baseName": "variantId",
+            "otherwise": { name: "variantData", type: "EntityMetadataWolfVariant" }
+         }]
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
-         if painting_variant: varint
+         if painting_variant:
+            width: varint
+            height: varint
+            assetId: string
          if sniffer_state: varint
          if armadillo_state: varint
          if vector3: vec3f
          if quaternion: vec4f
+   EntityMetadataWolfVariant:
+      wildTexture: string
+      tameTexture: string
+      angryTexture: string
+      biome: IDSet
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    minecraft_simple_recipe_format:
       category: varint
@@ -1184,6 +1243,34 @@
          namespace: string
          id: string
          version: string
+   # MC: ClientboundCustomReportDetailsPacket
+   packet_common_custom_report_details:
+      details: []varint
+         key: string
+         value: string
+
+   ServerLinkType: varint =>
+   - bug_report
+   - community_guidelines
+   - support
+   - status
+   - feedback
+   - community
+   - website
+   - forums
+   - news
+   - announcements
+   # MC: ClientboundServerLinksPacket
+   # This packet contains a list of links that the Notchian client will display in the menu 
+   # available from the pause menu. Link labels can be built-in or custom (i.e., any text).
+   packet_common_server_links:
+      links: []varint
+         hasKnownType: bool
+         knownType: hasKnownType ?
+            if true: ServerLinkType
+         unknownType: hasKnownType ?
+            if false: anonymousNbt
+         link: string
 
 ^handshaking.toClient.types:
    packet:
@@ -1390,6 +1477,8 @@
       - feature_flags
       - tags
       - select_known_packs
+      - custom_report_details
+      - server_links
       params: name ?
          if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
@@ -1406,6 +1495,8 @@
          if feature_flags: packet_feature_flags
          if tags: packet_tags
          if select_known_packs: packet_common_select_known_packs
+         if custom_report_details: packet_common_custom_report_details
+         if server_links: packet_common_server_links
 ^configuration.toServer.types:
    # MC: ServerboundClientInformationPacket
    packet_settings:
@@ -1445,6 +1536,8 @@
       - pong
       - resource_pack_receive
       - select_known_packs
+      - custom_report_details
+      - server_links
       params: name ?
          if settings: packet_settings
          if cookie_response: packet_common_cookie_response
@@ -1454,7 +1547,10 @@
          if pong: packet_pong
          if resource_pack_receive: packet_resource_pack_receive
          if select_known_packs: packet_common_select_known_packs
+         if custom_report_details: packet_common_custom_report_details
+         if server_links: packet_common_server_links
 ^play.toClient.types:
+   # World state information for spawn and respawn packets
    # World state information for spawn and respawn packets
    SpawnInfo:
       dimension: varint
@@ -1640,10 +1736,30 @@
    # MC: ClientboundDisconnectPacket
    packet_kick_disconnect:
       reason: anonymousNbt
+
+   ## client\net\minecraft\network\chat\ChatTypeDecoration.java
+   ## via client\net\minecraft\network\chat\ChatType.java
+   ChatTypeParameterType: varint =>
+      - content
+      - sender
+      - target
+   ChatType:
+      translationKey: string
+      parameters: ChatTypeParameterType[]varint
+      style: anonymousNbt
+   ChatTypes:
+      # Either the extra data is retrieved from the registry (via this ID+1 if non-zero), or it's supplied inline in the chat packet
+      registryIndex: varint
+      _: registryIndex ?
+         if 0:
+            chat: ChatType
+            narration: ChatType
+         default: void
+
    # MC: ClientboundDisguisedChatPacket
    packet_profileless_chat:
       message: anonymousNbt
-      type: varint
+      type: ChatTypes
       name: anonymousNbt
       target?: anonymousNbt
    # MC: ClientboundEntityEventPacket
@@ -1897,7 +2013,7 @@
       filterTypeMask: filterType ?
          if 2: i64[]varint
          default: void
-      type: varint
+      type: ChatTypes
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
    # MC: ClientboundPlayerCombatEndPacket
@@ -2279,7 +2395,8 @@
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
-      copyMetadata: bool
+      # Bit field: 0b1 - KEEP_ATTRIBUTE_MODIFIERS, 0b10 - KEEP_ENTITY_DATA
+      copyMetadata: u8
    # MC: ClientboundRotateHeadPacket
    packet_entity_head_rotation:
       entityId: varint
@@ -2508,8 +2625,7 @@
          if 0:
             resource: string
             range?: f32
-         default:
-
+         default: void
       soundCategory: soundSource
       x: i32
       y: i32
@@ -2627,7 +2743,7 @@
          - generic.step_height
          value: f64
          modifiers: []varint
-            uuid: UUID
+            uuid: string
             amount: f64
             operation: i8
    # MC: ClientboundUpdateMobEffectPacket
@@ -2728,7 +2844,7 @@
    # MC: ClientboundProjectilePowerPacket
    packet_set_projectile_power:
       id: varint
-      power: vec3f64
+      accelerationPower: f64
 
    packet:
       name: varint =>
@@ -3296,6 +3412,7 @@
    packet_use_item:
       hand: varint
       sequence: varint
+      rotation: vec2f
 
    packet:
       name: varint =>

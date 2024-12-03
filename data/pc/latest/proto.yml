@@ -1,4 +1,4 @@
-!version: 1.21.1
+!version: 1.21.3
 !StartDocs: true
 
 ^types:
@@ -23,6 +23,7 @@
    entityMetadataLoop: native
    topBitSetTerminatedArray: native
    bitfield: native
+   bitflags: native
    container: native
    switch: native
    void: native
@@ -30,7 +31,8 @@
    restBuffer: native
    anonymousNbt: native
    anonOptionalNbt: native
-   arrayWithLengthOffset: native
+   registryEntryHolder: native
+   registryEntryHolderSet: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: [
       "pstring",
@@ -54,7 +56,72 @@
       x: f64
       y: f64
       z: f64
-
+   IDSet: ["registryEntryHolderSet", {
+      "base": { name: "name", type: "string" },
+      "otherwise": { name: "ids", type: "varint" }
+   }]
+   ContainerID: varint
+   SoundEvent:
+      soundName: string
+      fixedRange?: f32
+   RecipeDisplay:
+      type: varint =>
+      - crafting_shapeless
+      - crafting_shaped
+      - furnace
+      - stonecutter
+      - smithing
+      data: type ?
+         if crafting_shapeless:
+            ingredients: SlotDisplay[]varint
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if crafting_shaped:
+            width: varint
+            height: varint
+            ingredients: SlotDisplay[]varint
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if furnace:
+            ingredient: SlotDisplay
+            fuel: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+            duration: varint
+            experience: f32
+         if stonecutter:
+            ingredient: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if smithing:
+            template: SlotDisplay
+            base: SlotDisplay
+            addition: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+   SlotDisplay:
+      type: varint =>
+      - empty
+      - any_fuel
+      - item
+      - item_stack
+      - tag
+      - smithing_trim
+      - with_remainder
+      - composite
+      data: type ?
+         if empty or any_fuel: void
+         if item: varint
+         if item_stack: Slot
+         if tag: string
+         if simthing_trim:
+            base: SlotDisplay
+            material: SlotDisplay
+            pattern: SlotDisplay
+         if with_remainder:
+            input: SlotDisplay
+            remainder: SlotDisplay
+         if composite: SlotDisplay[]varint
    SlotComponentType: varint =>
    - custom_data
    - max_stack_size
@@ -63,6 +130,7 @@
    - unbreakable
    - custom_name
    - item_name
+   - item_model
    - lore
    - rarity
    - enchantments
@@ -77,8 +145,17 @@
    - enchantment_glint_override
    - intangible_projectile
    - food
-   - fire_resistant
+   - consumable
+   - use_remainder
+   - use_cooldown
+   - damage_resistant
    - tool
+   - enchantable
+   - equippable
+   - repairable
+   - glider
+   - tooltip_style
+   - death_protection
    - stored_enchantments
    - dyed_color
    - map_color
@@ -116,8 +193,9 @@
 
    SlotComponent:
       type: SlotComponentType
+      ## Ref: client/net/minecraft/core/component/DataComponents.java
       data: type ?
-         # TODO: look into how nbt works here
+         ## TODO: look into how nbt works here
          if custom_data: anonymousNbt
          if max_stack_size: varint
          if max_damage: varint
@@ -125,8 +203,13 @@
          if unbreakable: bool
          if custom_name: anonymousNbt
          if item_name: anonymousNbt
+         if item_model: string
          if lore: anonOptionalNbt[]varint
-         if rarity: varint
+         if rarity: varint =>
+         - common
+         - uncommon
+         - rare
+         - epic
          if enchantments:
             enchantments: []varint
                id: varint
@@ -138,7 +221,6 @@
          if attribute_modifiers:
             attributes: []varint
                typeId: varint
-               uniqueId: UUID
                name: string
                value: f64
                operation: varint =>
@@ -164,53 +246,78 @@
          if creative_slot_lock: void
          if enchantment_glint_override: bool
          if intangible_projectile: void
-         # Name	Type	Description
-         # Nutrition	VarInt	Non-negative
-         # Saturation Modifier	Float	How much saturation will be given after consuming the item.
-         # Can Always Eat	Boolean	Whether the item can always be eaten, even at full hunger.
-         # Seconds To Eat	Float	How long it takes to consume the item.
-         # Using converts to	Slot Data	This specifies the item produced after consuming the current item. In the Notchian server, this is used for stews, which turn into bowls. Set this to Air if the item should be consumed normally without leaving any other item after.
-         # Number of effects	VarInt	Number of elements in the following array.
-         # Effect	Type ID	Array	Potion Effect	The potion effect. See Potion Effect.
-         # Probability	Float	The probability for this effect to be chosen.
          if food: 
             nutrition: varint
+            # How much saturation will be given after consuming the item.
             saturationModifier: f32
+            # Whether the item can always be eaten, even at full hunger.
             canAlwaysEat: bool
-            secondsToEat: f32
-            usingConvertsTo: Slot
-            effects: []varint
-               effect: varint
-               probability: f32
-         if fire_resistant: void
-         # Name	Type	Description
-         # Number of Rules	VarInt	The number of elements in the following array.
-         # Rule
-         #  Blocks	Array	Block Set	The block this rule applies to. See Block Set.
-         #  Has Speed	Boolean	
-         #  Speed	Optional Float	The speed at which the tool breaks this rules' blocks. Only present if Has Speed is true.
-         #  Has Correct Drop For Blocks	Boolean	
-         #  Correct Drop For Blocks	Optional Boolean	Whether items should drop only if this is the correct tool. Only present if Has Correct Drop For Blocks is true.
-         # Default Mining Speed	Float	The mining speed in case none of the previous rule were matched.
-         # Damage Per Block	VarInt	The amount of damage the item takes per block break.
+         if consumable:
+            consume_seconds: f32
+            animation: varint =>
+            - none
+            - eat
+            - drink
+            - block
+            - bow
+            - spear
+            - crossbow
+            - spyglass
+            - toot_horn
+            - brush
+            sound: ["registryEntryHolder", {
+               "baseName": "soundId",
+               "otherwise": { name: "data", type: "SoundEvent" }
+            }]
+            makes_particles: bool
+            effects: ConsumeEffect[]varint
+         if use_remainder: Slot
+         if use_cooldown:
+            seconds: f32
+            cooldownGroup?: string
+         if damage_resistant: string
          if tool:
             rules: []varint
-               blocks: BlockSet[]varint
-               hasSpeed: bool
-               speed: f32
-               hasCorrectDropForBlocks: bool
-               correctDropForBlocks: bool
+               blocks: IDSet
+               # The speed at which the tool breaks this rules' blocks.
+               speed?: f32
+               # Whether items should drop only if this is the correct tool.
+               correctDropForBlocks?: bool
+            # The mining speed in case none of the previous rule were matched.
             defaultMiningSpeed: f32
             damagePerBlock: varint
-         # Name	Type	Description
-         # Number of enchantments	VarInt	Number of elements in the following array.
-         # Enchantment	Type ID	Array	VarInt Enum	The ID of the enchantment in the enchantment registry.
-         # Level	VarInt	The level of the enchantment.
-         # Show In Tooltip	Boolean	Whether the list of enchantments should be shown on the item's tooltip.
+         # Enchantment cost up to which the item can be enchanted
+         if enchantable: varint
+         if equippable:
+            slot: varint =>
+            - main_hand
+            - off_hand
+            - feet
+            - legs
+            - chest
+            - head
+            - body
+            sound: ["registryEntryHolder", {
+               "baseName": "soundId",
+               "otherwise": { name: "data", type: "SoundEvent" }
+            }]
+            model?: string
+            cameraOverlay?: string
+            allowedEntities?: IDSet
+            dispensable: bool
+            swappable: bool
+            damageable: bool
+         if repairable:
+            items: IDSet
+         if tooltip_style: string
+         if death_protection:
+            effects: ConsumeEffect[]varint
          if stored_enchantments:
             enchantments: []varint
+               # The ID of the enchantment in the enchantment registry.
                id: varint
                level: varint
+            # Whether the list of enchantments should be shown on the item's tooltip.
             showInTooltip: bool
          if dyed_color:
             color: varint
@@ -223,21 +330,13 @@
             projectiles: Slot[]varint
          if bundle_contents:
             contents: Slot[]varint
-         # Name	Type	Description
-         # Has Potion ID	Boolean	Whether this potion has an ID in the potion registry. If true, it has the default effects associated with the potion type.
-         # Potion ID	Optional VarInt	The ID of the potion type in the potion registry. Only present if Has Potion ID is true.
-         # Has Custom Color	Boolean	Whether this potion has a custom color. If false, it uses the default color associated with the potion type.
-         # Custom Color	Optional Int	The RGB components of the color, encoded as an integer. Only present if Has Custom Color is true.
-         # Number Of Custom Effects	VarInt	The number of elements in the following array.
-         # Custom Effects	Array of Potion Effect	Any custom effects the potion might have. See Potion Effect.
          if potion_contents:
-            hasPotionId: bool
-            potionId: optvarint
-            hasCustomColor: bool
-            customColor: optvarint
-            customEffects: []varint
-               effect: varint
-               details: EffectDetail
+            # True if this potion has an ID in the potion registry--it has the default effects associated with the potion type.
+            potionId?: varint
+            # The RGB components of the color, encoded as an integer.
+            customColor?: varint
+            customEffects: PotionEffect[]varint
+            customName: string
          # Name	Type	Description
          # Number Of Effects	VarInt	Number of elements in the following array.
          # Effect	Type ID	Array	VarInt Enum	The ID of the effect in the potion effect type registry.
@@ -374,7 +473,7 @@
          if lodestone_tracker:
             globalPosition?:
                dimension: string
-               position: vec3f
+               position: position
             tracked: bool
          # Name	Type	Description
          # Shape	VarInt Enum	Can be one of the following:
@@ -459,68 +558,12 @@
          if container_loot: anonymousNbt
 
    Slot:
-      itemCount: i8
+      itemCount: varint
       _: itemCount ?
          if 0: void
          default:
-            itemId: varint
+            item: varint
 # https://wiki.vg/Slot_Data#Structured_components
-# +    public static final DataComponentType<CompoundTag> CUSTOM_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final IntComponentType MAX_STACK_SIZE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final IntComponentType MAX_DAMAGE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final IntComponentType DAMAGE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final BooleanComponentType UNBREAKABLE = new BooleanComponentType(ByteBuf::readBoolean, ByteBuf::writeBoolean, BooleanDataComponent::new);
-# +    public static final DataComponentType<Component> CUSTOM_NAME = new DataComponentType<>(ItemCodecHelper::readComponent, ItemCodecHelper::writeComponent, ObjectDataComponent::new);
-# +    public static final DataComponentType<Component> ITEM_NAME = new DataComponentType<>(ItemCodecHelper::readComponent, ItemCodecHelper::writeComponent, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<Component>> LORE = new DataComponentType<>(listReader(ItemCodecHelper::readComponent), listWriter(ItemCodecHelper::writeComponent), ObjectDataComponent::new);
-# +    public static final IntComponentType RARITY = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<ItemEnchantments> ENCHANTMENTS = new DataComponentType<>(ItemCodecHelper::readItemEnchantments, ItemCodecHelper::writeItemEnchantments, ObjectDataComponent::new);
-# +    public static final DataComponentType<AdventureModePredicate> CAN_PLACE_ON = new DataComponentType<>(ItemCodecHelper::readAdventureModePredicate, ItemCodecHelper::writeAdventureModePredicate, ObjectDataComponent::new);
-# +    public static final DataComponentType<AdventureModePredicate> CAN_BREAK = new DataComponentType<>(ItemCodecHelper::readAdventureModePredicate, ItemCodecHelper::writeAdventureModePredicate, ObjectDataComponent::new);
-# +    public static final DataComponentType<ItemAttributeModifiers> ATTRIBUTE_MODIFIERS = new DataComponentType<>(ItemCodecHelper::readItemAttributeModifiers, ItemCodecHelper::writeItemAttributeModifiers, ObjectDataComponent::new);
-# +    public static final IntComponentType CUSTOM_MODEL_DATA = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<Unit> HIDE_ADDITIONAL_TOOLTIP = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final DataComponentType<Unit> HIDE_TOOLTIP = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final IntComponentType REPAIR_COST = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<Unit> CREATIVE_SLOT_LOCK = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final BooleanComponentType ENCHANTMENT_GLINT_OVERRIDE = new BooleanComponentType(ByteBuf::readBoolean, ByteBuf::writeBoolean, BooleanDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> INTANGIBLE_PROJECTILE = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<FoodProperties> FOOD = new DataComponentType<>(ItemCodecHelper::readFoodProperties, ItemCodecHelper::writeFoodProperties, ObjectDataComponent::new);
-# +    public static final DataComponentType<Unit> FIRE_RESISTANT = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final DataComponentType<ToolData> TOOL = new DataComponentType<>(ItemCodecHelper::readToolData, ItemCodecHelper::writeToolData, ObjectDataComponent::new);
-# +    public static final DataComponentType<ItemEnchantments> STORED_ENCHANTMENTS = new DataComponentType<>(ItemCodecHelper::readItemEnchantments, ItemCodecHelper::writeItemEnchantments, ObjectDataComponent::new);
-# +    public static final DataComponentType<DyedItemColor> DYED_COLOR = new DataComponentType<>(ItemCodecHelper::readDyedItemColor, ItemCodecHelper::writeDyedItemColor, ObjectDataComponent::new);
-# +    public static final IntComponentType MAP_COLOR = new IntComponentType((helper, input) -> input.readInt(), (helper, output, value) -> output.writeInt(value), IntDataComponent::new);
-# +    public static final IntComponentType MAP_ID = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> MAP_DECORATIONS = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final IntComponentType MAP_POST_PROCESSING = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<List<ItemStack>> CHARGED_PROJECTILES = new DataComponentType<>(listReader(ItemCodecHelper::readItemStack), listWriter(ItemCodecHelper::writeItemStack), ObjectDataComponent::new);
-# +    public static final DataComponentType<List<ItemStack>> BUNDLE_CONTENTS = new DataComponentType<>(listReader(ItemCodecHelper::readItemStack), listWriter(ItemCodecHelper::writeItemStack), ObjectDataComponent::new);
-# +    public static final DataComponentType<PotionContents> POTION_CONTENTS = new DataComponentType<>(ItemCodecHelper::readPotionContents, ItemCodecHelper::writePotionContents, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = new DataComponentType<>(listReader(ItemCodecHelper::readStewEffect), listWriter(ItemCodecHelper::writeStewEffect), ObjectDataComponent::new);
-# +    public static final DataComponentType<WritableBookContent> WRITABLE_BOOK_CONTENT = new DataComponentType<>(ItemCodecHelper::readWritableBookContent, ItemCodecHelper::writeWritableBookContent, ObjectDataComponent::new);
-# +    public static final DataComponentType<WrittenBookContent> WRITTEN_BOOK_CONTENT = new DataComponentType<>(ItemCodecHelper::readWrittenBookContent, ItemCodecHelper::writeWrittenBookContent, ObjectDataComponent::new);
-# +    public static final DataComponentType<ArmorTrim> TRIM = new DataComponentType<>(ItemCodecHelper::readArmorTrim, ItemCodecHelper::writeArmorTrim, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> DEBUG_STICK_STATE = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> BUCKET_ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> BLOCK_ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<Holder<Instrument>> INSTRUMENT = new DataComponentType<>(ItemCodecHelper::readInstrument, ItemCodecHelper::writeInstrument, ObjectDataComponent::new);
-# +    public static final IntComponentType OMINOUS_BOTTLE_AMPLIFIER = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<ListTag> RECIPES = new DataComponentType<>(ItemCodecHelper::readRecipes, ItemCodecHelper::writeRecipes, ObjectDataComponent::new);
-# +    public static final DataComponentType<LodestoneTracker> LODESTONE_TRACKER = new DataComponentType<>(ItemCodecHelper::readLodestoneTarget, ItemCodecHelper::writeLodestoneTarget, ObjectDataComponent::new);
-# +    public static final DataComponentType<Fireworks.FireworkExplosion> FIREWORK_EXPLOSION = new DataComponentType<>(ItemCodecHelper::readFireworkExplosion, ItemCodecHelper::writeFireworkExplosion, ObjectDataComponent::new);
-# +    public static final DataComponentType<Fireworks> FIREWORKS = new DataComponentType<>(ItemCodecHelper::readFireworks, ItemCodecHelper::writeFireworks, ObjectDataComponent::new);
-# +    public static final DataComponentType<GameProfile> PROFILE = new DataComponentType<>(ItemCodecHelper::readResolvableProfile, ItemCodecHelper::writeResolvableProfile, ObjectDataComponent::new);
-# +    public static final DataComponentType<String> NOTE_BLOCK_SOUND = new DataComponentType<>(ItemCodecHelper::readResourceLocation, ItemCodecHelper::writeResourceLocation, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<BannerPatternLayer>> BANNER_PATTERNS = new DataComponentType<>(listReader(ItemCodecHelper::readBannerPatternLayer), listWriter(ItemCodecHelper::writeBannerPatternLayer), ObjectDataComponent::new);
-# +    public static final IntComponentType BASE_COLOR = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<List<Integer>> POT_DECORATIONS = new DataComponentType<>(listReader(ItemCodecHelper::readVarInt), listWriter(ItemCodecHelper::writeVarInt), ObjectDataComponent::new);
-# +    public static final DataComponentType<List<ItemStack>> CONTAINER = new DataComponentType<>(listReader(ItemCodecHelper::readOptionalItemStack), listWriter(MinecraftCodecHelper::writeOptionalItemStack), ObjectDataComponent::new);
-# +    public static final DataComponentType<BlockStateProperties> BLOCK_STATE = new DataComponentType<>(ItemCodecHelper::readBlockStateProperties, ItemCodecHelper::writeBlockStateProperties, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<BeehiveOccupant>> BEES = new DataComponentType<>(listReader(ItemCodecHelper::readBeehiveOccupant), listWriter(ItemCodecHelper::writeBeehiveOccupant), ObjectDataComponent::new);
-# +    public static final DataComponentType<StringTag> LOCK = new DataComponentType<>(ItemCodecHelper::readLock, ItemCodecHelper::writeLock, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> CONTAINER_LOOT = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
             addedComponentCount: varint
             removedComponentCount: varint
             components: SlotComponent[]$addedComponentCount
@@ -551,15 +594,31 @@
       showIcon: bool
       hiddenEffect?: EffectDetail
 
-   BlockSet:
-      type: varint
-      name: type ?
-         if 0: string
-         default: void
-      # TODO: This will require a custom type ; we need type - 1 length of blockIds
-      blockIds: type ?
-         if 0: void
-         default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
+   PotionEffect:
+      id: varint
+      details: EffectDetail
+
+   ConsumeEffect:
+      type: varint =>
+      - apply_effects
+      - remove_effects
+      - clear_all_effects
+      - teleport_randomly
+      - play_sound
+      _: type ?
+         if apply_effects:
+            effects: PotionEffect[]varint
+            probability: f32
+         if remove_effects:
+            effects: IDSet
+         if clear_all_effects: void
+         if teleport_randomly:
+            diameter: f32
+         if play_sound:
+            sound: ["registryEntryHolder", {
+               "baseName": "soundId",
+               "otherwise": { name: "data", type: "SoundEvent" }
+            }]
 
    BlockProperty:
       # Name of the block state property.
@@ -574,7 +633,10 @@
       maxValue?: string
 
    BlockPredicate:
-      blockSet?: BlockSet[]varint
+      blockSet?: ["registryEntryHolderSet", {
+         "base": { name: "name", type: "string" },
+         "otherwise": { name: "blockIds", type: "varint" }
+      }]
       properties?: BlockProperty[]varint
       nbt: anonOptionalNbt
 
@@ -627,6 +689,7 @@
       - instant_effect
       - item
       - vibration
+      - trail
       - item_slime
       - item_cobweb
       - item_snowball
@@ -690,6 +753,7 @@
       - ominous_spawning
       - raid_omen
       - trial_omen
+      - block_crumble
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.
@@ -705,7 +769,7 @@
       ## which as we can see writes the varint to the buffer.
       ## If you want to see all the serializers try regexp searching "StreamCodec.*Particle"
       data: type ?
-         if block or block_marker or falling_dust or dust_pillar: varint
+         if block or block_marker or falling_dust or dust_pillar or block_crumble: varint
          if dust:
             red: f32
             green: f32
@@ -733,6 +797,9 @@
                   entityId: varint
                   entity_eye_height: f32
             ticks: varint
+         if trail:
+            target: vec3f64
+            color: u8
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -842,36 +909,33 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if wolf_variant:
-            wildTexture: string
-            tameTexture: string
-            angryTexture: string
-            maybeInputLength: varint
-            biomeLocation: maybeInputLength ?
-               if 0: string
-            biomeHolders: maybeInputLength ?
-               if 0: void
-               default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
+         if wolf_variant: ["registryEntryHolder", {
+            "baseName": "variantId",
+            "otherwise": { name: "variantData", type: "EntityMetadataWolfVariant" }
+         }]
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
-         if painting_variant:
-            width: varint
-            height: varint
-            assetId: string
+         if painting_variant: ["registryEntryHolder", {
+            "baseName": "variantId",
+            "otherwise": { name: "variantData", type: "EntityMetadataPaintingVariant" }
+         }]
          if sniffer_state: varint
          if armadillo_state: varint
          if vector3: vec3f
          if quaternion: vec4f
+   EntityMetadataPaintingVariant:
+      width: i32
+      height: i32
+      assetId: string
+      title?: anonymousNbt
+      author?: anonymousNbt
+   EntityMetadataWolfVariant:
+      wildTexture: string
+      tameTexture: string
+      angryTexture: string
+      biome: IDSet
+
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
-   minecraft_simple_recipe_format:
-      category: varint
-   minecraft_smelting_format:
-      group: string
-      category: varint
-      ingredient: ingredient
-      result: Slot
-      experience: f32
-      cookTime: varint
    tags: []varint
       tagName: string
       entries: varint[]varint
@@ -1240,6 +1304,16 @@
       details: []varint
          key: string
          value: string
+   # MC: ClientboundResourcePackPopPacket
+   packet_common_remove_resource_pack:
+      uuid?: UUID
+   # MC: ClientboundResourcePackPushPacket
+   packet_common_add_resource_pack:
+      uuid: UUID
+      url: string
+      hash: string
+      forced: bool
+      promptMessage?: anonymousNbt
 
    ServerLinkType: varint =>
    - bug_report
@@ -1331,7 +1405,7 @@
          }
       ]
       shouldAuthenticate: bool
-   # MC: ClientboundGameProfilePacket
+   # MC: ClientboundLoginFinishedPacket
    packet_success:
       uuid: UUID
       username: string
@@ -1339,7 +1413,6 @@
          name: string
          value: string
          signature?: string
-      strictErrorHandling: bool
    # MC: ClientboundLoginCompressionPacket
    packet_compress:
       threshold: varint
@@ -1432,16 +1505,6 @@
       entries: []varint
          key: string
          value?: anonymousNbt
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    ## (Store cookie and Transfer are Common) ##
    # MC: ClientboundUpdateEnabledFeaturesPacket
    packet_feature_flags:
@@ -1480,8 +1543,8 @@
          if ping: packet_ping
          if reset_chat: packet_reset_chat
          if registry_data: packet_registry_data
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if store_cookie: packet_common_store_cookie
          if transfer: packet_common_transfer
          if feature_flags: packet_feature_flags
@@ -1500,6 +1563,7 @@
       mainHand: varint
       enableTextFiltering: bool
       enableServerListing: bool
+      particles: varint
    ## (Cookie Response is Common) ##
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
@@ -1560,6 +1624,7 @@
          dimensionName: string
          location: position
       portalCooldown: varint
+      seaLevel: varint
 
    # MC: ClientboundAddEntityPacket
    packet_spawn_entity:
@@ -1672,28 +1737,29 @@
       rootIndex: varint
    # MC: ClientboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: ContainerID
    # MC: ClientboundContainerSetContentPacket
    packet_window_items:
-      windowId: u8
+      windowId: ContainerID
       stateId: varint
       items: Slot[]varint
       carriedItem: Slot
    # MC: ClientboundContainerSetDataPacket
    packet_craft_progress_bar:
-      windowId: u8
+      windowId: ContainerID
       property: i16
       value: i16
    # MC: ClientboundContainerSetSlotPacket
    packet_set_slot:
-      windowId: i8
+      windowId: ContainerID
       stateId: varint
       slot: i16
       item: Slot
    ## (Cookie Request is Common)
    # MC: ClientboundCooldownPacket
    packet_set_cooldown:
-      itemID: varint
+      # TODO: figure out what this is
+      cooldownGroup: string
       cooldownTicks: varint
    # MC: ClientboundCustomChatCompletionsPacket
    packet_chat_suggestions:
@@ -1758,22 +1824,23 @@
    packet_entity_status:
       entityId: i32
       entityStatus: i8
-   # MC: ClientboundExplodePacket
-   packet_explosion:
+   # MC: ClientboundEntityPositionSyncPacket
+   packet_sync_entity_position:
+      entityId: varint
       x: f64
       y: f64
       z: f64
-      radius: f32
-      affectedBlockOffsets: []varint
-         x: i8
-         y: i8
-         z: i8
-      playerMotionX: f32
-      playerMotionY: f32
-      playerMotionZ: f32
-      block_interaction_type: varint
-      small_explosion_particle: Particle
-      large_explosion_particle: Particle
+      dx: f64
+      dy: f64
+      dz: f64
+      yaw: f32
+      pitch: f32
+      onGround: bool
+   # MC: ClientboundExplodePacket
+   packet_explosion:
+      center: vec3f
+      playerKnockback?: vec3f
+      explosionParticle: Particle
       soundId: varint
       _: soundId ?
          if 0:
@@ -1791,7 +1858,7 @@
       gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
    packet_open_horse_window:
-      windowId: u8
+      windowId: ContainerID
       nbSlots: varint
       entityId: i32
    # MC: ClientboundHurtAnimationPacket
@@ -1905,7 +1972,7 @@
          ]
    # MC: ClientboundMerchantOffersPacket
    packet_trade_list:
-      windowId: varint
+      windowId: ContainerID
       ## https://github.com/extremeheat/extracted_minecraft_data/blob/client1.20.5/client/net/minecraft/world/item/trading/MerchantOffer.java#L210
       trades: []varint
          inputItem1:
@@ -1946,6 +2013,15 @@
       yaw: i8
       pitch: i8
       onGround: bool
+   # MC: ClientboundMoveMinecartPacket
+   packet_move_minecart:
+      entityId: varint
+      steps: []varint
+         position: vec3f
+         movement: vec3f
+         yaw: f32
+         pitch: f32
+         weight: f32
    # MC: ClientboundMoveEntityPacket.Rot
    packet_entity_look:
       entityId: varint
@@ -1979,8 +2055,8 @@
       id: i64
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
-      windowId: i8
-      recipe: string
+      windowId: ContainerID
+      recipeDisplay: RecipeDisplay
    # MC: ClientboundPlayerAbilitiesPacket
    packet_abilities:
       flags: i8
@@ -2023,309 +2099,41 @@
       players: UUID[]varint
    # MC: ClientboundPlayerInfoUpdatePacket
    packet_player_info:
-      action: i8
+      # action is a bitfield of the above
+      action: ["bitfield", [
+         { "name": "unused", "size": 1, "signed": false },
+         { "name": "update_priority", "size": 1, "signed": false },
+         { "name": "update_display_name", "size": 1, "signed": false },
+         { "name": "update_latency", "size": 1, "signed": false },
+         { "name": "update_listed", "size": 1, "signed": false },
+         { "name": "update_game_mode", "size": 1, "signed": false },
+         { "name": "initialize_chat", "size": 1, "signed": false },
+         { "name": "add_player", "size": 1, "signed": false }
+      ]]
       data: []varint
          uuid: UUID
-         player: ../action ?
+         player: ../action/add_player ?
             if 1: game_profile
-            if 3: game_profile
-            if 5: game_profile
-            if 7: game_profile
-            if 9: game_profile
-            if 11: game_profile
-            if 13: game_profile
-            if 15: game_profile
-            if 17: game_profile
-            if 19: game_profile
-            if 21: game_profile
-            if 23: game_profile
-            if 25: game_profile
-            if 27: game_profile
-            if 29: game_profile
-            if 31: game_profile
-            if 33: game_profile
-            if 35: game_profile
-            if 37: game_profile
-            if 39: game_profile
-            if 41: game_profile
-            if 43: game_profile
-            if 45: game_profile
-            if 47: game_profile
-            if 49: game_profile
-            if 51: game_profile
-            if 53: game_profile
-            if 55: game_profile
-            if 57: game_profile
-            if 59: game_profile
-            if 61: game_profile
-            if 63: game_profile
             default: void
-         chatSession: ../action ?
-            if 2: chat_session
-            if 3: chat_session
-            if 6: chat_session
-            if 7: chat_session
-            if 10: chat_session
-            if 11: chat_session
-            if 14: chat_session
-            if 15: chat_session
-            if 18: chat_session
-            if 19: chat_session
-            if 22: chat_session
-            if 23: chat_session
-            if 26: chat_session
-            if 27: chat_session
-            if 30: chat_session
-            if 31: chat_session
-            if 34: chat_session
-            if 35: chat_session
-            if 38: chat_session
-            if 39: chat_session
-            if 42: chat_session
-            if 43: chat_session
-            if 46: chat_session
-            if 47: chat_session
-            if 50: chat_session
-            if 51: chat_session
-            if 54: chat_session
-            if 55: chat_session
-            if 58: chat_session
-            if 59: chat_session
-            if 62: chat_session
-            if 63: chat_session
+         chatSession: ../action/initialize_chat ?
+            if 1: chat_session
             default: void
-         gamemode: ../action ?
-            if 4: varint
-            if 5: varint
-            if 6: varint
-            if 7: varint
-            if 12: varint
-            if 13: varint
-            if 14: varint
-            if 15: varint
-            if 20: varint
-            if 21: varint
-            if 22: varint
-            if 23: varint
-            if 28: varint
-            if 29: varint
-            if 30: varint
-            if 31: varint
-            if 36: varint
-            if 37: varint
-            if 38: varint
-            if 39: varint
-            if 44: varint
-            if 45: varint
-            if 46: varint
-            if 47: varint
-            if 52: varint
-            if 53: varint
-            if 54: varint
-            if 55: varint
-            if 60: varint
-            if 61: varint
-            if 62: varint
-            if 63: varint
+         gamemode: ../action/update_game_mode ?
+            if 1: varint
             default: void
-         listed: ../action ?
-            if 8: bool
-            if 9: bool
-            if 10: bool
-            if 11: bool
-            if 12: bool
-            if 13: bool
-            if 14: bool
-            if 15: bool
-            if 24: bool
-            if 25: bool
-            if 26: bool
-            if 27: bool
-            if 28: bool
-            if 29: bool
-            if 30: bool
-            if 31: bool
-            if 40: bool
-            if 41: bool
-            if 42: bool
-            if 43: bool
-            if 44: bool
-            if 45: bool
-            if 46: bool
-            if 47: bool
-            if 56: bool
-            if 57: bool
-            if 58: bool
-            if 59: bool
-            if 60: bool
-            if 61: bool
-            if 62: bool
-            if 63: bool
+         listed: ../action/update_listed ?
+            if 1: varint
             default: void
-         latency: ../action ?
-            if 16: varint
-            if 17: varint
-            if 18: varint
-            if 19: varint
-            if 20: varint
-            if 21: varint
-            if 22: varint
-            if 23: varint
-            if 24: varint
-            if 25: varint
-            if 26: varint
-            if 27: varint
-            if 28: varint
-            if 29: varint
-            if 30: varint
-            if 31: varint
-            if 48: varint
-            if 49: varint
-            if 50: varint
-            if 51: varint
-            if 52: varint
-            if 53: varint
-            if 54: varint
-            if 55: varint
-            if 56: varint
-            if 57: varint
-            if 58: varint
-            if 59: varint
-            if 60: varint
-            if 61: varint
-            if 62: varint
-            if 63: varint
+         latency: ../action/update_latency ?
+            if 1: varint
             default: void
-         displayName: ../action ?
-            if 32: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 33: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 34: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 35: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 36: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 37: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 38: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 39: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 40: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 41: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 42: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 43: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 44: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 45: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 46: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 47: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 48: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 49: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 50: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 51: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 52: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 53: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 54: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 55: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 56: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 57: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 58: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 59: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 60: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 61: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 62: [
-               "option",
-               "anonymousNbt"
-            ]
-            if 63: [
-               "option",
-               "anonymousNbt"
-            ]
+         displayName: ../action/update_display_name ?
+            if 1: ["option", "anonymousNbt"]
             default: void
+         listPriority: ../action/update_priority ?
+            if 1: varint
+            default: void
+
    # MC: ClientboundPlayerLookAtPacket
    packet_face_player:
       feet_eyes: varint
@@ -2339,30 +2147,84 @@
       entity_feet_eyes: isEntity ?
          if true: varint
          default: void
+
+   # https://github.com/extremeheat/extracted_minecraft_data/blob/client1.21.2/client/net/minecraft/world/entity/Relative.java#L82
+   PositionUpdateRelatives: ["bitflags", {
+      "type": "u32",
+      "flags": ["x", "y", "z", "yaw", "pitch", "dx", "dy", "dz", "yawDelta"]
+   }]
+   # PositionUpdateRelatives: ["bitfield", [
+   #    # unused bits on top
+   #    { "name": "unused", "size": 23, "signed": false },
+   #    { "name": "yawDelta", "size": 1, "signed": false },
+   #    { "name": "dz", "size": 1, "signed": false },
+   #    { "name": "dy", "size": 1, "signed": false },
+   #    { "name": "dx", "size": 1, "signed": false },
+   #    { "name": "pitch", "size": 1, "signed": false },
+   #    { "name": "yaw", "size": 1, "signed": false },
+   #    { "name": "z", "size": 1, "signed": false },
+   #    { "name": "y", "size": 1, "signed": false },
+   #    { "name": "x", "size": 1, "signed": false },
+   # ]]
    # MC: ClientboundPlayerPositionPacket
    packet_position:
+      teleportId: varint
       x: f64
       y: f64
       z: f64
+      dx: f64
+      dy: f64
+      dz: f64
       yaw: f32
       pitch: f32
-      flags: i8
-      teleportId: varint
-   # MC: ClientboundRecipePacket
-   packet_unlock_recipes:
-      action: varint
-      craftingBookOpen: bool
-      filteringCraftable: bool
-      smeltingBookOpen: bool
-      filteringSmeltable: bool
-      blastFurnaceOpen: bool
-      filteringBlastFurnace: bool
-      smokerBookOpen: bool
-      filteringSmoker: bool
-      recipes1: string[]varint
-      recipes2: action ?
-         if 0: string[]varint
-         default: void
+      flags: PositionUpdateRelatives
+   # MC: ClientboundPlayerRotationPacket
+   packet_player_rotation:
+      yaw: f32
+      pitch: f32
+
+   # MC: ClientboundRecipeBookAddPacket
+   packet_recipe_book_add:
+      entries: []varint
+         # RecipeDisplayEntry
+         recipe:
+            displayId: varint
+            display: RecipeDisplay
+            group: optvarint
+            # This ID corresponds to the "recipe_book_category" registry
+            category: varint =>
+            - crafting_building_blocks
+            - crafting_redstone
+            - crafting_equipment
+            - crafting_misc
+            - furnace_food
+            - furnace_blocks
+            - furnace_misc
+            - blast_furnace_blocks
+            - blast_furnace_misc
+            - smoker_food
+            - stonecutter
+            - smithing
+            - campfire
+            craftingRequirements?: IDSet[]varint
+         flags: ["bitflags", {
+            "type": "u8",
+            "flags": ["notification", "highlight"]
+         }]
+      replace: bool
+   # MC: ClientboundRecipeBookRemovePacket
+   packet_recipe_book_remove:
+      recipeIds: varint[]varint
+   # MC: ClientboundRecipeBookSettingsPacket
+   packet_recipe_book_settings:
+      craftingGuiOpen: bool
+      craftingFilteringCraftable: bool
+      smeltingGuiOpen: bool
+      smeltingFilteringCraftable: bool
+      blastGuiOpen: bool
+      blastFilteringCraftable: bool
+      smokerGuiOpen: bool
+      smokerFilteringCraftable: bool
    # MC: ClientboundRemoveEntitiesPacket
    packet_entity_destroy:
       entityIds: varint[]varint
@@ -2374,16 +2236,6 @@
    packet_reset_score:
       entity_name: string
       objective_name?: string
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
@@ -2432,9 +2284,6 @@
    # MC: ClientboundSetCameraPacket
    packet_camera:
       cameraId: varint
-   # MC: ClientboundSetCarriedItemPacket
-   packet_held_item_slot:
-      slot: i8
    # MC: ClientboundSetChunkCacheCenterPacket
    packet_update_view_position:
       chunkX: varint
@@ -2442,6 +2291,9 @@
    # MC: ClientboundSetChunkCacheRadiusPacket
    packet_update_view_distance:
       viewDistance: varint
+   # MC: ClientboundSetCursorItemPacket
+   packet_set_cursor_item:
+      contents?: Slot
    # MC: ClientboundSetDefaultSpawnPositionPacket
    packet_spawn_position:
       location: position
@@ -2495,6 +2347,9 @@
       health: f32
       food: varint
       foodSaturation: f32
+   # MC: ClientboundSetHeldSlotPacket
+   packet_held_item_slot:
+      slot: i8
    # MC: ClientboundSetObjectivePacket
    packet_scoreboard_objective:
       name: string
@@ -2531,6 +2386,10 @@
    packet_set_passengers:
       entityId: varint
       passengers: varint[]varint
+   # MC: ClientboundSetPlayerInventoryPacket
+   packet_set_player_inventory:
+      slotId: varint
+      contents?: Slot
    # MC: ClientboundSetPlayerTeamPacket
    packet_teams:
       team: string
@@ -2589,6 +2448,7 @@
    packet_update_time:
       age: i64
       time: i64
+      tickDayTime: bool
    # MC: ClientboundSetTitleTextPacket
    packet_set_title_text:
       text: anonymousNbt
@@ -2757,77 +2617,11 @@
    packet_declare_recipes:
       recipes: []varint
          name: string
-         type: varint =>
-         - minecraft:crafting_shaped
-         - minecraft:crafting_shapeless
-         - minecraft:crafting_special_armordye
-         - minecraft:crafting_special_bookcloning
-         - minecraft:crafting_special_mapcloning
-         - minecraft:crafting_special_mapextending
-         - minecraft:crafting_special_firework_rocket
-         - minecraft:crafting_special_firework_star
-         - minecraft:crafting_special_firework_star_fade
-         - minecraft:crafting_special_tippedarrow
-         - minecraft:crafting_special_bannerduplicate
-         - minecraft:crafting_special_shielddecoration
-         - minecraft:crafting_special_shulkerboxcoloring
-         - minecraft:crafting_special_suspiciousstew
-         - minecraft:crafting_special_repairitem
-         - minecraft:smelting
-         - minecraft:blasting
-         - minecraft:smoking
-         - minecraft:campfire_cooking
-         - minecraft:stonecutting
-         - minecraft:smithing_transform
-         - minecraft:smithing_trim
-         - minecraft:crafting_decorated_pot
-         data: type ?
-            if minecraft:crafting_shapeless:
-               group: string
-               category: varint
-               ingredients: ingredient[]varint
-               result: Slot
-            if minecraft:crafting_shaped:
-               group: string
-               category: varint
-               width: varint
-               height: varint
-               ingredients: []$width
-                  _: ingredient[]$height
-               result: Slot
-               showNotification: bool
-            if minecraft:crafting_special_armordye: minecraft_simple_recipe_format
-            if minecraft:crafting_special_bookcloning: minecraft_simple_recipe_format
-            if minecraft:crafting_special_mapcloning: minecraft_simple_recipe_format
-            if minecraft:crafting_special_mapextending: minecraft_simple_recipe_format
-            if minecraft:crafting_special_firework_rocket: minecraft_simple_recipe_format
-            if minecraft:crafting_special_firework_star: minecraft_simple_recipe_format
-            if minecraft:crafting_special_firework_star_fade: minecraft_simple_recipe_format
-            if minecraft:crafting_special_repairitem: minecraft_simple_recipe_format
-            if minecraft:crafting_special_tippedarrow: minecraft_simple_recipe_format
-            if minecraft:crafting_special_bannerduplicate: minecraft_simple_recipe_format
-            if minecraft:crafting_special_banneraddpattern: minecraft_simple_recipe_format
-            if minecraft:crafting_special_shielddecoration: minecraft_simple_recipe_format
-            if minecraft:crafting_special_shulkerboxcoloring: minecraft_simple_recipe_format
-            if minecraft:crafting_special_suspiciousstew: minecraft_simple_recipe_format
-            if minecraft:smelting: minecraft_smelting_format
-            if minecraft:blasting: minecraft_smelting_format
-            if minecraft:smoking: minecraft_smelting_format
-            if minecraft:campfire_cooking: minecraft_smelting_format
-            if minecraft:stonecutting:
-               group: string
-               ingredient: ingredient
-               result: Slot
-            if minecraft:smithing_transform:
-               template: ingredient
-               base: ingredient
-               addition: ingredient
-               result: Slot
-            if minecraft:smithing_trim:
-               template: ingredient
-               base: ingredient
-               addition: ingredient
-            if minecraft:crafting_decorated_pot: minecraft_simple_recipe_format
+         items: varint[]varint
+      stoneCutterRecipes: []varint
+         input: IDSet
+         slotDisplay: SlotDisplay
+
    # MC: ClientboundUpdateTagsPacket
    packet_tags:
       tags: []varint
@@ -2837,6 +2631,7 @@
    packet_set_projectile_power:
       id: varint
       accelerationPower: f64
+   ## (ClientboundCustomReportDetailsPacket, ClientboundServerLinksPacket is common)
 
    packet:
       name: varint =>
@@ -2872,6 +2667,7 @@
       - kick_disconnect
       - profileless_chat
       - entity_status
+      - sync_entity_position
       - explosion
       - unload_chunk
       - game_state_change
@@ -2888,6 +2684,7 @@
       - trade_list
       - rel_entity_move
       - entity_move_look
+      - move_minecart
       - entity_look
       - vehicle_move
       - open_book
@@ -2905,7 +2702,10 @@
       - player_info
       - face_player
       - position
-      - unlock_recipes
+      - player_rotation
+      - recipe_book_add
+      - recipe_book_remove
+      - recipe_book_settings
       - entity_destroy
       - remove_entity_effect
       - reset_score
@@ -2923,9 +2723,9 @@
       - world_border_warning_delay
       - world_border_warning_reach
       - camera
-      - held_item_slot
       - update_view_position
       - update_view_distance
+      - set_cursor_item
       - spawn_position
       - scoreboard_display_objective
       - entity_metadata
@@ -2934,8 +2734,10 @@
       - entity_equipment
       - experience
       - update_health
+      - held_item_slot
       - scoreboard_objective
       - set_passengers
+      - set_player_inventory
       - teams
       - scoreboard_score
       - simulation_distance
@@ -2961,6 +2763,9 @@
       - entity_effect
       - declare_recipes
       - tags
+      - set_projectile_power
+      - custom_report_details
+      - server_links
       params: name ?
          if bundle_delimiter: void
          if spawn_entity: packet_spawn_entity
@@ -2994,6 +2799,7 @@
          if kick_disconnect: packet_kick_disconnect
          if profileless_chat: packet_profileless_chat
          if entity_status: packet_entity_status
+         if sync_entity_position: packet_sync_entity_position
          if explosion: packet_explosion
          if unload_chunk: packet_unload_chunk
          if game_state_change: packet_game_state_change
@@ -3010,6 +2816,7 @@
          if trade_list: packet_trade_list
          if rel_entity_move: packet_rel_entity_move
          if entity_move_look: packet_entity_move_look
+         if move_minecart: packet_move_minecart
          if entity_look: packet_entity_look
          if vehicle_move: packet_vehicle_move
          if open_book: packet_open_book
@@ -3027,12 +2834,15 @@
          if player_info: packet_player_info
          if face_player: packet_face_player
          if position: packet_position
-         if unlock_recipes: packet_unlock_recipes
+         if player_rotation: packet_player_rotation
+         if recipe_book_add: packet_recipe_book_add
+         if recipe_book_remove: packet_recipe_book_remove
+         if recipe_book_settings: packet_recipe_book_settings
          if entity_destroy: packet_entity_destroy
          if remove_entity_effect: packet_remove_entity_effect
          if reset_score: packet_reset_score
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if respawn: packet_respawn
          if entity_head_rotation: packet_entity_head_rotation
          if multi_block_change: packet_multi_block_change
@@ -3045,9 +2855,10 @@
          if world_border_warning_delay: packet_world_border_warning_delay
          if world_border_warning_reach: packet_world_border_warning_reach
          if camera: packet_camera
-         if held_item_slot: packet_held_item_slot
          if update_view_position: packet_update_view_position
          if update_view_distance: packet_update_view_distance
+         if set_cursor_item: packet_set_cursor_item
+         if held_item_slot: packet_held_item_slot
          if spawn_position: packet_spawn_position
          if scoreboard_display_objective: packet_scoreboard_display_objective
          if entity_metadata: packet_entity_metadata
@@ -3058,6 +2869,7 @@
          if update_health: packet_update_health
          if scoreboard_objective: packet_scoreboard_objective
          if set_passengers: packet_set_passengers
+         if set_player_inventory: packet_set_player_inventory
          if teams: packet_teams
          if scoreboard_score: packet_scoreboard_score
          if simulation_distance: packet_simulation_distance
@@ -3083,6 +2895,9 @@
          if entity_effect: packet_entity_effect
          if declare_recipes: packet_declare_recipes
          if tags: packet_tags
+         if set_projectile_power: packet_set_projectile_power
+         if custom_report_details: packet_common_custom_report_details
+         if server_links: packet_common_server_links
 
 ^play.toServer.types:
    # MC: ServerboundAcceptTeleportationPacket
@@ -3092,6 +2907,10 @@
    packet_query_block_nbt:
       transactionId: varint
       location: position
+   # MC: ServerboundSelectBundleItemPacket
+   packet_select_bundle_item:
+      slotId: varint
+      selectedItemIndex: varint
    # MC: ServerboundChangeDifficultyPacket
    packet_set_difficulty:
       newDifficulty: u8
@@ -3151,6 +2970,9 @@
    # MC: ServerboundClientCommandPacket
    packet_client_command:
       actionId: varint
+   # MC: ServerboundClientTickEndPacket
+   packet_tick_end:
+      # Empty
    # MC: ServerboundClientInformationPacket
    packet_settings:
       locale: string
@@ -3161,6 +2983,10 @@
       mainHand: varint
       enableTextFiltering: bool
       enableServerListing: bool
+      particleStatus: varint =>
+      - all
+      - decreased
+      - minimal
    # MC: ServerboundCommandSuggestionPacket
    packet_tab_complete:
       transactionId: varint
@@ -3170,11 +2996,11 @@
       # Empty
    # MC: ServerboundContainerButtonClickPacket
    packet_enchant_item:
-      windowId: i8
+      windowId: ContainerID
       enchantment: i8
    # MC: ServerboundContainerClickPacket
    packet_window_click:
-      windowId: u8
+      windowId: ContainerID
       stateId: varint
       slot: i16
       mouseButton: i8
@@ -3185,12 +3011,13 @@
       cursorItem: Slot
    # MC: ServerboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: ContainerID
    # MC: ServerboundContainerSlotStateChangedPacket
    packet_set_slot_state:
       slot_id: varint
-      window_id: varint
+      window_id: ContainerID
       state: bool
+   ## (ServerboundCookieResponsePacket is common)
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
@@ -3236,12 +3063,17 @@
    # MC: ServerboundLockDifficultyPacket
    packet_lock_difficulty:
       locked: bool
+
+   MovementFlags: ["bitflags", {
+      "type": "u8",
+      "flags": ["onGround", "hasHorizontalCollision"]
+   }]
    # MC: ServerboundMovePlayerPacket.Pos
    packet_position:
       x: f64
       y: f64
       z: f64
-      onGround: bool
+      flags: MovementFlags
    # MC: ServerboundMovePlayerPacket.PosRot
    packet_position_look:
       x: f64
@@ -3249,15 +3081,15 @@
       z: f64
       yaw: f32
       pitch: f32
-      onGround: bool
+      flags: MovementFlags
    # MC: ServerboundMovePlayerPacket.Rot
    packet_look:
       yaw: f32
       pitch: f32
-      onGround: bool
+      flags: MovementFlags
    # MC: ServerboundMovePlayerPacket.StatusOnly
    packet_flying:
-      onGround: bool
+      flags: MovementFlags
    # MC: ServerboundMoveVehiclePacket
    packet_vehicle_move:
       x: f64
@@ -3277,8 +3109,8 @@
       id: i64
    # MC: ServerboundPlaceRecipePacket
    packet_craft_recipe_request:
-      windowId: i8
-      recipe: string
+      windowId: ContainerID
+      recipeId: varint
       makeAll: bool
    # MC: ServerboundPlayerAbilitiesPacket
    packet_abilities:
@@ -3295,10 +3127,13 @@
       actionId: varint
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
-   packet_steer_vehicle:
-      sideways: f32
-      forward: f32
-      jump: u8
+   # previously: packet_steer_vehicle
+   packet_player_input:
+      ## client/net/minecraft/world/entity/player/Input.java
+      inputs: ["bitflags", {
+         "type": "u8",
+         "flags": ["forward", "backward", "left", "right", "jump", "shift", "sprint"]
+      }]
    # MC: ServerboundPongPacket
    packet_pong:
       id: i32
@@ -3309,7 +3144,7 @@
       filterActive: bool
    # MC: ServerboundRecipeBookSeenRecipePacket
    packet_displayed_recipe:
-      recipeId: string
+      recipeId: varint
    # MC: ServerboundRenameItemPacket
    packet_name_item:
       name: string
@@ -3399,6 +3234,7 @@
       cursorY: f32
       cursorZ: f32
       insideBlock: bool
+      worldBorderHit: bool
       sequence: varint
    # MC: ServerboundUseItemPacket
    packet_use_item:
@@ -3410,6 +3246,7 @@
       name: varint =>
       - teleport_confirm
       - query_block_nbt
+      - select_bundle_item
       - set_difficulty
       - message_acknowledgement
       - chat_command
@@ -3418,9 +3255,11 @@
       - chat_session_update
       - chunk_batch_received
       - client_command
+      - tick_end
       - settings
       - tab_complete
       - configuration_acknowledged
+      # Maybe rename enchant_item if it is used for other things too
       - enchant_item
       - window_click
       - close_window
@@ -3446,7 +3285,7 @@
       - abilities
       - block_dig
       - entity_action
-      - steer_vehicle
+      - player_input
       - pong
       - recipe_book
       - displayed_recipe
@@ -3469,6 +3308,7 @@
       params: name ?
          if teleport_confirm: packet_teleport_confirm
          if query_block_nbt: packet_query_block_nbt
+         if select_bundle_item: packet_select_bundle_item
          if set_difficulty: packet_set_difficulty
          if message_acknowledgement: packet_message_acknowledgement
          if chat_command: packet_chat_command
@@ -3477,6 +3317,7 @@
          if chat_session_update: packet_chat_session_update
          if chunk_batch_received: packet_chunk_batch_received
          if client_command: packet_client_command
+         if tick_end: packet_tick_end
          if settings: packet_settings
          if tab_complete: packet_tab_complete
          if configuration_acknowledged: packet_configuration_acknowledged
@@ -3504,7 +3345,7 @@
          if abilities: packet_abilities
          if block_dig: packet_block_dig
          if entity_action: packet_entity_action
-         if steer_vehicle: packet_steer_vehicle
+         if player_input: packet_player_input
          if pong: packet_pong
          if recipe_book: packet_recipe_book
          if displayed_recipe: packet_displayed_recipe

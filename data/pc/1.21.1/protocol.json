@@ -28,6 +28,8 @@
     "restBuffer": "native",
     "anonymousNbt": "native",
     "anonOptionalNbt": "native",
+    "registryEntryHolder": "native",
+    "registryEntryHolderSet": "native",
     "arrayWithLengthOffset": "native",
     "ByteArray": [
       "buffer",
@@ -108,6 +110,19 @@
           "type": "f64"
         }
       ]
+    ],
+    "IDSet": [
+      "registryEntryHolderSet",
+      {
+        "base": {
+          "name": "name",
+          "type": "string"
+        },
+        "otherwise": {
+          "name": "ids",
+          "type": "varint"
+        }
+      }
     ],
     "SlotComponentType": [
       "mapper",
@@ -202,7 +217,18 @@
                     "type": "anonOptionalNbt"
                   }
                 ],
-                "rarity": "varint",
+                "rarity": [
+                  "mapper",
+                  {
+                    "type": "varint",
+                    "mappings": {
+                      "0": "common",
+                      "1": "uncommon",
+                      "2": "rare",
+                      "3": "epic"
+                    }
+                  }
+                ],
                 "enchantments": [
                   "container",
                   [
@@ -1903,57 +1929,14 @@
                 "pose": "varint",
                 "cat_variant": "varint",
                 "wolf_variant": [
-                  "container",
-                  [
-                    {
-                      "name": "wildTexture",
-                      "type": "string"
-                    },
-                    {
-                      "name": "tameTexture",
-                      "type": "string"
-                    },
-                    {
-                      "name": "angryTexture",
-                      "type": "string"
-                    },
-                    {
-                      "name": "maybeInputLength",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "biomeLocation",
-                      "type": [
-                        "switch",
-                        {
-                          "compareTo": "maybeInputLength",
-                          "fields": {
-                            "0": "string"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "name": "biomeHolders",
-                      "type": [
-                        "switch",
-                        {
-                          "compareTo": "maybeInputLength",
-                          "fields": {
-                            "0": "void"
-                          },
-                          "default": [
-                            "arrayWithLengthOffset",
-                            {
-                              "count": "type",
-                              "type": "varint",
-                              "lengthOffset": -1
-                            }
-                          ]
-                        }
-                      ]
+                  "registryEntryHolder",
+                  {
+                    "baseName": "variantId",
+                    "otherwise": {
+                      "name": "variantData",
+                      "type": "EntityMetadataWolfVariant"
                     }
-                  ]
+                  }
                 ],
                 "frog_variant": "varint",
                 "optional_global_pos": [
@@ -1984,6 +1967,27 @@
               }
             }
           ]
+        }
+      ]
+    ],
+    "EntityMetadataWolfVariant": [
+      "container",
+      [
+        {
+          "name": "wildTexture",
+          "type": "string"
+        },
+        {
+          "name": "tameTexture",
+          "type": "string"
+        },
+        {
+          "name": "angryTexture",
+          "type": "string"
+        },
+        {
+          "name": "biome",
+          "type": "IDSet"
         }
       ]
     ],
