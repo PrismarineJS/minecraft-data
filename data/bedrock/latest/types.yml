@@ -1151,6 +1151,7 @@ ItemStackResponses: []varint
                item_stack_id: zigzag32
                # CustomName is the custom name of the item stack. It is used in relation to text filtering.
                custom_name: string
+               filtered_custom_name: string
                # DurabilityCorrection is the current durability of the item stack. This durability will be shown
                # client-side after the response is sent to the client.
                durability_correction: zigzag32
@@ -2303,9 +2304,11 @@ CameraPresets:
    align_target_and_camera_forward?: bool
    aim_assist?:
       preset_id?: string
-      target_mode?: TODO50
-      angle?:
-      distance?:
+      target_mode?: li32 =>
+         - angle
+         - distance
+      angle?: vec2f
+      distance?: lf32
 
 DisconnectFailReason: zigzag32 =>
    - unknown
