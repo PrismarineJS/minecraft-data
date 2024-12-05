@@ -3275,7 +3275,7 @@ The abilities that can be toggled between</p></td></tr>
 <tr><td class='field-name name'>parent </td><td>string</td><td><p>Parent is the name of the preset that this preset extends upon. This can be left empty.</p></td></tr>
 <tr><td class='field-name name'>position </td><td><a href="#Vec3fopts">Vec3fopts</a></td><td></td></tr>
 <tr><td class='field-name name'>rotation </td><td><a href="#Vec2fopts">Vec2fopts</a></td><td></td></tr>
-<tr><td class='field-name name'>rotation speed <div class='tag tag-optional'>optional</div></td><td>f32</td><td><p>RotationSpeed is the speed at which the camera should rotate.</p></td></tr>
+<tr><td class='field-name name'>rotation speed <div class='tag tag-optional'>optional</div></td><td>lf32</td><td><p>RotationSpeed is the speed at which the camera should rotate.</p></td></tr>
 <tr><td class='field-name name'>snap to target <div class='tag tag-optional'>optional</div></td><td>bool</td><td><p>SnapToTarget determines whether the camera should snap to the target entity or not.</p></td></tr>
 <tr><td class='field-name name'>horizontal rotation limit <div class='tag tag-optional'>optional</div></td><td><a href="#vec2f">vec2f</a></td><td><p>horizontal<em>rotation</em>limit is the horizontal rotation limit of the camera.</p></td></tr>
 <tr><td class='field-name name'>vertical rotation limit <div class='tag tag-optional'>optional</div></td><td><a href="#vec2f">vec2f</a></td><td><p>vertical<em>rotation</em>limit is the vertical rotation limit of the camera.</p></td></tr>
@@ -3283,7 +3283,7 @@ The abilities that can be toggled between</p></td></tr>
 <tr><td class='field-name name'>offset <div class='tag tag-optional'>optional</div></td><td><a href="#vec2f">vec2f</a></td><td><p>ViewOffset is only used in a follow_orbit camera and controls an offset based on a pivot point to the
 player, causing it to be shifted in a certain direction.</p></td></tr>
 <tr><td class='field-name name'>entity offset <div class='tag tag-optional'>optional</div></td><td><a href="#vec3f">vec3f</a></td><td><p>EntityOffset controls the offset from the entity that the camera should be rendered at.</p></td></tr>
-<tr><td class='field-name name'>radius <div class='tag tag-optional'>optional</div></td><td>f32</td><td><p>Radius is only used in a follow_orbit camera and controls how far away from the player the camera should
+<tr><td class='field-name name'>radius <div class='tag tag-optional'>optional</div></td><td>lf32</td><td><p>Radius is only used in a follow_orbit camera and controls how far away from the player the camera should
 be rendered.</p></td></tr>
 <tr><td class='field-name name'>audio listener <div class='tag tag-optional'>optional</div></td><td>u8</td><td></td></tr>
 <tr><td class='field-name name'>player effects <div class='tag tag-optional'>optional</div></td><td>bool</td><td></td></tr>
@@ -3525,7 +3525,8 @@ meaning it will be sent directly to the main menu.</p></td></tr>
 <tr><td class='field-name name'><span class='fake'>is true</span> </td><td>void</td><td></td></tr>
 <tr><td class='name'><span class='fake'>default</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>message </td><td>string</td><td><p>An optional message to show when disconnected.</p></td></tr>
-<tr><td class='field-name name'>filtered message </td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>filtered message </td><td>string</td><td><p>FilteredMessage is a filtered version of Message with all the profanity removed. The client will use
+this over Message if this field is not empty and they have the "Filter Profanity" setting enabled.</p></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
@@ -3618,7 +3619,8 @@ include TextTypeTip, TextTypePopup and TextTypeJukeboxPopup.</p></td></tr>
 <tr><td class='field-name name'>platform chat id </td><td>string</td><td><p>PlatformChatID is an identifier only set for particular platforms when chatting (presumably only for
 Nintendo Switch). It is otherwise an empty string, and is used to decide which players are able to
 chat with each other.</p></td></tr>
-<tr><td class='field-name name'>filtered message </td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>filtered message </td><td>string</td><td><p>FilteredMessage is a filtered version of Message with all the profanity removed. The client will use
+this over Message if this field is not empty and they have the "Filter Profanity" setting enabled.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_set_time">
     <a href="#packet_set_time"><div class='packet-id client'>10</div><div class='packet-name name'>packet set time</div></a>
@@ -5545,7 +5547,8 @@ measured in 20ths of a second (AKA in ticks).</p></td></tr>
 <tr><td class='field-name name'>xuid </td><td>string</td><td><p>XUID is the XBOX Live user ID of the player, which will remain consistent as long as the player is
 logged in with the XBOX Live account. It is empty if the user is not logged into its XBL account.</p></td></tr>
 <tr><td class='field-name name'>platform online id </td><td>string</td><td><p>PlatformOnlineID is either a uint64 or an empty string.</p></td></tr>
-<tr><td class='field-name name'>filtered message </td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>filtered message </td><td>string</td><td><p>FilteredMessage is a filtered version of Message with all the profanity removed. The client will use
+this over Message if this field is not empty and they have the "Filter Profanity" setting enabled.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_add_behavior_tree">
     <a href="#packet_add_behavior_tree"><div class='packet-id client'>89</div><div class='packet-name name'>packet add behavior tree</div></a>
@@ -6584,7 +6587,8 @@ concerned a block. If not, the face is always 0.</p></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>analogue move vector </td><td><a href="#vec2f">vec2f</a></td><td><p>AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
 values which are created using an analogue input.</p></td></tr>
-<tr><td class='field-name name'>camera orientation </td><td><a href="#vec3f">vec3f</a></td><td></td></tr>
+<tr><td class='field-name name'>camera orientation </td><td><a href="#vec3f">vec3f</a></td><td><p>CameraOrientation is the vector that represents the camera's forward direction which can be used to
+transform movement to be camera relative.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_creative_content">
     <a href="#packet_creative_content"><div class='packet-id client'>145</div><div class='packet-name name'>packet creative content</div></a>
@@ -7466,18 +7470,18 @@ ViewOffset is only used in a follow_orbit camera and controls an offset based on
 player, causing it to be shifted in a certain direction.</p></td></tr>
 <tr><td class='field-name name'>default <div class='tag tag-optional'>optional</div></td><td>bool</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'>clear <div class='tag tag-optional'>optional</div></td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>clear <div class='tag tag-optional'>optional</div></td><td>bool</td><td><p>Clear can be set to true to clear all the current camera instructions.</p></td></tr>
 <tr><td class='name'>fade <div class='tag tag-optional'>optional</div></td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>fade in duration </td><td>lf32</td><td></td></tr>
+<tr><td class='field-name name'>fade in duration </td><td>lf32</td><td><p>Clear can be set to true to clear all the current camera instructions.</p></td></tr>
 <tr><td class='field-name name'>wait duration </td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>fade out duration </td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>color rgb </td><td><a href="#vec3f">vec3f</a></td><td></td></tr>
 </table></td></tr>
 <tr><td class='name'>target <div class='tag tag-optional'>optional</div></td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>offset <div class='tag tag-optional'>optional</div></td><td><a href="#vec3f">vec3f</a></td><td></td></tr>
+<tr><td class='field-name name'>offset <div class='tag tag-optional'>optional</div></td><td><a href="#vec3f">vec3f</a></td><td><p>Target is a camera instruction that targets a specific entity.</p></td></tr>
 <tr><td class='field-name name'>entity unique id </td><td>li64</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'>remove target <div class='tag tag-optional'>optional</div></td><td>bool</td><td></td></tr>
+<tr><td class='field-name name'>remove target <div class='tag tag-optional'>optional</div></td><td>bool</td><td><p>RemoveTarget can be set to true to remove the current aim assist target.</p></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_compressed_biome_definitions">
     <a href="#packet_compressed_biome_definitions"><div class='packet-id client'>301</div><div class='packet-name name'>packet compressed biome definitions</div></a>
@@ -7624,7 +7628,7 @@ ServerBoundLoadingScreen is sent by the client to tell the server about the stat
 screen that the client is currently displaying.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>type </td><td>zigzag32</td><td><p>The type of the loading screen event.</p></td></tr>
-<tr><td class='field-name name'>loading screen id <div class='tag tag-optional'>optional</div></td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>loading screen id <div class='tag tag-optional'>optional</div></td><td>lu32</td><td></td></tr>
 </table><br/><hr/><br/>
     <div class="packet-header" id="packet_jigsaw_structure_data">
     <a href="#packet_jigsaw_structure_data"><div class='packet-id client'>313</div><div class='packet-name name'>packet jigsaw structure data</div></a>
