@@ -1,3 +1,9 @@
+## 3.80.0
+* [bedrock: sync protocol (#950)](https://github.com/PrismarineJS/minecraft-data/commit/00e5c04b275914cd409fab4e0c629f326a723e20) (thanks @extremeheat)
+* [Bedrock serverbound_loading_screen malformed packet (#944)](https://github.com/PrismarineJS/minecraft-data/commit/9753666c64c00d1307e8ad93a3f1e1d74f3c7586) (thanks @JSbETms)
+* [Add bedrock 1.21.50 protocol data (#945)](https://github.com/PrismarineJS/minecraft-data/commit/b0c5492bc709673ba684e2fc0fe034ff069f9c50) (thanks @CreeperG16)
+* [Add 1.21.3 to readme](https://github.com/PrismarineJS/minecraft-data/commit/6dc131a5b286da399ad0201ba977e7766cd3a5f6) (thanks @rom1504)
+
 ## 3.79.0
 * [Java 1.21.3 Support (#936)](https://github.com/PrismarineJS/minecraft-data/commit/2442f47dc991c587c8090a9469170dd86cfa0ee4) (thanks @GroobleDierne)
 * [Add 1.21.4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f88f2699c43dc48a12a2bdf5fd0109dc0ebc94b7) (thanks @github-actions[bot])
