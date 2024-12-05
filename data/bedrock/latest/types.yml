@@ -1,7 +1,7 @@
 !StartDocs: Types
 
 TexturePackInfos: []li16
-   uuid: string
+   uuid: uuid
    version: string
    size: lu64
    content_key: string
@@ -1151,6 +1151,9 @@ ItemStackResponses: []varint
                item_stack_id: zigzag32
                # CustomName is the custom name of the item stack. It is used in relation to text filtering.
                custom_name: string
+               # FilteredCustomName is a filtered version of CustomName with all the profanity removed. The client will
+               # use this over CustomName if this field is not empty and they have the "Filter Profanity" setting enabled.
+               filtered_custom_name: string
                # DurabilityCorrection is the current durability of the item stack. This durability will be shown
                # client-side after the response is sent to the client.
                durability_correction: zigzag32
@@ -2279,7 +2282,7 @@ CameraPresets:
    position: Vec3fopts
    rotation: Vec2fopts
    # RotationSpeed is the speed at which the camera should rotate.
-   rotation_speed?: f32
+   rotation_speed?: lf32
    # SnapToTarget determines whether the camera should snap to the target entity or not.
    snap_to_target?: bool
    # horizontal_rotation_limit is the horizontal rotation limit of the camera.
@@ -2288,6 +2291,8 @@ CameraPresets:
    vertical_rotation_limit?: vec2f
    # continue_targeting determines whether the camera should continue targeting the entity or not.
    continue_targeting?: bool
+   # TrackingRadius is the radius around the camera that the aim assist should track targets.
+   tracking_radius?: lf32
    # ViewOffset is only used in a follow_orbit camera and controls an offset based on a pivot point to the
    # player, causing it to be shifted in a certain direction.
    offset?: vec2f
@@ -2295,12 +2300,24 @@ CameraPresets:
    entity_offset?: vec3f
    # Radius is only used in a follow_orbit camera and controls how far away from the player the camera should
    # be rendered.
-   radius?: f32
+   radius?: lf32
    ## TODO: make this an enum afer adding proper optional support inside pdefyaml
    audio_listener?: u8
    player_effects?: bool
    # align_target_and_camera_forward determines whether the camera should align the target and the camera forward or not.
    align_target_and_camera_forward?: bool
+   aim_assist?:
+      # Preset is the ID of the preset that has previously been defined in the CameraAimAssistPresets packet.
+      preset_id?: string
+      target_mode?: li32 =>
+         - angle
+         - distance
+      # Angle is the maximum angle around the playes's cursor that the aim assist should check for a target,
+      # if `target_mode` is set to `angle`.
+      angle?: vec2f
+      # Distance is the maximum distance from the player's cursor should check for a target, if TargetMode is
+      # set to target_mode distance.
+      distance?: lf32
 
 DisconnectFailReason: zigzag32 =>
    - unknown

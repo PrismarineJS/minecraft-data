@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.50
+!version: 1.21.42
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -138,14 +138,6 @@ packet_resource_packs_info:
    has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
-   world_template:
-      # WorldTemplateUUID is teh UUID of the template that has been used to generate the world. Templates can
-      # be downloaded from the marketplace or installed via '.mctemplate' files. If the world was not generated
-      # from a template, this field is empty.
-      uuid: uuid
-      # WorldTemplateVersion is the version of the world template that has been used to generate the world. If
-      # the world was not generated from a template, this field is empty.
-      version: string
    # A list of resource packs that the client needs to download before joining the server. 
    # The order of these resource packs is not relevant in this packet. It is however important in the Resource Pack Stack packet.
    texture_packs: TexturePackInfos
@@ -849,8 +841,6 @@ packet_level_event:
       9812: animation_vault_deactivate
       9813: animation_vault_eject_item
       9814: animation_spawn_cobweb
-      9815: add_particle_smash_attack_ground_dust
-      9816: add_particle_creaking_heart_trail
       0x4000: add_particle_mask
       # 0x4000 | + particle ID
       16385: add_particle_bubble   # 1
@@ -3151,9 +3141,6 @@ packet_player_auth_input:
    # CameraOrientation is the vector that represents the camera's forward direction which can be used to
    # transform movement to be camera relative.
    camera_orientation: vec3f
-   # RawMoveVector is the value of MoveVector before it is affected by input permissions, sneaking/fly
-   # speeds and isn't normalised for analogue inputs.
-   raw_move_vector: vec2f
 
 #TODO: update to use the new `shift` option in bitflags
 InputFlag: [ "bitflags", {
@@ -3212,18 +3199,10 @@ InputFlag: [ "bitflags", {
       "vertical_collision",
       "down_left",
       "down_right",
-      "start_using_item",
       "camera_relative_movement_enabled",
       "rot_controlled_by_move_direction",
       "start_spin_attack",
-      "stop_spin_attack",
-      "hotbar_only_touch",
-      "jump_released_raw",
-      "jump_pressed_raw",
-      "jump_current_raw",
-      "sneak_released_raw",
-      "sneak_pressed_raw",
-      "sneak_current_raw"
+      "stop_spin_attack"
    ]
 }]
 
@@ -4124,7 +4103,7 @@ packet_camera_instruction:
       default?: bool
    # Clear can be set to true to clear all the current camera instructions.
    clear?: bool
-   # Fade is a camera instruction that fades the screen to a specified colour.
+   # Clear can be set to true to clear all the current camera instructions.
    fade?:
       fade_in_duration: lf32
       wait_duration: lf32
@@ -4310,8 +4289,6 @@ packet_serverbound_diagnostics:
 packet_camera_aim_assist:
    !id: 0x13C
    !bound: server
-   # Preset is the ID of the preset that has previously been defined in the CameraAimAssistPresets packet.
-   preset_id: string
    # CameraAimAssistTargetModeAngle.
    view_angle: vec2f
    # Distance is the distance that the camera should keep from the target, if TargetMode is set to
@@ -4358,44 +4335,3 @@ packet_set_movement_authority:
       0: client
       1: server
       2: server_with_rewind
-
-# CameraAimAssistPresets is sent by the server to the client to provide a list of categories and presets
-# that can be used when sending a CameraAimAssist packet or a CameraInstruction including aim assist.
-packet_camera_aim_assist_presets:
-   !id: 0x140
-   !bound: client
-   # CategoryGroups is a list of groups of categories which can be referenced by one of the Presets.
-   category_groups: []varint
-      # Identifier is the unique identifier of the group.
-      id: string
-      # Categories is a list of categories within this group.
-      categories: []varint
-         name: string
-         # Priorities represents the block and entity specific priorities for targetting. The aim
-         # assist will select the block or entity with the highest priority within the specified thresholds.
-         priorities:
-            entities: []varint
-               id: string
-               priority: li32
-            blocks: []varint
-               id: string
-               priority: li32
-            entity_default?: li32
-            block_default?: li32
-   presets: []varint
-      id: string
-      categories: string
-      exclude_blocks: string[]varint
-      target_liquids: string[]varint
-      item_settings: []varint
-         # Identifier of the item to apply the settings to.
-         id: string
-         # Category is the identifier of a category to use which has been defined by a CameraAimAssistCategory.
-         category: string
-      # DefaultItemSettings is the identifier of a category to use when the player is not holding an item
-      # listed in ItemSettings. This must be the identifier of a category within the
-      # above `categories` field.
-      default_item_settings?: string
-      # HandSettings is the identifier of a category to use when the player is not holding an item. This must
-      # be the identifier of a category within the above `categories` field.
-      hand_settings?: string
