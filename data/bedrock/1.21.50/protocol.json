@@ -4489,7 +4489,7 @@
           "name": "rotation_speed",
           "type": [
             "option",
-            "f32"
+            "lf32"
           ]
         },
         {
@@ -4521,6 +4521,13 @@
           ]
         },
         {
+          "name": "tracking_radius",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
           "name": "offset",
           "type": [
             "option",
@@ -4538,7 +4545,7 @@
           "name": "radius",
           "type": [
             "option",
-            "f32"
+            "lf32"
           ]
         },
         {
@@ -4754,81 +4761,6 @@
           "-1": "invalid"
         }
       }
-    ],
-    "CameraAimAssistCategory": [
-      "container",
-      [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "priorities",
-          "type": [
-            "container",
-            [
-              {
-                "name": "entities",
-                "type": [
-                  "array",
-                  {
-                    "countType": "varint",
-                    "type": [
-                      "container",
-                      [
-                        {
-                          "name": "id",
-                          "type": "string"
-                        },
-                        {
-                          "name": "priority",
-                          "type": "li32"
-                        }
-                      ]
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "blocks",
-                "type": [
-                  "array",
-                  {
-                    "countType": "varint",
-                    "type": [
-                      "container",
-                      [
-                        {
-                          "name": "id",
-                          "type": "string"
-                        },
-                        {
-                          "name": "priority",
-                          "type": "li32"
-                        }
-                      ]
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "entity_default",
-                "type": [
-                  "option",
-                  "li32"
-                ]
-              },
-              {
-                "name": "block_default",
-                "type": [
-                  "option",
-                  "li32"
-                ]
-              }
-            ]
-          ]
-        }
-      ]
     ],
     "mcpe_packet": [
       "container",
@@ -5411,7 +5343,7 @@
             "container",
             [
               {
-                "name": "id",
+                "name": "uuid",
                 "type": "uuid"
               },
               {
@@ -6606,6 +6538,8 @@
                 "9812": "animation_vault_deactivate",
                 "9813": "animation_vault_eject_item",
                 "9814": "animation_spawn_cobweb",
+                "9815": "add_particle_smash_attack_ground_dust",
+                "9816": "add_particle_creaking_heart_trail",
                 "16384": "add_particle_mask",
                 "16385": "add_particle_bubble",
                 "16386": "add_particle_bubble_manual",
@@ -10681,7 +10615,7 @@
     "InputFlag": [
       "bitflags",
       {
-        "type": "varlarge",
+        "type": "varint64",
         "big": true,
         "flags": [
           "ascend",
@@ -12915,7 +12849,7 @@
       "container",
       [
         {
-          "name": "categories",
+          "name": "category_groups",
           "type": [
             "array",
             {
@@ -12933,7 +12867,81 @@
                       "array",
                       {
                         "countType": "varint",
-                        "type": "CameraAimAssistCategory"
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "name",
+                              "type": "string"
+                            },
+                            {
+                              "name": "priorities",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "entities",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "container",
+                                          [
+                                            {
+                                              "name": "id",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "priority",
+                                              "type": "li32"
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "blocks",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "container",
+                                          [
+                                            {
+                                              "name": "id",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "priority",
+                                              "type": "li32"
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "entity_default",
+                                    "type": [
+                                      "option",
+                                      "li32"
+                                    ]
+                                  },
+                                  {
+                                    "name": "block_default",
+                                    "type": [
+                                      "option",
+                                      "li32"
+                                    ]
+                                  }
+                                ]
+                              ]
+                            }
+                          ]
+                        ]
                       }
                     ]
                   }
