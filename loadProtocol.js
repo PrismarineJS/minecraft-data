@@ -8,7 +8,7 @@ renderer.table = function (header, body) {
 marked.setOptions({
   gfm: true,
   tables: true,
-  renderer: renderer
+  renderer
 })
 
 const _ = DOMBuilder
@@ -34,16 +34,18 @@ function flatten (array, mutable) {
 
 function protocolToString (protocol, comments) {
   return _('div#protocolActualTable')._(
-    flatten(protocol['toClient'] ? directionsToLines('', protocol, comments) : Object.keys(protocol).filter(function (state) { return state !== 'types' }).map(function (state) {
-      return [_('h1').text(state),
-        directionsToLines(state, protocol[state], comments && comments[state])]
-    }))
+    flatten(protocol.toClient
+      ? directionsToLines('', protocol, comments)
+      : Object.keys(protocol).filter(function (state) { return state !== 'types' }).map(function (state) {
+        return [_('h1').text(state),
+          directionsToLines(state, protocol[state], comments && comments[state])]
+      }))
   ).H()
 }
 
 function directionsToLines (state, directions, comments) {
-  return [_('h2').text('toClient'), directionToLines(state, 'toClient', directions['toClient'].types, comments && comments['toClient']),
-    _('h2').text('toServer'), directionToLines(state, 'toServer', directions['toServer'].types, comments && comments['toServer'])]
+  return [_('h2').text('toClient'), directionToLines(state, 'toClient', directions.toClient.types, comments && comments.toClient),
+    _('h2').text('toServer'), directionToLines(state, 'toServer', directions.toServer.types, comments && comments.toServer)]
 }
 
 function reverseObject (o) {
@@ -51,8 +53,8 @@ function reverseObject (o) {
 }
 
 function directionToLines (state, direction, packets, comments) {
-  const typesToNames = reverseObject(packets['packet'][1][1]['type'][1]['fields'])
-  const namesToIds = reverseObject(packets['packet'][1][0]['type'][1]['mappings'])
+  const typesToNames = reverseObject(packets.packet[1][1].type[1].fields)
+  const namesToIds = reverseObject(packets.packet[1][0].type[1].mappings)
   return Object.keys(packets).filter(function (packetName) { return packetName !== 'packet' }).map(function (packetType) {
     const packetName = typesToNames[packetType]
     const packetId = namesToIds[packetName]
@@ -155,13 +157,15 @@ function switchToLines (totalCols, field, fieldType, depth, getVal) {
   // First, group together lines
   const elems = Object.keys(fieldType.typeArgs.fields).reduce(function (acc, key) {
     const k = JSON.stringify(fieldType.typeArgs.fields[key])
-    if (acc.hasOwnProperty(k)) { acc[k].push(key) } else { acc[k] = [key] }
+    if (Object.hasOwn(acc, k)) { acc[k].push(key) } else { acc[k] = [key] }
     return acc
   }, {})
   let lines = Object.keys(elems).reduce(function (acc, key) {
-    acc = acc.concat(fieldToLines(totalCols, { 'name': (firstLine ? '' : 'else ') +
+    acc = acc.concat(fieldToLines(totalCols, {
+      name: (firstLine ? '' : 'else ') +
     'if (' + eqs(fieldType.typeArgs.compareTo, elems[key]) + ')',
-    'type': JSON.parse(key) }, depth + 1, getVal))
+      type: JSON.parse(key)
+    }, depth + 1, getVal))
     firstLine = false
     return acc
   }, [])
@@ -170,7 +174,7 @@ function switchToLines (totalCols, field, fieldType, depth, getVal) {
     .map(JSON.parse.bind(JSON))
     .map(function (item) { return { type: item } })
   if (fieldType.typeArgs.default && fieldType.typeArgs.default !== 'void') {
-    lines = lines.concat(fieldToLines(totalCols, { 'name': 'else', 'type': fieldType.typeArgs.default }, depth + 1, getVal))
+    lines = lines.concat(fieldToLines(totalCols, { name: 'else', type: fieldType.typeArgs.default }, depth + 1, getVal))
     x.push({ type: fieldType.typeArgs.default })
   }
   if (lines.length > 0) {
@@ -232,7 +236,7 @@ function containerToLines (totalCols, field, fieldType, depth, getVal) {
 function uniq (a) {
   const seen = {}
   return a.filter(function (item) {
-    return seen.hasOwnProperty(item) ? false : (seen[item] = true)
+    return Object.hasOwn(seen, item) ? false : (seen[item] = true)
   })
 }
 
@@ -275,7 +279,7 @@ function countCols (fields) {
 }
 
 function getFieldInfo (type) {
-  if (typeof type === 'string') { return { 'type': type } } else if (Array.isArray(type)) { return { 'type': type[0], 'typeArgs': type[1] } } else { return type }
+  if (typeof type === 'string') { return { type } } else if (Array.isArray(type)) { return { type: type[0], typeArgs: type[1] } } else { return type }
 }
 
 function objValues (obj) {
@@ -291,15 +295,11 @@ function eqs (compareTo, k) {
   }, compareTo + ' == ' + k[0])
 }
 
-const dataPaths = require('minecraft-data/minecraft-data/data/dataPaths.json')
-
 function loadProtocol (version) {
-  if (version.startsWith('bedrock')) {
-    const [, v] = version.split('_')
-    const path = dataPaths.bedrock[v].protocol
-    $j('#protocolTable').html(`<html-view src="protocol/${path}"><a href="protocol/${path}">Click here</a></html-view>`)
+  const data = require('minecraft-data')(version)
+  if (data.proto) {
+    $j('#protocolTable').html(`<html-view src="protocol/${data.proto}"><a href="protocol/${data.proto}">Click here</a></html-view>`)
   } else {
-    const data = require('minecraft-data')(version).protocol
     const comments = require('minecraft-data')(version).protocolComments
     $j('#protocolTable').html(protocolToString(data, comments))
   }
