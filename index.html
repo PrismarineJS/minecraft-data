@@ -52,12 +52,12 @@
           <h1>Please wait...</h1>
         </div>
     </div>
-    <script src="https://cdn.rawgit.com/skyzyx/dombuilder/1.3/dombuilder.min.js"></script>
+    <script async src="https://cdn.rawgit.com/skyzyx/dombuilder/1.3/dombuilder.min.js"></script>
     <script>
       class WebView extends HTMLElement {
         scrollCallback = () => {
-          if (!document.getElementById(location.hash) && location.hash) {
-            this.shadowRoot.querySelector(location.hash)?.scrollIntoView({ behavior: 'smooth' })
+          if (!document.getElementById(location.hash.slice(1)) && location.hash) {
+            this.shadowRoot.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
           }
         }
         connectedCallback() {
@@ -79,6 +79,6 @@
 
       window.customElements.define('html-view', WebView)
     </script>
-    <script src="./bundle.js"></script>
+    <script async src="./bundle.js"></script>
 </body>
 </html>
