@@ -56,49 +56,6 @@
     "nbtLoop": "native",
     "enum_size_based_on_values_len": "native",
     "MapInfo": "native",
-    "BehaviourPackInfos": [
-      "array",
-      {
-        "countType": "li16",
-        "type": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": "string"
-            },
-            {
-              "name": "version",
-              "type": "string"
-            },
-            {
-              "name": "size",
-              "type": "lu64"
-            },
-            {
-              "name": "content_key",
-              "type": "string"
-            },
-            {
-              "name": "sub_pack_name",
-              "type": "string"
-            },
-            {
-              "name": "content_identity",
-              "type": "string"
-            },
-            {
-              "name": "has_scripts",
-              "type": "bool"
-            },
-            {
-              "name": "addon_pack",
-              "type": "bool"
-            }
-          ]
-        ]
-      }
-    ],
     "TexturePackInfos": [
       "array",
       {
@@ -108,7 +65,7 @@
           [
             {
               "name": "uuid",
-              "type": "string"
+              "type": "uuid"
             },
             {
               "name": "version",
@@ -141,6 +98,10 @@
             {
               "name": "rtx_enabled",
               "type": "bool"
+            },
+            {
+              "name": "cdn_url",
+              "type": "string"
             }
           ]
         ]
@@ -1216,6 +1177,14 @@
             },
             {
               "name": "current",
+              "type": "lf32"
+            },
+            {
+              "name": "default_min",
+              "type": "lf32"
+            },
+            {
+              "name": "default_max",
               "type": "lf32"
             },
             {
@@ -2636,7 +2605,8 @@
           "33": "stop_crawling",
           "34": "start_flying",
           "35": "stop_flying",
-          "36": "received_server_data"
+          "36": "received_server_data",
+          "37": "start_using_item"
         }
       }
     ],
@@ -3106,6 +3076,10 @@
                                             },
                                             {
                                               "name": "custom_name",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "filtered_custom_name",
                                               "type": "string"
                                             },
                                             {
@@ -4269,26 +4243,28 @@
           "507": "vault_deactivate",
           "508": "hurt_reduced",
           "509": "wind_charge_burst",
-          "510": "_",
-          "511": "armor_crack_wolf",
-          "512": "armor_break_wolf",
-          "513": "armor_repair_wolf",
-          "514": "mace_smash_air",
-          "515": "mace_smash_ground",
-          "516": "trail_spawner_charge_activate",
-          "517": "trail_spawner_ambient_ominous",
-          "518": "ominous_item_spawner_spawn_item",
-          "519": "ominous_bottle_end_use",
-          "520": "mace_smash_heavy_ground",
-          "521": "ominous_item_spawner_spawn_item_begin",
-          "522": "_",
-          "523": "apply_effect_bad_omen",
-          "524": "apply_effect_raid_omen",
-          "525": "apply_effect_trial_omen",
-          "526": "ominous_item_spawner_about_to_spawn_item",
-          "527": "record_creator",
-          "528": "record_creator_music_box",
-          "529": "record_precipice"
+          "510": "imitate_drowned",
+          "511": "bundle_insert_failed",
+          "512": "_",
+          "513": "armor_crack_wolf",
+          "514": "armor_break_wolf",
+          "515": "armor_repair_wolf",
+          "516": "mace_smash_air",
+          "517": "mace_smash_ground",
+          "518": "trail_spawner_charge_activate",
+          "519": "trail_spawner_ambient_ominous",
+          "520": "ominous_item_spawner_spawn_item",
+          "521": "ominous_bottle_end_use",
+          "522": "mace_smash_heavy_ground",
+          "523": "ominous_item_spawner_spawn_item_begin",
+          "524": "_",
+          "525": "apply_effect_bad_omen",
+          "526": "apply_effect_raid_omen",
+          "527": "apply_effect_trial_omen",
+          "528": "ominous_item_spawner_about_to_spawn_item",
+          "529": "record_creator",
+          "530": "record_creator_music_box",
+          "531": "record_precipice"
         }
       }
     ],
@@ -4510,10 +4486,59 @@
           "type": "Vec2fopts"
         },
         {
+          "name": "rotation_speed",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "snap_to_target",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "horizontal_rotation_limit",
+          "type": [
+            "option",
+            "vec2f"
+          ]
+        },
+        {
+          "name": "vertical_rotation_limit",
+          "type": [
+            "option",
+            "vec2f"
+          ]
+        },
+        {
+          "name": "continue_targeting",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "tracking_radius",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
           "name": "offset",
           "type": [
             "option",
             "vec2f"
+          ]
+        },
+        {
+          "name": "entity_offset",
+          "type": [
+            "option",
+            "vec3f"
           ]
         },
         {
@@ -4535,6 +4560,61 @@
           "type": [
             "option",
             "bool"
+          ]
+        },
+        {
+          "name": "align_target_and_camera_forward",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "aim_assist",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "preset_id",
+                  "type": [
+                    "option",
+                    "string"
+                  ]
+                },
+                {
+                  "name": "target_mode",
+                  "type": [
+                    "option",
+                    [
+                      "mapper",
+                      {
+                        "type": "li32",
+                        "mappings": {
+                          "0": "angle",
+                          "1": "distance"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "name": "angle",
+                  "type": [
+                    "option",
+                    "vec2f"
+                  ]
+                },
+                {
+                  "name": "distance",
+                  "type": [
+                    "option",
+                    "lf32"
+                  ]
+                }
+              ]
+            ]
           ]
         }
       ]
@@ -4665,9 +4745,22 @@
         },
         {
           "name": "dynamic_container_id",
-          "type": "u32"
+          "type": [
+            "option",
+            "u32"
+          ]
         }
       ]
+    ],
+    "MovementEffectType": [
+      "mapper",
+      {
+        "type": "varint",
+        "mappings": {
+          "0": "GLIDE_BOOST",
+          "-1": "invalid"
+        }
+      }
     ],
     "mcpe_packet": [
       "container",
@@ -4885,7 +4978,12 @@
                 "312": "serverbound_loading_screen",
                 "313": "jigsaw_structure_data",
                 "314": "current_structure_feature",
-                "315": "serverbound_diagnostics"
+                "315": "serverbound_diagnostics",
+                "316": "camera_aim_assist",
+                "317": "container_registry_cleanup",
+                "318": "movement_effect",
+                "319": "set_movement_authority",
+                "320": "camera_aim_assist_presets"
               }
             }
           ]
@@ -5103,7 +5201,12 @@
                 "serverbound_loading_screen": "packet_serverbound_loading_screen",
                 "jigsaw_structure_data": "packet_jigsaw_structure_data",
                 "current_structure_feature": "packet_current_structure_feature",
-                "serverbound_diagnostics": "packet_serverbound_diagnostics"
+                "serverbound_diagnostics": "packet_serverbound_diagnostics",
+                "camera_aim_assist": "packet_camera_aim_assist",
+                "container_registry_cleanup": "packet_container_registry_cleanup",
+                "movement_effect": "packet_movement_effect",
+                "set_movement_authority": "packet_set_movement_authority",
+                "camera_aim_assist_presets": "packet_camera_aim_assist_presets"
               }
             }
           ]
@@ -5235,38 +5338,24 @@
           "type": "bool"
         },
         {
-          "name": "force_server_packs",
-          "type": "bool"
-        },
-        {
-          "name": "behaviour_packs",
-          "type": "BehaviourPackInfos"
+          "name": "world_template",
+          "type": [
+            "container",
+            [
+              {
+                "name": "uuid",
+                "type": "uuid"
+              },
+              {
+                "name": "version",
+                "type": "string"
+              }
+            ]
+          ]
         },
         {
           "name": "texture_packs",
           "type": "TexturePackInfos"
-        },
-        {
-          "name": "resource_pack_links",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": [
-                "container",
-                [
-                  {
-                    "name": "id",
-                    "type": "string"
-                  },
-                  {
-                    "name": "url",
-                    "type": "string"
-                  }
-                ]
-              ]
-            }
-          ]
         }
       ]
     ],
@@ -6449,6 +6538,8 @@
                 "9812": "animation_vault_deactivate",
                 "9813": "animation_vault_eject_item",
                 "9814": "animation_spawn_cobweb",
+                "9815": "add_particle_smash_attack_ground_dust",
+                "9816": "add_particle_creaking_heart_trail",
                 "16384": "add_particle_mask",
                 "16385": "add_particle_bubble",
                 "16386": "add_particle_bubble_manual",
@@ -6691,7 +6782,7 @@
         },
         {
           "name": "tick",
-          "type": "lu64"
+          "type": "varint64"
         }
       ]
     ],
@@ -7123,8 +7214,12 @@
           "type": "ItemStacks"
         },
         {
-          "name": "dynamic_window_id",
-          "type": "varint"
+          "name": "container",
+          "type": "FullContainerName"
+        },
+        {
+          "name": "storage_item",
+          "type": "Item"
         }
       ]
     ],
@@ -7140,8 +7235,12 @@
           "type": "varint"
         },
         {
-          "name": "dynamic_window_id",
-          "type": "varint"
+          "name": "container",
+          "type": "FullContainerName"
+        },
+        {
+          "name": "storage_item",
+          "type": "Item"
         },
         {
           "name": "item",
@@ -8654,6 +8753,10 @@
         {
           "name": "port",
           "type": "lu16"
+        },
+        {
+          "name": "reload_world",
+          "type": "bool"
         }
       ]
     ],
@@ -10097,6 +10200,10 @@
           "type": "string"
         },
         {
+          "name": "emote_length_ticks",
+          "type": "varint"
+        },
+        {
           "name": "xuid",
           "type": "string"
         },
@@ -10314,16 +10421,8 @@
           ]
         },
         {
-          "name": "gaze_direction",
-          "type": [
-            "switch",
-            {
-              "compareTo": "play_mode",
-              "fields": {
-                "reality": "vec3f"
-              }
-            }
-          ]
+          "name": "interact_rotation",
+          "type": "vec2f"
         },
         {
           "name": "tick",
@@ -10502,13 +10601,21 @@
         {
           "name": "analogue_move_vector",
           "type": "vec2f"
+        },
+        {
+          "name": "camera_orientation",
+          "type": "vec3f"
+        },
+        {
+          "name": "raw_move_vector",
+          "type": "vec2f"
         }
       ]
     ],
     "InputFlag": [
       "bitflags",
       {
-        "type": "varint64",
+        "type": "varint128",
         "big": true,
         "flags": [
           "ascend",
@@ -10559,7 +10666,23 @@
           "client_predicted_vehicle",
           "paddling_left",
           "paddling_right",
-          "block_breaking_delay_enabled"
+          "block_breaking_delay_enabled",
+          "horizontal_collision",
+          "vertical_collision",
+          "down_left",
+          "down_right",
+          "start_using_item",
+          "camera_relative_movement_enabled",
+          "rot_controlled_by_move_direction",
+          "start_spin_attack",
+          "stop_spin_attack",
+          "hotbar_only_touch",
+          "jump_released_raw",
+          "jump_pressed_raw",
+          "jump_current_raw",
+          "sneak_released_raw",
+          "sneak_pressed_raw",
+          "sneak_current_raw"
         ]
       }
     ],
@@ -10724,7 +10847,7 @@
         },
         {
           "name": "tick",
-          "type": "varint"
+          "type": "varint64"
         }
       ]
     ],
@@ -12639,6 +12762,271 @@
         {
           "name": "average_unaccounted_time_percent",
           "type": "lf32"
+        }
+      ]
+    ],
+    "packet_camera_aim_assist": [
+      "container",
+      [
+        {
+          "name": "preset_id",
+          "type": "string"
+        },
+        {
+          "name": "view_angle",
+          "type": "vec2f"
+        },
+        {
+          "name": "distance",
+          "type": "lf32"
+        },
+        {
+          "name": "target_mode",
+          "type": "u8"
+        },
+        {
+          "name": "action",
+          "type": "u8"
+        }
+      ]
+    ],
+    "packet_container_registry_cleanup": [
+      "container",
+      [
+        {
+          "name": "removed_containers",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "FullContainerName"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_movement_effect": [
+      "container",
+      [
+        {
+          "name": "runtime_id",
+          "type": "varint64"
+        },
+        {
+          "name": "effect_type",
+          "type": "MovementEffectType"
+        },
+        {
+          "name": "effect_duration",
+          "type": "varint"
+        },
+        {
+          "name": "tick",
+          "type": "varint64"
+        }
+      ]
+    ],
+    "packet_set_movement_authority": [
+      "container",
+      [
+        {
+          "name": "movement_authority",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "client",
+                "1": "server",
+                "2": "server_with_rewind"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_aim_assist_presets": [
+      "container",
+      [
+        {
+          "name": "category_groups",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "id",
+                    "type": "string"
+                  },
+                  {
+                    "name": "categories",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "name",
+                              "type": "string"
+                            },
+                            {
+                              "name": "priorities",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "entities",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "container",
+                                          [
+                                            {
+                                              "name": "id",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "priority",
+                                              "type": "li32"
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "blocks",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "container",
+                                          [
+                                            {
+                                              "name": "id",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "priority",
+                                              "type": "li32"
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "entity_default",
+                                    "type": [
+                                      "option",
+                                      "li32"
+                                    ]
+                                  },
+                                  {
+                                    "name": "block_default",
+                                    "type": [
+                                      "option",
+                                      "li32"
+                                    ]
+                                  }
+                                ]
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "presets",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "id",
+                    "type": "string"
+                  },
+                  {
+                    "name": "categories",
+                    "type": "string"
+                  },
+                  {
+                    "name": "exclude_blocks",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "target_liquids",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "item_settings",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "id",
+                              "type": "string"
+                            },
+                            {
+                              "name": "category",
+                              "type": "string"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "default_item_settings",
+                    "type": [
+                      "option",
+                      "string"
+                    ]
+                  },
+                  {
+                    "name": "hand_settings",
+                    "type": [
+                      "option",
+                      "string"
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ]
