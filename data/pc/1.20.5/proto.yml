@@ -23,6 +23,7 @@
    entityMetadataLoop: native
    topBitSetTerminatedArray: native
    bitfield: native
+   bitflags: native
    container: native
    switch: native
    void: native
@@ -1875,17 +1876,17 @@
       players: UUID[]varint
    # MC: ClientboundPlayerInfoUpdatePacket
    packet_player_info:
-      # action is a bitfield of the above
-      action: ["bitfield", [
-         { "name": "unused", "size": 1, "signed": false },
-         { "name": "update_priority", "size": 1, "signed": false },
-         { "name": "update_display_name", "size": 1, "signed": false },
-         { "name": "update_latency", "size": 1, "signed": false },
-         { "name": "update_listed", "size": 1, "signed": false },
-         { "name": "update_game_mode", "size": 1, "signed": false },
-         { "name": "initialize_chat", "size": 1, "signed": false },
-         { "name": "add_player", "size": 1, "signed": false }
-      ]]
+      ## ClientboundPlayerInfoUpdatePacket.java#L160
+      action: ["bitflags", {
+         "type": "u8",
+         "flags": [
+            "add_player",
+            "initialize_chat",
+            "update_game_mode",
+            "update_listed",
+            "update_latency"
+         ]
+      }]
       data: []varint
          uuid: UUID
          player: ../action/add_player ?
@@ -1905,9 +1906,6 @@
             default: void
          displayName: ../action/update_display_name ?
             if 1: ["option", "anonymousNbt"]
-            default: void
-         listPriority: ../action/update_priority ?
-            if 1: varint
             default: void
    # MC: ClientboundPlayerLookAtPacket
    packet_face_player:

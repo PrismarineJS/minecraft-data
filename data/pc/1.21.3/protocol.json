@@ -6066,49 +6066,19 @@
             {
               "name": "action",
               "type": [
-                "bitfield",
-                [
-                  {
-                    "name": "unused",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_priority",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_display_name",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_latency",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_listed",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_game_mode",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "initialize_chat",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "add_player",
-                    "size": 1,
-                    "signed": false
-                  }
-                ]
+                "bitflags",
+                {
+                  "type": "u8",
+                  "flags": [
+                    "add_player",
+                    "initialize_chat",
+                    "update_game_mode",
+                    "update_listed",
+                    "update_latency",
+                    "update_display_name",
+                    "update_list_order"
+                  ]
+                }
               ]
             },
             {
@@ -6210,7 +6180,7 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action/update_priority",
+                            "compareTo": "../action/update_list_order",
                             "fields": {
                               "1": "varint"
                             },
