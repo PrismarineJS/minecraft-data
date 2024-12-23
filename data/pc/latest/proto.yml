@@ -337,37 +337,22 @@
             customColor?: varint
             customEffects: PotionEffect[]varint
             customName: string
-         # Name	Type	Description
-         # Number Of Effects	VarInt	Number of elements in the following array.
-         # Effect	Type ID	Array	VarInt Enum	The ID of the effect in the potion effect type registry.
-         # Duration	VarInt	The duration of the effect.
          if suspicious_stew_effects:
             effects: []varint
+               # The ID of the effect in the potion effect type registry.
                effect: varint
+               # The duration of the effect.
                duration: varint
-         # Name	Type	Description
-         # Number Of Pages	VarInt	Number of elements in the following array.
-         # Page	Raw Content	Array (100)	String (1024)	The raw text of the page.
-         # Has Filtered Content	Boolean	
-         # Filtered Content	Optional String (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
          if writable_book_content:
+            # Max 100 pages
             pages: BookPage[]varint
-         # Name	Type	Description
-         # Raw Title	String (32)	The raw title of the book.
-         # Has Filtered Title	Boolean	
-         # Filtered Title	Optional String (32)	The title after going through chat filters. Only present if Has Filtered Title is true.
-         # Author	String	
-         # Generation	VarInt	
-         # Number Of Pages	VarInt	Number of elements in the following array.
-         # Page	Raw Content	Array (100)	TextComponent (1024)	The raw text of the page.
-         # Has Filtered Content	Boolean	
-         # Filtered Content	Optional Text Component (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
-         # Resolved	Boolean	Whether entity selectors have already been resolved.
          if written_book_content:
+            # The raw title of the book, up to 32 characters.
             rawTitle: string
             filteredTitle?: string
             author: string
             generation: varint
+            # Max 100 pages
             pages: BookPage[]varint
             # Whether entity selectors have already been resolved.
             resolved: bool
@@ -465,53 +450,28 @@
                   songLocation: string
             showInTooltip: bool
          if recipes: anonymousNbt
-         # Name	Type	Description
-         # Has Global Position	Boolean	Whether this lodestone points to a position, otherwise it spins randomly.
-         # Dimension	Identifier	The dimension the compass points to. Only present if Has Global Position is true.
-         # Position	Position	The position the compass points to. Only present if Has Global Position is true.
-         # Tracked	Boolean	Whether the component is removed when the associated lodestone is broken.
          if lodestone_tracker:
+            # Specified if this lodestone points to a position; otherwise it spins randomly.
             globalPosition?:
                dimension: string
+               # The position the compass points to. Only present if Has Global Position is true.
                position: position
+            # Whether the component is removed when the associated lodestone is broken.
             tracked: bool
-         # Name	Type	Description
-         # Shape	VarInt Enum	Can be one of the following:
-         # 0 - Small ball
-         # 1 - Large ball
-         # 2 - Star
-         # 3 - Creeper
-         # 4 - Burst
-         # Number Of Colors	VarInt	The number of elements in the following array.
-         # Colors	Array of Int	The RGB components of the color, encoded as an integer.
-         # Number Of Fade Colors	VarInt	The number of elements in the following array.
-         # Fade Colors	Array of Int	The RGB components of the color, encoded as an integer.
-         # Has Trail	Boolean	
-         # Has Twinkle	Boolean	
          if firework_explosion: FireworkExplosion
          if fireworks:
             flightDuration: varint
             explosions: FireworkExplosion[]varint
-         # Name	Type	Description
-         # Has Name	Boolean	
-         # Name	Optional String (16)	Only present if Has Name is true.
-         # Has Unique ID	Boolean	
-         # Unique ID	Optional UUID	Only present if Has Unique ID is true.
-         # Number of Properties	VarInt	Number of elements in the following array.
-         # Property	Name	Array	String (64)	
-         # Value	String	
-         # Has Signature	Boolean	
-         # Signature	String (1024)	Only present if Has Signature is true.
          if profile:
-            hasName: bool
-            name: string
-            hasUniqueId: bool
-            uniqueId: UUID
+            # If the profile has a name, max 16 characters.
+            name?: string
+            uuid?: UUID
             properties: []varint
+               # Max 64 characters
                property: string
                value: string
-               hasSignature: bool
-               signature: string
+               # Max 1024 characters
+               signature?: string
          if note_block_sound: string
          # Name	Type	Description
          # Number of Layers	VarInt	Number of elements in the following array.
@@ -563,7 +523,7 @@
          if 0: void
          default:
             item: varint
-# https://wiki.vg/Slot_Data#Structured_components
+            # https://wiki.vg/Slot_Data#Structured_components
             addedComponentCount: varint
             removedComponentCount: varint
             components: SlotComponent[]$addedComponentCount
@@ -572,17 +532,22 @@
 
    FireworkExplosion:
       shape: varint =>
-      - small_ball
-      - large_ball
-      - star
-      - creeper
-      - burst
+         - small_ball
+         - large_ball
+         - star
+         - creeper
+         - burst
+      # The RGB components of the color, encoded as an integer.
       colors: i32[]varint
+      # The RGB components of the color, encoded as an integer.
       fadeColors: i32[]varint
+      # Whether the firework has a trail.
       hasTrail: bool
+      # Whether the firework has a twinkle effect.
       hasTwinkle: bool
 
    BookPage:
+      # The raw text of the page. TextComponent, max 1024 characters.
       content: string
       filteredContent?: string
 

@@ -31,7 +31,6 @@
     "anonOptionalNbt": "native",
     "registryEntryHolder": "native",
     "registryEntryHolderSet": "native",
-    "arrayWithLengthOffset": "native",
     "ByteArray": [
       "buffer",
       {
@@ -316,7 +315,7 @@
                                 "type": "varint"
                               },
                               {
-                                "name": "uniqueId",
+                                "name": "uuid",
                                 "type": "UUID"
                               },
                               {
@@ -442,29 +441,21 @@
                             [
                               {
                                 "name": "blocks",
-                                "type": [
-                                  "array",
-                                  {
-                                    "countType": "varint",
-                                    "type": "BlockSet"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "hasSpeed",
-                                "type": "bool"
+                                "type": "IDSet"
                               },
                               {
                                 "name": "speed",
-                                "type": "f32"
-                              },
-                              {
-                                "name": "hasCorrectDropForBlocks",
-                                "type": "bool"
+                                "type": [
+                                  "option",
+                                  "f32"
+                                ]
                               },
                               {
                                 "name": "correctDropForBlocks",
-                                "type": "bool"
+                                "type": [
+                                  "option",
+                                  "bool"
+                                ]
                               }
                             ]
                           ]
@@ -563,20 +554,18 @@
                   "container",
                   [
                     {
-                      "name": "hasPotionId",
-                      "type": "bool"
-                    },
-                    {
                       "name": "potionId",
-                      "type": "optvarint"
-                    },
-                    {
-                      "name": "hasCustomColor",
-                      "type": "bool"
+                      "type": [
+                        "option",
+                        "varint"
+                      ]
                     },
                     {
                       "name": "customColor",
-                      "type": "optvarint"
+                      "type": [
+                        "option",
+                        "varint"
+                      ]
                     },
                     {
                       "name": "customEffects",
@@ -584,21 +573,13 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": [
-                            "container",
-                            [
-                              {
-                                "name": "effect",
-                                "type": "varint"
-                              },
-                              {
-                                "name": "details",
-                                "type": "EffectDetail"
-                              }
-                            ]
-                          ]
+                          "type": "PotionEffect"
                         }
                       ]
+                    },
+                    {
+                      "name": "customName",
+                      "type": "string"
                     }
                   ]
                 ],
@@ -961,7 +942,7 @@
                             },
                             {
                               "name": "position",
-                              "type": "vec3f"
+                              "type": "position"
                             }
                           ]
                         ]
@@ -997,20 +978,18 @@
                   "container",
                   [
                     {
-                      "name": "hasName",
-                      "type": "bool"
-                    },
-                    {
                       "name": "name",
-                      "type": "string"
+                      "type": [
+                        "option",
+                        "string"
+                      ]
                     },
                     {
-                      "name": "hasUniqueId",
-                      "type": "bool"
-                    },
-                    {
-                      "name": "uniqueId",
-                      "type": "UUID"
+                      "name": "uuid",
+                      "type": [
+                        "option",
+                        "UUID"
+                      ]
                     },
                     {
                       "name": "properties",
@@ -1030,12 +1009,11 @@
                                 "type": "string"
                               },
                               {
-                                "name": "hasSignature",
-                                "type": "bool"
-                              },
-                              {
                                 "name": "signature",
-                                "type": "string"
+                                "type": [
+                                  "option",
+                                  "string"
+                                ]
                               }
                             ]
                           ]
@@ -1213,7 +1191,7 @@
                 "container",
                 [
                   {
-                    "name": "itemId",
+                    "name": "item",
                     "type": "varint"
                   },
                   {
@@ -1356,45 +1334,16 @@
         }
       ]
     ],
-    "BlockSet": [
+    "PotionEffect": [
       "container",
       [
         {
-          "name": "type",
+          "name": "id",
           "type": "varint"
         },
         {
-          "name": "name",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "0": "string"
-              },
-              "default": "void"
-            }
-          ]
-        },
-        {
-          "name": "blockIds",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "0": "void"
-              },
-              "default": [
-                "arrayWithLengthOffset",
-                {
-                  "count": "type",
-                  "type": "varint",
-                  "lengthOffset": -1
-                }
-              ]
-            }
-          ]
+          "name": "details",
+          "type": "EffectDetail"
         }
       ]
     ],
@@ -1440,10 +1389,16 @@
           "type": [
             "option",
             [
-              "array",
+              "registryEntryHolderSet",
               {
-                "countType": "varint",
-                "type": "BlockSet"
+                "base": {
+                  "name": "name",
+                  "type": "string"
+                },
+                "otherwise": {
+                  "name": "blockIds",
+                  "type": "varint"
+                }
               }
             ]
           ]
@@ -1945,21 +1900,14 @@
                   "string"
                 ],
                 "painting_variant": [
-                  "container",
-                  [
-                    {
-                      "name": "width",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "height",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "assetId",
-                      "type": "string"
+                  "registryEntryHolder",
+                  {
+                    "baseName": "variantId",
+                    "otherwise": {
+                      "name": "variantData",
+                      "type": "EntityMetadataPaintingVariant"
                     }
-                  ]
+                  }
                 ],
                 "sniffer_state": "varint",
                 "armadillo_state": "varint",
@@ -1967,6 +1915,37 @@
                 "quaternion": "vec4f"
               }
             }
+          ]
+        }
+      ]
+    ],
+    "EntityMetadataPaintingVariant": [
+      "container",
+      [
+        {
+          "name": "width",
+          "type": "i32"
+        },
+        {
+          "name": "height",
+          "type": "i32"
+        },
+        {
+          "name": "assetId",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": [
+            "option",
+            "anonymousNbt"
+          ]
+        },
+        {
+          "name": "author",
+          "type": [
+            "option",
+            "anonymousNbt"
           ]
         }
       ]
@@ -2806,6 +2785,46 @@
         }
       ]
     ],
+    "packet_common_remove_resource_pack": [
+      "container",
+      [
+        {
+          "name": "uuid",
+          "type": [
+            "option",
+            "UUID"
+          ]
+        }
+      ]
+    ],
+    "packet_common_add_resource_pack": [
+      "container",
+      [
+        {
+          "name": "uuid",
+          "type": "UUID"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "hash",
+          "type": "string"
+        },
+        {
+          "name": "forced",
+          "type": "bool"
+        },
+        {
+          "name": "promptMessage",
+          "type": [
+            "option",
+            "anonymousNbt"
+          ]
+        }
+      ]
+    ],
     "ServerLinkType": [
       "mapper",
       {
@@ -3414,46 +3433,6 @@
             }
           ]
         ],
-        "packet_remove_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": [
-                "option",
-                "UUID"
-              ]
-            }
-          ]
-        ],
-        "packet_add_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": "UUID"
-            },
-            {
-              "name": "url",
-              "type": "string"
-            },
-            {
-              "name": "hash",
-              "type": "string"
-            },
-            {
-              "name": "forced",
-              "type": "bool"
-            },
-            {
-              "name": "promptMessage",
-              "type": [
-                "option",
-                "anonymousNbt"
-              ]
-            }
-          ]
-        ],
         "packet_feature_flags": [
           "container",
           [
@@ -3542,8 +3521,8 @@
                     "ping": "packet_ping",
                     "reset_chat": "packet_reset_chat",
                     "registry_data": "packet_registry_data",
-                    "remove_resource_pack": "packet_remove_resource_pack",
-                    "add_resource_pack": "packet_add_resource_pack",
+                    "remove_resource_pack": "packet_common_remove_resource_pack",
+                    "add_resource_pack": "packet_common_add_resource_pack",
                     "store_cookie": "packet_common_store_cookie",
                     "transfer": "packet_common_transfer",
                     "feature_flags": "packet_feature_flags",
@@ -5588,7 +5567,8 @@
                     "initialize_chat",
                     "update_game_mode",
                     "update_listed",
-                    "update_latency"
+                    "update_latency",
+                    "update_display_name"
                   ]
                 }
               ]
@@ -5888,46 +5868,6 @@
               "type": [
                 "option",
                 "string"
-              ]
-            }
-          ]
-        ],
-        "packet_remove_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": [
-                "option",
-                "UUID"
-              ]
-            }
-          ]
-        ],
-        "packet_add_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": "UUID"
-            },
-            {
-              "name": "url",
-              "type": "string"
-            },
-            {
-              "name": "hash",
-              "type": "string"
-            },
-            {
-              "name": "forced",
-              "type": "bool"
-            },
-            {
-              "name": "promptMessage",
-              "type": [
-                "option",
-                "anonymousNbt"
               ]
             }
           ]
@@ -7668,8 +7608,8 @@
                     "entity_destroy": "packet_entity_destroy",
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "reset_score": "packet_reset_score",
-                    "remove_resource_pack": "packet_remove_resource_pack",
-                    "add_resource_pack": "packet_add_resource_pack",
+                    "remove_resource_pack": "packet_common_remove_resource_pack",
+                    "add_resource_pack": "packet_common_add_resource_pack",
                     "respawn": "packet_respawn",
                     "entity_head_rotation": "packet_entity_head_rotation",
                     "multi_block_change": "packet_multi_block_change",

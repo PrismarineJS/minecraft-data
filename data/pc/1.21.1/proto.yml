@@ -33,7 +33,6 @@
    anonOptionalNbt: native
    registryEntryHolder: native
    registryEntryHolderSet: native
-   arrayWithLengthOffset: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: [
       "pstring",
@@ -122,8 +121,9 @@
 
    SlotComponent:
       type: SlotComponentType
+      ## Ref: client/net/minecraft/core/component/DataComponents.java
       data: type ?
-         # TODO: look into how nbt works here
+         ## TODO: look into how nbt works here
          if custom_data: anonymousNbt
          if max_stack_size: varint
          if max_damage: varint
@@ -148,7 +148,7 @@
          if attribute_modifiers:
             attributes: []varint
                typeId: varint
-               uniqueId: UUID
+               uuid: UUID
                name: string
                value: f64
                operation: varint =>
@@ -174,18 +174,11 @@
          if creative_slot_lock: void
          if enchantment_glint_override: bool
          if intangible_projectile: void
-         # Name	Type	Description
-         # Nutrition	VarInt	Non-negative
-         # Saturation Modifier	Float	How much saturation will be given after consuming the item.
-         # Can Always Eat	Boolean	Whether the item can always be eaten, even at full hunger.
-         # Seconds To Eat	Float	How long it takes to consume the item.
-         # Using converts to	Slot Data	This specifies the item produced after consuming the current item. In the Notchian server, this is used for stews, which turn into bowls. Set this to Air if the item should be consumed normally without leaving any other item after.
-         # Number of effects	VarInt	Number of elements in the following array.
-         # Effect	Type ID	Array	Potion Effect	The potion effect. See Potion Effect.
-         # Probability	Float	The probability for this effect to be chosen.
          if food: 
             nutrition: varint
+            # How much saturation will be given after consuming the item.
             saturationModifier: f32
+            # Whether the item can always be eaten, even at full hunger.
             canAlwaysEat: bool
             secondsToEat: f32
             usingConvertsTo: Slot
@@ -193,34 +186,22 @@
                effect: varint
                probability: f32
          if fire_resistant: void
-         # Name	Type	Description
-         # Number of Rules	VarInt	The number of elements in the following array.
-         # Rule
-         #  Blocks	Array	Block Set	The block this rule applies to. See Block Set.
-         #  Has Speed	Boolean	
-         #  Speed	Optional Float	The speed at which the tool breaks this rules' blocks. Only present if Has Speed is true.
-         #  Has Correct Drop For Blocks	Boolean	
-         #  Correct Drop For Blocks	Optional Boolean	Whether items should drop only if this is the correct tool. Only present if Has Correct Drop For Blocks is true.
-         # Default Mining Speed	Float	The mining speed in case none of the previous rule were matched.
-         # Damage Per Block	VarInt	The amount of damage the item takes per block break.
          if tool:
             rules: []varint
-               blocks: BlockSet[]varint
-               hasSpeed: bool
-               speed: f32
-               hasCorrectDropForBlocks: bool
-               correctDropForBlocks: bool
+               blocks: IDSet
+               # The speed at which the tool breaks this rules' blocks.
+               speed?: f32
+               # Whether items should drop only if this is the correct tool.
+               correctDropForBlocks?: bool
+            # The mining speed in case none of the previous rule were matched.
             defaultMiningSpeed: f32
             damagePerBlock: varint
-         # Name	Type	Description
-         # Number of enchantments	VarInt	Number of elements in the following array.
-         # Enchantment	Type ID	Array	VarInt Enum	The ID of the enchantment in the enchantment registry.
-         # Level	VarInt	The level of the enchantment.
-         # Show In Tooltip	Boolean	Whether the list of enchantments should be shown on the item's tooltip.
          if stored_enchantments:
             enchantments: []varint
+               # The ID of the enchantment in the enchantment registry.
                id: varint
                level: varint
+            # Whether the list of enchantments should be shown on the item's tooltip.
             showInTooltip: bool
          if dyed_color:
             color: varint
@@ -233,52 +214,29 @@
             projectiles: Slot[]varint
          if bundle_contents:
             contents: Slot[]varint
-         # Name	Type	Description
-         # Has Potion ID	Boolean	Whether this potion has an ID in the potion registry. If true, it has the default effects associated with the potion type.
-         # Potion ID	Optional VarInt	The ID of the potion type in the potion registry. Only present if Has Potion ID is true.
-         # Has Custom Color	Boolean	Whether this potion has a custom color. If false, it uses the default color associated with the potion type.
-         # Custom Color	Optional Int	The RGB components of the color, encoded as an integer. Only present if Has Custom Color is true.
-         # Number Of Custom Effects	VarInt	The number of elements in the following array.
-         # Custom Effects	Array of Potion Effect	Any custom effects the potion might have. See Potion Effect.
          if potion_contents:
-            hasPotionId: bool
-            potionId: optvarint
-            hasCustomColor: bool
-            customColor: optvarint
-            customEffects: []varint
-               effect: varint
-               details: EffectDetail
-         # Name	Type	Description
-         # Number Of Effects	VarInt	Number of elements in the following array.
-         # Effect	Type ID	Array	VarInt Enum	The ID of the effect in the potion effect type registry.
-         # Duration	VarInt	The duration of the effect.
+            # True if this potion has an ID in the potion registry--it has the default effects associated with the potion type.
+            potionId?: varint
+            # The RGB components of the color, encoded as an integer.
+            customColor?: varint
+            customEffects: PotionEffect[]varint
+            customName: string
          if suspicious_stew_effects:
             effects: []varint
+               # The ID of the effect in the potion effect type registry.
                effect: varint
+               # The duration of the effect.
                duration: varint
-         # Name	Type	Description
-         # Number Of Pages	VarInt	Number of elements in the following array.
-         # Page	Raw Content	Array (100)	String (1024)	The raw text of the page.
-         # Has Filtered Content	Boolean	
-         # Filtered Content	Optional String (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
          if writable_book_content:
+            # Max 100 pages
             pages: BookPage[]varint
-         # Name	Type	Description
-         # Raw Title	String (32)	The raw title of the book.
-         # Has Filtered Title	Boolean	
-         # Filtered Title	Optional String (32)	The title after going through chat filters. Only present if Has Filtered Title is true.
-         # Author	String	
-         # Generation	VarInt	
-         # Number Of Pages	VarInt	Number of elements in the following array.
-         # Page	Raw Content	Array (100)	TextComponent (1024)	The raw text of the page.
-         # Has Filtered Content	Boolean	
-         # Filtered Content	Optional Text Component (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
-         # Resolved	Boolean	Whether entity selectors have already been resolved.
          if written_book_content:
+            # The raw title of the book, up to 32 characters.
             rawTitle: string
             filteredTitle?: string
             author: string
             generation: varint
+            # Max 100 pages
             pages: BookPage[]varint
             # Whether entity selectors have already been resolved.
             resolved: bool
@@ -376,53 +334,28 @@
                   songLocation: string
             showInTooltip: bool
          if recipes: anonymousNbt
-         # Name	Type	Description
-         # Has Global Position	Boolean	Whether this lodestone points to a position, otherwise it spins randomly.
-         # Dimension	Identifier	The dimension the compass points to. Only present if Has Global Position is true.
-         # Position	Position	The position the compass points to. Only present if Has Global Position is true.
-         # Tracked	Boolean	Whether the component is removed when the associated lodestone is broken.
          if lodestone_tracker:
+            # Specified if this lodestone points to a position; otherwise it spins randomly.
             globalPosition?:
                dimension: string
-               position: vec3f
+               # The position the compass points to. Only present if Has Global Position is true.
+               position: position
+            # Whether the component is removed when the associated lodestone is broken.
             tracked: bool
-         # Name	Type	Description
-         # Shape	VarInt Enum	Can be one of the following:
-         # 0 - Small ball
-         # 1 - Large ball
-         # 2 - Star
-         # 3 - Creeper
-         # 4 - Burst
-         # Number Of Colors	VarInt	The number of elements in the following array.
-         # Colors	Array of Int	The RGB components of the color, encoded as an integer.
-         # Number Of Fade Colors	VarInt	The number of elements in the following array.
-         # Fade Colors	Array of Int	The RGB components of the color, encoded as an integer.
-         # Has Trail	Boolean	
-         # Has Twinkle	Boolean	
          if firework_explosion: FireworkExplosion
          if fireworks:
             flightDuration: varint
             explosions: FireworkExplosion[]varint
-         # Name	Type	Description
-         # Has Name	Boolean	
-         # Name	Optional String (16)	Only present if Has Name is true.
-         # Has Unique ID	Boolean	
-         # Unique ID	Optional UUID	Only present if Has Unique ID is true.
-         # Number of Properties	VarInt	Number of elements in the following array.
-         # Property	Name	Array	String (64)	
-         # Value	String	
-         # Has Signature	Boolean	
-         # Signature	String (1024)	Only present if Has Signature is true.
          if profile:
-            hasName: bool
-            name: string
-            hasUniqueId: bool
-            uniqueId: UUID
+            # If the profile has a name, max 16 characters.
+            name?: string
+            uuid?: UUID
             properties: []varint
+               # Max 64 characters
                property: string
                value: string
-               hasSignature: bool
-               signature: string
+               # Max 1024 characters
+               signature?: string
          if note_block_sound: string
          # Name	Type	Description
          # Number of Layers	VarInt	Number of elements in the following array.
@@ -473,64 +406,8 @@
       _: itemCount ?
          if 0: void
          default:
-            itemId: varint
-# https://wiki.vg/Slot_Data#Structured_components
-# +    public static final DataComponentType<CompoundTag> CUSTOM_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final IntComponentType MAX_STACK_SIZE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final IntComponentType MAX_DAMAGE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final IntComponentType DAMAGE = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final BooleanComponentType UNBREAKABLE = new BooleanComponentType(ByteBuf::readBoolean, ByteBuf::writeBoolean, BooleanDataComponent::new);
-# +    public static final DataComponentType<Component> CUSTOM_NAME = new DataComponentType<>(ItemCodecHelper::readComponent, ItemCodecHelper::writeComponent, ObjectDataComponent::new);
-# +    public static final DataComponentType<Component> ITEM_NAME = new DataComponentType<>(ItemCodecHelper::readComponent, ItemCodecHelper::writeComponent, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<Component>> LORE = new DataComponentType<>(listReader(ItemCodecHelper::readComponent), listWriter(ItemCodecHelper::writeComponent), ObjectDataComponent::new);
-# +    public static final IntComponentType RARITY = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<ItemEnchantments> ENCHANTMENTS = new DataComponentType<>(ItemCodecHelper::readItemEnchantments, ItemCodecHelper::writeItemEnchantments, ObjectDataComponent::new);
-# +    public static final DataComponentType<AdventureModePredicate> CAN_PLACE_ON = new DataComponentType<>(ItemCodecHelper::readAdventureModePredicate, ItemCodecHelper::writeAdventureModePredicate, ObjectDataComponent::new);
-# +    public static final DataComponentType<AdventureModePredicate> CAN_BREAK = new DataComponentType<>(ItemCodecHelper::readAdventureModePredicate, ItemCodecHelper::writeAdventureModePredicate, ObjectDataComponent::new);
-# +    public static final DataComponentType<ItemAttributeModifiers> ATTRIBUTE_MODIFIERS = new DataComponentType<>(ItemCodecHelper::readItemAttributeModifiers, ItemCodecHelper::writeItemAttributeModifiers, ObjectDataComponent::new);
-# +    public static final IntComponentType CUSTOM_MODEL_DATA = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<Unit> HIDE_ADDITIONAL_TOOLTIP = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final DataComponentType<Unit> HIDE_TOOLTIP = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final IntComponentType REPAIR_COST = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<Unit> CREATIVE_SLOT_LOCK = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final BooleanComponentType ENCHANTMENT_GLINT_OVERRIDE = new BooleanComponentType(ByteBuf::readBoolean, ByteBuf::writeBoolean, BooleanDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> INTANGIBLE_PROJECTILE = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<FoodProperties> FOOD = new DataComponentType<>(ItemCodecHelper::readFoodProperties, ItemCodecHelper::writeFoodProperties, ObjectDataComponent::new);
-# +    public static final DataComponentType<Unit> FIRE_RESISTANT = new DataComponentType<>(unitReader(), unitWriter(), ObjectDataComponent::new);
-# +    public static final DataComponentType<ToolData> TOOL = new DataComponentType<>(ItemCodecHelper::readToolData, ItemCodecHelper::writeToolData, ObjectDataComponent::new);
-# +    public static final DataComponentType<ItemEnchantments> STORED_ENCHANTMENTS = new DataComponentType<>(ItemCodecHelper::readItemEnchantments, ItemCodecHelper::writeItemEnchantments, ObjectDataComponent::new);
-# +    public static final DataComponentType<DyedItemColor> DYED_COLOR = new DataComponentType<>(ItemCodecHelper::readDyedItemColor, ItemCodecHelper::writeDyedItemColor, ObjectDataComponent::new);
-# +    public static final IntComponentType MAP_COLOR = new IntComponentType((helper, input) -> input.readInt(), (helper, output, value) -> output.writeInt(value), IntDataComponent::new);
-# +    public static final IntComponentType MAP_ID = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> MAP_DECORATIONS = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final IntComponentType MAP_POST_PROCESSING = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<List<ItemStack>> CHARGED_PROJECTILES = new DataComponentType<>(listReader(ItemCodecHelper::readItemStack), listWriter(ItemCodecHelper::writeItemStack), ObjectDataComponent::new);
-# +    public static final DataComponentType<List<ItemStack>> BUNDLE_CONTENTS = new DataComponentType<>(listReader(ItemCodecHelper::readItemStack), listWriter(ItemCodecHelper::writeItemStack), ObjectDataComponent::new);
-# +    public static final DataComponentType<PotionContents> POTION_CONTENTS = new DataComponentType<>(ItemCodecHelper::readPotionContents, ItemCodecHelper::writePotionContents, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<SuspiciousStewEffect>> SUSPICIOUS_STEW_EFFECTS = new DataComponentType<>(listReader(ItemCodecHelper::readStewEffect), listWriter(ItemCodecHelper::writeStewEffect), ObjectDataComponent::new);
-# +    public static final DataComponentType<WritableBookContent> WRITABLE_BOOK_CONTENT = new DataComponentType<>(ItemCodecHelper::readWritableBookContent, ItemCodecHelper::writeWritableBookContent, ObjectDataComponent::new);
-# +    public static final DataComponentType<WrittenBookContent> WRITTEN_BOOK_CONTENT = new DataComponentType<>(ItemCodecHelper::readWrittenBookContent, ItemCodecHelper::writeWrittenBookContent, ObjectDataComponent::new);
-# +    public static final DataComponentType<ArmorTrim> TRIM = new DataComponentType<>(ItemCodecHelper::readArmorTrim, ItemCodecHelper::writeArmorTrim, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> DEBUG_STICK_STATE = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> BUCKET_ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> BLOCK_ENTITY_DATA = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
-# +    public static final DataComponentType<Holder<Instrument>> INSTRUMENT = new DataComponentType<>(ItemCodecHelper::readInstrument, ItemCodecHelper::writeInstrument, ObjectDataComponent::new);
-# +    public static final IntComponentType OMINOUS_BOTTLE_AMPLIFIER = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<ListTag> RECIPES = new DataComponentType<>(ItemCodecHelper::readRecipes, ItemCodecHelper::writeRecipes, ObjectDataComponent::new);
-# +    public static final DataComponentType<LodestoneTracker> LODESTONE_TRACKER = new DataComponentType<>(ItemCodecHelper::readLodestoneTarget, ItemCodecHelper::writeLodestoneTarget, ObjectDataComponent::new);
-# +    public static final DataComponentType<Fireworks.FireworkExplosion> FIREWORK_EXPLOSION = new DataComponentType<>(ItemCodecHelper::readFireworkExplosion, ItemCodecHelper::writeFireworkExplosion, ObjectDataComponent::new);
-# +    public static final DataComponentType<Fireworks> FIREWORKS = new DataComponentType<>(ItemCodecHelper::readFireworks, ItemCodecHelper::writeFireworks, ObjectDataComponent::new);
-# +    public static final DataComponentType<GameProfile> PROFILE = new DataComponentType<>(ItemCodecHelper::readResolvableProfile, ItemCodecHelper::writeResolvableProfile, ObjectDataComponent::new);
-# +    public static final DataComponentType<String> NOTE_BLOCK_SOUND = new DataComponentType<>(ItemCodecHelper::readResourceLocation, ItemCodecHelper::writeResourceLocation, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<BannerPatternLayer>> BANNER_PATTERNS = new DataComponentType<>(listReader(ItemCodecHelper::readBannerPatternLayer), listWriter(ItemCodecHelper::writeBannerPatternLayer), ObjectDataComponent::new);
-# +    public static final IntComponentType BASE_COLOR = new IntComponentType(ItemCodecHelper::readVarInt, ItemCodecHelper::writeVarInt, IntDataComponent::new);
-# +    public static final DataComponentType<List<Integer>> POT_DECORATIONS = new DataComponentType<>(listReader(ItemCodecHelper::readVarInt), listWriter(ItemCodecHelper::writeVarInt), ObjectDataComponent::new);
-# +    public static final DataComponentType<List<ItemStack>> CONTAINER = new DataComponentType<>(listReader(ItemCodecHelper::readOptionalItemStack), listWriter(MinecraftCodecHelper::writeOptionalItemStack), ObjectDataComponent::new);
-# +    public static final DataComponentType<BlockStateProperties> BLOCK_STATE = new DataComponentType<>(ItemCodecHelper::readBlockStateProperties, ItemCodecHelper::writeBlockStateProperties, ObjectDataComponent::new);
-# +    public static final DataComponentType<List<BeehiveOccupant>> BEES = new DataComponentType<>(listReader(ItemCodecHelper::readBeehiveOccupant), listWriter(ItemCodecHelper::writeBeehiveOccupant), ObjectDataComponent::new);
-# +    public static final DataComponentType<StringTag> LOCK = new DataComponentType<>(ItemCodecHelper::readLock, ItemCodecHelper::writeLock, ObjectDataComponent::new);
-# +    public static final DataComponentType<CompoundTag> CONTAINER_LOOT = new DataComponentType<>(ItemCodecHelper::readAnyTag, ItemCodecHelper::writeAnyTag, ObjectDataComponent::new);
+            item: varint
+            # https://wiki.vg/Slot_Data#Structured_components
             addedComponentCount: varint
             removedComponentCount: varint
             components: SlotComponent[]$addedComponentCount
@@ -539,17 +416,22 @@
 
    FireworkExplosion:
       shape: varint =>
-      - small_ball
-      - large_ball
-      - star
-      - creeper
-      - burst
+         - small_ball
+         - large_ball
+         - star
+         - creeper
+         - burst
+      # The RGB components of the color, encoded as an integer.
       colors: i32[]varint
+      # The RGB components of the color, encoded as an integer.
       fadeColors: i32[]varint
+      # Whether the firework has a trail.
       hasTrail: bool
+      # Whether the firework has a twinkle effect.
       hasTwinkle: bool
 
    BookPage:
+      # The raw text of the page. TextComponent, max 1024 characters.
       content: string
       filteredContent?: string
 
@@ -561,15 +443,9 @@
       showIcon: bool
       hiddenEffect?: EffectDetail
 
-   BlockSet:
-      type: varint
-      name: type ?
-         if 0: string
-         default: void
-      # TODO: This will require a custom type ; we need type - 1 length of blockIds
-      blockIds: type ?
-         if 0: void
-         default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
+   PotionEffect:
+      id: varint
+      details: EffectDetail
 
    BlockProperty:
       # Name of the block state property.
@@ -584,7 +460,10 @@
       maxValue?: string
 
    BlockPredicate:
-      blockSet?: BlockSet[]varint
+      blockSet?: ["registryEntryHolderSet", {
+         "base": { name: "name", type: "string" },
+         "otherwise": { name: "blockIds", type: "varint" }
+      }]
       properties?: BlockProperty[]varint
       nbt: anonOptionalNbt
 
@@ -858,19 +737,26 @@
          }]
          if frog_variant: varint
          if optional_global_pos: ["option", "string"]
-         if painting_variant:
-            width: varint
-            height: varint
-            assetId: string
+         if painting_variant: ["registryEntryHolder", {
+            "baseName": "variantId",
+            "otherwise": { name: "variantData", type: "EntityMetadataPaintingVariant" }
+         }]
          if sniffer_state: varint
          if armadillo_state: varint
          if vector3: vec3f
          if quaternion: vec4f
+   EntityMetadataPaintingVariant:
+      width: i32
+      height: i32
+      assetId: string
+      title?: anonymousNbt
+      author?: anonymousNbt
    EntityMetadataWolfVariant:
       wildTexture: string
       tameTexture: string
       angryTexture: string
       biome: IDSet
+
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    minecraft_simple_recipe_format:
       category: varint
@@ -1249,6 +1135,16 @@
       details: []varint
          key: string
          value: string
+   # MC: ClientboundResourcePackPopPacket
+   packet_common_remove_resource_pack:
+      uuid?: UUID
+   # MC: ClientboundResourcePackPushPacket
+   packet_common_add_resource_pack:
+      uuid: UUID
+      url: string
+      hash: string
+      forced: bool
+      promptMessage?: anonymousNbt
 
    ServerLinkType: varint =>
    - bug_report
@@ -1441,16 +1337,6 @@
       entries: []varint
          key: string
          value?: anonymousNbt
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    ## (Store cookie and Transfer are Common) ##
    # MC: ClientboundUpdateEnabledFeaturesPacket
    packet_feature_flags:
@@ -1489,8 +1375,8 @@
          if ping: packet_ping
          if reset_chat: packet_reset_chat
          if registry_data: packet_registry_data
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if store_cookie: packet_common_store_cookie
          if transfer: packet_common_transfer
          if feature_flags: packet_feature_flags
@@ -2040,7 +1926,8 @@
             "initialize_chat",
             "update_game_mode",
             "update_listed",
-            "update_latency"
+            "update_latency",
+            "update_display_name"
          ]
       }]
       data: []varint
@@ -2111,16 +1998,6 @@
    packet_reset_score:
       entity_name: string
       objective_name?: string
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
@@ -2768,8 +2645,8 @@
          if entity_destroy: packet_entity_destroy
          if remove_entity_effect: packet_remove_entity_effect
          if reset_score: packet_reset_score
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if respawn: packet_respawn
          if entity_head_rotation: packet_entity_head_rotation
          if multi_block_change: packet_multi_block_change
