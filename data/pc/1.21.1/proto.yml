@@ -34,12 +34,7 @@
    registryEntryHolder: native
    registryEntryHolderSet: native
    ByteArray: ["buffer", { "countType": "varint" }]
-   string: [
-      "pstring",
-      {
-         "countType": "varint"
-      }
-   ]
+   string: ["pstring", { "countType": "varint" }]
    vec2f:
       x: f32
       y: f32
@@ -61,63 +56,63 @@
       "otherwise": { name: "ids", type: "varint" }
    }]
    SlotComponentType: varint =>
-   - custom_data
-   - max_stack_size
-   - max_damage
-   - damage
-   - unbreakable
-   - custom_name
-   - item_name
-   - lore
-   - rarity
-   - enchantments
-   - can_place_on
-   - can_break
-   - attribute_modifiers
-   - custom_model_data
-   - hide_additional_tooltip
-   - hide_tooltip
-   - repair_cost
-   - creative_slot_lock
-   - enchantment_glint_override
-   - intangible_projectile
-   - food
-   - fire_resistant
-   - tool
-   - stored_enchantments
-   - dyed_color
-   - map_color
-   - map_id
-   - map_decorations
-   - map_post_processing
-   - charged_projectiles
-   - bundle_contents
-   - potion_contents
-   - suspicious_stew_effects
-   - writable_book_content
-   - written_book_content
-   - trim
-   - debug_stick_state
-   - entity_data
-   - bucket_entity_data
-   - block_entity_data
-   - instrument
-   - ominous_bottle_amplifier
-   - jukebox_playable
-   - recipes
-   - lodestone_tracker
-   - firework_explosion
-   - fireworks
-   - profile
-   - note_block_sound
-   - banner_patterns
-   - base_color
-   - pot_decorations
-   - container
-   - block_state
-   - bees
-   - lock
-   - container_loot
+      - custom_data
+      - max_stack_size
+      - max_damage
+      - damage
+      - unbreakable
+      - custom_name
+      - item_name
+      - lore
+      - rarity
+      - enchantments
+      - can_place_on
+      - can_break
+      - attribute_modifiers
+      - custom_model_data
+      - hide_additional_tooltip
+      - hide_tooltip
+      - repair_cost
+      - creative_slot_lock
+      - enchantment_glint_override
+      - intangible_projectile
+      - food
+      - fire_resistant
+      - tool
+      - stored_enchantments
+      - dyed_color
+      - map_color
+      - map_id
+      - map_decorations
+      - map_post_processing
+      - charged_projectiles
+      - bundle_contents
+      - potion_contents
+      - suspicious_stew_effects
+      - writable_book_content
+      - written_book_content
+      - trim
+      - debug_stick_state
+      - entity_data
+      - bucket_entity_data
+      - block_entity_data
+      - instrument
+      - ominous_bottle_amplifier
+      - jukebox_playable
+      - recipes
+      - lodestone_tracker
+      - firework_explosion
+      - fireworks
+      - profile
+      - note_block_sound
+      - banner_patterns
+      - base_color
+      - pot_decorations
+      - container
+      - block_state
+      - bees
+      - lock
+      - container_loot
 
    SlotComponent:
       type: SlotComponentType
@@ -143,7 +138,7 @@
                level: varint
             showTooltip: bool
          if can_place_on or can_break:
-            predicates: BlockPredicate[]varint
+            predicates: ItemBlockPredicate[]varint
             showTooltip: bool
          if attribute_modifiers:
             attributes: []varint
@@ -219,7 +214,7 @@
             potionId?: varint
             # The RGB components of the color, encoded as an integer.
             customColor?: varint
-            customEffects: PotionEffect[]varint
+            customEffects: ItemPotionEffect[]varint
             customName: string
          if suspicious_stew_effects:
             effects: []varint
@@ -229,7 +224,7 @@
                duration: varint
          if writable_book_content:
             # Max 100 pages
-            pages: BookPage[]varint
+            pages: ItemBookPage[]varint
          if written_book_content:
             # The raw title of the book, up to 32 characters.
             rawTitle: string
@@ -237,7 +232,7 @@
             author: string
             generation: varint
             # Max 100 pages
-            pages: BookPage[]varint
+            pages: ItemBookPage[]varint
             # Whether entity selectors have already been resolved.
             resolved: bool
          # Name	Type	Description
@@ -342,10 +337,10 @@
                position: position
             # Whether the component is removed when the associated lodestone is broken.
             tracked: bool
-         if firework_explosion: FireworkExplosion
+         if firework_explosion: ItemFireworkExplosion
          if fireworks:
             flightDuration: varint
-            explosions: FireworkExplosion[]varint
+            explosions: ItemFireworkExplosion[]varint
          if profile:
             # If the profile has a name, max 16 characters.
             name?: string
@@ -401,20 +396,12 @@
          if lock: anonymousNbt
          if container_loot: anonymousNbt
 
-   Slot:
-      itemCount: i8
-      _: itemCount ?
-         if 0: void
-         default:
-            item: varint
-            # https://wiki.vg/Slot_Data#Structured_components
-            addedComponentCount: varint
-            removedComponentCount: varint
-            components: SlotComponent[]$addedComponentCount
-            removeComponents: []$removedComponentCount
-               type: SlotComponentType
+   # TODO: see latest todo
+   ItemSoundEvent:
+      soundName: string
+      fixedRange?: f32
 
-   FireworkExplosion:
+   ItemFireworkExplosion:
       shape: varint =>
          - small_ball
          - large_ball
@@ -430,24 +417,19 @@
       # Whether the firework has a twinkle effect.
       hasTwinkle: bool
 
-   BookPage:
-      # The raw text of the page. TextComponent, max 1024 characters.
-      content: string
-      filteredContent?: string
-
-   EffectDetail:
+   ItemEffectDetail:
       amplifier: varint
       duration: varint
       ambient: bool
       showParticles: bool
       showIcon: bool
-      hiddenEffect?: EffectDetail
+      hiddenEffect?: ItemEffectDetail
 
-   PotionEffect:
+   ItemPotionEffect:
       id: varint
-      details: EffectDetail
+      details: ItemEffectDetail
 
-   BlockProperty:
+   ItemBlockProperty:
       # Name of the block state property.
       name: string
       # Whether this is an exact value match, as opposed to ranged.
@@ -459,126 +441,144 @@
       # Maximum value of the block state property range. Only present in ranged match mode.
       maxValue?: string
 
-   BlockPredicate:
+   ItemBlockPredicate:
       blockSet?: ["registryEntryHolderSet", {
          "base": { name: "name", type: "string" },
          "otherwise": { name: "blockIds", type: "varint" }
       }]
-      properties?: BlockProperty[]varint
+      properties?: ItemBlockProperty[]varint
       nbt: anonOptionalNbt
+
+   ItemBookPage:
+      # The raw text of the page. TextComponent, max 1024 characters.
+      content: string
+      filteredContent?: string
+
+   Slot:
+      itemCount: varint
+      _: itemCount ?
+         if 0: void
+         default:
+            item: varint
+            # https://wiki.vg/Slot_Data#Structured_components
+            addedComponentCount: varint
+            removedComponentCount: varint
+            components: SlotComponent[]$addedComponentCount
+            removeComponents: []$removedComponentCount
+               type: SlotComponentType
 
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
       type: varint =>
-      - angry_villager
-      - block
-      - block_marker
-      - bubble
-      - cloud
-      - crit
-      - damage_indicator
-      - dragon_breath
-      - dripping_lava
-      - falling_lava
-      - landing_lava
-      - dripping_water
-      - falling_water
-      - dust
-      - dust_color_transition
-      - effect
-      - elder_guardian
-      - enchanted_hit
-      - enchant
-      - end_rod
-      - entity_effect
-      - explosion_emitter
-      - explosion
-      - gust
-      - small_gust
-      - gust_emitter_large
-      - gust_emitter_small
-      - sonic_boom
-      - falling_dust
-      - firework
-      - fishing
-      - flame
-      - infested
-      - cherry_leaves
-      - sculk_soul
-      - sculk_charge
-      - sculk_charge_pop
-      - soul_fire_flame
-      - soul
-      - flash
-      - happy_villager
-      - composter
-      - heart
-      - instant_effect
-      - item
-      - vibration
-      - item_slime
-      - item_cobweb
-      - item_snowball
-      - large_smoke
-      - lava
-      - mycelium
-      - note
-      - poof
-      - portal
-      - rain
-      - smoke
-      - white_smoke
-      - sneeze
-      - spit
-      - squid_ink
-      - sweep_attack
-      - totem_of_undying
-      - underwater
-      - splash
-      - witch
-      - bubble_pop
-      - current_down
-      - bubble_column_up
-      - nautilus
-      - dolphin
-      - campfire_cosy_smoke
-      - campfire_signal_smoke
-      - dripping_honey
-      - falling_honey
-      - landing_honey
-      - falling_nectar
-      - falling_spore_blossom
-      - ash
-      - crimson_spore
-      - warped_spore
-      - spore_blossom_air
-      - dripping_obsidian_tear
-      - falling_obsidian_tear
-      - landing_obsidian_tear
-      - reverse_portal
-      - white_ash
-      - small_flame
-      - snowflake
-      - dripping_dripstone_lava
-      - falling_dripstone_lava
-      - dripping_dripstone_water
-      - falling_dripstone_water
-      - glow_squid_ink
-      - glow
-      - wax_on
-      - wax_off
-      - electric_spark
-      - scrape
-      - shriek
-      - egg_crack
-      - dust_plume
-      - trial_spawner_detected_player
-      - trial_spawner_detected_player_ominous
-      - vault_connection
-      - dust_pillar
-      - ominous_spawning
-      - raid_omen
-      - trial_omen
+         - angry_villager
+         - block
+         - block_marker
+         - bubble
+         - cloud
+         - crit
+         - damage_indicator
+         - dragon_breath
+         - dripping_lava
+         - falling_lava
+         - landing_lava
+         - dripping_water
+         - falling_water
+         - dust
+         - dust_color_transition
+         - effect
+         - elder_guardian
+         - enchanted_hit
+         - enchant
+         - end_rod
+         - entity_effect
+         - explosion_emitter
+         - explosion
+         - gust
+         - small_gust
+         - gust_emitter_large
+         - gust_emitter_small
+         - sonic_boom
+         - falling_dust
+         - firework
+         - fishing
+         - flame
+         - infested
+         - cherry_leaves
+         - sculk_soul
+         - sculk_charge
+         - sculk_charge_pop
+         - soul_fire_flame
+         - soul
+         - flash
+         - happy_villager
+         - composter
+         - heart
+         - instant_effect
+         - item
+         - vibration
+         - item_slime
+         - item_cobweb
+         - item_snowball
+         - large_smoke
+         - lava
+         - mycelium
+         - note
+         - poof
+         - portal
+         - rain
+         - smoke
+         - white_smoke
+         - sneeze
+         - spit
+         - squid_ink
+         - sweep_attack
+         - totem_of_undying
+         - underwater
+         - splash
+         - witch
+         - bubble_pop
+         - current_down
+         - bubble_column_up
+         - nautilus
+         - dolphin
+         - campfire_cosy_smoke
+         - campfire_signal_smoke
+         - dripping_honey
+         - falling_honey
+         - landing_honey
+         - falling_nectar
+         - falling_spore_blossom
+         - ash
+         - crimson_spore
+         - warped_spore
+         - spore_blossom_air
+         - dripping_obsidian_tear
+         - falling_obsidian_tear
+         - landing_obsidian_tear
+         - reverse_portal
+         - white_ash
+         - small_flame
+         - snowflake
+         - dripping_dripstone_lava
+         - falling_dripstone_lava
+         - dripping_dripstone_water
+         - falling_dripstone_water
+         - glow_squid_ink
+         - glow
+         - wax_on
+         - wax_off
+         - electric_spark
+         - scrape
+         - shriek
+         - egg_crack
+         - dust_plume
+         - trial_spawner_detected_player
+         - trial_spawner_detected_player_ominous
+         - vault_connection
+         - dust_pillar
+         - ominous_spawning
+         - raid_omen
+         - trial_omen
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.

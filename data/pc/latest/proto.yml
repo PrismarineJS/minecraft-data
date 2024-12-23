@@ -34,12 +34,7 @@
    registryEntryHolder: native
    registryEntryHolderSet: native
    ByteArray: ["buffer", { "countType": "varint" }]
-   string: [
-      "pstring",
-      {
-         "countType": "varint"
-      }
-   ]
+   string: ["pstring", { "countType": "varint" }]
    vec2f:
       x: f32
       y: f32
@@ -61,136 +56,77 @@
       "otherwise": { name: "ids", type: "varint" }
    }]
    ContainerID: varint
-   SoundEvent:
-      soundName: string
-      fixedRange?: f32
-   RecipeDisplay:
-      type: varint =>
-      - crafting_shapeless
-      - crafting_shaped
-      - furnace
-      - stonecutter
-      - smithing
-      data: type ?
-         if crafting_shapeless:
-            ingredients: SlotDisplay[]varint
-            result: SlotDisplay
-            craftingStation: SlotDisplay
-         if crafting_shaped:
-            width: varint
-            height: varint
-            ingredients: SlotDisplay[]varint
-            result: SlotDisplay
-            craftingStation: SlotDisplay
-         if furnace:
-            ingredient: SlotDisplay
-            fuel: SlotDisplay
-            result: SlotDisplay
-            craftingStation: SlotDisplay
-            duration: varint
-            experience: f32
-         if stonecutter:
-            ingredient: SlotDisplay
-            result: SlotDisplay
-            craftingStation: SlotDisplay
-         if smithing:
-            template: SlotDisplay
-            base: SlotDisplay
-            addition: SlotDisplay
-            result: SlotDisplay
-            craftingStation: SlotDisplay
-   SlotDisplay:
-      type: varint =>
-      - empty
-      - any_fuel
-      - item
-      - item_stack
-      - tag
-      - smithing_trim
-      - with_remainder
-      - composite
-      data: type ?
-         if empty or any_fuel: void
-         if item: varint
-         if item_stack: Slot
-         if tag: string
-         if simthing_trim:
-            base: SlotDisplay
-            material: SlotDisplay
-            pattern: SlotDisplay
-         if with_remainder:
-            input: SlotDisplay
-            remainder: SlotDisplay
-         if composite: SlotDisplay[]varint
    SlotComponentType: varint =>
-   - custom_data
-   - max_stack_size
-   - max_damage
-   - damage
-   - unbreakable
-   - custom_name
-   - item_name
-   - item_model
-   - lore
-   - rarity
-   - enchantments
-   - can_place_on
-   - can_break
-   - attribute_modifiers
-   - custom_model_data
-   - hide_additional_tooltip
-   - hide_tooltip
-   - repair_cost
-   - creative_slot_lock
-   - enchantment_glint_override
-   - intangible_projectile
-   - food
-   - consumable
-   - use_remainder
-   - use_cooldown
-   - damage_resistant
-   - tool
-   - enchantable
-   - equippable
-   - repairable
-   - glider
-   - tooltip_style
-   - death_protection
-   - stored_enchantments
-   - dyed_color
-   - map_color
-   - map_id
-   - map_decorations
-   - map_post_processing
-   - charged_projectiles
-   - bundle_contents
-   - potion_contents
-   - suspicious_stew_effects
-   - writable_book_content
-   - written_book_content
-   - trim
-   - debug_stick_state
-   - entity_data
-   - bucket_entity_data
-   - block_entity_data
-   - instrument
-   - ominous_bottle_amplifier
-   - jukebox_playable
-   - recipes
-   - lodestone_tracker
-   - firework_explosion
-   - fireworks
-   - profile
-   - note_block_sound
-   - banner_patterns
-   - base_color
-   - pot_decorations
-   - container
-   - block_state
-   - bees
-   - lock
-   - container_loot
+      - custom_data
+      - max_stack_size
+      - max_damage
+      - damage
+      - unbreakable
+      - custom_name
+      - item_name
+      - item_model
+      - lore
+      - rarity
+      - enchantments
+      - can_place_on
+      - can_break
+      - attribute_modifiers
+      - custom_model_data
+      - hide_additional_tooltip
+      - hide_tooltip
+      - repair_cost
+      - creative_slot_lock
+      - enchantment_glint_override
+      - intangible_projectile
+      - food
+      - consumable
+      - use_remainder
+      - use_cooldown
+      - damage_resistant
+      - tool
+      - enchantable
+      - equippable
+      - repairable
+      - glider
+      - tooltip_style
+      - death_protection
+      - stored_enchantments
+      - dyed_color
+      - map_color
+      - map_id
+      - map_decorations
+      - map_post_processing
+      - charged_projectiles
+      - bundle_contents
+      - potion_contents
+      - suspicious_stew_effects
+      - writable_book_content
+      - written_book_content
+      - trim
+      - debug_stick_state
+      - entity_data
+      - bucket_entity_data
+      - block_entity_data
+      - instrument
+      - ominous_bottle_amplifier
+      - jukebox_playable
+      - recipes
+      - lodestone_tracker
+      - firework_explosion
+      - fireworks
+      - profile
+      - note_block_sound
+      - banner_patterns
+      - base_color
+      - pot_decorations
+      - container
+      - block_state
+      - bees
+      - lock
+      - container_loot
 
+   # Instead of sending NBT for items over the network, Minecraft since 1.20.5 sends a
+   # list of components that make up the item. This saves bandwidth by not encoding tag names.
    SlotComponent:
       type: SlotComponentType
       ## Ref: client/net/minecraft/core/component/DataComponents.java
@@ -216,7 +152,7 @@
                level: varint
             showTooltip: bool
          if can_place_on or can_break:
-            predicates: BlockPredicate[]varint
+            predicates: ItemBlockPredicate[]varint
             showTooltip: bool
          if attribute_modifiers:
             attributes: []varint
@@ -267,10 +203,10 @@
             - brush
             sound: ["registryEntryHolder", {
                "baseName": "soundId",
-               "otherwise": { name: "data", type: "SoundEvent" }
+               "otherwise": { name: "data", type: "ItemSoundEvent" }
             }]
             makes_particles: bool
-            effects: ConsumeEffect[]varint
+            effects: ItemConsumeEffect[]varint
          if use_remainder: Slot
          if use_cooldown:
             seconds: f32
@@ -299,7 +235,7 @@
             - body
             sound: ["registryEntryHolder", {
                "baseName": "soundId",
-               "otherwise": { name: "data", type: "SoundEvent" }
+               "otherwise": { name: "data", type: "ItemSoundEvent" }
             }]
             model?: string
             cameraOverlay?: string
@@ -311,7 +247,7 @@
             items: IDSet
          if tooltip_style: string
          if death_protection:
-            effects: ConsumeEffect[]varint
+            effects: ItemConsumeEffect[]varint
          if stored_enchantments:
             enchantments: []varint
                # The ID of the enchantment in the enchantment registry.
@@ -335,7 +271,7 @@
             potionId?: varint
             # The RGB components of the color, encoded as an integer.
             customColor?: varint
-            customEffects: PotionEffect[]varint
+            customEffects: ItemPotionEffect[]varint
             customName: string
          if suspicious_stew_effects:
             effects: []varint
@@ -345,7 +281,7 @@
                duration: varint
          if writable_book_content:
             # Max 100 pages
-            pages: BookPage[]varint
+            pages: ItemBookPage[]varint
          if written_book_content:
             # The raw title of the book, up to 32 characters.
             rawTitle: string
@@ -353,7 +289,7 @@
             author: string
             generation: varint
             # Max 100 pages
-            pages: BookPage[]varint
+            pages: ItemBookPage[]varint
             # Whether entity selectors have already been resolved.
             resolved: bool
          # Name	Type	Description
@@ -458,10 +394,10 @@
                position: position
             # Whether the component is removed when the associated lodestone is broken.
             tracked: bool
-         if firework_explosion: FireworkExplosion
+         if firework_explosion: ItemFireworkExplosion
          if fireworks:
             flightDuration: varint
-            explosions: FireworkExplosion[]varint
+            explosions: ItemFireworkExplosion[]varint
          if profile:
             # If the profile has a name, max 16 characters.
             name?: string
@@ -517,20 +453,12 @@
          if lock: anonymousNbt
          if container_loot: anonymousNbt
 
-   Slot:
-      itemCount: varint
-      _: itemCount ?
-         if 0: void
-         default:
-            item: varint
-            # https://wiki.vg/Slot_Data#Structured_components
-            addedComponentCount: varint
-            removedComponentCount: varint
-            components: SlotComponent[]$addedComponentCount
-            removeComponents: []$removedComponentCount
-               type: SlotComponentType
+   # TODO: add to ClientboundExplodePacket and ClientboundSoundEntityPacket and ClientboundSoundPacket (and maybe other) packet which also use HolderSet
+   ItemSoundEvent:
+      soundName: string
+      fixedRange?: f32
 
-   FireworkExplosion:
+   ItemFireworkExplosion:
       shape: varint =>
          - small_ball
          - large_ball
@@ -546,46 +474,19 @@
       # Whether the firework has a twinkle effect.
       hasTwinkle: bool
 
-   BookPage:
-      # The raw text of the page. TextComponent, max 1024 characters.
-      content: string
-      filteredContent?: string
-
-   EffectDetail:
+   ItemEffectDetail:
       amplifier: varint
       duration: varint
       ambient: bool
       showParticles: bool
       showIcon: bool
-      hiddenEffect?: EffectDetail
+      hiddenEffect?: ItemEffectDetail
 
-   PotionEffect:
+   ItemPotionEffect:
       id: varint
-      details: EffectDetail
+      details: ItemEffectDetail
 
-   ConsumeEffect:
-      type: varint =>
-      - apply_effects
-      - remove_effects
-      - clear_all_effects
-      - teleport_randomly
-      - play_sound
-      _: type ?
-         if apply_effects:
-            effects: PotionEffect[]varint
-            probability: f32
-         if remove_effects:
-            effects: IDSet
-         if clear_all_effects: void
-         if teleport_randomly:
-            diameter: f32
-         if play_sound:
-            sound: ["registryEntryHolder", {
-               "baseName": "soundId",
-               "otherwise": { name: "data", type: "SoundEvent" }
-            }]
-
-   BlockProperty:
+   ItemBlockProperty:
       # Name of the block state property.
       name: string
       # Whether this is an exact value match, as opposed to ranged.
@@ -597,128 +498,168 @@
       # Maximum value of the block state property range. Only present in ranged match mode.
       maxValue?: string
 
-   BlockPredicate:
+   ItemBlockPredicate:
       blockSet?: ["registryEntryHolderSet", {
          "base": { name: "name", type: "string" },
          "otherwise": { name: "blockIds", type: "varint" }
       }]
-      properties?: BlockProperty[]varint
+      properties?: ItemBlockProperty[]varint
       nbt: anonOptionalNbt
+
+   ItemBookPage:
+      # The raw text of the page. TextComponent, max 1024 characters.
+      content: string
+      filteredContent?: string
+
+   ItemConsumeEffect:
+      type: varint =>
+      - apply_effects
+      - remove_effects
+      - clear_all_effects
+      - teleport_randomly
+      - play_sound
+      _: type ?
+         if apply_effects:
+            effects: ItemPotionEffect[]varint
+            probability: f32
+         if remove_effects:
+            effects: IDSet
+         if clear_all_effects: void
+         if teleport_randomly:
+            diameter: f32
+         if play_sound:
+            sound: ["registryEntryHolder", {
+               "baseName": "soundId",
+               "otherwise": { name: "data", type: "ItemSoundEvent" }
+            }]
+
+   Slot:
+      itemCount: varint
+      _: itemCount ?
+         if 0: void
+         default:
+            item: varint
+            # https://wiki.vg/Slot_Data#Structured_components
+            addedComponentCount: varint
+            removedComponentCount: varint
+            components: SlotComponent[]$addedComponentCount
+            removeComponents: []$removedComponentCount
+               type: SlotComponentType
 
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
       type: varint =>
-      - angry_villager
-      - block
-      - block_marker
-      - bubble
-      - cloud
-      - crit
-      - damage_indicator
-      - dragon_breath
-      - dripping_lava
-      - falling_lava
-      - landing_lava
-      - dripping_water
-      - falling_water
-      - dust
-      - dust_color_transition
-      - effect
-      - elder_guardian
-      - enchanted_hit
-      - enchant
-      - end_rod
-      - entity_effect
-      - explosion_emitter
-      - explosion
-      - gust
-      - small_gust
-      - gust_emitter_large
-      - gust_emitter_small
-      - sonic_boom
-      - falling_dust
-      - firework
-      - fishing
-      - flame
-      - infested
-      - cherry_leaves
-      - sculk_soul
-      - sculk_charge
-      - sculk_charge_pop
-      - soul_fire_flame
-      - soul
-      - flash
-      - happy_villager
-      - composter
-      - heart
-      - instant_effect
-      - item
-      - vibration
-      - trail
-      - item_slime
-      - item_cobweb
-      - item_snowball
-      - large_smoke
-      - lava
-      - mycelium
-      - note
-      - poof
-      - portal
-      - rain
-      - smoke
-      - white_smoke
-      - sneeze
-      - spit
-      - squid_ink
-      - sweep_attack
-      - totem_of_undying
-      - underwater
-      - splash
-      - witch
-      - bubble_pop
-      - current_down
-      - bubble_column_up
-      - nautilus
-      - dolphin
-      - campfire_cosy_smoke
-      - campfire_signal_smoke
-      - dripping_honey
-      - falling_honey
-      - landing_honey
-      - falling_nectar
-      - falling_spore_blossom
-      - ash
-      - crimson_spore
-      - warped_spore
-      - spore_blossom_air
-      - dripping_obsidian_tear
-      - falling_obsidian_tear
-      - landing_obsidian_tear
-      - reverse_portal
-      - white_ash
-      - small_flame
-      - snowflake
-      - dripping_dripstone_lava
-      - falling_dripstone_lava
-      - dripping_dripstone_water
-      - falling_dripstone_water
-      - glow_squid_ink
-      - glow
-      - wax_on
-      - wax_off
-      - electric_spark
-      - scrape
-      - shriek
-      - egg_crack
-      - dust_plume
-      - trial_spawner_detected_player
-      - trial_spawner_detected_player_ominous
-      - vault_connection
-      - dust_pillar
-      - ominous_spawning
-      - raid_omen
-      - trial_omen
-      - block_crumble
+         - angry_villager
+         - block
+         - block_marker
+         - bubble
+         - cloud
+         - crit
+         - damage_indicator
+         - dragon_breath
+         - dripping_lava
+         - falling_lava
+         - landing_lava
+         - dripping_water
+         - falling_water
+         - dust
+         - dust_color_transition
+         - effect
+         - elder_guardian
+         - enchanted_hit
+         - enchant
+         - end_rod
+         - entity_effect
+         - explosion_emitter
+         - explosion
+         - gust
+         - small_gust
+         - gust_emitter_large
+         - gust_emitter_small
+         - sonic_boom
+         - falling_dust
+         - firework
+         - fishing
+         - flame
+         - infested
+         - cherry_leaves
+         - sculk_soul
+         - sculk_charge
+         - sculk_charge_pop
+         - soul_fire_flame
+         - soul
+         - flash
+         - happy_villager
+         - composter
+         - heart
+         - instant_effect
+         - item
+         - vibration
+         - trail
+         - item_slime
+         - item_cobweb
+         - item_snowball
+         - large_smoke
+         - lava
+         - mycelium
+         - note
+         - poof
+         - portal
+         - rain
+         - smoke
+         - white_smoke
+         - sneeze
+         - spit
+         - squid_ink
+         - sweep_attack
+         - totem_of_undying
+         - underwater
+         - splash
+         - witch
+         - bubble_pop
+         - current_down
+         - bubble_column_up
+         - nautilus
+         - dolphin
+         - campfire_cosy_smoke
+         - campfire_signal_smoke
+         - dripping_honey
+         - falling_honey
+         - landing_honey
+         - falling_nectar
+         - falling_spore_blossom
+         - ash
+         - crimson_spore
+         - warped_spore
+         - spore_blossom_air
+         - dripping_obsidian_tear
+         - falling_obsidian_tear
+         - landing_obsidian_tear
+         - reverse_portal
+         - white_ash
+         - small_flame
+         - snowflake
+         - dripping_dripstone_lava
+         - falling_dripstone_lava
+         - dripping_dripstone_water
+         - falling_dripstone_water
+         - glow_squid_ink
+         - glow
+         - wax_on
+         - wax_off
+         - electric_spark
+         - scrape
+         - shriek
+         - egg_crack
+         - dust_plume
+         - trial_spawner_detected_player
+         - trial_spawner_detected_player_ominous
+         - vault_connection
+         - dust_pillar
+         - ominous_spawning
+         - raid_omen
+         - trial_omen
+         - block_crumble
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.
@@ -1571,7 +1512,64 @@
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
 ^play.toClient.types:
-   # World state information for spawn and respawn packets
+   SlotDisplay:
+      type: varint =>
+      - empty
+      - any_fuel
+      - item
+      - item_stack
+      - tag
+      - smithing_trim
+      - with_remainder
+      - composite
+      data: type ?
+         if empty or any_fuel: void
+         if item: varint
+         if item_stack: Slot
+         if tag: string
+         if simthing_trim:
+            base: SlotDisplay
+            material: SlotDisplay
+            pattern: SlotDisplay
+         if with_remainder:
+            input: SlotDisplay
+            remainder: SlotDisplay
+         if composite: SlotDisplay[]varint
+   RecipeDisplay:
+      type: varint =>
+      - crafting_shapeless
+      - crafting_shaped
+      - furnace
+      - stonecutter
+      - smithing
+      data: type ?
+         if crafting_shapeless:
+            ingredients: SlotDisplay[]varint
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if crafting_shaped:
+            width: varint
+            height: varint
+            ingredients: SlotDisplay[]varint
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if furnace:
+            ingredient: SlotDisplay
+            fuel: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+            duration: varint
+            experience: f32
+         if stonecutter:
+            ingredient: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
+         if smithing:
+            template: SlotDisplay
+            base: SlotDisplay
+            addition: SlotDisplay
+            result: SlotDisplay
+            craftingStation: SlotDisplay
    # World state information for spawn and respawn packets
    SpawnInfo:
       dimension: varint
@@ -2190,6 +2188,7 @@
    packet_reset_score:
       entity_name: string
       objective_name?: string
+   ## (remove_resource_pack is common)
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo

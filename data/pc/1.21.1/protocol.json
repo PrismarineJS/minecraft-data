@@ -269,7 +269,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BlockPredicate"
+                          "type": "ItemBlockPredicate"
                         }
                       ]
                     },
@@ -288,7 +288,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BlockPredicate"
+                          "type": "ItemBlockPredicate"
                         }
                       ]
                     },
@@ -573,7 +573,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "PotionEffect"
+                          "type": "ItemPotionEffect"
                         }
                       ]
                     },
@@ -619,7 +619,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BookPage"
+                          "type": "ItemBookPage"
                         }
                       ]
                     }
@@ -653,7 +653,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BookPage"
+                          "type": "ItemBookPage"
                         }
                       ]
                     },
@@ -954,7 +954,7 @@
                     }
                   ]
                 ],
-                "firework_explosion": "FireworkExplosion",
+                "firework_explosion": "ItemFireworkExplosion",
                 "fireworks": [
                   "container",
                   [
@@ -968,7 +968,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "FireworkExplosion"
+                          "type": "ItemFireworkExplosion"
                         }
                       ]
                     }
@@ -1171,12 +1171,213 @@
         }
       ]
     ],
+    "ItemSoundEvent": [
+      "container",
+      [
+        {
+          "name": "soundName",
+          "type": "string"
+        },
+        {
+          "name": "fixedRange",
+          "type": [
+            "option",
+            "f32"
+          ]
+        }
+      ]
+    ],
+    "ItemFireworkExplosion": [
+      "container",
+      [
+        {
+          "name": "shape",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "small_ball",
+                "1": "large_ball",
+                "2": "star",
+                "3": "creeper",
+                "4": "burst"
+              }
+            }
+          ]
+        },
+        {
+          "name": "colors",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "i32"
+            }
+          ]
+        },
+        {
+          "name": "fadeColors",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "i32"
+            }
+          ]
+        },
+        {
+          "name": "hasTrail",
+          "type": "bool"
+        },
+        {
+          "name": "hasTwinkle",
+          "type": "bool"
+        }
+      ]
+    ],
+    "ItemEffectDetail": [
+      "container",
+      [
+        {
+          "name": "amplifier",
+          "type": "varint"
+        },
+        {
+          "name": "duration",
+          "type": "varint"
+        },
+        {
+          "name": "ambient",
+          "type": "bool"
+        },
+        {
+          "name": "showParticles",
+          "type": "bool"
+        },
+        {
+          "name": "showIcon",
+          "type": "bool"
+        },
+        {
+          "name": "hiddenEffect",
+          "type": [
+            "option",
+            "ItemEffectDetail"
+          ]
+        }
+      ]
+    ],
+    "ItemPotionEffect": [
+      "container",
+      [
+        {
+          "name": "id",
+          "type": "varint"
+        },
+        {
+          "name": "details",
+          "type": "ItemEffectDetail"
+        }
+      ]
+    ],
+    "ItemBlockProperty": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "isExactMatch",
+          "type": "bool"
+        },
+        {
+          "name": "exactValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "minValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "maxValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "ItemBlockPredicate": [
+      "container",
+      [
+        {
+          "name": "blockSet",
+          "type": [
+            "option",
+            [
+              "registryEntryHolderSet",
+              {
+                "base": {
+                  "name": "name",
+                  "type": "string"
+                },
+                "otherwise": {
+                  "name": "blockIds",
+                  "type": "varint"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "properties",
+          "type": [
+            "option",
+            [
+              "array",
+              {
+                "countType": "varint",
+                "type": "ItemBlockProperty"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "nbt",
+          "type": "anonOptionalNbt"
+        }
+      ]
+    ],
+    "ItemBookPage": [
+      "container",
+      [
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "filteredContent",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
     "Slot": [
       "container",
       [
         {
           "name": "itemCount",
-          "type": "i8"
+          "type": "varint"
         },
         {
           "anon": true,
@@ -1234,191 +1435,6 @@
               ]
             }
           ]
-        }
-      ]
-    ],
-    "FireworkExplosion": [
-      "container",
-      [
-        {
-          "name": "shape",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "small_ball",
-                "1": "large_ball",
-                "2": "star",
-                "3": "creeper",
-                "4": "burst"
-              }
-            }
-          ]
-        },
-        {
-          "name": "colors",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": "i32"
-            }
-          ]
-        },
-        {
-          "name": "fadeColors",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": "i32"
-            }
-          ]
-        },
-        {
-          "name": "hasTrail",
-          "type": "bool"
-        },
-        {
-          "name": "hasTwinkle",
-          "type": "bool"
-        }
-      ]
-    ],
-    "BookPage": [
-      "container",
-      [
-        {
-          "name": "content",
-          "type": "string"
-        },
-        {
-          "name": "filteredContent",
-          "type": [
-            "option",
-            "string"
-          ]
-        }
-      ]
-    ],
-    "EffectDetail": [
-      "container",
-      [
-        {
-          "name": "amplifier",
-          "type": "varint"
-        },
-        {
-          "name": "duration",
-          "type": "varint"
-        },
-        {
-          "name": "ambient",
-          "type": "bool"
-        },
-        {
-          "name": "showParticles",
-          "type": "bool"
-        },
-        {
-          "name": "showIcon",
-          "type": "bool"
-        },
-        {
-          "name": "hiddenEffect",
-          "type": [
-            "option",
-            "EffectDetail"
-          ]
-        }
-      ]
-    ],
-    "PotionEffect": [
-      "container",
-      [
-        {
-          "name": "id",
-          "type": "varint"
-        },
-        {
-          "name": "details",
-          "type": "EffectDetail"
-        }
-      ]
-    ],
-    "BlockProperty": [
-      "container",
-      [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "isExactMatch",
-          "type": "bool"
-        },
-        {
-          "name": "exactValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        },
-        {
-          "name": "minValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        },
-        {
-          "name": "maxValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        }
-      ]
-    ],
-    "BlockPredicate": [
-      "container",
-      [
-        {
-          "name": "blockSet",
-          "type": [
-            "option",
-            [
-              "registryEntryHolderSet",
-              {
-                "base": {
-                  "name": "name",
-                  "type": "string"
-                },
-                "otherwise": {
-                  "name": "blockIds",
-                  "type": "varint"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "properties",
-          "type": [
-            "option",
-            [
-              "array",
-              {
-                "countType": "varint",
-                "type": "BlockProperty"
-              }
-            ]
-          ]
-        },
-        {
-          "name": "nbt",
-          "type": "anonOptionalNbt"
         }
       ]
     ],
