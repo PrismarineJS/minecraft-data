@@ -1,3 +1,7 @@
+## 3.80.1
+* [pc: Add 1.19.4 loginPacket and `removedNamedSoundEffectPacket` 1.19.3+ feature (#956)](https://github.com/PrismarineJS/minecraft-data/commit/4aae3c344149e844664fa0a0a8ba4fb3f3a94f52) (thanks @extremeheat)
+* [Fix bedrock 1.21.50 protocol input flags (#952)](https://github.com/PrismarineJS/minecraft-data/commit/ea066f38c91be23f28a3cbc9fa0c6407c09b21b6) (thanks @extremeheat)
+
 ## 3.80.0
 * [Add bedrock 1.21.50 protocol data (#945)](https://github.com/PrismarineJS/minecraft-data/commit/b0c5492bc709673ba684e2fc0fe034ff069f9c50) (thanks @CreeperG16)
 * [bedrock: fix serverbound_loading_screen malformed packet (#944)](https://github.com/PrismarineJS/minecraft-data/commit/9753666c64c00d1307e8ad93a3f1e1d74f3c7586) (thanks @JSbETms)
