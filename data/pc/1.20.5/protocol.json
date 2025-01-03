@@ -21,6 +21,7 @@
     "entityMetadataLoop": "native",
     "topBitSetTerminatedArray": "native",
     "bitfield": "native",
+    "bitflags": "native",
     "container": "native",
     "switch": "native",
     "void": "native",
@@ -1752,13 +1753,31 @@
                 "optional_unsigned_int": "optvarint",
                 "pose": "varint",
                 "cat_variant": "varint",
-                "wolf_variant": "varint",
+                "wolf_variant": [
+                  "registryEntryHolder",
+                  {
+                    "baseName": "variantId",
+                    "otherwise": {
+                      "name": "variantData",
+                      "type": "EntityMetadataWolfVariant"
+                    }
+                  }
+                ],
                 "frog_variant": "varint",
                 "optional_global_pos": [
                   "option",
                   "string"
                 ],
-                "painting_variant": "varint",
+                "painting_variant": [
+                  "registryEntryHolder",
+                  {
+                    "baseName": "variantId",
+                    "otherwise": {
+                      "name": "variantData",
+                      "type": "EntityMetadataPaintingVariant"
+                    }
+                  }
+                ],
                 "sniffer_state": "varint",
                 "armadillo_state": "varint",
                 "vector3": "vec3f",
@@ -1766,6 +1785,58 @@
               }
             }
           ]
+        }
+      ]
+    ],
+    "EntityMetadataPaintingVariant": [
+      "container",
+      [
+        {
+          "name": "width",
+          "type": "i32"
+        },
+        {
+          "name": "height",
+          "type": "i32"
+        },
+        {
+          "name": "assetId",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": [
+            "option",
+            "anonymousNbt"
+          ]
+        },
+        {
+          "name": "author",
+          "type": [
+            "option",
+            "anonymousNbt"
+          ]
+        }
+      ]
+    ],
+    "EntityMetadataWolfVariant": [
+      "container",
+      [
+        {
+          "name": "wildTexture",
+          "type": "string"
+        },
+        {
+          "name": "tameTexture",
+          "type": "string"
+        },
+        {
+          "name": "angryTexture",
+          "type": "string"
+        },
+        {
+          "name": "biome",
+          "type": "IDSet"
         }
       ]
     ],
@@ -5184,7 +5255,19 @@
           [
             {
               "name": "action",
-              "type": "i8"
+              "type": [
+                "bitflags",
+                {
+                  "type": "u8",
+                  "flags": [
+                    "add_player",
+                    "initialize_chat",
+                    "update_game_mode",
+                    "update_listed",
+                    "update_latency"
+                  ]
+                }
+              ]
             },
             {
               "name": "data",
@@ -5204,40 +5287,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/add_player",
                             "fields": {
-                              "1": "game_profile",
-                              "3": "game_profile",
-                              "5": "game_profile",
-                              "7": "game_profile",
-                              "9": "game_profile",
-                              "11": "game_profile",
-                              "13": "game_profile",
-                              "15": "game_profile",
-                              "17": "game_profile",
-                              "19": "game_profile",
-                              "21": "game_profile",
-                              "23": "game_profile",
-                              "25": "game_profile",
-                              "27": "game_profile",
-                              "29": "game_profile",
-                              "31": "game_profile",
-                              "33": "game_profile",
-                              "35": "game_profile",
-                              "37": "game_profile",
-                              "39": "game_profile",
-                              "41": "game_profile",
-                              "43": "game_profile",
-                              "45": "game_profile",
-                              "47": "game_profile",
-                              "49": "game_profile",
-                              "51": "game_profile",
-                              "53": "game_profile",
-                              "55": "game_profile",
-                              "57": "game_profile",
-                              "59": "game_profile",
-                              "61": "game_profile",
-                              "63": "game_profile"
+                              "1": "game_profile"
                             },
                             "default": "void"
                           }
@@ -5248,40 +5300,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/initialize_chat",
                             "fields": {
-                              "2": "chat_session",
-                              "3": "chat_session",
-                              "6": "chat_session",
-                              "7": "chat_session",
-                              "10": "chat_session",
-                              "11": "chat_session",
-                              "14": "chat_session",
-                              "15": "chat_session",
-                              "18": "chat_session",
-                              "19": "chat_session",
-                              "22": "chat_session",
-                              "23": "chat_session",
-                              "26": "chat_session",
-                              "27": "chat_session",
-                              "30": "chat_session",
-                              "31": "chat_session",
-                              "34": "chat_session",
-                              "35": "chat_session",
-                              "38": "chat_session",
-                              "39": "chat_session",
-                              "42": "chat_session",
-                              "43": "chat_session",
-                              "46": "chat_session",
-                              "47": "chat_session",
-                              "50": "chat_session",
-                              "51": "chat_session",
-                              "54": "chat_session",
-                              "55": "chat_session",
-                              "58": "chat_session",
-                              "59": "chat_session",
-                              "62": "chat_session",
-                              "63": "chat_session"
+                              "1": "chat_session"
                             },
                             "default": "void"
                           }
@@ -5292,40 +5313,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_game_mode",
                             "fields": {
-                              "4": "varint",
-                              "5": "varint",
-                              "6": "varint",
-                              "7": "varint",
-                              "12": "varint",
-                              "13": "varint",
-                              "14": "varint",
-                              "15": "varint",
-                              "20": "varint",
-                              "21": "varint",
-                              "22": "varint",
-                              "23": "varint",
-                              "28": "varint",
-                              "29": "varint",
-                              "30": "varint",
-                              "31": "varint",
-                              "36": "varint",
-                              "37": "varint",
-                              "38": "varint",
-                              "39": "varint",
-                              "44": "varint",
-                              "45": "varint",
-                              "46": "varint",
-                              "47": "varint",
-                              "52": "varint",
-                              "53": "varint",
-                              "54": "varint",
-                              "55": "varint",
-                              "60": "varint",
-                              "61": "varint",
-                              "62": "varint",
-                              "63": "varint"
+                              "1": "varint"
                             },
                             "default": "void"
                           }
@@ -5336,40 +5326,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_listed",
                             "fields": {
-                              "8": "bool",
-                              "9": "bool",
-                              "10": "bool",
-                              "11": "bool",
-                              "12": "bool",
-                              "13": "bool",
-                              "14": "bool",
-                              "15": "bool",
-                              "24": "bool",
-                              "25": "bool",
-                              "26": "bool",
-                              "27": "bool",
-                              "28": "bool",
-                              "29": "bool",
-                              "30": "bool",
-                              "31": "bool",
-                              "40": "bool",
-                              "41": "bool",
-                              "42": "bool",
-                              "43": "bool",
-                              "44": "bool",
-                              "45": "bool",
-                              "46": "bool",
-                              "47": "bool",
-                              "56": "bool",
-                              "57": "bool",
-                              "58": "bool",
-                              "59": "bool",
-                              "60": "bool",
-                              "61": "bool",
-                              "62": "bool",
-                              "63": "bool"
+                              "1": "varint"
                             },
                             "default": "void"
                           }
@@ -5380,40 +5339,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_latency",
                             "fields": {
-                              "16": "varint",
-                              "17": "varint",
-                              "18": "varint",
-                              "19": "varint",
-                              "20": "varint",
-                              "21": "varint",
-                              "22": "varint",
-                              "23": "varint",
-                              "24": "varint",
-                              "25": "varint",
-                              "26": "varint",
-                              "27": "varint",
-                              "28": "varint",
-                              "29": "varint",
-                              "30": "varint",
-                              "31": "varint",
-                              "48": "varint",
-                              "49": "varint",
-                              "50": "varint",
-                              "51": "varint",
-                              "52": "varint",
-                              "53": "varint",
-                              "54": "varint",
-                              "55": "varint",
-                              "56": "varint",
-                              "57": "varint",
-                              "58": "varint",
-                              "59": "varint",
-                              "60": "varint",
-                              "61": "varint",
-                              "62": "varint",
-                              "63": "varint"
+                              "1": "varint"
                             },
                             "default": "void"
                           }
@@ -5424,133 +5352,9 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action",
+                            "compareTo": "../action/update_display_name",
                             "fields": {
-                              "32": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "33": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "34": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "35": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "36": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "37": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "38": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "39": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "40": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "41": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "42": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "43": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "44": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "45": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "46": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "47": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "48": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "49": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "50": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "51": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "52": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "53": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "54": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "55": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "56": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "57": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "58": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "59": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "60": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "61": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "62": [
-                                "option",
-                                "anonymousNbt"
-                              ],
-                              "63": [
+                              "1": [
                                 "option",
                                 "anonymousNbt"
                               ]
