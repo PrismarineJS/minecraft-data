@@ -16,6 +16,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 18.x
+    # Old versions of bedrock use old libssl that Ubuntu no longer ships with; need manual install
+    - name: Install libssl 1.1
+      run: |
+        wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+        sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
     - name: Checkout node-minecraft-data
       uses: actions/checkout@v2
       with:
