@@ -1,3 +1,6 @@
+## 3.81.1
+* [Add pc 1.21.1 and 1.21.3 loginPackets (#960)](https://github.com/PrismarineJS/minecraft-data/commit/ae2828606ba66d77365fc8ccba3f1e4b56aa3be2) (thanks @extremeheat)
+
 ## 3.81.0
 * [fixed incorrect 1.20.5 and 1.21.1 data (#943)](https://github.com/PrismarineJS/minecraft-data/commit/a72613c08b1a34d331cf7a62da758deb878a22cc) (thanks @Madlykeanu)
 * [Update bedrock-ci.yml to install libssl v1.1](https://github.com/PrismarineJS/minecraft-data/commit/42da8a3217eeb1b34a7a54111337bebdf13abc5f) (thanks @extremeheat)
