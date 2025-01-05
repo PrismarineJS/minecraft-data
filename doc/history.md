@@ -1,3 +1,7 @@
+## 3.81.0
+* [fixed incorrect 1.20.5 and 1.21.1 data (#943)](https://github.com/PrismarineJS/minecraft-data/commit/a72613c08b1a34d331cf7a62da758deb878a22cc) (thanks @Madlykeanu)
+* [Update bedrock-ci.yml to install libssl v1.1](https://github.com/PrismarineJS/minecraft-data/commit/42da8a3217eeb1b34a7a54111337bebdf13abc5f) (thanks @extremeheat)
+
 ## 3.80.1
 * [pc: Add 1.19.4 loginPacket and `removedNamedSoundEffectPacket` 1.19.3+ feature (#956)](https://github.com/PrismarineJS/minecraft-data/commit/4aae3c344149e844664fa0a0a8ba4fb3f3a94f52) (thanks @extremeheat)
 * [Fix bedrock 1.21.50 protocol input flags (#952)](https://github.com/PrismarineJS/minecraft-data/commit/ea066f38c91be23f28a3cbc9fa0c6407c09b21b6) (thanks @extremeheat)
