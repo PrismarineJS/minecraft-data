@@ -511,7 +511,7 @@
       content: string
       filteredContent?: string
 
-   ItemConsumeEffect:
+   ItemConsumeEffect: # 1.21.3
       type: varint =>
       - apply_effects
       - remove_effects
@@ -694,14 +694,14 @@
          if sculk_charge: f32
          if shriek: varint
          if vibration:
-            position_type: varint =>
+            positionType: varint =>
             - block
             - entity
-            position: position_type ?
+            position: positionType ?
                if block: position
                if entity:
                   entityId: varint
-                  entity_eye_height: f32
+                  entityEyeHeight: f32
             ticks: varint
          if trail:
             target: vec3f64
@@ -1222,16 +1222,16 @@
       promptMessage?: anonymousNbt
 
    ServerLinkType: varint =>
-   - bug_report
-   - community_guidelines
-   - support
-   - status
-   - feedback
-   - community
-   - website
-   - forums
-   - news
-   - announcements
+      - bug_report
+      - community_guidelines
+      - support
+      - status
+      - feedback
+      - community
+      - website
+      - forums
+      - news
+      - announcements
    # MC: ClientboundServerLinksPacket
    # This packet contains a list of links that the Notchian client will display in the menu 
    # available from the pause menu. Link labels can be built-in or custom (i.e., any text).
@@ -1977,7 +1977,7 @@
       pitch: i8
       onGround: bool
    # MC: ClientboundMoveMinecartPacket
-   packet_move_minecart:
+   packet_move_minecart: # 1.21.3
       entityId: varint
       steps: []varint
          position: vec3f

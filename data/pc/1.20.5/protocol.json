@@ -29,7 +29,8 @@
     "restBuffer": "native",
     "anonymousNbt": "native",
     "anonOptionalNbt": "native",
-    "arrayWithLengthOffset": "native",
+    "registryEntryHolder": "native",
+    "registryEntryHolderSet": "native",
     "ByteArray": [
       "buffer",
       {
@@ -97,6 +98,20 @@
         }
       ]
     ],
+    "IDSet": [
+      "registryEntryHolderSet",
+      {
+        "base": {
+          "name": "name",
+          "type": "string"
+        },
+        "otherwise": {
+          "name": "ids",
+          "type": "varint"
+        }
+      }
+    ],
+    "ContainerID": "u8",
     "SlotComponentType": [
       "mapper",
       {
@@ -241,7 +256,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BlockPredicate"
+                          "type": "ItemBlockPredicate"
                         }
                       ]
                     },
@@ -260,7 +275,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BlockPredicate"
+                          "type": "ItemBlockPredicate"
                         }
                       ]
                     },
@@ -287,7 +302,7 @@
                                 "type": "varint"
                               },
                               {
-                                "name": "uniqueId",
+                                "name": "uuid",
                                 "type": "UUID"
                               },
                               {
@@ -413,29 +428,21 @@
                             [
                               {
                                 "name": "blocks",
-                                "type": [
-                                  "array",
-                                  {
-                                    "countType": "varint",
-                                    "type": "BlockSet"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "hasSpeed",
-                                "type": "bool"
+                                "type": "IDSet"
                               },
                               {
                                 "name": "speed",
-                                "type": "f32"
-                              },
-                              {
-                                "name": "hasCorrectDropForBlocks",
-                                "type": "bool"
+                                "type": [
+                                  "option",
+                                  "f32"
+                                ]
                               },
                               {
                                 "name": "correctDropForBlocks",
-                                "type": "bool"
+                                "type": [
+                                  "option",
+                                  "bool"
+                                ]
                               }
                             ]
                           ]
@@ -534,20 +541,18 @@
                   "container",
                   [
                     {
-                      "name": "hasPotionId",
-                      "type": "bool"
-                    },
-                    {
                       "name": "potionId",
-                      "type": "optvarint"
-                    },
-                    {
-                      "name": "hasCustomColor",
-                      "type": "bool"
+                      "type": [
+                        "option",
+                        "varint"
+                      ]
                     },
                     {
                       "name": "customColor",
-                      "type": "optvarint"
+                      "type": [
+                        "option",
+                        "varint"
+                      ]
                     },
                     {
                       "name": "customEffects",
@@ -555,21 +560,13 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": [
-                            "container",
-                            [
-                              {
-                                "name": "effect",
-                                "type": "varint"
-                              },
-                              {
-                                "name": "details",
-                                "type": "EffectDetail"
-                              }
-                            ]
-                          ]
+                          "type": "ItemPotionEffect"
                         }
                       ]
+                    },
+                    {
+                      "name": "customName",
+                      "type": "string"
                     }
                   ]
                 ],
@@ -609,7 +606,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BookPage"
+                          "type": "ItemBookPage"
                         }
                       ]
                     }
@@ -643,7 +640,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BookPage"
+                          "type": "ItemBookPage"
                         }
                       ]
                     },
@@ -819,7 +816,7 @@
                             },
                             {
                               "name": "position",
-                              "type": "vec3f"
+                              "type": "position"
                             }
                           ]
                         ]
@@ -831,7 +828,7 @@
                     }
                   ]
                 ],
-                "firework_explosion": "FireworkExplosion",
+                "firework_explosion": "ItemFireworkExplosion",
                 "fireworks": [
                   "container",
                   [
@@ -845,7 +842,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "FireworkExplosion"
+                          "type": "ItemFireworkExplosion"
                         }
                       ]
                     }
@@ -855,20 +852,18 @@
                   "container",
                   [
                     {
-                      "name": "hasName",
-                      "type": "bool"
-                    },
-                    {
                       "name": "name",
-                      "type": "string"
+                      "type": [
+                        "option",
+                        "string"
+                      ]
                     },
                     {
-                      "name": "hasUniqueId",
-                      "type": "bool"
-                    },
-                    {
-                      "name": "uniqueId",
-                      "type": "UUID"
+                      "name": "uuid",
+                      "type": [
+                        "option",
+                        "UUID"
+                      ]
                     },
                     {
                       "name": "properties",
@@ -888,12 +883,11 @@
                                 "type": "string"
                               },
                               {
-                                "name": "hasSignature",
-                                "type": "bool"
-                              },
-                              {
                                 "name": "signature",
-                                "type": "string"
+                                "type": [
+                                  "option",
+                                  "string"
+                                ]
                               }
                             ]
                           ]
@@ -1051,73 +1045,7 @@
         }
       ]
     ],
-    "Slot": [
-      "container",
-      [
-        {
-          "name": "itemCount",
-          "type": "i8"
-        },
-        {
-          "anon": true,
-          "type": [
-            "switch",
-            {
-              "compareTo": "itemCount",
-              "fields": {
-                "0": "void"
-              },
-              "default": [
-                "container",
-                [
-                  {
-                    "name": "itemId",
-                    "type": "varint"
-                  },
-                  {
-                    "name": "addedComponentCount",
-                    "type": "varint"
-                  },
-                  {
-                    "name": "removedComponentCount",
-                    "type": "varint"
-                  },
-                  {
-                    "name": "components",
-                    "type": [
-                      "array",
-                      {
-                        "count": "addedComponentCount",
-                        "type": "SlotComponent"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "removeComponents",
-                    "type": [
-                      "array",
-                      {
-                        "count": "removedComponentCount",
-                        "type": [
-                          "container",
-                          [
-                            {
-                              "name": "type",
-                              "type": "SlotComponentType"
-                            }
-                          ]
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              ]
-            }
-          ]
-        }
-      ]
-    ],
-    "FireworkExplosion": [
+    "ItemFireworkExplosion": [
       "container",
       [
         {
@@ -1166,23 +1094,7 @@
         }
       ]
     ],
-    "BookPage": [
-      "container",
-      [
-        {
-          "name": "content",
-          "type": "string"
-        },
-        {
-          "name": "filteredContent",
-          "type": [
-            "option",
-            "string"
-          ]
-        }
-      ]
-    ],
-    "EffectDetail": [
+    "ItemEffectDetail": [
       "container",
       [
         {
@@ -1209,54 +1121,25 @@
           "name": "hiddenEffect",
           "type": [
             "option",
-            "EffectDetail"
+            "ItemEffectDetail"
           ]
         }
       ]
     ],
-    "BlockSet": [
+    "ItemPotionEffect": [
       "container",
       [
         {
-          "name": "type",
+          "name": "id",
           "type": "varint"
         },
         {
-          "name": "name",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "0": "string"
-              },
-              "default": "void"
-            }
-          ]
-        },
-        {
-          "name": "blockIds",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "0": "void"
-              },
-              "default": [
-                "arrayWithLengthOffset",
-                {
-                  "count": "type",
-                  "type": "varint",
-                  "lengthOffset": -1
-                }
-              ]
-            }
-          ]
+          "name": "details",
+          "type": "ItemEffectDetail"
         }
       ]
     ],
-    "BlockProperty": [
+    "ItemBlockProperty": [
       "container",
       [
         {
@@ -1290,7 +1173,7 @@
         }
       ]
     ],
-    "BlockPredicate": [
+    "ItemBlockPredicate": [
       "container",
       [
         {
@@ -1298,10 +1181,16 @@
           "type": [
             "option",
             [
-              "array",
+              "registryEntryHolderSet",
               {
-                "countType": "varint",
-                "type": "BlockSet"
+                "base": {
+                  "name": "name",
+                  "type": "string"
+                },
+                "otherwise": {
+                  "name": "blockIds",
+                  "type": "varint"
+                }
               }
             ]
           ]
@@ -1314,7 +1203,7 @@
               "array",
               {
                 "countType": "varint",
-                "type": "BlockProperty"
+                "type": "ItemBlockProperty"
               }
             ]
           ]
@@ -1322,6 +1211,88 @@
         {
           "name": "nbt",
           "type": "anonOptionalNbt"
+        }
+      ]
+    ],
+    "ItemBookPage": [
+      "container",
+      [
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "filteredContent",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "Slot": [
+      "container",
+      [
+        {
+          "name": "itemCount",
+          "type": "i8"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "itemCount",
+              "fields": {
+                "0": "void"
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "item",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "addedComponentCount",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "removedComponentCount",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "components",
+                    "type": [
+                      "array",
+                      {
+                        "count": "addedComponentCount",
+                        "type": "SlotComponent"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "removeComponents",
+                    "type": [
+                      "array",
+                      {
+                        "count": "removedComponentCount",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "type",
+                              "type": "SlotComponentType"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -1521,11 +1492,45 @@
                   "container",
                   [
                     {
-                      "name": "position",
-                      "type": "string"
+                      "name": "positionType",
+                      "type": [
+                        "mapper",
+                        {
+                          "type": "varint",
+                          "mappings": {
+                            "0": "block",
+                            "1": "entity"
+                          }
+                        }
+                      ]
                     },
                     {
-                      "name": "entityId",
+                      "name": "position",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "positionType",
+                          "fields": {
+                            "block": "position",
+                            "entity": [
+                              "container",
+                              [
+                                {
+                                  "name": "entityId",
+                                  "type": "varint"
+                                },
+                                {
+                                  "name": "entityEyeHeight",
+                                  "type": "f32"
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "ticks",
                       "type": "varint"
                     }
                   ]
@@ -2626,6 +2631,46 @@
           ]
         }
       ]
+    ],
+    "packet_common_remove_resource_pack": [
+      "container",
+      [
+        {
+          "name": "uuid",
+          "type": [
+            "option",
+            "UUID"
+          ]
+        }
+      ]
+    ],
+    "packet_common_add_resource_pack": [
+      "container",
+      [
+        {
+          "name": "uuid",
+          "type": "UUID"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "hash",
+          "type": "string"
+        },
+        {
+          "name": "forced",
+          "type": "bool"
+        },
+        {
+          "name": "promptMessage",
+          "type": [
+            "option",
+            "anonymousNbt"
+          ]
+        }
+      ]
     ]
   },
   "handshaking": {
@@ -3166,46 +3211,6 @@
             }
           ]
         ],
-        "packet_remove_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": [
-                "option",
-                "UUID"
-              ]
-            }
-          ]
-        ],
-        "packet_add_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": "UUID"
-            },
-            {
-              "name": "url",
-              "type": "string"
-            },
-            {
-              "name": "hash",
-              "type": "string"
-            },
-            {
-              "name": "forced",
-              "type": "bool"
-            },
-            {
-              "name": "promptMessage",
-              "type": [
-                "option",
-                "anonymousNbt"
-              ]
-            }
-          ]
-        ],
         "packet_feature_flags": [
           "container",
           [
@@ -3292,8 +3297,8 @@
                     "ping": "packet_ping",
                     "reset_chat": "packet_reset_chat",
                     "registry_data": "packet_registry_data",
-                    "remove_resource_pack": "packet_remove_resource_pack",
-                    "add_resource_pack": "packet_add_resource_pack",
+                    "remove_resource_pack": "packet_common_remove_resource_pack",
+                    "add_resource_pack": "packet_common_add_resource_pack",
                     "store_cookie": "packet_common_store_cookie",
                     "transfer": "packet_common_transfer",
                     "feature_flags": "packet_feature_flags",
@@ -3924,7 +3929,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             }
           ]
         ],
@@ -3933,7 +3938,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -3960,7 +3965,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "property",
@@ -3977,7 +3982,7 @@
           [
             {
               "name": "windowId",
-              "type": "i8"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -4121,6 +4126,74 @@
             }
           ]
         ],
+        "ChatTypeParameterType": [
+          "mapper",
+          {
+            "type": "varint",
+            "mappings": {
+              "0": "content",
+              "1": "sender",
+              "2": "target"
+            }
+          }
+        ],
+        "ChatType": [
+          "container",
+          [
+            {
+              "name": "translationKey",
+              "type": "string"
+            },
+            {
+              "name": "parameters",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "ChatTypeParameterType"
+                }
+              ]
+            },
+            {
+              "name": "style",
+              "type": "anonymousNbt"
+            }
+          ]
+        ],
+        "ChatTypes": [
+          "container",
+          [
+            {
+              "name": "registryIndex",
+              "type": "varint"
+            },
+            {
+              "anon": true,
+              "type": [
+                "switch",
+                {
+                  "compareTo": "registryIndex",
+                  "fields": {
+                    "0": [
+                      "container",
+                      [
+                        {
+                          "name": "chat",
+                          "type": "ChatType"
+                        },
+                        {
+                          "name": "narration",
+                          "type": "ChatType"
+                        }
+                      ]
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_profileless_chat": [
           "container",
           [
@@ -4162,16 +4235,8 @@
           "container",
           [
             {
-              "name": "x",
-              "type": "f64"
-            },
-            {
-              "name": "y",
-              "type": "f64"
-            },
-            {
-              "name": "z",
-              "type": "f64"
+              "name": "center",
+              "type": "vec3f"
             },
             {
               "name": "radius",
@@ -4295,7 +4360,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "nbSlots",
@@ -4803,7 +4868,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "trades",
@@ -5098,7 +5163,7 @@
           [
             {
               "name": "windowId",
-              "type": "i8"
+              "type": "ContainerID"
             },
             {
               "name": "recipe",
@@ -5194,7 +5259,7 @@
             },
             {
               "name": "type",
-              "type": "varint"
+              "type": "ChatTypes"
             },
             {
               "name": "networkName",
@@ -5421,6 +5486,23 @@
             }
           ]
         ],
+        "PositionUpdateRelatives": [
+          "bitflags",
+          {
+            "type": "u32",
+            "flags": [
+              "x",
+              "y",
+              "z",
+              "yaw",
+              "pitch",
+              "dx",
+              "dy",
+              "dz",
+              "yawDelta"
+            ]
+          }
+        ],
         "packet_position": [
           "container",
           [
@@ -5446,7 +5528,7 @@
             },
             {
               "name": "flags",
-              "type": "i8"
+              "type": "PositionUpdateRelatives"
             },
             {
               "name": "teleportId",
@@ -5568,46 +5650,6 @@
             }
           ]
         ],
-        "packet_remove_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": [
-                "option",
-                "UUID"
-              ]
-            }
-          ]
-        ],
-        "packet_add_resource_pack": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": "UUID"
-            },
-            {
-              "name": "url",
-              "type": "string"
-            },
-            {
-              "name": "hash",
-              "type": "string"
-            },
-            {
-              "name": "forced",
-              "type": "bool"
-            },
-            {
-              "name": "promptMessage",
-              "type": [
-                "option",
-                "anonymousNbt"
-              ]
-            }
-          ]
-        ],
         "packet_respawn": [
           "container",
           [
@@ -5617,7 +5659,7 @@
             },
             {
               "name": "copyMetadata",
-              "type": "bool"
+              "type": "u8"
             }
           ]
         ],
@@ -7347,8 +7389,8 @@
                     "entity_destroy": "packet_entity_destroy",
                     "remove_entity_effect": "packet_remove_entity_effect",
                     "reset_score": "packet_reset_score",
-                    "remove_resource_pack": "packet_remove_resource_pack",
-                    "add_resource_pack": "packet_add_resource_pack",
+                    "remove_resource_pack": "packet_common_remove_resource_pack",
+                    "add_resource_pack": "packet_common_add_resource_pack",
                     "respawn": "packet_respawn",
                     "entity_head_rotation": "packet_entity_head_rotation",
                     "multi_block_change": "packet_multi_block_change",
@@ -7668,7 +7710,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -7719,7 +7761,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             }
           ]
         ],

@@ -124,6 +124,7 @@
         }
       }
     ],
+    "ContainerID": "u8",
     "SlotComponentType": [
       "mapper",
       {
@@ -313,10 +314,6 @@
                               {
                                 "name": "typeId",
                                 "type": "varint"
-                              },
-                              {
-                                "name": "uuid",
-                                "type": "UUID"
                               },
                               {
                                 "name": "name",
@@ -1634,7 +1631,7 @@
                   "container",
                   [
                     {
-                      "name": "position_type",
+                      "name": "positionType",
                       "type": [
                         "mapper",
                         {
@@ -1651,7 +1648,7 @@
                       "type": [
                         "switch",
                         {
-                          "compareTo": "position_type",
+                          "compareTo": "positionType",
                           "fields": {
                             "block": "position",
                             "entity": [
@@ -1662,7 +1659,7 @@
                                   "type": "varint"
                                 },
                                 {
-                                  "name": "entity_eye_height",
+                                  "name": "entityEyeHeight",
                                   "type": "f32"
                                 }
                               ]
@@ -2774,33 +2771,6 @@
         }
       ]
     ],
-    "packet_common_custom_report_details": [
-      "container",
-      [
-        {
-          "name": "details",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": [
-                "container",
-                [
-                  {
-                    "name": "key",
-                    "type": "string"
-                  },
-                  {
-                    "name": "value",
-                    "type": "string"
-                  }
-                ]
-              ]
-            }
-          ]
-        }
-      ]
-    ],
     "packet_common_remove_resource_pack": [
       "container",
       [
@@ -2837,6 +2807,33 @@
           "type": [
             "option",
             "anonymousNbt"
+          ]
+        }
+      ]
+    ],
+    "packet_common_custom_report_details": [
+      "container",
+      [
+        {
+          "name": "details",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "key",
+                    "type": "string"
+                  },
+                  {
+                    "name": "value",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
           ]
         }
       ]
@@ -4175,7 +4172,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             }
           ]
         ],
@@ -4184,7 +4181,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -4211,7 +4208,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "property",
@@ -4228,7 +4225,7 @@
           [
             {
               "name": "windowId",
-              "type": "i8"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -4481,16 +4478,8 @@
           "container",
           [
             {
-              "name": "x",
-              "type": "f64"
-            },
-            {
-              "name": "y",
-              "type": "f64"
-            },
-            {
-              "name": "z",
-              "type": "f64"
+              "name": "center",
+              "type": "vec3f"
             },
             {
               "name": "radius",
@@ -4614,7 +4603,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "nbSlots",
@@ -5122,7 +5111,7 @@
           [
             {
               "name": "windowId",
-              "type": "varint"
+              "type": "ContainerID"
             },
             {
               "name": "trades",
@@ -5417,7 +5406,7 @@
           [
             {
               "name": "windowId",
-              "type": "i8"
+              "type": "ContainerID"
             },
             {
               "name": "recipe",
@@ -5741,6 +5730,23 @@
             }
           ]
         ],
+        "PositionUpdateRelatives": [
+          "bitflags",
+          {
+            "type": "u32",
+            "flags": [
+              "x",
+              "y",
+              "z",
+              "yaw",
+              "pitch",
+              "dx",
+              "dy",
+              "dz",
+              "yawDelta"
+            ]
+          }
+        ],
         "packet_position": [
           "container",
           [
@@ -5766,7 +5772,7 @@
             },
             {
               "name": "flags",
-              "type": "i8"
+              "type": "PositionUpdateRelatives"
             },
             {
               "name": "teleportId",
@@ -7932,7 +7938,7 @@
           [
             {
               "name": "windowId",
-              "type": "i8"
+              "type": "ContainerID"
             },
             {
               "name": "enchantment",
@@ -7945,7 +7951,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             },
             {
               "name": "stateId",
@@ -7996,7 +8002,7 @@
           [
             {
               "name": "windowId",
-              "type": "u8"
+              "type": "ContainerID"
             }
           ]
         ],
@@ -8320,7 +8326,7 @@
           [
             {
               "name": "windowId",
-              "type": "i8"
+              "type": "ContainerID"
             },
             {
               "name": "recipe",

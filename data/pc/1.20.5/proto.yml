@@ -31,14 +31,10 @@
    restBuffer: native
    anonymousNbt: native
    anonOptionalNbt: native
-   arrayWithLengthOffset: native
+   registryEntryHolder: native
+   registryEntryHolderSet: native
    ByteArray: ["buffer", { "countType": "varint" }]
-   string: [
-      "pstring",
-      {
-         "countType": "varint"
-      }
-   ]
+   string: ["pstring", { "countType": "varint" }]
    vec3f:
       x: f32
       y: f32
@@ -52,69 +48,74 @@
       x: f64
       y: f64
       z: f64
-
+   IDSet: ["registryEntryHolderSet", {
+      "base": { name: "name", type: "string" },
+      "otherwise": { name: "ids", type: "varint" }
+   }]
+   ContainerID: u8
    SlotComponentType: varint =>
-   - custom_data
-   - max_stack_size
-   - max_damage
-   - damage
-   - unbreakable
-   - custom_name
-   - item_name
-   - lore
-   - rarity
-   - enchantments
-   - can_place_on
-   - can_break
-   - attribute_modifiers
-   - custom_model_data
-   - hide_additional_tooltip
-   - hide_tooltip
-   - repair_cost
-   - creative_slot_lock
-   - enchantment_glint_override
-   - intangible_projectile
-   - food
-   - fire_resistant
-   - tool
-   - stored_enchantments
-   - dyed_color
-   - map_color
-   - map_id
-   - map_decorations
-   - map_post_processing
-   - charged_projectiles
-   - bundle_contents
-   - potion_contents
-   - suspicious_stew_effects
-   - writable_book_content
-   - written_book_content
-   - trim
-   - debug_stick_state
-   - entity_data
-   - bucket_entity_data
-   - block_entity_data
-   - instrument
-   - ominous_bottle_amplifier
-   - recipes
-   - lodestone_tracker
-   - firework_explosion
-   - fireworks
-   - profile
-   - note_block_sound
-   - banner_patterns
-   - base_color
-   - pot_decorations
-   - container
-   - block_state
-   - bees
-   - lock
-   - container_loot
+      - custom_data
+      - max_stack_size
+      - max_damage
+      - damage
+      - unbreakable
+      - custom_name
+      - item_name
+      - lore
+      - rarity
+      - enchantments
+      - can_place_on
+      - can_break
+      - attribute_modifiers
+      - custom_model_data
+      - hide_additional_tooltip
+      - hide_tooltip
+      - repair_cost
+      - creative_slot_lock
+      - enchantment_glint_override
+      - intangible_projectile
+      - food
+      - fire_resistant
+      - tool
+      - stored_enchantments
+      - dyed_color
+      - map_color
+      - map_id
+      - map_decorations
+      - map_post_processing
+      - charged_projectiles
+      - bundle_contents
+      - potion_contents
+      - suspicious_stew_effects
+      - writable_book_content
+      - written_book_content
+      - trim
+      - debug_stick_state
+      - entity_data
+      - bucket_entity_data
+      - block_entity_data
+      - instrument
+      - ominous_bottle_amplifier
+      - recipes
+      - lodestone_tracker
+      - firework_explosion
+      - fireworks
+      - profile
+      - note_block_sound
+      - banner_patterns
+      - base_color
+      - pot_decorations
+      - container
+      - block_state
+      - bees
+      - lock
+      - container_loot
 
    SlotComponent:
       type: SlotComponentType
+      ## Ref: client/net/minecraft/core/component/DataComponents.java
       data: type ?
-         # TODO: look into how nbt works here
+         ## TODO: look into how nbt works here
          if custom_data: anonymousNbt
          if max_stack_size: varint
          if max_damage: varint
@@ -134,12 +135,12 @@
                level: varint
             showTooltip: bool
          if can_place_on or can_break:
-            predicates: BlockPredicate[]varint
+            predicates: ItemBlockPredicate[]varint
             showTooltip: bool
          if attribute_modifiers:
             attributes: []varint
                typeId: varint
-               uniqueId: UUID
+               uuid: UUID
                name: string
                value: f64
                operation: varint =>
@@ -165,18 +166,11 @@
          if creative_slot_lock: void
          if enchantment_glint_override: bool
          if intangible_projectile: void
-         # Name	Type	Description
-         # Nutrition	VarInt	Non-negative
-         # Saturation Modifier	Float	How much saturation will be given after consuming the item.
-         # Can Always Eat	Boolean	Whether the item can always be eaten, even at full hunger.
-         # Seconds To Eat	Float	How long it takes to consume the item.
-         # Using converts to	Slot Data	This specifies the item produced after consuming the current item. In the Notchian server, this is used for stews, which turn into bowls. Set this to Air if the item should be consumed normally without leaving any other item after.
-         # Number of effects	VarInt	Number of elements in the following array.
-         # Effect	Type ID	Array	Potion Effect	The potion effect. See Potion Effect.
-         # Probability	Float	The probability for this effect to be chosen.
          if food: 
             nutrition: varint
+            # How much saturation will be given after consuming the item.
             saturationModifier: f32
+            # Whether the item can always be eaten, even at full hunger.
             canAlwaysEat: bool
             secondsToEat: f32
             usingConvertsTo: Slot
@@ -184,34 +178,22 @@
                effect: varint
                probability: f32
          if fire_resistant: void
-         # Name	Type	Description
-         # Number of Rules	VarInt	The number of elements in the following array.
-         # Rule
-         #  Blocks	Array	Block Set	The block this rule applies to. See Block Set.
-         #  Has Speed	Boolean	
-         #  Speed	Optional Float	The speed at which the tool breaks this rules' blocks. Only present if Has Speed is true.
-         #  Has Correct Drop For Blocks	Boolean	
-         #  Correct Drop For Blocks	Optional Boolean	Whether items should drop only if this is the correct tool. Only present if Has Correct Drop For Blocks is true.
-         # Default Mining Speed	Float	The mining speed in case none of the previous rule were matched.
-         # Damage Per Block	VarInt	The amount of damage the item takes per block break.
          if tool:
             rules: []varint
-               blocks: BlockSet[]varint
-               hasSpeed: bool
-               speed: f32
-               hasCorrectDropForBlocks: bool
-               correctDropForBlocks: bool
+               blocks: IDSet
+               # The speed at which the tool breaks this rules' blocks.
+               speed?: f32
+               # Whether items should drop only if this is the correct tool.
+               correctDropForBlocks?: bool
+            # The mining speed in case none of the previous rule were matched.
             defaultMiningSpeed: f32
             damagePerBlock: varint
-         # Name	Type	Description
-         # Number of enchantments	VarInt	Number of elements in the following array.
-         # Enchantment	Type ID	Array	VarInt Enum	The ID of the enchantment in the enchantment registry.
-         # Level	VarInt	The level of the enchantment.
-         # Show In Tooltip	Boolean	Whether the list of enchantments should be shown on the item's tooltip.
          if stored_enchantments:
             enchantments: []varint
+               # The ID of the enchantment in the enchantment registry.
                id: varint
                level: varint
+            # Whether the list of enchantments should be shown on the item's tooltip.
             showInTooltip: bool
          if dyed_color:
             color: varint
@@ -224,53 +206,30 @@
             projectiles: Slot[]varint
          if bundle_contents:
             contents: Slot[]varint
-         # Name	Type	Description
-         # Has Potion ID	Boolean	Whether this potion has an ID in the potion registry. If true, it has the default effects associated with the potion type.
-         # Potion ID	Optional VarInt	The ID of the potion type in the potion registry. Only present if Has Potion ID is true.
-         # Has Custom Color	Boolean	Whether this potion has a custom color. If false, it uses the default color associated with the potion type.
-         # Custom Color	Optional Int	The RGB components of the color, encoded as an integer. Only present if Has Custom Color is true.
-         # Number Of Custom Effects	VarInt	The number of elements in the following array.
-         # Custom Effects	Array of Potion Effect	Any custom effects the potion might have. See Potion Effect.
          if potion_contents:
-            hasPotionId: bool
-            potionId: optvarint
-            hasCustomColor: bool
-            customColor: optvarint
-            customEffects: []varint
-               effect: varint
-               details: EffectDetail
-         # Name	Type	Description
-         # Number Of Effects	VarInt	Number of elements in the following array.
-         # Effect	Type ID	Array	VarInt Enum	The ID of the effect in the potion effect type registry.
-         # Duration	VarInt	The duration of the effect.
+            # True if this potion has an ID in the potion registry--it has the default effects associated with the potion type.
+            potionId?: varint
+            # The RGB components of the color, encoded as an integer.
+            customColor?: varint
+            customEffects: ItemPotionEffect[]varint
+            customName: string
          if suspicious_stew_effects:
             effects: []varint
+               # The ID of the effect in the potion effect type registry.
                effect: varint
+               # The duration of the effect.
                duration: varint
-         # Name	Type	Description
-         # Number Of Pages	VarInt	Number of elements in the following array.
-         # Page	Raw Content	Array (100)	String (1024)	The raw text of the page.
-         # Has Filtered Content	Boolean	
-         # Filtered Content	Optional String (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
          if writable_book_content:
-            pages: BookPage[]varint
-         # Name	Type	Description
-         # Raw Title	String (32)	The raw title of the book.
-         # Has Filtered Title	Boolean	
-         # Filtered Title	Optional String (32)	The title after going through chat filters. Only present if Has Filtered Title is true.
-         # Author	String	
-         # Generation	VarInt	
-         # Number Of Pages	VarInt	Number of elements in the following array.
-         # Page	Raw Content	Array (100)	TextComponent (1024)	The raw text of the page.
-         # Has Filtered Content	Boolean	
-         # Filtered Content	Optional Text Component (1024)	The content after passing through chat filters. Only present if Has Filtered Content is true.
-         # Resolved	Boolean	Whether entity selectors have already been resolved.
+            # Max 100 pages
+            pages: ItemBookPage[]varint
          if written_book_content:
+            # The raw title of the book, up to 32 characters.
             rawTitle: string
             filteredTitle?: string
             author: string
             generation: varint
-            pages: BookPage[]varint
+            # Max 100 pages
+            pages: ItemBookPage[]varint
             # Whether entity selectors have already been resolved.
             resolved: bool
          # Name	Type	Description
@@ -335,53 +294,28 @@
                   range: f32
          if ominous_bottle_amplifier: varint
          if recipes: anonymousNbt
-         # Name	Type	Description
-         # Has Global Position	Boolean	Whether this lodestone points to a position, otherwise it spins randomly.
-         # Dimension	Identifier	The dimension the compass points to. Only present if Has Global Position is true.
-         # Position	Position	The position the compass points to. Only present if Has Global Position is true.
-         # Tracked	Boolean	Whether the component is removed when the associated lodestone is broken.
          if lodestone_tracker:
+            # Specified if this lodestone points to a position; otherwise it spins randomly.
             globalPosition?:
                dimension: string
-               position: vec3f
+               # The position the compass points to. Only present if Has Global Position is true.
+               position: position
+            # Whether the component is removed when the associated lodestone is broken.
             tracked: bool
-         # Name	Type	Description
-         # Shape	VarInt Enum	Can be one of the following:
-         # 0 - Small ball
-         # 1 - Large ball
-         # 2 - Star
-         # 3 - Creeper
-         # 4 - Burst
-         # Number Of Colors	VarInt	The number of elements in the following array.
-         # Colors	Array of Int	The RGB components of the color, encoded as an integer.
-         # Number Of Fade Colors	VarInt	The number of elements in the following array.
-         # Fade Colors	Array of Int	The RGB components of the color, encoded as an integer.
-         # Has Trail	Boolean	
-         # Has Twinkle	Boolean	
-         if firework_explosion: FireworkExplosion
+         if firework_explosion: ItemFireworkExplosion
          if fireworks:
             flightDuration: varint
-            explosions: FireworkExplosion[]varint
-         # Name	Type	Description
-         # Has Name	Boolean	
-         # Name	Optional String (16)	Only present if Has Name is true.
-         # Has Unique ID	Boolean	
-         # Unique ID	Optional UUID	Only present if Has Unique ID is true.
-         # Number of Properties	VarInt	Number of elements in the following array.
-         # Property	Name	Array	String (64)	
-         # Value	String	
-         # Has Signature	Boolean	
-         # Signature	String (1024)	Only present if Has Signature is true.
+            explosions: ItemFireworkExplosion[]varint
          if profile:
-            hasName: bool
-            name: string
-            hasUniqueId: bool
-            uniqueId: UUID
+            # If the profile has a name, max 16 characters.
+            name?: string
+            uuid?: UUID
             properties: []varint
+               # Max 64 characters
                property: string
                value: string
-               hasSignature: bool
-               signature: string
+               # Max 1024 characters
+               signature?: string
          if note_block_sound: string
          # Name	Type	Description
          # Number of Layers	VarInt	Number of elements in the following array.
@@ -427,53 +361,36 @@
          if lock: anonymousNbt
          if container_loot: anonymousNbt
 
-   Slot:
-      itemCount: i8
-      _: itemCount ?
-         if 0: void
-         default:
-            itemId: varint
-            addedComponentCount: varint
-            removedComponentCount: varint
-            components: SlotComponent[]$addedComponentCount
-            removeComponents: []$removedComponentCount
-               type: SlotComponentType
 
-   FireworkExplosion:
+   ItemFireworkExplosion:
       shape: varint =>
-      - small_ball
-      - large_ball
-      - star
-      - creeper
-      - burst
+         - small_ball
+         - large_ball
+         - star
+         - creeper
+         - burst
+      # The RGB components of the color, encoded as an integer.
       colors: i32[]varint
+      # The RGB components of the color, encoded as an integer.
       fadeColors: i32[]varint
+      # Whether the firework has a trail.
       hasTrail: bool
+      # Whether the firework has a twinkle effect.
       hasTwinkle: bool
 
-   BookPage:
-      content: string
-      filteredContent?: string
-
-   EffectDetail:
+   ItemEffectDetail:
       amplifier: varint
       duration: varint
       ambient: bool
       showParticles: bool
       showIcon: bool
-      hiddenEffect?: EffectDetail
+      hiddenEffect?: ItemEffectDetail
 
-   BlockSet:
-      type: varint
-      name: type ?
-         if 0: string
-         default: void
-      # TODO: This will require a custom type ; we need type - 1 length of blockIds
-      blockIds: type ?
-         if 0: void
-         default: ["arrayWithLengthOffset", {"count": "type", "type": "varint", "lengthOffset": -1}]
+   ItemPotionEffect:
+      id: varint
+      details: ItemEffectDetail
 
-   BlockProperty:
+   ItemBlockProperty:
       # Name of the block state property.
       name: string
       # Whether this is an exact value match, as opposed to ranged.
@@ -485,123 +402,144 @@
       # Maximum value of the block state property range. Only present in ranged match mode.
       maxValue?: string
 
-   BlockPredicate:
-      blockSet?: BlockSet[]varint
-      properties?: BlockProperty[]varint
+   ItemBlockPredicate:
+      blockSet?: ["registryEntryHolderSet", {
+         "base": { name: "name", type: "string" },
+         "otherwise": { name: "blockIds", type: "varint" }
+      }]
+      properties?: ItemBlockProperty[]varint
       nbt: anonOptionalNbt
+
+   ItemBookPage:
+      # The raw text of the page. TextComponent, max 1024 characters.
+      content: string
+      filteredContent?: string
+
+   Slot:
+      itemCount: i8
+      _: itemCount ?
+         if 0: void
+         default:
+            item: varint
+            # https://wiki.vg/Slot_Data#Structured_components
+            addedComponentCount: varint
+            removedComponentCount: varint
+            components: SlotComponent[]$addedComponentCount
+            removeComponents: []$removedComponentCount
+               type: SlotComponentType
 
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
       type: varint =>
-      - angry_villager
-      - block
-      - block_marker
-      - bubble
-      - cloud
-      - crit
-      - damage_indicator
-      - dragon_breath
-      - dripping_lava
-      - falling_lava
-      - landing_lava
-      - dripping_water
-      - falling_water
-      - dust
-      - dust_color_transition
-      - effect
-      - elder_guardian
-      - enchanted_hit
-      - enchant
-      - end_rod
-      - entity_effect
-      - explosion_emitter
-      - explosion
-      - gust
-      - small_gust
-      - gust_emitter_large
-      - gust_emitter_small
-      - sonic_boom
-      - falling_dust
-      - firework
-      - fishing
-      - flame
-      - infested
-      - cherry_leaves
-      - sculk_soul
-      - sculk_charge
-      - sculk_charge_pop
-      - soul_fire_flame
-      - soul
-      - flash
-      - happy_villager
-      - composter
-      - heart
-      - instant_effect
-      - item
-      - vibration
-      - item_slime
-      - item_cobweb
-      - item_snowball
-      - large_smoke
-      - lava
-      - mycelium
-      - note
-      - poof
-      - portal
-      - rain
-      - smoke
-      - white_smoke
-      - sneeze
-      - spit
-      - squid_ink
-      - sweep_attack
-      - totem_of_undying
-      - underwater
-      - splash
-      - witch
-      - bubble_pop
-      - current_down
-      - bubble_column_up
-      - nautilus
-      - dolphin
-      - campfire_cosy_smoke
-      - campfire_signal_smoke
-      - dripping_honey
-      - falling_honey
-      - landing_honey
-      - falling_nectar
-      - falling_spore_blossom
-      - ash
-      - crimson_spore
-      - warped_spore
-      - spore_blossom_air
-      - dripping_obsidian_tear
-      - falling_obsidian_tear
-      - landing_obsidian_tear
-      - reverse_portal
-      - white_ash
-      - small_flame
-      - snowflake
-      - dripping_dripstone_lava
-      - falling_dripstone_lava
-      - dripping_dripstone_water
-      - falling_dripstone_water
-      - glow_squid_ink
-      - glow
-      - wax_on
-      - wax_off
-      - electric_spark
-      - scrape
-      - shriek
-      - egg_crack
-      - dust_plume
-      - trial_spawner_detected_player
-      - trial_spawner_detected_player_ominous
-      - vault_connection
-      - dust_pillar
-      - ominous_spawning
-      - raid_omen
-      - trial_omen
+         - angry_villager
+         - block
+         - block_marker
+         - bubble
+         - cloud
+         - crit
+         - damage_indicator
+         - dragon_breath
+         - dripping_lava
+         - falling_lava
+         - landing_lava
+         - dripping_water
+         - falling_water
+         - dust
+         - dust_color_transition
+         - effect
+         - elder_guardian
+         - enchanted_hit
+         - enchant
+         - end_rod
+         - entity_effect
+         - explosion_emitter
+         - explosion
+         - gust
+         - small_gust
+         - gust_emitter_large
+         - gust_emitter_small
+         - sonic_boom
+         - falling_dust
+         - firework
+         - fishing
+         - flame
+         - infested
+         - cherry_leaves
+         - sculk_soul
+         - sculk_charge
+         - sculk_charge_pop
+         - soul_fire_flame
+         - soul
+         - flash
+         - happy_villager
+         - composter
+         - heart
+         - instant_effect
+         - item
+         - vibration
+         - item_slime
+         - item_cobweb
+         - item_snowball
+         - large_smoke
+         - lava
+         - mycelium
+         - note
+         - poof
+         - portal
+         - rain
+         - smoke
+         - white_smoke
+         - sneeze
+         - spit
+         - squid_ink
+         - sweep_attack
+         - totem_of_undying
+         - underwater
+         - splash
+         - witch
+         - bubble_pop
+         - current_down
+         - bubble_column_up
+         - nautilus
+         - dolphin
+         - campfire_cosy_smoke
+         - campfire_signal_smoke
+         - dripping_honey
+         - falling_honey
+         - landing_honey
+         - falling_nectar
+         - falling_spore_blossom
+         - ash
+         - crimson_spore
+         - warped_spore
+         - spore_blossom_air
+         - dripping_obsidian_tear
+         - falling_obsidian_tear
+         - landing_obsidian_tear
+         - reverse_portal
+         - white_ash
+         - small_flame
+         - snowflake
+         - dripping_dripstone_lava
+         - falling_dripstone_lava
+         - dripping_dripstone_water
+         - falling_dripstone_water
+         - glow_squid_ink
+         - glow
+         - wax_on
+         - wax_off
+         - electric_spark
+         - scrape
+         - shriek
+         - egg_crack
+         - dust_plume
+         - trial_spawner_detected_player
+         - trial_spawner_detected_player_ominous
+         - vault_connection
+         - dust_pillar
+         - ominous_spawning
+         - raid_omen
+         - trial_omen
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.
@@ -636,8 +574,15 @@
          if sculk_charge: f32
          if shriek: varint
          if vibration:
-            position: string
-            entityId: varint
+            positionType: varint =>
+            - block
+            - entity
+            position: positionType ?
+               if block: position
+               if entity:
+                  entityId: varint
+                  entityEyeHeight: f32
+            ticks: varint
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -772,6 +717,7 @@
       tameTexture: string
       angryTexture: string
       biome: IDSet
+
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    minecraft_simple_recipe_format:
       category: varint
@@ -1145,6 +1091,16 @@
          namespace: string
          id: string
          version: string
+   # MC: ClientboundResourcePackPopPacket
+   packet_common_remove_resource_pack:
+      uuid?: UUID
+   # MC: ClientboundResourcePackPushPacket
+   packet_common_add_resource_pack:
+      uuid: UUID
+      url: string
+      hash: string
+      forced: bool
+      promptMessage?: anonymousNbt
 
 ^handshaking.toClient.types:
    packet:
@@ -1314,16 +1270,6 @@
       entries: []varint
          key: string
          value?: anonymousNbt
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    ## (Store cookie and Transfer are Common) ##
    # MC: ClientboundUpdateEnabledFeaturesPacket
    packet_feature_flags:
@@ -1360,8 +1306,8 @@
          if ping: packet_ping
          if reset_chat: packet_reset_chat
          if registry_data: packet_registry_data
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if store_cookie: packet_common_store_cookie
          if transfer: packet_common_transfer
          if feature_flags: packet_feature_flags
@@ -1545,21 +1491,21 @@
       rootIndex: varint
    # MC: ClientboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: ContainerID
    # MC: ClientboundContainerSetContentPacket
    packet_window_items:
-      windowId: u8
+      windowId: ContainerID
       stateId: varint
       items: Slot[]varint
       carriedItem: Slot
    # MC: ClientboundContainerSetDataPacket
    packet_craft_progress_bar:
-      windowId: u8
+      windowId: ContainerID
       property: i16
       value: i16
    # MC: ClientboundContainerSetSlotPacket
    packet_set_slot:
-      windowId: i8
+      windowId: ContainerID
       stateId: varint
       slot: i16
       item: Slot
@@ -1601,6 +1547,26 @@
    # MC: ClientboundDisconnectPacket
    packet_kick_disconnect:
       reason: anonymousNbt
+
+   ## client\net\minecraft\network\chat\ChatTypeDecoration.java
+   ## via client\net\minecraft\network\chat\ChatType.java
+   ChatTypeParameterType: varint =>
+      - content
+      - sender
+      - target
+   ChatType:
+      translationKey: string
+      parameters: ChatTypeParameterType[]varint
+      style: anonymousNbt
+   ChatTypes:
+      # Either the extra data is retrieved from the registry (via this ID+1 if non-zero), or it's supplied inline in the chat packet
+      registryIndex: varint
+      _: registryIndex ?
+         if 0:
+            chat: ChatType
+            narration: ChatType
+         default: void
+
    # MC: ClientboundDisguisedChatPacket
    packet_profileless_chat:
       message: anonymousNbt
@@ -1613,9 +1579,7 @@
       entityStatus: i8
    # MC: ClientboundExplodePacket
    packet_explosion:
-      x: f64
-      y: f64
-      z: f64
+      center: vec3f
       radius: f32
       affectedBlockOffsets: []varint
          x: i8
@@ -1644,7 +1608,7 @@
       gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
    packet_open_horse_window:
-      windowId: u8
+      windowId: ContainerID
       nbSlots: varint
       entityId: i32
    # MC: ClientboundHurtAnimationPacket
@@ -1758,7 +1722,7 @@
          ]
    # MC: ClientboundMerchantOffersPacket
    packet_trade_list:
-      windowId: varint
+      windowId: ContainerID
       ## https://github.com/extremeheat/extracted_minecraft_data/blob/client1.20.5/client/net/minecraft/world/item/trading/MerchantOffer.java#L210
       trades: []varint
          inputItem1:
@@ -1832,7 +1796,7 @@
       id: i64
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
-      windowId: i8
+      windowId: ContainerID
       recipe: string
    # MC: ClientboundPlayerAbilitiesPacket
    packet_abilities:
@@ -1858,7 +1822,7 @@
       filterTypeMask: filterType ?
          if 2: i64[]varint
          default: void
-      type: varint
+      type: ChatTypes
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
    # MC: ClientboundPlayerCombatEndPacket
@@ -1920,6 +1884,12 @@
       entity_feet_eyes: isEntity ?
          if true: varint
          default: void
+
+   # Relative.java
+   PositionUpdateRelatives: ["bitflags", {
+      "type": "u32",
+      "flags": ["x", "y", "z", "yaw", "pitch", "dx", "dy", "dz", "yawDelta"]
+   }]
    # MC: ClientboundPlayerPositionPacket
    packet_position:
       x: f64
@@ -1927,7 +1897,7 @@
       z: f64
       yaw: f32
       pitch: f32
-      flags: i8
+      flags: PositionUpdateRelatives
       teleportId: varint
    # MC: ClientboundRecipePacket
    packet_unlock_recipes:
@@ -1955,20 +1925,11 @@
    packet_reset_score:
       entity_name: string
       objective_name?: string
-   # MC: ClientboundResourcePackPopPacket
-   packet_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
-      copyMetadata: bool
+      # Bit field: 0b1 - KEEP_ATTRIBUTE_MODIFIERS, 0b10 - KEEP_ENTITY_DATA
+      copyMetadata: u8
    # MC: ClientboundRotateHeadPacket
    packet_entity_head_rotation:
       entityId: varint
@@ -2612,8 +2573,8 @@
          if entity_destroy: packet_entity_destroy
          if remove_entity_effect: packet_remove_entity_effect
          if reset_score: packet_reset_score
-         if remove_resource_pack: packet_remove_resource_pack
-         if add_resource_pack: packet_add_resource_pack
+         if remove_resource_pack: packet_common_remove_resource_pack
+         if add_resource_pack: packet_common_add_resource_pack
          if respawn: packet_respawn
          if entity_head_rotation: packet_entity_head_rotation
          if multi_block_change: packet_multi_block_change
@@ -2755,7 +2716,7 @@
       enchantment: i8
    # MC: ServerboundContainerClickPacket
    packet_window_click:
-      windowId: u8
+      windowId: ContainerID
       stateId: varint
       slot: i16
       mouseButton: i8
@@ -2766,7 +2727,7 @@
       cursorItem: Slot
    # MC: ServerboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: ContainerID
    # MC: ServerboundContainerSlotStateChangedPacket
    packet_set_slot_state:
       slot_id: varint

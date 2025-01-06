@@ -55,6 +55,7 @@
       "base": { name: "name", type: "string" },
       "otherwise": { name: "ids", type: "varint" }
    }]
+   ContainerID: u8
    SlotComponentType: varint =>
       - custom_data
       - max_stack_size
@@ -143,7 +144,6 @@
          if attribute_modifiers:
             attributes: []varint
                typeId: varint
-               uuid: UUID
                name: string
                value: f64
                operation: varint =>
@@ -613,14 +613,14 @@
          if sculk_charge: f32
          if shriek: varint
          if vibration:
-            position_type: varint =>
+            positionType: varint =>
             - block
             - entity
-            position: position_type ?
+            position: positionType ?
                if block: position
                if entity:
                   entityId: varint
-                  entity_eye_height: f32
+                  entityEyeHeight: f32
             ticks: varint
    ingredient: Slot[]varint
    position: [
@@ -1130,11 +1130,6 @@
          namespace: string
          id: string
          version: string
-   # MC: ClientboundCustomReportDetailsPacket
-   packet_common_custom_report_details:
-      details: []varint
-         key: string
-         value: string
    # MC: ClientboundResourcePackPopPacket
    packet_common_remove_resource_pack:
       uuid?: UUID
@@ -1145,18 +1140,23 @@
       hash: string
       forced: bool
       promptMessage?: anonymousNbt
+   # MC: ClientboundCustomReportDetailsPacket
+   packet_common_custom_report_details: # 1.21.1
+      details: []varint
+         key: string
+         value: string
 
    ServerLinkType: varint =>
-   - bug_report
-   - community_guidelines
-   - support
-   - status
-   - feedback
-   - community
-   - website
-   - forums
-   - news
-   - announcements
+      - bug_report
+      - community_guidelines
+      - support
+      - status
+      - feedback
+      - community
+      - website
+      - forums
+      - news
+      - announcements
    # MC: ClientboundServerLinksPacket
    # This packet contains a list of links that the Notchian client will display in the menu 
    # available from the pause menu. Link labels can be built-in or custom (i.e., any text).
@@ -1438,7 +1438,6 @@
          if server_links: packet_common_server_links
 ^play.toClient.types:
    # World state information for spawn and respawn packets
-   # World state information for spawn and respawn packets
    SpawnInfo:
       dimension: varint
       name: string
@@ -1567,21 +1566,21 @@
       rootIndex: varint
    # MC: ClientboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: ContainerID
    # MC: ClientboundContainerSetContentPacket
    packet_window_items:
-      windowId: u8
+      windowId: ContainerID
       stateId: varint
       items: Slot[]varint
       carriedItem: Slot
    # MC: ClientboundContainerSetDataPacket
    packet_craft_progress_bar:
-      windowId: u8
+      windowId: ContainerID
       property: i16
       value: i16
    # MC: ClientboundContainerSetSlotPacket
    packet_set_slot:
-      windowId: i8
+      windowId: ContainerID
       stateId: varint
       slot: i16
       item: Slot
@@ -1655,9 +1654,7 @@
       entityStatus: i8
    # MC: ClientboundExplodePacket
    packet_explosion:
-      x: f64
-      y: f64
-      z: f64
+      center: vec3f
       radius: f32
       affectedBlockOffsets: []varint
          x: i8
@@ -1686,7 +1683,7 @@
       gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
    packet_open_horse_window:
-      windowId: u8
+      windowId: ContainerID
       nbSlots: varint
       entityId: i32
    # MC: ClientboundHurtAnimationPacket
@@ -1800,7 +1797,7 @@
          ]
    # MC: ClientboundMerchantOffersPacket
    packet_trade_list:
-      windowId: varint
+      windowId: ContainerID
       ## https://github.com/extremeheat/extracted_minecraft_data/blob/client1.20.5/client/net/minecraft/world/item/trading/MerchantOffer.java#L210
       trades: []varint
          inputItem1:
@@ -1874,7 +1871,7 @@
       id: i64
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
-      windowId: i8
+      windowId: ContainerID
       recipe: string
    # MC: ClientboundPlayerAbilitiesPacket
    packet_abilities:
@@ -1963,6 +1960,12 @@
       entity_feet_eyes: isEntity ?
          if true: varint
          default: void
+
+   # Relative.java
+   PositionUpdateRelatives: ["bitflags", {
+      "type": "u32",
+      "flags": ["x", "y", "z", "yaw", "pitch", "dx", "dy", "dz", "yawDelta"]
+   }]
    # MC: ClientboundPlayerPositionPacket
    packet_position:
       x: f64
@@ -1970,7 +1973,7 @@
       z: f64
       yaw: f32
       pitch: f32
-      flags: i8
+      flags: PositionUpdateRelatives
       teleportId: varint
    # MC: ClientboundRecipePacket
    packet_unlock_recipes:
@@ -2784,11 +2787,11 @@
       # Empty
    # MC: ServerboundContainerButtonClickPacket
    packet_enchant_item:
-      windowId: i8
+      windowId: ContainerID
       enchantment: i8
    # MC: ServerboundContainerClickPacket
    packet_window_click:
-      windowId: u8
+      windowId: ContainerID
       stateId: varint
       slot: i16
       mouseButton: i8
@@ -2799,7 +2802,7 @@
       cursorItem: Slot
    # MC: ServerboundContainerClosePacket
    packet_close_window:
-      windowId: u8
+      windowId: ContainerID
    # MC: ServerboundContainerSlotStateChangedPacket
    packet_set_slot_state:
       slot_id: varint
@@ -2891,7 +2894,7 @@
       id: i64
    # MC: ServerboundPlaceRecipePacket
    packet_craft_recipe_request:
-      windowId: i8
+      windowId: ContainerID
       recipe: string
       makeAll: bool
    # MC: ServerboundPlayerAbilitiesPacket
