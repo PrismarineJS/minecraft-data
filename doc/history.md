@@ -1,3 +1,7 @@
+## 3.82.0
+* [Add pc1.21.3 features (#965)](https://github.com/PrismarineJS/minecraft-data/commit/2ce91b425f91a6bac16d679bf7912974f768ca16) (thanks @extremeheat)
+* [bedrock: fix protocol ItemStackRequest optional type, add 1.21.50 updated skin (#962)](https://github.com/PrismarineJS/minecraft-data/commit/6e12664f6bd49b62546b77e667c91b3ceeae6035) (thanks @yowzaoppo)
+
 ## 3.81.2
 * [pc1.21.3 protocol: fix slot itemId name and player_info bitfield (#963)](https://github.com/PrismarineJS/minecraft-data/commit/9de94fd41d2577d592eafb391a2bcfefd761b6fa) (thanks @extremeheat)
 
