@@ -1591,7 +1591,7 @@
                 "container",
                 [
                   {
-                    "name": "item",
+                    "name": "itemId",
                     "type": "varint"
                   },
                   {
@@ -6066,49 +6066,19 @@
             {
               "name": "action",
               "type": [
-                "bitfield",
-                [
-                  {
-                    "name": "unused",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_priority",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_display_name",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_latency",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_listed",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "update_game_mode",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "initialize_chat",
-                    "size": 1,
-                    "signed": false
-                  },
-                  {
-                    "name": "add_player",
-                    "size": 1,
-                    "signed": false
-                  }
-                ]
+                "bitflags",
+                {
+                  "type": "u8",
+                  "flags": [
+                    "add_player",
+                    "initialize_chat",
+                    "update_game_mode",
+                    "update_listed",
+                    "update_latency",
+                    "update_display_name",
+                    "update_priority"
+                  ]
+                }
               ]
             },
             {
@@ -6131,7 +6101,7 @@
                           {
                             "compareTo": "../action/add_player",
                             "fields": {
-                              "1": "game_profile"
+                              "true": "game_profile"
                             },
                             "default": "void"
                           }
@@ -6144,7 +6114,7 @@
                           {
                             "compareTo": "../action/initialize_chat",
                             "fields": {
-                              "1": "chat_session"
+                              "true": "chat_session"
                             },
                             "default": "void"
                           }
@@ -6157,7 +6127,7 @@
                           {
                             "compareTo": "../action/update_game_mode",
                             "fields": {
-                              "1": "varint"
+                              "true": "varint"
                             },
                             "default": "void"
                           }
@@ -6170,7 +6140,7 @@
                           {
                             "compareTo": "../action/update_listed",
                             "fields": {
-                              "1": "varint"
+                              "true": "varint"
                             },
                             "default": "void"
                           }
@@ -6183,7 +6153,7 @@
                           {
                             "compareTo": "../action/update_latency",
                             "fields": {
-                              "1": "varint"
+                              "true": "varint"
                             },
                             "default": "void"
                           }
@@ -6196,7 +6166,7 @@
                           {
                             "compareTo": "../action/update_display_name",
                             "fields": {
-                              "1": [
+                              "true": [
                                 "option",
                                 "anonymousNbt"
                               ]
@@ -6212,7 +6182,7 @@
                           {
                             "compareTo": "../action/update_priority",
                             "fields": {
-                              "1": "varint"
+                              "true": "varint"
                             },
                             "default": "void"
                           }
