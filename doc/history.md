@@ -1,3 +1,6 @@
+## 3.81.2
+* [pc1.21.3 protocol: fix slot itemId name and player_info bitfield (#963)](https://github.com/PrismarineJS/minecraft-data/commit/9de94fd41d2577d592eafb391a2bcfefd761b6fa) (thanks @extremeheat)
+
 ## 3.81.1
 * [Add pc 1.21.1 and 1.21.3 loginPackets (#960)](https://github.com/PrismarineJS/minecraft-data/commit/ae2828606ba66d77365fc8ccba3f1e4b56aa3be2) (thanks @extremeheat)
 
