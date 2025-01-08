@@ -20,7 +20,7 @@ module.exports = function (active, enums, enumsValues) {
   $j('#tabContent').html(tabContent)
 
   enums.forEach(function (e) {
-    const raw = parameters['v']
+    const raw = parameters.v
     $j('a[href="' + '#' + e + 'Tab' + '"]').click(function () {
       window.history.pushState('', '', '?' + (raw ? 'v=' + raw + '&' : '') + 'd=' + e)
     })
