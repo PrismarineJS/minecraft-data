@@ -1,3 +1,6 @@
+## 3.83.1
+* [Update pc1.21.4 entity metadata (#969)](https://github.com/PrismarineJS/minecraft-data/commit/0f8ead7370ea6fb11552c29dbb9d86fd4da8e4f2) (thanks @extremeheat)
+
 ## 3.83.0
 * [Add pc1.21.4 data (#967)](https://github.com/PrismarineJS/minecraft-data/commit/d7c753a903c5cfee967db04b7f4b146ba8f8d375) (thanks @extremeheat)
 * [Add 25w02a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5f8a3f5df832c117c00447f8cec66d10795771c3) (thanks @github-actions[bot])
