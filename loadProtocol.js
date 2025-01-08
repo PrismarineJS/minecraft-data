@@ -295,12 +295,16 @@ function eqs (compareTo, k) {
   }, compareTo + ' == ' + k[0])
 }
 
+window.require = window.require || require
+
 function loadProtocol (version) {
   const data = require('minecraft-data')(version)
-  if (data.proto) {
-    $j('#protocolTable').html(`<html-view src="protocol/${data.proto}"><a href="protocol/${data.proto}">Click here</a></html-view>`)
+  console.log('Load Protocol', version, data?.version)
+  if (data.protocolYaml?.length) {
+    const v = version.replace('bedrock_', '')
+    $j('#protocolTable').html(`<html-view src="protocol/${data.type}/${v}"><a href="protocol/${data.type}/${v}">Click here</a></html-view>`)
   } else {
-    const comments = require('minecraft-data')(version).protocolComments
+    const comments = data.protocolComments
     $j('#protocolTable').html(protocolToString(data, comments))
   }
 }
