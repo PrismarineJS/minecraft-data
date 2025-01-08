@@ -103,7 +103,7 @@ for (const file in allEntityFileCodes) {
       }
     }
 
-    if (line.includes('SynchedEntityData.defineId(')) {
+    if (line.match(/SynchedEntityData\..*defineId\(/)) {
       // from:    private static final EntityDataAccessor<Sniffer.State> DATA_STATE = SynchedEntityData.defineId(Sniffer.class, EntityDataSerializers.SNIFFER_STATE);
       // extract: DATA_STATE, SNIFFER_STATE
       const r = line.match(/> ([A-Z_0-9]+) = .*EntityDataSerializers.([A-Z_0-9]+)/s)
