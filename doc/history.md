@@ -1,3 +1,7 @@
+## 3.83.0
+* [Add pc1.21.4 data (#967)](https://github.com/PrismarineJS/minecraft-data/commit/d7c753a903c5cfee967db04b7f4b146ba8f8d375) (thanks @extremeheat)
+* [Add 25w02a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5f8a3f5df832c117c00447f8cec66d10795771c3) (thanks @github-actions[bot])
+
 ## 3.82.0
 * [Add pc1.21.3 features (#965)](https://github.com/PrismarineJS/minecraft-data/commit/2ce91b425f91a6bac16d679bf7912974f768ca16) (thanks @extremeheat)
 * [bedrock: fix protocol ItemStackRequest optional type, add 1.21.50 updated skin (#962)](https://github.com/PrismarineJS/minecraft-data/commit/6e12664f6bd49b62546b77e667c91b3ceeae6035) (thanks @yowzaoppo)
