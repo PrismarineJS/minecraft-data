@@ -1,4 +1,4 @@
-!version: 1.21.4
+!version: 1.21.3
 !StartDocs: true
 
 ^types:
@@ -677,7 +677,6 @@
       - flame
       - infested
       - cherry_leaves
-      - pale_oak_leaves
       - sculk_soul
       - sculk_charge
       - sculk_charge_pop
@@ -1908,7 +1907,6 @@
    # MC: ClientboundLevelParticlesPacket
    packet_world_particles:
       longDistance: bool
-      alwaysShow: bool
       x: f64
       y: f64
       z: f64
@@ -2110,7 +2108,6 @@
             "update_listed",
             "update_latency",
             "update_display_name",
-            "update_hat",
             "update_priority"
          ]
       }]
@@ -2136,9 +2133,6 @@
             default: void
          listPriority: ../action/update_priority ?
             if true: varint
-            default: void
-         showHat: ../action/update_hat ?
-            if true: bool
             default: void
 
    # MC: ClientboundPlayerLookAtPacket
@@ -2356,7 +2350,7 @@
       foodSaturation: f32
    # MC: ClientboundSetHeldSlotPacket
    packet_held_item_slot:
-      slot: varint
+      slot: i8
    # MC: ClientboundSetObjectivePacket
    packet_scoreboard_objective:
       name: string
@@ -3104,19 +3098,13 @@
       z: f64
       yaw: f32
       pitch: f32
-      onGround: bool
    # MC: ServerboundPaddleBoatPacket
    packet_steer_boat:
       leftPaddle: bool
       rightPaddle: bool
-   # MC: ServerboundPickItemFromBlockPacket
-   packet_pick_item_from_block:
-      position: position
-      includeData: bool
-   # MC: ServerboundPickItemFromEntityPacket
-   packet_pick_item_from_entity:
-      entityId: varint
-      includeData: bool
+   # MC: ServerboundPickItemPacket
+   packet_pick_item:
+      slot: varint
    # MC: ServerboundPingRequestPacket
    packet_ping_request:
       id: i64
@@ -3147,9 +3135,6 @@
          "type": "u8",
          "flags": ["forward", "backward", "left", "right", "jump", "shift", "sprint"]
       }]
-   # MC: ServerboundPlayerLoadedPacket
-   packet_player_loaded:
-      # Empty
    # MC: ServerboundPongPacket
    packet_pong:
       id: i32
@@ -3295,15 +3280,13 @@
       - flying
       - vehicle_move
       - steer_boat
-      - pick_item_from_block
-      - pick_item_from_entity
+      - pick_item
       - ping_request
       - craft_recipe_request
       - abilities
       - block_dig
       - entity_action
       - player_input
-      - player_loaded
       - pong
       - recipe_book
       - displayed_recipe
@@ -3357,15 +3340,13 @@
          if flying: packet_flying
          if vehicle_move: packet_vehicle_move
          if steer_boat: packet_steer_boat
-         if pick_item_from_block: packet_pick_item_from_block
-         if pick_item_from_entity: packet_pick_item_from_entity
+         if pick_item: packet_pick_item
          if ping_request: packet_ping_request
          if craft_recipe_request: packet_craft_recipe_request
          if abilities: packet_abilities
          if block_dig: packet_block_dig
          if entity_action: packet_entity_action
          if player_input: packet_player_input
-         if player_loaded: packet_player_loaded
          if pong: packet_pong
          if recipe_book: packet_recipe_book
          if displayed_recipe: packet_displayed_recipe
