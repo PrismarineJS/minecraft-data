@@ -19,7 +19,7 @@ function toggleAnchor () {
 }
 
 function fieldsToColumns (fields) {
-  return fields.map(function (field) { return { 'title': field } })
+  return fields.map(function (field) { return { title: field } })
 }
 
 function nameToImage (version, name) {
@@ -53,10 +53,10 @@ function nameToImage (version, name) {
 function loadBlocks (version) {
   loadData(version, 'blocks',
     function (block) {
-      return [nameToImage(version, block['name']), block['id'], '<a href="#' + block['name'] + '">' + block['name'] + '</a>',
-        block['displayName'], block['stackSize'], block['hardness'],
-        block['diggable'], block['boundingBox'], block['material'] ? block['material'] : null,
-        block['transparent'], block['emitLight'], block['filterLight']]
+      return [nameToImage(version, block.name), block.id, '<a href="#' + block.name + '">' + block.name + '</a>',
+        block.displayName, block.stackSize, block.hardness,
+        block.diggable, block.boundingBox, block.material ? block.material : null,
+        block.transparent, block.emitLight, block.filterLight]
     },
     ['texture', 'id', 'name', 'displayName', 'stackSize', 'hardness', 'diggable', 'boundingBox', 'material', 'transparent', 'emitLight', 'filterLight'],
     [7, 8, 9, 10, 11],
@@ -67,8 +67,8 @@ function loadBlocks (version) {
 function loadItems (version) {
   loadData(version, 'items',
     function (item) {
-      return [nameToImage(version, item['name']), item['id'], '<a href="#' + item['name'] + '">' + item['name'] + '</a>',
-        item['displayName'], item['stackSize']]
+      return [nameToImage(version, item.name), item.id, '<a href="#' + item.name + '">' + item.name + '</a>',
+        item.displayName, item.stackSize]
     },
     ['texture', 'id', 'name', 'displayName', 'stackSize'], [], 1
   )
@@ -77,8 +77,8 @@ function loadItems (version) {
 function loadBiomes (version) {
   loadData(version, 'biomes',
     function (e) {
-      return [e['id'], '<a href="#' + e['name'] + '">' + e['name'] + '</a>',
-        e['color'] === undefined ? '' : e['color'], e['temperature'], e.rainfall == null ? 'N/A' : e.rainfall]
+      return [e.id, '<a href="#' + e.name + '">' + e.name + '</a>',
+        e.color === undefined ? '' : e.color, e.temperature, e.rainfall == null ? 'N/A' : e.rainfall]
     },
     ['id', 'name', 'color', 'temperature', 'rainfall'],
     []
@@ -88,8 +88,8 @@ function loadBiomes (version) {
 function loadEntities (version) {
   loadData(version, 'entities',
     function (e) {
-      return [e['id'], '<a href="#' + e['name'] + '">' + e['name'] + '</a>',
-        e['displayName'], e['type'], e['internalId'] ? e['internalId'] : '', e['width'], e['height'], e['category'] ? e['category'] : '']
+      return [e.id, '<a href="#' + e.name + '">' + e.name + '</a>',
+        e.displayName, e.type, e.internalId ? e.internalId : '', e.width, e.height, e.category ? e.category : '']
     },
     ['id', 'name', 'displayName', 'type', 'internalId', 'width', 'height', 'category'],
     []
@@ -98,7 +98,7 @@ function loadEntities (version) {
 
 function loadInstruments (version) {
   loadData(version, 'instruments',
-    function (e) { return [e['id'], '<a href="#' + e['name'] + '">' + e['name'] + '</a>'] },
+    function (e) { return [e.id, '<a href="#' + e.name + '">' + e.name + '</a>'] },
     ['id', 'name'],
     []
   )
@@ -106,7 +106,7 @@ function loadInstruments (version) {
 
 function loadWindows (version) {
   loadData(version, 'windows',
-    function (e) { return [e['id'], '<a href="#' + e['name'] + '">' + e['name'] + '</a>'] },
+    function (e) { return [e.id, '<a href="#' + e.name + '">' + e.name + '</a>'] },
     ['id', 'name'],
     []
   )
@@ -114,7 +114,7 @@ function loadWindows (version) {
 
 function loadEffects (version) {
   loadData(version, 'effects',
-    function (e) { return [e['id'], '<a href="#' + e['name'] + '">' + e['name'] + '</a>', e['displayName'], e['type']] },
+    function (e) { return [e.id, '<a href="#' + e.name + '">' + e.name + '</a>', e.displayName, e.type] },
     ['id', 'name', 'displayName', 'type'],
     []
   )
@@ -127,14 +127,14 @@ function loadData (version, enumName, elementToArray, fields, hiddenColumns, ord
   $j('#' + enumName + 'Table').html('<table cellpadding="0" cellspacing="0" border="0"' +
     ' class="display" id="' + enumName + 'ActualTable"></table>')
   $j('#' + enumName + 'ActualTable').dataTable({
-    'data': dataset,
-    'paging': false,
-    'columns': fieldsToColumns(fields),
-    'dom': 'C<"clear">lfrtip',
-    'columnDefs': [
+    data: dataset,
+    paging: false,
+    columns: fieldsToColumns(fields),
+    dom: 'C<"clear">lfrtip',
+    columnDefs: [
       { visible: false, targets: hiddenColumns }
     ],
-    'order': [[ orderColumn || 0, 'asc' ]]
+    order: [[orderColumn || 0, 'asc']]
   }
   )
 }
