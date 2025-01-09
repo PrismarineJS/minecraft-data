@@ -1,3 +1,17 @@
+## 3.83.1
+* [Update pc1.21.4 entity metadata (#969)](https://github.com/PrismarineJS/minecraft-data/commit/0f8ead7370ea6fb11552c29dbb9d86fd4da8e4f2) (thanks @extremeheat)
+
+## 3.83.0
+* [Add pc1.21.4 data (#967)](https://github.com/PrismarineJS/minecraft-data/commit/d7c753a903c5cfee967db04b7f4b146ba8f8d375) (thanks @extremeheat)
+* [Add 25w02a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5f8a3f5df832c117c00447f8cec66d10795771c3) (thanks @github-actions[bot])
+
+## 3.82.0
+* [Add pc1.21.3 features (#965)](https://github.com/PrismarineJS/minecraft-data/commit/2ce91b425f91a6bac16d679bf7912974f768ca16) (thanks @extremeheat)
+* [bedrock: fix protocol ItemStackRequest optional type, add 1.21.50 updated skin (#962)](https://github.com/PrismarineJS/minecraft-data/commit/6e12664f6bd49b62546b77e667c91b3ceeae6035) (thanks @yowzaoppo)
+
+## 3.81.2
+* [pc1.21.3 protocol: fix slot itemId name and player_info bitfield (#963)](https://github.com/PrismarineJS/minecraft-data/commit/9de94fd41d2577d592eafb391a2bcfefd761b6fa) (thanks @extremeheat)
+
 ## 3.81.1
 * [Add pc 1.21.1 and 1.21.3 loginPackets (#960)](https://github.com/PrismarineJS/minecraft-data/commit/ae2828606ba66d77365fc8ccba3f1e4b56aa3be2) (thanks @extremeheat)
 

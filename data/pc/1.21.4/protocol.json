@@ -125,6 +125,256 @@
       }
     ],
     "ContainerID": "varint",
+    "SoundEvent": [
+      "container",
+      [
+        {
+          "name": "soundName",
+          "type": "string"
+        },
+        {
+          "name": "fixedRange",
+          "type": [
+            "option",
+            "f32"
+          ]
+        }
+      ]
+    ],
+    "RecipeDisplay": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "crafting_shapeless",
+                "1": "crafting_shaped",
+                "2": "furnace",
+                "3": "stonecutter",
+                "4": "smithing"
+              }
+            }
+          ]
+        },
+        {
+          "name": "data",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "crafting_shapeless": [
+                  "container",
+                  [
+                    {
+                      "name": "ingredients",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "crafting_shaped": [
+                  "container",
+                  [
+                    {
+                      "name": "width",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "height",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "ingredients",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "furnace": [
+                  "container",
+                  [
+                    {
+                      "name": "ingredient",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "fuel",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "duration",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "experience",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "stonecutter": [
+                  "container",
+                  [
+                    {
+                      "name": "ingredient",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "smithing": [
+                  "container",
+                  [
+                    {
+                      "name": "template",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "base",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "addition",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "result",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "craftingStation",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "SlotDisplay": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "empty",
+                "1": "any_fuel",
+                "2": "item",
+                "3": "item_stack",
+                "4": "tag",
+                "5": "smithing_trim",
+                "6": "with_remainder",
+                "7": "composite"
+              }
+            }
+          ]
+        },
+        {
+          "name": "data",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "empty": "void",
+                "any_fuel": "void",
+                "item": "varint",
+                "item_stack": "Slot",
+                "tag": "string",
+                "simthing_trim": [
+                  "container",
+                  [
+                    {
+                      "name": "base",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "material",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "pattern",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "with_remainder": [
+                  "container",
+                  [
+                    {
+                      "name": "input",
+                      "type": "SlotDisplay"
+                    },
+                    {
+                      "name": "remainder",
+                      "type": "SlotDisplay"
+                    }
+                  ]
+                ],
+                "composite": [
+                  "array",
+                  {
+                    "countType": "varint",
+                    "type": "SlotDisplay"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
     "SlotComponentType": [
       "mapper",
       {
@@ -281,7 +531,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemBlockPredicate"
+                          "type": "BlockPredicate"
                         }
                       ]
                     },
@@ -300,7 +550,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemBlockPredicate"
+                          "type": "BlockPredicate"
                         }
                       ]
                     },
@@ -440,7 +690,7 @@
                           "baseName": "soundId",
                           "otherwise": {
                             "name": "data",
-                            "type": "ItemSoundEvent"
+                            "type": "SoundEvent"
                           }
                         }
                       ]
@@ -455,7 +705,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemConsumeEffect"
+                          "type": "ConsumeEffect"
                         }
                       ]
                     }
@@ -554,7 +804,7 @@
                           "baseName": "soundId",
                           "otherwise": {
                             "name": "data",
-                            "type": "ItemSoundEvent"
+                            "type": "SoundEvent"
                           }
                         }
                       ]
@@ -613,7 +863,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemConsumeEffect"
+                          "type": "ConsumeEffect"
                         }
                       ]
                     }
@@ -720,7 +970,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemPotionEffect"
+                          "type": "PotionEffect"
                         }
                       ]
                     },
@@ -766,7 +1016,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemBookPage"
+                          "type": "BookPage"
                         }
                       ]
                     }
@@ -800,7 +1050,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemBookPage"
+                          "type": "BookPage"
                         }
                       ]
                     },
@@ -1101,7 +1351,7 @@
                     }
                   ]
                 ],
-                "firework_explosion": "ItemFireworkExplosion",
+                "firework_explosion": "FireworkExplosion",
                 "fireworks": [
                   "container",
                   [
@@ -1115,7 +1365,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemFireworkExplosion"
+                          "type": "FireworkExplosion"
                         }
                       ]
                     }
@@ -1125,18 +1375,20 @@
                   "container",
                   [
                     {
-                      "name": "name",
-                      "type": [
-                        "option",
-                        "string"
-                      ]
+                      "name": "hasName",
+                      "type": "bool"
                     },
                     {
-                      "name": "uuid",
-                      "type": [
-                        "option",
-                        "UUID"
-                      ]
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "hasUniqueId",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "uniqueId",
+                      "type": "UUID"
                     },
                     {
                       "name": "properties",
@@ -1156,11 +1408,12 @@
                                 "type": "string"
                               },
                               {
+                                "name": "hasSignature",
+                                "type": "bool"
+                              },
+                              {
                                 "name": "signature",
-                                "type": [
-                                  "option",
-                                  "string"
-                                ]
+                                "type": "string"
                               }
                             ]
                           ]
@@ -1318,23 +1571,73 @@
         }
       ]
     ],
-    "ItemSoundEvent": [
+    "Slot": [
       "container",
       [
         {
-          "name": "soundName",
-          "type": "string"
+          "name": "itemCount",
+          "type": "varint"
         },
         {
-          "name": "fixedRange",
+          "anon": true,
           "type": [
-            "option",
-            "f32"
+            "switch",
+            {
+              "compareTo": "itemCount",
+              "fields": {
+                "0": "void"
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "itemId",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "addedComponentCount",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "removedComponentCount",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "components",
+                    "type": [
+                      "array",
+                      {
+                        "count": "addedComponentCount",
+                        "type": "SlotComponent"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "removeComponents",
+                    "type": [
+                      "array",
+                      {
+                        "count": "removedComponentCount",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "type",
+                              "type": "SlotComponentType"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
           ]
         }
       ]
     ],
-    "ItemFireworkExplosion": [
+    "FireworkExplosion": [
       "container",
       [
         {
@@ -1383,7 +1686,23 @@
         }
       ]
     ],
-    "ItemEffectDetail": [
+    "BookPage": [
+      "container",
+      [
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "filteredContent",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "EffectDetail": [
       "container",
       [
         {
@@ -1410,12 +1729,12 @@
           "name": "hiddenEffect",
           "type": [
             "option",
-            "ItemEffectDetail"
+            "EffectDetail"
           ]
         }
       ]
     ],
-    "ItemPotionEffect": [
+    "PotionEffect": [
       "container",
       [
         {
@@ -1424,102 +1743,11 @@
         },
         {
           "name": "details",
-          "type": "ItemEffectDetail"
+          "type": "EffectDetail"
         }
       ]
     ],
-    "ItemBlockProperty": [
-      "container",
-      [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "isExactMatch",
-          "type": "bool"
-        },
-        {
-          "name": "exactValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        },
-        {
-          "name": "minValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        },
-        {
-          "name": "maxValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        }
-      ]
-    ],
-    "ItemBlockPredicate": [
-      "container",
-      [
-        {
-          "name": "blockSet",
-          "type": [
-            "option",
-            [
-              "registryEntryHolderSet",
-              {
-                "base": {
-                  "name": "name",
-                  "type": "string"
-                },
-                "otherwise": {
-                  "name": "blockIds",
-                  "type": "varint"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "properties",
-          "type": [
-            "option",
-            [
-              "array",
-              {
-                "countType": "varint",
-                "type": "ItemBlockProperty"
-              }
-            ]
-          ]
-        },
-        {
-          "name": "nbt",
-          "type": "anonOptionalNbt"
-        }
-      ]
-    ],
-    "ItemBookPage": [
-      "container",
-      [
-        {
-          "name": "content",
-          "type": "string"
-        },
-        {
-          "name": "filteredContent",
-          "type": [
-            "option",
-            "string"
-          ]
-        }
-      ]
-    ],
-    "ItemConsumeEffect": [
+    "ConsumeEffect": [
       "container",
       [
         {
@@ -1554,7 +1782,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ItemPotionEffect"
+                          "type": "PotionEffect"
                         }
                       ]
                     },
@@ -1594,7 +1822,7 @@
                           "baseName": "soundId",
                           "otherwise": {
                             "name": "data",
-                            "type": "ItemSoundEvent"
+                            "type": "SoundEvent"
                           }
                         }
                       ]
@@ -1607,69 +1835,78 @@
         }
       ]
     ],
-    "Slot": [
+    "BlockProperty": [
       "container",
       [
         {
-          "name": "itemCount",
-          "type": "varint"
+          "name": "name",
+          "type": "string"
         },
         {
-          "anon": true,
+          "name": "isExactMatch",
+          "type": "bool"
+        },
+        {
+          "name": "exactValue",
           "type": [
-            "switch",
-            {
-              "compareTo": "itemCount",
-              "fields": {
-                "0": "void"
-              },
-              "default": [
-                "container",
-                [
-                  {
-                    "name": "item",
-                    "type": "varint"
-                  },
-                  {
-                    "name": "addedComponentCount",
-                    "type": "varint"
-                  },
-                  {
-                    "name": "removedComponentCount",
-                    "type": "varint"
-                  },
-                  {
-                    "name": "components",
-                    "type": [
-                      "array",
-                      {
-                        "count": "addedComponentCount",
-                        "type": "SlotComponent"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "removeComponents",
-                    "type": [
-                      "array",
-                      {
-                        "count": "removedComponentCount",
-                        "type": [
-                          "container",
-                          [
-                            {
-                              "name": "type",
-                              "type": "SlotComponentType"
-                            }
-                          ]
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              ]
-            }
+            "option",
+            "string"
           ]
+        },
+        {
+          "name": "minValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "maxValue",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "BlockPredicate": [
+      "container",
+      [
+        {
+          "name": "blockSet",
+          "type": [
+            "option",
+            [
+              "registryEntryHolderSet",
+              {
+                "base": {
+                  "name": "name",
+                  "type": "string"
+                },
+                "otherwise": {
+                  "name": "blockIds",
+                  "type": "varint"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "properties",
+          "type": [
+            "option",
+            [
+              "array",
+              {
+                "countType": "varint",
+                "type": "BlockProperty"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "nbt",
+          "type": "anonOptionalNbt"
         }
       ]
     ],
@@ -1717,83 +1954,84 @@
                 "31": "flame",
                 "32": "infested",
                 "33": "cherry_leaves",
-                "34": "sculk_soul",
-                "35": "sculk_charge",
-                "36": "sculk_charge_pop",
-                "37": "soul_fire_flame",
-                "38": "soul",
-                "39": "flash",
-                "40": "happy_villager",
-                "41": "composter",
-                "42": "heart",
-                "43": "instant_effect",
-                "44": "item",
-                "45": "vibration",
-                "46": "trail",
-                "47": "item_slime",
-                "48": "item_cobweb",
-                "49": "item_snowball",
-                "50": "large_smoke",
-                "51": "lava",
-                "52": "mycelium",
-                "53": "note",
-                "54": "poof",
-                "55": "portal",
-                "56": "rain",
-                "57": "smoke",
-                "58": "white_smoke",
-                "59": "sneeze",
-                "60": "spit",
-                "61": "squid_ink",
-                "62": "sweep_attack",
-                "63": "totem_of_undying",
-                "64": "underwater",
-                "65": "splash",
-                "66": "witch",
-                "67": "bubble_pop",
-                "68": "current_down",
-                "69": "bubble_column_up",
-                "70": "nautilus",
-                "71": "dolphin",
-                "72": "campfire_cosy_smoke",
-                "73": "campfire_signal_smoke",
-                "74": "dripping_honey",
-                "75": "falling_honey",
-                "76": "landing_honey",
-                "77": "falling_nectar",
-                "78": "falling_spore_blossom",
-                "79": "ash",
-                "80": "crimson_spore",
-                "81": "warped_spore",
-                "82": "spore_blossom_air",
-                "83": "dripping_obsidian_tear",
-                "84": "falling_obsidian_tear",
-                "85": "landing_obsidian_tear",
-                "86": "reverse_portal",
-                "87": "white_ash",
-                "88": "small_flame",
-                "89": "snowflake",
-                "90": "dripping_dripstone_lava",
-                "91": "falling_dripstone_lava",
-                "92": "dripping_dripstone_water",
-                "93": "falling_dripstone_water",
-                "94": "glow_squid_ink",
-                "95": "glow",
-                "96": "wax_on",
-                "97": "wax_off",
-                "98": "electric_spark",
-                "99": "scrape",
-                "100": "shriek",
-                "101": "egg_crack",
-                "102": "dust_plume",
-                "103": "trial_spawner_detected_player",
-                "104": "trial_spawner_detected_player_ominous",
-                "105": "vault_connection",
-                "106": "dust_pillar",
-                "107": "ominous_spawning",
-                "108": "raid_omen",
-                "109": "trial_omen",
-                "110": "block_crumble"
+                "34": "pale_oak_leaves",
+                "35": "sculk_soul",
+                "36": "sculk_charge",
+                "37": "sculk_charge_pop",
+                "38": "soul_fire_flame",
+                "39": "soul",
+                "40": "flash",
+                "41": "happy_villager",
+                "42": "composter",
+                "43": "heart",
+                "44": "instant_effect",
+                "45": "item",
+                "46": "vibration",
+                "47": "trail",
+                "48": "item_slime",
+                "49": "item_cobweb",
+                "50": "item_snowball",
+                "51": "large_smoke",
+                "52": "lava",
+                "53": "mycelium",
+                "54": "note",
+                "55": "poof",
+                "56": "portal",
+                "57": "rain",
+                "58": "smoke",
+                "59": "white_smoke",
+                "60": "sneeze",
+                "61": "spit",
+                "62": "squid_ink",
+                "63": "sweep_attack",
+                "64": "totem_of_undying",
+                "65": "underwater",
+                "66": "splash",
+                "67": "witch",
+                "68": "bubble_pop",
+                "69": "current_down",
+                "70": "bubble_column_up",
+                "71": "nautilus",
+                "72": "dolphin",
+                "73": "campfire_cosy_smoke",
+                "74": "campfire_signal_smoke",
+                "75": "dripping_honey",
+                "76": "falling_honey",
+                "77": "landing_honey",
+                "78": "falling_nectar",
+                "79": "falling_spore_blossom",
+                "80": "ash",
+                "81": "crimson_spore",
+                "82": "warped_spore",
+                "83": "spore_blossom_air",
+                "84": "dripping_obsidian_tear",
+                "85": "falling_obsidian_tear",
+                "86": "landing_obsidian_tear",
+                "87": "reverse_portal",
+                "88": "white_ash",
+                "89": "small_flame",
+                "90": "snowflake",
+                "91": "dripping_dripstone_lava",
+                "92": "falling_dripstone_lava",
+                "93": "dripping_dripstone_water",
+                "94": "falling_dripstone_water",
+                "95": "glow_squid_ink",
+                "96": "glow",
+                "97": "wax_on",
+                "98": "wax_off",
+                "99": "electric_spark",
+                "100": "scrape",
+                "101": "shriek",
+                "102": "egg_crack",
+                "103": "dust_plume",
+                "104": "trial_spawner_detected_player",
+                "105": "trial_spawner_detected_player_ominous",
+                "106": "vault_connection",
+                "107": "dust_pillar",
+                "108": "ominous_spawning",
+                "109": "raid_omen",
+                "110": "trial_omen",
+                "111": "block_crumble"
               }
             }
           ]
@@ -1872,7 +2110,7 @@
                   "container",
                   [
                     {
-                      "name": "positionType",
+                      "name": "position_type",
                       "type": [
                         "mapper",
                         {
@@ -1889,7 +2127,7 @@
                       "type": [
                         "switch",
                         {
-                          "compareTo": "positionType",
+                          "compareTo": "position_type",
                           "fields": {
                             "block": "position",
                             "entity": [
@@ -1900,7 +2138,7 @@
                                   "type": "varint"
                                 },
                                 {
-                                  "name": "entityEyeHeight",
+                                  "name": "entity_eye_height",
                                   "type": "f32"
                                 }
                               ]
@@ -3907,240 +4145,6 @@
   "play": {
     "toClient": {
       "types": {
-        "SlotDisplay": [
-          "container",
-          [
-            {
-              "name": "type",
-              "type": [
-                "mapper",
-                {
-                  "type": "varint",
-                  "mappings": {
-                    "0": "empty",
-                    "1": "any_fuel",
-                    "2": "item",
-                    "3": "item_stack",
-                    "4": "tag",
-                    "5": "smithing_trim",
-                    "6": "with_remainder",
-                    "7": "composite"
-                  }
-                }
-              ]
-            },
-            {
-              "name": "data",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "type",
-                  "fields": {
-                    "empty": "void",
-                    "any_fuel": "void",
-                    "item": "varint",
-                    "item_stack": "Slot",
-                    "tag": "string",
-                    "simthing_trim": [
-                      "container",
-                      [
-                        {
-                          "name": "base",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "material",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "pattern",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    ],
-                    "with_remainder": [
-                      "container",
-                      [
-                        {
-                          "name": "input",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "remainder",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    ],
-                    "composite": [
-                      "array",
-                      {
-                        "countType": "varint",
-                        "type": "SlotDisplay"
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          ]
-        ],
-        "RecipeDisplay": [
-          "container",
-          [
-            {
-              "name": "type",
-              "type": [
-                "mapper",
-                {
-                  "type": "varint",
-                  "mappings": {
-                    "0": "crafting_shapeless",
-                    "1": "crafting_shaped",
-                    "2": "furnace",
-                    "3": "stonecutter",
-                    "4": "smithing"
-                  }
-                }
-              ]
-            },
-            {
-              "name": "data",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "type",
-                  "fields": {
-                    "crafting_shapeless": [
-                      "container",
-                      [
-                        {
-                          "name": "ingredients",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "SlotDisplay"
-                            }
-                          ]
-                        },
-                        {
-                          "name": "result",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "craftingStation",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    ],
-                    "crafting_shaped": [
-                      "container",
-                      [
-                        {
-                          "name": "width",
-                          "type": "varint"
-                        },
-                        {
-                          "name": "height",
-                          "type": "varint"
-                        },
-                        {
-                          "name": "ingredients",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "SlotDisplay"
-                            }
-                          ]
-                        },
-                        {
-                          "name": "result",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "craftingStation",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    ],
-                    "furnace": [
-                      "container",
-                      [
-                        {
-                          "name": "ingredient",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "fuel",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "result",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "craftingStation",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "duration",
-                          "type": "varint"
-                        },
-                        {
-                          "name": "experience",
-                          "type": "f32"
-                        }
-                      ]
-                    ],
-                    "stonecutter": [
-                      "container",
-                      [
-                        {
-                          "name": "ingredient",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "result",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "craftingStation",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    ],
-                    "smithing": [
-                      "container",
-                      [
-                        {
-                          "name": "template",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "base",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "addition",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "result",
-                          "type": "SlotDisplay"
-                        },
-                        {
-                          "name": "craftingStation",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    ]
-                  }
-                }
-              ]
-            }
-          ]
-        ],
         "SpawnInfo": [
           "container",
           [
@@ -5267,6 +5271,10 @@
               "type": "bool"
             },
             {
+              "name": "alwaysShow",
+              "type": "bool"
+            },
+            {
               "name": "x",
               "type": "f64"
             },
@@ -6073,7 +6081,8 @@
                     "update_listed",
                     "update_latency",
                     "update_display_name",
-                    "update_list_order"
+                    "update_hat",
+                    "update_priority"
                   ]
                 }
               ]
@@ -6174,9 +6183,22 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action/update_list_order",
+                            "compareTo": "../action/update_priority",
                             "fields": {
                               "true": "varint"
+                            },
+                            "default": "void"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "showHat",
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action/update_hat",
+                            "fields": {
+                              "true": "bool"
                             },
                             "default": "void"
                           }
@@ -6847,7 +6869,7 @@
           [
             {
               "name": "slot",
-              "type": "i8"
+              "type": "varint"
             }
           ]
         ],
@@ -8831,6 +8853,10 @@
             {
               "name": "pitch",
               "type": "f32"
+            },
+            {
+              "name": "onGround",
+              "type": "bool"
             }
           ]
         ],
@@ -8847,12 +8873,29 @@
             }
           ]
         ],
-        "packet_pick_item": [
+        "packet_pick_item_from_block": [
           "container",
           [
             {
-              "name": "slot",
+              "name": "position",
+              "type": "position"
+            },
+            {
+              "name": "includeData",
+              "type": "bool"
+            }
+          ]
+        ],
+        "packet_pick_item_from_entity": [
+          "container",
+          [
+            {
+              "name": "entityId",
               "type": "varint"
+            },
+            {
+              "name": "includeData",
+              "type": "bool"
             }
           ]
         ],
@@ -8951,6 +8994,10 @@
               ]
             }
           ]
+        ],
+        "packet_player_loaded": [
+          "container",
+          []
         ],
         "packet_pong": [
           "container",
@@ -9374,32 +9421,34 @@
                     "0x1f": "flying",
                     "0x20": "vehicle_move",
                     "0x21": "steer_boat",
-                    "0x22": "pick_item",
-                    "0x23": "ping_request",
-                    "0x24": "craft_recipe_request",
-                    "0x25": "abilities",
-                    "0x26": "block_dig",
-                    "0x27": "entity_action",
-                    "0x28": "player_input",
-                    "0x29": "pong",
-                    "0x2a": "recipe_book",
-                    "0x2b": "displayed_recipe",
-                    "0x2c": "name_item",
-                    "0x2d": "resource_pack_receive",
-                    "0x2e": "advancement_tab",
-                    "0x2f": "select_trade",
-                    "0x30": "set_beacon_effect",
-                    "0x31": "held_item_slot",
-                    "0x32": "update_command_block",
-                    "0x33": "update_command_block_minecart",
-                    "0x34": "set_creative_slot",
-                    "0x35": "update_jigsaw_block",
-                    "0x36": "update_structure_block",
-                    "0x37": "update_sign",
-                    "0x38": "arm_animation",
-                    "0x39": "spectate",
-                    "0x3a": "block_place",
-                    "0x3b": "use_item"
+                    "0x22": "pick_item_from_block",
+                    "0x23": "pick_item_from_entity",
+                    "0x24": "ping_request",
+                    "0x25": "craft_recipe_request",
+                    "0x26": "abilities",
+                    "0x27": "block_dig",
+                    "0x28": "entity_action",
+                    "0x29": "player_input",
+                    "0x2a": "player_loaded",
+                    "0x2b": "pong",
+                    "0x2c": "recipe_book",
+                    "0x2d": "displayed_recipe",
+                    "0x2e": "name_item",
+                    "0x2f": "resource_pack_receive",
+                    "0x30": "advancement_tab",
+                    "0x31": "select_trade",
+                    "0x32": "set_beacon_effect",
+                    "0x33": "held_item_slot",
+                    "0x34": "update_command_block",
+                    "0x35": "update_command_block_minecart",
+                    "0x36": "set_creative_slot",
+                    "0x37": "update_jigsaw_block",
+                    "0x38": "update_structure_block",
+                    "0x39": "update_sign",
+                    "0x3a": "arm_animation",
+                    "0x3b": "spectate",
+                    "0x3c": "block_place",
+                    "0x3d": "use_item"
                   }
                 }
               ]
@@ -9444,13 +9493,15 @@
                     "flying": "packet_flying",
                     "vehicle_move": "packet_vehicle_move",
                     "steer_boat": "packet_steer_boat",
-                    "pick_item": "packet_pick_item",
+                    "pick_item_from_block": "packet_pick_item_from_block",
+                    "pick_item_from_entity": "packet_pick_item_from_entity",
                     "ping_request": "packet_ping_request",
                     "craft_recipe_request": "packet_craft_recipe_request",
                     "abilities": "packet_abilities",
                     "block_dig": "packet_block_dig",
                     "entity_action": "packet_entity_action",
                     "player_input": "packet_player_input",
+                    "player_loaded": "packet_player_loaded",
                     "pong": "packet_pong",
                     "recipe_book": "packet_recipe_book",
                     "displayed_recipe": "packet_displayed_recipe",
