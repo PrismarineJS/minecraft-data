@@ -1,0 +1,22 @@
+name: Publish
+on:
+  push:
+    branches: [ web ]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: web
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+      - name: Run tool
+        run: |
+            npm install
+            git config user.name 'rom1504bot'
+            git config user.email 'rom1504bot@users.noreply.github.com'
+            npm run gh-publish
