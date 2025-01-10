@@ -11,11 +11,21 @@ module.exports = function (version) {
   loadProtocol(version)
   loadWindows(version)
   loadEffects(version)
+  setupTabSwitchHandler()
   toggleAnchor()
 }
 
 function toggleAnchor () {
   $j(window.location.hash.substr(0, window.location.hash.length - 1)).show()
+}
+
+function setupTabSwitchHandler () {
+  $j('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+    const activeTable = $j('.tab-pane.active .dataTable')
+    if ($j.fn.DataTable.isDataTable(activeTable)) {
+      activeTable.DataTable().columns.adjust()
+    }
+  })
 }
 
 function fieldsToColumns (fields) {
@@ -55,6 +65,7 @@ function nameToImage (version, name) {
 }
 
 function loadBlocks (version) {
+  destroyDataTable('blocksActualTable')
   loadData(
     version,
     'blocks',
@@ -94,6 +105,7 @@ function loadBlocks (version) {
 }
 
 function loadItems (version) {
+  destroyDataTable('itemsActualTable')
   loadData(
     version,
     'items',
@@ -113,6 +125,7 @@ function loadItems (version) {
 }
 
 function loadBiomes (version) {
+  destroyDataTable('biomesActualTable')
   loadData(
     version,
     'biomes',
@@ -132,6 +145,7 @@ function loadBiomes (version) {
 }
 
 function loadEntities (version) {
+  destroyDataTable('entitiesActualTable')
   loadData(
     version,
     'entities',
@@ -154,6 +168,7 @@ function loadEntities (version) {
 }
 
 function loadInstruments (version) {
+  destroyDataTable('instrumentsActualTable')
   loadData(
     version,
     'instruments',
@@ -170,6 +185,7 @@ function loadInstruments (version) {
 }
 
 function loadWindows (version) {
+  destroyDataTable('windowsActualTable')
   loadData(
     version,
     'windows',
@@ -186,6 +202,7 @@ function loadWindows (version) {
 }
 
 function loadEffects (version) {
+  destroyDataTable('effectsActualTable')
   loadData(
     version,
     'effects',
@@ -221,22 +238,52 @@ function loadData (version, enumName, elementToArray, fields, hiddenColumns, ord
     ajax: function (data, callback) {
       const start = data.start
       const length = data.length
-      const filteredData = dataset.slice(start, start + length)
+
+      // Apply filtering
+      const filteredData = data.search.value
+        ? dataset.filter(row =>
+          row.some(field => field && field.toString().toLowerCase().includes(data.search.value.toLowerCase()))
+        )
+        : dataset
+
+      // Apply ordering
+      const order = data.order[0]
+      if (order) {
+        const columnIndex = order.column
+        const dir = order.dir === 'asc' ? 1 : -1
+        filteredData.sort((a, b) => {
+          if (a[columnIndex] < b[columnIndex]) return -dir
+          if (a[columnIndex] > b[columnIndex]) return dir
+          return 0
+        })
+      }
+
+      // Slice for pagination
+      const paginatedData = filteredData.slice(start, start + length)
+
       // eslint-disable-next-line n/no-callback-literal
       callback({
-        data: filteredData,
+        data: paginatedData,
         recordsTotal: dataset.length,
-        recordsFiltered: dataset.length
+        recordsFiltered: filteredData.length
       })
     },
+    columns: fieldsToColumns(fields),
+    paging: true,
     deferRender: true,
     scrollY: '400px',
     scrollCollapse: true,
     scroller: true,
-    paging: true,
-    columns: fieldsToColumns(fields),
     dom: 'C<"clear">lfrtip',
     columnDefs: [{ visible: false, targets: hiddenColumns }],
     order: [[orderColumn || 0, 'asc']]
   })
+}
+
+function destroyDataTable (tableId) {
+  const table = $j('#' + tableId)
+  if ($j.fn.DataTable.isDataTable(table)) {
+    table.DataTable().destroy()
+    table.empty()
+  }
 }
