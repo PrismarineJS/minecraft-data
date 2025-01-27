@@ -1101,69 +1101,39 @@
       playerId: varint
       entityId: i32
       message: string
-   packet_player_info:   
-      action: varint
+   # MC: ClientboundPlayerInfoPacket
+   packet_player_info:
+      action: varint =>
+         - add_player
+         - update_game_mode
+         - update_latency
+         - update_display_name
+         - remove_player
       data: []varint
-         UUID: UUID
-         name: ../action ?
-            if 0: string
-            default: void
-         properties: ../action ?
-            if 0: []varint
+         _: ../action ?
+            uuid: UUID
+            if add_player:
                name: string
-               value: string
-               signature?: string
-            default: void
-         gamemode: ../action ?
-            if 0: varint
-            if 1: varint
-            default: void
-         ping: ../action ?
-            if 0: varint
-            if 2: varint
-            default: void
-         displayName: ../action ?
-            if 0: [
-               "option",
-               "string"
-            ]
-            if 3: [
-               "option",
-               "string"
-            ]
-            default: void
-         crypto: ../action ?
-            if 0: [
-               "option",
-               [
-                  "container",
-                  [
-                     {
-                        "name": "timestamp",
-                        "type": "i64"
-                     },
-                     {
-                        "name": "publicKey",
-                        "type": [
-                           "buffer",
-                           {
-                              "countType": "varint"
-                           }
-                        ]
-                     },
-                     {
-                        "name": "signature",
-                        "type": [
-                           "buffer",
-                           {
-                              "countType": "varint"
-                           }
-                        ]
-                     }
-                  ]
-               ]
-            ]
-            default: void
+               properties: []varint
+                  key: string
+                  value: string
+                  signature?: string
+               gamemode: varint
+               ping: varint
+               displayName?: nbt
+               ## ProfilePublicKey.java#L75
+               crypto?:
+                  # What time the following key expires at
+                  timestamp: i64
+                  publicKey: ByteArray
+                  signature: ByteArray
+            if update_game_mode:
+               gamemode: varint
+            if update_latency:
+               ping: varint
+            if update_display_name:
+               displayName?: nbt
+            if remove_player: void
    packet_position:   
       x: f64
       y: f64
