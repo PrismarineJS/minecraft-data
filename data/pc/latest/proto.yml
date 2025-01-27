@@ -1274,70 +1274,95 @@
             suggestionType: ../flags/has_custom_suggestions ?
                if 1: string
                default: void
-   # # Shared Packets
-   # These are packets that are shared between multiple states.
-   # They are defined here to avoid duplication.
-   # =====
-   # MC: ClientboundCookieRequestPacket
-   packet_common_cookie_request:
-      cookie: string
-   # MC: ClientboundStoreCookiePacket
-   packet_common_store_cookie:
-      key: string
-      value: ByteArray
-   # MC: ClientboundTransferPacket
-   packet_common_transfer:
-      host: string
-      port: varint
-   # MC: ServerboundCookieResponsePacket
-   packet_common_cookie_response:
-      key: string
-      value: ByteArray
-   # MC: ServerboundSelectKnownPacks
-   # MC: ClientboundSelectKnownPacks
-   packet_common_select_known_packs:
-      packs: []varint
-         namespace: string
-         id: string
-         version: string
-   # MC: ClientboundCustomReportDetailsPacket
-   packet_common_custom_report_details:
-      details: []varint
-         key: string
-         value: string
-   # MC: ClientboundResourcePackPopPacket
-   packet_common_remove_resource_pack:
-      uuid?: UUID
-   # MC: ClientboundResourcePackPushPacket
-   packet_common_add_resource_pack:
-      uuid: UUID
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: anonymousNbt
+# Shared Packets
+# These are packets that are shared between multiple states.
+# They are defined here to avoid duplication.
+# =====
+# MC: ClientboundCookieRequestPacket
+# wiki.vg: Cookie Request (login)
+# Requests a cookie that was previously stored.
+packet_common_cookie_request:
+   cookie: string
 
-   ServerLinkType: varint =>
-   - bug_report
-   - community_guidelines
-   - support
-   - status
-   - feedback
-   - community
-   - website
-   - forums
-   - news
-   - announcements
-   # MC: ClientboundServerLinksPacket
-   # This packet contains a list of links that the Notchian client will display in the menu 
-   # available from the pause menu. Link labels can be built-in or custom (i.e., any text).
-   packet_common_server_links:
-      links: []varint
-         hasKnownType: bool
-         knownType: hasKnownType ?
-            if true: ServerLinkType
-         unknownType: hasKnownType ?
-            if false: anonymousNbt
-         link: string
+# MC: ClientboundStoreCookiePacket
+# wiki.vg: Store Cookie (configuration)
+# Stores some arbitrary data on the client, which persists between server transfers. The Notchian client only accepts cookies of up to 5 kiB in size.
+packet_common_store_cookie:
+   key: string
+   value: ByteArray
+
+# MC: ClientboundTransferPacket
+# wiki.vg: Transfer (configuration)
+# Notifies the client that it should transfer to the given server. Cookies previously stored are preserved between server transfers.
+packet_common_transfer:
+   host: string
+   port: varint
+
+# MC: ServerboundCookieResponsePacket
+# wiki.vg: Cookie Response (login)
+# Response to a Cookie Request (login) from the server. The Notchian server only accepts responses of up to 5 kiB in size.
+packet_common_cookie_response:
+   key: string
+   value: ByteArray
+
+# MC: ServerboundSelectKnownPacks
+# MC: ClientboundSelectKnownPacks
+# wiki.vg: Clientbound Known Packs
+# Informs the client of which data packs are present on the server. The client is expected to respond with its own Serverbound Known Packs packet. The Notchian server does not continue with Configuration until it receives a response.
+# The Notchian client requires the minecraft:core pack with version 1.21.4 for a normal login sequence. This packet must be sent before the Registry Data packets.
+packet_common_select_known_packs:
+   packs: []varint
+      namespace: string
+      id: string
+      version: string
+
+# MC: ClientboundCustomReportDetailsPacket
+# wiki.vg: Custom Report Details (configuration)
+# Contains a list of key-value text entries that are included in any crash or disconnection report generated during connection to the server.
+packet_common_custom_report_details:
+   details: []varint
+      key: string
+      value: string
+
+# MC: ClientboundResourcePackPopPacket
+# wiki.vg: Remove Resource Pack (configuration)
+# Removes a resource pack from the client.
+packet_common_remove_resource_pack:
+   uuid?: UUID
+
+# MC: ClientboundResourcePackPushPacket
+# wiki.vg: Add Resource Pack (configuration)
+# Adds a resource pack to the client.
+packet_common_add_resource_pack:
+   uuid: UUID
+   url: string
+   hash: string
+   forced: bool
+   promptMessage?: anonymousNbt
+
+ServerLinkType: varint =>
+- bug_report
+- community_guidelines
+- support
+- status
+- feedback
+- community
+- website
+- forums
+- news
+- announcements
+
+# MC: ClientboundServerLinksPacket
+# wiki.vg: Server Links (configuration)
+# This packet contains a list of links that the Notchian client will display in the menu available from the pause menu. Link labels can be built-in or custom (i.e., any text).
+packet_common_server_links:
+   links: []varint
+      hasKnownType: bool
+      knownType: hasKnownType ?
+         if true: ServerLinkType
+      unknownType: hasKnownType ?
+         if false: anonymousNbt
+      link: string
 
 ^handshaking.toClient.types:
    packet:
@@ -1358,11 +1383,16 @@
       params: name ?
          if set_protocol: packet_set_protocol
          if legacy_server_list_ping: packet_legacy_server_list_ping
+
 ^status.toClient.types:
    # MC: ClientboundStatusResponsePacket
+   # wiki.vg: Status Response
+   # Sent by the server in response to a Status Request packet. Contains server information in JSON format.
    packet_server_info:
       response: string
    # MC: ClientboundPongResponsePacket
+   # wiki.vg: Pong Response (status)
+   # Sent by the server in response to a Ping Request packet. Contains the same timestamp as the Ping Request.
    packet_ping:
       time: i64
    packet:
@@ -1372,11 +1402,16 @@
       params: name ?
          if server_info: packet_server_info
          if ping: packet_ping
+
 ^status.toServer.types:
    # MC: ServerboundStatusRequestPacket
+   # wiki.vg: Status Request
+   # Sent by the client to request server status information.
    packet_ping_start:
       # Empty
    # MC: ServerboundPingRequestPacket
+   # wiki.vg: Ping Request (status)
+   # Sent by the client to measure the latency to the server. The server responds with a Pong Response packet containing the same timestamp.
    packet_ping:
       time: i64
    packet:
@@ -1386,11 +1421,16 @@
       params: name ?
          if ping_start: packet_ping_start
          if ping: packet_ping
+
 ^login.toClient.types:
    # MC: ClientboundLoginDisconnectPacket
+   # wiki.vg: Disconnect (login)
+   # Sent by the server to disconnect the client during the login process. The client will display the reason to the user.
    packet_disconnect:
       reason: string
    # MC: ClientboundHelloPacket
+   # wiki.vg: Encryption Request
+   # Sent by the server to request encryption during the login process. Contains the server's public key and a verify token.
    packet_encryption_begin:
       serverId: string
       publicKey: [
@@ -1407,6 +1447,8 @@
       ]
       shouldAuthenticate: bool
    # MC: ClientboundLoginFinishedPacket
+   # wiki.vg: Login Success
+   # Sent by the server to indicate that the login process was successful. Contains the player's UUID and username.
    packet_success:
       uuid: UUID
       username: string
@@ -1415,9 +1457,13 @@
          value: string
          signature?: string
    # MC: ClientboundLoginCompressionPacket
+   # wiki.vg: Set Compression
+   # Sent by the server to enable compression for all subsequent packets. If compression is enabled, all following packets are encoded in the compressed packet format.
    packet_compress:
       threshold: varint
    # MC: ClientboundCustomQueryPacket
+   # wiki.vg: Login Plugin Request
+   # Used to implement a custom handshaking flow together with Login Plugin Response.
    packet_login_plugin_request:
       messageId: varint
       channel: string
@@ -1438,12 +1484,17 @@
          if compress: packet_compress
          if login_plugin_request: packet_login_plugin_request
          if cookie_request: packet_common_cookie_request
+
 ^login.toServer.types:
    # MC: ServerboundHelloPacket
+   # wiki.vg: Login Start
+   # Sent by the client to initiate the login process. Contains the player's username and UUID.
    packet_login_start:
       username: string
       playerUUID: UUID
    # MC: ServerboundKeyPacket
+   # wiki.vg: Encryption Response
+   # Sent by the client in response to an Encryption Request packet. Contains the shared secret and verify token encrypted with the server's public key.
    packet_encryption_begin:
       sharedSecret: [
          "buffer",
@@ -1458,10 +1509,14 @@
          }
       ]
    # MC: ServerboundCustomQueryAnswerPacket
+   # wiki.vg: Login Plugin Response
+   # Sent by the client in response to a Login Plugin Request packet. Contains the response data for the custom handshaking flow.
    packet_login_plugin_response:
       messageId: varint
       data?: restBuffer
    # MC: ServerboundLoginAcknowledgedPacket
+   # wiki.vg: Login Acknowledged
+   # Sent by the client to acknowledge the Login Success packet. This packet switches the connection state to configuration.
    packet_login_acknowledged:
       # Empty
    ## (Cookie Response is Common) ##
@@ -1478,28 +1533,43 @@
          if login_plugin_response: packet_login_plugin_response
          if login_acknowledged: packet_login_acknowledged
          if cookie_response: packet_common_cookie_response
+
 ^configuration.toClient.types:
    ## (Cookie Request is common)
    # MC: ClientboundCustomPayloadPacket
+   # wiki.vg: Clientbound Plugin Message (configuration)
+   # Mods and plugins can use this to send their data. Minecraft itself uses several plugin channels. These internal channels are in the minecraft namespace.
    packet_custom_payload:
       channel: string
       data: restBuffer
    # MC: ClientboundDisconnectPacket
+   # wiki.vg: Disconnect (configuration)
+   # Sent by the server to disconnect the client during the configuration process. The client will display the reason to the user.
    packet_disconnect:
       reason: anonymousNbt
    # MC: ClientboundFinishConfigurationPacket
+   # wiki.vg: Finish Configuration
+   # Sent by the server to notify the client that the configuration process has finished. The client answers with Acknowledge Finish Configuration whenever it is ready to continue.
    packet_finish_configuration:
       # Empty
    # MC: ClientboundKeepAlivePacket
+   # wiki.vg: Clientbound Keep Alive (configuration)
+   # The server will frequently send out a keep-alive, each containing a random ID. The client must respond with the same payload (see Serverbound Keep Alive). If the client does not respond to a Keep Alive packet within 15 seconds after it was sent, the server kicks the client. Vice versa, if the server does not send any keep-alives for 20 seconds, the client will disconnect and yields a "Timed out" exception.
    packet_keep_alive:
       keepAliveId: i64
    # MC: ClientboundPingPacket
+   # wiki.vg: Ping (configuration)
+   # Packet is not used by the Notchian server. When sent to the client, client responds with a Pong packet with the same id.
    packet_ping:
       id: i32
    # MC: ClientboundResetChatPacket
+   # wiki.vg: Reset Chat
+   # Resets the client's chat history.
    packet_reset_chat:
       # Empty
    # MC: ClientboundRegistryDataPacket
+   # wiki.vg: Registry Data
+   # Represents certain registries that are sent from the server and are applied on the client.
    packet_registry_data:
       # The server can send multiple registries
       id: string
@@ -1508,9 +1578,13 @@
          value?: anonymousNbt
    ## (Store cookie and Transfer are Common) ##
    # MC: ClientboundUpdateEnabledFeaturesPacket
+   # wiki.vg: Feature Flags
+   # Used to enable and disable features, generally experimental ones, on the client.
    packet_feature_flags:
       features: string[]varint
    # MC: ClientboundUpdateTagsPacket
+   # wiki.vg: Update Tags (configuration)
+   # Updates the tags for blocks, items, entities, etc.
    packet_tags:
       tags: []varint
          tagType: string
@@ -1553,8 +1627,11 @@
          if select_known_packs: packet_common_select_known_packs
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
+
 ^configuration.toServer.types:
    # MC: ServerboundClientInformationPacket
+   # wiki.vg: Client Information (configuration)
+   # Sent when the player connects, or when settings are changed.
    packet_settings:
       locale: string
       viewDistance: i8
@@ -1567,19 +1644,29 @@
       particles: varint
    ## (Cookie Response is Common) ##
    # MC: ServerboundCustomPayloadPacket
+   # wiki.vg: Serverbound Plugin Message (configuration)
+   # Mods and plugins can use this to send their data. Minecraft itself uses some plugin channels. These internal channels are in the minecraft namespace.
    packet_custom_payload:
       channel: string
       data: restBuffer
    # MC: ServerboundFinishConfigurationPacket
+   # wiki.vg: Acknowledge Finish Configuration
+   # Sent by the client to notify the server that the configuration process has finished. It is sent in response to the server's Finish Configuration.
    packet_finish_configuration:
       # Empty
    # MC: ServerboundKeepAlivePacket
+   # wiki.vg: Serverbound Keep Alive (configuration)
+   # The server will frequently send out a keep-alive (see Clientbound Keep Alive), each containing a random ID. The client must respond with the same packet.
    packet_keep_alive:
       keepAliveId: i64
    # MC: ServerboundPongPacket
+   # wiki.vg: Pong (configuration)
+   # Response to the clientbound packet (Ping) with the same id.
    packet_pong:
       id: i32
    # MC: ServerboundResourcePackPacket
+   # wiki.vg: Resource Pack Response (configuration)
+   # Response to the clientbound packet (Add Resource Pack) with the same id.
    packet_resource_pack_receive:
       uuid: UUID
       result: varint
@@ -1606,6 +1693,7 @@
          if select_known_packs: packet_common_select_known_packs
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
+
 ^play.toClient.types:
    # World state information for spawn and respawn packets
    # World state information for spawn and respawn packets
@@ -1628,6 +1716,8 @@
       seaLevel: varint
 
    # MC: ClientboundAddEntityPacket
+   # wiki.vg: Spawn Entity
+   # Sent by the server when an entity (aside from Experience Orb) is created.
    packet_spawn_entity:
       entityId: varint
       objectUUID: UUID
@@ -1643,6 +1733,8 @@
       velocityY: i16
       velocityZ: i16
    # MC: ClientboundAddExperienceOrbPacket
+   # wiki.vg: Spawn Experience Orb
+   # Spawns one or more experience orbs.
    packet_spawn_entity_experience_orb:
       entityId: varint
       x: f64
@@ -1650,39 +1742,55 @@
       z: f64
       count: i16
    # MC: ClientboundAnimatePacket
+   # wiki.vg: Entity Animation
+   # Sent whenever an entity should change animation.
    packet_animation:
       entityId: varint
       animation: u8
    # MC: ClientboundAwardStatsPacket
+   # wiki.vg: Award Statistics
+   # Sent as a response to Client Status (id 1). Will only send the changed values if previously requested.
    packet_statistics:
       entries: []varint
          categoryId: varint
          statisticId: varint
          value: varint
    # MC: ClientboundBlockChangedAckPacket
+   # wiki.vg: Acknowledge Block Change
+   # Acknowledges a user-initiated block change. After receiving this packet, the client will display the block state sent by the server instead of the one predicted by the client.
    packet_acknowledge_player_digging:
       sequenceId: varint
    # MC: ClientboundBlockDestructionPacket
+   # wiki.vg: Set Block Destroy Stage
+   # 0–9 are the displayable destroy stages and each other number means that there is no animation on this coordinate.
    packet_block_break_animation:
       entityId: varint
       location: position
       destroyStage: i8
    # MC: ClientboundBlockEntityDataPacket
+   # wiki.vg: Block Entity Data
+   # Sets the block entity associated with the block at the given location.
    packet_tile_entity_data:
       location: position
       action: varint
       nbtData: anonOptionalNbt
    # MC: ClientboundBlockEventPacket
+   # wiki.vg: Block Action
+   # This packet is used for a number of actions and animations performed by blocks, usually non-persistent. The client ignores the provided block type and instead uses the block state in their world.
    packet_block_action:
       location: position
       byte1: u8
       byte2: u8
       blockId: varint
    # MC: ClientboundBlockUpdatePacket
+   # wiki.vg: Block Update
+   # Fired whenever a block is changed within the render distance.
    packet_block_change:
       location: position
       type: varint
    # MC: ClientboundBossEventPacket
+   # wiki.vg: Boss Bar
+   # Sent by the server to display or update a boss bar.
    packet_boss_bar:
       entityUUID: UUID
       action: varint
@@ -1707,24 +1815,36 @@
          if 5: u8
          default: void
    # MC: ClientboundChangeDifficultyPacket
+   # wiki.vg: Change Difficulty
+   # Changes the difficulty setting in the client's option menu.
    packet_difficulty:
       difficulty: u8
       difficultyLocked: bool
    # MC: ClientboundChunkBatchFinishedPacket
+   # wiki.vg: Chunk Batch Finished
+   # Marks the end of a chunk batch. The Notchian client marks the time it receives this packet and calculates the elapsed duration since the beginning of the chunk batch.
    packet_chunk_batch_finished:
       batchSize: varint
    # MC: ClientboundChunkBatchStartPacket
+   # wiki.vg: Chunk Batch Start
+   # Marks the start of a chunk batch. The Notchian client marks and stores the time it receives this packet.
    packet_chunk_batch_start:
       # Empty
    # MC: ClientboundChunksBiomesPacket
+   # wiki.vg: Chunk Biomes
+   # Sent by the server to update the biomes of a chunk.
    packet_chunk_biomes:
       biomes: []varint
          position: packedChunkPos
          data: ByteArray
    # MC: ClientboundClearTitlesPacket
+   # wiki.vg: Clear Titles
+   # Clear the client's current title information, with the option to also reset it.
    packet_clear_titles:
       reset: bool
    # MC: ClientboundCommandSuggestionsPacket
+   # wiki.vg: Command Suggestions Response
+   # The server responds with a list of auto-completions of the last word sent to it. In the case of regular chat, this is a player username. Command names and parameters are also supported.
    packet_tab_complete:
       transactionId: varint
       start: varint
@@ -1733,24 +1853,34 @@
          match: string
          tooltip?: anonymousNbt
    # MC: ClientboundCommandsPacket
+   # wiki.vg: Commands
+   # Lists all of the commands on the server, and how they are parsed.
    packet_declare_commands:
       nodes: command_node[]varint
       rootIndex: varint
    # MC: ClientboundContainerClosePacket
+   # wiki.vg: Close Container
+   # This packet is sent from the server to the client when a window is forcibly closed, such as when a chest is destroyed while it's open.
    packet_close_window:
       windowId: ContainerID
    # MC: ClientboundContainerSetContentPacket
+   # wiki.vg: Set Container Content
+   # Replaces the contents of a container window. Sent by the server upon initialization of a container window or the player's inventory, and in response to state ID mismatches.
    packet_window_items:
       windowId: ContainerID
       stateId: varint
       items: Slot[]varint
       carriedItem: Slot
    # MC: ClientboundContainerSetDataPacket
+   # wiki.vg: Set Container Property
+   # This packet is used to inform the client that part of a GUI window should be updated.
    packet_craft_progress_bar:
       windowId: ContainerID
       property: i16
       value: i16
    # MC: ClientboundContainerSetSlotPacket
+   # wiki.vg: Set Container Slot
+   # Sent by the server when an item in a slot (in a window) is added/removed.
    packet_set_slot:
       windowId: ContainerID
       stateId: varint
@@ -1758,19 +1888,27 @@
       item: Slot
    ## (Cookie Request is Common)
    # MC: ClientboundCooldownPacket
+   # wiki.vg: Set Cooldown
+   # Applies a cooldown period to all items with the given type. Used by the Notchian server with enderpearls.
    packet_set_cooldown:
       # TODO: figure out what this is
       cooldownGroup: string
       cooldownTicks: varint
    # MC: ClientboundCustomChatCompletionsPacket
+   # wiki.vg: Chat Suggestions
+   # Unused by the Notchian server. Likely provided for custom servers to send chat message completions to clients.
    packet_chat_suggestions:
       action: varint
       entries: string[]varint
    # MC: ClientboundCustomPayloadPacket
+   # wiki.vg: Clientbound Plugin Message (play)
+   # Mods and plugins can use this to send their data. Minecraft itself uses several plugin channels. These internal channels are in the minecraft namespace.
    packet_custom_payload:
       channel: string
       data: restBuffer
    # MC: ClientboundDamageEventPacket
+   # wiki.vg: Damage Event
+   # Sent by the server when an entity takes damage.
    packet_damage_event:
       entityId: varint
       sourceTypeId: varint
@@ -1778,10 +1916,14 @@
       sourceDirectId: varint
       sourcePosition?: vec3f64
    # MC: ClientboundDebugSamplePacket
+   # wiki.vg: Debug Sample
+   # Sample data that is sent periodically after the client has subscribed with Debug Sample Subscription.
    packet_debug_sample:
       sample: i64[]varint
       type: varint
    # MC: ClientboundDeleteChatPacket
+   # wiki.vg: Delete Message
+   # Removes a message from the client's chat. This only works for messages with signatures, system messages cannot be deleted with this packet.
    packet_hide_message:
       id: varint
       signature: id ?
@@ -1793,6 +1935,8 @@
          ]
          default: void
    # MC: ClientboundDisconnectPacket
+   # wiki.vg: Disconnect (play)
+   # Sent by the server before it disconnects a client. The client assumes that the server has already closed the connection by the time the packet arrives.
    packet_kick_disconnect:
       reason: anonymousNbt
 
@@ -1816,16 +1960,22 @@
          default: void
 
    # MC: ClientboundDisguisedChatPacket
+   # wiki.vg: Disguised Chat Message
+   # Sends the client a chat message, but without any message signing information.
    packet_profileless_chat:
       message: anonymousNbt
       type: ChatTypes
       name: anonymousNbt
       target?: anonymousNbt
    # MC: ClientboundEntityEventPacket
+   # wiki.vg: Entity Event
+   # Entity statuses generally trigger an animation for an entity. The available statuses vary by the entity's type (and are available to subclasses of that type as well).
    packet_entity_status:
       entityId: i32
       entityStatus: i8
    # MC: ClientboundEntityPositionSyncPacket
+   # wiki.vg: Teleport Entity
+   # Sent by the server when an entity moves more than 8 blocks.
    packet_sync_entity_position:
       entityId: varint
       x: f64
@@ -1838,6 +1988,8 @@
       pitch: f32
       onGround: bool
    # MC: ClientboundExplodePacket
+   # wiki.vg: Explosion
+   # Sent when an explosion occurs (creepers, TNT, and ghast fireballs).
    packet_explosion:
       center: vec3f
       playerKnockback?: vec3f
@@ -1850,23 +2002,33 @@
          default:
             
    # MC: ClientboundForgetLevelChunkPacket
+   # wiki.vg: Unload Chunk
+   # Tells the client to unload a chunk column.
    packet_unload_chunk:
       chunkZ: i32
       chunkX: i32
    # MC: ClientboundGameEventPacket
+   # wiki.vg: Game Event
+   # Used for a wide variety of game events, from weather to bed use to game mode to demo messages.
    packet_game_state_change:
       reason: u8
       gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
+   # wiki.vg: Open Horse Screen
+   # This packet is used exclusively for opening the horse GUI. Open Screen is used for all other GUIs.
    packet_open_horse_window:
       windowId: ContainerID
       nbSlots: varint
       entityId: i32
    # MC: ClientboundHurtAnimationPacket
+   # wiki.vg: Hurt Animation
+   # Plays a bobbing animation for the entity receiving damage.
    packet_hurt_animation:
       entityId: varint
       yaw: f32
    # MC: ClientboundInitializeBorderPacket
+   # wiki.vg: Initialize World Border
+   # Sent by the server to initialize the world border.
    packet_initialize_world_border:
       x: f64
       z: f64
@@ -1877,9 +2039,13 @@
       warningBlocks: varint
       warningTime: varint
    # MC: ClientboundKeepAlivePacket
+   # wiki.vg: Clientbound Keep Alive (play)
+   # The server will frequently send out a keep-alive, each containing a random ID. The client must respond with the same payload (see Serverbound Keep Alive). If the client does not respond to a Keep Alive packet within 15 seconds after it was sent, the server kicks the client. Vice versa, if the server does not send any keep-alives for 20 seconds, the client will disconnect and yields a "Timed out" exception.
    packet_keep_alive:
       keepAliveId: i64
    # MC: ClientboundLevelChunkWithLightPacket
+   # wiki.vg: Chunk Data and Update Light
+   # Sent when a chunk comes into the client's view distance, specifying its terrain, lighting and block entities.
    packet_map_chunk:
       x: i32
       z: i32
@@ -1900,12 +2066,16 @@
       blockLight: []varint
          _: u8[]varint
    # MC: ClientboundLevelEventPacket
+   # wiki.vg: World Event
+   # Sent when a client is to play a sound or particle effect.
    packet_world_event:
       effectId: i32
       location: position
       data: i32
       global: bool
    # MC: ClientboundLevelParticlesPacket
+   # wiki.vg: Particle
+   # Sent by the server to display a particle effect.
    packet_world_particles:
       longDistance: bool
       alwaysShow: bool
@@ -1919,6 +2089,8 @@
       amount: i32
       particle: Particle
    # MC: ClientboundLightUpdatePacket
+   # wiki.vg: Update Light
+   # Sent by the server to update the lighting of a chunk.
    packet_update_light:
       chunkX: varint
       chunkZ: varint
@@ -1931,6 +2103,8 @@
       blockLight: []varint
          _: u8[]varint
    # MC: ClientboundLoginPacket
+   # wiki.vg: Login (play)
+   # Sent by the server to initialize the player's game state.
    packet_login:
       entityId: i32
       isHardcore: bool
@@ -1944,6 +2118,8 @@
       worldState: SpawnInfo
       enforcesSecureChat: bool
    # MC: ClientboundMapItemDataPacket
+   # wiki.vg: Map Data
+   # Sent by the server to update a map item.
    packet_map:
       itemDamage: varint
       scale: i8
@@ -1973,6 +2149,8 @@
             }
          ]
    # MC: ClientboundMerchantOffersPacket
+   # wiki.vg: Merchant Offers
+   # Sent by the server to update the trading offers of a villager.
    packet_trade_list:
       windowId: ContainerID
       ## https://github.com/extremeheat/extracted_minecraft_data/blob/client1.20.5/client/net/minecraft/world/item/trading/MerchantOffer.java#L210
@@ -2000,6 +2178,8 @@
       isRegularVillager: bool
       canRestock: bool
    # MC: ClientboundMoveEntityPacket.Pos
+   # wiki.vg: Update Entity Position
+   # Sent by the server when an entity moves.
    packet_rel_entity_move:
       entityId: varint
       dX: i16
@@ -2007,6 +2187,8 @@
       dZ: i16
       onGround: bool
    # MC: ClientboundMoveEntityPacket.PosRot
+   # wiki.vg: Update Entity Position and Rotation
+   # Sent by the server when an entity moves and rotates.
    packet_entity_move_look:
       entityId: varint
       dX: i16
@@ -2016,6 +2198,8 @@
       pitch: i8
       onGround: bool
    # MC: ClientboundMoveMinecartPacket
+   # wiki.vg: Move Minecart Along Track
+   # Sent by the server when a minecart moves along a track.
    packet_move_minecart:
       entityId: varint
       steps: []varint
@@ -2025,12 +2209,16 @@
          pitch: f32
          weight: f32
    # MC: ClientboundMoveEntityPacket.Rot
+   # wiki.vg: Update Entity Rotation
+   # Sent by the server when an entity rotates.
    packet_entity_look:
       entityId: varint
       yaw: i8
       pitch: i8
       onGround: bool
    # MC: ClientboundMoveVehiclePacket
+   # wiki.vg: Move Vehicle
+   # Sent by the server when a vehicle moves.
    packet_vehicle_move:
       x: f64
       y: f64
@@ -2038,33 +2226,49 @@
       yaw: f32
       pitch: f32
    # MC: ClientboundOpenBookPacket
+   # wiki.vg: Open Book
+   # Sent by the server to open a book GUI.
    packet_open_book:
       hand: varint
    # MC: ClientboundOpenScreenPacket
+   # wiki.vg: Open Screen
+   # Sent by the server to open a GUI.
    packet_open_window:
       windowId: varint
       inventoryType: varint
       windowTitle: anonymousNbt
    # MC: ClientboundOpenSignEditorPacket
+   # wiki.vg: Open Sign Editor
+   # Sent by the server to open the sign editor GUI.
    packet_open_sign_entity:
       location: position
       isFrontText: bool
    # MC: ClientboundPingPacket
+   # wiki.vg: Ping (play)
+   # Packet is not used by the Notchian server. When sent to the client, client responds with a Pong packet with the same id.
    packet_ping:
       id: i32
    # MC: ClientboundPongResponsePacket
+   # wiki.vg: Pong Response (play)
+   # Sent by the server in response to a Ping Request packet. Contains the same timestamp as the Ping Request.
    packet_ping_response:
       id: i64
    # MC: ClientboundPlaceGhostRecipePacket
+   # wiki.vg: Place Ghost Recipe
+   # Sent by the server to place a ghost recipe in the crafting grid.
    packet_craft_recipe_response:
       windowId: ContainerID
       recipeDisplay: RecipeDisplay
    # MC: ClientboundPlayerAbilitiesPacket
+   # wiki.vg: Player Abilities (clientbound)
+   # Sent by the server to update the player's abilities.
    packet_abilities:
       flags: i8
       flyingSpeed: f32
       walkingSpeed: f32
    # MC: ClientboundPlayerChatPacket
+   # wiki.vg: Player Chat Message
+   # Sent by the server to send a chat message to the client.
    packet_player_chat:
       senderUuid: UUID
       index: varint
@@ -2087,19 +2291,29 @@
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
    # MC: ClientboundPlayerCombatEndPacket
+   # wiki.vg: End Combat
+   # Sent by the server to end a combat event.
    packet_end_combat_event:
       duration: varint
    # MC: ClientboundPlayerCombatEnterPacket
+   # wiki.vg: Enter Combat
+   # Sent by the server to start a combat event.
    packet_enter_combat_event:
       # Empty
    # MC: ClientboundPlayerCombatKillPacket
+   # wiki.vg: Combat Death
+   # Sent by the server to indicate that a player has died in combat.
    packet_death_combat_event:
       playerId: varint
       message: anonymousNbt
    # MC: ClientboundPlayerInfoRemovePacket
+   # wiki.vg: Player Info Remove
+   # Sent by the server to remove a player from the player list.
    packet_player_remove:
       players: UUID[]varint
    # MC: ClientboundPlayerInfoUpdatePacket
+   # wiki.vg: Player Info Update
+   # Sent by the server to update the player list.
    packet_player_info:
       action: ["bitflags", {
          "type": "u8",
@@ -2142,6 +2356,8 @@
             default: void
 
    # MC: ClientboundPlayerLookAtPacket
+   # wiki.vg: Look At
+   # Sent by the server to make the player look at a specific entity or position.
    packet_face_player:
       feet_eyes: varint
       x: f64
@@ -2174,6 +2390,8 @@
    #    { "name": "x", "size": 1, "signed": false },
    # ]]
    # MC: ClientboundPlayerPositionPacket
+   # wiki.vg: Synchronize Player Position
+   # Sent by the server to synchronize the player's position.
    packet_position:
       teleportId: varint
       x: f64
@@ -2186,11 +2404,15 @@
       pitch: f32
       flags: PositionUpdateRelatives
    # MC: ClientboundPlayerRotationPacket
+   # wiki.vg: Player Rotation
+   # Sent by the server to synchronize the player's rotation.
    packet_player_rotation:
       yaw: f32
       pitch: f32
 
    # MC: ClientboundRecipeBookAddPacket
+   # wiki.vg: Recipe Book Add
+   # Sent by the server to add a recipe to the client's recipe book.
    packet_recipe_book_add:
       entries: []varint
          # RecipeDisplayEntry
@@ -2220,9 +2442,13 @@
          }]
       replace: bool
    # MC: ClientboundRecipeBookRemovePacket
+   # wiki.vg: Recipe Book Remove
+   # Sent by the server to remove a recipe from the client's recipe book.
    packet_recipe_book_remove:
       recipeIds: varint[]varint
    # MC: ClientboundRecipeBookSettingsPacket
+   # wiki.vg: Recipe Book Settings
+   # Sent by the server to update the client's recipe book settings.
    packet_recipe_book_settings:
       craftingGuiOpen: bool
       craftingFilteringCraftable: bool
@@ -2233,26 +2459,38 @@
       smokerGuiOpen: bool
       smokerFilteringCraftable: bool
    # MC: ClientboundRemoveEntitiesPacket
+   # wiki.vg: Remove Entities
+   # Sent by the server to remove entities from the client's world.
    packet_entity_destroy:
       entityIds: varint[]varint
    # MC: ClientboundRemoveMobEffectPacket
+   # wiki.vg: Remove Entity Effect
+   # Sent by the server to remove a mob effect from an entity.
    packet_remove_entity_effect:
       entityId: varint
       effectId: varint
    # MC: ClientboundResetScorePacket
+   # wiki.vg: Reset Score
+   # Sent by the server to reset a scoreboard objective.
    packet_reset_score:
       entity_name: string
       objective_name?: string
    # MC: ClientboundRespawnPacket
+   # wiki.vg: Respawn
+   # Sent by the server to respawn the player.
    packet_respawn:
       worldState: SpawnInfo
       # Bit field: 0b1 - KEEP_ATTRIBUTE_MODIFIERS, 0b10 - KEEP_ENTITY_DATA
       copyMetadata: u8
    # MC: ClientboundRotateHeadPacket
+   # wiki.vg: Set Head Rotation
+   # Sent by the server to rotate an entity's head.
    packet_entity_head_rotation:
       entityId: varint
       headYaw: i8
    # MC: ClientboundSectionBlocksUpdatePacket
+   # wiki.vg: Update Section Blocks
+   # Sent by the server to update the blocks in a chunk section.
    packet_multi_block_change:
       chunkCoordinates: [ "bitfield", [
          { "name": "x", "size": 22, "signed": true },
@@ -2261,69 +2499,105 @@
       ]]
       records: varint[]varint
    # MC: ClientboundSelectAdvancementsTabPacket
+   # wiki.vg: Select Advancements Tab
+   # Sent by the server to select an advancements tab.
    packet_select_advancement_tab:
       id?: string
    # MC: ClientboundServerDataPacket
+   # wiki.vg: Server Data
+   # Sent by the server to update the server's MOTD and icon.
    packet_server_data:
       motd: anonymousNbt
       iconBytes?: ByteArray
    # MC: ClientboundSetActionBarTextPacket
+   # wiki.vg: Set Action Bar Text
+   # Sent by the server to display text in the action bar.
    packet_action_bar:
       text: anonymousNbt
    # MC: ClientboundSetBorderCenterPacket
+   # wiki.vg: Set Border Center
+   # Sent by the server to set the center of the world border.
    packet_world_border_center:
       x: f64
       z: f64
    # MC: ClientboundSetBorderLerpSizePacket
+   # wiki.vg: Set Border Lerp Size
+   # Sent by the server to set the size of the world border.
    packet_world_border_lerp_size:
       oldDiameter: f64
       newDiameter: f64
       speed: varint
    # MC: ClientboundSetBorderSizePacket
+   # wiki.vg: Set Border Size
+   # Sent by the server to set the size of the world border.
    packet_world_border_size:
       diameter: f64
    # MC: ClientboundSetBorderWarningDelayPacket
+   # wiki.vg: Set Border Warning Delay
+   # Sent by the server to set the warning delay for the world border.
    packet_world_border_warning_delay:
       warningTime: varint
    # MC: ClientboundSetBorderWarningDistancePacket
+   # wiki.vg: Set Border Warning Distance
+   # Sent by the server to set the warning distance for the world border.
    packet_world_border_warning_reach:
       warningBlocks: varint
    # MC: ClientboundSetCameraPacket
+   # wiki.vg: Set Camera
+   # Sent by the server to set the camera entity.
    packet_camera:
       cameraId: varint
    # MC: ClientboundSetChunkCacheCenterPacket
+   # wiki.vg: Set Center Chunk
+   # Sent by the server to set the center chunk for the client's chunk cache.
    packet_update_view_position:
       chunkX: varint
       chunkZ: varint
    # MC: ClientboundSetChunkCacheRadiusPacket
+   # wiki.vg: Set Render Distance
+   # Sent by the server to set the render distance.
    packet_update_view_distance:
       viewDistance: varint
    # MC: ClientboundSetCursorItemPacket
+   # wiki.vg: Set Cursor Item
+   # Sent by the server to set the item in the cursor slot.
    packet_set_cursor_item:
       contents?: Slot
    # MC: ClientboundSetDefaultSpawnPositionPacket
+   # wiki.vg: Set Default Spawn Position
+   # Sent by the server to set the default spawn position.
    packet_spawn_position:
       location: position
       angle: f32
    # MC: ClientboundSetDisplayObjectivePacket
+   # wiki.vg: Display Objective
+   # Sent by the server to display a scoreboard objective.
    packet_scoreboard_display_objective:
       position: varint
       name: string
    # MC: ClientboundSetEntityDataPacket
+   # wiki.vg: Set Entity Metadata
+   # Sent by the server to update an entity's metadata.
    packet_entity_metadata:
       entityId: varint
       metadata: entityMetadata
    # MC: ClientboundSetEntityLinkPacket
+   # wiki.vg: Link Entities
+   # Sent by the server to link two entities.
    packet_attach_entity:
       entityId: i32
       vehicleId: i32
    # MC: ClientboundSetEntityMotionPacket
+   # wiki.vg: Set Entity Velocity
+   # Sent by the server to set an entity's velocity.
    packet_entity_velocity:
       entityId: varint
       velocityX: i16
       velocityY: i16
       velocityZ: i16
    # MC: ClientboundSetEquipmentPacket
+   # wiki.vg: Set Equipment
+   # Sent by the server to set an entity's equipment.
    packet_entity_equipment:
       entityId: varint
       equipments: [
@@ -2345,19 +2619,27 @@
          }
       ]
    # MC: ClientboundSetExperiencePacket
+   # wiki.vg: Set Experience
+   # Sent by the server to set the player's experience.
    packet_experience:
       experienceBar: f32
       level: varint
       totalExperience: varint
    # MC: ClientboundSetHealthPacket
+   # wiki.vg: Set Health
+   # Sent by the server to set the player's health.
    packet_update_health:
       health: f32
       food: varint
       foodSaturation: f32
    # MC: ClientboundSetHeldSlotPacket
+   # wiki.vg: Set Held Item (clientbound)
+   # Sent by the server to set the player's held item.
    packet_held_item_slot:
       slot: varint
    # MC: ClientboundSetObjectivePacket
+   # wiki.vg: Update Objectives
+   # Sent by the server to update a scoreboard objective.
    packet_scoreboard_objective:
       name: string
       action: i8
@@ -2390,14 +2672,20 @@
             default: void
          default: void
    # MC: ClientboundSetPassengersPacket
+   # wiki.vg: Set Passengers
+   # Sent by the server to set the passengers of an entity.
    packet_set_passengers:
       entityId: varint
       passengers: varint[]varint
    # MC: ClientboundSetPlayerInventoryPacket
+   # wiki.vg: Set Player Inventory Slot
+   # Sent by the server to set the player's inventory slot.
    packet_set_player_inventory:
       slotId: varint
       contents?: Slot
    # MC: ClientboundSetPlayerTeamPacket
+   # wiki.vg: Update Teams
+   # Sent by the server to update a team.
    packet_teams:
       team: string
       mode: i8
@@ -2435,6 +2723,8 @@
          if 4: string[]varint
          default: void
    # MC: ClientboundSetScorePacket
+   # wiki.vg: Update Score
+   # Sent by the server to update a scoreboard score.
    packet_scoreboard_score:
       itemName: string
       scoreName: string
@@ -2446,25 +2736,37 @@
          if 2: anonymousNbt
          default: void
    # MC: ClientboundSetSimulationDistancePacket
+   # wiki.vg: Set Simulation Distance
+   # Sent by the server to set the simulation distance.
    packet_simulation_distance:
       distance: varint
    # MC: ClientboundSetSubtitleTextPacket
+   # wiki.vg: Set Subtitle Text
+   # Sent by the server to set the subtitle text.
    packet_set_title_subtitle:
       text: anonymousNbt
    # MC: ClientboundSetTimePacket
+   # wiki.vg: Update Time
+   # Sent by the server to update the world time.
    packet_update_time:
       age: i64
       time: i64
       tickDayTime: bool
    # MC: ClientboundSetTitleTextPacket
+   # wiki.vg: Set Title Text
+   # Sent by the server to set the title text.
    packet_set_title_text:
       text: anonymousNbt
    # MC: ClientboundSetTitlesAnimationPacket
+   # wiki.vg: Set Title Animation Times
+   # Sent by the server to set the title animation times.
    packet_set_title_time:
       fadeIn: i32
       stay: i32
       fadeOut: i32
    # MC: ClientboundSoundEntityPacket
+   # wiki.vg: Entity Sound Effect
+   # Sent by the server to play a sound effect from an entity.
    packet_entity_sound_effect:
       soundId: varint
       soundEvent: soundId ?
@@ -2478,6 +2780,8 @@
       pitch: f32
       seed: i64
    # MC: ClientboundSoundPacket
+   # wiki.vg: Sound Effect
+   # Sent by the server to play a sound effect.
    packet_sound_effect:
       soundId: varint
       soundEvent: soundId ?
@@ -2493,9 +2797,13 @@
       pitch: f32
       seed: i64
    # MC: ClientboundStartConfigurationPacket
+   # wiki.vg: Start Configuration
+   # Sent by the server to start the configuration process.
    packet_start_configuration:
       # Empty
    # MC: ClientboundStopSoundPacket
+   # wiki.vg: Stop Sound
+   # Sent by the server to stop a sound effect.
    packet_stop_sound:
       flags: i8
       source: flags ?
@@ -2508,23 +2816,33 @@
          default: void
    ## (Store Cookie is Common)
    # MC: ClientboundSystemChatPacket
+   # wiki.vg: System Chat Message
+   # Sent by the server to send a system chat message to the client.
    packet_system_chat:
       content: anonymousNbt
       isActionBar: bool
    # MC: ClientboundTabListPacket
+   # wiki.vg: Set Tab List Header And Footer
+   # Sent by the server to set the header and footer of the tab list.
    packet_playerlist_header:
       header: anonymousNbt
       footer: anonymousNbt
    # MC: ClientboundTagQueryPacket
+   # wiki.vg: Tag Query Response
+   # Sent by the server to respond to a tag query.
    packet_nbt_query_response:
       transactionId: varint
       nbt: anonOptionalNbt
    # MC: ClientboundTakeItemEntityPacket
+   # wiki.vg: Pickup Item
+   # Sent by the server to indicate that an item has been picked up by an entity.
    packet_collect:
       collectedEntityId: varint
       collectorEntityId: varint
       pickupItemCount: varint
    # MC: ClientboundTeleportEntityPacket
+   # wiki.vg: Synchronize Vehicle Position
+   # Sent by the server to synchronize the position of a vehicle.
    packet_entity_teleport:
       entityId: varint
       x: f64
@@ -2534,14 +2852,20 @@
       pitch: i8
       onGround: bool
    # MC: ClientboundTickingStatePacket
+   # wiki.vg: Set Ticking State
+   # Sent by the server to set the ticking state of the world.
    packet_set_ticking_state:
       tick_rate: f32
       is_frozen: bool
    # MC: ClientboundTickingStepPacket
+   # wiki.vg: Step Tick
+   # Sent by the server to step the world's ticks.
    packet_step_tick:
       tick_steps: varint
    ## (Transfer is common)
    # MC: ClientboundUpdateAdvancementsPacket
+   # wiki.vg: Update Advancements
+   # Sent by the server to update the client's advancements.
    packet_advancements:
       reset: bool
       advancementMapping: []varint
@@ -2574,6 +2898,8 @@
             criterionIdentifier: string
             criterionProgress?: i64
    # MC: ClientboundUpdateAttributesPacket
+   # wiki.vg: Update Attributes
+   # Sent by the server to update an entity's attributes.
    packet_entity_update_attributes:
       entityId: varint
       properties: []varint
@@ -2606,6 +2932,8 @@
             amount: f64
             operation: i8
    # MC: ClientboundUpdateMobEffectPacket
+   # wiki.vg: Entity Effect
+   # Sent by the server to update a mob effect on an entity.
    packet_entity_effect:
       entityId: varint
       effectId: varint
@@ -2621,6 +2949,8 @@
       # ]]
       flags: u8
    # MC: ClientboundUpdateRecipesPacket
+   # wiki.vg: Update Recipes
+   # Sent by the server to update the client's recipes.
    packet_declare_recipes:
       recipes: []varint
          name: string
@@ -2630,11 +2960,15 @@
          slotDisplay: SlotDisplay
 
    # MC: ClientboundUpdateTagsPacket
+   # wiki.vg: Update Tags (play)
+   # Sent by the server to update the client's tags.
    packet_tags:
       tags: []varint
          tagType: string
          tags: tags
    # MC: ClientboundProjectilePowerPacket
+   # wiki.vg: Projectile Power
+   # Sent by the server to set the power of a projectile.
    packet_set_projectile_power:
       id: varint
       accelerationPower: f64
@@ -2733,6 +3067,7 @@
       - update_view_position
       - update_view_distance
       - set_cursor_item
+      - held_item_slot
       - spawn_position
       - scoreboard_display_objective
       - entity_metadata
@@ -2741,7 +3076,6 @@
       - entity_equipment
       - experience
       - update_health
-      - held_item_slot
       - scoreboard_objective
       - set_passengers
       - set_player_inventory
@@ -2908,26 +3242,40 @@
 
 ^play.toServer.types:
    # MC: ServerboundAcceptTeleportationPacket
+   # wiki.vg: Confirm Teleportation
+   # Sent by the client to confirm a teleportation.
    packet_teleport_confirm:
       teleportId: varint
    # MC: ServerboundBlockEntityTagQueryPacket
+   # wiki.vg: Query Block Entity Tag
+   # Sent by the client to query the tag of a block entity.
    packet_query_block_nbt:
       transactionId: varint
       location: position
    # MC: ServerboundSelectBundleItemPacket
+   # wiki.vg: Bundle Item Selected
+   # Sent by the client to select an item from a bundle.
    packet_select_bundle_item:
       slotId: varint
       selectedItemIndex: varint
    # MC: ServerboundChangeDifficultyPacket
+   # wiki.vg: Change Difficulty
+   # Sent by the client to change the difficulty.
    packet_set_difficulty:
       newDifficulty: u8
    # MC: ServerboundChatAckPacket
+   # wiki.vg: Acknowledge Message
+   # Sent by the client to acknowledge a chat message.
    packet_message_acknowledgement:
       count: varint
    # MC: ServerboundChatCommandPacket
+   # wiki.vg: Chat Command
+   # Sent by the client to send a chat command.
    packet_chat_command:
       command: string
    # MC: ServerboundChatCommandSignedPacket
+   # wiki.vg: Signed Chat Command
+   # Sent by the client to send a signed chat command.
    packet_chat_command_signed:
       command: string
       timestamp: i64
@@ -2948,6 +3296,8 @@
          }
       ]
    # MC: ServerboundChatPacket
+   # wiki.vg: Chat Message
+   # Sent by the client to send a chat message.
    packet_chat_message:
       message: string
       timestamp: i64
@@ -2966,21 +3316,31 @@
          }
       ]
    # MC: ServerboundChatSessionUpdatePacket
+   # wiki.vg: Player Session
+   # Sent by the client to update the player's session.
    packet_chat_session_update:
       sessionUUID: UUID
       expireTime: i64
       publicKey: ByteArray
       signature: ByteArray
    # MC: ServerboundChunkBatchReceivedPacket
+   # wiki.vg: Chunk Batch Received
+   # Sent by the client to acknowledge the receipt of a chunk batch.
    packet_chunk_batch_received:
       chunksPerTick: f32
    # MC: ServerboundClientCommandPacket
+   # wiki.vg: Client Status
+   # Sent by the client to indicate a client status.
    packet_client_command:
       actionId: varint
    # MC: ServerboundClientTickEndPacket
+   # wiki.vg: Client Tick End
+   # Sent by the client to indicate the end of a client tick.
    packet_tick_end:
       # Empty
    # MC: ServerboundClientInformationPacket
+   # wiki.vg: Client Information (play)
+   # Sent by the client to update the client's information.
    packet_settings:
       locale: string
       viewDistance: i8
@@ -2995,17 +3355,25 @@
       - decreased
       - minimal
    # MC: ServerboundCommandSuggestionPacket
+   # wiki.vg: Command Suggestions Request
+   # Sent by the client to request command suggestions.
    packet_tab_complete:
       transactionId: varint
       text: string
    # MC: ServerboundConfigurationAcknowledgedPacket
+   # wiki.vg: Acknowledge Configuration
+   # Sent by the client to acknowledge the configuration process.
    packet_configuration_acknowledged:
       # Empty
    # MC: ServerboundContainerButtonClickPacket
+   # wiki.vg: Click Container Button
+   # Sent by the client to click a button in a container.
    packet_enchant_item:
       windowId: ContainerID
       enchantment: i8
    # MC: ServerboundContainerClickPacket
+   # wiki.vg: Click Container
+   # Sent by the client to click a slot in a container.
    packet_window_click:
       windowId: ContainerID
       stateId: varint
@@ -3017,31 +3385,45 @@
          item: Slot
       cursorItem: Slot
    # MC: ServerboundContainerClosePacket
+   # wiki.vg: Close Container
+   # Sent by the client to close a container.
    packet_close_window:
       windowId: ContainerID
    # MC: ServerboundContainerSlotStateChangedPacket
+   # wiki.vg: Change Container Slot State
+   # Sent by the client to change the state of a container slot.
    packet_set_slot_state:
       slot_id: varint
       window_id: ContainerID
       state: bool
    ## (ServerboundCookieResponsePacket is common)
    # MC: ServerboundCustomPayloadPacket
+   # wiki.vg: Serverbound Plugin Message (play)
+   # Mods and plugins can use this to send their data. Minecraft itself uses some plugin channels. These internal channels are in the minecraft namespace.
    packet_custom_payload:
       channel: string
       data: restBuffer
    # MC: ServerboundDebugSampleSubscriptionPacket
+   # wiki.vg: Debug Sample Subscription
+   # Sent by the client to subscribe to debug samples.
    packet_debug_sample_subscription:
       type: varint
    # MC: ServerboundEditBookPacket
+   # wiki.vg: Edit Book
+   # Sent by the client to edit a book.
    packet_edit_book:
       hand: varint
       pages: string[]varint
       title?: string
    # MC: ServerboundEntityTagQuery
+   # wiki.vg: Query Entity Tag
+   # Sent by the client to query the tag of an entity.
    packet_query_entity_nbt:
       transactionId: varint
       entityId: varint
    # MC: ServerboundInteractPacket
+   # wiki.vg: Interact
+   # Sent by the client to interact with an entity.
    packet_use_entity:
       target: varint
       mouse: varint
@@ -3060,14 +3442,20 @@
          default: void
       sneaking: bool
    # MC: ServerboundJigsawGeneratePacket
+   # wiki.vg: Jigsaw Generate
+   # Sent by the client to generate a jigsaw structure.
    packet_generate_structure:
       location: position
       levels: varint
       keepJigsaws: bool
    # MC: ServerboundKeepAlivePacket
+   # wiki.vg: Serverbound Keep Alive (play)
+   # Sent by the client to respond to a keep-alive packet.
    packet_keep_alive:
       keepAliveId: i64
    # MC: ServerboundLockDifficultyPacket
+   # wiki.vg: Lock Difficulty
+   # Sent by the client to lock the difficulty.
    packet_lock_difficulty:
       locked: bool
 
@@ -3076,12 +3464,16 @@
       "flags": ["onGround", "hasHorizontalCollision"]
    }]
    # MC: ServerboundMovePlayerPacket.Pos
+   # wiki.vg: Set Player Position
+   # Sent by the client to set the player's position.
    packet_position:
       x: f64
       y: f64
       z: f64
       flags: MovementFlags
    # MC: ServerboundMovePlayerPacket.PosRot
+   # wiki.vg: Set Player Position and Rotation
+   # Sent by the client to set the player's position and rotation.
    packet_position_look:
       x: f64
       y: f64
@@ -3090,14 +3482,20 @@
       pitch: f32
       flags: MovementFlags
    # MC: ServerboundMovePlayerPacket.Rot
+   # wiki.vg: Set Player Rotation
+   # Sent by the client to set the player's rotation.
    packet_look:
       yaw: f32
       pitch: f32
       flags: MovementFlags
    # MC: ServerboundMovePlayerPacket.StatusOnly
+   # wiki.vg: Set Player Movement Flags
+   # Sent by the client to set the player's movement flags.
    packet_flying:
       flags: MovementFlags
    # MC: ServerboundMoveVehiclePacket
+   # wiki.vg: Move Vehicle
+   # Sent by the client to move a vehicle.
    packet_vehicle_move:
       x: f64
       y: f64
@@ -3106,41 +3504,58 @@
       pitch: f32
       onGround: bool
    # MC: ServerboundPaddleBoatPacket
+   # wiki.vg: Paddle Boat
+   # Sent by the client to paddle a boat.
    packet_steer_boat:
       leftPaddle: bool
       rightPaddle: bool
    # MC: ServerboundPickItemFromBlockPacket
+   # wiki.vg: Pick Item From Block
+   # Sent by the client to pick an item from a block.
    packet_pick_item_from_block:
       position: position
       includeData: bool
    # MC: ServerboundPickItemFromEntityPacket
+   # wiki.vg: Pick Item From Entity
+   # Sent by the client to pick an item from an entity.
    packet_pick_item_from_entity:
       entityId: varint
       includeData: bool
    # MC: ServerboundPingRequestPacket
+   # wiki.vg: Ping Request (play)
+   # Sent by the client to measure the latency to the server.
    packet_ping_request:
       id: i64
    # MC: ServerboundPlaceRecipePacket
+   # wiki.vg: Place Recipe
+   # Sent by the client to place a recipe in the crafting grid.
    packet_craft_recipe_request:
       windowId: ContainerID
       recipeId: varint
       makeAll: bool
    # MC: ServerboundPlayerAbilitiesPacket
+   # wiki.vg: Player Abilities (serverbound)
+   # Sent by the client to update the player's abilities.
    packet_abilities:
       flags: i8
    # MC: ServerboundPlayerActionPacket
+   # wiki.vg: Player Action
+   # Sent by the client to perform a player action.
    packet_block_dig:
       status: varint
       location: position
       face: i8
       sequence: varint
    # MC: ServerboundPlayerCommandPacket
+   # wiki.vg: Player Command
+   # Sent by the client to perform a player command.
    packet_entity_action:
       entityId: varint
       actionId: varint
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
-   # previously: packet_steer_vehicle
+   # wiki.vg: Player Input
+   # Sent by the client to update the player's input.
    packet_player_input:
       ## client/net/minecraft/world/entity/player/Input.java
       inputs: ["bitflags", {
@@ -3148,58 +3563,86 @@
          "flags": ["forward", "backward", "left", "right", "jump", "shift", "sprint"]
       }]
    # MC: ServerboundPlayerLoadedPacket
+   # wiki.vg: Player Loaded
+   # Sent by the client to indicate that the player has loaded.
    packet_player_loaded:
       # Empty
    # MC: ServerboundPongPacket
+   # wiki.vg: Pong (play)
+   # Sent by the client to respond to a ping request.
    packet_pong:
       id: i32
    # MC: ServerboundRecipeBookChangeSettingsPacket
+   # wiki.vg: Change Recipe Book Settings
+   # Sent by the client to change the recipe book settings.
    packet_recipe_book:
       bookId: varint
       bookOpen: bool
       filterActive: bool
    # MC: ServerboundRecipeBookSeenRecipePacket
+   # wiki.vg: Set Seen Recipe
+   # Sent by the client to set a recipe as seen.
    packet_displayed_recipe:
       recipeId: varint
    # MC: ServerboundRenameItemPacket
+   # wiki.vg: Rename Item
+   # Sent by the client to rename an item.
    packet_name_item:
       name: string
    # MC: ServerboundResourcePackPacket
+   # wiki.vg: Resource Pack Response (play)
+   # Sent by the client to respond to a resource pack request.
    packet_resource_pack_receive:
       uuid: UUID
       result: varint
    # MC: ServerboundSeenAdvancementsPacket
+   # wiki.vg: Seen Advancements
+   # Sent by the client to indicate that advancements have been seen.
    packet_advancement_tab:
       action: varint
       tabId: action ?
          if 0: string
          if 1: void
    # MC: ServerboundSelectTradePacket
+   # wiki.vg: Select Trade
+   # Sent by the client to select a trade.
    packet_select_trade:
       slot: varint
    # MC: ServerboundSetBeaconPacket
+   # wiki.vg: Set Beacon Effect
+   # Sent by the client to set the beacon effect.
    packet_set_beacon_effect:
       primary_effect?: varint
       secondary_effect?: varint
    # MC: ServerboundSetCarriedItemPacket
+   # wiki.vg: Set Held Item (serverbound)
+   # Sent by the client to set the held item.
    packet_held_item_slot:
       slotId: i16
    # MC: ServerboundSetCommandBlockPacket
+   # wiki.vg: Program Command Block
+   # Sent by the client to program a command block.
    packet_update_command_block:
       location: position
       command: string
       mode: varint
       flags: u8
    # MC: ServerboundSetCommandMinecartPacket
+   # wiki.vg: Program Command Block Minecart
+   # Sent by the client to program a command block minecart.
    packet_update_command_block_minecart:
       entityId: varint
       command: string
       track_output: bool
    # MC: ServerboundSetCreativeModeSlotPacket
+   # wiki.vg: Set Creative Mode Slot
+   # Sent by the client to set a creative mode slot.
    packet_set_creative_slot:
       slot: i16
       item: Slot
    # MC: ServerboundSetJigsawBlockPacket
+   # wiki.vg: Program Jigsaw Block
+   # Sent by the client to program a jigsaw block.
    packet_update_jigsaw_block:
       location: position
       name: string
@@ -3210,6 +3653,8 @@
       selection_priority: varint
       placement_priority: varint
    # MC: ServerboundSetStructureBlockPacket
+   # wiki.vg: Program Structure Block
+   # Sent by the client to program a structure block.
    packet_update_structure_block:
       location: position
       action: varint
@@ -3228,6 +3673,8 @@
       seed: varint
       flags: u8
    # MC: ServerboundSignUpdatePacket
+   # wiki.vg: Update Sign
+   # Sent by the client to update a sign.
    packet_update_sign:
       location: position
       isFrontText: bool
@@ -3236,12 +3683,18 @@
       text3: string
       text4: string
    # MC: ServerboundSwingPacket
+   # wiki.vg: Swing Arm
+   # Sent by the client to swing the player's arm.
    packet_arm_animation:
       hand: varint
    # MC: ServerboundTeleportToEntityPacket
+   # wiki.vg: Teleport To Entity
+   # Sent by the client to teleport to an entity.
    packet_spectate:
       target: UUID
    # MC: ServerboundUseItemOnPacket
+   # wiki.vg: Use Item On
+   # Sent by the client to use an item on a block.
    packet_block_place:
       hand: varint
       location: position
@@ -3253,6 +3706,8 @@
       worldBorderHit: bool
       sequence: varint
    # MC: ServerboundUseItemPacket
+   # wiki.vg: Use Item
+   # Sent by the client to use an item.
    packet_use_item:
       hand: varint
       sequence: varint
