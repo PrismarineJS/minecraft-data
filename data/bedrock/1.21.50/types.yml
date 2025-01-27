@@ -307,8 +307,6 @@ MetadataDictionary: []varint
       130: player_has_died
       131: collision_box
       132: visible_mob_effects
-      # 132: filtered_name
-      # 133: enter_bed_position
    type: varint =>
       0: byte
       1: short
@@ -523,14 +521,8 @@ TransactionUseItem:
    # ActionType is the type of the UseItem inventory transaction. It is one of the action types found above,
    # and specifies the way the player interacted with the block.
    action_type: varint =>
-      # Right click item use on a surface like placing a block
       0: click_block
-      # Start right click and hold style item use or potentially interact with nothing.
-      # If it is a usable item like food the server is expected to send a SetActorDataPacket with ActorFlags::USINGITEM along with the transaction response.
-      # While using an item, movement speed is slowed which will be reflected in the move vector in Player Auth Input.
       1: click_air
-      # Block breaking like left click. When using server auth block breaking as specified in StartGamePacket this is never sent.
-      # Instead, block actions are supplied in Player Auth Input.
       2: break_block
    # TriggerType is the type of the trigger that caused the inventory transaction. It is one of the trigger
    # types found in the constants above. If TriggerType is TriggerTypePlayerInput, the transaction is from
@@ -615,19 +607,10 @@ Transaction:
    legacy: TransactionLegacy
    # What type of transaction took place
    transaction_type: varint =>
-      # Sent for container UI operations depending on if ItemStackNetManager is enabled
       0: normal
-      # Sent from server to client to reject a transaction
       1: inventory_mismatch
-      # Sent for a player performing right click style item use.
-      # See the contained ItemUseInventoryTransaction::ActionType for the expected use case.
       2: item_use
-      # Sent for a player right clicking on an entity or attacking them.
-      # See ItemUseInventoryTransaction::ActionType for which it is.
       3: item_use_on_entity
-      # Sent when releasing right click on a chargeable item like a bow or finishing charging like a crossbow.
-      # This is different than canceling item use early which would be in Player Auth Input.
-      # See ItemReleaseInventoryTransaction::ActionType for which it is.
       4: item_release
    # The list of inventory internal actions in this packet, e.g. inventory GUI actions
    actions: TransactionActions
@@ -646,9 +629,7 @@ Transaction:
          # ActionType is the type of the UseItemOnEntity inventory transaction. It is one of the action types
          # found in the constants above, and specifies the way the player interacted with the entity.
          action_type: varint =>
-            # Right click interact with actor.
             0: interact
-            # Left click style attack of actor or elytra spin attack. Server is expected to deal damage to the entity with visuals.
             1: attack
          # HotBarSlot is the hot bar slot that the player was holding while clicking the entity. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.
@@ -669,9 +650,7 @@ Transaction:
          # As of 1.13, the ActionType is always 0. This field can be ignored, because releasing food (by consuming
          # it) or releasing a bow (to shoot an arrow) is essentially the same.
          action_type: varint =>
-            # Release right click and hold style item use, like firing a bow
             0: release
-            # Finish right click and hold style item use, like charging a crossbow
             1: consume
          # HotBarSlot is the hot bar slot that the player was holding while releasing the item. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.
@@ -1179,15 +1158,9 @@ ItemStackResponses: []varint
                durability_correction: zigzag32
 
 
-ItemData:
+ItemComponentList: []varint
    # Name is the name of the item, which is a name like 'minecraft:stick'.
    name: string
-   # ID is the numerical network ID of the item, used to reference the item in packets.
-   network_id: li16
-   # IsComponentBased specifies whether the item uses components.
-   component_based: bool
-   # ItemVersion is the version of the item.
-   version: varint
    # Data is a map containing the components and properties of the item.
    nbt: nbt
 
@@ -1596,7 +1569,6 @@ ContainerSlotType: u8 =>
    - smithing_table_template
    - crafter
    - dynamic
-   - registry # 125
 
 SoundType: varint =>
    - ItemUseOn
@@ -2241,7 +2213,6 @@ DeviceOS: li32 =>
 - IOS
 - OSX
 - FireOS
-# Deprecated
 - GearVR
 - Hololens
 - Win10
@@ -2278,7 +2249,6 @@ AbilitySet: ["bitflags",
          "world_builder",
          "no_clip",
          "privileged_builder",
-         "vertical_fly_speed",
          "count"
       ]
    }
@@ -2415,7 +2385,6 @@ DisconnectFailReason: zigzag32 =>
    - block_mismatch
    - invalid_heights
    - invalid_widths
-   # deprecated
    - connection_lost
    - zombie_connection
    - shutdown
@@ -2459,8 +2428,6 @@ DisconnectFailReason: zigzag32 =>
    - server_shutdown
    - game_setup_cancelled
    - game_setup_failed
-   - sub_client_login_disabled # 116
-   - deep_link_trying_to_open_demo_world_while_signed_in # 117
 
 FullContainerName:
    container_id: ContainerSlotType
@@ -2469,31 +2436,3 @@ FullContainerName:
 MovementEffectType: varint =>
    -1: invalid
    0: GLIDE_BOOST
-
-CameraAimAssistAction: u8 =>
-   # Sets aim-assist to use the settings from a CameraPresets aim_assist field.
-   0: set_from_camera_preset
-   # Clears aim-assist settings.
-   1: clear
-
-EntityBoundingBoxComponent:
-   scale: lf32
-   width: lf32
-   height: lf32
-
-MovementAttributesComponent:
-   movement_speed: lf32
-   underwater_movement_speed: lf32
-   lava_movement_speed: lf32
-   jump_strength: lf32
-   health: lf32
-   hunger: lf32
-
-CreativeItemCategory: li32 =>
-   0: all
-   1: construction
-   2: nature
-   3: equipment
-   4: items
-   5: item_command_only
-   6: undefined

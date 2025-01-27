@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.60
+!version: 1.21.50
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -435,6 +435,9 @@ packet_start_game:
 
    # BlockProperties is a list of all the custom blocks registered on the server.
    block_properties: BlockProperties
+   # A list of all items with their legacy IDs which are available in the game.
+   # Failing to send any of the items that are in the game will crash mobile clients.
+   itemstates: Itemstates
    # A unique ID specifying the multi-player session of the player. 
    # A random UUID should be filled out for this field.
    multiplayer_correlation_id: string
@@ -1178,23 +1181,13 @@ packet_animate:
    !id: 0x2c
    !bound: both
    action_id: zigzag32 =>
-      # Unused
       0: none
-      # Server bound notification to swing the player's arm. Server is expected to rebroadcast to all that should see the arm move.
-      #  See also PlayerAuthInputPacket::InputData::MissedSwing for a very similar action
       1: swing_arm
       2: unknown
-      # Client bound notification to stop sleeping in a bed
       3: wake_up
-      # Client-bound notification to play critical hit particles
       4: critical_hit
-      # Unused
       5: magic_critical_hit
-      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
-      # See Player Auth Input for how to compute this in the latest protocol.
       128: row_right
-      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
-      # See Player Auth Input for how to compute this in the latest protocol.
       129: row_left
    runtime_entity_id: varint64
    _: action_id ?
@@ -1947,7 +1940,6 @@ packet_command_block_update:
    # Name is the name of the command block updated. If not empty, it will show this name hovering above the
    # command block when hovering over the block with the cursor.
    name: string
-   filtered_name: string
    # ShouldTrackOutput specifies if the command block tracks output. If set to false, the output box won't
    # be shown within the command block.
    should_track_output: bool
@@ -2196,7 +2188,6 @@ packet_structure_block_update:
    # StructureName is the name of the structure that was set in the structure block's UI. This is the name
    # used to export the structure to a file.
    structure_name: string
-   filtered_structure_name: string
    # DataField is the name of a function to run, usually used during natural generation. A description can
    # be found here: https://minecraft.wiki/w/Structure_Block#Data.
    data_field: string
@@ -3242,21 +3233,10 @@ InputFlag: [ "bitflags", {
 packet_creative_content:
    !id: 0x91
    !bound: client
-   # The groups that are displayed within the creative inventory menu.
-   groups: []varint
-      # Where the group shows up in the creative inventory (e.g. Construction, Items, etc)
-      category: CreativeItemCategory
-      # The name of the group (e.g. Decorative stone, Wool, etc.)
-      name: string
-      # The item whose icon is used to label the group (icon you click on to open/close the group)
-      icon_item: ItemLegacy
-   # Individual items that are displayed within the creative inventory menu, grouped by their category.
+   # Items is a list of the items that should be added to the creative inventory.
    items: []varint
-      # The index of the item in the creative menu.
-      item_index: varint
-      item_instance: ItemLegacy
-      # The group index of the item - which group in the groups array this item belongs to.
-      group_index: varint
+      entry_id: varint
+      item: ItemLegacy
 
 # PlayerEnchantOptions is sent by the server to update the enchantment options displayed when the user opens
 # the enchantment table and puts an item in. This packet was added in 1.16 and allows the server to decide on
@@ -3507,15 +3487,12 @@ packet_correct_player_move_prediction:
    # Tick is the tick of the movement which was corrected by this packet.
    tick: varint64
 
-# ItemRegistryPacket is used to declare what items the server makes available, and components of custom items.
-# After 1.21.60, this packet replaces the functionality of the "itemstates" field in the StartGamePacket
-# In pre-1.21.60 versions, this was the ItemComponentPacket, and was
-# sent by the server to attach client-side components to custom items.
-packet_item_registry:
+# ItemComponent is sent by the server to attach client-side components to a custom item.
+packet_item_component:
    !id: 0xa2
    !bound: client
-   # `items` holds a list of all items.
-   items: ItemData[]varint
+   # `entries` holds a list of all custom items with their respective components set.
+   entries: ItemComponentList
 
 # FilterText is sent by the both the client and the server. The client sends the packet to the server to
 # allow the server to filter the text server-side. The server then responds with the same packet and the
@@ -4102,38 +4079,38 @@ packet_camera_instruction:
       # Ease represents the easing function that is used by the instruction.
       ease_data?:
          type: u8 =>
-            - Linear
-            - Spring
-            - InQuad
-            - OutQuad
-            - InOutQuad
-            - InCubic
-            - OutCubic
-            - InOutCubic
-            - InQuart
-            - OutQuart
-            - InOutQuart
-            - InQuint
-            - OutQuint
-            - InOutQuint
-            - InSine
-            - OutSine
-            - InOutSine
-            - InExpo
-            - OutExpo
-            - InOutExpo
-            - InCirc
-            - OutCirc
-            - InOutCirc
-            - InBounce
-            - OutBounce
-            - InOutBounce
-            - InBack
-            - OutBack
-            - InOutBack
-            - InElastic
-            - OutElastic
-            - InOutElastic
+         - Linear
+         - Spring
+         - InQuad
+         - OutQuad
+         - InOutQuad
+         - InCubic
+         - OutCubic
+         - InOutCubic
+         - InQuart
+         - OutQuart
+         - InOutQuart
+         - InQuint
+         - OutQuint
+         - InOutQuint
+         - InSine
+         - OutSine
+         - InOutSine
+         - InExpo
+         - OutExpo
+         - InOutExpo
+         - InCirc
+         - OutCirc
+         - InOutCirc
+         - InBounce
+         - OutBounce
+         - InOutBounce
+         - InBack
+         - OutBack
+         - InOutBack
+         - InElastic
+         - OutElastic
+         - InOutElastic
          duration: lf32
       position?: vec3f
       rotation?: vec2f
@@ -4142,7 +4119,6 @@ packet_camera_instruction:
       # ViewOffset is only used in a follow_orbit camera and controls an offset based on a pivot point to the
       # player, causing it to be shifted in a certain direction.
       offset?: vec2f
-      entity_offset?: vec3f
       default?: bool
    # Clear can be set to true to clear all the current camera instructions.
    clear?: bool
@@ -4339,12 +4315,10 @@ packet_camera_aim_assist:
    # Distance is the distance that the camera should keep from the target, if TargetMode is set to
    # CameraAimAssistTargetModeDistance.
    distance: lf32
-   # TargetMode is the mode that the camera should use to aim at the target. This is one of the constants below.
-   target_mode: u8 =>
-      - angle
-      - distance
+   # TargetMode is the mode that the camera should use to aim at the target. This is one of the constants above.
+   target_mode: u8
    # Action is the action that should be performed with the aim assist. This is one of the constants above.
-   action: CameraAimAssistAction
+   action: u8
 
 # ContainerRegistryCleanup is sent by the server to trigger a client-side cleanup of the dynamic container registry.
 packet_container_registry_cleanup:
@@ -4423,19 +4397,3 @@ packet_camera_aim_assist_presets:
       # HandSettings is the identifier of a category to use when the player is not holding an item. This must
       # be the identifier of a category within the above `categories` field.
       hand_settings?: string
-   operation: u8
-
-packet_client_camera_aim_assist:
-   !id: 0x141
-   #!bound: client
-   preset_id: string
-   action: CameraAimAssistAction
-   allow_aim_assist: bool
-
-packet_client_movement_prediction_sync:
-   !id: 0x142
-   #!bound: ?
-   data_flags: varint128 # TODO - figure out flags
-   bounding_box: EntityBoundingBoxComponent
-   movement_attributes: MovementAttributesComponent
-   entity_unique_id: varint64
