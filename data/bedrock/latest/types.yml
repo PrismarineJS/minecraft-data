@@ -71,8 +71,14 @@ Itemstates: []varint
    name: string
    runtime_id: li16
    component_based: bool
-
-
+   # Version is the version of the item entry which is used by the client to determine how to handle the
+   # item entry. It is one of the constants above.
+   version: zigzag32 =>
+      - legacy
+      - data_driven
+      - none
+   # Components on the item
+   nbt: nbt
 
 ItemExtraDataWithBlockingTick:
    has_nbt: lu16 =>
@@ -1178,18 +1184,6 @@ ItemStackResponses: []varint
                # client-side after the response is sent to the client.
                durability_correction: zigzag32
 
-
-ItemData:
-   # Name is the name of the item, which is a name like 'minecraft:stick'.
-   name: string
-   # ID is the numerical network ID of the item, used to reference the item in packets.
-   runtime_id: li16
-   # IsComponentBased specifies whether the item uses components.
-   component_based: bool
-   # ItemVersion is the version of the item.
-   version: varint
-   # Data is a map containing the components and properties of the item.
-   nbt: nbt
 
 CommandOrigin:
    # Origin is one of the values above that specifies the origin of the command. The origin may change,
@@ -2300,6 +2294,8 @@ AbilityLayers:
    enabled: AbilitySet
    # FlySpeed is the default fly speed of the layer.
    fly_speed: lf32
+   # VerticalFlySpeed is the default vertical fly speed of the layer.
+   vertical_fly_speed: lf32
    # WalkSpeed is the default walk speed of the layer.
    walk_speed: lf32
 
@@ -2471,22 +2467,3 @@ FullContainerName:
 MovementEffectType: varint =>
    -1: invalid
    0: GLIDE_BOOST
-
-CameraAimAssistAction: u8 =>
-   # Sets aim-assist to use the settings from a CameraPresets aim_assist field.
-   0: set_from_camera_preset
-   # Clears aim-assist settings.
-   1: clear
-
-EntityBoundingBoxComponent:
-   scale: lf32
-   width: lf32
-   height: lf32
-
-MovementAttributesComponent:
-   movement_speed: lf32
-   underwater_movement_speed: lf32
-   lava_movement_speed: lf32
-   jump_strength: lf32
-   health: lf32
-   hunger: lf32

@@ -270,6 +270,24 @@
             {
               "name": "component_based",
               "type": "bool"
+            },
+            {
+              "name": "version",
+              "type": [
+                "mapper",
+                {
+                  "type": "zigzag32",
+                  "mappings": {
+                    "0": "legacy",
+                    "1": "data_driven",
+                    "2": "none"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "nbt",
+              "type": "nbt"
             }
           ]
         ]
@@ -3102,31 +3120,6 @@
         ]
       }
     ],
-    "ItemData": [
-      "container",
-      [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "runtime_id",
-          "type": "li16"
-        },
-        {
-          "name": "component_based",
-          "type": "bool"
-        },
-        {
-          "name": "version",
-          "type": "varint"
-        },
-        {
-          "name": "nbt",
-          "type": "nbt"
-        }
-      ]
-    ],
     "CommandOrigin": [
       "container",
       [
@@ -4465,6 +4458,10 @@
           "type": "lf32"
         },
         {
+          "name": "vertical_fly_speed",
+          "type": "lf32"
+        },
+        {
           "name": "walk_speed",
           "type": "lf32"
         }
@@ -4781,62 +4778,6 @@
           "-1": "invalid"
         }
       }
-    ],
-    "CameraAimAssistAction": [
-      "mapper",
-      {
-        "type": "u8",
-        "mappings": {
-          "0": "set_from_camera_preset",
-          "1": "clear"
-        }
-      }
-    ],
-    "EntityBoundingBoxComponent": [
-      "container",
-      [
-        {
-          "name": "scale",
-          "type": "lf32"
-        },
-        {
-          "name": "width",
-          "type": "lf32"
-        },
-        {
-          "name": "height",
-          "type": "lf32"
-        }
-      ]
-    ],
-    "MovementAttributesComponent": [
-      "container",
-      [
-        {
-          "name": "movement_speed",
-          "type": "lf32"
-        },
-        {
-          "name": "underwater_movement_speed",
-          "type": "lf32"
-        },
-        {
-          "name": "lava_movement_speed",
-          "type": "lf32"
-        },
-        {
-          "name": "jump_strength",
-          "type": "lf32"
-        },
-        {
-          "name": "health",
-          "type": "lf32"
-        },
-        {
-          "name": "hunger",
-          "type": "lf32"
-        }
-      ]
     ],
     "mcpe_packet": [
       "container",
@@ -8014,6 +7955,10 @@
                       "type": "string"
                     },
                     {
+                      "name": "filtered_title",
+                      "type": "string"
+                    },
+                    {
                       "name": "progress",
                       "type": "lf32"
                     },
@@ -8072,6 +8017,10 @@
                   [
                     {
                       "name": "title",
+                      "type": "string"
+                    },
+                    {
+                      "name": "filtered_title",
                       "type": "string"
                     }
                   ]
@@ -10797,8 +10746,7 @@
                           "2": "nature",
                           "3": "equipment",
                           "4": "items",
-                          "5": "item_command_only",
-                          "6": "undefined"
+                          "5": "item_command_only"
                         }
                       }
                     ]
@@ -10834,7 +10782,7 @@
                     "type": "ItemLegacy"
                   },
                   {
-                    "name": "group_id",
+                    "name": "group_index",
                     "type": "varint"
                   }
                 ]
@@ -11254,14 +11202,8 @@
       "container",
       [
         {
-          "name": "items",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": "ItemData"
-            }
-          ]
+          "name": "itemstates",
+          "type": "Itemstates"
         }
       ]
     ],
@@ -13183,7 +13125,16 @@
         },
         {
           "name": "operation",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set",
+                "1": "add_to_existing"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -13196,7 +13147,16 @@
         },
         {
           "name": "action",
-          "type": "CameraAimAssistAction"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set_from_camera_preset",
+                "1": "clear"
+              }
+            }
+          ]
         },
         {
           "name": "allow_aim_assist",
@@ -13213,14 +13173,50 @@
         },
         {
           "name": "bounding_box",
-          "type": "EntityBoundingBoxComponent"
+          "type": [
+            "container",
+            [
+              {
+                "name": "scale",
+                "type": "lf32"
+              },
+              {
+                "name": "width",
+                "type": "lf32"
+              },
+              {
+                "name": "height",
+                "type": "lf32"
+              }
+            ]
+          ]
         },
         {
-          "name": "movement_attributes",
-          "type": "MovementAttributesComponent"
+          "name": "movement_speed",
+          "type": "lf32"
         },
         {
-          "name": "entity_unique_id",
+          "name": "underwater_movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "lava_movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "jump_strength",
+          "type": "lf32"
+        },
+        {
+          "name": "health",
+          "type": "lf32"
+        },
+        {
+          "name": "hunger",
+          "type": "lf32"
+        },
+        {
+          "name": "entity_runtime_id",
           "type": "varint64"
         }
       ]

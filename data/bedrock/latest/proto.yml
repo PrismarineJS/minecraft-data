@@ -1725,6 +1725,10 @@ packet_boss_event:
          # the name tag of the boss entity at all times. It is only set if the EventType is BossEventShow or
          # BossEventTitle.
          title: string
+         # FilteredBossBarTitle is a filtered version of BossBarTitle with all the
+         # profanity removed. The client will use this over BossBarTitle if this
+         # field is not empty and they have the "Filter Profanity" setting enabled.
+         filtered_title: string
          # HealthPercentage is the percentage of health that is shown in the boss bar. It currently does not
          # function, and instead uses the health percentage of the boss entity at all times. It is only set if the
          # EventType is BossEventShow or BossEventHealthPercentage.
@@ -1748,6 +1752,10 @@ packet_boss_event:
          progress: lf32
       if set_bar_title:
          title: string
+         # FilteredBossBarTitle is a filtered version of BossBarTitle with all the
+         # profanity removed. The client will use this over BossBarTitle if this
+         # field is not empty and they have the "Filter Profanity" setting enabled.
+         filtered_title: string
       if update_properties:
          screen_darkening: li16
          color: varint
@@ -1948,6 +1956,8 @@ packet_command_block_update:
    # Name is the name of the command block updated. If not empty, it will show this name hovering above the
    # command block when hovering over the block with the cursor.
    name: string
+   # FilteredName is a filtered version of Name with all the profanity removed. The client will use this
+   # over Name if this field is not empty and they have the "Filter Profanity" setting enabled.
    filtered_name: string
    # ShouldTrackOutput specifies if the command block tracks output. If set to false, the output box won't
    # be shown within the command block.
@@ -2197,6 +2207,9 @@ packet_structure_block_update:
    # StructureName is the name of the structure that was set in the structure block's UI. This is the name
    # used to export the structure to a file.
    structure_name: string
+   # FilteredStructureName is a filtered version of StructureName with all the profanity removed. The client
+   # will use this over StructureName if this field is not empty and they have the "Filter Profanity"
+   # setting enabled.
    filtered_structure_name: string
    # DataField is the name of a function to run, usually used during natural generation. A description can
    # be found here: https://minecraft.wiki/w/Structure_Block#Data.
@@ -3247,13 +3260,12 @@ packet_creative_content:
    groups: []varint
       # Where the group shows up in the creative inventory (e.g. Construction, Items, etc)
       category: li32 =>
-         0: all
-         1: construction
-         2: nature
-         3: equipment
-         4: items
-         5: item_command_only
-         6: undefined
+         - all
+         - construction
+         - nature
+         - equipment
+         - items
+         - item_command_only
       # The name of the group (e.g. Decorative stone, Wool, etc.)
       name: string
       # The item whose icon is used to label the group (icon you click on to open/close the group)
@@ -3264,7 +3276,7 @@ packet_creative_content:
       entry_id: varint
       item: ItemLegacy
       # The group index of the item - which group in the groups array this item belongs to.
-      group_id: varint
+      group_index: varint
 
 # PlayerEnchantOptions is sent by the server to update the enchantment options displayed when the user opens
 # the enchantment table and puts an item in. This packet was added in 1.16 and allows the server to decide on
@@ -3523,7 +3535,7 @@ packet_item_registry:
    !id: 0xa2
    !bound: client
    # `items` holds a list of all items.
-   items: ItemData[]varint
+   itemstates: Itemstates
 
 # FilterText is sent by the both the client and the server. The client sends the packet to the server to
 # allow the server to filter the text server-side. The server then responds with the same packet and the
@@ -4431,19 +4443,33 @@ packet_camera_aim_assist_presets:
       # HandSettings is the identifier of a category to use when the player is not holding an item. This must
       # be the identifier of a category within the above `categories` field.
       hand_settings?: string
-   operation: u8
+   operation: u8 =>
+      - set
+      - add_to_existing
 
 packet_client_camera_aim_assist:
    !id: 0x141
    #!bound: client
    preset_id: string
-   action: CameraAimAssistAction
+   action: u8 =>
+      # Sets aim-assist to use the settings from a CameraPresets aim_assist field.
+      0: set_from_camera_preset
+      # Clears aim-assist settings.
+      1: clear
    allow_aim_assist: bool
 
 packet_client_movement_prediction_sync:
    !id: 0x142
    #!bound: ?
    data_flags: varint128 # TODO - figure out flags
-   bounding_box: EntityBoundingBoxComponent
-   movement_attributes: MovementAttributesComponent
-   entity_unique_id: varint64
+   bounding_box:
+      scale: lf32
+      width: lf32
+      height: lf32
+   movement_speed: lf32
+   underwater_movement_speed: lf32
+   lava_movement_speed: lf32
+   jump_strength: lf32
+   health: lf32
+   hunger: lf32
+   entity_runtime_id: varint64
