@@ -306,10 +306,19 @@ Transaction:
          changed_slots: []varint
             slot_id: u8
    transaction_type: varint =>
+      # Sent for container UI operations depending on if ItemStackNetManager is enabled
       0: normal
+      # Sent from server to client to reject a transaction
       1: inventory_mismatch
+      # Sent for a player performing right click style item use.
+      # See the contained ItemUseInventoryTransaction::ActionType for the expected use case.
       2: item_use
+      # Sent for a player right clicking on an entity or attacking them.
+      # See ItemUseInventoryTransaction::ActionType for which it is.
       3: item_use_on_entity
+      # Sent when releasing right click on a chargeable item like a bow or finishing charging like a crossbow.
+      # This is different than canceling item use early which would be in Player Auth Input.
+      # See ItemReleaseInventoryTransaction::ActionType for which it is.
       4: item_release
    network_ids: bool
    inventory_actions: []varint
@@ -375,7 +384,9 @@ Transaction:
          # ActionType is the type of the UseItemOnEntity inventory transaction. It is one of the action types
          # found in the constants above, and specifies the way the player interacted with the entity.
          action_type: varint =>
+            # Right click interact with actor.
             0: interact
+            # Left click style attack of actor or elytra spin attack. Server is expected to deal damage to the entity with visuals.
             1: attack
          # HotBarSlot is the hot bar slot that the player was holding while clicking the entity. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.
@@ -396,7 +407,9 @@ Transaction:
          # As of 1.13, the ActionType is always 0. This field can be ignored, because releasing food (by consuming
          # it) or releasing a bow (to shoot an arrow) is essentially the same.
          action_type: varint =>
+            # Release right click and hold style item use, like firing a bow
             0: release
+            # Finish right click and hold style item use, like charging a crossbow
             1: consume
          # HotBarSlot is the hot bar slot that the player was holding while releasing the item. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.
