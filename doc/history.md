@@ -1,3 +1,12 @@
+## 3.84.0
+* [Add bedrock 1.21.60 data (#980)](https://github.com/PrismarineJS/minecraft-data/commit/641f42d548595b754c63248d25decc86caed8f21) (thanks @CreeperG16)
+* [Add 25w06a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c42c06e7965f7297829b1f946ced8b42723e61a5) (thanks @github-actions[bot])
+* [Add 25w05a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bcc43071da36dfd21e5ff084b5b08b3d914e06c7) (thanks @github-actions[bot])
+* [node 22 (#978)](https://github.com/PrismarineJS/minecraft-data/commit/10749e0a06563f0cd563327e85c003b145923648) (thanks @rom1504)
+* [Add 25w04a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ebd71f1e8986c32eb235669312072bb54d90b23a) (thanks @github-actions[bot])
+* [Fix bedrock packet_spawn_particle_effect (#976)](https://github.com/PrismarineJS/minecraft-data/commit/dd4d29d41f938d539371445a7dd897fd4fd12d36) (thanks @extremeheat)
+* [Add 25w03a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e6bbfbd4e4200ed363f7ec065764878f4b941636) (thanks @github-actions[bot])
+
 ## 3.83.1
 * [Update pc1.21.4 entity metadata (#969)](https://github.com/PrismarineJS/minecraft-data/commit/0f8ead7370ea6fb11552c29dbb9d86fd4da8e4f2) (thanks @extremeheat)
 
