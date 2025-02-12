@@ -56,45 +56,6 @@
     "nbtLoop": "native",
     "enum_size_based_on_values_len": "native",
     "MapInfo": "native",
-    "BehaviourPackInfos": [
-      "array",
-      {
-        "countType": "li16",
-        "type": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": "string"
-            },
-            {
-              "name": "version",
-              "type": "string"
-            },
-            {
-              "name": "size",
-              "type": "lu64"
-            },
-            {
-              "name": "content_key",
-              "type": "string"
-            },
-            {
-              "name": "sub_pack_name",
-              "type": "string"
-            },
-            {
-              "name": "content_identity",
-              "type": "string"
-            },
-            {
-              "name": "has_scripts",
-              "type": "bool"
-            }
-          ]
-        ]
-      }
-    ],
     "TexturePackInfos": [
       "array",
       {
@@ -104,7 +65,7 @@
           [
             {
               "name": "uuid",
-              "type": "string"
+              "type": "uuid"
             },
             {
               "name": "version",
@@ -131,8 +92,16 @@
               "type": "bool"
             },
             {
+              "name": "addon_pack",
+              "type": "bool"
+            },
+            {
               "name": "rtx_enabled",
               "type": "bool"
+            },
+            {
+              "name": "cdn_url",
+              "type": "string"
             }
           ]
         ]
@@ -301,6 +270,24 @@
             {
               "name": "component_based",
               "type": "bool"
+            },
+            {
+              "name": "version",
+              "type": [
+                "mapper",
+                {
+                  "type": "zigzag32",
+                  "mappings": {
+                    "0": "legacy",
+                    "1": "data_driven",
+                    "2": "none"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "nbt",
+              "type": "nbt"
             }
           ]
         ]
@@ -596,6 +583,23 @@
         }
       ]
     ],
+    "vec3li": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "li32"
+        },
+        {
+          "name": "y",
+          "type": "li32"
+        },
+        {
+          "name": "z",
+          "type": "li32"
+        }
+      ]
+    ],
     "vec3u": [
       "container",
       [
@@ -640,6 +644,51 @@
         {
           "name": "z",
           "type": "lf32"
+        }
+      ]
+    ],
+    "Vec3fopts": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "y",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "z",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        }
+      ]
+    ],
+    "Vec2fopts": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "y",
+          "type": [
+            "option",
+            "lf32"
+          ]
         }
       ]
     ],
@@ -776,17 +825,20 @@
                     "117": "nearby_cured_discount_timestamp",
                     "118": "hitbox",
                     "119": "is_buoyant",
-                    "120": "base_runtime_id",
-                    "121": "freezing_effect_strength",
-                    "122": "buoyancy_data",
-                    "123": "goat_horn_count",
-                    "124": "update_properties",
-                    "125": "movement_sound_distance_offset",
-                    "126": "heartbeat_interval_ticks",
-                    "127": "heartbeat_sound_event",
-                    "128": "player_last_death_position",
-                    "129": "player_last_death_dimension",
-                    "130": "player_has_died"
+                    "120": "freezing_effect_strength",
+                    "121": "buoyancy_data",
+                    "122": "goat_horn_count",
+                    "123": "update_properties",
+                    "124": "movement_sound_distance_offset",
+                    "125": "heartbeat_interval_ticks",
+                    "126": "heartbeat_sound_event",
+                    "127": "player_last_death_position",
+                    "128": "player_last_death_dimension",
+                    "129": "player_has_died",
+                    "130": "collision_box",
+                    "131": "visible_mob_effects",
+                    "132": "filtered_name",
+                    "133": "bed_enter_position"
                   }
                 }
               ]
@@ -973,7 +1025,13 @@
           "scenting",
           "rising",
           "feeling_happy",
-          "searching"
+          "searching",
+          "crawling",
+          "timer_flag_1",
+          "timer_flag_2",
+          "timer_flag_3",
+          "body_rotation_blocked",
+          "render_when_invisible"
         ]
       }
     ],
@@ -999,6 +1057,10 @@
         {
           "name": "rider_initiated",
           "type": "bool"
+        },
+        {
+          "name": "angular_velocity",
+          "type": "lf32"
         }
       ]
     ],
@@ -1139,6 +1201,14 @@
               "type": "lf32"
             },
             {
+              "name": "default_min",
+              "type": "lf32"
+            },
+            {
+              "name": "default_max",
+              "type": "lf32"
+            },
+            {
               "name": "default",
               "type": "lf32"
             },
@@ -1206,6 +1276,20 @@
           ]
         },
         {
+          "name": "trigger_type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "unknown",
+                "1": "player_input",
+                "2": "simulation_tick"
+              }
+            }
+          ]
+        },
+        {
           "name": "block_position",
           "type": "BlockCoordinates"
         },
@@ -1232,6 +1316,19 @@
         {
           "name": "block_runtime_id",
           "type": "varint"
+        },
+        {
+          "name": "client_prediction",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "failure",
+                "1": "success"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -1678,7 +1775,8 @@
                     "5": "shulker_box",
                     "6": "shapeless_chemistry",
                     "7": "shaped_chemistry",
-                    "8": "smithing_transform"
+                    "8": "smithing_transform",
+                    "9": "smithing_trim"
                   }
                 }
               ]
@@ -1730,6 +1828,10 @@
                           "type": "zigzag32"
                         },
                         {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
                           "name": "network_id",
                           "type": "varint"
                         }
@@ -1775,6 +1877,10 @@
                           "type": "zigzag32"
                         },
                         {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
                           "name": "network_id",
                           "type": "varint"
                         }
@@ -1818,6 +1924,10 @@
                         {
                           "name": "priority",
                           "type": "zigzag32"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
                         },
                         {
                           "name": "network_id",
@@ -1879,6 +1989,14 @@
                           "type": "zigzag32"
                         },
                         {
+                          "name": "assume_symmetry",
+                          "type": "bool"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
                           "name": "network_id",
                           "type": "varint"
                         }
@@ -1936,6 +2054,14 @@
                         {
                           "name": "priority",
                           "type": "zigzag32"
+                        },
+                        {
+                          "name": "assume_symmetry",
+                          "type": "bool"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
                         },
                         {
                           "name": "network_id",
@@ -2002,6 +2128,10 @@
                           "type": "LatinString"
                         },
                         {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
                           "name": "base",
                           "type": "RecipeIngredient"
                         },
@@ -2022,6 +2152,35 @@
                           "type": "varint"
                         }
                       ]
+                    ],
+                    "smithing_trim": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "LatinString"
+                        },
+                        {
+                          "name": "template",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "input",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "addition",
+                          "type": "RecipeIngredient"
+                        },
+                        {
+                          "name": "block",
+                          "type": "string"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
                     ]
                   }
                 }
@@ -2030,6 +2189,44 @@
           ]
         ]
       }
+    ],
+    "RecipeUnlockingRequirement": [
+      "container",
+      [
+        {
+          "name": "context",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "always_unlocked",
+                "2": "player_in_water",
+                "3": "player_has_many_items"
+              }
+            }
+          ]
+        },
+        {
+          "name": "ingredients",
+          "type": [
+            "switch",
+            {
+              "compareTo": "context",
+              "fields": {
+                "none": [
+                  "array",
+                  {
+                    "countType": "varint",
+                    "type": "RecipeIngredient"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     ],
     "SkinImage": [
       "container",
@@ -2282,6 +2479,10 @@
                         {
                           "name": "is_host",
                           "type": "bool"
+                        },
+                        {
+                          "name": "is_subclient",
+                          "type": "bool"
                         }
                       ]
                     ],
@@ -2419,7 +2620,14 @@
           "27": "continue_break",
           "28": "start_item_use_on",
           "29": "stop_item_use_on",
-          "30": "handled_teleport"
+          "30": "handled_teleport",
+          "31": "missed_swing",
+          "32": "start_crawling",
+          "33": "stop_crawling",
+          "34": "start_flying",
+          "35": "stop_flying",
+          "36": "received_server_data",
+          "37": "start_using_item"
         }
       }
     ],
@@ -2428,7 +2636,7 @@
       [
         {
           "name": "slot_type",
-          "type": "ContainerSlotType"
+          "type": "FullContainerName"
         },
         {
           "name": "slot",
@@ -2663,6 +2871,10 @@
                               {
                                 "name": "recipe_network_id",
                                 "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted",
+                                "type": "u8"
                               }
                             ]
                           ],
@@ -2672,6 +2884,10 @@
                               {
                                 "name": "recipe_network_id",
                                 "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted_2",
+                                "type": "u8"
                               },
                               {
                                 "name": "times_crafted",
@@ -2695,6 +2911,10 @@
                               {
                                 "name": "item_id",
                                 "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted",
+                                "type": "u8"
                               }
                             ]
                           ],
@@ -2790,7 +3010,9 @@
                 "8": "leave_event_text",
                 "9": "slash_command_chat",
                 "10": "cartography_text",
-                "11": "slash_command_non_chat"
+                "11": "kick_command",
+                "12": "title_command",
+                "13": "summon_command"
               }
             }
           ]
@@ -2842,7 +3064,7 @@
                                 [
                                   {
                                     "name": "slot_type",
-                                    "type": "ContainerSlotType"
+                                    "type": "FullContainerName"
                                   },
                                   {
                                     "name": "slots",
@@ -2874,6 +3096,10 @@
                                               "type": "string"
                                             },
                                             {
+                                              "name": "filtered_custom_name",
+                                              "type": "string"
+                                            },
+                                            {
                                               "name": "durability_correction",
                                               "type": "zigzag32"
                                             }
@@ -2892,25 +3118,6 @@
                   }
                 }
               ]
-            }
-          ]
-        ]
-      }
-    ],
-    "ItemComponentList": [
-      "array",
-      {
-        "countType": "varint",
-        "type": [
-          "container",
-          [
-            {
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "name": "nbt",
-              "type": "nbt"
             }
           ]
         ]
@@ -3060,7 +3267,31 @@
                 "20": "village_snowy",
                 "21": "village_taiga",
                 "22": "jungle_temple",
-                "23": "witch_hut"
+                "23": "witch_hut =>",
+                "24": "marker_white",
+                "25": "marker_green",
+                "26": "marker_red",
+                "27": "marker_blue",
+                "28": "cross_white",
+                "29": "triangle_red",
+                "30": "square_white",
+                "31": "marker_sign",
+                "32": "marker_pink",
+                "33": "marker_orange",
+                "34": "marker_yellow",
+                "35": "marker_teal",
+                "36": "triangle_green",
+                "37": "small_square_white",
+                "38": "mansion",
+                "39": "monument",
+                "40": "no_draw",
+                "41": "village_desert",
+                "42": "village_plains",
+                "43": "village_savanna",
+                "44": "village_snowy",
+                "45": "village_taiga",
+                "46": "jungle_temple",
+                "47": "witch_hut"
               }
             }
           ]
@@ -3416,6 +3647,8 @@
           "32": "jigsaw_editor",
           "33": "smithing_table",
           "34": "chest_boat",
+          "35": "decorated_pot",
+          "36": "crafter",
           "-9": "none",
           "-1": "inventory"
         }
@@ -3486,7 +3719,11 @@
           "57": "cartography_result",
           "58": "barrel",
           "59": "cursor",
-          "60": "creative_output"
+          "60": "creative_output",
+          "61": "smithing_table_template",
+          "62": "crafter",
+          "63": "dynamic",
+          "64": "registry"
         }
       }
     ],
@@ -3960,7 +4197,73 @@
           "462": "Brush",
           "463": "BrushCompleted",
           "464": "ShatterDecoratedPot",
-          "465": "BreakDecoratedPot"
+          "465": "BreakDecoratedPot",
+          "466": "SnifferEggCrack",
+          "467": "SnifferEggHatched",
+          "468": "WaxedSignInteractFail",
+          "469": "RecordRelic",
+          "470": "Bump",
+          "471": "PumpkinCarve",
+          "472": "ConvertHuskToZombie",
+          "473": "PigDeath",
+          "474": "HoglinZombified",
+          "475": "AmbientUnderwaterEnter",
+          "476": "AmbientUnderwaterExit",
+          "477": "bottle_fill",
+          "478": "bottle_empty",
+          "479": "crafter_craft",
+          "480": "crafter_fail",
+          "481": "block_decorated_pot_insert",
+          "482": "block_decorated_pot_insert_fail",
+          "483": "crafter_disable_slot",
+          "484": "trial_spawner_open_shutter",
+          "485": "trial_spawner_eject_item",
+          "486": "trial_spawner_detect_player",
+          "487": "trial_spawner_spawn_mob",
+          "488": "trial_spawner_close_shutter",
+          "489": "trial_spawner_ambient",
+          "490": "block_copper_bulb_turn_on",
+          "491": "block_copper_bulb_turn_off",
+          "492": "ambient_in_air",
+          "493": "breeze_wind_charge_burst",
+          "494": "imitate_breeze",
+          "495": "mob_armadillo_brush",
+          "496": "mob_armadillo_scute_drop",
+          "497": "armor_equip_wolf",
+          "498": "armor_unequip_wolf",
+          "499": "reflect",
+          "500": "vault_open_shutter",
+          "501": "vault_close_shutter",
+          "502": "vault_eject_item",
+          "503": "vault_insert_item",
+          "504": "vault_insert_item_fail",
+          "505": "vault_ambient",
+          "506": "vault_activate",
+          "507": "vault_deactivate",
+          "508": "hurt_reduced",
+          "509": "wind_charge_burst",
+          "510": "imitate_drowned",
+          "511": "bundle_insert_failed",
+          "512": "_",
+          "513": "armor_crack_wolf",
+          "514": "armor_break_wolf",
+          "515": "armor_repair_wolf",
+          "516": "mace_smash_air",
+          "517": "mace_smash_ground",
+          "518": "trail_spawner_charge_activate",
+          "519": "trail_spawner_ambient_ominous",
+          "520": "ominous_item_spawner_spawn_item",
+          "521": "ominous_bottle_end_use",
+          "522": "mace_smash_heavy_ground",
+          "523": "ominous_item_spawner_spawn_item_begin",
+          "524": "_",
+          "525": "apply_effect_bad_omen",
+          "526": "apply_effect_raid_omen",
+          "527": "apply_effect_trial_omen",
+          "528": "ominous_item_spawner_about_to_spawn_item",
+          "529": "record_creator",
+          "530": "record_creator_music_box",
+          "531": "record_precipice"
         }
       }
     ],
@@ -4120,6 +4423,7 @@
           "world_builder",
           "no_clip",
           "privileged_builder",
+          "vertical_fly_speed",
           "count"
         ]
       }
@@ -4138,7 +4442,8 @@
                 "1": "base",
                 "2": "spectator",
                 "3": "commands",
-                "4": "editor"
+                "4": "editor",
+                "5": "loading_screen"
               }
             }
           ]
@@ -4156,10 +4461,333 @@
           "type": "lf32"
         },
         {
+          "name": "vertical_fly_speed",
+          "type": "lf32"
+        },
+        {
           "name": "walk_speed",
           "type": "lf32"
         }
       ]
+    ],
+    "CameraPresets": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "parent",
+          "type": "string"
+        },
+        {
+          "name": "position",
+          "type": "Vec3fopts"
+        },
+        {
+          "name": "rotation",
+          "type": "Vec2fopts"
+        },
+        {
+          "name": "rotation_speed",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "snap_to_target",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "horizontal_rotation_limit",
+          "type": [
+            "option",
+            "vec2f"
+          ]
+        },
+        {
+          "name": "vertical_rotation_limit",
+          "type": [
+            "option",
+            "vec2f"
+          ]
+        },
+        {
+          "name": "continue_targeting",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "tracking_radius",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "offset",
+          "type": [
+            "option",
+            "vec2f"
+          ]
+        },
+        {
+          "name": "entity_offset",
+          "type": [
+            "option",
+            "vec3f"
+          ]
+        },
+        {
+          "name": "radius",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "yaw_limit_min",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "yaw_limit_max",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "audio_listener",
+          "type": [
+            "option",
+            "u8"
+          ]
+        },
+        {
+          "name": "player_effects",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "align_target_and_camera_forward",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "aim_assist",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "preset_id",
+                  "type": [
+                    "option",
+                    "string"
+                  ]
+                },
+                {
+                  "name": "target_mode",
+                  "type": [
+                    "option",
+                    [
+                      "mapper",
+                      {
+                        "type": "li32",
+                        "mappings": {
+                          "0": "angle",
+                          "1": "distance"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "name": "angle",
+                  "type": [
+                    "option",
+                    "vec2f"
+                  ]
+                },
+                {
+                  "name": "distance",
+                  "type": [
+                    "option",
+                    "lf32"
+                  ]
+                }
+              ]
+            ]
+          ]
+        }
+      ]
+    ],
+    "DisconnectFailReason": [
+      "mapper",
+      {
+        "type": "zigzag32",
+        "mappings": {
+          "0": "unknown",
+          "1": "cant_connect_no_internet",
+          "2": "no_permissions",
+          "3": "unrecoverable_error",
+          "4": "third_party_blocked",
+          "5": "third_party_no_internet",
+          "6": "third_party_bad_ip",
+          "7": "third_party_no_server_or_server_locked",
+          "8": "version_mismatch",
+          "9": "skin_issue",
+          "10": "invite_session_not_found",
+          "11": "edu_level_settings_missing",
+          "12": "local_server_not_found",
+          "13": "legacy_disconnect",
+          "14": "user_leave_game_attempted",
+          "15": "platform_locked_skins_error",
+          "16": "realms_world_unassigned",
+          "17": "realms_server_cant_connect",
+          "18": "realms_server_hidden",
+          "19": "realms_server_disabled_beta",
+          "20": "realms_server_disabled",
+          "21": "cross_platform_disallowed",
+          "22": "cant_connect",
+          "23": "session_not_found",
+          "24": "client_settings_incompatible_with_server",
+          "25": "server_full",
+          "26": "invalid_platform_skin",
+          "27": "edition_version_mismatch",
+          "28": "edition_mismatch",
+          "29": "level_newer_than_exe_version",
+          "30": "no_fail_occurred",
+          "31": "banned_skin",
+          "32": "timeout",
+          "33": "server_not_found",
+          "34": "outdated_server",
+          "35": "outdated_client",
+          "36": "no_premium_platform",
+          "37": "multiplayer_disabled",
+          "38": "no_wifi",
+          "39": "world_corruption",
+          "40": "no_reason",
+          "41": "disconnected",
+          "42": "invalid_player",
+          "43": "logged_in_other_location",
+          "44": "server_id_conflict",
+          "45": "not_allowed",
+          "46": "not_authenticated",
+          "47": "invalid_tenant",
+          "48": "unknown_packet",
+          "49": "unexpected_packet",
+          "50": "invalid_command_request_packet",
+          "51": "host_suspended",
+          "52": "login_packet_no_request",
+          "53": "login_packet_no_cert",
+          "54": "missing_client",
+          "55": "kicked",
+          "56": "kicked_for_exploit",
+          "57": "kicked_for_idle",
+          "58": "resource_pack_problem",
+          "59": "incompatible_pack",
+          "60": "out_of_storage",
+          "61": "invalid_level",
+          "62": "disconnect_packet_deprecated",
+          "63": "block_mismatch",
+          "64": "invalid_heights",
+          "65": "invalid_widths",
+          "66": "connection_lost",
+          "67": "zombie_connection",
+          "68": "shutdown",
+          "69": "reason_not_set",
+          "70": "loading_state_timeout",
+          "71": "resource_pack_loading_failed",
+          "72": "searching_for_session_loading_screen_failed",
+          "73": "conn_protocol_version",
+          "74": "subsystem_status_error",
+          "75": "empty_auth_from_discovery",
+          "76": "empty_url_from_discovery",
+          "77": "expired_auth_from_discovery",
+          "78": "unknown_signal_service_sign_in_failure",
+          "79": "xbl_join_lobby_failure",
+          "80": "unspecified_client_instance_disconnection",
+          "81": "conn_session_not_found",
+          "82": "conn_create_peer_connection",
+          "83": "conn_ice",
+          "84": "conn_connect_request",
+          "85": "conn_connect_response",
+          "86": "conn_negotiation_timeout",
+          "87": "conn_inactivity_timeout",
+          "88": "stale_connection_being_replaced",
+          "89": "realms_session_not_found",
+          "90": "bad_packet",
+          "91": "conn_failed_to_create_offer",
+          "92": "conn_failed_to_create_answer",
+          "93": "conn_failed_to_set_local_description",
+          "94": "conn_failed_to_set_remote_description",
+          "95": "conn_negotiation_timeout_waiting_for_response",
+          "96": "conn_negotiation_timeout_waiting_for_accept",
+          "97": "conn_incoming_connection_ignored",
+          "98": "conn_signaling_parsing_failure",
+          "99": "conn_signaling_unknown_error",
+          "100": "conn_signaling_unicast_delivery_failed",
+          "101": "conn_signaling_broadcast_delivery_failed",
+          "102": "conn_signaling_generic_delivery_failed",
+          "103": "editor_mismatch_editor_world",
+          "104": "editor_mismatch_vanilla_world",
+          "105": "world_transfer_not_primary_client",
+          "106": "server_shutdown",
+          "107": "game_setup_cancelled",
+          "108": "game_setup_failed",
+          "109": "no_venue",
+          "110": "conn_signalling_sign_in_failed",
+          "111": "session_access_denied",
+          "112": "service_sign_in_issue",
+          "113": "conn_no_signaling_channel",
+          "114": "conn_not_logged_in",
+          "115": "conn_client_signalling_error",
+          "116": "sub_client_login_disabled",
+          "117": "deep_link_trying_to_open_demo_world_while_signed_in"
+        }
+      }
+    ],
+    "FullContainerName": [
+      "container",
+      [
+        {
+          "name": "container_id",
+          "type": "ContainerSlotType"
+        },
+        {
+          "name": "dynamic_container_id",
+          "type": [
+            "option",
+            "u32"
+          ]
+        }
+      ]
+    ],
+    "MovementEffectType": [
+      "mapper",
+      {
+        "type": "varint",
+        "mappings": {
+          "0": "GLIDE_BOOST",
+          "-1": "invalid"
+        }
+      }
     ],
     "mcpe_packet": [
       "container",
@@ -4186,6 +4814,7 @@
                 "13": "add_entity",
                 "14": "remove_entity",
                 "15": "add_item_entity",
+                "16": "server_post_move",
                 "17": "take_item_entity",
                 "18": "move_entity",
                 "19": "move_player",
@@ -4239,7 +4868,6 @@
                 "68": "map_info_request",
                 "69": "request_chunk_radius",
                 "70": "chunk_radius_update",
-                "71": "item_frame_drop_item",
                 "72": "game_rules_changed",
                 "73": "camera",
                 "74": "boss_event",
@@ -4294,8 +4922,6 @@
                 "124": "level_event_generic",
                 "125": "lectern_update",
                 "126": "video_stream_connect",
-                "127": "add_ecs_entity",
-                "128": "remove_ecs_entity",
                 "129": "client_cache_status",
                 "130": "on_screen_texture_animation",
                 "131": "map_create_locked_copy",
@@ -4327,7 +4953,7 @@
                 "159": "camera_shake",
                 "160": "player_fog",
                 "161": "correct_player_move_prediction",
-                "162": "item_component",
+                "162": "item_registry",
                 "163": "filter_text_packet",
                 "164": "debug_renderer",
                 "165": "sync_entity_property",
@@ -4365,7 +4991,28 @@
                 "197": "client_cheat_ability",
                 "198": "camera_presets",
                 "199": "unlocked_recipes",
-                "300": "camera_instruction"
+                "300": "camera_instruction",
+                "301": "compressed_biome_definitions",
+                "302": "trim_data",
+                "303": "open_sign",
+                "304": "agent_animation",
+                "305": "refresh_entitlements",
+                "306": "toggle_crafter_slot_request",
+                "307": "set_player_inventory_options",
+                "308": "set_hud",
+                "309": "award_achievement",
+                "310": "clientbound_close_form",
+                "312": "serverbound_loading_screen",
+                "313": "jigsaw_structure_data",
+                "314": "current_structure_feature",
+                "315": "serverbound_diagnostics",
+                "316": "camera_aim_assist",
+                "317": "container_registry_cleanup",
+                "318": "movement_effect",
+                "319": "set_movement_authority",
+                "320": "camera_aim_assist_presets",
+                "321": "client_camera_aim_assist",
+                "322": "client_movement_prediction_sync"
               }
             }
           ]
@@ -4445,7 +5092,6 @@
                 "map_info_request": "packet_map_info_request",
                 "request_chunk_radius": "packet_request_chunk_radius",
                 "chunk_radius_update": "packet_chunk_radius_update",
-                "item_frame_drop_item": "packet_item_frame_drop_item",
                 "game_rules_changed": "packet_game_rules_changed",
                 "camera": "packet_camera",
                 "boss_event": "packet_boss_event",
@@ -4500,8 +5146,6 @@
                 "level_event_generic": "packet_level_event_generic",
                 "lectern_update": "packet_lectern_update",
                 "video_stream_connect": "packet_video_stream_connect",
-                "add_ecs_entity": "packet_add_ecs_entity",
-                "remove_ecs_entity": "packet_remove_ecs_entity",
                 "client_cache_status": "packet_client_cache_status",
                 "on_screen_texture_animation": "packet_on_screen_texture_animation",
                 "map_create_locked_copy": "packet_map_create_locked_copy",
@@ -4533,7 +5177,7 @@
                 "camera_shake": "packet_camera_shake",
                 "player_fog": "packet_player_fog",
                 "correct_player_move_prediction": "packet_correct_player_move_prediction",
-                "item_component": "packet_item_component",
+                "item_registry": "packet_item_registry",
                 "filter_text_packet": "packet_filter_text_packet",
                 "debug_renderer": "packet_debug_renderer",
                 "sync_entity_property": "packet_sync_entity_property",
@@ -4571,7 +5215,29 @@
                 "client_cheat_ability": "packet_client_cheat_ability",
                 "camera_presets": "packet_camera_presets",
                 "unlocked_recipes": "packet_unlocked_recipes",
-                "camera_instruction": "packet_camera_instruction"
+                "camera_instruction": "packet_camera_instruction",
+                "compressed_biome_definitions": "packet_compressed_biome_definitions",
+                "trim_data": "packet_trim_data",
+                "open_sign": "packet_open_sign",
+                "agent_animation": "packet_agent_animation",
+                "refresh_entitlements": "packet_refresh_entitlements",
+                "toggle_crafter_slot_request": "packet_toggle_crafter_slot_request",
+                "set_player_inventory_options": "packet_set_player_inventory_options",
+                "set_hud": "packet_set_hud",
+                "award_achievement": "packet_award_achievement",
+                "server_post_move": "packet_server_post_move",
+                "clientbound_close_form": "packet_clientbound_close_form",
+                "serverbound_loading_screen": "packet_serverbound_loading_screen",
+                "jigsaw_structure_data": "packet_jigsaw_structure_data",
+                "current_structure_feature": "packet_current_structure_feature",
+                "serverbound_diagnostics": "packet_serverbound_diagnostics",
+                "camera_aim_assist": "packet_camera_aim_assist",
+                "container_registry_cleanup": "packet_container_registry_cleanup",
+                "movement_effect": "packet_movement_effect",
+                "set_movement_authority": "packet_set_movement_authority",
+                "camera_aim_assist_presets": "packet_camera_aim_assist_presets",
+                "client_camera_aim_assist": "packet_client_camera_aim_assist",
+                "client_movement_prediction_sync": "packet_client_movement_prediction_sync"
               }
             }
           ]
@@ -4653,12 +5319,37 @@
       "container",
       [
         {
+          "name": "reason",
+          "type": "DisconnectFailReason"
+        },
+        {
           "name": "hide_disconnect_reason",
           "type": "bool"
         },
         {
-          "name": "message",
-          "type": "string"
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "hide_disconnect_reason",
+              "fields": {
+                "true": "void"
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "message",
+                    "type": "string"
+                  },
+                  {
+                    "name": "filtered_message",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -4670,16 +5361,28 @@
           "type": "bool"
         },
         {
+          "name": "has_addons",
+          "type": "bool"
+        },
+        {
           "name": "has_scripts",
           "type": "bool"
         },
         {
-          "name": "force_server_packs",
-          "type": "bool"
-        },
-        {
-          "name": "behaviour_packs",
-          "type": "BehaviourPackInfos"
+          "name": "world_template",
+          "type": [
+            "container",
+            [
+              {
+                "name": "uuid",
+                "type": "uuid"
+              },
+              {
+                "name": "version",
+                "type": "string"
+              }
+            ]
+          ]
         },
         {
           "name": "texture_packs",
@@ -4712,6 +5415,10 @@
         },
         {
           "name": "experiments_previously_used",
+          "type": "bool"
+        },
+        {
+          "name": "has_editor_packs",
           "type": "bool"
         }
       ]
@@ -4939,6 +5646,10 @@
         {
           "name": "platform_chat_id",
           "type": "string"
+        },
+        {
+          "name": "filtered_message",
+          "type": "string"
         }
       ]
     ],
@@ -5009,6 +5720,10 @@
           "type": "GameMode"
         },
         {
+          "name": "hardcore",
+          "type": "bool"
+        },
+        {
           "name": "difficulty",
           "type": "zigzag32"
         },
@@ -5021,7 +5736,25 @@
           "type": "bool"
         },
         {
-          "name": "editor_world",
+          "name": "editor_world_type",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "not_editor",
+                "1": "project",
+                "2": "test_level"
+              }
+            }
+          ]
+        },
+        {
+          "name": "created_in_editor",
+          "type": "bool"
+        },
+        {
+          "name": "exported_from_editor",
           "type": "bool"
         },
         {
@@ -5187,6 +5920,18 @@
           "type": "bool"
         },
         {
+          "name": "server_identifier",
+          "type": "string"
+        },
+        {
+          "name": "world_identifier",
+          "type": "string"
+        },
+        {
+          "name": "scenario_identifier",
+          "type": "string"
+        },
+        {
           "name": "level_id",
           "type": "string"
         },
@@ -5237,10 +5982,6 @@
           "type": "BlockProperties"
         },
         {
-          "name": "itemstates",
-          "type": "Itemstates"
-        },
-        {
           "name": "multiplayer_correlation_id",
           "type": "string"
         },
@@ -5266,6 +6007,14 @@
         },
         {
           "name": "client_side_generation",
+          "type": "bool"
+        },
+        {
+          "name": "block_network_ids_are_hashes",
+          "type": "bool"
+        },
+        {
+          "name": "server_controlled_sound",
           "type": "bool"
         }
       ]
@@ -5774,6 +6523,7 @@
                 "2037": "sculk_charge",
                 "2038": "sculk_charge_pop",
                 "2039": "sonic_explosion",
+                "2040": "dust_plume",
                 "3001": "start_rain",
                 "3002": "start_thunder",
                 "3003": "stop_rain",
@@ -5794,9 +6544,29 @@
                 "3600": "block_start_break",
                 "3601": "block_stop_break",
                 "3602": "block_break_speed",
+                "3603": "particle_punch_block_down",
+                "3604": "particle_punch_block_up",
+                "3605": "particle_punch_block_north",
+                "3606": "particle_punch_block_south",
+                "3607": "particle_punch_block_west",
+                "3608": "particle_punch_block_east",
+                "3609": "particle_shoot_white_smoke",
+                "3610": "particle_breeze_wind_explosion",
+                "3611": "particle_trial_spawner_detection",
+                "3612": "particle_trial_spawner_spawning",
+                "3613": "particle_trial_spawner_ejecting",
+                "3614": "particle_wind_explosion",
+                "3615": "particle_wolf_armor_break",
                 "4000": "set_data",
                 "9800": "players_sleeping",
                 "9801": "sleeping_players",
+                "9810": "jump_prevented",
+                "9811": "animation_vault_activate",
+                "9812": "animation_vault_deactivate",
+                "9813": "animation_vault_eject_item",
+                "9814": "animation_spawn_cobweb",
+                "9815": "add_particle_smash_attack_ground_dust",
+                "9816": "add_particle_creaking_heart_trail",
                 "16384": "add_particle_mask",
                 "16385": "add_particle_bubble",
                 "16386": "add_particle_bubble_manual",
@@ -6036,6 +6806,10 @@
         {
           "name": "duration",
           "type": "zigzag32"
+        },
+        {
+          "name": "tick",
+          "type": "varint64"
         }
       ]
     ],
@@ -6111,6 +6885,10 @@
         },
         {
           "name": "boots",
+          "type": "Item"
+        },
+        {
+          "name": "body",
           "type": "Item"
         }
       ]
@@ -6267,6 +7045,10 @@
         {
           "name": "velocity",
           "type": "vec3f"
+        },
+        {
+          "name": "tick",
+          "type": "varint64"
         }
       ]
     ],
@@ -6421,6 +7203,10 @@
           "type": "WindowID"
         },
         {
+          "name": "window_type",
+          "type": "WindowType"
+        },
+        {
           "name": "server",
           "type": "bool"
         }
@@ -6453,6 +7239,14 @@
         {
           "name": "input",
           "type": "ItemStacks"
+        },
+        {
+          "name": "container",
+          "type": "FullContainerName"
+        },
+        {
+          "name": "storage_item",
+          "type": "Item"
         }
       ]
     ],
@@ -6466,6 +7260,14 @@
         {
           "name": "slot",
           "type": "varint"
+        },
+        {
+          "name": "container",
+          "type": "FullContainerName"
+        },
+        {
+          "name": "storage_item",
+          "type": "Item"
         },
         {
           "name": "item",
@@ -6693,6 +7495,10 @@
           "type": "zigzag32"
         },
         {
+          "name": "dimension",
+          "type": "zigzag32"
+        },
+        {
           "name": "sub_chunk_count",
           "type": "varint"
         },
@@ -6776,6 +7582,13 @@
         {
           "name": "respawn",
           "type": "bool"
+        },
+        {
+          "name": "loading_screen_id",
+          "type": [
+            "option",
+            "lu32"
+          ]
         }
       ]
     ],
@@ -6860,7 +7673,9 @@
                 "26": "code_builder_runtime_action",
                 "27": "code_builder_scoreboard",
                 "28": "strider_ridden_in_lava_in_overworld",
-                "29": "sneak_close_to_sculk_sensor"
+                "29": "sneak_close_to_sculk_sensor",
+                "30": "careful_restoration",
+                "31": "item_used"
               }
             }
           ]
@@ -7070,6 +7885,10 @@
         {
           "name": "chunk_radius",
           "type": "zigzag32"
+        },
+        {
+          "name": "max_radius",
+          "type": "u8"
         }
       ]
     ],
@@ -7079,15 +7898,6 @@
         {
           "name": "chunk_radius",
           "type": "zigzag32"
-        }
-      ]
-    ],
-    "packet_item_frame_drop_item": [
-      "container",
-      [
-        {
-          "name": "coordinates",
-          "type": "BlockCoordinates"
         }
       ]
     ],
@@ -7155,6 +7965,10 @@
                       "type": "string"
                     },
                     {
+                      "name": "filtered_title",
+                      "type": "string"
+                    },
+                    {
                       "name": "progress",
                       "type": "lf32"
                     },
@@ -7213,6 +8027,10 @@
                   [
                     {
                       "name": "title",
+                      "type": "string"
+                    },
+                    {
+                      "name": "filtered_title",
                       "type": "string"
                     }
                   ]
@@ -7290,6 +8108,16 @@
           ]
         },
         {
+          "name": "chained_subcommand_values",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "string"
+            }
+          ]
+        },
+        {
           "name": "suffixes",
           "type": [
             "array",
@@ -7338,6 +8166,46 @@
           ]
         },
         {
+          "name": "chained_subcommands",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "values",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "index",
+                              "type": "lu16"
+                            },
+                            {
+                              "name": "value",
+                              "type": "lu16"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
           "name": "command_data",
           "type": [
             "array",
@@ -7367,6 +8235,16 @@
                     "type": "li32"
                   },
                   {
+                    "name": "chained_subcommand_offsets",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "lu16"
+                      }
+                    ]
+                  },
+                  {
                     "name": "overloads",
                     "type": [
                       "array",
@@ -7375,6 +8253,10 @@
                         "type": [
                           "container",
                           [
+                            {
+                              "name": "chaining",
+                              "type": "bool"
+                            },
                             {
                               "name": "parameters",
                               "type": [
@@ -7405,15 +8287,15 @@
                                               "10": "wildcard_target",
                                               "17": "file_path",
                                               "23": "integer_range",
-                                              "38": "equipment_slots",
-                                              "39": "string",
-                                              "47": "block_position",
-                                              "48": "position",
-                                              "51": "message",
-                                              "53": "raw_text",
-                                              "57": "json",
-                                              "67": "block_states",
-                                              "70": "command"
+                                              "43": "equipment_slots",
+                                              "44": "string",
+                                              "52": "block_position",
+                                              "53": "position",
+                                              "55": "message",
+                                              "58": "raw_text",
+                                              "62": "json",
+                                              "71": "block_states",
+                                              "74": "command"
                                             }
                                           }
                                         ]
@@ -7655,6 +8537,10 @@
         },
         {
           "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "filtered_name",
           "type": "string"
         },
         {
@@ -7906,6 +8792,10 @@
         {
           "name": "port",
           "type": "lu16"
+        },
+        {
+          "name": "reload_world",
+          "type": "bool"
         }
       ]
     ],
@@ -7939,6 +8829,10 @@
         },
         {
           "name": "stop_all",
+          "type": "bool"
+        },
+        {
+          "name": "stop_music_legacy",
           "type": "bool"
         }
       ]
@@ -7989,6 +8883,10 @@
         {
           "name": "platform_online_id",
           "type": "string"
+        },
+        {
+          "name": "filtered_message",
+          "type": "string"
         }
       ]
     ],
@@ -8010,6 +8908,10 @@
         },
         {
           "name": "structure_name",
+          "type": "string"
+        },
+        {
+          "name": "filtered_structure_name",
           "type": "string"
         },
         {
@@ -8054,8 +8956,18 @@
           "type": "string"
         },
         {
-          "name": "show_all",
-          "type": "bool"
+          "name": "redirect_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "marketplace",
+                "1": "dressing_room",
+                "2": "third_party_server_page"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -9017,10 +9929,6 @@
         {
           "name": "position",
           "type": "vec3i"
-        },
-        {
-          "name": "drop_book",
-          "type": "bool"
         }
       ]
     ],
@@ -9055,24 +9963,6 @@
         {
           "name": "resolution_y",
           "type": "li32"
-        }
-      ]
-    ],
-    "packet_add_ecs_entity": [
-      "container",
-      [
-        {
-          "name": "network_id",
-          "type": "varint64"
-        }
-      ]
-    ],
-    "packet_remove_ecs_entity": [
-      "container",
-      [
-        {
-          "name": "network_id",
-          "type": "varint64"
         }
       ]
     ],
@@ -9356,6 +10246,18 @@
           "type": "string"
         },
         {
+          "name": "emote_length_ticks",
+          "type": "varint"
+        },
+        {
+          "name": "xuid",
+          "type": "string"
+        },
+        {
+          "name": "platform_id",
+          "type": "string"
+        },
+        {
           "name": "flags",
           "type": [
             "mapper",
@@ -9443,7 +10345,9 @@
                 "11": "interact",
                 "12": "retrieved",
                 "13": "dyed",
-                "14": "traded"
+                "14": "traded",
+                "15": "brushing_completed",
+                "16": "opened_vault"
               }
             }
           ]
@@ -9563,16 +10467,8 @@
           ]
         },
         {
-          "name": "gaze_direction",
-          "type": [
-            "switch",
-            {
-              "compareTo": "play_mode",
-              "fields": {
-                "reality": "vec3f"
-              }
-            }
-          ]
+          "name": "interact_rotation",
+          "type": "vec2f"
         },
         {
           "name": "tick",
@@ -9618,6 +10514,30 @@
               "compareTo": "input_data.item_stack_request",
               "fields": {
                 "true": "ItemStackRequest"
+              }
+            }
+          ]
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "input_data.client_predicted_vehicle",
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "vehicle_rotation",
+                      "type": "vec2f"
+                    },
+                    {
+                      "name": "predicted_vehicle",
+                      "type": "zigzag64"
+                    }
+                  ]
+                ]
               }
             }
           ]
@@ -9727,13 +10647,21 @@
         {
           "name": "analogue_move_vector",
           "type": "vec2f"
+        },
+        {
+          "name": "camera_orientation",
+          "type": "vec3f"
+        },
+        {
+          "name": "raw_move_vector",
+          "type": "vec2f"
         }
       ]
     ],
     "InputFlag": [
       "bitflags",
       {
-        "type": "varint64",
+        "type": "varint128",
         "big": true,
         "flags": [
           "ascend",
@@ -9774,13 +10702,78 @@
           "block_action",
           "item_stack_request",
           "handled_teleport",
-          "emoting"
+          "emoting",
+          "missed_swing",
+          "start_crawling",
+          "stop_crawling",
+          "start_flying",
+          "stop_flying",
+          "received_server_data",
+          "client_predicted_vehicle",
+          "paddling_left",
+          "paddling_right",
+          "block_breaking_delay_enabled",
+          "horizontal_collision",
+          "vertical_collision",
+          "down_left",
+          "down_right",
+          "start_using_item",
+          "camera_relative_movement_enabled",
+          "rot_controlled_by_move_direction",
+          "start_spin_attack",
+          "stop_spin_attack",
+          "hotbar_only_touch",
+          "jump_released_raw",
+          "jump_pressed_raw",
+          "jump_current_raw",
+          "sneak_released_raw",
+          "sneak_pressed_raw",
+          "sneak_current_raw"
         ]
       }
     ],
     "packet_creative_content": [
       "container",
       [
+        {
+          "name": "groups",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "category",
+                    "type": [
+                      "mapper",
+                      {
+                        "type": "li32",
+                        "mappings": {
+                          "0": "all",
+                          "1": "construction",
+                          "2": "nature",
+                          "3": "equipment",
+                          "4": "items",
+                          "5": "item_command_only"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "icon_item",
+                    "type": "ItemLegacy"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
         {
           "name": "items",
           "type": [
@@ -9797,6 +10790,10 @@
                   {
                     "name": "item",
                     "type": "ItemLegacy"
+                  },
+                  {
+                    "name": "group_index",
+                    "type": "varint"
                   }
                 ]
               ]
@@ -9898,6 +10895,18 @@
               }
             }
           ]
+        },
+        {
+          "name": "body_damage",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type.body",
+              "fields": {
+                "true": "zigzag32"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -9909,7 +10918,8 @@
           "head": 1,
           "chest": 2,
           "legs": 4,
-          "feet": 8
+          "feet": 8,
+          "body": 16
         }
       }
     ],
@@ -9923,6 +10933,10 @@
         {
           "name": "player_unique_id",
           "type": "zigzag64"
+        },
+        {
+          "name": "tick",
+          "type": "varint64"
         }
       ]
     ],
@@ -10137,12 +11151,52 @@
       "container",
       [
         {
+          "name": "prediction_type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "player",
+                "1": "vehicle"
+              }
+            }
+          ]
+        },
+        {
           "name": "position",
           "type": "vec3f"
         },
         {
           "name": "delta",
           "type": "vec3f"
+        },
+        {
+          "name": "vehicle_rotation",
+          "type": [
+            "switch",
+            {
+              "compareTo": "prediction_type",
+              "fields": {
+                "vehicle": [
+                  "container",
+                  [
+                    {
+                      "name": "rotation",
+                      "type": "vec2f"
+                    },
+                    {
+                      "name": "angular_velocity",
+                      "type": [
+                        "option",
+                        "lf32"
+                      ]
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "on_ground",
@@ -10154,12 +11208,12 @@
         }
       ]
     ],
-    "packet_item_component": [
+    "packet_item_registry": [
       "container",
       [
         {
-          "name": "entries",
-          "type": "ItemComponentList"
+          "name": "itemstates",
+          "type": "Itemstates"
         }
       ]
     ],
@@ -10727,8 +11781,21 @@
           ]
         },
         {
-          "name": "value",
-          "type": "string"
+          "name": "code_status",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "none",
+                "1": "not_started",
+                "2": "in_progress",
+                "3": "paused",
+                "4": "error",
+                "5": "succeeded"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -11055,6 +12122,10 @@
       "container",
       [
         {
+          "name": "route_to_manager",
+          "type": "bool"
+        },
+        {
           "name": "payload",
           "type": "nbt"
         }
@@ -11229,8 +12300,14 @@
       "container",
       [
         {
-          "name": "data",
-          "type": "nbt"
+          "name": "presets",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "CameraPresets"
+            }
+          ]
         }
       ]
     ],
@@ -11238,8 +12315,20 @@
       "container",
       [
         {
-          "name": "new_unlocks",
-          "type": "bool"
+          "name": "unlock_type",
+          "type": [
+            "mapper",
+            {
+              "type": "lu32",
+              "mappings": {
+                "0": "empty",
+                "1": "initially_unlocked",
+                "2": "newly_unlocked",
+                "3": "remove_unlocked",
+                "4": "remove_all_unlocked"
+              }
+            }
+          ]
         },
         {
           "name": "recipes",
@@ -11257,8 +12346,897 @@
       "container",
       [
         {
-          "name": "data",
+          "name": "instruction_set",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "runtime_id",
+                  "type": "li32"
+                },
+                {
+                  "name": "ease_data",
+                  "type": [
+                    "option",
+                    [
+                      "container",
+                      [
+                        {
+                          "name": "type",
+                          "type": [
+                            "mapper",
+                            {
+                              "type": "u8",
+                              "mappings": {
+                                "0": "Linear",
+                                "1": "Spring",
+                                "2": "InQuad",
+                                "3": "OutQuad",
+                                "4": "InOutQuad",
+                                "5": "InCubic",
+                                "6": "OutCubic",
+                                "7": "InOutCubic",
+                                "8": "InQuart",
+                                "9": "OutQuart",
+                                "10": "InOutQuart",
+                                "11": "InQuint",
+                                "12": "OutQuint",
+                                "13": "InOutQuint",
+                                "14": "InSine",
+                                "15": "OutSine",
+                                "16": "InOutSine",
+                                "17": "InExpo",
+                                "18": "OutExpo",
+                                "19": "InOutExpo",
+                                "20": "InCirc",
+                                "21": "OutCirc",
+                                "22": "InOutCirc",
+                                "23": "InBounce",
+                                "24": "OutBounce",
+                                "25": "InOutBounce",
+                                "26": "InBack",
+                                "27": "OutBack",
+                                "28": "InOutBack",
+                                "29": "InElastic",
+                                "30": "OutElastic",
+                                "31": "InOutElastic"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "name": "duration",
+                          "type": "lf32"
+                        }
+                      ]
+                    ]
+                  ]
+                },
+                {
+                  "name": "position",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
+                  "name": "rotation",
+                  "type": [
+                    "option",
+                    "vec2f"
+                  ]
+                },
+                {
+                  "name": "facing",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
+                  "name": "offset",
+                  "type": [
+                    "option",
+                    "vec2f"
+                  ]
+                },
+                {
+                  "name": "entity_offset",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
+                  "name": "default",
+                  "type": [
+                    "option",
+                    "bool"
+                  ]
+                }
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "clear",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
+          "name": "fade",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "fade_in_duration",
+                  "type": "lf32"
+                },
+                {
+                  "name": "wait_duration",
+                  "type": "lf32"
+                },
+                {
+                  "name": "fade_out_duration",
+                  "type": "lf32"
+                },
+                {
+                  "name": "color_rgb",
+                  "type": "vec3f"
+                }
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "target",
+          "type": [
+            "option",
+            [
+              "container",
+              [
+                {
+                  "name": "offset",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
+                  "name": "entity_unique_id",
+                  "type": "li64"
+                }
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "remove_target",
+          "type": [
+            "option",
+            "bool"
+          ]
+        }
+      ]
+    ],
+    "packet_compressed_biome_definitions": [
+      "container",
+      [
+        {
+          "name": "raw_payload",
+          "type": "ByteArray"
+        }
+      ]
+    ],
+    "packet_trim_data": [
+      "container",
+      [
+        {
+          "name": "patterns",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "pattern",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "materials",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "material",
+                    "type": "string"
+                  },
+                  {
+                    "name": "color",
+                    "type": "string"
+                  },
+                  {
+                    "name": "item_name",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_open_sign": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "BlockCoordinates"
+        },
+        {
+          "name": "is_front",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_agent_animation": [
+      "container",
+      [
+        {
+          "name": "animation",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "arm_swing",
+                "1": "shrug"
+              }
+            }
+          ]
+        },
+        {
+          "name": "entity_runtime_id",
+          "type": "varint64"
+        }
+      ]
+    ],
+    "packet_refresh_entitlements": [
+      "container",
+      []
+    ],
+    "packet_toggle_crafter_slot_request": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "vec3li"
+        },
+        {
+          "name": "slot",
+          "type": "u8"
+        },
+        {
+          "name": "disabled",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_set_player_inventory_options": [
+      "container",
+      [
+        {
+          "name": "left_tab",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "construction",
+                "2": "equipment",
+                "3": "items",
+                "4": "nature",
+                "5": "search",
+                "6": "survival"
+              }
+            }
+          ]
+        },
+        {
+          "name": "right_tab",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "fullscreen",
+                "2": "crafting",
+                "3": "armor"
+              }
+            }
+          ]
+        },
+        {
+          "name": "filtering",
+          "type": "bool"
+        },
+        {
+          "name": "layout",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "survival",
+                "2": "recipe_book",
+                "3": "creative"
+              }
+            }
+          ]
+        },
+        {
+          "name": "crafting_layout",
+          "type": [
+            "mapper",
+            {
+              "type": "zigzag32",
+              "mappings": {
+                "0": "none",
+                "1": "survival",
+                "2": "recipe_book",
+                "3": "creative"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_set_hud": [
+      "container",
+      [
+        {
+          "name": "elements",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "Element"
+            }
+          ]
+        },
+        {
+          "name": "visibility",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "hide",
+                "1": "reset"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "Element": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "PaperDoll",
+          "1": "Armour",
+          "2": "ToolTips",
+          "3": "TouchControls",
+          "4": "Crosshair",
+          "5": "HotBar",
+          "6": "Health",
+          "7": "ProgressBar",
+          "8": "Hunger",
+          "9": "AirBubbles",
+          "10": "VehicleHealth",
+          "11": "EffectsBar",
+          "12": "ItemTextPopup"
+        }
+      }
+    ],
+    "packet_award_achievement": [
+      "container",
+      [
+        {
+          "name": "achievement_id",
+          "type": "li32"
+        }
+      ]
+    ],
+    "packet_server_post_move": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "vec3f"
+        }
+      ]
+    ],
+    "packet_clientbound_close_form": [
+      "container",
+      []
+    ],
+    "packet_serverbound_loading_screen": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": "zigzag32"
+        },
+        {
+          "name": "loading_screen_id",
+          "type": [
+            "option",
+            "lu32"
+          ]
+        }
+      ]
+    ],
+    "packet_jigsaw_structure_data": [
+      "container",
+      [
+        {
+          "name": "structure_data",
           "type": "nbt"
+        }
+      ]
+    ],
+    "packet_current_structure_feature": [
+      "container",
+      [
+        {
+          "name": "current_feature",
+          "type": "string"
+        }
+      ]
+    ],
+    "packet_serverbound_diagnostics": [
+      "container",
+      [
+        {
+          "name": "average_frames_per_second",
+          "type": "lf32"
+        },
+        {
+          "name": "average_server_sim_tick_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_client_sim_tick_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_begin_frame_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_input_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_render_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_end_frame_time",
+          "type": "lf32"
+        },
+        {
+          "name": "average_remainder_time_percent",
+          "type": "lf32"
+        },
+        {
+          "name": "average_unaccounted_time_percent",
+          "type": "lf32"
+        }
+      ]
+    ],
+    "packet_camera_aim_assist": [
+      "container",
+      [
+        {
+          "name": "preset_id",
+          "type": "string"
+        },
+        {
+          "name": "view_angle",
+          "type": "vec2f"
+        },
+        {
+          "name": "distance",
+          "type": "lf32"
+        },
+        {
+          "name": "target_mode",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "angle",
+                "1": "distance"
+              }
+            }
+          ]
+        },
+        {
+          "name": "action",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set",
+                "1": "clear"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_container_registry_cleanup": [
+      "container",
+      [
+        {
+          "name": "removed_containers",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "FullContainerName"
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_movement_effect": [
+      "container",
+      [
+        {
+          "name": "runtime_id",
+          "type": "varint64"
+        },
+        {
+          "name": "effect_type",
+          "type": "MovementEffectType"
+        },
+        {
+          "name": "effect_duration",
+          "type": "varint"
+        },
+        {
+          "name": "tick",
+          "type": "varint64"
+        }
+      ]
+    ],
+    "packet_set_movement_authority": [
+      "container",
+      [
+        {
+          "name": "movement_authority",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "client",
+                "1": "server",
+                "2": "server_with_rewind"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_camera_aim_assist_presets": [
+      "container",
+      [
+        {
+          "name": "category_groups",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "id",
+                    "type": "string"
+                  },
+                  {
+                    "name": "categories",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "name",
+                              "type": "string"
+                            },
+                            {
+                              "name": "priorities",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "entities",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "container",
+                                          [
+                                            {
+                                              "name": "id",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "priority",
+                                              "type": "li32"
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "blocks",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "container",
+                                          [
+                                            {
+                                              "name": "id",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "priority",
+                                              "type": "li32"
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "entity_default",
+                                    "type": [
+                                      "option",
+                                      "li32"
+                                    ]
+                                  },
+                                  {
+                                    "name": "block_default",
+                                    "type": [
+                                      "option",
+                                      "li32"
+                                    ]
+                                  }
+                                ]
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "presets",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "id",
+                    "type": "string"
+                  },
+                  {
+                    "name": "categories",
+                    "type": "string"
+                  },
+                  {
+                    "name": "exclude_blocks",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "target_liquids",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "item_settings",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "id",
+                              "type": "string"
+                            },
+                            {
+                              "name": "category",
+                              "type": "string"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "default_item_settings",
+                    "type": [
+                      "option",
+                      "string"
+                    ]
+                  },
+                  {
+                    "name": "hand_settings",
+                    "type": [
+                      "option",
+                      "string"
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "operation",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set",
+                "1": "add_to_existing"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_client_camera_aim_assist": [
+      "container",
+      [
+        {
+          "name": "preset_id",
+          "type": "string"
+        },
+        {
+          "name": "action",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set_from_camera_preset",
+                "1": "clear"
+              }
+            }
+          ]
+        },
+        {
+          "name": "allow_aim_assist",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_client_movement_prediction_sync": [
+      "container",
+      [
+        {
+          "name": "data_flags",
+          "type": "varint128"
+        },
+        {
+          "name": "bounding_box",
+          "type": [
+            "container",
+            [
+              {
+                "name": "scale",
+                "type": "lf32"
+              },
+              {
+                "name": "width",
+                "type": "lf32"
+              },
+              {
+                "name": "height",
+                "type": "lf32"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "underwater_movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "lava_movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "jump_strength",
+          "type": "lf32"
+        },
+        {
+          "name": "health",
+          "type": "lf32"
+        },
+        {
+          "name": "hunger",
+          "type": "lf32"
+        },
+        {
+          "name": "entity_runtime_id",
+          "type": "varint64"
         }
       ]
     ]

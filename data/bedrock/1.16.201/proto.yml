@@ -873,13 +873,23 @@ packet_animate:
    !id: 0x2c
    !bound: both
    action_id: zigzag32 =>
+      # Unused
       0: none
+      # Server bound notification to swing the player's arm. Server is expected to rebroadcast to all that should see the arm move.
+      #  See also PlayerAuthInputPacket::InputData::MissedSwing for a very similar action
       1: swing_arm
       2: unknown
+      # Client bound notification to stop sleeping in a bed
       3: wake_up
+      # Client-bound notification to play critical hit particles
       4: critical_hit
+      # Unused
       5: magic_critical_hit
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
       128: row_right
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
       129: row_left
    runtime_entity_id: varint64
    _: action_id ?
