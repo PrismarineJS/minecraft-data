@@ -1114,8 +1114,8 @@ a { text-decoration: none; }
 <tr><td class='field-name name'>height </td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2 class="vpad"><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>__497</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__497</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>__510</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__510</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>output</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>Item</td><td></td></tr>
@@ -2609,14 +2609,17 @@ riding another.</p></p>
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='name field-name'>action id </td><td colspan=2  class="vpad"><div style='padding:8px'>zigzag32 <span class='tag tag-enum'>enum</span></div><table>
-  <tr><td class='name'>0</td><td class='name'>none</td><td></td></tr>
-  <tr><td class='name'>1</td><td class='name'>swing arm</td><td></td></tr>
+  <tr><td class='name'>0</td><td class='name'>none</td><td><p>Unused</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>swing arm</td><td><p>Server bound notification to swing the player's arm. Server is expected to rebroadcast to all that should see the arm move.
+See also PlayerAuthInputPacket::InputData::MissedSwing for a very similar action</p></td></tr>
   <tr><td class='name'>2</td><td class='name'>unknown</td><td></td></tr>
-  <tr><td class='name'>3</td><td class='name'>wake up</td><td></td></tr>
-  <tr><td class='name'>4</td><td class='name'>critical hit</td><td></td></tr>
-  <tr><td class='name'>5</td><td class='name'>magic critical hit</td><td></td></tr>
-  <tr><td class='name'>128</td><td class='name'>row right</td><td></td></tr>
-  <tr><td class='name'>129</td><td class='name'>row left</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>wake up</td><td><p>Client bound notification to stop sleeping in a bed</p></td></tr>
+  <tr><td class='name'>4</td><td class='name'>critical hit</td><td><p>Client-bound notification to play critical hit particles</p></td></tr>
+  <tr><td class='name'>5</td><td class='name'>magic critical hit</td><td><p>Unused</p></td></tr>
+  <tr><td class='name'>128</td><td class='name'>row right</td><td><p>Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+See Player Auth Input for how to compute this in the latest protocol.</p></td></tr>
+  <tr><td class='name'>129</td><td class='name'>row left</td><td><p>Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+See Player Auth Input for how to compute this in the latest protocol.</p></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>runtime entity id </td><td>varint64</td><td></td></tr>
 <tr><td><b class='name'>&#128257;</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>action id</span></div></i></td><td colspan=2><table>
