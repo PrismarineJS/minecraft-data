@@ -4411,26 +4411,22 @@ packet_camera_aim_assist_presets:
    !id: 0x140
    !bound: client
    # CategoryGroups is a list of groups of categories which can be referenced by one of the Presets.
-   category_groups: []varint
+   categories: []varint
       # Identifier is the unique identifier of the group.
-      id: string
-      # Categories is a list of categories within this group.
-      categories: []varint
-         name: string
-         # Priorities represents the block and entity specific priorities for targetting. The aim
-         # assist will select the block or entity with the highest priority within the specified thresholds.
-         priorities:
-            entities: []varint
-               id: string
-               priority: li32
-            blocks: []varint
-               id: string
-               priority: li32
-            entity_default?: li32
-            block_default?: li32
+      name: string
+      # Priorities represents the block and entity specific priorities for targetting. The aim
+      # assist will select the block or entity with the highest priority within the specified thresholds.
+      entity_priorities: []varint
+         id: string
+         priority: li32
+      block_priorities: []varint
+         id: string
+         priority: li32
+      entity_default?: li32
+      block_default?: li32
    presets: []varint
       id: string
-      categories: string
+      # categories: string
       exclude_blocks: string[]varint
       target_liquids: string[]varint
       item_settings: []varint
