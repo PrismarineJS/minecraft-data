@@ -59,65 +59,40 @@
          }
       ]
    ]
-   entityMetadataItem: $compareTo ?
-      if 0: i8
-      if 1: varint
-      if 2: f32
-      if 3: string
-      if 4: string
-      if 5: slot
-      if 6: bool
-      if 7:      
-         pitch: f32
-         yaw: f32
-         roll: f32
-      if 8: position
-      if 9: [
-         "option",
-         "position"
-      ]
-      if 10: varint
-      if 11: [
-         "option",
-         "UUID"
-      ]
-      if 12: varint
-   entityMetadata: [
-      "entityMetadataLoop",
-      {
-         "endVal": 255,
-         "type": [
-            "container",
-            [
-               {
-                  "anon": true,
-                  "type": [
-                     "container",
-                     [
-                        {
-                           "name": "key",
-                           "type": "u8"
-                        },
-                        {
-                           "name": "type",
-                           "type": "i8"
-                        }
-                     ]
-                  ]
-               },
-               {
-                  "name": "value",
-                  "type": [
-                     "entityMetadataItem",
-                     {
-                        "compareTo": "type"
-                     }
-                  ]
-               }
-            ]
-         ]
-      }
-   ]
+   entityMetadataEntry:
+      key: u8
+      type: varint =>
+      - byte
+      - int
+      - float
+      - string
+      - component
+      - item_stack
+      - boolean
+      - rotations
+      - block_pos
+      - optional_block_pos
+      - direction
+      - optional_uuid
+      - block_state
+      value: type ?
+         if byte: i8
+         if int: varint
+         if float: f32
+         if string: string
+         if component: string
+         if item_stack: slot
+         if boolean: bool
+         if rotations:
+            pitch: f32
+            yaw: f32
+            roll: f32
+         if block_pos: position
+         if optional_block_pos: ["option", "position"]
+         if direction: varint
+         if optional_uuid: ["option", "UUID"]
+         if block_state: varint
+   entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
 
 ^handshaking.toClient.types:
    packet:   
