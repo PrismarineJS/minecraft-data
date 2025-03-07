@@ -4492,18 +4492,18 @@ packet_player_video_capture:
    !bound: client
    # action is the action that the client should perform. This is one of the constants defined above.
    action: u8 =>
-      0: stop
-      1: start
+      - stop
+      - start
    # frame_rate is the frame rate at which the video should be recorded. It is only used when Action is
-	# PlayerVideoCaptureActionStart. A higher frame rate will cause more frames to be recorded, but also
-	# a noticeable increase in lag.
-	frame_rate: varint
+   # PlayerVideoCaptureActionStart. A higher frame rate will cause more frames to be recorded, but also
+   # a noticeable increase in lag.
+   frame_rate: varint
    # Unknown1, Unknown2, Unknown3 ... always 0?
    unknown1: u8
    unknown2: u8
    unknown3: u8
    # file_prefix is the prefix of the file name that will be used to save the frames. The frames will be saved
-	# in the format 'FilePrefix%d.png' where %d is the frame index.
+   # in the format 'FilePrefix%d.png' where %d is the frame index.
    file_prefix: string
 
 # PlayerUpdateEntityOverrides is sent by the server to modify an entity's properties individually.
@@ -4511,19 +4511,19 @@ packet_player_update_entity_overrides:
    !id: 0x145
    !bound: client
    # EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
-	# entities are generally identified in packets using this runtime ID.
-	runtime_id: varlong
-	# PropertyIndex is the index of the property to modify. The index is unique for each property of an entity.
-	property_index: varint
-	# Type is the type of action to perform with the property. It is one of the constants above.
-	type: u8 =>
+   # entities are generally identified in packets using this runtime ID.
+   runtime_id: varlong
+   # PropertyIndex is the index of the property to modify. The index is unique for each property of an entity.
+   property_index: varint
+   # Type is the type of action to perform with the property. It is one of the constants above.
+   type: u8 =>
       - clear_all
       - remove
       - set_int
       - set_float
-	# IntValue is the new integer value of the property. It is only used when Type is set to
-	# PlayerUpdateEntityOverridesTypeInt.
-	int_value: li32
-	# FloatValue is the new float value of the property. It is only used when Type is set to
-	# PlayerUpdateEntityOverridesTypeFloat.
-	float_value: lf32
+   # IntValue is the new integer value of the property. It is only used when Type is set to
+   # PlayerUpdateEntityOverridesTypeInt.
+   int_value: li32
+   # FloatValue is the new float value of the property. It is only used when Type is set to
+   # PlayerUpdateEntityOverridesTypeFloat.
+   float_value: lf32
