@@ -82,77 +82,55 @@
          }
       ]
    ]
-   entityMetadataItem: $compareTo ?
-      if 0: i8
-      if 1: varint
-      if 2: f32
-      if 3: string
-      if 4: string
-      if 5: [
-         "option",
-         "string"
-      ]
-      if 6: slot
-      if 7: bool
-      if 8:      
-         pitch: f32
-         yaw: f32
-         roll: f32
-      if 9: position
-      if 10: [
-         "option",
-         "position"
-      ]
-      if 11: varint
-      if 12: [
-         "option",
-         "UUID"
-      ]
-      if 13: varint
-      if 14: nbt
-      if 15: particle
-      if 16:      
-         villagerType: varint
-         villagerProfession: varint
-         level: varint
-      if 17: optvarint
-      if 18: varint
-   entityMetadata: [
-      "entityMetadataLoop",
-      {
-         "endVal": 255,
-         "type": [
-            "container",
-            [
-               {
-                  "anon": true,
-                  "type": [
-                     "container",
-                     [
-                        {
-                           "name": "key",
-                           "type": "u8"
-                        },
-                        {
-                           "name": "type",
-                           "type": "varint"
-                        }
-                     ]
-                  ]
-               },
-               {
-                  "name": "value",
-                  "type": [
-                     "entityMetadataItem",
-                     {
-                        "compareTo": "type"
-                     }
-                  ]
-               }
-            ]
-         ]
-      }
-   ]
+   entityMetadataEntry:
+      key: u8
+      type: varint =>
+      - byte
+      - int
+      - float
+      - string
+      - component
+      - optional_component
+      - item_stack
+      - boolean
+      - rotations
+      - block_pos
+      - optional_block_pos
+      - direction
+      - optional_uuid
+      - block_state
+      - compound_tag
+      - particle
+      - villager_data
+      - optional_unsigned_int
+      - pose
+      value: type ?
+         if byte: i8
+         if int: varint
+         if float: f32
+         if string: string
+         if component: string
+         if optional_component: ["option", "string"]
+         if item_stack: slot
+         if boolean: bool
+         if rotations:
+            pitch: f32
+            yaw: f32
+            roll: f32
+         if block_pos: position
+         if optional_block_pos: ["option", "position"]
+         if direction: varint
+         if optional_uuid: ["option", "UUID"]
+         if block_state: varint
+         if compound_tag: nbt
+         if particle: particle
+         if villager_data:
+            villagerType: varint
+            villagerProfession: varint
+            level: varint
+         if optional_unsigned_int: optvarint
+         if pose: varint
+   entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    minecraft_smelting_format:   
       group: string
       ingredient: ingredient
