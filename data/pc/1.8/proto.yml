@@ -59,32 +59,21 @@
          }
       ]
    ]
-   entityMetadataEntry:
-      key: u8
-      type: i8 =>
-      - byte
-      - short
-      - int
-      - float
-      - string
-      - item_stack
-      - position
-      - rotations
-      value: type ?
-         if byte: i8
-         if short: i16
-         if int: i32
-         if float: f32
-         if string: string
-         if item_stack: slot
-         if position:
-            x: i32
-            y: i32
-            z: i32
-         if rotations:
-            pitch: f32
-            yaw: f32
-            roll: f32
+   entityMetadataItem: $compareTo ?
+      if 0: i8
+      if 1: i16
+      if 2: i32
+      if 3: f32
+      if 4: string
+      if 5: slot
+      if 6:      
+         x: i32
+         y: i32
+         z: i32
+      if 7:      
+         pitch: f32
+         yaw: f32
+         roll: f32
    entityMetadata: [
       "entityMetadataLoop",
       {
@@ -112,7 +101,12 @@
                },
                {
                   "name": "value",
-                  "type": "entityMetadataEntry"
+                  "type": [
+                     "entityMetadataItem",
+                     {
+                        "compareTo": "type"
+                     }
+                  ]
                }
             ]
          ]

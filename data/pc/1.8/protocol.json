@@ -88,84 +88,53 @@
         }
       ]
     ],
-    "entityMetadataEntry": [
-      "container",
-      [
-        {
-          "name": "key",
-          "type": "u8"
-        },
-        {
-          "name": "type",
-          "type": [
-            "mapper",
-            {
-              "type": "i8",
-              "mappings": {
-                "0": "byte",
-                "1": "short",
-                "2": "int",
-                "3": "float",
-                "4": "string",
-                "5": "item_stack",
-                "6": "position",
-                "7": "rotations"
+    "entityMetadataItem": [
+      "switch",
+      {
+        "compareTo": "$compareTo",
+        "fields": {
+          "0": "i8",
+          "1": "i16",
+          "2": "i32",
+          "3": "f32",
+          "4": "string",
+          "5": "slot",
+          "6": [
+            "container",
+            [
+              {
+                "name": "x",
+                "type": "i32"
+              },
+              {
+                "name": "y",
+                "type": "i32"
+              },
+              {
+                "name": "z",
+                "type": "i32"
               }
-            }
-          ]
-        },
-        {
-          "name": "value",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "byte": "i8",
-                "short": "i16",
-                "int": "i32",
-                "float": "f32",
-                "string": "string",
-                "item_stack": "slot",
-                "position": [
-                  "container",
-                  [
-                    {
-                      "name": "x",
-                      "type": "i32"
-                    },
-                    {
-                      "name": "y",
-                      "type": "i32"
-                    },
-                    {
-                      "name": "z",
-                      "type": "i32"
-                    }
-                  ]
-                ],
-                "rotations": [
-                  "container",
-                  [
-                    {
-                      "name": "pitch",
-                      "type": "f32"
-                    },
-                    {
-                      "name": "yaw",
-                      "type": "f32"
-                    },
-                    {
-                      "name": "roll",
-                      "type": "f32"
-                    }
-                  ]
-                ]
+            ]
+          ],
+          "7": [
+            "container",
+            [
+              {
+                "name": "pitch",
+                "type": "f32"
+              },
+              {
+                "name": "yaw",
+                "type": "f32"
+              },
+              {
+                "name": "roll",
+                "type": "f32"
               }
-            }
+            ]
           ]
         }
-      ]
+      }
     ],
     "entityMetadata": [
       "entityMetadataLoop",
@@ -194,7 +163,12 @@
             },
             {
               "name": "value",
-              "type": "entityMetadataEntry"
+              "type": [
+                "entityMetadataItem",
+                {
+                  "compareTo": "type"
+                }
+              ]
             }
           ]
         ]
