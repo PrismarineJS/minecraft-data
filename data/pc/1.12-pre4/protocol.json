@@ -88,84 +88,92 @@
         }
       ]
     ],
-    "entityMetadataItem": [
-      "switch",
-      {
-        "compareTo": "$compareTo",
-        "fields": {
-          "0": "i8",
-          "1": "varint",
-          "2": "f32",
-          "3": "string",
-          "4": "string",
-          "5": "slot",
-          "6": "bool",
-          "7": [
-            "container",
-            [
-              {
-                "name": "pitch",
-                "type": "f32"
-              },
-              {
-                "name": "yaw",
-                "type": "f32"
-              },
-              {
-                "name": "roll",
-                "type": "f32"
+    "entityMetadataEntry": [
+      "container",
+      [
+        {
+          "name": "key",
+          "type": "u8"
+        },
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "i8",
+              "mappings": {
+                "0": "byte",
+                "1": "int",
+                "2": "float",
+                "3": "string",
+                "4": "component",
+                "5": "item_stack",
+                "6": "boolean",
+                "7": "rotations",
+                "8": "block_pos",
+                "9": "optional_block_pos",
+                "10": "direction",
+                "11": "optional_uuid",
+                "12": "block_state",
+                "13": "compound_tag"
               }
-            ]
-          ],
-          "8": "position",
-          "9": [
-            "option",
-            "position"
-          ],
-          "10": "varint",
-          "11": [
-            "option",
-            "UUID"
-          ],
-          "12": "varint",
-          "13": "nbt"
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "byte": "i8",
+                "int": "varint",
+                "float": "f32",
+                "string": "string",
+                "component": "string",
+                "item_stack": "slot",
+                "boolean": "bool",
+                "rotations": [
+                  "container",
+                  [
+                    {
+                      "name": "pitch",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "yaw",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "roll",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "block_pos": "position",
+                "optional_block_pos": [
+                  "option",
+                  "position"
+                ],
+                "direction": "varint",
+                "optional_uuid": [
+                  "option",
+                  "UUID"
+                ],
+                "block_state": "varint",
+                "compound_tag": "nbt"
+              }
+            }
+          ]
         }
-      }
+      ]
     ],
     "entityMetadata": [
       "entityMetadataLoop",
       {
         "endVal": 255,
-        "type": [
-          "container",
-          [
-            {
-              "anon": true,
-              "type": [
-                "container",
-                [
-                  {
-                    "name": "key",
-                    "type": "u8"
-                  },
-                  {
-                    "name": "type",
-                    "type": "i8"
-                  }
-                ]
-              ]
-            },
-            {
-              "name": "value",
-              "type": [
-                "entityMetadataItem",
-                {
-                  "compareTo": "type"
-                }
-              ]
-            }
-          ]
-        ]
+        "type": "entityMetadataEntry"
       }
     ]
   },
