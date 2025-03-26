@@ -1115,11 +1115,16 @@ ItemStackRequest:
             # RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
             # one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
             recipe_network_id: varint
+            # NumberOfCrafts is how many times the recipe was crafted. This field appears to be boilerplate and
+            # has no effect.
+            times_crafted: u8
             # Cost is the cost of the recipe that was crafted.
             cost: varint
          if craft_loom_request:
             # Pattern is the pattern identifier for the loom recipe.
             pattern: string
+            # TimesCrafted is how many times the recipe was crafted.
+            times_crafted: u8
          if non_implemented: void
          if results_deprecated:
             result_items: ItemLegacy[]varint
