@@ -85,7 +85,7 @@ function validate (edition, ver, path) {
 
   // Make sure the protocol_expected.json file equals the protocol.json file; otherwise the JSON must be rebuilt
   if (expected !== actual) {
-    console.log(expected.length, actual.length, expected, actual)
+    // console.log(expected.length, actual.length, expected, actual)
     throw Error(`${ver} (${version}) / protocol.json is desynced from yaml, please run 'npm run build'`)
   }
 
