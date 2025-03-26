@@ -270,6 +270,24 @@
             {
               "name": "component_based",
               "type": "bool"
+            },
+            {
+              "name": "version",
+              "type": [
+                "mapper",
+                {
+                  "type": "zigzag32",
+                  "mappings": {
+                    "0": "legacy",
+                    "1": "data_driven",
+                    "2": "none"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "nbt",
+              "type": "nbt"
             }
           ]
         ]
@@ -818,7 +836,9 @@
                     "128": "player_last_death_dimension",
                     "129": "player_has_died",
                     "130": "collision_box",
-                    "131": "visible_mob_effects"
+                    "131": "visible_mob_effects",
+                    "132": "filtered_name",
+                    "133": "bed_enter_position"
                   }
                 }
               ]
@@ -1010,7 +1030,11 @@
           "timer_flag_1",
           "timer_flag_2",
           "timer_flag_3",
-          "body_rotation_blocked"
+          "body_rotation_blocked",
+          "render_when_invisible",
+          "body_rotation_axis_aligned",
+          "collidable",
+          "wasd_air_controlled"
         ]
       }
     ],
@@ -3102,25 +3126,6 @@
         ]
       }
     ],
-    "ItemComponentList": [
-      "array",
-      {
-        "countType": "varint",
-        "type": [
-          "container",
-          [
-            {
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "name": "nbt",
-              "type": "nbt"
-            }
-          ]
-        ]
-      }
-    ],
     "CommandOrigin": [
       "container",
       [
@@ -3720,7 +3725,8 @@
           "60": "creative_output",
           "61": "smithing_table_template",
           "62": "crafter",
-          "63": "dynamic"
+          "63": "dynamic",
+          "64": "registry"
         }
       }
     ],
@@ -4420,6 +4426,7 @@
           "world_builder",
           "no_clip",
           "privileged_builder",
+          "vertical_fly_speed",
           "count"
         ]
       }
@@ -4454,6 +4461,10 @@
         },
         {
           "name": "fly_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "vertical_fly_speed",
           "type": "lf32"
         },
         {
@@ -4539,6 +4550,20 @@
         },
         {
           "name": "radius",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "yaw_limit_min",
+          "type": [
+            "option",
+            "lf32"
+          ]
+        },
+        {
+          "name": "yaw_limit_max",
           "type": [
             "option",
             "lf32"
@@ -4931,7 +4956,7 @@
                 "159": "camera_shake",
                 "160": "player_fog",
                 "161": "correct_player_move_prediction",
-                "162": "item_component",
+                "162": "item_registry",
                 "163": "filter_text_packet",
                 "164": "debug_renderer",
                 "165": "sync_entity_property",
@@ -4988,7 +5013,12 @@
                 "317": "container_registry_cleanup",
                 "318": "movement_effect",
                 "319": "set_movement_authority",
-                "320": "camera_aim_assist_presets"
+                "320": "camera_aim_assist_presets",
+                "321": "client_camera_aim_assist",
+                "322": "client_movement_prediction_sync",
+                "323": "update_client_options",
+                "324": "player_video_capture",
+                "325": "player_update_entity_overrides"
               }
             }
           ]
@@ -5153,7 +5183,7 @@
                 "camera_shake": "packet_camera_shake",
                 "player_fog": "packet_player_fog",
                 "correct_player_move_prediction": "packet_correct_player_move_prediction",
-                "item_component": "packet_item_component",
+                "item_registry": "packet_item_registry",
                 "filter_text_packet": "packet_filter_text_packet",
                 "debug_renderer": "packet_debug_renderer",
                 "sync_entity_property": "packet_sync_entity_property",
@@ -5211,7 +5241,12 @@
                 "container_registry_cleanup": "packet_container_registry_cleanup",
                 "movement_effect": "packet_movement_effect",
                 "set_movement_authority": "packet_set_movement_authority",
-                "camera_aim_assist_presets": "packet_camera_aim_assist_presets"
+                "camera_aim_assist_presets": "packet_camera_aim_assist_presets",
+                "client_camera_aim_assist": "packet_client_camera_aim_assist",
+                "client_movement_prediction_sync": "packet_client_movement_prediction_sync",
+                "update_client_options": "packet_update_client_options",
+                "player_video_capture": "packet_player_video_capture",
+                "player_update_entity_overrides": "packet_player_update_entity_overrides"
               }
             }
           ]
@@ -5954,10 +5989,6 @@
         {
           "name": "block_properties",
           "type": "BlockProperties"
-        },
-        {
-          "name": "itemstates",
-          "type": "Itemstates"
         },
         {
           "name": "multiplayer_correlation_id",
@@ -7943,6 +7974,10 @@
                       "type": "string"
                     },
                     {
+                      "name": "filtered_title",
+                      "type": "string"
+                    },
+                    {
                       "name": "progress",
                       "type": "lf32"
                     },
@@ -8001,6 +8036,10 @@
                   [
                     {
                       "name": "title",
+                      "type": "string"
+                    },
+                    {
+                      "name": "filtered_title",
                       "type": "string"
                     }
                   ]
@@ -8510,6 +8549,10 @@
           "type": "string"
         },
         {
+          "name": "filtered_name",
+          "type": "string"
+        },
+        {
           "name": "should_track_output",
           "type": "bool"
         },
@@ -8874,6 +8917,10 @@
         },
         {
           "name": "structure_name",
+          "type": "string"
+        },
+        {
+          "name": "filtered_structure_name",
           "type": "string"
         },
         {
@@ -9861,6 +9908,10 @@
         {
           "name": "is_global",
           "type": "bool"
+        },
+        {
+          "name": "entity_unique_id",
+          "type": "li64"
         }
       ]
     ],
@@ -10698,6 +10749,45 @@
       "container",
       [
         {
+          "name": "groups",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "category",
+                    "type": [
+                      "mapper",
+                      {
+                        "type": "li32",
+                        "mappings": {
+                          "0": "all",
+                          "1": "construction",
+                          "2": "nature",
+                          "3": "equipment",
+                          "4": "items",
+                          "5": "item_command_only"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "icon_item",
+                    "type": "ItemLegacy"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
           "name": "items",
           "type": [
             "array",
@@ -10713,6 +10803,10 @@
                   {
                     "name": "item",
                     "type": "ItemLegacy"
+                  },
+                  {
+                    "name": "group_index",
+                    "type": "varint"
                   }
                 ]
               ]
@@ -11127,12 +11221,12 @@
         }
       ]
     ],
-    "packet_item_component": [
+    "packet_item_registry": [
       "container",
       [
         {
-          "name": "entries",
-          "type": "ItemComponentList"
+          "name": "itemstates",
+          "type": "Itemstates"
         }
       ]
     ],
@@ -12652,7 +12746,7 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
+              "type": "varint",
               "mappings": {
                 "0": "hide",
                 "1": "reset"
@@ -12665,7 +12759,7 @@
     "Element": [
       "mapper",
       {
-        "type": "u8",
+        "type": "varint",
         "mappings": {
           "0": "PaperDoll",
           "1": "Armour",
@@ -12797,11 +12891,29 @@
         },
         {
           "name": "target_mode",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "angle",
+                "1": "distance"
+              }
+            }
+          ]
         },
         {
           "name": "action",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set",
+                "1": "clear"
+              }
+            }
+          ]
         }
       ]
     ],
@@ -13010,6 +13122,212 @@
                   }
                 ]
               ]
+            }
+          ]
+        },
+        {
+          "name": "operation",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set",
+                "1": "add_to_existing"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_client_camera_aim_assist": [
+      "container",
+      [
+        {
+          "name": "preset_id",
+          "type": "string"
+        },
+        {
+          "name": "action",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "set_from_camera_preset",
+                "1": "clear"
+              }
+            }
+          ]
+        },
+        {
+          "name": "allow_aim_assist",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_client_movement_prediction_sync": [
+      "container",
+      [
+        {
+          "name": "data_flags",
+          "type": "varint128"
+        },
+        {
+          "name": "bounding_box",
+          "type": [
+            "container",
+            [
+              {
+                "name": "scale",
+                "type": "lf32"
+              },
+              {
+                "name": "width",
+                "type": "lf32"
+              },
+              {
+                "name": "height",
+                "type": "lf32"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "underwater_movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "lava_movement_speed",
+          "type": "lf32"
+        },
+        {
+          "name": "jump_strength",
+          "type": "lf32"
+        },
+        {
+          "name": "health",
+          "type": "lf32"
+        },
+        {
+          "name": "hunger",
+          "type": "lf32"
+        },
+        {
+          "name": "entity_runtime_id",
+          "type": "varint64"
+        },
+        {
+          "name": "is_flying",
+          "type": "bool"
+        }
+      ]
+    ],
+    "packet_update_client_options": [
+      "container",
+      [
+        {
+          "name": "graphics_mode",
+          "type": [
+            "option",
+            [
+              "mapper",
+              {
+                "type": "u8",
+                "mappings": {
+                  "0": "simple",
+                  "1": "fancy",
+                  "2": "advanced",
+                  "3": "ray_traced"
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    ],
+    "packet_player_video_capture": [
+      "container",
+      [
+        {
+          "name": "action",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "stop",
+                "1": "start"
+              }
+            }
+          ]
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "action",
+              "fields": {
+                "start": [
+                  "container",
+                  [
+                    {
+                      "name": "frame_rate",
+                      "type": "li32"
+                    },
+                    {
+                      "name": "file_prefix",
+                      "type": "string"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_player_update_entity_overrides": [
+      "container",
+      [
+        {
+          "name": "runtime_id",
+          "type": "varint64"
+        },
+        {
+          "name": "property_index",
+          "type": "varint"
+        },
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "clear_all",
+                "1": "remove",
+                "2": "set_int",
+                "3": "set_float"
+              }
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "set_int": "li32",
+                "set_float": "lf32"
+              }
             }
           ]
         }
