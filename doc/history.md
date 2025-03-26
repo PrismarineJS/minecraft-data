@@ -1,18 +1,8 @@
 ## 3.85.0
 * [Add Bedrock 1.21.70 (785) protocol data (#990)](https://github.com/PrismarineJS/minecraft-data/commit/982946615de283af7709ccf2611844d3808a63b7) (thanks @CreeperG16)
-* [Add 1.21.5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/74d8515c6717f4e409c89395d65dff820e4edf49) (thanks @github-actions[bot])
-* [Add 1.21.5-rc2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e0130d8b7803bbdbd34f9416c99430ac4787ec07) (thanks @github-actions[bot])
-* [Add 1.21.5-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/466f9b2c0ff79342906963812a1b9305397ffb6a) (thanks @github-actions[bot])
 * [Fix bedrock ItemStackRequest packet fields (#988)](https://github.com/PrismarineJS/minecraft-data/commit/41aa5c7ed620a4b6b51892153fb8abe67b6ded8e) (thanks @EntifiedOptics)
 * [Add bedrock 1.21.42 data (#992)](https://github.com/PrismarineJS/minecraft-data/commit/82049f691f9f8475b3871e6a4fb2ff7b5653959c) (thanks @bedrock-bot)
-* [Add 1.21.5-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ef0a5b36954264ed037faf1cc2220c012e755511) (thanks @github-actions[bot])
-* [Add 1.21.5-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/89afb7586417a3b3a64d3ffca26dc96dddb7ae50) (thanks @github-actions[bot])
 * [Add bedrock 1.21.0-1.21.60 block state data (#989)](https://github.com/PrismarineJS/minecraft-data/commit/6695a165f0c329affc2789bf7d7a428e21d98b68) (thanks @bedrock-bot)
-* [Add 1.21.5-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/b868af1078c9e82db029682743bf16d3b015c783) (thanks @github-actions[bot])
-* [Add 25w10a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bb446599ad1db6c04cd11bd26ca639319d200070) (thanks @github-actions[bot])
-* [Add 25w09b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/085ca7cd4aa06add9b5a27c5c96fdcbd724abbce) (thanks @github-actions[bot])
-* [Add 25w09a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/75ee9a98ce71aecb53bc057d67fbc49b29f646a9) (thanks @github-actions[bot])
-* [Add 25w08a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fe984d9f4430aba240d727ea9e8cacef6ffa2e56) (thanks @github-actions[bot])
 
 ## 3.84.1
 * [bedrock: fix aim assist presets packet (#983)](https://github.com/PrismarineJS/minecraft-data/commit/99b6fb48a9e227a8dcb4234727eece94c95169e0) (thanks @extremeheat)
