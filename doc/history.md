@@ -1,3 +1,6 @@
+## 3.85.0
+* Support for pc 1.21.5
+
 ## 3.84.1
 * [bedrock: fix aim assist presets packet (#983)](https://github.com/PrismarineJS/minecraft-data/commit/99b6fb48a9e227a8dcb4234727eece94c95169e0) (thanks @extremeheat)
 * [Add 25w07a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97d62e48225c8a8953618c050b237677b3767e42) (thanks @github-actions[bot])
