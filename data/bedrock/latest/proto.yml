@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.60
+!version: 1.21.70
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -2803,6 +2803,10 @@ packet_level_sound_event:
    # sound will have full volume, regardless of where the Position is, whereas if set to false, the sound's
    # volume will be based on the distance to Position.
    is_global: bool
+   # EntityUniqueID is the unique ID of a source entity. The unique ID is a value that remains consistent across
+   # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
+   # this field.
+   entity_unique_id: li64
 
 # LevelEventGeneric is sent by the server to send a 'generic' level event to the client. This packet sends an
 # NBT serialised object and may for that reason be used for any event holding additional data.
@@ -4270,11 +4274,11 @@ packet_set_hud:
    elements: Element[]varint
    # Visibility represents the new visibility of the specified Elements. It can be any of the HudVisibility
    # constants above.
-   visibility: u8 =>
-   - hide
-   - reset
+   visibility: varint =>
+      - hide
+      - reset
 
-Element: u8 =>
+Element: varint =>
 - PaperDoll
 - Armour
 - ToolTips
@@ -4470,3 +4474,54 @@ packet_client_movement_prediction_sync:
    health: lf32
    hunger: lf32
    entity_runtime_id: varint64
+   is_flying: bool
+
+packet_update_client_options:
+   !id: 0x143
+   !bound: both
+   graphics_mode?: u8 =>
+      - simple
+      - fancy
+      - advanced
+      - ray_traced
+
+# PlayerVideoCapturePacket is sent by the server to start or stop video recording for a player. This packet
+# only works on development builds and has no effect on retail builds. When recording, the client will save
+# individual frames to '/LocalCache/minecraftpe' in the format specified below.
+packet_player_video_capture:
+   !id: 0x144
+   !bound: client
+   # action is the action that the client should perform. This is one of the constants defined above.
+   action: u8 =>
+      - stop
+      - start
+   _: action ?
+      if start:
+         # frame_rate is the frame rate at which the video should be recorded. It is only used when Action is
+         # PlayerVideoCaptureActionStart. A higher frame rate will cause more frames to be recorded, but also
+         # a noticeable increase in lag.
+         frame_rate: li32
+         file_prefix: string
+
+# PlayerUpdateEntityOverrides is sent by the server to modify an entity's properties individually.
+packet_player_update_entity_overrides:
+   !id: 0x145
+   !bound: client
+   # EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
+   # entities are generally identified in packets using this runtime ID.
+   runtime_id: varint64
+   # PropertyIndex is the index of the property to modify. The index is unique for each property of an entity.
+   property_index: varint
+   # Type is the type of action to perform with the property. It is one of the constants above.
+   type: u8 =>
+      - clear_all
+      - remove
+      - set_int
+      - set_float
+   value: type ?
+      # IntValue is the new integer value of the property. It is only used when Type is set to
+      # PlayerUpdateEntityOverridesTypeInt.
+      if set_int: li32
+      # FloatValue is the new float value of the property. It is only used when Type is set to
+      # PlayerUpdateEntityOverridesTypeFloat.
+      if set_float: lf32
