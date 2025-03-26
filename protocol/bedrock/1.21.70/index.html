@@ -836,6 +836,13 @@ a { text-decoration: none; }
 <tr><td><a href="#packet_camera_aim_assist_presets">0x140</a></td><td><a href="#packet_camera_aim_assist_presets">packet_camera_aim_assist_presets</a></td></tr>
 <tr><td><a href="#packet_client_camera_aim_assist">0x141</a></td><td><a href="#packet_client_camera_aim_assist">packet_client_camera_aim_assist</a></td></tr>
 <tr><td><a href="#packet_client_movement_prediction_sync">0x142</a></td><td><a href="#packet_client_movement_prediction_sync">packet_client_movement_prediction_sync</a></td></tr>
+<tr><td><a href="#packet_update_client_options">0x143</a></td><td><a href="#packet_update_client_options">packet_update_client_options</a></td></tr>
+
+
+
+<tr><td><a href="#packet_player_video_capture">0x144</a></td><td><a href="#packet_player_video_capture">packet_player_video_capture</a></td></tr>
+
+<tr><td><a href="#packet_player_update_entity_overrides">0x145</a></td><td><a href="#packet_player_update_entity_overrides">packet_player_update_entity_overrides</a></td></tr>
   </tbody>
   </table><br/><hr/>
 <div class="packet-header" id="TexturePackInfos">
@@ -1703,8 +1710,8 @@ together, resulting in a new item.</p></td></tr>
 <tr><td class='field-name name'>height </td><td>zigzag32</td><td></td></tr>
 <tr><td colspan=2 class="vpad"><i>Length for <span class='name'>input</span> below is <b class='name'>width</b> from above</td><td ><p>2D input array, size of width*height</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>input</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>__810</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__810</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
+<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>__813</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__813</span> <div class="tag tag-array">array</div></td><td>RecipeIngredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>output</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
 <tr><td class='field-name'><span class='name'>output</span> <div class="tag tag-array">array</div></td><td>ItemLegacy</td><td></td></tr>
@@ -6335,6 +6342,9 @@ imitations, which will change based on if this field is set to true or not.</p><
 <tr><td class='field-name name'>is global </td><td>bool</td><td><p>DisableRelativeVolume specifies if the sound should be played relatively or not. If set to true, the
 sound will have full volume, regardless of where the Position is, whereas if set to false, the sound's
 volume will be based on the distance to Position.</p></td></tr>
+<tr><td class='field-name name'>entity unique id </td><td>li64</td><td><p>EntityUniqueID is the unique ID of a source entity. The unique ID is a value that remains consistent across
+different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
+this field.</p></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="packet_level_event_generic">
 <a href="#packet_level_event_generic"><div class='packet-id bound-client'>124</div><div class='packet-name name'>packet level event generic</div></a>
@@ -8119,4 +8129,64 @@ be the identifier of a category within the above <code>categories</code> field.<
 <tr><td class='field-name name'>health </td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>hunger </td><td>lf32</td><td></td></tr>
 <tr><td class='field-name name'>entity runtime id </td><td>varint64</td><td></td></tr>
+<tr><td class='field-name name'>is flying </td><td>bool</td><td></td></tr>
+</table><br/><hr/><br/>
+<div class="packet-header" id="packet_update_client_options">
+<a href="#packet_update_client_options"><div class='packet-id bound-both'>323</div><div class='packet-name name'>packet update client options</div></a>
+  <span style='vertical-align:middle;float:right'>Bidirectional</span>
+</div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='name field-name'>graphics mode <div class='tag tag-optional'>optional</div></td><td colspan=2  class="vpad"><div style='padding:8px'>u8 <span class='tag tag-enum'>enum</span></div><table>
+  <tr><td class='name'>0</td><td class='name'>simple</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>fancy</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>advanced</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>ray traced</td><td></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+<div class="packet-header" id="packet_player_video_capture">
+<a href="#packet_player_video_capture"><div class='packet-id bound-client'>324</div><div class='packet-name name'>packet player video capture</div></a>
+  <span style='vertical-align:middle;float:right'>Clientbound</span>
+</div><br/>
+    
+<p><p>PlayerVideoCapturePacket is sent by the server to start or stop video recording for a player. This packet
+only works on development builds and has no effect on retail builds. When recording, the client will save
+individual frames to '/LocalCache/minecraftpe' in the format specified below.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='name field-name'>action </td><td colspan=2  class="vpad"><div style='padding:8px'>u8 <span class='tag tag-enum'>enum</span></div><table>
+  <tr><td class='name'>0</td><td class='name'>stop</td><td><p>action is the action that the client should perform. This is one of the constants defined above.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>start</td><td></td></tr>
+</table></td></tr>
+<tr><td><b class='name'>&#128257;</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>action</span></div></i></td><td colspan=2><table>
+<tr><td class='name'><span class='fake'>is start</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>frame rate </td><td>li32</td><td><p>frame_rate is the frame rate at which the video should be recorded. It is only used when Action is
+PlayerVideoCaptureActionStart. A higher frame rate will cause more frames to be recorded, but also
+a noticeable increase in lag.</p></td></tr>
+<tr><td class='field-name name'>file prefix </td><td>string</td><td></td></tr>
+</table></td></tr>
+</table></td></tr>
+</table><br/><hr/><br/>
+<div class="packet-header" id="packet_player_update_entity_overrides">
+<a href="#packet_player_update_entity_overrides"><div class='packet-id bound-client'>325</div><div class='packet-name name'>packet player update entity overrides</div></a>
+  <span style='vertical-align:middle;float:right'>Clientbound</span>
+</div><br/>
+    
+<p><p>PlayerUpdateEntityOverrides is sent by the server to modify an entity's properties individually.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>runtime id </td><td>varint64</td><td><p>EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
+entities are generally identified in packets using this runtime ID.</p></td></tr>
+<tr><td class='field-name name'>property index </td><td>varint</td><td><p>PropertyIndex is the index of the property to modify. The index is unique for each property of an entity.</p></td></tr>
+<tr><td class='name field-name'>type </td><td colspan=2  class="vpad"><div style='padding:8px'>u8 <span class='tag tag-enum'>enum</span></div><table>
+  <tr><td class='name'>0</td><td class='name'>clear all</td><td><p>Type is the type of action to perform with the property. It is one of the constants above.</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>remove</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>set int</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>set float</td><td></td></tr>
+</table></td></tr>
+<tr><td><b class='name'>value</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is set int</span> </td><td>li32</td><td><p>IntValue is the new integer value of the property. It is only used when Type is set to
+PlayerUpdateEntityOverridesTypeInt.</p></td></tr>
+<tr><td class='field-name name'><span class='fake'>is set float</span> </td><td>lf32</td><td><p>FloatValue is the new float value of the property. It is only used when Type is set to
+PlayerUpdateEntityOverridesTypeFloat.</p></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/></div>
