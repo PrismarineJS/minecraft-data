@@ -3173,6 +3173,16 @@ packet_position_tracking_db_broadcast:
    tracking_id: zigzag32
    nbt: nbt
 
+# DebugInfo is a packet sent by the server to the client. It does not seem to do anything when sent to the
+# normal client in 1.16.
+packet_debug_info:
+    !id: 0x9b
+    !bound: client
+    # PlayerUniqueID is the unique ID of the player that the packet is sent to.
+    player_unique_id: varint64
+    # Data is the debug data.
+    data: ByteArray
+
 # PacketViolationWarning is sent by the client when it receives an invalid packet from the server. It holds
 # some information on the error that occurred.
 packet_packet_violation_warning:
