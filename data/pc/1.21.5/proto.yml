@@ -1642,13 +1642,7 @@
       velocityX: i16
       velocityY: i16
       velocityZ: i16
-   # MC: ClientboundAddExperienceOrbPacket
-   packet_spawn_entity_experience_orb:
-      entityId: varint
-      x: f64
-      y: f64
-      z: f64
-      count: i16
+
    # MC: ClientboundAnimatePacket
    packet_animation:
       entityId: varint
@@ -1883,7 +1877,9 @@
    packet_map_chunk:
       x: i32
       z: i32
-      heightmaps: anonymousNbt
+      heightmaps: []varint
+         type: varint 
+         data: i64[]varint
       chunkData: [
          "buffer",
          {
@@ -2066,6 +2062,7 @@
       walkingSpeed: f32
    # MC: ClientboundPlayerChatPacket
    packet_player_chat:
+      globalIndex: varint
       senderUuid: UUID
       index: varint
       signature?: [
@@ -2533,6 +2530,10 @@
       yaw: i8
       pitch: i8
       onGround: bool
+   # MC: ClientboundTestInstanceBlockStatus
+   packet_test_instance_block_status:
+      status: anonymousNbt
+      size?: vec3f64
    # MC: ClientboundTickingStatePacket
    packet_set_ticking_state:
       tick_rate: f32
@@ -2573,6 +2574,7 @@
          value: []varint
             criterionIdentifier: string
             criterionProgress?: i64
+      showAdvancements: bool
    # MC: ClientboundUpdateAttributesPacket
    packet_entity_update_attributes:
       entityId: varint
@@ -2644,7 +2646,6 @@
       name: varint =>
       - bundle_delimiter
       - spawn_entity
-      - spawn_entity_experience_orb
       - animation
       - statistics
       - acknowledge_player_digging
@@ -2762,6 +2763,7 @@
       - nbt_query_response
       - collect
       - entity_teleport
+      - test_instance_block_status
       - set_ticking_state
       - step_tick
       - transfer
@@ -2776,7 +2778,6 @@
       params: name ?
          if bundle_delimiter: void
          if spawn_entity: packet_spawn_entity
-         if spawn_entity_experience_orb: packet_spawn_entity_experience_orb
          if animation: packet_animation
          if statistics: packet_statistics
          if acknowledge_player_digging: packet_acknowledge_player_digging
@@ -2894,6 +2895,7 @@
          if nbt_query_response: packet_nbt_query_response
          if collect: packet_collect
          if entity_teleport: packet_entity_teleport
+         if test_instance_block_status: packet_test_instance_block_status
          if set_ticking_state: packet_set_ticking_state
          if step_tick: packet_step_tick
          if transfer: packet_common_transfer
@@ -2947,6 +2949,7 @@
             "count": 3
          }
       ]
+      checksum: u8
    # MC: ServerboundChatPacket
    packet_chat_message:
       message: string
@@ -2965,6 +2968,7 @@
             "count": 3
          }
       ]
+      checksum: u8
    # MC: ServerboundChatSessionUpdatePacket
    packet_chat_session_update:
       sessionUUID: UUID
