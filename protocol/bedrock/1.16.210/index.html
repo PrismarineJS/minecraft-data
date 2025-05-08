@@ -468,6 +468,9 @@ a { text-decoration: none; }
 
 
 
+<tr><td><a href="#packet_code_builder">0x96</a></td><td><a href="#packet_code_builder">packet_code_builder</a></td></tr>
+
+
 <tr><td><a href="#packet_update_player_game_type">0x97</a></td><td><a href="#packet_update_player_game_type">packet_update_player_game_type</a></td></tr>
 
 
@@ -490,6 +493,9 @@ a { text-decoration: none; }
 
 
 <tr><td><a href="#packet_position_tracking_db_broadcast">0x99</a></td><td><a href="#packet_position_tracking_db_broadcast">packet_position_tracking_db_broadcast</a></td></tr>
+
+
+<tr><td><a href="#packet_debug_info">0x9b</a></td><td><a href="#packet_debug_info">packet_debug_info</a></td></tr>
 
 
 <tr><td><a href="#packet_packet_violation_warning">0x9c</a></td><td><a href="#packet_packet_violation_warning">packet_packet_violation_warning</a></td></tr>
@@ -4471,6 +4477,19 @@ and the fourth for boots.</p></td></tr>
 <tr><td class='field-name name'><span class='fake'>is true</span> </td><td>zigzag32</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
+<div class="packet-header" id="packet_code_builder">
+<a href="#packet_code_builder"><div class='packet-id bound-client'>150</div><div class='packet-name name'>packet code builder</div></a>
+  <span style='vertical-align:middle;float:right'>Clientbound</span>
+</div><br/>
+    
+<p><p>CodeBuilder is an Education Edition packet sent by the server to the client to open the URL to a Code
+Builder (websocket) server.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>url </td><td>string</td><td><p>URL is the url to the Code Builder (websocket) server.</p></td></tr>
+<tr><td class='field-name name'>should open code builder </td><td>bool</td><td><p>ShouldOpenCodeBuilder specifies if the client should automatically open the Code Builder app. If set to
+true, the client will attempt to use the Code Builder app to connect to and interface with the server
+running at the URL above.</p></td></tr>
+</table><br/><hr/><br/>
 <div class="packet-header" id="packet_update_player_game_type">
 <a href="#packet_update_player_game_type"><div class='packet-id bound-client'>151</div><div class='packet-name name'>packet update player game type</div></a>
   <span style='vertical-align:middle;float:right'>Clientbound</span>
@@ -4545,6 +4564,17 @@ indicate that there is not (no longer) a lodestone at that position.</p></td></t
 <tr><td class='field-name name'>tracking id </td><td>zigzag32</td><td><p>TrackingID is the ID of the PositionTrackingDBClientRequest packet that this packet was in response to.
 The tracking ID is also present as the 'id' field in the SerialisedData field.</p></td></tr>
 <tr><td class='field-name name'>nbt </td><td>nbt</td><td></td></tr>
+</table><br/><hr/><br/>
+<div class="packet-header" id="packet_debug_info">
+<a href="#packet_debug_info"><div class='packet-id bound-client'>155</div><div class='packet-name name'>packet debug info</div></a>
+  <span style='vertical-align:middle;float:right'>Clientbound</span>
+</div><br/>
+    
+<p><p>DebugInfo is a packet sent by the server to the client. It does not seem to do anything when sent to the
+normal client in 1.16.</p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>player unique id </td><td>zigzag64</td><td><p>PlayerUniqueID is the unique ID of the player that the packet is sent to.</p></td></tr>
+<tr><td class='field-name name'>data </td><td>ByteArray</td><td><p>Data is the debug data.</p></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="packet_packet_violation_warning">
 <a href="#packet_packet_violation_warning"><div class='packet-id bound-server'>156</div><div class='packet-name name'>packet packet violation warning</div></a>
