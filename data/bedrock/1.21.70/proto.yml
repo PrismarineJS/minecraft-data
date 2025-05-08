@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.80
+!version: 1.21.70
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -270,7 +270,6 @@ packet_start_game:
    # limited worlds, 1 being infinite worlds, 2 being flat worlds, 3 being nether worlds and 
    # 4 being end worlds. A value of 0 will actually make the client stop rendering chunks you 
    # send beyond the world limit.
-   # As of 1.21.80, protocol.PlayerMovementModeServer is the minimum requirement for MovementType.
    generator: zigzag32
    # The world game mode that a player gets when it first spawns in the world. It is shown in the
    # settings and is used if the Player Gamemode is set to 5.
@@ -294,7 +293,6 @@ packet_start_game:
    - not_editor
    - project
    - test_level
-   - realms_upload
    # Whether the world was created in editor mode
    created_in_editor: bool
    # Whether the world was exported from editor mode
@@ -411,7 +409,6 @@ packet_start_game:
    # packet.AuthoritativeMovementModeServerWithRewind, where server the server authoritative types result
    # in the client sending PlayerAuthInput packets instead of MovePlayer packets and the rewind mode
    # requires sending the tick of movement and several actions.
-   # As of 1.21.80, `client` (0) is deprecated.
    #
    # Specifies if the client or server is authoritative over the movement of the player, 
    # meaning it controls the movement of it. 
@@ -660,7 +657,6 @@ packet_move_player:
          source_entity_type: LegacyEntityType
    tick: varint64
 
-# Removed in 1.21.80
 packet_rider_jump:
    !id: 0x14
    !bound: both
@@ -1445,7 +1441,6 @@ packet_block_entity_data:
    position: BlockCoordinates
    nbt: nbt
 
-# Removed in 1.21.80
 packet_player_input:
    !id: 0x39
    !bound: server
@@ -2778,11 +2773,9 @@ packet_network_chunk_publisher_update:
 packet_biome_definition_list:
    !id: 0x7a
    !bound: client
-   # BiomeDefinitions is a list of biomes that are available on the server.
-   biome_definitions: BiomeDefinition[]varint
-   # StringList is a makeshift dictionary implementation Mojang created to try and reduce the size of the
-   # overall packet. It is a list of common strings that are used in the biome definitions.
-   string_list: string[]varint
+   # SerialisedBiomeDefinitions is a network NBT serialised compound of all definitions of biomes that are
+   # available on the server.
+   nbt: nbt
 
 # LevelSoundEvent is sent by the server to make any kind of built-in sound heard to a player. It is sent to,
 # for example, play a stepping sound or a shear sound. The packet is also sent by the client, in which case
@@ -4212,7 +4205,7 @@ packet_camera_instruction:
    # RemoveTarget can be set to true to remove the current aim assist target.
    remove_target?: bool
 
-# Removed in 1.21.80
+
 packet_compressed_biome_definitions:
    !id: 0x12d
    !bound: client
@@ -4554,25 +4547,3 @@ packet_player_update_entity_overrides:
       # FloatValue is the new float value of the property. It is only used when Type is set to
       # PlayerUpdateEntityOverridesTypeFloat.
       if set_float: lf32
-
-packet_player_location:
-   !id: 0x146
-   !bound: client
-   # Type is the action that is being performed. It is one of the constants above.
-   type: li32 =>
-      - coordinates
-      - type_hide
-   entity_unique_id: varint64
-   position: type ?
-      if coordinates: vec3f
-
-packet_clientbound_controls_scheme:
-   !id: 0x147
-   !bound: client
-   # Scheme is the scheme that the client should use. It is one of the constants above.
-   scheme: u8 =>
-      - locked_player_relative_strafe
-      - camera_relative
-      - camera_relative_strafe
-      - player_relative
-      - player_relative_strafe
