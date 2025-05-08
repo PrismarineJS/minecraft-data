@@ -1,3 +1,15 @@
+## 3.86.0
+* [Add Bedrock 1.21.80 protocol data (#1010)](https://github.com/PrismarineJS/minecraft-data/commit/9d518a1e4387c0323e55fe58dd2edbf50f6a13d8) (thanks @extremeheat)
+* [Add 25w19a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/67b970caad2f0a3fba11e97f71176ecac5618af4) (thanks @github-actions[bot])
+* [Add 25w18a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/32698076a22800d1d6af2b4d69ab0bc38c88a49c) (thanks @github-actions[bot])
+* [Add data for bedrock 1.21.60 and 1.21.70 (#997)](https://github.com/PrismarineJS/minecraft-data/commit/57e34f79c2e9deac2e71888ba639f4cb01068c34) (thanks @bedrock-bot)
+* [Add 25w17a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c0cc8530e15bee25ff10fcbec12ceab28d5c354d) (thanks @github-actions[bot])
+* [Add 25w16a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0cb2465d9f80cdf044b1053067613bdca0fb4562) (thanks @github-actions[bot])
+* [bedrock: add code_builder packet to protocol (#1000)](https://github.com/PrismarineJS/minecraft-data/commit/e2debd1bca378c38b75c7fd2de0796ab7087cc63) (thanks @EntifiedOptics)
+* [Add 25w15a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/12f2a4d7f95f0df16e64b4ad7a38bab74814619b) (thanks @github-actions[bot])
+* [Fix Bedrock protocol missing debug_info packet (#999)](https://github.com/PrismarineJS/minecraft-data/commit/c22521517fc708f387af874bd2ce603ae314541b) (thanks @EntifiedOptics)
+* [Add 25w14craftmine to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8020298eb014fee8066c70f4cdc887e6d104d6d6) (thanks @github-actions[bot])
+
 ## 3.85.0
 * [Add Bedrock 1.21.70 (785) protocol data (#990)](https://github.com/PrismarineJS/minecraft-data/commit/982946615de283af7709ccf2611844d3808a63b7) (thanks @CreeperG16)
 * [Fix bedrock ItemStackRequest packet fields (#988)](https://github.com/PrismarineJS/minecraft-data/commit/41aa5c7ed620a4b6b51892153fb8abe67b6ded8e) (thanks @EntifiedOptics)
