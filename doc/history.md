@@ -1,3 +1,9 @@
+## 3.86.0
+* [Add Bedrock 1.21.80 protocol data (#1010)](https://github.com/PrismarineJS/minecraft-data/commit/9d518a1e4387c0323e55fe58dd2edbf50f6a13d8) (thanks @extremeheat)
+* [Add data for bedrock 1.21.60 and 1.21.70 (#997)](https://github.com/PrismarineJS/minecraft-data/commit/57e34f79c2e9deac2e71888ba639f4cb01068c34) (thanks @bedrock-bot)
+* [bedrock: add code_builder packet to protocol (#1000)](https://github.com/PrismarineJS/minecraft-data/commit/e2debd1bca378c38b75c7fd2de0796ab7087cc63) (thanks @EntifiedOptics)
+* [Fix Bedrock protocol missing debug_info packet (#999)](https://github.com/PrismarineJS/minecraft-data/commit/c22521517fc708f387af874bd2ce603ae314541b) (thanks @EntifiedOptics)
+
 ## 3.85.0
 * [Add Bedrock 1.21.70 (785) protocol data (#990)](https://github.com/PrismarineJS/minecraft-data/commit/982946615de283af7709ccf2611844d3808a63b7) (thanks @CreeperG16)
 * [Fix bedrock ItemStackRequest packet fields (#988)](https://github.com/PrismarineJS/minecraft-data/commit/41aa5c7ed620a4b6b51892153fb8abe67b6ded8e) (thanks @EntifiedOptics)
