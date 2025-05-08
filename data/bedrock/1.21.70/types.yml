@@ -315,8 +315,6 @@ MetadataDictionary: []varint
       131: visible_mob_effects # long
       132: filtered_name # string
       133: bed_enter_position # blockpos
-      134: seat_third_person_camera_radius
-      135: seat_camera_relax_distance_smoothing
    type: varint =>
       0: byte
       1: short
@@ -330,8 +328,6 @@ MetadataDictionary: []varint
    value: key ?
       if flags: MetadataFlags1
       if flags_extended: MetadataFlags2
-      if seat_third_person_camera_radius: lf32
-      if seat_camera_relax_distance_smoothing: lf32
       default: type ?
          if byte: i8
          if short: li16
@@ -476,8 +472,7 @@ MetadataFlags2: [ "bitflags", {
       "render_when_invisible",
       "body_rotation_axis_aligned",
       "collidable",
-      "wasd_air_controlled",
-      "does_server_auth_only_dismount"
+      "wasd_air_controlled"
    ]
 }]
 
@@ -901,9 +896,6 @@ PlayerRecords:
             is_teacher: bool
             is_host: bool
             is_subclient: bool
-            # PlayerColour is the colour of the player that is shown in UI elements, currently only used for the
-            # player locator bar.
-            player_color: li32
          if remove:
             uuid: uuid
    verified: type ?
@@ -2362,13 +2354,6 @@ CameraPresets:
       # Distance is the maximum distance from the player's cursor should check for a target, if TargetMode is
       # set to target_mode distance.
       distance?: lf32
-   control_scheme?: u8 =>
-      - locked_player_relative_strafe
-      - camera_relative
-      - camera_relative_strafe
-      - player_relative
-      - player_relative_strafe
-
 
 DisconnectFailReason: zigzag32 =>
    - unknown
@@ -2498,278 +2483,3 @@ FullContainerName:
 MovementEffectType: varint =>
    -1: invalid
    0: GLIDE_BOOST
-
-# BiomeDefinition represents a biome definition in the game. This can be a vanilla biome or a completely
-# custom biome.
-BiomeDefinition:
-   # NameIndex represents the index of the biome name in the string list from BiomeDefinitionListPacket.
-   name_index: li16
-   # BiomeID is the biome ID. This is optional and can be empty.
-   biome_id?: lu16
-   # Temperature is the temperature of the biome, used for weather, biome behaviours and sky colour.
-   temperature: lf32
-   # Downfall is the amount that precipitation affects colours and block changes.
-   downfall: lf32
-   # RedSporeDensity is the density of red spore precipitation visuals.
-   red_spore_density: lf32
-   # BlueSporeDensity is the density of blue spore precipitation visuals.
-   blue_spore_density: lf32
-   # AshDensity is the density of ash precipitation visuals.
-   ash_density: lf32
-   # WhiteAshDensity is the density of white ash precipitation visuals.
-   white_ash_density: lf32
-   # Depth ...
-   depth: lf32
-   # Scale ...
-   scale: lf32
-   # MapWaterColour is an ARGB value for the water colour on maps in the biome.
-   map_water_colour: li32
-   # Rain is true if the biome has rain, false if it is a dry biome.
-   rain: bool
-   # Tags are a list of indices of tags in the string list. These are used to group biomes together for
-   # biome generation and other purposes.
-   tags?: lu16[]varint
-   # ChunkGeneration is optional information to assist in client-side chunk generation.
-   chunk_generation?: BiomeChunkGeneration
-
-
-# BiomeChunkGeneration represents the information required for the client to generate chunks itself
-# to create the illusion of a larger render distance.
-BiomeChunkGeneration:
-   # Climate is optional information to specify the biome's climate.
-   climate?: BiomeClimate
-   # ConsolidatedFeatures is a list of features that are consolidated into a single feature.
-   consolidated_features?: BiomeConsolidatedFeature[]varint
-   # MountainParameters is optional information to specify the biome's mountain parameters.
-   mountain_parameters?: BiomeMountainParameters
-   # SurfaceMaterialAdjustments is a list of surface material adjustments.
-   surface_material_adjustments?: BiomeElementData[]varint
-   # SurfaceMaterials is a set of materials to use for the surface layers of the biome.
-   surface_materials?: BiomeSurfaceMaterial
-   # HasSwampSurface is true if the biome has a swamp surface.
-   has_swamp_surface: bool
-   # HasFrozenOceanSurface is true if the biome has a frozen ocean surface.
-   has_frozen_ocean_surface: bool
-   # HasEndSurface is true if the biome has an end surface.
-   has_end_surface: bool
-   # MesaSurface is optional information to specify the biome's mesa surface.
-   mesa_surface?: BiomeMesaSurface
-   # CappedSurface is optional information to specify the biome's capped surface, i.e. in the Nether.
-   capped_surface?: BiomeCappedSurface
-   # OverworldRules is optional information to specify the biome's overworld rules, such as rivers and hills.
-   overworld_rules?: BiomeOverworldRules
-   # MultiNoiseRules is optional information to specify the biome's multi-noise rules.
-   multi_noise_rules?: BiomeMultiNoiseRules
-   # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
-   # weighted biomes.
-   legacy_rules?: BiomeConditionalTransformation[]varint
-
-# BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
-BiomeClimate:
-   # Temperature is the temperature of the biome, used for weather, biome behaviours and sky colour.
-   temperature: lf32
-   # Downfall is the amount that precipitation affects colours and block changes.
-   downfall: lf32
-   # RedSporeDensity is the density of red spore precipitation visuals.
-   red_spore_density: lf32
-   # BlueSporeDensity is the density of blue spore precipitation visuals.
-   blue_spore_density: lf32
-   # AshDensity is the density of ash precipitation visuals.
-   ash_density: lf32
-   # WhiteAshDensity is the density of white ash precipitation visuals.
-   white_ash_density: lf32
-   # SnowAccumulationMin is the minimum amount of snow that can accumulate in the biome, every 0.125 is
-   # another layer of snow.
-   snow_accumulation_min: lf32
-   # SnowAccumulationMax is the maximum amount of snow that can accumulate in the biome, every 0.125 is
-   # another layer of snow.
-   snow_accumulation_max: lf32
-
-# BiomeMountainParameters specifies the parameters for a mountain biome.
-BiomeMountainParameters:
-   # SteepBlock is the runtime ID of the block to use for steep slopes.
-   steep_block: li32
-   # NorthSlopes is true if the biome has north slopes.
-   north_slopes: bool
-   # SouthSlopes is true if the biome has south slopes.
-   south_slopes: bool
-   # WestSlopes is true if the biome has west slopes.
-   west_slopes: bool
-   # EastSlopes is true if the biome has east slopes.
-   east_slopes: bool
-   # TopSlideEnabled is true if the biome has top slide enabled.
-   top_slide_enabled: bool
-
-# BiomeSurfaceMaterial specifies the materials to use for the surface layers of the biome.
-BiomeSurfaceMaterial:
-   # TopBlock is the runtime ID of the block to use for the top layer.
-   top_block: li32
-   # MidBlock is the runtime ID to use for the middle layers.
-   mid_block: li32
-   # SeaFloorBlock is the runtime ID to use for the sea floor.
-   sea_floor_block: li32
-   # FoundationBlock is the runtime ID to use for the foundation layers.
-   foundation_block: li32
-   # SeaBlock is the runtime ID to use for the sea layers.
-   sea_block: li32
-   # SeaFloorDepth is the depth of the sea floor, in blocks.
-   sea_floor_depth: li32
-
-# BiomeMesaSurface specifies the materials to use for the mesa biome.
-BiomeMesaSurface:
-   # ClayMaterial is the runtime ID of the block to use for clay layers.
-   clay_material: lu32
-   # HardClayMaterial is the runtime ID of the block to use for hard clay layers.
-   hard_clay_material: lu32
-   # BrycePillars is true if the biome has bryce pillars, which are tall spire-like structures.
-   bryce_pillars: bool
-   # HasForest is true if the biome has a forest.
-   has_forest: bool
-
-# BiomeCappedSurface specifies the materials to use for the capped surface of a biome, such as in the Nether.
-BiomeCappedSurface:
-   # FloorBlocks is a list of runtime IDs to use for the floor blocks.
-   floor_blocks: li32[]varint
-   # CeilingBlocks is a list of runtime IDs to use for the ceiling blocks.
-   ceiling_blocks: li32[]varint
-   # SeaBlock is an optional runtime ID to use for the sea block.
-   sea_block?: lu32
-   # FoundationBlock is an optional runtime ID to use for the foundation block.
-   foundation_block?: lu32
-   # BeachBlock is an optional runtime ID to use for the beach block.
-   beach_block?: lu32
-
-# BiomeMultiNoiseRules specifies the rules for multi-noise biomes, which are biomes that are defined by
-# multiple noise parameters instead of just temperature and humidity.
-BiomeMultiNoiseRules:
-   # Temperature is the temperature level of the biome.
-   temperature: lf32
-   # Humidity is the humidity level of the biome.
-   humidity: lf32
-   # Altitude is the altitude level of the biome.
-   altitude: lf32
-   # Weirdness is the weirdness level of the biome.
-   weirdness: lf32
-   # Weight is the weight of the biome, with a higher weight being more likely to be selected.
-   weight: lf32
-
-# BiomeWeight defines the weight for a biome, used for weighted randomness.
-BiomeWeight:
-   # Biome is the index of the biome name in the string list.
-   biome: li16
-   # Weight is the weight of the biome, with a higher weight being more likely to be selected.
-   weight: lu32
-
-# BiomeTemperatureWeight defines the weight for a temperature, used for weighted randomness.
-BiomeTemperatureWeight:
-   # Temperature is the temperature that can be selected.
-   temperature: zigzag32
-   # Weight is the weight of the temperature, with a higher weight being more likely to be selected.
-   weight: lu32
-
-# BiomeConsolidatedFeature represents a feature that is consolidated into a single feature for the biome.
-BiomeConsolidatedFeature:
-   # Scatter defines how the feature is scattered in the biome.
-   scatter: BiomeScatterParameter
-   # Feature is the index of the feature's name in the string list.
-   feature: li16
-   # Identifier is the index of the feature's identifier in the string list.
-   identifier: li16
-   # Pass is the index of the feature's pass in the string list.
-   pass: li16
-   # CanUseInternal is true if the feature can use internal features.
-   can_use_internal: bool
-
-BiomeScatterParameter:
-   # Coordinates is a list of coordinate rules to scatter the feature within.
-   coordinates: BiomeCoordinate[]varint
-   # EvaluationOrder is the order in which the coordinates are evaluated.
-   evaluation_order: zigzag32 => # BiomeCoordinateEvaluationOrder
-      0: xyz
-      1: xzy
-      2: yxz
-      3: yzx
-      4: zxy
-      5: zyx
-   # ChancePercentType is the type of expression operation to use for the chance percent.
-   chance_percent_type: zigzag32 # BiomeExpressionOp
-   # ChancePercent is the index of the chance expression in the string list.
-   chance_percent: li16
-   # ChanceNumerator is the numerator of the chance expression.
-   chance_numerator: li32
-   # ChanceDenominator is the denominator of the chance expression.
-   chance_denominator: li32
-   # IterationsType is the type of expression operation to use for the iterations.
-   iterations_type: zigzag32 # BiomeExpressionOp
-   # Iterations is the index of the iterations expression in the string list.
-   iterations: li16
-
-# BiomeCoordinate specifies coordinate rules for where features can be scattered in the biome.
-BiomeCoordinate:
-   # MinValueType is the type of expression operation to use for the minimum value.
-   min_value_type: zigzag32 # BiomeExpressionOp
-   # MinValue is the index of the minimum value expression in the string list.
-   min_value: li16
-   # MaxValueType is the type of expression operation to use for the maximum value.
-   max_value_type: zigzag32 # BiomeExpressionOp
-   # MaxValue is the index of the maximum value expression in the string list.
-   max_value: li16
-   # GridOffset is the offset of the grid, used for fixed grid and jittered grid distributions.
-   grid_offset: lu32
-   # GridStepSize is the step size of the grid, used for fixed grid and jittered grid distributions.
-   grid_step_size: lu32
-   # Distribution is the type of distribution to use for the coordinate.
-   distribution: zigzag32 => # BiomeRandomDistributionType
-      0: single_valued
-      1: uniform
-      2: gaussian
-      3: inverse_gaussian
-      4: fixed_grid
-      5: jittered_grid
-      6: triangle
-
-# BiomeElementData are set rules to adjust the surface materials of the biome.
-BiomeElementData:
-   # NoiseFrequencyScale is the frequency scale of the noise used to adjust the surface materials.
-   noise_frequency_scale: lf32
-   # NoiseLowerBound is the minimum noise value required to be selected.
-   noise_lower_bound: lf32
-   # NoiseUpperBound is the maximum noise value required to be selected.
-   noise_upper_bound: lf32
-   # HeightMinType is the type of expression operation to use for the minimum height.
-   height_min_type: zigzag32 # BiomeExpressionOp
-   # HeightMin is the index of the minimum height expression in the string list.
-   height_min: li16
-   # HeightMaxType is the type of expression operation to use for the maximum height.
-   height_max_type: zigzag32 # BiomeExpressionOp
-   # HeightMax is the index of the maximum height expression in the string list.
-   height_max: li16
-   # AdjustedMaterials is the materials to use for the surface layers of the biome if selected.
-   adjusted_materials: BiomeSurfaceMaterial
-
-# BiomeOverworldRules specifies a list of transformation rules to apply to different parts of the overworld.
-BiomeOverworldRules:
-   # HillsTransformations is a list of weighted biome transformations to apply to hills.
-   hills_transformations: BiomeWeight[]varint
-   # MutateTransformations is a list of weighted biome transformations to apply to mutated biomes.
-   mutate_transformations: BiomeWeight[]varint
-   # RiverTransformations is a list of weighted biome transformations to apply to rivers.
-   river_transformations: BiomeWeight[]varint
-   # ShoreTransformations is a list of weighted biome transformations to apply to shores.
-   shore_transformations: BiomeWeight[]varint
-   # PreHillsEdgeTransformations is a list of conditional transformations to apply to the edges of hills.
-   pre_hills_edge_transformations: BiomeConditionalTransformation[]varint
-   # PostShoreEdgeTransformations is a list of conditional transformations to apply to the edges of shores.
-   post_shore_edge_transformations: BiomeConditionalTransformation[]varint
-   # ClimateTransformations is a list of weighted temperature transformations to apply to the biome's climate.
-   climate_transformations: BiomeTemperatureWeight[]varint
-
-# BiomeConditionalTransformation is the legacy method of transforming biomes.
-BiomeConditionalTransformation:
-   # WeightedBiomes is a list of biomes and their weights.
-   weighted_biomes: BiomeWeight[]varint
-   # ConditionJSON is an index of the condition JSON data in the string list.
-   condition_json: li16
-   # MinPassingNeighbours is the minimum number of neighbours that must pass the condition for the
-   # transformation to be applied.
-   min_passing_neighbours: lu32
