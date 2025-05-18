@@ -1,3 +1,7 @@
+## 3.87.0
+* [Fix bug in packet experience.](https://github.com/PrismarineJS/minecraft-data/commit/a32f3880296467fbed19e5205b1d1d23331fffa8) (thanks @rom1504)
+* [Add 25w20a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9ba5dfb80f37415e2ac79c3dc15c5581d5738bfa) (thanks @github-actions[bot])
+
 ## 3.86.0
 * [Add Bedrock 1.21.80 protocol data (#1010)](https://github.com/PrismarineJS/minecraft-data/commit/9d518a1e4387c0323e55fe58dd2edbf50f6a13d8) (thanks @extremeheat)
 * [Add data for bedrock 1.21.60 and 1.21.70 (#997)](https://github.com/PrismarineJS/minecraft-data/commit/57e34f79c2e9deac2e71888ba639f4cb01068c34) (thanks @bedrock-bot)
