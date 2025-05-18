@@ -1,3 +1,6 @@
+## 3.88.0
+* [Add title features.](https://github.com/PrismarineJS/minecraft-data/commit/33ac15edaa7da6c4252b52fc8f3c05803437dd64) (thanks @rom1504)
+
 ## 3.87.0
 * [Fix bug in packet experience.](https://github.com/PrismarineJS/minecraft-data/commit/a32f3880296467fbed19e5205b1d1d23331fffa8) (thanks @rom1504)
 * [Add 25w20a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9ba5dfb80f37415e2ac79c3dc15c5581d5738bfa) (thanks @github-actions[bot])
