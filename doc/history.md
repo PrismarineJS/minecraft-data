@@ -1,3 +1,6 @@
+## 3.89.0
+* [Add some sound features](https://github.com/PrismarineJS/minecraft-data/commit/431245e650d88863f867b156a6b418b56797658b) (thanks @rom1504)
+
 ## 3.88.0
 * [Add title features.](https://github.com/PrismarineJS/minecraft-data/commit/33ac15edaa7da6c4252b52fc8f3c05803437dd64) (thanks @rom1504)
 
