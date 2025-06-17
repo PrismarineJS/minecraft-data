@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.90
+!version: 1.21.80
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -139,8 +139,6 @@ packet_resource_packs_info:
    has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
-   # Force disable Vibrant Visuals.
-   disable_vibrant_visuals: bool
    world_template:
       # WorldTemplateUUID is teh UUID of the template that has been used to generate the world. Templates can
       # be downloaded from the marketplace or installed via '.mctemplate' files. If the world was not generated
@@ -395,7 +393,6 @@ packet_start_game:
    server_identifier: string
    world_identifier: string
    scenario_identifier: string
-   owner_identifier: string
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -408,6 +405,22 @@ packet_start_game:
    # Specifies if the world was a trial world, meaning features are limited and there 
    # is a time limit on the world.
    is_trial: bool
+   
+   # MovementType specifies the way the server handles player movement. Available options are
+   # packet.AuthoritativeMovementModeClient, packet.AuthoritativeMovementModeServer and
+   # packet.AuthoritativeMovementModeServerWithRewind, where server the server authoritative types result
+   # in the client sending PlayerAuthInput packets instead of MovePlayer packets and the rewind mode
+   # requires sending the tick of movement and several actions.
+   # As of 1.21.80, `client` (0) is deprecated.
+   #
+   # Specifies if the client or server is authoritative over the movement of the player, 
+   # meaning it controls the movement of it. 
+   ## https://github.com/pmmp/PocketMine-MP/blob/a43b46a93cb127f037c879b5d8c29cda251dd60c/src/pocketmine/network/mcpe/protocol/types/PlayerMovementType.php#L26
+   movement_authority: zigzag32 =>
+      0: client
+      1: server
+      # PlayerAuthInputPacket + a bunch of junk that solves a nonexisting problem
+      2: server_with_rewind
    # RewindHistorySize is the amount of history to keep at maximum if MovementType is
    # packet.AuthoritativeMovementModeServerWithRewind.
    rewind_history_size: zigzag32
@@ -3688,13 +3701,6 @@ packet_photo_info_request:
    !bound: server
    photo_id: zigzag64
 
-HeightMapDataType: u8 =>
-   0: no_data
-   1: has_data
-   2: too_high
-   3: too_low
-   4: all_copied
-
 SubChunkEntryWithoutCaching: []lu32
    dx: i8
    dy: i8
@@ -3709,11 +3715,12 @@ SubChunkEntryWithoutCaching: []lu32
       6: success_all_air
    # Payload has the terrain data, if the chunk isn't empty and caching is disabled
    payload: ByteArray
-   heightmap_type: HeightMapDataType
+   heightmap_type: u8 =>
+      0: no_data
+      1: has_data
+      2: too_high
+      3: too_low
    heightmap: heightmap_type ?
-      if has_data: '["buffer", { "count": 256 }]'
-   render_heightmap_type: HeightMapDataType
-   render_heightmap: render_heightmap_type ?
       if has_data: '["buffer", { "count": 256 }]'
 
 SubChunkEntryWithCaching: []lu32
@@ -3732,11 +3739,12 @@ SubChunkEntryWithCaching: []lu32
    payload: result ?
       if success_all_air: void
       default: ByteArray
-   heightmap_type: HeightMapDataType
+   heightmap_type: u8 =>
+      0: no_data
+      1: has_data
+      2: too_high
+      3: too_low
    heightmap: heightmap_type ?
-      if has_data: '["buffer", { "count": 256 }]'
-   render_heightmap_type: HeightMapDataType
-   render_heightmap: render_heightmap_type ?
       if has_data: '["buffer", { "count": 256 }]'
    blob_id: lu64
 
@@ -4189,7 +4197,6 @@ packet_camera_instruction:
       offset?: vec2f
       entity_offset?: vec3f
       default?: bool
-      remove_ignore_starting_values: bool
    # Clear can be set to true to clear all the current camera instructions.
    clear?: bool
    # Fade is a camera instruction that fades the screen to a specified colour.
@@ -4418,7 +4425,6 @@ packet_movement_effect:
    tick: varint64
 
 # set_movement_authority is sent by the server to the client to change its movement mode.
-# This packet has been deprecated and as of protocol 818 (1.21.90) has been removed from the game.
 packet_set_movement_authority:
    !id: 0x13F
    !bound: client
@@ -4570,27 +4576,3 @@ packet_clientbound_controls_scheme:
       - camera_relative_strafe
       - player_relative
       - player_relative_strafe
-
-packet_server_script_debug_drawer:
-   !id: 0x148
-   !bound: server
-   shapes: []varint
-      network_id: varint64
-      shape_type?: u8 =>
-         - line
-         - box
-         - sphere
-         - circle
-         - text
-         - arrow
-      location?: vec3f
-      scale?: lf32
-      rotation?: vec3f
-      time_left?: lf32
-      color?: varint
-      text?: string
-      box_bound?: vec3f
-      line_end_location?: vec3f
-      arrow_head_length?: lf32
-      arrow_head_radius?: lf32
-      segment_count?: u8

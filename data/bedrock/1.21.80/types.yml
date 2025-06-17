@@ -477,8 +477,7 @@ MetadataFlags2: [ "bitflags", {
       "body_rotation_axis_aligned",
       "collidable",
       "wasd_air_controlled",
-      "does_server_auth_only_dismount",
-      "body_rotation_always_follows_head"
+      "does_server_auth_only_dismount"
    ]
 }]
 
@@ -962,7 +961,6 @@ Action: zigzag32 =>
    33: stop_crawling
    34: start_flying
    35: stop_flying
-   # Deprecated. Corresponds to Player Auth Input InputData::ClientAckServerData bit 44 Not sent when using server authoritative movement as specified in StartGamePacket. This is now deprecated because only server authoritative movement exists.
    36: received_server_data
    37: start_using_item
 
@@ -2350,6 +2348,8 @@ CameraPresets:
    ## TODO: make this an enum afer adding proper optional support inside pdefyaml
    audio_listener?: u8
    player_effects?: bool
+   # align_target_and_camera_forward determines whether the camera should align the target and the camera forward or not.
+   align_target_and_camera_forward?: bool
    aim_assist?:
       # Preset is the ID of the preset that has previously been defined in the CameraAimAssistPresets packet.
       preset_id?: string
@@ -2491,9 +2491,6 @@ DisconnectFailReason: zigzag32 =>
    - sub_client_login_disabled
    - deep_link_trying_to_open_demo_world_while_signed_in
    - async_join_task_denied
-   - realms_timeline_required
-   - guest_withough_host
-   - failed_to_join_experience
 
 FullContainerName:
    container_id: ContainerSlotType
