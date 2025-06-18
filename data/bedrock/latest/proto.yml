@@ -59,13 +59,18 @@ packet_login:
    !bound: server
    # Protocol version (Big Endian!)
    protocol_version: i32
+   # The structure of the login tokens has changed in 1.21.90.
+   # The encapsulated data is now a JSON object with a stringified `Certificate`.
    tokens: '["encapsulated", { "lengthType": "varint", "type": "LoginTokens" }]'
 
 LoginTokens:
    # JSON array of JWT data: contains the display name, UUID and XUID
    # It should be signed by the Mojang public key
+   # For 1.21.90+, the 'identity' field is a Little-Endian length-prefixed JSON-encoded string.
+   # This JSON object must contain a 'Certificate' key, whose value is a *stringified* JSON object
+   # that holds the actual JWT 'chain' array.
    identity: LittleString
-   # Skin related data
+   # JWT containing skin and other client data.
    client: LittleString
 
 packet_play_status:
@@ -139,7 +144,8 @@ packet_resource_packs_info:
    has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
-   # Force disable Vibrant Visuals.
+   # ForceDisableVibrantVisuals specifies if the vibrant visuals feature should be forcibly disabled on the server.
+   # If set to true, the server will ensure that vibrant visuals are not enabled, regardless of the client's settings.
    disable_vibrant_visuals: bool
    world_template:
       # WorldTemplateUUID is teh UUID of the template that has been used to generate the world. Templates can
@@ -408,13 +414,11 @@ packet_start_game:
    # Specifies if the world was a trial world, meaning features are limited and there 
    # is a time limit on the world.
    is_trial: bool
-   # RewindHistorySize is the amount of history to keep at maximum if MovementType is
-   # packet.AuthoritativeMovementModeServerWithRewind.
+   # RewindHistorySize is the amount of history to keep at maximum
    rewind_history_size: zigzag32
    # ServerAuthoritativeBlockBreaking specifies if block breaking should be sent through
    # packet.PlayerAuthInput or not. This field is somewhat redundant as it is always enabled if
-   # MovementType is packet.AuthoritativeMovementModeServer or
-   # packet.AuthoritativeMovementModeServerWithRewind
+   # server authoritative movement is enabled.
    server_authoritative_block_breaking: bool
 
    # The total time in ticks that has elapsed since the start of the world.
@@ -4587,7 +4591,7 @@ packet_server_script_debug_drawer:
       scale?: lf32
       rotation?: vec3f
       time_left?: lf32
-      color?: varint
+      color?: li32
       text?: string
       box_bound?: vec3f
       line_end_location?: vec3f
