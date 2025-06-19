@@ -1,3 +1,16 @@
+## 3.90.0
+* [Add bedrock 1.21.90 protocol data (#1021)](https://github.com/PrismarineJS/minecraft-data/commit/06c2106a669deb24f0c14770874a0abeb116687b) (thanks @CreeperG16)
+* [Add 1.21.6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/699f44f039e7dc07e5da82976b69358309728518) (thanks @github-actions[bot])
+* [Add 1.21.6-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/d44e88d7e4cdb0e9228effc491cabfffcf6b8385) (thanks @github-actions[bot])
+* [Add 1.21.6-pre4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/d74d4c030adbfa1e360c8eab24d0d2f3b516f76d) (thanks @github-actions[bot])
+* [bedrock: add v1.21.70 Steve Skin (#1004)](https://github.com/PrismarineJS/minecraft-data/commit/b1b05bb62907ab0c6508d6f52e44b753df065d54) (thanks @yowzaoppo)
+* [Add Bedrock 1.21.80 data (#1012)](https://github.com/PrismarineJS/minecraft-data/commit/23eff009e11d739dd2f2bfc782a440dc885ef7f3) (thanks @bedrock-bot)
+* [pc: fix editBookPacketUsesNbt feature version range (#1013)](https://github.com/PrismarineJS/minecraft-data/commit/52b59d8f13e9b8e8e29654b95ca7e00ba702464f) (thanks @autowert66)
+* [Add 1.21.6-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/601fa2494e593b4d3c7756424e6c6245d2c8be24) (thanks @github-actions[bot])
+* [Add 1.21.6-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6af2e045dfcb740fea03f1adde9b619ccdc2246e) (thanks @github-actions[bot])
+* [Add 1.21.6-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/99303b46b32a8d866c6a8f9c0348bf6019073be1) (thanks @github-actions[bot])
+* [Add 25w21a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7340da411f44b425b0f670a651dbb786e08d6379) (thanks @github-actions[bot])
+
 ## 3.89.0
 * [Add some sound features](https://github.com/PrismarineJS/minecraft-data/commit/431245e650d88863f867b156a6b418b56797658b) (thanks @rom1504)
 
