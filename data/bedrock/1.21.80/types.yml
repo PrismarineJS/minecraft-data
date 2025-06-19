@@ -477,8 +477,7 @@ MetadataFlags2: [ "bitflags", {
       "body_rotation_axis_aligned",
       "collidable",
       "wasd_air_controlled",
-      "does_server_auth_only_dismount",
-      "body_rotation_always_follows_head"
+      "does_server_auth_only_dismount"
    ]
 }]
 
@@ -962,7 +961,6 @@ Action: zigzag32 =>
    33: stop_crawling
    34: start_flying
    35: stop_flying
-   # Deprecated. Corresponds to Player Auth Input InputData::ClientAckServerData bit 44 Not sent when using server authoritative movement as specified in StartGamePacket. This is now deprecated because only server authoritative movement exists.
    36: received_server_data
    37: start_using_item
 
@@ -2123,35 +2121,8 @@ SoundType: varint =>
    - hurt_reduced
    - wind_charge_burst
    - imitate_drowned
-   - imitate_creaking
    - bundle_insert_failed
-   - sponge_absorb
    - _
-   - block_creaking_heart_trail
-   - creaking_heart_spawn
-   - activate
-   - deactivate
-   - freeze
-   - unfreeze
-   - open
-   - open_long
-   - close
-   - close_long
-   - imitate_phantom
-   - imitate_zoglin
-   - imitate_guardian
-   - imitate_ravager
-   - imitate_pillager
-   - place_in_water
-   - state_change
-   - imitate_happy_ghast
-   - unique_generic
-   - record_tears
-   - the_end_light_flash
-   - lead_leash
-   - lead_unleash
-   - lead_break
-   - unsaddle
    - armor_crack_wolf
    - armor_break_wolf
    - armor_repair_wolf
@@ -2377,6 +2348,8 @@ CameraPresets:
    ## TODO: make this an enum afer adding proper optional support inside pdefyaml
    audio_listener?: u8
    player_effects?: bool
+   # align_target_and_camera_forward determines whether the camera should align the target and the camera forward or not.
+   align_target_and_camera_forward?: bool
    aim_assist?:
       # Preset is the ID of the preset that has previously been defined in the CameraAimAssistPresets packet.
       preset_id?: string
@@ -2518,9 +2491,6 @@ DisconnectFailReason: zigzag32 =>
    - sub_client_login_disabled
    - deep_link_trying_to_open_demo_world_while_signed_in
    - async_join_task_denied
-   - realms_timeline_required
-   - guest_withough_host
-   - failed_to_join_experience
 
 FullContainerName:
    container_id: ContainerSlotType
