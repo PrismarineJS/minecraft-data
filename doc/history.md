@@ -1,3 +1,9 @@
+## 3.90.0
+* [Add bedrock 1.21.90 protocol data (#1021)](https://github.com/PrismarineJS/minecraft-data/commit/06c2106a669deb24f0c14770874a0abeb116687b) (thanks @CreeperG16)
+* [bedrock: add v1.21.70 Steve Skin (#1004)](https://github.com/PrismarineJS/minecraft-data/commit/b1b05bb62907ab0c6508d6f52e44b753df065d54) (thanks @yowzaoppo)
+* [Add Bedrock 1.21.80 data (#1012)](https://github.com/PrismarineJS/minecraft-data/commit/23eff009e11d739dd2f2bfc782a440dc885ef7f3) (thanks @bedrock-bot)
+* [pc: fix editBookPacketUsesNbt feature version range (#1013)](https://github.com/PrismarineJS/minecraft-data/commit/52b59d8f13e9b8e8e29654b95ca7e00ba702464f) (thanks @autowert66)
+
 ## 3.89.0
 * [Add some sound features](https://github.com/PrismarineJS/minecraft-data/commit/431245e650d88863f867b156a6b418b56797658b) (thanks @rom1504)
 
