@@ -148,116 +148,73 @@
             }
          ]
          default: void
-   entityMetadataItem: $compareTo ?
-      if byte: i8
-      if int: varint
-      if long: varlong
-      if float: f32
-      if string: string
-      if component: string
-      if optional_component: [
-         "option",
-         "string"
-      ]
-      if item_stack: slot
-      if boolean: bool
-      if rotations:      
-         pitch: f32
-         yaw: f32
-         roll: f32
-      if block_pos: position
-      if optional_block_pos: [
-         "option",
-         "position"
-      ]
-      if direction: varint
-      if optional_uuid: [
-         "option",
-         "UUID"
-      ]
-      if block_state: varint
-      if optional_block_state: optvarint
-      if compound_tag: nbt
-      if particle: particle
-      if villager_data:      
-         villagerType: varint
-         villagerProfession: varint
-         level: varint
-      if optional_unsigned_int: optvarint
-      if pose: varint
-      if cat_variant: varint
-      if frog_variant: varint
-      if optional_global_pos: [
-         "option",
-         "string"
-      ]
-      if painting_variant: varint
-      if sniffer_state: varint
-      if vector3: vec3f
-      if quaternion: vec4f
-   entityMetadata: [
-      "entityMetadataLoop",
-      {
-         "endVal": 255,
-         "type": [
-            "container",
-            [
-               {
-                  "name": "key",
-                  "type": "u8"
-               },
-               {
-                  "name": "type",
-                  "type": [
-                     "mapper",
-                     {
-                        "type": "varint",
-                        "mappings": {
-                           "0": "byte",
-                           "1": "int",
-                           "2": "long",
-                           "3": "float",
-                           "4": "string",
-                           "5": "component",
-                           "6": "optional_component",
-                           "7": "item_stack",
-                           "8": "boolean",
-                           "9": "rotations",
-                           "10": "block_pos",
-                           "11": "optional_block_pos",
-                           "12": "direction",
-                           "13": "optional_uuid",
-                           "14": "block_state",
-                           "15": "optional_block_state",
-                           "16": "compound_tag",
-                           "17": "particle",
-                           "18": "villager_data",
-                           "19": "optional_unsigned_int",
-                           "20": "pose",
-                           "21": "cat_variant",
-                           "22": "frog_variant",
-                           "23": "optional_global_pos",
-                           "24": "painting_variant",
-                           "25": "sniffer_state",
-                           "26": "vector3",
-                           "27": "quaternion"
-                        }
-                     }
-                  ]
-               },
-               {
-                  "name": "value",
-                  "type": [
-                     "entityMetadataItem",
-                     {
-                        "compareTo": "type"
-                     }
-                  ]
-               }
-            ]
-         ]
-      }
-   ]
+   entityMetadataEntry:
+      key: u8
+      type: varint =>
+      - byte
+      - int
+      - long
+      - float
+      - string
+      - component
+      - optional_component
+      - item_stack
+      - boolean
+      - rotations
+      - block_pos
+      - optional_block_pos
+      - direction
+      - optional_uuid
+      - block_state
+      - optional_block_state
+      - compound_tag
+      - particle
+      - villager_data
+      - optional_unsigned_int
+      - pose
+      - cat_variant
+      - frog_variant
+      - optional_global_pos
+      - painting_variant
+      - sniffer_state
+      - vector3
+      - quaternion
+      value: type ?
+         if byte: i8
+         if int: varint
+         if long: varlong
+         if float: f32
+         if string: string
+         if component: string
+         if optional_component: ["option", "string"]
+         if item_stack: slot
+         if boolean: bool
+         if rotations:
+            pitch: f32
+            yaw: f32
+            roll: f32
+         if block_pos: position
+         if optional_block_pos: ["option", "position"]
+         if direction: varint
+         if optional_uuid: ["option", "UUID"]
+         if block_state: varint
+         if optional_block_state: optvarint
+         if compound_tag: nbt
+         if particle: particle
+         if villager_data:
+            villagerType: varint
+            villagerProfession: varint
+            level: varint
+         if optional_unsigned_int: optvarint
+         if pose: varint
+         if cat_variant: varint
+         if frog_variant: varint
+         if optional_global_pos: ["option", "string"]
+         if painting_variant: varint
+         if sniffer_state: varint
+         if vector3: vec3f
+         if quaternion: vec4f
+   entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    minecraft_simple_recipe_format:   
       category: varint
    minecraft_smelting_format:   
