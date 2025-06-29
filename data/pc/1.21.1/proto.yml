@@ -1043,6 +1043,16 @@
    # These are packets that are shared between multiple states.
    # They are defined here to avoid duplication.
    # =====
+   # MC: ServerboundClientInformationPacket
+   packet_common_settings:
+      locale: string
+      viewDistance: i8
+      chatFlags: varint
+      chatColors: bool
+      skinParts: u8
+      mainHand: varint
+      enableTextFiltering: bool
+      enableServerListing: bool
    # MC: ClientboundCookieRequestPacket
    packet_common_cookie_request:
       cookie: string
@@ -1320,16 +1330,7 @@
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
 ^configuration.toServer.types:
-   # MC: ServerboundClientInformationPacket
-   packet_settings:
-      locale: string
-      viewDistance: i8
-      chatFlags: varint
-      chatColors: bool
-      skinParts: u8
-      mainHand: varint
-      enableTextFiltering: bool
-      enableServerListing: bool
+   ## (Settings is Common) ##
    ## (Cookie Response is Common) ##
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
@@ -1361,7 +1362,7 @@
       - custom_report_details
       - server_links
       params: name ?
-         if settings: packet_settings
+         if settings: packet_common_settings
          if cookie_response: packet_common_cookie_response
          if custom_payload: packet_custom_payload
          if finish_configuration: packet_finish_configuration
@@ -2687,16 +2688,6 @@
    # MC: ServerboundClientCommandPacket
    packet_client_command:
       actionId: varint
-   # MC: ServerboundClientInformationPacket
-   packet_settings:
-      locale: string
-      viewDistance: i8
-      chatFlags: varint
-      chatColors: bool
-      skinParts: u8
-      mainHand: varint
-      enableTextFiltering: bool
-      enableServerListing: bool
    # MC: ServerboundCommandSuggestionPacket
    packet_tab_complete:
       transactionId: varint
@@ -3013,7 +3004,7 @@
          if chat_session_update: packet_chat_session_update
          if chunk_batch_received: packet_chunk_batch_received
          if client_command: packet_client_command
-         if settings: packet_settings
+         if settings: packet_common_settings
          if tab_complete: packet_tab_complete
          if configuration_acknowledged: packet_configuration_acknowledged
          if enchant_item: packet_enchant_item
