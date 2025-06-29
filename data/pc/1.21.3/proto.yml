@@ -205,10 +205,7 @@
             - spyglass
             - toot_horn
             - brush
-            sound: ["registryEntryHolder", {
-               "baseName": "soundId",
-               "otherwise": { name: "data", type: "ItemSoundEvent" }
-            }]
+            sound: ItemSoundHolder
             makes_particles: bool
             effects: ItemConsumeEffect[]varint
          if use_remainder: Slot
@@ -237,10 +234,7 @@
             - chest
             - head
             - body
-            sound: ["registryEntryHolder", {
-               "baseName": "soundId",
-               "otherwise": { name: "data", type: "ItemSoundEvent" }
-            }]
+            sound: ItemSoundHolder
             model?: string
             cameraOverlay?: string
             allowedEntities?: IDSet
@@ -359,6 +353,10 @@
    ItemSoundEvent:
       soundName: string
       fixedRange?: f32
+   ItemSoundHolder: ["registryEntryHolder", {
+      "baseName": "soundId",
+      "otherwise": { name: "data", type: "ItemSoundEvent" }
+   }]
 
    ItemFireworkExplosion:
       shape: varint =>
@@ -432,10 +430,7 @@
          if teleport_randomly:
             diameter: f32
          if play_sound:
-            sound: ["registryEntryHolder", {
-               "baseName": "soundId",
-               "otherwise": { name: "data", type: "ItemSoundEvent" }
-            }]
+            sound: ItemSoundHolder
 
    ArmorTrimMaterial:
       assetName: string
@@ -452,13 +447,13 @@
       decal: bool
 
    InstrumentData:
-      soundEvent: ["registryEntryHolder", { "baseName": "soundId", "otherwise": { "name": "data", "type": "ItemSoundEvent" } }]
+      soundEvent: ItemSoundHolder
       useDuration: f32
       range: f32
       description: anonymousNbt
 
    JukeboxSongData:
-      soundEvent: ["registryEntryHolder", { "baseName": "soundId", "otherwise": { "name": "data", "type": "ItemSoundEvent" } }]
+      soundEvent: ItemSoundHolder
       description: anonymousNbt
       lengthInSeconds: f32
       comparatorOutput: varint
@@ -467,7 +462,7 @@
       assetId: string
       translationKey: string
    BannerPatternLayer:
-      pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "BannerPattern" } }]
+      pattern: ItemSoundHolder
       colorId: varint
 
    Slot:
@@ -1741,13 +1736,7 @@
       center: vec3f
       playerKnockback?: vec3f
       explosionParticle: Particle
-      soundId: varint
-      _: soundId ?
-         if 0:
-            soundName: string
-            range?: f32
-         default:
-            
+      sound: ItemSoundHolder
    # MC: ClientboundForgetLevelChunkPacket
    packet_unload_chunk:
       chunkZ: i32
@@ -2349,12 +2338,7 @@
       fadeOut: i32
    # MC: ClientboundSoundEntityPacket
    packet_entity_sound_effect:
-      soundId: varint
-      soundEvent: soundId ?
-         if 0:
-            resource: string
-            range?: f32
-         default: void
+      sound: ItemSoundHolder
       soundCategory: soundSource
       entityId: varint
       volume: f32
@@ -2362,12 +2346,7 @@
       seed: i64
    # MC: ClientboundSoundPacket
    packet_sound_effect:
-      soundId: varint
-      soundEvent: soundId ?
-         if 0:
-            resource: string
-            range?: f32
-         default: void
+      sound: ItemSoundHolder
       soundCategory: soundSource
       x: i32
       y: i32

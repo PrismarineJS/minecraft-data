@@ -293,10 +293,13 @@
          if lock: anonymousNbt
          if container_loot: anonymousNbt
 
-   # TODO: add to ClientboundExplodePacket and ClientboundSoundEntityPacket and ClientboundSoundPacket (and maybe other) packet which also use HolderSet
    ItemSoundEvent:
       soundName: string
       fixedRange?: f32
+   ItemSoundHolder: ["registryEntryHolder", {
+      "baseName": "soundId",
+      "otherwise": { name: "data", type: "ItemSoundEvent" }
+   }]
 
    ItemFireworkExplosion:
       shape: varint =>
@@ -368,13 +371,13 @@
       decal: bool
 
    InstrumentData:
-      soundEvent: ["registryEntryHolder", { "baseName": "soundId", "otherwise": { "name": "data", "type": "ItemSoundEvent" } }]
+      soundEvent: ItemSoundHolder
       useDuration: f32
       range: f32
       description: anonymousNbt
 
    JukeboxSongData:
-      soundEvent: ["registryEntryHolder", { "baseName": "soundId", "otherwise": { "name": "data", "type": "ItemSoundEvent" } }]
+      soundEvent: ItemSoundHolder
       description: anonymousNbt
       lengthInSeconds: f32
       comparatorOutput: varint
@@ -1598,13 +1601,7 @@
       block_interaction_type: varint
       small_explosion_particle: Particle
       large_explosion_particle: Particle
-      soundId: varint
-      _: soundId ?
-         if 0:
-            soundName: string
-            range?: f32
-         default:
-            
+      sound: ItemSoundHolder
    # MC: ClientboundForgetLevelChunkPacket
    packet_unload_chunk:
       chunkZ: i32
@@ -2148,12 +2145,7 @@
       fadeOut: i32
    # MC: ClientboundSoundEntityPacket
    packet_entity_sound_effect:
-      soundId: varint
-      soundEvent: soundId ?
-         if 0:
-            resource: string
-            range?: f32
-         default: void
+      sound: ItemSoundHolder
       soundCategory: soundSource
       entityId: varint
       volume: f32
@@ -2161,12 +2153,7 @@
       seed: i64
    # MC: ClientboundSoundPacket
    packet_sound_effect:
-      soundId: varint
-      soundEvent: soundId ?
-         if 0:
-            resource: string
-            range?: f32
-         default: void
+      sound: ItemSoundHolder
       soundCategory: soundSource
       x: i32
       y: i32
