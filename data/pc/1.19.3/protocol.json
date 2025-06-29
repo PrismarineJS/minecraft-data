@@ -337,116 +337,134 @@
         ]
       }
     ],
-    "entityMetadataItem": [
-      "switch",
-      {
-        "compareTo": "$compareTo",
-        "fields": {
-          "0": "i8",
-          "1": "varint",
-          "2": "varlong",
-          "3": "f32",
-          "4": "string",
-          "5": "string",
-          "6": [
-            "option",
-            "string"
-          ],
-          "7": "slot",
-          "8": "bool",
-          "9": [
-            "container",
-            [
-              {
-                "name": "pitch",
-                "type": "f32"
-              },
-              {
-                "name": "yaw",
-                "type": "f32"
-              },
-              {
-                "name": "roll",
-                "type": "f32"
+    "entityMetadataEntry": [
+      "container",
+      [
+        {
+          "name": "key",
+          "type": "u8"
+        },
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "byte",
+                "1": "int",
+                "2": "long",
+                "3": "float",
+                "4": "string",
+                "5": "component",
+                "6": "optional_component",
+                "7": "item_stack",
+                "8": "boolean",
+                "9": "rotations",
+                "10": "block_pos",
+                "11": "optional_block_pos",
+                "12": "direction",
+                "13": "optional_uuid",
+                "14": "block_state",
+                "15": "compound_tag",
+                "16": "particle",
+                "17": "villager_data",
+                "18": "optional_unsigned_int",
+                "19": "pose",
+                "20": "cat_variant",
+                "21": "frog_variant",
+                "22": "optional_global_pos",
+                "23": "painting_variant"
               }
-            ]
-          ],
-          "10": "position",
-          "11": [
-            "option",
-            "position"
-          ],
-          "12": "varint",
-          "13": [
-            "option",
-            "UUID"
-          ],
-          "14": "varint",
-          "15": "nbt",
-          "16": "particle",
-          "17": [
-            "container",
-            [
-              {
-                "name": "villagerType",
-                "type": "varint"
-              },
-              {
-                "name": "villagerProfession",
-                "type": "varint"
-              },
-              {
-                "name": "level",
-                "type": "varint"
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "byte": "i8",
+                "int": "varint",
+                "long": "varlong",
+                "float": "f32",
+                "string": "string",
+                "component": "string",
+                "optional_component": [
+                  "option",
+                  "string"
+                ],
+                "item_stack": "slot",
+                "boolean": "bool",
+                "rotations": [
+                  "container",
+                  [
+                    {
+                      "name": "pitch",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "yaw",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "roll",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "block_pos": "position",
+                "optional_block_pos": [
+                  "option",
+                  "position"
+                ],
+                "direction": "varint",
+                "optional_uuid": [
+                  "option",
+                  "UUID"
+                ],
+                "block_state": "varint",
+                "compound_tag": "nbt",
+                "particle": "particle",
+                "villager_data": [
+                  "container",
+                  [
+                    {
+                      "name": "villagerType",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "villagerProfession",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "level",
+                      "type": "varint"
+                    }
+                  ]
+                ],
+                "optional_unsigned_int": "optvarint",
+                "pose": "varint",
+                "cat_variant": "varint",
+                "frog_variant": "varint",
+                "optional_global_pos": [
+                  "option",
+                  "string"
+                ],
+                "painting_variant": "varint"
               }
-            ]
-          ],
-          "18": "optvarint",
-          "19": "varint",
-          "20": "varint",
-          "21": "varint",
-          "22": [
-            "option",
-            "string"
-          ],
-          "23": "varint"
+            }
+          ]
         }
-      }
+      ]
     ],
     "entityMetadata": [
       "entityMetadataLoop",
       {
         "endVal": 255,
-        "type": [
-          "container",
-          [
-            {
-              "anon": true,
-              "type": [
-                "container",
-                [
-                  {
-                    "name": "key",
-                    "type": "u8"
-                  },
-                  {
-                    "name": "type",
-                    "type": "varint"
-                  }
-                ]
-              ]
-            },
-            {
-              "name": "value",
-              "type": [
-                "entityMetadataItem",
-                {
-                  "compareTo": "type"
-                }
-              ]
-            }
-          ]
-        ]
+        "type": "entityMetadataEntry"
       }
     ],
     "minecraft_simple_recipe_format": [
