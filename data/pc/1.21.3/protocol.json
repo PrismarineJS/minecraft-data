@@ -478,16 +478,7 @@
                     },
                     {
                       "name": "sound",
-                      "type": [
-                        "registryEntryHolder",
-                        {
-                          "baseName": "soundId",
-                          "otherwise": {
-                            "name": "data",
-                            "type": "ItemSoundEvent"
-                          }
-                        }
-                      ]
+                      "type": "ItemSoundHolder"
                     },
                     {
                       "name": "makes_particles",
@@ -592,16 +583,7 @@
                     },
                     {
                       "name": "sound",
-                      "type": [
-                        "registryEntryHolder",
-                        {
-                          "baseName": "soundId",
-                          "otherwise": {
-                            "name": "data",
-                            "type": "ItemSoundEvent"
-                          }
-                        }
-                      ]
+                      "type": "ItemSoundHolder"
                     },
                     {
                       "name": "model",
@@ -1169,6 +1151,16 @@
         }
       ]
     ],
+    "ItemSoundHolder": [
+      "registryEntryHolder",
+      {
+        "baseName": "soundId",
+        "otherwise": {
+          "name": "data",
+          "type": "ItemSoundEvent"
+        }
+      }
+    ],
     "ItemFireworkExplosion": [
       "container",
       [
@@ -1448,16 +1440,7 @@
                   [
                     {
                       "name": "sound",
-                      "type": [
-                        "registryEntryHolder",
-                        {
-                          "baseName": "soundId",
-                          "otherwise": {
-                            "name": "data",
-                            "type": "ItemSoundEvent"
-                          }
-                        }
-                      ]
+                      "type": "ItemSoundHolder"
                     }
                   ]
                 ]
@@ -1532,16 +1515,7 @@
       [
         {
           "name": "soundEvent",
-          "type": [
-            "registryEntryHolder",
-            {
-              "baseName": "soundId",
-              "otherwise": {
-                "name": "data",
-                "type": "ItemSoundEvent"
-              }
-            }
-          ]
+          "type": "ItemSoundHolder"
         },
         {
           "name": "useDuration",
@@ -1562,16 +1536,7 @@
       [
         {
           "name": "soundEvent",
-          "type": [
-            "registryEntryHolder",
-            {
-              "baseName": "soundId",
-              "otherwise": {
-                "name": "data",
-                "type": "ItemSoundEvent"
-              }
-            }
-          ]
+          "type": "ItemSoundHolder"
         },
         {
           "name": "description",
@@ -1605,16 +1570,7 @@
       [
         {
           "name": "pattern",
-          "type": [
-            "registryEntryHolder",
-            {
-              "baseName": "patternId",
-              "otherwise": {
-                "name": "data",
-                "type": "BannerPattern"
-              }
-            }
-          ]
+          "type": "ItemSoundHolder"
         },
         {
           "name": "colorId",
@@ -2923,6 +2879,57 @@
         }
       ]
     ],
+    "packet_common_settings": [
+      "container",
+      [
+        {
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "name": "viewDistance",
+          "type": "i8"
+        },
+        {
+          "name": "chatFlags",
+          "type": "varint"
+        },
+        {
+          "name": "chatColors",
+          "type": "bool"
+        },
+        {
+          "name": "skinParts",
+          "type": "u8"
+        },
+        {
+          "name": "mainHand",
+          "type": "varint"
+        },
+        {
+          "name": "enableTextFiltering",
+          "type": "bool"
+        },
+        {
+          "name": "enableServerListing",
+          "type": "bool"
+        },
+        {
+          "name": "particleStatus",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "all",
+                "1": "decreased",
+                "2": "minimal"
+              }
+            }
+          ]
+        }
+      ]
+    ],
     "packet_common_cookie_request": [
       "container",
       [
@@ -3780,47 +3787,6 @@
     },
     "toServer": {
       "types": {
-        "packet_settings": [
-          "container",
-          [
-            {
-              "name": "locale",
-              "type": "string"
-            },
-            {
-              "name": "viewDistance",
-              "type": "i8"
-            },
-            {
-              "name": "chatFlags",
-              "type": "varint"
-            },
-            {
-              "name": "chatColors",
-              "type": "bool"
-            },
-            {
-              "name": "skinParts",
-              "type": "u8"
-            },
-            {
-              "name": "mainHand",
-              "type": "varint"
-            },
-            {
-              "name": "enableTextFiltering",
-              "type": "bool"
-            },
-            {
-              "name": "enableServerListing",
-              "type": "bool"
-            },
-            {
-              "name": "particles",
-              "type": "varint"
-            }
-          ]
-        ],
         "packet_custom_payload": [
           "container",
           [
@@ -3900,7 +3866,7 @@
                 {
                   "compareTo": "name",
                   "fields": {
-                    "settings": "packet_settings",
+                    "settings": "packet_common_settings",
                     "cookie_response": "packet_common_cookie_response",
                     "custom_payload": "packet_custom_payload",
                     "finish_configuration": "packet_finish_configuration",
@@ -5007,39 +4973,8 @@
               "type": "Particle"
             },
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "anon": true,
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "soundName",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": [
-                    "container",
-                    []
-                  ]
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             }
           ]
         ],
@@ -7253,36 +7188,8 @@
           "container",
           [
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "name": "soundEvent",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "resource",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             },
             {
               "name": "soundCategory",
@@ -7310,36 +7217,8 @@
           "container",
           [
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "name": "soundEvent",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "resource",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             },
             {
               "name": "soundCategory",
@@ -8417,57 +8296,6 @@
           "container",
           []
         ],
-        "packet_settings": [
-          "container",
-          [
-            {
-              "name": "locale",
-              "type": "string"
-            },
-            {
-              "name": "viewDistance",
-              "type": "i8"
-            },
-            {
-              "name": "chatFlags",
-              "type": "varint"
-            },
-            {
-              "name": "chatColors",
-              "type": "bool"
-            },
-            {
-              "name": "skinParts",
-              "type": "u8"
-            },
-            {
-              "name": "mainHand",
-              "type": "varint"
-            },
-            {
-              "name": "enableTextFiltering",
-              "type": "bool"
-            },
-            {
-              "name": "enableServerListing",
-              "type": "bool"
-            },
-            {
-              "name": "particleStatus",
-              "type": [
-                "mapper",
-                {
-                  "type": "varint",
-                  "mappings": {
-                    "0": "all",
-                    "1": "decreased",
-                    "2": "minimal"
-                  }
-                }
-              ]
-            }
-          ]
-        ],
         "packet_tab_complete": [
           "container",
           [
@@ -9441,7 +9269,7 @@
                     "chunk_batch_received": "packet_chunk_batch_received",
                     "client_command": "packet_client_command",
                     "tick_end": "packet_tick_end",
-                    "settings": "packet_settings",
+                    "settings": "packet_common_settings",
                     "tab_complete": "packet_tab_complete",
                     "configuration_acknowledged": "packet_configuration_acknowledged",
                     "enchant_item": "packet_enchant_item",

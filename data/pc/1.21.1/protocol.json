@@ -974,6 +974,16 @@
         }
       ]
     ],
+    "ItemSoundHolder": [
+      "registryEntryHolder",
+      {
+        "baseName": "soundId",
+        "otherwise": {
+          "name": "data",
+          "type": "ItemSoundEvent"
+        }
+      }
+    ],
     "ItemFireworkExplosion": [
       "container",
       [
@@ -1249,16 +1259,7 @@
       [
         {
           "name": "soundEvent",
-          "type": [
-            "registryEntryHolder",
-            {
-              "baseName": "soundId",
-              "otherwise": {
-                "name": "data",
-                "type": "ItemSoundEvent"
-              }
-            }
-          ]
+          "type": "ItemSoundHolder"
         },
         {
           "name": "useDuration",
@@ -1279,16 +1280,7 @@
       [
         {
           "name": "soundEvent",
-          "type": [
-            "registryEntryHolder",
-            {
-              "baseName": "soundId",
-              "otherwise": {
-                "name": "data",
-                "type": "ItemSoundEvent"
-              }
-            }
-          ]
+          "type": "ItemSoundHolder"
         },
         {
           "name": "description",
@@ -2662,6 +2654,43 @@
         }
       ]
     ],
+    "packet_common_settings": [
+      "container",
+      [
+        {
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "name": "viewDistance",
+          "type": "i8"
+        },
+        {
+          "name": "chatFlags",
+          "type": "varint"
+        },
+        {
+          "name": "chatColors",
+          "type": "bool"
+        },
+        {
+          "name": "skinParts",
+          "type": "u8"
+        },
+        {
+          "name": "mainHand",
+          "type": "varint"
+        },
+        {
+          "name": "enableTextFiltering",
+          "type": "bool"
+        },
+        {
+          "name": "enableServerListing",
+          "type": "bool"
+        }
+      ]
+    ],
     "packet_common_cookie_request": [
       "container",
       [
@@ -3523,43 +3552,6 @@
     },
     "toServer": {
       "types": {
-        "packet_settings": [
-          "container",
-          [
-            {
-              "name": "locale",
-              "type": "string"
-            },
-            {
-              "name": "viewDistance",
-              "type": "i8"
-            },
-            {
-              "name": "chatFlags",
-              "type": "varint"
-            },
-            {
-              "name": "chatColors",
-              "type": "bool"
-            },
-            {
-              "name": "skinParts",
-              "type": "u8"
-            },
-            {
-              "name": "mainHand",
-              "type": "varint"
-            },
-            {
-              "name": "enableTextFiltering",
-              "type": "bool"
-            },
-            {
-              "name": "enableServerListing",
-              "type": "bool"
-            }
-          ]
-        ],
         "packet_custom_payload": [
           "container",
           [
@@ -3639,7 +3631,7 @@
                 {
                   "compareTo": "name",
                   "fields": {
-                    "settings": "packet_settings",
+                    "settings": "packet_common_settings",
                     "cookie_response": "packet_common_cookie_response",
                     "custom_payload": "packet_custom_payload",
                     "finish_configuration": "packet_finish_configuration",
@@ -4506,39 +4498,8 @@
               "type": "Particle"
             },
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "anon": true,
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "soundName",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": [
-                    "container",
-                    []
-                  ]
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             }
           ]
         ],
@@ -6563,36 +6524,8 @@
           "container",
           [
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "name": "soundEvent",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "resource",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             },
             {
               "name": "soundCategory",
@@ -6620,36 +6553,8 @@
           "container",
           [
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "name": "soundEvent",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "resource",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             },
             {
               "name": "soundCategory",
@@ -7849,43 +7754,6 @@
             }
           ]
         ],
-        "packet_settings": [
-          "container",
-          [
-            {
-              "name": "locale",
-              "type": "string"
-            },
-            {
-              "name": "viewDistance",
-              "type": "i8"
-            },
-            {
-              "name": "chatFlags",
-              "type": "varint"
-            },
-            {
-              "name": "chatColors",
-              "type": "bool"
-            },
-            {
-              "name": "skinParts",
-              "type": "u8"
-            },
-            {
-              "name": "mainHand",
-              "type": "varint"
-            },
-            {
-              "name": "enableTextFiltering",
-              "type": "bool"
-            },
-            {
-              "name": "enableServerListing",
-              "type": "bool"
-            }
-          ]
-        ],
         "packet_tab_complete": [
           "container",
           [
@@ -8835,7 +8703,7 @@
                     "chat_session_update": "packet_chat_session_update",
                     "chunk_batch_received": "packet_chunk_batch_received",
                     "client_command": "packet_client_command",
-                    "settings": "packet_settings",
+                    "settings": "packet_common_settings",
                     "tab_complete": "packet_tab_complete",
                     "configuration_acknowledged": "packet_configuration_acknowledged",
                     "enchant_item": "packet_enchant_item",

@@ -20,6 +20,7 @@
     "entityMetadataLoop": "native",
     "topBitSetTerminatedArray": "native",
     "bitfield": "native",
+    "bitflags": "native",
     "container": "native",
     "switch": "native",
     "void": "native",
@@ -27,6 +28,12 @@
     "restBuffer": "native",
     "nbt": "native",
     "optionalNbt": "native",
+    "ByteArray": [
+      "buffer",
+      {
+        "countType": "varint"
+      }
+    ],
     "string": [
       "pstring",
       {
@@ -3422,119 +3429,131 @@
                 {
                   "countType": "varint",
                   "type": [
-                    "switch",
-                    {
-                      "compareTo": "../action",
-                      "fields": {
-                        "add_player": [
-                          "container",
-                          [
-                            {
-                              "name": "name",
-                              "type": "string"
-                            },
-                            {
-                              "name": "properties",
-                              "type": [
-                                "array",
-                                {
-                                  "countType": "varint",
-                                  "type": [
-                                    "container",
-                                    [
+                    "container",
+                    [
+                      {
+                        "name": "uuid",
+                        "type": "UUID"
+                      },
+                      {
+                        "anon": true,
+                        "type": [
+                          "switch",
+                          {
+                            "compareTo": "../action",
+                            "fields": {
+                              "add_player": [
+                                "container",
+                                [
+                                  {
+                                    "name": "name",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "properties",
+                                    "type": [
+                                      "array",
                                       {
-                                        "name": "key",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "name": "value",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "name": "signature",
+                                        "countType": "varint",
                                         "type": [
-                                          "option",
-                                          "string"
+                                          "container",
+                                          [
+                                            {
+                                              "name": "key",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "value",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "signature",
+                                              "type": [
+                                                "option",
+                                                "string"
+                                              ]
+                                            }
+                                          ]
                                         ]
                                       }
                                     ]
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "name": "gamemode",
-                              "type": "varint"
-                            },
-                            {
-                              "name": "ping",
-                              "type": "varint"
-                            },
-                            {
-                              "name": "displayName",
-                              "type": [
-                                "option",
-                                "nbt"
-                              ]
-                            },
-                            {
-                              "name": "crypto",
-                              "type": [
-                                "option",
-                                [
-                                  "container",
-                                  [
-                                    {
-                                      "name": "timestamp",
-                                      "type": "i64"
-                                    },
-                                    {
-                                      "name": "publicKey",
-                                      "type": "ByteArray"
-                                    },
-                                    {
-                                      "name": "signature",
-                                      "type": "ByteArray"
-                                    }
-                                  ]
+                                  },
+                                  {
+                                    "name": "gamemode",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "ping",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "displayName",
+                                    "type": [
+                                      "option",
+                                      "nbt"
+                                    ]
+                                  },
+                                  {
+                                    "name": "crypto",
+                                    "type": [
+                                      "option",
+                                      [
+                                        "container",
+                                        [
+                                          {
+                                            "name": "timestamp",
+                                            "type": "i64"
+                                          },
+                                          {
+                                            "name": "publicKey",
+                                            "type": "ByteArray"
+                                          },
+                                          {
+                                            "name": "signature",
+                                            "type": "ByteArray"
+                                          }
+                                        ]
+                                      ]
+                                    ]
+                                  }
                                 ]
-                              ]
+                              ],
+                              "update_game_mode": [
+                                "container",
+                                [
+                                  {
+                                    "name": "gamemode",
+                                    "type": "varint"
+                                  }
+                                ]
+                              ],
+                              "update_latency": [
+                                "container",
+                                [
+                                  {
+                                    "name": "ping",
+                                    "type": "varint"
+                                  }
+                                ]
+                              ],
+                              "update_display_name": [
+                                "container",
+                                [
+                                  {
+                                    "name": "displayName",
+                                    "type": [
+                                      "option",
+                                      "nbt"
+                                    ]
+                                  }
+                                ]
+                              ],
+                              "remove_player": "void"
                             }
-                          ]
-                        ],
-                        "update_game_mode": [
-                          "container",
-                          [
-                            {
-                              "name": "gamemode",
-                              "type": "varint"
-                            }
-                          ]
-                        ],
-                        "update_latency": [
-                          "container",
-                          [
-                            {
-                              "name": "ping",
-                              "type": "varint"
-                            }
-                          ]
-                        ],
-                        "update_display_name": [
-                          "container",
-                          [
-                            {
-                              "name": "displayName",
-                              "type": [
-                                "option",
-                                "nbt"
-                              ]
-                            }
-                          ]
-                        ],
-                        "remove_player": "void"
+                          }
+                        ]
                       }
-                    }
+                    ]
                   ]
                 }
               ]
