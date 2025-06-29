@@ -1,3 +1,9 @@
+## 3.91.0
+* [Add missing data version values in protocol version file (#1024)](https://github.com/PrismarineJS/minecraft-data/commit/72533f88da564797d59b618de59835c7984a79d5) (thanks @rom1504)
+* [Add some 1.21.5 data (#995)](https://github.com/PrismarineJS/minecraft-data/commit/f9ea32fedfb44b8cc4b41c3b41e178a96c690907) (thanks @RomainNeup)
+* [Add 1.21.7-rc2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0790f31720fffa6c65f04ce5fd5da12bbcf4f31b) (thanks @github-actions[bot])
+* [Add 1.21.7-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bfa42528b71ae2941ca92015e65be3c0cbcc1ddf) (thanks @github-actions[bot])
+
 ## 3.90.0
 * [Add bedrock 1.21.90 protocol data (#1021)](https://github.com/PrismarineJS/minecraft-data/commit/06c2106a669deb24f0c14770874a0abeb116687b) (thanks @CreeperG16)
 * [bedrock: add v1.21.70 Steve Skin (#1004)](https://github.com/PrismarineJS/minecraft-data/commit/b1b05bb62907ab0c6508d6f52e44b753df065d54) (thanks @yowzaoppo)
