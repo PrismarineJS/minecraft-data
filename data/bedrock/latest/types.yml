@@ -71,8 +71,14 @@ Itemstates: []varint
    name: string
    runtime_id: li16
    component_based: bool
-
-
+   # Version is the version of the item entry which is used by the client to determine how to handle the
+   # item entry. It is one of the constants above.
+   version: zigzag32 =>
+      - legacy
+      - data_driven
+      - none
+   # Components on the item
+   nbt: nbt
 
 ItemExtraDataWithBlockingTick:
    has_nbt: lu16 =>
@@ -195,8 +201,9 @@ MetadataDictionary: []varint
       16: minecart_display_block #int (id | (data << 16))
       17: minecart_display_offset #int
       18: minecart_has_display #byte (must be 1 for minecart to show block inside)
-      20: old_swell
-      21: swell_dir
+      19: horse_type
+      20: creeper_swell
+      21: creeper_swell_direction
       22: charge_amount
       23: enderman_held_runtime_id #short
       24: entity_age #short
@@ -226,7 +233,7 @@ MetadataDictionary: []varint
       49: wither_target_1 #long
       50: wither_target_2 #long
       51: wither_target_3 #long
-      52: aerial_attack
+      52: wither_aerial_attack
       53: boundingbox_width
       54: boundingbox_height
       55: fuse_length
@@ -234,7 +241,7 @@ MetadataDictionary: []varint
       57: rider_rotation_locked #byte
       58: rider_max_rotation #float
       59: rider_min_rotation #float
-      60: rider_rotation_offset
+      60: rider_seat_rotation_offset
       61: area_effect_cloud_radius #float
       62: area_effect_cloud_waiting #int
       63: area_effect_cloud_particle_id #int
@@ -251,7 +258,7 @@ MetadataDictionary: []varint
       74: controlling_rider_seat_number #byte
       75: strength #int
       76: max_strength #int
-      77: spell_casting_color #int
+      77: evoker_spell_casting_color #int
       78: limited_life
       79: armor_stand_pose_index # int
       80: ender_crystal_time_offset # int
@@ -269,11 +276,11 @@ MetadataDictionary: []varint
       92: flags_extended
       93: laying_amount
       94: laying_amount_previous
-      95: duration
-      96: spawn_time
-      97: change_rate
-      98: change_on_pickup
-      99: pickup_count
+      95: area_effect_cloud_duration
+      96: area_effect_cloud_spawn_time
+      97: area_effect_cloud_change_rate
+      98: area_effect_cloud_change_on_pickup
+      99: area_effect_cloud_pickup_count
       100: interact_text
       101: trade_tier
       102: max_trade_tier
@@ -294,19 +301,22 @@ MetadataDictionary: []varint
       117: nearby_cured_discount_timestamp
       118: hitbox
       119: is_buoyant
-      120: base_runtime_id
-      121: freezing_effect_strength
-      122: buoyancy_data
-      123: goat_horn_count
-      124: update_properties
-      125: movement_sound_distance_offset
-      126: heartbeat_interval_ticks
-      127: heartbeat_sound_event
-      128: player_last_death_position
-      129: player_last_death_dimension
-      130: player_has_died
-      131: collision_box
-      132: visible_mob_effects
+      120: freezing_effect_strength
+      121: buoyancy_data
+      122: goat_horn_count
+      123: update_properties
+      124: movement_sound_distance_offset
+      125: heartbeat_interval_ticks
+      126: heartbeat_sound_event
+      127: player_last_death_position
+      128: player_last_death_dimension
+      129: player_has_died
+      130: collision_box
+      131: visible_mob_effects # long
+      132: filtered_name # string
+      133: bed_enter_position # blockpos
+      134: seat_third_person_camera_radius
+      135: seat_camera_relax_distance_smoothing
    type: varint =>
       0: byte
       1: short
@@ -320,6 +330,8 @@ MetadataDictionary: []varint
    value: key ?
       if flags: MetadataFlags1
       if flags_extended: MetadataFlags2
+      if seat_third_person_camera_radius: lf32
+      if seat_camera_relax_distance_smoothing: lf32
       default: type ?
          if byte: i8
          if short: li16
@@ -460,7 +472,13 @@ MetadataFlags2: [ "bitflags", {
       "timer_flag_1",
       "timer_flag_2",
       "timer_flag_3",
-      "body_rotation_blocked"
+      "body_rotation_blocked",
+      "render_when_invisible",
+      "body_rotation_axis_aligned",
+      "collidable",
+      "wasd_air_controlled",
+      "does_server_auth_only_dismount",
+      "body_rotation_always_follows_head"
    ]
 }]
 
@@ -521,8 +539,14 @@ TransactionUseItem:
    # ActionType is the type of the UseItem inventory transaction. It is one of the action types found above,
    # and specifies the way the player interacted with the block.
    action_type: varint =>
+      # Right click item use on a surface like placing a block
       0: click_block
+      # Start right click and hold style item use or potentially interact with nothing.
+      # If it is a usable item like food the server is expected to send a SetActorDataPacket with ActorFlags::USINGITEM along with the transaction response.
+      # While using an item, movement speed is slowed which will be reflected in the move vector in Player Auth Input.
       1: click_air
+      # Block breaking like left click. When using server auth block breaking as specified in StartGamePacket this is never sent.
+      # Instead, block actions are supplied in Player Auth Input.
       2: break_block
    # TriggerType is the type of the trigger that caused the inventory transaction. It is one of the trigger
    # types found in the constants above. If TriggerType is TriggerTypePlayerInput, the transaction is from
@@ -607,10 +631,19 @@ Transaction:
    legacy: TransactionLegacy
    # What type of transaction took place
    transaction_type: varint =>
+      # Sent for container UI operations depending on if ItemStackNetManager is enabled
       0: normal
+      # Sent from server to client to reject a transaction
       1: inventory_mismatch
+      # Sent for a player performing right click style item use.
+      # See the contained ItemUseInventoryTransaction::ActionType for the expected use case.
       2: item_use
+      # Sent for a player right clicking on an entity or attacking them.
+      # See ItemUseInventoryTransaction::ActionType for which it is.
       3: item_use_on_entity
+      # Sent when releasing right click on a chargeable item like a bow or finishing charging like a crossbow.
+      # This is different than canceling item use early which would be in Player Auth Input.
+      # See ItemReleaseInventoryTransaction::ActionType for which it is.
       4: item_release
    # The list of inventory internal actions in this packet, e.g. inventory GUI actions
    actions: TransactionActions
@@ -629,7 +662,9 @@ Transaction:
          # ActionType is the type of the UseItemOnEntity inventory transaction. It is one of the action types
          # found in the constants above, and specifies the way the player interacted with the entity.
          action_type: varint =>
+            # Right click interact with actor.
             0: interact
+            # Left click style attack of actor or elytra spin attack. Server is expected to deal damage to the entity with visuals.
             1: attack
          # HotBarSlot is the hot bar slot that the player was holding while clicking the entity. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.
@@ -650,7 +685,9 @@ Transaction:
          # As of 1.13, the ActionType is always 0. This field can be ignored, because releasing food (by consuming
          # it) or releasing a bow (to shoot an arrow) is essentially the same.
          action_type: varint =>
+            # Release right click and hold style item use, like firing a bow
             0: release
+            # Finish right click and hold style item use, like charging a crossbow
             1: consume
          # HotBarSlot is the hot bar slot that the player was holding while releasing the item. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.
@@ -865,6 +902,9 @@ PlayerRecords:
             is_teacher: bool
             is_host: bool
             is_subclient: bool
+            # PlayerColour is the colour of the player that is shown in UI elements, currently only used for the
+            # player locator bar.
+            player_color: li32
          if remove:
             uuid: uuid
    verified: type ?
@@ -922,6 +962,7 @@ Action: zigzag32 =>
    33: stop_crawling
    34: start_flying
    35: stop_flying
+   # Deprecated. Corresponds to Player Auth Input InputData::ClientAckServerData bit 44 Not sent when using server authoritative movement as specified in StartGamePacket. This is now deprecated because only server authoritative movement exists.
    36: received_server_data
    37: start_using_item
 
@@ -1084,11 +1125,16 @@ ItemStackRequest:
             # RecipeNetworkID is the network ID of the recipe that is about to be crafted. This network ID matches
             # one of the recipes sent in the CraftingData packet, where each of the recipes have a RecipeNetworkID as
             recipe_network_id: varint
+            # NumberOfCrafts is how many times the recipe was crafted. This field appears to be boilerplate and
+            # has no effect.
+            times_crafted: u8
             # Cost is the cost of the recipe that was crafted.
             cost: varint
          if craft_loom_request:
             # Pattern is the pattern identifier for the loom recipe.
             pattern: string
+            # TimesCrafted is how many times the recipe was crafted.
+            times_crafted: u8
          if non_implemented: void
          if results_deprecated:
             result_items: ItemLegacy[]varint
@@ -1157,12 +1203,6 @@ ItemStackResponses: []varint
                # client-side after the response is sent to the client.
                durability_correction: zigzag32
 
-
-ItemComponentList: []varint
-   # Name is the name of the item, which is a name like 'minecraft:stick'.
-   name: string
-   # Data is a map containing the components and properties of the item.
-   nbt: nbt
 
 CommandOrigin:
    # Origin is one of the values above that specifies the origin of the command. The origin may change,
@@ -1569,6 +1609,7 @@ ContainerSlotType: u8 =>
    - smithing_table_template
    - crafter
    - dynamic
+   - registry # 125
 
 SoundType: varint =>
    - ItemUseOn
@@ -2082,8 +2123,35 @@ SoundType: varint =>
    - hurt_reduced
    - wind_charge_burst
    - imitate_drowned
+   - imitate_creaking
    - bundle_insert_failed
+   - sponge_absorb
    - _
+   - block_creaking_heart_trail
+   - creaking_heart_spawn
+   - activate
+   - deactivate
+   - freeze
+   - unfreeze
+   - open
+   - open_long
+   - close
+   - close_long
+   - imitate_phantom
+   - imitate_zoglin
+   - imitate_guardian
+   - imitate_ravager
+   - imitate_pillager
+   - place_in_water
+   - state_change
+   - imitate_happy_ghast
+   - unique_generic
+   - record_tears
+   - the_end_light_flash
+   - lead_leash
+   - lead_unleash
+   - lead_break
+   - unsaddle
    - armor_crack_wolf
    - armor_break_wolf
    - armor_repair_wolf
@@ -2213,6 +2281,7 @@ DeviceOS: li32 =>
 - IOS
 - OSX
 - FireOS
+# Deprecated
 - GearVR
 - Hololens
 - Win10
@@ -2249,6 +2318,7 @@ AbilitySet: ["bitflags",
          "world_builder",
          "no_clip",
          "privileged_builder",
+         "vertical_fly_speed",
          "count"
       ]
    }
@@ -2268,8 +2338,10 @@ AbilityLayers:
    allowed: AbilitySet
    # The abilities that are currently active
    enabled: AbilitySet
-   # FlySpeed is the default fly speed of the layer.
+   # FlySpeed is the default horizontal fly speed of the layer.
    fly_speed: lf32
+   # VerticalFlySpeed is the default vertical fly speed of the layer.
+   vertical_fly_speed: lf32
    # WalkSpeed is the default walk speed of the layer.
    walk_speed: lf32
 
@@ -2300,11 +2372,11 @@ CameraPresets:
    # Radius is only used in a follow_orbit camera and controls how far away from the player the camera should
    # be rendered.
    radius?: lf32
+   yaw_limit_min?: lf32
+   yaw_limit_max?: lf32
    ## TODO: make this an enum afer adding proper optional support inside pdefyaml
    audio_listener?: u8
    player_effects?: bool
-   # align_target_and_camera_forward determines whether the camera should align the target and the camera forward or not.
-   align_target_and_camera_forward?: bool
    aim_assist?:
       # Preset is the ID of the preset that has previously been defined in the CameraAimAssistPresets packet.
       preset_id?: string
@@ -2317,6 +2389,13 @@ CameraPresets:
       # Distance is the maximum distance from the player's cursor should check for a target, if TargetMode is
       # set to target_mode distance.
       distance?: lf32
+   control_scheme?: u8 =>
+      - locked_player_relative_strafe
+      - camera_relative
+      - camera_relative_strafe
+      - player_relative
+      - player_relative_strafe
+
 
 DisconnectFailReason: zigzag32 =>
    - unknown
@@ -2385,6 +2464,7 @@ DisconnectFailReason: zigzag32 =>
    - block_mismatch
    - invalid_heights
    - invalid_widths
+   # deprecated
    - connection_lost
    - zombie_connection
    - shutdown
@@ -2428,6 +2508,19 @@ DisconnectFailReason: zigzag32 =>
    - server_shutdown
    - game_setup_cancelled
    - game_setup_failed
+   - no_venue
+   - conn_signalling_sign_in_failed
+   - session_access_denied
+   - service_sign_in_issue
+   - conn_no_signaling_channel
+   - conn_not_logged_in
+   - conn_client_signalling_error
+   - sub_client_login_disabled
+   - deep_link_trying_to_open_demo_world_while_signed_in
+   - async_join_task_denied
+   - realms_timeline_required
+   - guest_withough_host
+   - failed_to_join_experience
 
 FullContainerName:
    container_id: ContainerSlotType
@@ -2436,3 +2529,278 @@ FullContainerName:
 MovementEffectType: varint =>
    -1: invalid
    0: GLIDE_BOOST
+
+# BiomeDefinition represents a biome definition in the game. This can be a vanilla biome or a completely
+# custom biome.
+BiomeDefinition:
+   # NameIndex represents the index of the biome name in the string list from BiomeDefinitionListPacket.
+   name_index: li16
+   # BiomeID is the biome ID. This is optional and can be empty.
+   biome_id?: lu16
+   # Temperature is the temperature of the biome, used for weather, biome behaviours and sky colour.
+   temperature: lf32
+   # Downfall is the amount that precipitation affects colours and block changes.
+   downfall: lf32
+   # RedSporeDensity is the density of red spore precipitation visuals.
+   red_spore_density: lf32
+   # BlueSporeDensity is the density of blue spore precipitation visuals.
+   blue_spore_density: lf32
+   # AshDensity is the density of ash precipitation visuals.
+   ash_density: lf32
+   # WhiteAshDensity is the density of white ash precipitation visuals.
+   white_ash_density: lf32
+   # Depth ...
+   depth: lf32
+   # Scale ...
+   scale: lf32
+   # MapWaterColour is an ARGB value for the water colour on maps in the biome.
+   map_water_colour: li32
+   # Rain is true if the biome has rain, false if it is a dry biome.
+   rain: bool
+   # Tags are a list of indices of tags in the string list. These are used to group biomes together for
+   # biome generation and other purposes.
+   tags?: lu16[]varint
+   # ChunkGeneration is optional information to assist in client-side chunk generation.
+   chunk_generation?: BiomeChunkGeneration
+
+
+# BiomeChunkGeneration represents the information required for the client to generate chunks itself
+# to create the illusion of a larger render distance.
+BiomeChunkGeneration:
+   # Climate is optional information to specify the biome's climate.
+   climate?: BiomeClimate
+   # ConsolidatedFeatures is a list of features that are consolidated into a single feature.
+   consolidated_features?: BiomeConsolidatedFeature[]varint
+   # MountainParameters is optional information to specify the biome's mountain parameters.
+   mountain_parameters?: BiomeMountainParameters
+   # SurfaceMaterialAdjustments is a list of surface material adjustments.
+   surface_material_adjustments?: BiomeElementData[]varint
+   # SurfaceMaterials is a set of materials to use for the surface layers of the biome.
+   surface_materials?: BiomeSurfaceMaterial
+   # HasSwampSurface is true if the biome has a swamp surface.
+   has_swamp_surface: bool
+   # HasFrozenOceanSurface is true if the biome has a frozen ocean surface.
+   has_frozen_ocean_surface: bool
+   # HasEndSurface is true if the biome has an end surface.
+   has_end_surface: bool
+   # MesaSurface is optional information to specify the biome's mesa surface.
+   mesa_surface?: BiomeMesaSurface
+   # CappedSurface is optional information to specify the biome's capped surface, i.e. in the Nether.
+   capped_surface?: BiomeCappedSurface
+   # OverworldRules is optional information to specify the biome's overworld rules, such as rivers and hills.
+   overworld_rules?: BiomeOverworldRules
+   # MultiNoiseRules is optional information to specify the biome's multi-noise rules.
+   multi_noise_rules?: BiomeMultiNoiseRules
+   # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
+   # weighted biomes.
+   legacy_rules?: BiomeConditionalTransformation[]varint
+
+# BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
+BiomeClimate:
+   # Temperature is the temperature of the biome, used for weather, biome behaviours and sky colour.
+   temperature: lf32
+   # Downfall is the amount that precipitation affects colours and block changes.
+   downfall: lf32
+   # RedSporeDensity is the density of red spore precipitation visuals.
+   red_spore_density: lf32
+   # BlueSporeDensity is the density of blue spore precipitation visuals.
+   blue_spore_density: lf32
+   # AshDensity is the density of ash precipitation visuals.
+   ash_density: lf32
+   # WhiteAshDensity is the density of white ash precipitation visuals.
+   white_ash_density: lf32
+   # SnowAccumulationMin is the minimum amount of snow that can accumulate in the biome, every 0.125 is
+   # another layer of snow.
+   snow_accumulation_min: lf32
+   # SnowAccumulationMax is the maximum amount of snow that can accumulate in the biome, every 0.125 is
+   # another layer of snow.
+   snow_accumulation_max: lf32
+
+# BiomeMountainParameters specifies the parameters for a mountain biome.
+BiomeMountainParameters:
+   # SteepBlock is the runtime ID of the block to use for steep slopes.
+   steep_block: li32
+   # NorthSlopes is true if the biome has north slopes.
+   north_slopes: bool
+   # SouthSlopes is true if the biome has south slopes.
+   south_slopes: bool
+   # WestSlopes is true if the biome has west slopes.
+   west_slopes: bool
+   # EastSlopes is true if the biome has east slopes.
+   east_slopes: bool
+   # TopSlideEnabled is true if the biome has top slide enabled.
+   top_slide_enabled: bool
+
+# BiomeSurfaceMaterial specifies the materials to use for the surface layers of the biome.
+BiomeSurfaceMaterial:
+   # TopBlock is the runtime ID of the block to use for the top layer.
+   top_block: li32
+   # MidBlock is the runtime ID to use for the middle layers.
+   mid_block: li32
+   # SeaFloorBlock is the runtime ID to use for the sea floor.
+   sea_floor_block: li32
+   # FoundationBlock is the runtime ID to use for the foundation layers.
+   foundation_block: li32
+   # SeaBlock is the runtime ID to use for the sea layers.
+   sea_block: li32
+   # SeaFloorDepth is the depth of the sea floor, in blocks.
+   sea_floor_depth: li32
+
+# BiomeMesaSurface specifies the materials to use for the mesa biome.
+BiomeMesaSurface:
+   # ClayMaterial is the runtime ID of the block to use for clay layers.
+   clay_material: lu32
+   # HardClayMaterial is the runtime ID of the block to use for hard clay layers.
+   hard_clay_material: lu32
+   # BrycePillars is true if the biome has bryce pillars, which are tall spire-like structures.
+   bryce_pillars: bool
+   # HasForest is true if the biome has a forest.
+   has_forest: bool
+
+# BiomeCappedSurface specifies the materials to use for the capped surface of a biome, such as in the Nether.
+BiomeCappedSurface:
+   # FloorBlocks is a list of runtime IDs to use for the floor blocks.
+   floor_blocks: li32[]varint
+   # CeilingBlocks is a list of runtime IDs to use for the ceiling blocks.
+   ceiling_blocks: li32[]varint
+   # SeaBlock is an optional runtime ID to use for the sea block.
+   sea_block?: lu32
+   # FoundationBlock is an optional runtime ID to use for the foundation block.
+   foundation_block?: lu32
+   # BeachBlock is an optional runtime ID to use for the beach block.
+   beach_block?: lu32
+
+# BiomeMultiNoiseRules specifies the rules for multi-noise biomes, which are biomes that are defined by
+# multiple noise parameters instead of just temperature and humidity.
+BiomeMultiNoiseRules:
+   # Temperature is the temperature level of the biome.
+   temperature: lf32
+   # Humidity is the humidity level of the biome.
+   humidity: lf32
+   # Altitude is the altitude level of the biome.
+   altitude: lf32
+   # Weirdness is the weirdness level of the biome.
+   weirdness: lf32
+   # Weight is the weight of the biome, with a higher weight being more likely to be selected.
+   weight: lf32
+
+# BiomeWeight defines the weight for a biome, used for weighted randomness.
+BiomeWeight:
+   # Biome is the index of the biome name in the string list.
+   biome: li16
+   # Weight is the weight of the biome, with a higher weight being more likely to be selected.
+   weight: lu32
+
+# BiomeTemperatureWeight defines the weight for a temperature, used for weighted randomness.
+BiomeTemperatureWeight:
+   # Temperature is the temperature that can be selected.
+   temperature: zigzag32
+   # Weight is the weight of the temperature, with a higher weight being more likely to be selected.
+   weight: lu32
+
+# BiomeConsolidatedFeature represents a feature that is consolidated into a single feature for the biome.
+BiomeConsolidatedFeature:
+   # Scatter defines how the feature is scattered in the biome.
+   scatter: BiomeScatterParameter
+   # Feature is the index of the feature's name in the string list.
+   feature: li16
+   # Identifier is the index of the feature's identifier in the string list.
+   identifier: li16
+   # Pass is the index of the feature's pass in the string list.
+   pass: li16
+   # CanUseInternal is true if the feature can use internal features.
+   can_use_internal: bool
+
+BiomeScatterParameter:
+   # Coordinates is a list of coordinate rules to scatter the feature within.
+   coordinates: BiomeCoordinate[]varint
+   # EvaluationOrder is the order in which the coordinates are evaluated.
+   evaluation_order: zigzag32 => # BiomeCoordinateEvaluationOrder
+      0: xyz
+      1: xzy
+      2: yxz
+      3: yzx
+      4: zxy
+      5: zyx
+   # ChancePercentType is the type of expression operation to use for the chance percent.
+   chance_percent_type: zigzag32 # BiomeExpressionOp
+   # ChancePercent is the index of the chance expression in the string list.
+   chance_percent: li16
+   # ChanceNumerator is the numerator of the chance expression.
+   chance_numerator: li32
+   # ChanceDenominator is the denominator of the chance expression.
+   chance_denominator: li32
+   # IterationsType is the type of expression operation to use for the iterations.
+   iterations_type: zigzag32 # BiomeExpressionOp
+   # Iterations is the index of the iterations expression in the string list.
+   iterations: li16
+
+# BiomeCoordinate specifies coordinate rules for where features can be scattered in the biome.
+BiomeCoordinate:
+   # MinValueType is the type of expression operation to use for the minimum value.
+   min_value_type: zigzag32 # BiomeExpressionOp
+   # MinValue is the index of the minimum value expression in the string list.
+   min_value: li16
+   # MaxValueType is the type of expression operation to use for the maximum value.
+   max_value_type: zigzag32 # BiomeExpressionOp
+   # MaxValue is the index of the maximum value expression in the string list.
+   max_value: li16
+   # GridOffset is the offset of the grid, used for fixed grid and jittered grid distributions.
+   grid_offset: lu32
+   # GridStepSize is the step size of the grid, used for fixed grid and jittered grid distributions.
+   grid_step_size: lu32
+   # Distribution is the type of distribution to use for the coordinate.
+   distribution: zigzag32 => # BiomeRandomDistributionType
+      0: single_valued
+      1: uniform
+      2: gaussian
+      3: inverse_gaussian
+      4: fixed_grid
+      5: jittered_grid
+      6: triangle
+
+# BiomeElementData are set rules to adjust the surface materials of the biome.
+BiomeElementData:
+   # NoiseFrequencyScale is the frequency scale of the noise used to adjust the surface materials.
+   noise_frequency_scale: lf32
+   # NoiseLowerBound is the minimum noise value required to be selected.
+   noise_lower_bound: lf32
+   # NoiseUpperBound is the maximum noise value required to be selected.
+   noise_upper_bound: lf32
+   # HeightMinType is the type of expression operation to use for the minimum height.
+   height_min_type: zigzag32 # BiomeExpressionOp
+   # HeightMin is the index of the minimum height expression in the string list.
+   height_min: li16
+   # HeightMaxType is the type of expression operation to use for the maximum height.
+   height_max_type: zigzag32 # BiomeExpressionOp
+   # HeightMax is the index of the maximum height expression in the string list.
+   height_max: li16
+   # AdjustedMaterials is the materials to use for the surface layers of the biome if selected.
+   adjusted_materials: BiomeSurfaceMaterial
+
+# BiomeOverworldRules specifies a list of transformation rules to apply to different parts of the overworld.
+BiomeOverworldRules:
+   # HillsTransformations is a list of weighted biome transformations to apply to hills.
+   hills_transformations: BiomeWeight[]varint
+   # MutateTransformations is a list of weighted biome transformations to apply to mutated biomes.
+   mutate_transformations: BiomeWeight[]varint
+   # RiverTransformations is a list of weighted biome transformations to apply to rivers.
+   river_transformations: BiomeWeight[]varint
+   # ShoreTransformations is a list of weighted biome transformations to apply to shores.
+   shore_transformations: BiomeWeight[]varint
+   # PreHillsEdgeTransformations is a list of conditional transformations to apply to the edges of hills.
+   pre_hills_edge_transformations: BiomeConditionalTransformation[]varint
+   # PostShoreEdgeTransformations is a list of conditional transformations to apply to the edges of shores.
+   post_shore_edge_transformations: BiomeConditionalTransformation[]varint
+   # ClimateTransformations is a list of weighted temperature transformations to apply to the biome's climate.
+   climate_transformations: BiomeTemperatureWeight[]varint
+
+# BiomeConditionalTransformation is the legacy method of transforming biomes.
+BiomeConditionalTransformation:
+   # WeightedBiomes is a list of biomes and their weights.
+   weighted_biomes: BiomeWeight[]varint
+   # ConditionJSON is an index of the condition JSON data in the string list.
+   condition_json: li16
+   # MinPassingNeighbours is the minimum number of neighbours that must pass the condition for the
+   # transformation to be applied.
+   min_passing_neighbours: lu32

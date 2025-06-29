@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.50
+!version: 1.21.90
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -43,6 +43,7 @@ MapInfo: native
 # * S→C: [Resource Pack Stack](#packet_resource_pack_stack)
 # * C→S: [Resource Pack Client Response](#packet_resource_pack_client_response)
 # * S→C: [Start Game](#packet_start_game)
+# * S→C: [Item Registry](#packet_item_registry)
 # * S→C: [Creative Content](#packet_creative_content)
 # * S→C: [Biome Definition List](#packet_biome_definition_list)
 # * S→C: [Chunks](#packet_level_chunk)
@@ -58,13 +59,18 @@ packet_login:
    !bound: server
    # Protocol version (Big Endian!)
    protocol_version: i32
+   # The structure of the login tokens has changed in 1.21.90.
+   # The encapsulated data is now a JSON object with a stringified `Certificate`.
    tokens: '["encapsulated", { "lengthType": "varint", "type": "LoginTokens" }]'
 
 LoginTokens:
    # JSON array of JWT data: contains the display name, UUID and XUID
    # It should be signed by the Mojang public key
+   # For 1.21.90+, the 'identity' field is a Little-Endian length-prefixed JSON-encoded string.
+   # This JSON object must contain a 'Certificate' key, whose value is a *stringified* JSON object
+   # that holds the actual JWT 'chain' array.
    identity: LittleString
-   # Skin related data
+   # JWT containing skin and other client data.
    client: LittleString
 
 packet_play_status:
@@ -138,6 +144,9 @@ packet_resource_packs_info:
    has_addons: bool
    # If scripting is enabled.
    has_scripts: bool
+   # ForceDisableVibrantVisuals specifies if the vibrant visuals feature should be forcibly disabled on the server.
+   # If set to true, the server will ensure that vibrant visuals are not enabled, regardless of the client's settings.
+   disable_vibrant_visuals: bool
    world_template:
       # WorldTemplateUUID is teh UUID of the template that has been used to generate the world. Templates can
       # be downloaded from the marketplace or installed via '.mctemplate' files. If the world was not generated
@@ -269,6 +278,7 @@ packet_start_game:
    # limited worlds, 1 being infinite worlds, 2 being flat worlds, 3 being nether worlds and 
    # 4 being end worlds. A value of 0 will actually make the client stop rendering chunks you 
    # send beyond the world limit.
+   # As of 1.21.80, protocol.PlayerMovementModeServer is the minimum requirement for MovementType.
    generator: zigzag32
    # The world game mode that a player gets when it first spawns in the world. It is shown in the
    # settings and is used if the Player Gamemode is set to 5.
@@ -292,6 +302,7 @@ packet_start_game:
    - not_editor
    - project
    - test_level
+   - realms_upload
    # Whether the world was created in editor mode
    created_in_editor: bool
    # Whether the world was exported from editor mode
@@ -390,6 +401,7 @@ packet_start_game:
    server_identifier: string
    world_identifier: string
    scenario_identifier: string
+   owner_identifier: string
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -402,28 +414,11 @@ packet_start_game:
    # Specifies if the world was a trial world, meaning features are limited and there 
    # is a time limit on the world.
    is_trial: bool
-   
-   # MovementType specifies the way the server handles player movement. Available options are
-   # packet.AuthoritativeMovementModeClient, packet.AuthoritativeMovementModeServer and
-   # packet.AuthoritativeMovementModeServerWithRewind, where server the server authoritative types result
-   # in the client sending PlayerAuthInput packets instead of MovePlayer packets and the rewind mode
-   # requires sending the tick of movement and several actions.
-   #
-   # Specifies if the client or server is authoritative over the movement of the player, 
-   # meaning it controls the movement of it. 
-   ## https://github.com/pmmp/PocketMine-MP/blob/a43b46a93cb127f037c879b5d8c29cda251dd60c/src/pocketmine/network/mcpe/protocol/types/PlayerMovementType.php#L26
-   movement_authority: zigzag32 =>
-      0: client
-      1: server
-      # PlayerAuthInputPacket + a bunch of junk that solves a nonexisting problem
-      2: server_with_rewind
-   # RewindHistorySize is the amount of history to keep at maximum if MovementType is
-   # packet.AuthoritativeMovementModeServerWithRewind.
+   # RewindHistorySize is the amount of history to keep at maximum
    rewind_history_size: zigzag32
    # ServerAuthoritativeBlockBreaking specifies if block breaking should be sent through
    # packet.PlayerAuthInput or not. This field is somewhat redundant as it is always enabled if
-   # MovementType is packet.AuthoritativeMovementModeServer or
-   # packet.AuthoritativeMovementModeServerWithRewind
+   # server authoritative movement is enabled.
    server_authoritative_block_breaking: bool
 
    # The total time in ticks that has elapsed since the start of the world.
@@ -435,9 +430,6 @@ packet_start_game:
 
    # BlockProperties is a list of all the custom blocks registered on the server.
    block_properties: BlockProperties
-   # A list of all items with their legacy IDs which are available in the game.
-   # Failing to send any of the items that are in the game will crash mobile clients.
-   itemstates: Itemstates
    # A unique ID specifying the multi-player session of the player. 
    # A random UUID should be filled out for this field.
    multiplayer_correlation_id: string
@@ -659,6 +651,7 @@ packet_move_player:
          source_entity_type: LegacyEntityType
    tick: varint64
 
+# Removed in 1.21.80
 packet_rider_jump:
    !id: 0x14
    !bound: both
@@ -1181,13 +1174,23 @@ packet_animate:
    !id: 0x2c
    !bound: both
    action_id: zigzag32 =>
+      # Unused
       0: none
+      # Server bound notification to swing the player's arm. Server is expected to rebroadcast to all that should see the arm move.
+      #  See also PlayerAuthInputPacket::InputData::MissedSwing for a very similar action
       1: swing_arm
       2: unknown
+      # Client bound notification to stop sleeping in a bed
       3: wake_up
+      # Client-bound notification to play critical hit particles
       4: critical_hit
+      # Unused
       5: magic_critical_hit
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
       128: row_right
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
       129: row_left
    runtime_entity_id: varint64
    _: action_id ?
@@ -1433,6 +1436,7 @@ packet_block_entity_data:
    position: BlockCoordinates
    nbt: nbt
 
+# Removed in 1.21.80
 packet_player_input:
    !id: 0x39
    !bound: server
@@ -1717,6 +1721,10 @@ packet_boss_event:
          # the name tag of the boss entity at all times. It is only set if the EventType is BossEventShow or
          # BossEventTitle.
          title: string
+         # FilteredBossBarTitle is a filtered version of BossBarTitle with all the
+         # profanity removed. The client will use this over BossBarTitle if this
+         # field is not empty and they have the "Filter Profanity" setting enabled.
+         filtered_title: string
          # HealthPercentage is the percentage of health that is shown in the boss bar. It currently does not
          # function, and instead uses the health percentage of the boss entity at all times. It is only set if the
          # EventType is BossEventShow or BossEventHealthPercentage.
@@ -1740,6 +1748,10 @@ packet_boss_event:
          progress: lf32
       if set_bar_title:
          title: string
+         # FilteredBossBarTitle is a filtered version of BossBarTitle with all the
+         # profanity removed. The client will use this over BossBarTitle if this
+         # field is not empty and they have the "Filter Profanity" setting enabled.
+         filtered_title: string
       if update_properties:
          screen_darkening: li16
          color: varint
@@ -1940,6 +1952,9 @@ packet_command_block_update:
    # Name is the name of the command block updated. If not empty, it will show this name hovering above the
    # command block when hovering over the block with the cursor.
    name: string
+   # FilteredName is a filtered version of Name with all the profanity removed. The client will use this
+   # over Name if this field is not empty and they have the "Filter Profanity" setting enabled.
+   filtered_name: string
    # ShouldTrackOutput specifies if the command block tracks output. If set to false, the output box won't
    # be shown within the command block.
    should_track_output: bool
@@ -2188,6 +2203,10 @@ packet_structure_block_update:
    # StructureName is the name of the structure that was set in the structure block's UI. This is the name
    # used to export the structure to a file.
    structure_name: string
+   # FilteredStructureName is a filtered version of StructureName with all the profanity removed. The client
+   # will use this over StructureName if this field is not empty and they have the "Filter Profanity"
+   # setting enabled.
+   filtered_structure_name: string
    # DataField is the name of a function to run, usually used during natural generation. A description can
    # be found here: https://minecraft.wiki/w/Structure_Block#Data.
    data_field: string
@@ -2697,8 +2716,7 @@ packet_spawn_particle_effect:
    particle_name: string
    # MoLangVariables is an encoded JSON map of MoLang variables that may be applicable to the particle spawn. This can
    # just be left empty in most cases.
-   # TODO: Investigate, probably not a ByteArray...
-   molang_variables: ByteArray
+   molang_variables?: string
 
 # AvailableActorIdentifiers is sent by the server at the start of the game to let the client know all
 # entities that are available on the server.
@@ -2751,9 +2769,11 @@ packet_network_chunk_publisher_update:
 packet_biome_definition_list:
    !id: 0x7a
    !bound: client
-   # SerialisedBiomeDefinitions is a network NBT serialised compound of all definitions of biomes that are
-   # available on the server.
-   nbt: nbt
+   # BiomeDefinitions is a list of biomes that are available on the server.
+   biome_definitions: BiomeDefinition[]varint
+   # StringList is a makeshift dictionary implementation Mojang created to try and reduce the size of the
+   # overall packet. It is a list of common strings that are used in the biome definitions.
+   string_list: string[]varint
 
 # LevelSoundEvent is sent by the server to make any kind of built-in sound heard to a player. It is sent to,
 # for example, play a stepping sound or a shear sound. The packet is also sent by the client, in which case
@@ -2781,6 +2801,10 @@ packet_level_sound_event:
    # sound will have full volume, regardless of where the Position is, whereas if set to false, the sound's
    # volume will be based on the distance to Position.
    is_global: bool
+   # EntityUniqueID is the unique ID of a source entity. The unique ID is a value that remains consistent across
+   # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
+   # this field.
+   entity_unique_id: li64
 
 # LevelEventGeneric is sent by the server to send a 'generic' level event to the client. This packet sends an
 # NBT serialised object and may for that reason be used for any event holding additional data.
@@ -3234,10 +3258,27 @@ InputFlag: [ "bitflags", {
 packet_creative_content:
    !id: 0x91
    !bound: client
-   # Items is a list of the items that should be added to the creative inventory.
+   # The groups that are displayed within the creative inventory menu.
+   groups: []varint
+      # Where the group shows up in the creative inventory (e.g. Construction, Items, etc)
+      category: li32 =>
+         - all
+         - construction
+         - nature
+         - equipment
+         - items
+         - item_command_only
+      # The name of the group (e.g. Decorative stone, Wool, etc.)
+      name: string
+      # The item whose icon is used to label the group (icon you click on to open/close the group)
+      icon_item: ItemLegacy
+   # Individual items that are displayed within the creative inventory menu, grouped by their category.
    items: []varint
+      # The index of the item in the creative menu.
       entry_id: varint
       item: ItemLegacy
+      # The group index of the item - which group in the groups array this item belongs to.
+      group_index: varint
 
 # PlayerEnchantOptions is sent by the server to update the enchantment options displayed when the user opens
 # the enchantment table and puts an item in. This packet was added in 1.16 and allows the server to decide on
@@ -3305,6 +3346,18 @@ ArmorDamageType: [ "bitflags",
       }
    }
 ]
+
+# CodeBuilder is an Education Edition packet sent by the server to the client to open the URL to a Code
+# Builder (websocket) server.
+packet_code_builder:
+   !id: 0x96
+   !bound: client
+   # URL is the url to the Code Builder (websocket) server.
+   url: string
+   # ShouldOpenCodeBuilder specifies if the client should automatically open the Code Builder app. If set to
+   # true, the client will attempt to use the Code Builder app to connect to and interface with the server
+   # running at the URL above.
+   should_open_code_builder: bool
 
 # UpdatePlayerGameType is sent by the server to change the game mode of a player. It is functionally
 # identical to the SetPlayerGameType packet.
@@ -3374,6 +3427,16 @@ packet_position_tracking_db_broadcast:
    # The tracking ID is also present as the 'id' field in the SerialisedData field.
    tracking_id: zigzag32
    nbt: nbt
+
+# DebugInfo is a packet sent by the server to the client. It does not seem to do anything when sent to the
+# normal client in 1.16.
+packet_debug_info:
+    !id: 0x9b
+    !bound: client
+    # PlayerUniqueID is the unique ID of the player that the packet is sent to.
+    player_unique_id: zigzag64
+    # Data is the debug data.
+    data: ByteArray
 
 # PacketViolationWarning is sent by the client when it receives an invalid packet from the server. It holds
 # some information on the error that occurred.
@@ -3488,12 +3551,15 @@ packet_correct_player_move_prediction:
    # Tick is the tick of the movement which was corrected by this packet.
    tick: varint64
 
-# ItemComponent is sent by the server to attach client-side components to a custom item.
-packet_item_component:
+# ItemRegistryPacket is used to declare what items the server makes available, and components of custom items.
+# After 1.21.60, this packet replaces the functionality of the "itemstates" field in the StartGamePacket
+# In pre-1.21.60 versions, this was the ItemComponentPacket, and was
+# sent by the server to attach client-side components to custom items.
+packet_item_registry:
    !id: 0xa2
    !bound: client
-   # `entries` holds a list of all custom items with their respective components set.
-   entries: ItemComponentList
+   # `items` holds a list of all items.
+   itemstates: Itemstates
 
 # FilterText is sent by the both the client and the server. The client sends the packet to the server to
 # allow the server to filter the text server-side. The server then responds with the same packet and the
@@ -3626,6 +3692,13 @@ packet_photo_info_request:
    !bound: server
    photo_id: zigzag64
 
+HeightMapDataType: u8 =>
+   0: no_data
+   1: has_data
+   2: too_high
+   3: too_low
+   4: all_copied
+
 SubChunkEntryWithoutCaching: []lu32
    dx: i8
    dy: i8
@@ -3640,12 +3713,11 @@ SubChunkEntryWithoutCaching: []lu32
       6: success_all_air
    # Payload has the terrain data, if the chunk isn't empty and caching is disabled
    payload: ByteArray
-   heightmap_type: u8 =>
-      0: no_data
-      1: has_data
-      2: too_high
-      3: too_low
+   heightmap_type: HeightMapDataType
    heightmap: heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+   render_heightmap_type: HeightMapDataType
+   render_heightmap: render_heightmap_type ?
       if has_data: '["buffer", { "count": 256 }]'
 
 SubChunkEntryWithCaching: []lu32
@@ -3664,12 +3736,11 @@ SubChunkEntryWithCaching: []lu32
    payload: result ?
       if success_all_air: void
       default: ByteArray
-   heightmap_type: u8 =>
-      0: no_data
-      1: has_data
-      2: too_high
-      3: too_low
+   heightmap_type: HeightMapDataType
    heightmap: heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+   render_heightmap_type: HeightMapDataType
+   render_heightmap: render_heightmap_type ?
       if has_data: '["buffer", { "count": 256 }]'
    blob_id: lu64
 
@@ -4080,38 +4151,38 @@ packet_camera_instruction:
       # Ease represents the easing function that is used by the instruction.
       ease_data?:
          type: u8 =>
-         - Linear
-         - Spring
-         - InQuad
-         - OutQuad
-         - InOutQuad
-         - InCubic
-         - OutCubic
-         - InOutCubic
-         - InQuart
-         - OutQuart
-         - InOutQuart
-         - InQuint
-         - OutQuint
-         - InOutQuint
-         - InSine
-         - OutSine
-         - InOutSine
-         - InExpo
-         - OutExpo
-         - InOutExpo
-         - InCirc
-         - OutCirc
-         - InOutCirc
-         - InBounce
-         - OutBounce
-         - InOutBounce
-         - InBack
-         - OutBack
-         - InOutBack
-         - InElastic
-         - OutElastic
-         - InOutElastic
+            - Linear
+            - Spring
+            - InQuad
+            - OutQuad
+            - InOutQuad
+            - InCubic
+            - OutCubic
+            - InOutCubic
+            - InQuart
+            - OutQuart
+            - InOutQuart
+            - InQuint
+            - OutQuint
+            - InOutQuint
+            - InSine
+            - OutSine
+            - InOutSine
+            - InExpo
+            - OutExpo
+            - InOutExpo
+            - InCirc
+            - OutCirc
+            - InOutCirc
+            - InBounce
+            - OutBounce
+            - InOutBounce
+            - InBack
+            - OutBack
+            - InOutBack
+            - InElastic
+            - OutElastic
+            - InOutElastic
          duration: lf32
       position?: vec3f
       rotation?: vec2f
@@ -4120,7 +4191,9 @@ packet_camera_instruction:
       # ViewOffset is only used in a follow_orbit camera and controls an offset based on a pivot point to the
       # player, causing it to be shifted in a certain direction.
       offset?: vec2f
+      entity_offset?: vec3f
       default?: bool
+      remove_ignore_starting_values: bool
    # Clear can be set to true to clear all the current camera instructions.
    clear?: bool
    # Fade is a camera instruction that fades the screen to a specified colour.
@@ -4136,7 +4209,7 @@ packet_camera_instruction:
    # RemoveTarget can be set to true to remove the current aim assist target.
    remove_target?: bool
 
-
+# Removed in 1.21.80
 packet_compressed_biome_definitions:
    !id: 0x12d
    !bound: client
@@ -4227,11 +4300,11 @@ packet_set_hud:
    elements: Element[]varint
    # Visibility represents the new visibility of the specified Elements. It can be any of the HudVisibility
    # constants above.
-   visibility: u8 =>
-   - hide
-   - reset
+   visibility: varint =>
+      - hide
+      - reset
 
-Element: u8 =>
+Element: varint =>
 - PaperDoll
 - Armour
 - ToolTips
@@ -4316,10 +4389,14 @@ packet_camera_aim_assist:
    # Distance is the distance that the camera should keep from the target, if TargetMode is set to
    # CameraAimAssistTargetModeDistance.
    distance: lf32
-   # TargetMode is the mode that the camera should use to aim at the target. This is one of the constants above.
-   target_mode: u8
+   # TargetMode is the mode that the camera should use to aim at the target. This is one of the constants below.
+   target_mode: u8 =>
+      - angle
+      - distance
    # Action is the action that should be performed with the aim assist. This is one of the constants above.
-   action: u8
+   action: u8 =>
+      - set
+      - clear
 
 # ContainerRegistryCleanup is sent by the server to trigger a client-side cleanup of the dynamic container registry.
 packet_container_registry_cleanup:
@@ -4345,6 +4422,7 @@ packet_movement_effect:
    tick: varint64
 
 # set_movement_authority is sent by the server to the client to change its movement mode.
+# This packet has been deprecated and as of protocol 818 (1.21.90) has been removed from the game.
 packet_set_movement_authority:
    !id: 0x13F
    !bound: client
@@ -4364,26 +4442,21 @@ packet_camera_aim_assist_presets:
    !id: 0x140
    !bound: client
    # CategoryGroups is a list of groups of categories which can be referenced by one of the Presets.
-   category_groups: []varint
+   categories: []varint
       # Identifier is the unique identifier of the group.
-      id: string
-      # Categories is a list of categories within this group.
-      categories: []varint
-         name: string
-         # Priorities represents the block and entity specific priorities for targetting. The aim
-         # assist will select the block or entity with the highest priority within the specified thresholds.
-         priorities:
-            entities: []varint
-               id: string
-               priority: li32
-            blocks: []varint
-               id: string
-               priority: li32
-            entity_default?: li32
-            block_default?: li32
+      name: string
+      # Priorities represents the block and entity specific priorities for targetting. The aim
+      # assist will select the block or entity with the highest priority within the specified thresholds.
+      entity_priorities: []varint
+         id: string
+         priority: li32
+      block_priorities: []varint
+         id: string
+         priority: li32
+      entity_default?: li32
+      block_default?: li32
    presets: []varint
       id: string
-      categories: string
       exclude_blocks: string[]varint
       target_liquids: string[]varint
       item_settings: []varint
@@ -4398,3 +4471,130 @@ packet_camera_aim_assist_presets:
       # HandSettings is the identifier of a category to use when the player is not holding an item. This must
       # be the identifier of a category within the above `categories` field.
       hand_settings?: string
+   operation: u8 =>
+      - set
+      - add_to_existing
+
+packet_client_camera_aim_assist:
+   !id: 0x141
+   #!bound: client
+   preset_id: string
+   action: u8 =>
+      # Sets aim-assist to use the settings from a CameraPresets aim_assist field.
+      0: set_from_camera_preset
+      # Clears aim-assist settings.
+      1: clear
+   allow_aim_assist: bool
+
+packet_client_movement_prediction_sync:
+   !id: 0x142
+   #!bound: ?
+   data_flags: varint128 # TODO - figure out flags
+   bounding_box:
+      scale: lf32
+      width: lf32
+      height: lf32
+   movement_speed: lf32
+   underwater_movement_speed: lf32
+   lava_movement_speed: lf32
+   jump_strength: lf32
+   health: lf32
+   hunger: lf32
+   entity_runtime_id: varint64
+   is_flying: bool
+
+packet_update_client_options:
+   !id: 0x143
+   !bound: both
+   graphics_mode?: u8 =>
+      - simple
+      - fancy
+      - advanced
+      - ray_traced
+
+# PlayerVideoCapturePacket is sent by the server to start or stop video recording for a player. This packet
+# only works on development builds and has no effect on retail builds. When recording, the client will save
+# individual frames to '/LocalCache/minecraftpe' in the format specified below.
+packet_player_video_capture:
+   !id: 0x144
+   !bound: client
+   # action is the action that the client should perform. This is one of the constants defined above.
+   action: u8 =>
+      - stop
+      - start
+   _: action ?
+      if start:
+         # frame_rate is the frame rate at which the video should be recorded. It is only used when Action is
+         # PlayerVideoCaptureActionStart. A higher frame rate will cause more frames to be recorded, but also
+         # a noticeable increase in lag.
+         frame_rate: li32
+         file_prefix: string
+
+# PlayerUpdateEntityOverrides is sent by the server to modify an entity's properties individually.
+packet_player_update_entity_overrides:
+   !id: 0x145
+   !bound: client
+   # EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
+   # entities are generally identified in packets using this runtime ID.
+   runtime_id: varint64
+   # PropertyIndex is the index of the property to modify. The index is unique for each property of an entity.
+   property_index: varint
+   # Type is the type of action to perform with the property. It is one of the constants above.
+   type: u8 =>
+      - clear_all
+      - remove
+      - set_int
+      - set_float
+   value: type ?
+      # IntValue is the new integer value of the property. It is only used when Type is set to
+      # PlayerUpdateEntityOverridesTypeInt.
+      if set_int: li32
+      # FloatValue is the new float value of the property. It is only used when Type is set to
+      # PlayerUpdateEntityOverridesTypeFloat.
+      if set_float: lf32
+
+packet_player_location:
+   !id: 0x146
+   !bound: client
+   # Type is the action that is being performed. It is one of the constants above.
+   type: li32 =>
+      - coordinates
+      - type_hide
+   entity_unique_id: varint64
+   position: type ?
+      if coordinates: vec3f
+
+packet_clientbound_controls_scheme:
+   !id: 0x147
+   !bound: client
+   # Scheme is the scheme that the client should use. It is one of the constants above.
+   scheme: u8 =>
+      - locked_player_relative_strafe
+      - camera_relative
+      - camera_relative_strafe
+      - player_relative
+      - player_relative_strafe
+
+packet_server_script_debug_drawer:
+   !id: 0x148
+   !bound: server
+   shapes: []varint
+      network_id: varint64
+      shape_type?: u8 =>
+         - line
+         - box
+         - sphere
+         - circle
+         - text
+         - arrow
+      location?: vec3f
+      scale?: lf32
+      rotation?: vec3f
+      time_left?: lf32
+      color?: li32
+      text?: string
+      box_bound?: vec3f
+      line_end_location?: vec3f
+      arrow_head_length?: lf32
+      arrow_head_radius?: lf32
+      segment_count?: u8

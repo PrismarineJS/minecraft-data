@@ -1,3 +1,44 @@
+## 3.90.0
+* [Add bedrock 1.21.90 protocol data (#1021)](https://github.com/PrismarineJS/minecraft-data/commit/06c2106a669deb24f0c14770874a0abeb116687b) (thanks @CreeperG16)
+* [bedrock: add v1.21.70 Steve Skin (#1004)](https://github.com/PrismarineJS/minecraft-data/commit/b1b05bb62907ab0c6508d6f52e44b753df065d54) (thanks @yowzaoppo)
+* [Add Bedrock 1.21.80 data (#1012)](https://github.com/PrismarineJS/minecraft-data/commit/23eff009e11d739dd2f2bfc782a440dc885ef7f3) (thanks @bedrock-bot)
+* [pc: fix editBookPacketUsesNbt feature version range (#1013)](https://github.com/PrismarineJS/minecraft-data/commit/52b59d8f13e9b8e8e29654b95ca7e00ba702464f) (thanks @autowert66)
+
+## 3.89.0
+* [Add some sound features](https://github.com/PrismarineJS/minecraft-data/commit/431245e650d88863f867b156a6b418b56797658b) (thanks @rom1504)
+
+## 3.88.0
+* [Add title features.](https://github.com/PrismarineJS/minecraft-data/commit/33ac15edaa7da6c4252b52fc8f3c05803437dd64) (thanks @rom1504)
+
+## 3.87.0
+* [Fix bug in packet experience.](https://github.com/PrismarineJS/minecraft-data/commit/a32f3880296467fbed19e5205b1d1d23331fffa8) (thanks @rom1504)
+* [Add 25w20a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9ba5dfb80f37415e2ac79c3dc15c5581d5738bfa) (thanks @github-actions[bot])
+
+## 3.86.0
+* [Add Bedrock 1.21.80 protocol data (#1010)](https://github.com/PrismarineJS/minecraft-data/commit/9d518a1e4387c0323e55fe58dd2edbf50f6a13d8) (thanks @extremeheat)
+* [Add data for bedrock 1.21.60 and 1.21.70 (#997)](https://github.com/PrismarineJS/minecraft-data/commit/57e34f79c2e9deac2e71888ba639f4cb01068c34) (thanks @bedrock-bot)
+* [bedrock: add code_builder packet to protocol (#1000)](https://github.com/PrismarineJS/minecraft-data/commit/e2debd1bca378c38b75c7fd2de0796ab7087cc63) (thanks @EntifiedOptics)
+* [Fix Bedrock protocol missing debug_info packet (#999)](https://github.com/PrismarineJS/minecraft-data/commit/c22521517fc708f387af874bd2ce603ae314541b) (thanks @EntifiedOptics)
+
+## 3.85.0
+* [Add Bedrock 1.21.70 (785) protocol data (#990)](https://github.com/PrismarineJS/minecraft-data/commit/982946615de283af7709ccf2611844d3808a63b7) (thanks @CreeperG16)
+* [Fix bedrock ItemStackRequest packet fields (#988)](https://github.com/PrismarineJS/minecraft-data/commit/41aa5c7ed620a4b6b51892153fb8abe67b6ded8e) (thanks @EntifiedOptics)
+* [Add bedrock 1.21.42 data (#992)](https://github.com/PrismarineJS/minecraft-data/commit/82049f691f9f8475b3871e6a4fb2ff7b5653959c) (thanks @bedrock-bot)
+* [Add bedrock 1.21.0-1.21.60 block state data (#989)](https://github.com/PrismarineJS/minecraft-data/commit/6695a165f0c329affc2789bf7d7a428e21d98b68) (thanks @bedrock-bot)
+
+## 3.84.1
+* [bedrock: fix aim assist presets packet (#983)](https://github.com/PrismarineJS/minecraft-data/commit/99b6fb48a9e227a8dcb4234727eece94c95169e0) (thanks @extremeheat)
+* [Add 25w07a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97d62e48225c8a8953618c050b237677b3767e42) (thanks @github-actions[bot])
+
+## 3.84.0
+* [Add bedrock 1.21.60 data (#980)](https://github.com/PrismarineJS/minecraft-data/commit/641f42d548595b754c63248d25decc86caed8f21) (thanks @CreeperG16)
+* [Add 25w06a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c42c06e7965f7297829b1f946ced8b42723e61a5) (thanks @github-actions[bot])
+* [Add 25w05a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bcc43071da36dfd21e5ff084b5b08b3d914e06c7) (thanks @github-actions[bot])
+* [node 22 (#978)](https://github.com/PrismarineJS/minecraft-data/commit/10749e0a06563f0cd563327e85c003b145923648) (thanks @rom1504)
+* [Add 25w04a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ebd71f1e8986c32eb235669312072bb54d90b23a) (thanks @github-actions[bot])
+* [Fix bedrock packet_spawn_particle_effect (#976)](https://github.com/PrismarineJS/minecraft-data/commit/dd4d29d41f938d539371445a7dd897fd4fd12d36) (thanks @extremeheat)
+* [Add 25w03a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e6bbfbd4e4200ed363f7ec065764878f4b941636) (thanks @github-actions[bot])
+
 ## 3.83.1
 * [Update pc1.21.4 entity metadata (#969)](https://github.com/PrismarineJS/minecraft-data/commit/0f8ead7370ea6fb11552c29dbb9d86fd4da8e4f2) (thanks @extremeheat)
 

@@ -675,8 +675,9 @@
                     "16": "minecart_display_block",
                     "17": "minecart_display_offset",
                     "18": "minecart_has_display",
-                    "20": "old_swell",
-                    "21": "swell_dir",
+                    "19": "horse_type",
+                    "20": "creeper_swell",
+                    "21": "creeper_swell_direction",
                     "22": "charge_amount",
                     "23": "enderman_held_runtime_id",
                     "24": "entity_age",
@@ -706,7 +707,7 @@
                     "49": "wither_target_1",
                     "50": "wither_target_2",
                     "51": "wither_target_3",
-                    "52": "aerial_attack",
+                    "52": "wither_aerial_attack",
                     "53": "boundingbox_width",
                     "54": "boundingbox_height",
                     "55": "fuse_length",
@@ -714,7 +715,7 @@
                     "57": "rider_rotation_locked",
                     "58": "rider_max_rotation",
                     "59": "rider_min_rotation",
-                    "60": "rider_rotation_offset",
+                    "60": "rider_seat_rotation_offset",
                     "61": "area_effect_cloud_radius",
                     "62": "area_effect_cloud_waiting",
                     "63": "area_effect_cloud_particle_id",
@@ -731,7 +732,7 @@
                     "74": "controlling_rider_seat_number",
                     "75": "strength",
                     "76": "max_strength",
-                    "77": "spell_casting_color",
+                    "77": "evoker_spell_casting_color",
                     "78": "limited_life",
                     "79": "armor_stand_pose_index",
                     "80": "ender_crystal_time_offset",
@@ -749,11 +750,11 @@
                     "92": "flags_extended",
                     "93": "laying_amount",
                     "94": "laying_amount_previous",
-                    "95": "duration",
-                    "96": "spawn_time",
-                    "97": "change_rate",
-                    "98": "change_on_pickup",
-                    "99": "pickup_count",
+                    "95": "area_effect_cloud_duration",
+                    "96": "area_effect_cloud_spawn_time",
+                    "97": "area_effect_cloud_change_rate",
+                    "98": "area_effect_cloud_change_on_pickup",
+                    "99": "area_effect_cloud_pickup_count",
                     "100": "interact_text",
                     "101": "trade_tier",
                     "102": "max_trade_tier",
@@ -3792,10 +3793,12 @@
                 "147": "item_stack_request",
                 "148": "item_stack_response",
                 "149": "player_armor_damage",
+                "150": "code_builder",
                 "151": "update_player_game_type",
                 "152": "emote_list",
                 "153": "position_tracking_db_broadcast",
                 "154": "position_tracking_db_request",
+                "155": "debug_info",
                 "156": "packet_violation_warning",
                 "157": "motion_prediction_hints",
                 "158": "animate_entity",
@@ -3973,10 +3976,12 @@
                 "item_stack_request": "packet_item_stack_request",
                 "item_stack_response": "packet_item_stack_response",
                 "player_armor_damage": "packet_player_armor_damage",
+                "code_builder": "packet_code_builder",
                 "update_player_game_type": "packet_update_player_game_type",
                 "emote_list": "packet_emote_list",
                 "position_tracking_db_request": "packet_position_tracking_db_request",
                 "position_tracking_db_broadcast": "packet_position_tracking_db_broadcast",
+                "debug_info": "packet_debug_info",
                 "packet_violation_warning": "packet_packet_violation_warning",
                 "motion_prediction_hints": "packet_motion_prediction_hints",
                 "animate_entity": "packet_animate_entity",
@@ -9032,6 +9037,19 @@
         }
       }
     ],
+    "packet_code_builder": [
+      "container",
+      [
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "should_open_code_builder",
+          "type": "bool"
+        }
+      ]
+    ],
     "packet_update_player_game_type": [
       "container",
       [
@@ -9109,6 +9127,19 @@
         {
           "name": "nbt",
           "type": "nbt"
+        }
+      ]
+    ],
+    "packet_debug_info": [
+      "container",
+      [
+        {
+          "name": "player_unique_id",
+          "type": "zigzag64"
+        },
+        {
+          "name": "data",
+          "type": "ByteArray"
         }
       ]
     ],

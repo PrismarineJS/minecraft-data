@@ -1118,13 +1118,23 @@ packet_animate:
    !id: 0x2c
    !bound: both
    action_id: zigzag32 =>
+      # Unused
       0: none
+      # Server bound notification to swing the player's arm. Server is expected to rebroadcast to all that should see the arm move.
+      #  See also PlayerAuthInputPacket::InputData::MissedSwing for a very similar action
       1: swing_arm
       2: unknown
+      # Client bound notification to stop sleeping in a bed
       3: wake_up
+      # Client-bound notification to play critical hit particles
       4: critical_hit
+      # Unused
       5: magic_critical_hit
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
       128: row_right
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
       129: row_left
    runtime_entity_id: varint64
    _: action_id ?
@@ -2584,8 +2594,7 @@ packet_spawn_particle_effect:
    particle_name: string
    # MoLangVariables is an encoded JSON map of MoLang variables that may be applicable to the particle spawn. This can
    # just be left empty in most cases.
-   # TODO: Investigate, probably not a ByteArray...
-   molang_variables: ByteArray
+   molang_variables?: string
 
 # AvailableActorIdentifiers is sent by the server at the start of the game to let the client know all
 # entities that are available on the server.
@@ -3157,6 +3166,18 @@ ArmorDamageType: [ "bitflags",
    }
 ]
 
+# CodeBuilder is an Education Edition packet sent by the server to the client to open the URL to a Code
+# Builder (websocket) server.
+packet_code_builder:
+   !id: 0x96
+   !bound: client
+   # URL is the url to the Code Builder (websocket) server.
+   url: string
+   # ShouldOpenCodeBuilder specifies if the client should automatically open the Code Builder app. If set to
+   # true, the client will attempt to use the Code Builder app to connect to and interface with the server
+   # running at the URL above.
+   should_open_code_builder: bool
+
 # UpdatePlayerGameType is sent by the server to change the game mode of a player. It is functionally
 # identical to the SetPlayerGameType packet.
 packet_update_player_game_type:
@@ -3225,6 +3246,16 @@ packet_position_tracking_db_broadcast:
    # The tracking ID is also present as the 'id' field in the SerialisedData field.
    tracking_id: zigzag32
    nbt: nbt
+
+# DebugInfo is a packet sent by the server to the client. It does not seem to do anything when sent to the
+# normal client in 1.16.
+packet_debug_info:
+    !id: 0x9b
+    !bound: client
+    # PlayerUniqueID is the unique ID of the player that the packet is sent to.
+    player_unique_id: zigzag64
+    # Data is the debug data.
+    data: ByteArray
 
 # PacketViolationWarning is sent by the client when it receives an invalid packet from the server. It holds
 # some information on the error that occurred.

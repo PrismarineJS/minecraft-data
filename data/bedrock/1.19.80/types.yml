@@ -186,8 +186,9 @@ MetadataDictionary: []varint
       16: minecart_display_block #int (id | (data << 16))
       17: minecart_display_offset #int
       18: minecart_has_display #byte (must be 1 for minecart to show block inside)
-      20: old_swell
-      21: swell_dir
+      19: horse_type
+      20: creeper_swell
+      21: creeper_swell_direction
       22: charge_amount
       23: enderman_held_runtime_id #short
       24: entity_age #short
@@ -217,7 +218,7 @@ MetadataDictionary: []varint
       49: wither_target_1 #long
       50: wither_target_2 #long
       51: wither_target_3 #long
-      52: aerial_attack
+      52: wither_aerial_attack
       53: boundingbox_width
       54: boundingbox_height
       55: fuse_length
@@ -225,7 +226,7 @@ MetadataDictionary: []varint
       57: rider_rotation_locked #byte
       58: rider_max_rotation #float
       59: rider_min_rotation #float
-      60: rider_rotation_offset
+      60: rider_seat_rotation_offset
       61: area_effect_cloud_radius #float
       62: area_effect_cloud_waiting #int
       63: area_effect_cloud_particle_id #int
@@ -242,7 +243,7 @@ MetadataDictionary: []varint
       74: controlling_rider_seat_number #byte
       75: strength #int
       76: max_strength #int
-      77: spell_casting_color #int
+      77: evoker_spell_casting_color #int
       78: limited_life
       79: armor_stand_pose_index # int
       80: ender_crystal_time_offset # int
@@ -260,11 +261,11 @@ MetadataDictionary: []varint
       92: flags_extended
       93: laying_amount
       94: laying_amount_previous
-      95: duration
-      96: spawn_time
-      97: change_rate
-      98: change_on_pickup
-      99: pickup_count
+      95: area_effect_cloud_duration
+      96: area_effect_cloud_spawn_time
+      97: area_effect_cloud_change_rate
+      98: area_effect_cloud_change_on_pickup
+      99: area_effect_cloud_pickup_count
       100: interact_text
       101: trade_tier
       102: max_trade_tier
@@ -501,8 +502,14 @@ TransactionUseItem:
    # ActionType is the type of the UseItem inventory transaction. It is one of the action types found above,
    # and specifies the way the player interacted with the block.
    action_type: varint =>
+      # Right click item use on a surface like placing a block
       0: click_block
+      # Start right click and hold style item use or potentially interact with nothing.
+      # If it is a usable item like food the server is expected to send a SetActorDataPacket with ActorFlags::USINGITEM along with the transaction response.
+      # While using an item, movement speed is slowed which will be reflected in the move vector in Player Auth Input.
       1: click_air
+      # Block breaking like left click. When using server auth block breaking as specified in StartGamePacket this is never sent.
+      # Instead, block actions are supplied in Player Auth Input.
       2: break_block
    # BlockPosition is the position of the block that was interacted with. This is only really a correct
    # block position if ActionType is not UseItemActionClickAir.
@@ -575,10 +582,19 @@ Transaction:
    legacy: TransactionLegacy
    # What type of transaction took place
    transaction_type: varint =>
+      # Sent for container UI operations depending on if ItemStackNetManager is enabled
       0: normal
+      # Sent from server to client to reject a transaction
       1: inventory_mismatch
+      # Sent for a player performing right click style item use.
+      # See the contained ItemUseInventoryTransaction::ActionType for the expected use case.
       2: item_use
+      # Sent for a player right clicking on an entity or attacking them.
+      # See ItemUseInventoryTransaction::ActionType for which it is.
       3: item_use_on_entity
+      # Sent when releasing right click on a chargeable item like a bow or finishing charging like a crossbow.
+      # This is different than canceling item use early which would be in Player Auth Input.
+      # See ItemReleaseInventoryTransaction::ActionType for which it is.
       4: item_release
    # The list of inventory internal actions in this packet, e.g. inventory GUI actions
    actions: TransactionActions
@@ -597,7 +613,9 @@ Transaction:
          # ActionType is the type of the UseItemOnEntity inventory transaction. It is one of the action types
          # found in the constants above, and specifies the way the player interacted with the entity.
          action_type: varint =>
+            # Right click interact with actor.
             0: interact
+            # Left click style attack of actor or elytra spin attack. Server is expected to deal damage to the entity with visuals.
             1: attack
          # HotBarSlot is the hot bar slot that the player was holding while clicking the entity. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.
@@ -618,7 +636,9 @@ Transaction:
          # As of 1.13, the ActionType is always 0. This field can be ignored, because releasing food (by consuming
          # it) or releasing a bow (to shoot an arrow) is essentially the same.
          action_type: varint =>
+            # Release right click and hold style item use, like firing a bow
             0: release
+            # Finish right click and hold style item use, like charging a crossbow
             1: consume
          # HotBarSlot is the hot bar slot that the player was holding while releasing the item. It should be used
          # to ensure that the hot bar slot and held item are correctly synchronised with the server.

@@ -707,8 +707,9 @@
                     "16": "minecart_display_block",
                     "17": "minecart_display_offset",
                     "18": "minecart_has_display",
-                    "20": "old_swell",
-                    "21": "swell_dir",
+                    "19": "horse_type",
+                    "20": "creeper_swell",
+                    "21": "creeper_swell_direction",
                     "22": "charge_amount",
                     "23": "enderman_held_runtime_id",
                     "24": "entity_age",
@@ -738,7 +739,7 @@
                     "49": "wither_target_1",
                     "50": "wither_target_2",
                     "51": "wither_target_3",
-                    "52": "aerial_attack",
+                    "52": "wither_aerial_attack",
                     "53": "boundingbox_width",
                     "54": "boundingbox_height",
                     "55": "fuse_length",
@@ -746,7 +747,7 @@
                     "57": "rider_rotation_locked",
                     "58": "rider_max_rotation",
                     "59": "rider_min_rotation",
-                    "60": "rider_rotation_offset",
+                    "60": "rider_seat_rotation_offset",
                     "61": "area_effect_cloud_radius",
                     "62": "area_effect_cloud_waiting",
                     "63": "area_effect_cloud_particle_id",
@@ -763,7 +764,7 @@
                     "74": "controlling_rider_seat_number",
                     "75": "strength",
                     "76": "max_strength",
-                    "77": "spell_casting_color",
+                    "77": "evoker_spell_casting_color",
                     "78": "limited_life",
                     "79": "armor_stand_pose_index",
                     "80": "ender_crystal_time_offset",
@@ -781,11 +782,11 @@
                     "92": "flags_extended",
                     "93": "laying_amount",
                     "94": "laying_amount_previous",
-                    "95": "duration",
-                    "96": "spawn_time",
-                    "97": "change_rate",
-                    "98": "change_on_pickup",
-                    "99": "pickup_count",
+                    "95": "area_effect_cloud_duration",
+                    "96": "area_effect_cloud_spawn_time",
+                    "97": "area_effect_cloud_change_rate",
+                    "98": "area_effect_cloud_change_on_pickup",
+                    "99": "area_effect_cloud_pickup_count",
                     "100": "interact_text",
                     "101": "trade_tier",
                     "102": "max_trade_tier",
@@ -806,19 +807,18 @@
                     "117": "nearby_cured_discount_timestamp",
                     "118": "hitbox",
                     "119": "is_buoyant",
-                    "120": "base_runtime_id",
-                    "121": "freezing_effect_strength",
-                    "122": "buoyancy_data",
-                    "123": "goat_horn_count",
-                    "124": "update_properties",
-                    "125": "movement_sound_distance_offset",
-                    "126": "heartbeat_interval_ticks",
-                    "127": "heartbeat_sound_event",
-                    "128": "player_last_death_position",
-                    "129": "player_last_death_dimension",
-                    "130": "player_has_died",
-                    "131": "collision_box",
-                    "132": "visible_mob_effects"
+                    "120": "freezing_effect_strength",
+                    "121": "buoyancy_data",
+                    "122": "goat_horn_count",
+                    "123": "update_properties",
+                    "124": "movement_sound_distance_offset",
+                    "125": "heartbeat_interval_ticks",
+                    "126": "heartbeat_sound_event",
+                    "127": "player_last_death_position",
+                    "128": "player_last_death_dimension",
+                    "129": "player_has_died",
+                    "130": "collision_box",
+                    "131": "visible_mob_effects"
                   }
                 }
               ]
@@ -2918,6 +2918,10 @@
                                 "type": "varint"
                               },
                               {
+                                "name": "times_crafted",
+                                "type": "u8"
+                              },
+                              {
                                 "name": "cost",
                                 "type": "varint"
                               }
@@ -2929,6 +2933,10 @@
                               {
                                 "name": "pattern",
                                 "type": "string"
+                              },
+                              {
+                                "name": "times_crafted",
+                                "type": "u8"
                               }
                             ]
                           ],
@@ -4728,7 +4736,16 @@
           "105": "world_transfer_not_primary_client",
           "106": "server_shutdown",
           "107": "game_setup_cancelled",
-          "108": "game_setup_failed"
+          "108": "game_setup_failed",
+          "109": "no_venue",
+          "110": "conn_signalling_sign_in_failed",
+          "111": "session_access_denied",
+          "112": "service_sign_in_issue",
+          "113": "conn_no_signaling_channel",
+          "114": "conn_not_logged_in",
+          "115": "conn_client_signalling_error",
+          "116": "sub_client_login_disabled",
+          "117": "deep_link_trying_to_open_demo_world_while_signed_in"
         }
       }
     ],
@@ -4912,10 +4929,12 @@
                 "147": "item_stack_request",
                 "148": "item_stack_response",
                 "149": "player_armor_damage",
+                "150": "code_builder",
                 "151": "update_player_game_type",
                 "152": "emote_list",
                 "153": "position_tracking_db_broadcast",
                 "154": "position_tracking_db_request",
+                "155": "debug_info",
                 "156": "packet_violation_warning",
                 "157": "motion_prediction_hints",
                 "158": "animate_entity",
@@ -5134,10 +5153,12 @@
                 "item_stack_request": "packet_item_stack_request",
                 "item_stack_response": "packet_item_stack_response",
                 "player_armor_damage": "packet_player_armor_damage",
+                "code_builder": "packet_code_builder",
                 "update_player_game_type": "packet_update_player_game_type",
                 "emote_list": "packet_emote_list",
                 "position_tracking_db_request": "packet_position_tracking_db_request",
                 "position_tracking_db_broadcast": "packet_position_tracking_db_broadcast",
+                "debug_info": "packet_debug_info",
                 "packet_violation_warning": "packet_packet_violation_warning",
                 "motion_prediction_hints": "packet_motion_prediction_hints",
                 "animate_entity": "packet_animate_entity",
@@ -9737,7 +9758,10 @@
         },
         {
           "name": "molang_variables",
-          "type": "ByteArray"
+          "type": [
+            "option",
+            "string"
+          ]
         }
       ]
     ],
@@ -10830,6 +10854,19 @@
         }
       }
     ],
+    "packet_code_builder": [
+      "container",
+      [
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "should_open_code_builder",
+          "type": "bool"
+        }
+      ]
+    ],
     "packet_update_player_game_type": [
       "container",
       [
@@ -10911,6 +10948,19 @@
         {
           "name": "nbt",
           "type": "nbt"
+        }
+      ]
+    ],
+    "packet_debug_info": [
+      "container",
+      [
+        {
+          "name": "player_unique_id",
+          "type": "zigzag64"
+        },
+        {
+          "name": "data",
+          "type": "ByteArray"
         }
       ]
     ],
@@ -12350,6 +12400,13 @@
                   ]
                 },
                 {
+                  "name": "entity_offset",
+                  "type": [
+                    "option",
+                    "vec3f"
+                  ]
+                },
+                {
                   "name": "default",
                   "type": [
                     "option",
@@ -12845,7 +12902,7 @@
       "container",
       [
         {
-          "name": "category_groups",
+          "name": "categories",
           "type": [
             "array",
             {
@@ -12854,11 +12911,11 @@
                 "container",
                 [
                   {
-                    "name": "id",
+                    "name": "name",
                     "type": "string"
                   },
                   {
-                    "name": "categories",
+                    "name": "entity_priorities",
                     "type": [
                       "array",
                       {
@@ -12867,78 +12924,52 @@
                           "container",
                           [
                             {
-                              "name": "name",
+                              "name": "id",
                               "type": "string"
                             },
                             {
-                              "name": "priorities",
-                              "type": [
-                                "container",
-                                [
-                                  {
-                                    "name": "entities",
-                                    "type": [
-                                      "array",
-                                      {
-                                        "countType": "varint",
-                                        "type": [
-                                          "container",
-                                          [
-                                            {
-                                              "name": "id",
-                                              "type": "string"
-                                            },
-                                            {
-                                              "name": "priority",
-                                              "type": "li32"
-                                            }
-                                          ]
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "name": "blocks",
-                                    "type": [
-                                      "array",
-                                      {
-                                        "countType": "varint",
-                                        "type": [
-                                          "container",
-                                          [
-                                            {
-                                              "name": "id",
-                                              "type": "string"
-                                            },
-                                            {
-                                              "name": "priority",
-                                              "type": "li32"
-                                            }
-                                          ]
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "name": "entity_default",
-                                    "type": [
-                                      "option",
-                                      "li32"
-                                    ]
-                                  },
-                                  {
-                                    "name": "block_default",
-                                    "type": [
-                                      "option",
-                                      "li32"
-                                    ]
-                                  }
-                                ]
-                              ]
+                              "name": "priority",
+                              "type": "li32"
                             }
                           ]
                         ]
                       }
+                    ]
+                  },
+                  {
+                    "name": "block_priorities",
+                    "type": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "id",
+                              "type": "string"
+                            },
+                            {
+                              "name": "priority",
+                              "type": "li32"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "entity_default",
+                    "type": [
+                      "option",
+                      "li32"
+                    ]
+                  },
+                  {
+                    "name": "block_default",
+                    "type": [
+                      "option",
+                      "li32"
                     ]
                   }
                 ]
@@ -12957,10 +12988,6 @@
                 [
                   {
                     "name": "id",
-                    "type": "string"
-                  },
-                  {
-                    "name": "categories",
                     "type": "string"
                   },
                   {
