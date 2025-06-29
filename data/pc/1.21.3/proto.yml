@@ -1705,18 +1705,14 @@
       parameters: ChatTypeParameterType[]varint
       style: anonymousNbt
    ChatTypes:
-      # Either the extra data is retrieved from the registry (via this ID+1 if non-zero), or it's supplied inline in the chat packet
-      registryIndex: varint
-      _: registryIndex ?
-         if 0:
-            chat: ChatType
-            narration: ChatType
-         default: void
+      chat: ChatType
+      narration: ChatType
+   ChatTypesHolder: ["registryEntryHolder", { "baseName": "chatType", "otherwise": { name: "data", type: "ChatTypes" } }]
 
    # MC: ClientboundDisguisedChatPacket
    packet_profileless_chat:
       message: anonymousNbt
-      type: ChatTypes
+      type: ChatTypesHolder
       name: anonymousNbt
       target?: anonymousNbt
    # MC: ClientboundEntityEventPacket
@@ -1974,7 +1970,7 @@
       filterTypeMask: filterType ?
          if 2: i64[]varint
          default: void
-      type: ChatTypes
+      type: ChatTypesHolder
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
    # MC: ClientboundPlayerCombatEndPacket

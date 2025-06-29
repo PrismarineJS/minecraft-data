@@ -4852,35 +4852,24 @@
           "container",
           [
             {
-              "name": "registryIndex",
-              "type": "varint"
+              "name": "chat",
+              "type": "ChatType"
             },
             {
-              "anon": true,
-              "type": [
-                "switch",
-                {
-                  "compareTo": "registryIndex",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "chat",
-                          "type": "ChatType"
-                        },
-                        {
-                          "name": "narration",
-                          "type": "ChatType"
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "narration",
+              "type": "ChatType"
             }
           ]
+        ],
+        "ChatTypesHolder": [
+          "registryEntryHolder",
+          {
+            "baseName": "chatType",
+            "otherwise": {
+              "name": "data",
+              "type": "ChatTypes"
+            }
+          }
         ],
         "packet_profileless_chat": [
           "container",
@@ -4891,7 +4880,7 @@
             },
             {
               "name": "type",
-              "type": "ChatTypes"
+              "type": "ChatTypesHolder"
             },
             {
               "name": "name",
@@ -5965,7 +5954,7 @@
             },
             {
               "name": "type",
-              "type": "ChatTypes"
+              "type": "ChatTypesHolder"
             },
             {
               "name": "networkName",

@@ -1519,13 +1519,8 @@
       parameters: ChatTypeParameterType[]varint
       style: anonymousNbt
    ChatTypes:
-      # Either the extra data is retrieved from the registry (via this ID+1 if non-zero), or it's supplied inline in the chat packet
-      registryIndex: varint
-      _: registryIndex ?
-         if 0:
-            chat: ChatType
-            narration: ChatType
-         default: void
+      chat: ChatType
+      narration: ChatType
 
    # MC: ClientboundDisguisedChatPacket
    packet_profileless_chat:
@@ -1776,7 +1771,7 @@
       filterTypeMask: filterType ?
          if 2: i64[]varint
          default: void
-      type: ChatTypes
+      type: varint
       networkName: anonymousNbt
       networkTargetName?: anonymousNbt
    # MC: ClientboundPlayerCombatEndPacket
@@ -2276,10 +2271,10 @@
             if minecraft:crafting_shaped:
                group: string
                category: varint
-               width: varint
-               height: varint
-               ingredients: []$width
-                  _: ingredient[]$height
+               gridWidth: varint
+               gridHeight: varint
+               ingredients: []$gridWidth
+                  _: ingredient[]$gridHeight
                result: Slot
                showNotification: bool
             if minecraft:crafting_special_armordye: minecraft_simple_recipe_format
