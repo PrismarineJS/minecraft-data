@@ -48,6 +48,13 @@
       x: f64
       y: f64
       z: f64
+   ItemSoundEvent:
+      soundName: string
+      fixedRange?: f32
+   ItemSoundHolder: ["registryEntryHolder", {
+      "baseName": "soundId",
+      "otherwise": { name: "data", type: "ItemSoundEvent" }
+   }]
    slot:
       present: bool
       _: present ?
@@ -1208,13 +1215,7 @@
       block_interaction_type: varint
       small_explosion_particle: Particle
       large_explosion_particle: Particle
-      soundId: varint
-      _: soundId ?
-         if 0:
-            soundName: string
-            range?: f32
-         default:
-
+      sound: ItemSoundHolder
    # MC: ClientboundForgetLevelChunkPacket
    packet_unload_chunk:
       chunkZ: i32
@@ -1713,12 +1714,7 @@
          default: void
    # MC: ClientboundSoundPacket
    packet_sound_effect:
-      soundId: varint
-      soundEvent: soundId ?
-         if 0:
-            resource: string
-            range?: f32
-         default: void
+      sound: ItemSoundHolder
       soundCategory: soundSource
       x: i32
       y: i32

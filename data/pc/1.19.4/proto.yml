@@ -30,6 +30,8 @@
    restBuffer: native
    nbt: native
    optionalNbt: native
+   registryEntryHolder: native
+   registryEntryHolderSet: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: ["pstring", { "countType": "varint" }]
    vec3f:   
@@ -45,6 +47,13 @@
       x: f64
       y: f64
       z: f64
+   ItemSoundEvent:
+      soundName: string
+      fixedRange?: f32
+   ItemSoundHolder: ["registryEntryHolder", {
+      "baseName": "soundId",
+      "otherwise": { name: "data", type: "ItemSoundEvent" }
+   }]
    slot:   
       present: bool
       _: present ?
@@ -1374,12 +1383,7 @@
          if 3: string
          default: void
    packet_sound_effect:   
-      soundId: varint
-      soundEvent: soundId ?
-         if 0:         
-            resource: string
-            range?: f32
-         default: void
+      sound: ItemSoundHolder
       soundCategory: soundSource
       x: i32
       y: i32
