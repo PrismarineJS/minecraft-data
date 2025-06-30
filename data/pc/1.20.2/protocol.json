@@ -29,6 +29,8 @@
     "restBuffer": "native",
     "anonymousNbt": "native",
     "anonOptionalNbt": "native",
+    "registryEntryHolder": "native",
+    "registryEntryHolderSet": "native",
     "ByteArray": [
       "buffer",
       {
@@ -95,6 +97,32 @@
           "type": "f64"
         }
       ]
+    ],
+    "ItemSoundEvent": [
+      "container",
+      [
+        {
+          "name": "soundName",
+          "type": "string"
+        },
+        {
+          "name": "fixedRange",
+          "type": [
+            "option",
+            "f32"
+          ]
+        }
+      ]
+    ],
+    "ItemSoundHolder": [
+      "registryEntryHolder",
+      {
+        "baseName": "soundId",
+        "otherwise": {
+          "name": "data",
+          "type": "ItemSoundEvent"
+        }
+      }
     ],
     "slot": [
       "container",
@@ -4684,36 +4712,8 @@
           "container",
           [
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "name": "soundEvent",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "resource",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             },
             {
               "name": "soundCategory",
