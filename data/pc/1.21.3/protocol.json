@@ -125,256 +125,6 @@
       }
     ],
     "ContainerID": "varint",
-    "SoundEvent": [
-      "container",
-      [
-        {
-          "name": "soundName",
-          "type": "string"
-        },
-        {
-          "name": "fixedRange",
-          "type": [
-            "option",
-            "f32"
-          ]
-        }
-      ]
-    ],
-    "RecipeDisplay": [
-      "container",
-      [
-        {
-          "name": "type",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "crafting_shapeless",
-                "1": "crafting_shaped",
-                "2": "furnace",
-                "3": "stonecutter",
-                "4": "smithing"
-              }
-            }
-          ]
-        },
-        {
-          "name": "data",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "crafting_shapeless": [
-                  "container",
-                  [
-                    {
-                      "name": "ingredients",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "result",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "craftingStation",
-                      "type": "SlotDisplay"
-                    }
-                  ]
-                ],
-                "crafting_shaped": [
-                  "container",
-                  [
-                    {
-                      "name": "width",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "height",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "ingredients",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": "SlotDisplay"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "result",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "craftingStation",
-                      "type": "SlotDisplay"
-                    }
-                  ]
-                ],
-                "furnace": [
-                  "container",
-                  [
-                    {
-                      "name": "ingredient",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "fuel",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "result",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "craftingStation",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "duration",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "experience",
-                      "type": "f32"
-                    }
-                  ]
-                ],
-                "stonecutter": [
-                  "container",
-                  [
-                    {
-                      "name": "ingredient",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "result",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "craftingStation",
-                      "type": "SlotDisplay"
-                    }
-                  ]
-                ],
-                "smithing": [
-                  "container",
-                  [
-                    {
-                      "name": "template",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "base",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "addition",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "result",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "craftingStation",
-                      "type": "SlotDisplay"
-                    }
-                  ]
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    ],
-    "SlotDisplay": [
-      "container",
-      [
-        {
-          "name": "type",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "empty",
-                "1": "any_fuel",
-                "2": "item",
-                "3": "item_stack",
-                "4": "tag",
-                "5": "smithing_trim",
-                "6": "with_remainder",
-                "7": "composite"
-              }
-            }
-          ]
-        },
-        {
-          "name": "data",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "empty": "void",
-                "any_fuel": "void",
-                "item": "varint",
-                "item_stack": "Slot",
-                "tag": "string",
-                "simthing_trim": [
-                  "container",
-                  [
-                    {
-                      "name": "base",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "material",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "pattern",
-                      "type": "SlotDisplay"
-                    }
-                  ]
-                ],
-                "with_remainder": [
-                  "container",
-                  [
-                    {
-                      "name": "input",
-                      "type": "SlotDisplay"
-                    },
-                    {
-                      "name": "remainder",
-                      "type": "SlotDisplay"
-                    }
-                  ]
-                ],
-                "composite": [
-                  "array",
-                  {
-                    "countType": "varint",
-                    "type": "SlotDisplay"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    ],
     "SlotComponentType": [
       "mapper",
       {
@@ -531,7 +281,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BlockPredicate"
+                          "type": "ItemBlockPredicate"
                         }
                       ]
                     },
@@ -550,7 +300,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BlockPredicate"
+                          "type": "ItemBlockPredicate"
                         }
                       ]
                     },
@@ -630,13 +380,57 @@
                     }
                   ]
                 ],
-                "custom_model_data": "varint",
+                "custom_model_data": [
+                  "container",
+                  [
+                    {
+                      "name": "floats",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "f32"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "flags",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "bool"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "strings",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "colors",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "i32"
+                        }
+                      ]
+                    }
+                  ]
+                ],
                 "hide_additional_tooltip": "void",
                 "hide_tooltip": "void",
                 "repair_cost": "varint",
                 "creative_slot_lock": "void",
                 "enchantment_glint_override": "bool",
-                "intangible_projectile": "void",
+                "intangible_projectile": "anonymousNbt",
                 "food": [
                   "container",
                   [
@@ -684,16 +478,7 @@
                     },
                     {
                       "name": "sound",
-                      "type": [
-                        "registryEntryHolder",
-                        {
-                          "baseName": "soundId",
-                          "otherwise": {
-                            "name": "data",
-                            "type": "SoundEvent"
-                          }
-                        }
-                      ]
+                      "type": "ItemSoundHolder"
                     },
                     {
                       "name": "makes_particles",
@@ -705,7 +490,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ConsumeEffect"
+                          "type": "ItemConsumeEffect"
                         }
                       ]
                     }
@@ -798,16 +583,7 @@
                     },
                     {
                       "name": "sound",
-                      "type": [
-                        "registryEntryHolder",
-                        {
-                          "baseName": "soundId",
-                          "otherwise": {
-                            "name": "data",
-                            "type": "SoundEvent"
-                          }
-                        }
-                      ]
+                      "type": "ItemSoundHolder"
                     },
                     {
                       "name": "model",
@@ -853,6 +629,7 @@
                     }
                   ]
                 ],
+                "glider": "void",
                 "tooltip_style": "string",
                 "death_protection": [
                   "container",
@@ -863,7 +640,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "ConsumeEffect"
+                          "type": "ItemConsumeEffect"
                         }
                       ]
                     }
@@ -905,7 +682,7 @@
                   [
                     {
                       "name": "color",
-                      "type": "varint"
+                      "type": "i32"
                     },
                     {
                       "name": "showTooltip",
@@ -913,9 +690,9 @@
                     }
                   ]
                 ],
-                "map_color": "varint",
+                "map_color": "i32",
                 "map_id": "varint",
-                "map_decorations": "anonOptionalNbt",
+                "map_decorations": "anonymousNbt",
                 "map_post_processing": "varint",
                 "charged_projectiles": [
                   "container",
@@ -961,7 +738,7 @@
                       "name": "customColor",
                       "type": [
                         "option",
-                        "varint"
+                        "i32"
                       ]
                     },
                     {
@@ -970,13 +747,16 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "PotionEffect"
+                          "type": "ItemPotionEffect"
                         }
                       ]
                     },
                     {
                       "name": "customName",
-                      "type": "string"
+                      "type": [
+                        "option",
+                        "string"
+                      ]
                     }
                   ]
                 ],
@@ -1016,7 +796,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BookPage"
+                          "type": "ItemBookPage"
                         }
                       ]
                     }
@@ -1050,7 +830,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "BookPage"
+                          "type": "ItemWrittenBookPage"
                         }
                       ]
                     },
@@ -1064,99 +844,27 @@
                   "container",
                   [
                     {
-                      "name": "materialType",
-                      "type": "varint"
-                    },
-                    {
-                      "anon": true,
+                      "name": "material",
                       "type": [
-                        "switch",
+                        "registryEntryHolder",
                         {
-                          "compareTo": "materialType",
-                          "fields": {
-                            "0": [
-                              "container",
-                              [
-                                {
-                                  "name": "assetName",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "ingredientId",
-                                  "type": "varint"
-                                },
-                                {
-                                  "name": "itemModelIndex",
-                                  "type": "f32"
-                                },
-                                {
-                                  "name": "numberOfOverrides",
-                                  "type": "optvarint"
-                                },
-                                {
-                                  "name": "override",
-                                  "type": [
-                                    "array",
-                                    {
-                                      "countType": "varint",
-                                      "type": [
-                                        "container",
-                                        [
-                                          {
-                                            "name": "armorMaterialType",
-                                            "type": "varint"
-                                          },
-                                          {
-                                            "name": "overridenAssetName",
-                                            "type": "string"
-                                          }
-                                        ]
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "name": "description",
-                                  "type": "string"
-                                }
-                              ]
-                            ]
+                          "baseName": "materialId",
+                          "otherwise": {
+                            "name": "data",
+                            "type": "ArmorTrimMaterial"
                           }
                         }
                       ]
                     },
                     {
-                      "name": "trimPatternType",
-                      "type": "varint"
-                    },
-                    {
-                      "anon": true,
+                      "name": "pattern",
                       "type": [
-                        "switch",
+                        "registryEntryHolder",
                         {
-                          "compareTo": "trimPatternType",
-                          "fields": {
-                            "0": [
-                              "container",
-                              [
-                                {
-                                  "name": "assetName",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "templateItem",
-                                  "type": "varint"
-                                },
-                                {
-                                  "name": "description",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "decal",
-                                  "type": "bool"
-                                }
-                              ]
-                            ]
+                          "baseName": "patternId",
+                          "otherwise": {
+                            "name": "data",
+                            "type": "ArmorTrimPattern"
                           }
                         }
                       ]
@@ -1172,146 +880,41 @@
                 "bucket_entity_data": "anonymousNbt",
                 "block_entity_data": "anonymousNbt",
                 "instrument": [
-                  "container",
-                  [
-                    {
-                      "name": "instrumentType",
-                      "type": "varint"
-                    },
-                    {
-                      "anon": true,
-                      "type": [
-                        "switch",
-                        {
-                          "compareTo": "instrumentType",
-                          "fields": {
-                            "0": [
-                              "container",
-                              [
-                                {
-                                  "name": "soundEvent",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "useDuration",
-                                  "type": "f32"
-                                },
-                                {
-                                  "name": "range",
-                                  "type": "f32"
-                                }
-                              ]
-                            ]
-                          }
-                        }
-                      ]
+                  "registryEntryHolder",
+                  {
+                    "baseName": "instrumentId",
+                    "otherwise": {
+                      "name": "data",
+                      "type": "InstrumentData"
                     }
-                  ]
+                  }
                 ],
                 "ominous_bottle_amplifier": "varint",
                 "jukebox_playable": [
                   "container",
                   [
                     {
-                      "name": "directMode",
+                      "name": "hasHolder",
                       "type": "bool"
                     },
                     {
-                      "anon": true,
+                      "name": "song",
                       "type": [
                         "switch",
                         {
-                          "compareTo": "directMode",
+                          "compareTo": "hasHolder",
                           "fields": {
                             "true": [
-                              "container",
-                              [
-                                {
-                                  "name": "jukeboxSongName",
-                                  "type": "string"
-                                },
-                                {
-                                  "name": "jukeboxSongType",
-                                  "type": "varint"
-                                },
-                                {
-                                  "anon": true,
-                                  "type": [
-                                    "switch",
-                                    {
-                                      "compareTo": "jukeboxSongType",
-                                      "fields": {
-                                        "0": [
-                                          "container",
-                                          [
-                                            {
-                                              "name": "soundEvent",
-                                              "type": [
-                                                "container",
-                                                [
-                                                  {
-                                                    "name": "soundEventType",
-                                                    "type": "varint"
-                                                  },
-                                                  {
-                                                    "anon": true,
-                                                    "type": [
-                                                      "switch",
-                                                      {
-                                                        "compareTo": "soundEventType",
-                                                        "fields": {
-                                                          "0": [
-                                                            "container",
-                                                            [
-                                                              {
-                                                                "name": "soundName",
-                                                                "type": "string"
-                                                              },
-                                                              {
-                                                                "name": "fixedRange",
-                                                                "type": [
-                                                                  "option",
-                                                                  "f32"
-                                                                ]
-                                                              }
-                                                            ]
-                                                          ]
-                                                        }
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              ]
-                                            }
-                                          ]
-                                        ]
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "name": "description",
-                                  "type": "anonymousNbt"
-                                },
-                                {
-                                  "name": "duration",
-                                  "type": "f32"
-                                },
-                                {
-                                  "name": "output",
-                                  "type": "varint"
+                              "registryEntryHolder",
+                              {
+                                "baseName": "songId",
+                                "otherwise": {
+                                  "name": "data",
+                                  "type": "JukeboxSongData"
                                 }
-                              ]
+                              }
                             ],
-                            "false": [
-                              "container",
-                              [
-                                {
-                                  "name": "songLocation",
-                                  "type": "string"
-                                }
-                              ]
-                            ]
+                            "false": "string"
                           }
                         }
                       ]
@@ -1351,7 +954,7 @@
                     }
                   ]
                 ],
-                "firework_explosion": "FireworkExplosion",
+                "firework_explosion": "ItemFireworkExplosion",
                 "fireworks": [
                   "container",
                   [
@@ -1365,7 +968,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "FireworkExplosion"
+                          "type": "ItemFireworkExplosion"
                         }
                       ]
                     }
@@ -1375,20 +978,18 @@
                   "container",
                   [
                     {
-                      "name": "hasName",
-                      "type": "bool"
-                    },
-                    {
                       "name": "name",
-                      "type": "string"
+                      "type": [
+                        "option",
+                        "string"
+                      ]
                     },
                     {
-                      "name": "hasUniqueId",
-                      "type": "bool"
-                    },
-                    {
-                      "name": "uniqueId",
-                      "type": "UUID"
+                      "name": "uuid",
+                      "type": [
+                        "option",
+                        "UUID"
+                      ]
                     },
                     {
                       "name": "properties",
@@ -1400,7 +1001,7 @@
                             "container",
                             [
                               {
-                                "name": "property",
+                                "name": "name",
                                 "type": "string"
                               },
                               {
@@ -1408,12 +1009,11 @@
                                 "type": "string"
                               },
                               {
-                                "name": "hasSignature",
-                                "type": "bool"
-                              },
-                              {
                                 "name": "signature",
-                                "type": "string"
+                                "type": [
+                                  "option",
+                                  "string"
+                                ]
                               }
                             ]
                           ]
@@ -1432,43 +1032,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": [
-                            "container",
-                            [
-                              {
-                                "name": "patternType",
-                                "type": "varint"
-                              },
-                              {
-                                "anon": true,
-                                "type": [
-                                  "switch",
-                                  {
-                                    "compareTo": "patternType",
-                                    "fields": {
-                                      "0": [
-                                        "container",
-                                        [
-                                          {
-                                            "name": "assetId",
-                                            "type": "string"
-                                          },
-                                          {
-                                            "name": "translationKey",
-                                            "type": "string"
-                                          }
-                                        ]
-                                      ]
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "color",
-                                "type": "varint"
-                              }
-                            ]
-                          ]
+                          "type": "BannerPatternLayer"
                         }
                       ]
                     }
@@ -1518,7 +1082,7 @@
                             "container",
                             [
                               {
-                                "name": "property",
+                                "name": "name",
                                 "type": "string"
                               },
                               {
@@ -1568,6 +1132,449 @@
               }
             }
           ]
+        }
+      ]
+    ],
+    "ItemSoundEvent": [
+      "container",
+      [
+        {
+          "name": "soundName",
+          "type": "string"
+        },
+        {
+          "name": "fixedRange",
+          "type": [
+            "option",
+            "f32"
+          ]
+        }
+      ]
+    ],
+    "ItemSoundHolder": [
+      "registryEntryHolder",
+      {
+        "baseName": "soundId",
+        "otherwise": {
+          "name": "data",
+          "type": "ItemSoundEvent"
+        }
+      }
+    ],
+    "ItemFireworkExplosion": [
+      "container",
+      [
+        {
+          "name": "shape",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "small_ball",
+                "1": "large_ball",
+                "2": "star",
+                "3": "creeper",
+                "4": "burst"
+              }
+            }
+          ]
+        },
+        {
+          "name": "colors",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "i32"
+            }
+          ]
+        },
+        {
+          "name": "fadeColors",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "i32"
+            }
+          ]
+        },
+        {
+          "name": "hasTrail",
+          "type": "bool"
+        },
+        {
+          "name": "hasTwinkle",
+          "type": "bool"
+        }
+      ]
+    ],
+    "ItemEffectDetail": [
+      "container",
+      [
+        {
+          "name": "amplifier",
+          "type": "varint"
+        },
+        {
+          "name": "duration",
+          "type": "varint"
+        },
+        {
+          "name": "ambient",
+          "type": "bool"
+        },
+        {
+          "name": "showParticles",
+          "type": "bool"
+        },
+        {
+          "name": "showIcon",
+          "type": "bool"
+        },
+        {
+          "name": "hiddenEffect",
+          "type": [
+            "option",
+            "ItemEffectDetail"
+          ]
+        }
+      ]
+    ],
+    "ItemPotionEffect": [
+      "container",
+      [
+        {
+          "name": "id",
+          "type": "varint"
+        },
+        {
+          "name": "details",
+          "type": "ItemEffectDetail"
+        }
+      ]
+    ],
+    "ItemBlockProperty": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "isExactMatch",
+          "type": "bool"
+        },
+        {
+          "name": "value",
+          "type": [
+            "switch",
+            {
+              "compareTo": "isExactMatch",
+              "fields": {
+                "true": [
+                  "container",
+                  [
+                    {
+                      "name": "exactValue",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "false": [
+                  "container",
+                  [
+                    {
+                      "name": "minValue",
+                      "type": "string"
+                    },
+                    {
+                      "name": "maxValue",
+                      "type": "string"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "ItemBlockPredicate": [
+      "container",
+      [
+        {
+          "name": "blockSet",
+          "type": [
+            "option",
+            [
+              "registryEntryHolderSet",
+              {
+                "base": {
+                  "name": "name",
+                  "type": "string"
+                },
+                "otherwise": {
+                  "name": "blockIds",
+                  "type": "varint"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "properties",
+          "type": [
+            "option",
+            [
+              "array",
+              {
+                "countType": "varint",
+                "type": "ItemBlockProperty"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "nbt",
+          "type": "anonOptionalNbt"
+        }
+      ]
+    ],
+    "ItemBookPage": [
+      "container",
+      [
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "filteredContent",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "ItemWrittenBookPage": [
+      "container",
+      [
+        {
+          "name": "content",
+          "type": "anonymousNbt"
+        },
+        {
+          "name": "filteredContent",
+          "type": "anonOptionalNbt"
+        }
+      ]
+    ],
+    "ItemConsumeEffect": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "apply_effects",
+                "1": "remove_effects",
+                "2": "clear_all_effects",
+                "3": "teleport_randomly",
+                "4": "play_sound"
+              }
+            }
+          ]
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "apply_effects": [
+                  "container",
+                  [
+                    {
+                      "name": "effects",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "ItemPotionEffect"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "probability",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "remove_effects": [
+                  "container",
+                  [
+                    {
+                      "name": "effects",
+                      "type": "IDSet"
+                    }
+                  ]
+                ],
+                "clear_all_effects": "void",
+                "teleport_randomly": [
+                  "container",
+                  [
+                    {
+                      "name": "diameter",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "play_sound": [
+                  "container",
+                  [
+                    {
+                      "name": "sound",
+                      "type": "ItemSoundHolder"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "ArmorTrimMaterial": [
+      "container",
+      [
+        {
+          "name": "assetName",
+          "type": "string"
+        },
+        {
+          "name": "ingredientId",
+          "type": "varint"
+        },
+        {
+          "name": "overrideArmorAssets",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "key",
+                    "type": "string"
+                  },
+                  {
+                    "name": "value",
+                    "type": "string"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "name": "description",
+          "type": "anonymousNbt"
+        }
+      ]
+    ],
+    "ArmorTrimPattern": [
+      "container",
+      [
+        {
+          "name": "assetId",
+          "type": "string"
+        },
+        {
+          "name": "templateItemId",
+          "type": "varint"
+        },
+        {
+          "name": "description",
+          "type": "anonymousNbt"
+        },
+        {
+          "name": "decal",
+          "type": "bool"
+        }
+      ]
+    ],
+    "InstrumentData": [
+      "container",
+      [
+        {
+          "name": "soundEvent",
+          "type": "ItemSoundHolder"
+        },
+        {
+          "name": "useDuration",
+          "type": "f32"
+        },
+        {
+          "name": "range",
+          "type": "f32"
+        },
+        {
+          "name": "description",
+          "type": "anonymousNbt"
+        }
+      ]
+    ],
+    "JukeboxSongData": [
+      "container",
+      [
+        {
+          "name": "soundEvent",
+          "type": "ItemSoundHolder"
+        },
+        {
+          "name": "description",
+          "type": "anonymousNbt"
+        },
+        {
+          "name": "lengthInSeconds",
+          "type": "f32"
+        },
+        {
+          "name": "comparatorOutput",
+          "type": "varint"
+        }
+      ]
+    ],
+    "BannerPattern": [
+      "container",
+      [
+        {
+          "name": "assetId",
+          "type": "string"
+        },
+        {
+          "name": "translationKey",
+          "type": "string"
+        }
+      ]
+    ],
+    "BannerPatternLayer": [
+      "container",
+      [
+        {
+          "name": "pattern",
+          "type": "ItemSoundHolder"
+        },
+        {
+          "name": "colorId",
+          "type": "varint"
         }
       ]
     ],
@@ -1634,279 +1641,6 @@
               ]
             }
           ]
-        }
-      ]
-    ],
-    "FireworkExplosion": [
-      "container",
-      [
-        {
-          "name": "shape",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "small_ball",
-                "1": "large_ball",
-                "2": "star",
-                "3": "creeper",
-                "4": "burst"
-              }
-            }
-          ]
-        },
-        {
-          "name": "colors",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": "i32"
-            }
-          ]
-        },
-        {
-          "name": "fadeColors",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": "i32"
-            }
-          ]
-        },
-        {
-          "name": "hasTrail",
-          "type": "bool"
-        },
-        {
-          "name": "hasTwinkle",
-          "type": "bool"
-        }
-      ]
-    ],
-    "BookPage": [
-      "container",
-      [
-        {
-          "name": "content",
-          "type": "string"
-        },
-        {
-          "name": "filteredContent",
-          "type": [
-            "option",
-            "string"
-          ]
-        }
-      ]
-    ],
-    "EffectDetail": [
-      "container",
-      [
-        {
-          "name": "amplifier",
-          "type": "varint"
-        },
-        {
-          "name": "duration",
-          "type": "varint"
-        },
-        {
-          "name": "ambient",
-          "type": "bool"
-        },
-        {
-          "name": "showParticles",
-          "type": "bool"
-        },
-        {
-          "name": "showIcon",
-          "type": "bool"
-        },
-        {
-          "name": "hiddenEffect",
-          "type": [
-            "option",
-            "EffectDetail"
-          ]
-        }
-      ]
-    ],
-    "PotionEffect": [
-      "container",
-      [
-        {
-          "name": "id",
-          "type": "varint"
-        },
-        {
-          "name": "details",
-          "type": "EffectDetail"
-        }
-      ]
-    ],
-    "ConsumeEffect": [
-      "container",
-      [
-        {
-          "name": "type",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "apply_effects",
-                "1": "remove_effects",
-                "2": "clear_all_effects",
-                "3": "teleport_randomly",
-                "4": "play_sound"
-              }
-            }
-          ]
-        },
-        {
-          "anon": true,
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "apply_effects": [
-                  "container",
-                  [
-                    {
-                      "name": "effects",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": "PotionEffect"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "probability",
-                      "type": "f32"
-                    }
-                  ]
-                ],
-                "remove_effects": [
-                  "container",
-                  [
-                    {
-                      "name": "effects",
-                      "type": "IDSet"
-                    }
-                  ]
-                ],
-                "clear_all_effects": "void",
-                "teleport_randomly": [
-                  "container",
-                  [
-                    {
-                      "name": "diameter",
-                      "type": "f32"
-                    }
-                  ]
-                ],
-                "play_sound": [
-                  "container",
-                  [
-                    {
-                      "name": "sound",
-                      "type": [
-                        "registryEntryHolder",
-                        {
-                          "baseName": "soundId",
-                          "otherwise": {
-                            "name": "data",
-                            "type": "SoundEvent"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    ],
-    "BlockProperty": [
-      "container",
-      [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "isExactMatch",
-          "type": "bool"
-        },
-        {
-          "name": "exactValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        },
-        {
-          "name": "minValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        },
-        {
-          "name": "maxValue",
-          "type": [
-            "option",
-            "string"
-          ]
-        }
-      ]
-    ],
-    "BlockPredicate": [
-      "container",
-      [
-        {
-          "name": "blockSet",
-          "type": [
-            "option",
-            [
-              "registryEntryHolderSet",
-              {
-                "base": {
-                  "name": "name",
-                  "type": "string"
-                },
-                "otherwise": {
-                  "name": "blockIds",
-                  "type": "varint"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "properties",
-          "type": [
-            "option",
-            [
-              "array",
-              {
-                "countType": "varint",
-                "type": "BlockProperty"
-              }
-            ]
-          ]
-        },
-        {
-          "name": "nbt",
-          "type": "anonOptionalNbt"
         }
       ]
     ],
@@ -2109,7 +1843,7 @@
                   "container",
                   [
                     {
-                      "name": "position_type",
+                      "name": "positionType",
                       "type": [
                         "mapper",
                         {
@@ -2126,7 +1860,7 @@
                       "type": [
                         "switch",
                         {
-                          "compareTo": "position_type",
+                          "compareTo": "positionType",
                           "fields": {
                             "block": "position",
                             "entity": [
@@ -2137,7 +1871,7 @@
                                   "type": "varint"
                                 },
                                 {
-                                  "name": "entity_eye_height",
+                                  "name": "entityEyeHeight",
                                   "type": "f32"
                                 }
                               ]
@@ -2601,7 +2335,7 @@
                 "container",
                 [
                   {
-                    "name": "key",
+                    "name": "name",
                     "type": "string"
                   },
                   {
@@ -3139,6 +2873,57 @@
                     }
                   ]
                 ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "packet_common_settings": [
+      "container",
+      [
+        {
+          "name": "locale",
+          "type": "string"
+        },
+        {
+          "name": "viewDistance",
+          "type": "i8"
+        },
+        {
+          "name": "chatFlags",
+          "type": "varint"
+        },
+        {
+          "name": "chatColors",
+          "type": "bool"
+        },
+        {
+          "name": "skinParts",
+          "type": "u8"
+        },
+        {
+          "name": "mainHand",
+          "type": "varint"
+        },
+        {
+          "name": "enableTextFiltering",
+          "type": "bool"
+        },
+        {
+          "name": "enableServerListing",
+          "type": "bool"
+        },
+        {
+          "name": "particleStatus",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "all",
+                "1": "decreased",
+                "2": "minimal"
               }
             }
           ]
@@ -4002,47 +3787,6 @@
     },
     "toServer": {
       "types": {
-        "packet_settings": [
-          "container",
-          [
-            {
-              "name": "locale",
-              "type": "string"
-            },
-            {
-              "name": "viewDistance",
-              "type": "i8"
-            },
-            {
-              "name": "chatFlags",
-              "type": "varint"
-            },
-            {
-              "name": "chatColors",
-              "type": "bool"
-            },
-            {
-              "name": "skinParts",
-              "type": "u8"
-            },
-            {
-              "name": "mainHand",
-              "type": "varint"
-            },
-            {
-              "name": "enableTextFiltering",
-              "type": "bool"
-            },
-            {
-              "name": "enableServerListing",
-              "type": "bool"
-            },
-            {
-              "name": "particles",
-              "type": "varint"
-            }
-          ]
-        ],
         "packet_custom_payload": [
           "container",
           [
@@ -4122,7 +3866,7 @@
                 {
                   "compareTo": "name",
                   "fields": {
-                    "settings": "packet_settings",
+                    "settings": "packet_common_settings",
                     "cookie_response": "packet_common_cookie_response",
                     "custom_payload": "packet_custom_payload",
                     "finish_configuration": "packet_finish_configuration",
@@ -4144,6 +3888,240 @@
   "play": {
     "toClient": {
       "types": {
+        "SlotDisplay": [
+          "container",
+          [
+            {
+              "name": "type",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "empty",
+                    "1": "any_fuel",
+                    "2": "item",
+                    "3": "item_stack",
+                    "4": "tag",
+                    "5": "smithing_trim",
+                    "6": "with_remainder",
+                    "7": "composite"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "data",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "type",
+                  "fields": {
+                    "empty": "void",
+                    "any_fuel": "void",
+                    "item": "varint",
+                    "item_stack": "Slot",
+                    "tag": "string",
+                    "simthing_trim": [
+                      "container",
+                      [
+                        {
+                          "name": "base",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "material",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "pattern",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ],
+                    "with_remainder": [
+                      "container",
+                      [
+                        {
+                          "name": "input",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "remainder",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ],
+                    "composite": [
+                      "array",
+                      {
+                        "countType": "varint",
+                        "type": "SlotDisplay"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "RecipeDisplay": [
+          "container",
+          [
+            {
+              "name": "type",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "crafting_shapeless",
+                    "1": "crafting_shaped",
+                    "2": "furnace",
+                    "3": "stonecutter",
+                    "4": "smithing"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "data",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "type",
+                  "fields": {
+                    "crafting_shapeless": [
+                      "container",
+                      [
+                        {
+                          "name": "ingredients",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "SlotDisplay"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "result",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "craftingStation",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ],
+                    "crafting_shaped": [
+                      "container",
+                      [
+                        {
+                          "name": "width",
+                          "type": "varint"
+                        },
+                        {
+                          "name": "height",
+                          "type": "varint"
+                        },
+                        {
+                          "name": "ingredients",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "SlotDisplay"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "result",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "craftingStation",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ],
+                    "furnace": [
+                      "container",
+                      [
+                        {
+                          "name": "ingredient",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "fuel",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "result",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "craftingStation",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "duration",
+                          "type": "varint"
+                        },
+                        {
+                          "name": "experience",
+                          "type": "f32"
+                        }
+                      ]
+                    ],
+                    "stonecutter": [
+                      "container",
+                      [
+                        {
+                          "name": "ingredient",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "result",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "craftingStation",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ],
+                    "smithing": [
+                      "container",
+                      [
+                        {
+                          "name": "template",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "base",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "addition",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "result",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "craftingStation",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        ],
         "SpawnInfo": [
           "container",
           [
@@ -4864,35 +4842,24 @@
           "container",
           [
             {
-              "name": "registryIndex",
-              "type": "varint"
+              "name": "chat",
+              "type": "ChatType"
             },
             {
-              "anon": true,
-              "type": [
-                "switch",
-                {
-                  "compareTo": "registryIndex",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "chat",
-                          "type": "ChatType"
-                        },
-                        {
-                          "name": "narration",
-                          "type": "ChatType"
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "narration",
+              "type": "ChatType"
             }
           ]
+        ],
+        "ChatTypesHolder": [
+          "registryEntryHolder",
+          {
+            "baseName": "chatType",
+            "otherwise": {
+              "name": "data",
+              "type": "ChatTypes"
+            }
+          }
         ],
         "packet_profileless_chat": [
           "container",
@@ -4903,7 +4870,7 @@
             },
             {
               "name": "type",
-              "type": "ChatTypes"
+              "type": "ChatTypesHolder"
             },
             {
               "name": "name",
@@ -4980,8 +4947,16 @@
           "container",
           [
             {
-              "name": "center",
-              "type": "vec3f"
+              "name": "x",
+              "type": "f64"
+            },
+            {
+              "name": "y",
+              "type": "f64"
+            },
+            {
+              "name": "z",
+              "type": "f64"
             },
             {
               "name": "playerKnockback",
@@ -4995,39 +4970,8 @@
               "type": "Particle"
             },
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "anon": true,
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "soundName",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": [
-                    "container",
-                    []
-                  ]
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             }
           ]
         ],
@@ -6004,7 +5948,7 @@
             },
             {
               "name": "type",
-              "type": "ChatTypes"
+              "type": "ChatTypesHolder"
             },
             {
               "name": "networkName",
@@ -6076,7 +6020,7 @@
                     "update_listed",
                     "update_latency",
                     "update_display_name",
-                    "update_priority"
+                    "update_list_order"
                   ]
                 }
               ]
@@ -6166,7 +6110,10 @@
                           {
                             "compareTo": "../action/update_display_name",
                             "fields": {
-                              "true": "anonOptionalNbt"
+                              "true": [
+                                "option",
+                                "anonymousNbt"
+                              ]
                             },
                             "default": "void"
                           }
@@ -6177,7 +6124,7 @@
                         "type": [
                           "switch",
                           {
-                            "compareTo": "../action/update_priority",
+                            "compareTo": "../action/update_list_order",
                             "fields": {
                               "true": "varint"
                             },
@@ -7238,36 +7185,8 @@
           "container",
           [
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "name": "soundEvent",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "resource",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             },
             {
               "name": "soundCategory",
@@ -7295,36 +7214,8 @@
           "container",
           [
             {
-              "name": "soundId",
-              "type": "varint"
-            },
-            {
-              "name": "soundEvent",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "soundId",
-                  "fields": {
-                    "0": [
-                      "container",
-                      [
-                        {
-                          "name": "resource",
-                          "type": "string"
-                        },
-                        {
-                          "name": "range",
-                          "type": [
-                            "option",
-                            "f32"
-                          ]
-                        }
-                      ]
-                    ]
-                  },
-                  "default": "void"
-                }
-              ]
+              "name": "sound",
+              "type": "ItemSoundHolder"
             },
             {
               "name": "soundCategory",
@@ -8402,57 +8293,6 @@
           "container",
           []
         ],
-        "packet_settings": [
-          "container",
-          [
-            {
-              "name": "locale",
-              "type": "string"
-            },
-            {
-              "name": "viewDistance",
-              "type": "i8"
-            },
-            {
-              "name": "chatFlags",
-              "type": "varint"
-            },
-            {
-              "name": "chatColors",
-              "type": "bool"
-            },
-            {
-              "name": "skinParts",
-              "type": "u8"
-            },
-            {
-              "name": "mainHand",
-              "type": "varint"
-            },
-            {
-              "name": "enableTextFiltering",
-              "type": "bool"
-            },
-            {
-              "name": "enableServerListing",
-              "type": "bool"
-            },
-            {
-              "name": "particleStatus",
-              "type": [
-                "mapper",
-                {
-                  "type": "varint",
-                  "mappings": {
-                    "0": "all",
-                    "1": "decreased",
-                    "2": "minimal"
-                  }
-                }
-              ]
-            }
-          ]
-        ],
         "packet_tab_complete": [
           "container",
           [
@@ -9426,7 +9266,7 @@
                     "chunk_batch_received": "packet_chunk_batch_received",
                     "client_command": "packet_client_command",
                     "tick_end": "packet_tick_end",
-                    "settings": "packet_settings",
+                    "settings": "packet_common_settings",
                     "tab_complete": "packet_tab_complete",
                     "configuration_acknowledged": "packet_configuration_acknowledged",
                     "enchant_item": "packet_enchant_item",

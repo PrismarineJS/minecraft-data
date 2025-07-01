@@ -22,6 +22,7 @@
    entityMetadataLoop: native
    topBitSetTerminatedArray: native
    bitfield: native
+   bitflags: native
    container: native
    switch: native
    void: native
@@ -29,12 +30,10 @@
    restBuffer: native
    nbt: native
    optionalNbt: native
-   string: [
-      "pstring",
-      {
-         "countType": "varint"
-      }
-   ]
+   registryEntryHolder: native
+   registryEntryHolderSet: native
+   ByteArray: ["buffer", { "countType": "varint" }]
+   string: ["pstring", { "countType": "varint" }]
    slot:   
       present: bool
       _: present ?
@@ -43,6 +42,13 @@
             itemId: varint
             itemCount: i8
             nbtData: optionalNbt
+   ItemSoundEvent:
+      soundName: string
+      fixedRange?: f32
+   ItemSoundHolder: ["registryEntryHolder", {
+      "baseName": "soundId",
+      "otherwise": { name: "data", type: "ItemSoundEvent" }
+   }]
    particle:   
       particleId: varint
       data: [
@@ -261,7 +267,7 @@
    game_profile:   
       name: string
       properties: []varint
-         key: string
+         name: string
          value: string
          signature?: string
    command_node:   
@@ -1111,308 +1117,37 @@
    packet_player_remove:   
       players: UUID[]varint
    packet_player_info:   
-      action: i8
+      ## ClientboundPlayerInfoUpdatePacket.java#L160
+      action: ["bitflags", {
+         "type": "u8",
+         "flags": [
+            "add_player",
+            "initialize_chat",
+            "update_game_mode",
+            "update_listed",
+            "update_latency",
+            "update_display_name"
+         ]
+      }]
       data: []varint
          uuid: UUID
-         player: ../action ?
-            if 1: game_profile
-            if 3: game_profile
-            if 5: game_profile
-            if 7: game_profile
-            if 9: game_profile
-            if 11: game_profile
-            if 13: game_profile
-            if 15: game_profile
-            if 17: game_profile
-            if 19: game_profile
-            if 21: game_profile
-            if 23: game_profile
-            if 25: game_profile
-            if 27: game_profile
-            if 29: game_profile
-            if 31: game_profile
-            if 33: game_profile
-            if 35: game_profile
-            if 37: game_profile
-            if 39: game_profile
-            if 41: game_profile
-            if 43: game_profile
-            if 45: game_profile
-            if 47: game_profile
-            if 49: game_profile
-            if 51: game_profile
-            if 53: game_profile
-            if 55: game_profile
-            if 57: game_profile
-            if 59: game_profile
-            if 61: game_profile
-            if 63: game_profile
+         player: ../action/add_player ?
+            if true: game_profile
             default: void
-         chatSession: ../action ?
-            if 2: chat_session
-            if 3: chat_session
-            if 6: chat_session
-            if 7: chat_session
-            if 10: chat_session
-            if 11: chat_session
-            if 14: chat_session
-            if 15: chat_session
-            if 18: chat_session
-            if 19: chat_session
-            if 22: chat_session
-            if 23: chat_session
-            if 26: chat_session
-            if 27: chat_session
-            if 30: chat_session
-            if 31: chat_session
-            if 34: chat_session
-            if 35: chat_session
-            if 38: chat_session
-            if 39: chat_session
-            if 42: chat_session
-            if 43: chat_session
-            if 46: chat_session
-            if 47: chat_session
-            if 50: chat_session
-            if 51: chat_session
-            if 54: chat_session
-            if 55: chat_session
-            if 58: chat_session
-            if 59: chat_session
-            if 62: chat_session
-            if 63: chat_session
+         chatSession: ../action/initialize_chat ?
+            if true: chat_session
             default: void
-         gamemode: ../action ?
-            if 4: varint
-            if 5: varint
-            if 6: varint
-            if 7: varint
-            if 12: varint
-            if 13: varint
-            if 14: varint
-            if 15: varint
-            if 20: varint
-            if 21: varint
-            if 22: varint
-            if 23: varint
-            if 28: varint
-            if 29: varint
-            if 30: varint
-            if 31: varint
-            if 36: varint
-            if 37: varint
-            if 38: varint
-            if 39: varint
-            if 44: varint
-            if 45: varint
-            if 46: varint
-            if 47: varint
-            if 52: varint
-            if 53: varint
-            if 54: varint
-            if 55: varint
-            if 60: varint
-            if 61: varint
-            if 62: varint
-            if 63: varint
+         gamemode: ../action/update_game_mode ?
+            if true: varint
             default: void
-         listed: ../action ?
-            if 8: bool
-            if 9: bool
-            if 10: bool
-            if 11: bool
-            if 12: bool
-            if 13: bool
-            if 14: bool
-            if 15: bool
-            if 24: bool
-            if 25: bool
-            if 26: bool
-            if 27: bool
-            if 28: bool
-            if 29: bool
-            if 30: bool
-            if 31: bool
-            if 40: bool
-            if 41: bool
-            if 42: bool
-            if 43: bool
-            if 44: bool
-            if 45: bool
-            if 46: bool
-            if 47: bool
-            if 56: bool
-            if 57: bool
-            if 58: bool
-            if 59: bool
-            if 60: bool
-            if 61: bool
-            if 62: bool
-            if 63: bool
+         listed: ../action/update_listed ?
+            if true: varint
             default: void
-         latency: ../action ?
-            if 16: varint
-            if 17: varint
-            if 18: varint
-            if 19: varint
-            if 20: varint
-            if 21: varint
-            if 22: varint
-            if 23: varint
-            if 24: varint
-            if 25: varint
-            if 26: varint
-            if 27: varint
-            if 28: varint
-            if 29: varint
-            if 30: varint
-            if 31: varint
-            if 48: varint
-            if 49: varint
-            if 50: varint
-            if 51: varint
-            if 52: varint
-            if 53: varint
-            if 54: varint
-            if 55: varint
-            if 56: varint
-            if 57: varint
-            if 58: varint
-            if 59: varint
-            if 60: varint
-            if 61: varint
-            if 62: varint
-            if 63: varint
+         latency: ../action/update_latency ?
+            if true: varint
             default: void
-         displayName: ../action ?
-            if 32: [
-               "option",
-               "string"
-            ]
-            if 33: [
-               "option",
-               "string"
-            ]
-            if 34: [
-               "option",
-               "string"
-            ]
-            if 35: [
-               "option",
-               "string"
-            ]
-            if 36: [
-               "option",
-               "string"
-            ]
-            if 37: [
-               "option",
-               "string"
-            ]
-            if 38: [
-               "option",
-               "string"
-            ]
-            if 39: [
-               "option",
-               "string"
-            ]
-            if 40: [
-               "option",
-               "string"
-            ]
-            if 41: [
-               "option",
-               "string"
-            ]
-            if 42: [
-               "option",
-               "string"
-            ]
-            if 43: [
-               "option",
-               "string"
-            ]
-            if 44: [
-               "option",
-               "string"
-            ]
-            if 45: [
-               "option",
-               "string"
-            ]
-            if 46: [
-               "option",
-               "string"
-            ]
-            if 47: [
-               "option",
-               "string"
-            ]
-            if 48: [
-               "option",
-               "string"
-            ]
-            if 49: [
-               "option",
-               "string"
-            ]
-            if 50: [
-               "option",
-               "string"
-            ]
-            if 51: [
-               "option",
-               "string"
-            ]
-            if 52: [
-               "option",
-               "string"
-            ]
-            if 53: [
-               "option",
-               "string"
-            ]
-            if 54: [
-               "option",
-               "string"
-            ]
-            if 55: [
-               "option",
-               "string"
-            ]
-            if 56: [
-               "option",
-               "string"
-            ]
-            if 57: [
-               "option",
-               "string"
-            ]
-            if 58: [
-               "option",
-               "string"
-            ]
-            if 59: [
-               "option",
-               "string"
-            ]
-            if 60: [
-               "option",
-               "string"
-            ]
-            if 61: [
-               "option",
-               "string"
-            ]
-            if 62: [
-               "option",
-               "string"
-            ]
-            if 63: [
-               "option",
-               "string"
-            ]
+         displayName: ../action/update_display_name ?
+            if true: ["option", "string"]
             default: void
    packet_position:   
       x: f64
@@ -1599,12 +1334,7 @@
          if 3: string
          default: void
    packet_sound_effect:   
-      soundId: varint
-      soundEvent: soundId ?
-         if 0:         
-            resource: string
-            range?: f32
-         default: void
+      sound: ItemSoundHolder
       soundCategory: soundSource
       x: i32
       y: i32
@@ -1633,7 +1363,7 @@
    packet_entity_update_attributes:   
       entityId: varint
       properties: []varint
-         key: string
+         name: string
          value: f64
          modifiers: []varint
             uuid: UUID

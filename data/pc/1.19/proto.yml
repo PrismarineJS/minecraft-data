@@ -21,6 +21,7 @@
    entityMetadataLoop: native
    topBitSetTerminatedArray: native
    bitfield: native
+   bitflags: native
    container: native
    switch: native
    void: native
@@ -28,12 +29,8 @@
    restBuffer: native
    nbt: native
    optionalNbt: native
-   string: [
-      "pstring",
-      {
-         "countType": "varint"
-      }
-   ]
+   ByteArray: ["buffer", { "countType": "varint" }]
+   string: ["pstring", { "countType": "varint" }]
    slot:   
       present: bool
       _: present ?
@@ -1063,69 +1060,39 @@
       playerId: varint
       entityId: i32
       message: string
+   # MC: ClientboundPlayerInfoPacket
    packet_player_info:   
-      action: varint
+      action: varint =>
+         - add_player
+         - update_game_mode
+         - update_latency
+         - update_display_name
+         - remove_player
       data: []varint
-         UUID: UUID
-         name: ../action ?
-            if 0: string
-            default: void
-         properties: ../action ?
-            if 0: []varint
+         uuid: UUID
+         _: ../action ?
+            if add_player:
                name: string
-               value: string
-               signature?: string
-            default: void
-         gamemode: ../action ?
-            if 0: varint
-            if 1: varint
-            default: void
-         ping: ../action ?
-            if 0: varint
-            if 2: varint
-            default: void
-         displayName: ../action ?
-            if 0: [
-               "option",
-               "string"
-            ]
-            if 3: [
-               "option",
-               "string"
-            ]
-            default: void
-         crypto: ../action ?
-            if 0: [
-               "option",
-               [
-                  "container",
-                  [
-                     {
-                        "name": "timestamp",
-                        "type": "i64"
-                     },
-                     {
-                        "name": "publicKey",
-                        "type": [
-                           "buffer",
-                           {
-                              "countType": "varint"
-                           }
-                        ]
-                     },
-                     {
-                        "name": "signature",
-                        "type": [
-                           "buffer",
-                           {
-                              "countType": "varint"
-                           }
-                        ]
-                     }
-                  ]
-               ]
-            ]
-            default: void
+               properties: []varint
+                  name: string
+                  value: string
+                  signature?: string
+               gamemode: varint
+               ping: varint
+               displayName?: string
+               ## ProfilePublicKey.java#L75
+               crypto?:
+                  # What time the following key expires at
+                  timestamp: i64
+                  publicKey: ByteArray
+                  signature: ByteArray
+            if update_game_mode:
+               gamemode: varint
+            if update_latency:
+               ping: varint
+            if update_display_name:
+               displayName?: string
+            if remove_player: void
    packet_position:   
       x: f64
       y: f64
@@ -1337,7 +1304,7 @@
    packet_entity_update_attributes:   
       entityId: varint
       properties: []varint
-         key: string
+         name: string
          value: f64
          modifiers: []varint
             uuid: UUID
