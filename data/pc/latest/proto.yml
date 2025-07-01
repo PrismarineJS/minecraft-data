@@ -549,14 +549,6 @@
       pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "BannerPattern" } }]
       colorId: varint
 
-   TestInstanceBlockEntity:
-      test?: string
-      size: vec3i
-      rotation: varint
-      ignoreEntities: bool
-      status: varint
-      errorMessage?: anonymousNbt
-
    # This represents a single component within an UntrustedSlot.
    # The 'data' field is a varint-prefixed byte array that contains the actual component data.
    # The code generator will need to know that it should read a varint for length, then the bytes.
@@ -3251,7 +3243,13 @@
    packet_test_instance_block_action:
       pos: position
       action: varint
-      data: TestInstanceBlockEntity
+      data:
+         test?: string
+         size: vec3i
+         rotation: varint
+         ignoreEntities: bool
+         status: varint
+         errorMessage?: anonymousNbt
 
    packet:
       name: varint =>
