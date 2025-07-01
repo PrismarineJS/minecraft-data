@@ -1,4 +1,4 @@
-!version: 1.21.4
+!version: 1.21.5
 !StartDocs: true
 
 ^types:
@@ -51,6 +51,10 @@
       x: f64
       y: f64
       z: f64
+   vec3i:
+      x: varint
+      y: varint
+      z: varint
    IDSet: ["registryEntryHolderSet", {
       "base": { name: "name", type: "string" },
       "otherwise": { name: "ids", type: "varint" }
@@ -72,8 +76,7 @@
       - can_break
       - attribute_modifiers
       - custom_model_data
-      - hide_additional_tooltip
-      - hide_tooltip
+      - tooltip_display
       - repair_cost
       - creative_slot_lock
       - enchantment_glint_override
@@ -84,18 +87,21 @@
       - use_cooldown
       - damage_resistant
       - tool
+      - weapon
       - enchantable
       - equippable
       - repairable
       - glider
       - tooltip_style
       - death_protection
+      - blocks_attacks
       - stored_enchantments
       - dyed_color
       - map_color
       - map_id
       - map_decorations
       - map_post_processing
+      - potion_duration_scale
       - charged_projectiles
       - bundle_contents
       - potion_contents
@@ -108,8 +114,10 @@
       - bucket_entity_data
       - block_entity_data
       - instrument
+      - provides_trim_material
       - ominous_bottle_amplifier
       - jukebox_playable
+      - provides_banner_patterns
       - recipes
       - lodestone_tracker
       - firework_explosion
@@ -124,6 +132,31 @@
       - bees
       - lock
       - container_loot
+      - break_sound
+      - villager/variant
+      - wolf/variant
+      - wolf/sound_variant
+      - wolf/collar
+      - fox/variant
+      - salmon/size
+      - parrot/variant
+      - tropical_fish/pattern
+      - tropical_fish/base_color
+      - tropical_fish/pattern_color
+      - mooshroom/variant
+      - rabbit/variant
+      - pig/variant
+      - cow/variant
+      - chicken/variant
+      - frog/variant
+      - horse/variant
+      - painting/variant
+      - llama/variant
+      - axolotl/variant
+      - cat/variant
+      - cat/collar
+      - sheep/color
+      - shulker/color
 
    # Instead of sending NBT for items over the network, Minecraft since 1.20.5 sends a
    # list of components that make up the item. This saves bandwidth by not encoding tag names.
@@ -136,7 +169,7 @@
          if max_stack_size: varint
          if max_damage: varint
          if damage: varint
-         if unbreakable: bool
+         if unbreakable: void
          if custom_name: anonymousNbt
          if item_name: anonymousNbt
          if item_model: string
@@ -150,10 +183,8 @@
             enchantments: []varint
                id: varint
                level: varint
-            showTooltip: bool
          if can_place_on or can_break:
             predicates: ItemBlockPredicate[]varint
-            showTooltip: bool
          if attribute_modifiers:
             attributes: []varint
                typeId: varint
@@ -174,18 +205,35 @@
                - head
                - armor
                - body
+               - saddle
             showTooltip: bool
          if custom_model_data:
             floats: f32[]varint
             flags: bool[]varint
             strings: string[]varint
             colors: i32[]varint
-         if hide_additional_tooltip: void
-         if hide_tooltip: void
+         if tooltip_display:
+            hideTooltip: bool
+            hiddenComponents: varint[]varint
          if repair_cost: varint
          if creative_slot_lock: void
          if enchantment_glint_override: bool
-         if intangible_projectile: anonymousNbt
+         if intangible_projectile: void
+         if blocks_attacks:
+            blockDelaySeconds: f32
+            disableCooldownScale: f32
+            damageReductions: []varint
+               horizontalBlockingAngle: f32
+               type?: IDSet
+               base: f32
+               factor: f32
+            itemDamage:
+               threshold: f32
+               base: f32
+               factor: f32
+            bypassedBy?: string
+            blockSound?: ItemSoundHolder
+            disableSound?: ItemSoundHolder
          if food: 
             nutrition: varint
             # How much saturation will be given after consuming the item.
@@ -205,6 +253,7 @@
             - spyglass
             - toot_horn
             - brush
+            - bundle
             sound: ItemSoundHolder
             makes_particles: bool
             effects: ItemConsumeEffect[]varint
@@ -223,6 +272,10 @@
             # The mining speed in case none of the previous rule were matched.
             defaultMiningSpeed: f32
             damagePerBlock: varint
+            canDestroyBlocksInCreative: bool
+         if weapon:
+            itemDamagePerAttack: varint
+            disableBlockingForSeconds: f32
          # Enchantment cost up to which the item can be enchanted
          if enchantable: varint
          if equippable:
@@ -234,6 +287,7 @@
             - chest
             - head
             - body
+            - saddle
             sound: ItemSoundHolder
             model?: string
             cameraOverlay?: string
@@ -241,6 +295,7 @@
             dispensable: bool
             swappable: bool
             damageable: bool
+            equipOnInteract: bool
          if repairable:
             items: IDSet
          if glider: void
@@ -252,15 +307,12 @@
                # The ID of the enchantment in the enchantment registry.
                id: varint
                level: varint
-            # Whether the list of enchantments should be shown on the item's tooltip.
-            showInTooltip: bool
-         if dyed_color:
-            color: i32
-            showTooltip: bool
+         if dyed_color: i32
          if map_color: i32
          if map_id: varint
          if map_decorations: anonymousNbt
          if map_post_processing: varint
+         if potion_duration_scale: f32
          if charged_projectiles:
             projectiles: Slot[]varint
          if bundle_contents:
@@ -291,19 +343,23 @@
          if trim:
             material: ["registryEntryHolder", { "baseName": "materialId", "otherwise": { "name": "data", "type": "ArmorTrimMaterial" } }]
             pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "ArmorTrimPattern" } }]
-            showInTooltip: bool
          if debug_stick_state: anonymousNbt
          if entity_data: anonymousNbt
          if bucket_entity_data: anonymousNbt
          if block_entity_data: anonymousNbt
          if instrument: ["registryEntryHolder", { "baseName": "instrumentId", "otherwise": { "name": "data", "type": "InstrumentData" } }]
+         if provides_trim_material:
+            hasHolder: bool
+            material: hasHolder ?
+               if true: ["registryEntryHolder", { "baseName": "materialId", "otherwise": { "name": "data", "type": "ArmorTrimMaterial" } }]
+               if false: string
          if ominous_bottle_amplifier: varint
          if jukebox_playable:
             hasHolder: bool
             song: hasHolder ?
                if true: ["registryEntryHolder", { "baseName": "songId", "otherwise": { "name": "data", "type": "JukeboxSongData" } }]
                if false: string
-            showInTooltip: bool
+         if provides_banner_patterns: string
          if recipes: anonymousNbt
          if lodestone_tracker:
             # Specified if this lodestone points to a position; otherwise it spins randomly.
@@ -348,7 +404,32 @@
                minTicksInHive: varint
          if lock: anonymousNbt
          if container_loot: anonymousNbt
-
+         if break_sound: ItemSoundHolder
+         if villager/variant: varint
+         if wolf/variant: varint
+         if wolf/sound_variant: varint
+         if wolf/collar: varint
+         if fox/variant: varint
+         if salmon/size: varint
+         if parrot/variant: varint
+         if tropical_fish/pattern: varint
+         if tropical_fish/base_color: varint
+         if tropical_fish/pattern_color: varint
+         if mooshroom/variant: varint
+         if rabbit/variant: varint
+         if pig/variant: varint
+         if cow/variant: varint
+         if chicken/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
+         if frog/variant: varint
+         if horse/variant: varint
+         if painting/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "data", "type": "EntityMetadataPaintingVariant" } }]
+         if llama/variant: varint
+         if axolotl/variant: varint
+         if cat/variant: varint
+         if cat/collar: varint
+         if sheep/color: varint
+         if shulker/color: varint
+ 
    ItemSoundEvent:
       soundName: string
       fixedRange?: f32
@@ -395,14 +476,20 @@
             minValue: string
             maxValue: string
 
+   ExactComponentMatcher: SlotComponent[]varint
+
+   DataComponentMatchers:
+      exactMatchers: ExactComponentMatcher
+      partialMatchers: varint[]varint
 
    ItemBlockPredicate:
       blockSet?: ["registryEntryHolderSet", {
          "base": { name: "name", type: "string" },
-         "otherwise": { name: "blockIds", type: "varint" }
+         "otherwise": { name: "blockIds", "type": "varint" }
       }]
       properties?: ItemBlockProperty[]varint
       nbt: anonOptionalNbt
+      components: DataComponentMatchers
 
    ItemBookPage:
       # The raw text of the page. TextComponent, max 1024 characters.
@@ -414,11 +501,11 @@
 
    ItemConsumeEffect: # 1.21.3
       type: varint =>
-      - apply_effects
-      - remove_effects
-      - clear_all_effects
-      - teleport_randomly
-      - play_sound
+         - apply_effects
+         - remove_effects
+         - clear_all_effects
+         - teleport_randomly
+         - play_sound
       _: type ?
          if apply_effects:
             effects: ItemPotionEffect[]varint
@@ -432,8 +519,7 @@
             sound: ItemSoundHolder
 
    ArmorTrimMaterial:
-      assetName: string
-      ingredientId: varint
+      assetBase: string
       overrideArmorAssets: []varint
          key: string
          value: string
@@ -441,7 +527,6 @@
 
    ArmorTrimPattern:
       assetId: string
-      templateItemId: varint
       description: anonymousNbt
       decal: bool
 
@@ -464,6 +549,37 @@
       pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "BannerPattern" } }]
       colorId: varint
 
+   TestInstanceBlockEntity:
+      test?: string
+      size: vec3i
+      rotation: varint
+      ignoreEntities: bool
+      status: varint
+      errorMessage?: anonymousNbt
+
+   # This represents a single component within an UntrustedSlot.
+   # The 'data' field is a varint-prefixed byte array that contains the actual component data.
+   # The code generator will need to know that it should read a varint for length, then the bytes.
+   UntrustedSlotComponent:
+      type: SlotComponentType
+      data: ByteArray
+
+   # An UntrustedSlot is structurally identical to a regular Slot,
+   # but it uses the special UntrustedSlotComponent type for its component list.
+   # It's optional because the player might be clearing the slot.
+   UntrustedSlot:
+      present: bool
+      item: present ?
+         if true:
+            itemId: varint
+            itemCount: varint
+            addedComponentCount: varint
+            removedComponentCount: varint
+            components: UntrustedSlotComponent[]$addedComponentCount
+            removeComponents: []$removedComponentCount
+               type: SlotComponentType
+         if false: void
+
    Slot:
       itemCount: varint
       _: itemCount ?
@@ -476,6 +592,14 @@
             components: SlotComponent[]$addedComponentCount
             removeComponents: []$removedComponentCount
                type: SlotComponentType
+
+   HashedStack:
+      itemId: varint
+      count: varint
+      addedComponents: []varint
+         typeId: varint
+         hash: i32
+      removedComponents: varint[]varint
 
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
@@ -515,6 +639,7 @@
          - infested
          - cherry_leaves
          - pale_oak_leaves
+         - tinted_leaves
          - sculk_soul
          - sculk_charge
          - sculk_charge_pop
@@ -592,6 +717,7 @@
          - raid_omen
          - trial_omen
          - block_crumble
+         - firefly
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.
@@ -627,8 +753,8 @@
          if shriek: varint
          if vibration:
             positionType: varint =>
-            - block
-            - entity
+               - block
+               - entity
             position: positionType ?
                if block: position
                if entity:
@@ -638,6 +764,8 @@
          if trail:
             target: vec3f64
             color: u8
+         if tinted_leaves: i32
+         if firefly: void
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -699,7 +827,7 @@
       - block_pos
       - optional_block_pos
       - direction
-      - optional_uuid
+      - optional_living_entity_reference
       - block_state
       - optional_block_state
       - compound_tag
@@ -709,14 +837,19 @@
       - optional_unsigned_int
       - pose
       - cat_variant
+      - cow_variant
       - wolf_variant
+      - wolf_sound_variant
       - frog_variant
+      - pig_variant
+      - chicken_variant
       - optional_global_pos
       - painting_variant
       - sniffer_state
       - armadillo_state
       - vector3
       - quaternion
+      - optional_uuid
       value: type ?
          if byte: i8
          if int: varint
@@ -747,11 +880,12 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if wolf_variant: ["registryEntryHolder", {
-            "baseName": "variantId",
-            "otherwise": { name: "variantData", type: "EntityMetadataWolfVariant" }
-         }]
+         if cow_variant: varint
+         if wolf_variant: varint
+         if wolf_sound_variant: varint
          if frog_variant: varint
+         if pig_variant: varint
+         if chicken_variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
          if optional_global_pos: ["option", "string"]
          if painting_variant: ["registryEntryHolder", {
             "baseName": "variantId",
@@ -765,13 +899,6 @@
       width: i32
       height: i32
       assetId: string
-      title?: anonymousNbt
-      author?: anonymousNbt
-   EntityMetadataWolfVariant:
-      wildTexture: string
-      tameTexture: string
-      angryTexture: string
-      biome: IDSet
 
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
    tags: []varint
@@ -910,6 +1037,7 @@
             - minecraft:template_mirror
             - minecraft:template_rotation
             - minecraft:heightmap
+            - minecraft:resource_selector
             - minecraft:loot_table # 1.20.5
             - minecraft:loot_predicate # 1.20.5
             - minecraft:loot_modifier # 1.20.5
@@ -1126,9 +1254,9 @@
       enableTextFiltering: bool
       enableServerListing: bool
       particleStatus: varint =>
-      - all
-      - decreased
-      - minimal
+         - all
+         - decreased
+         - minimal
    # MC: ClientboundCookieRequestPacket
    packet_common_cookie_request:
       cookie: string
@@ -1276,12 +1404,12 @@
    ## (Cookie Request is Common) ##
    packet:
       name: varint =>
-      - disconnect
-      - encryption_begin
-      - success
-      - compress
-      - login_plugin_request
-      - cookie_request
+         - disconnect
+         - encryption_begin
+         - success
+         - compress
+         - login_plugin_request
+         - cookie_request
       params: name ?
          if disconnect: packet_disconnect
          if encryption_begin: packet_encryption_begin
@@ -1318,11 +1446,11 @@
    ## (Cookie Response is Common) ##
    packet:
       name: varint =>
-      - login_start
-      - encryption_begin
-      - login_plugin_response
-      - login_acknowledged
-      - cookie_response
+         - login_start
+         - encryption_begin
+         - login_plugin_response
+         - login_acknowledged
+         - cookie_response
       params: name ?
          if login_start: packet_login_start
          if encryption_begin: packet_encryption_begin
@@ -1369,23 +1497,23 @@
    ## (Select known packs is common)
    packet:
       name: varint =>
-      - cookie_request
-      - custom_payload
-      - disconnect
-      - finish_configuration
-      - keep_alive
-      - ping
-      - reset_chat
-      - registry_data
-      - remove_resource_pack
-      - add_resource_pack
-      - store_cookie
-      - transfer
-      - feature_flags
-      - tags
-      - select_known_packs
-      - custom_report_details
-      - server_links
+         - cookie_request
+         - custom_payload
+         - disconnect
+         - finish_configuration
+         - keep_alive
+         - ping
+         - reset_chat
+         - registry_data
+         - remove_resource_pack
+         - add_resource_pack
+         - store_cookie
+         - transfer
+         - feature_flags
+         - tags
+         - select_known_packs
+         - custom_report_details
+         - server_links
       params: name ?
          if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
@@ -1426,16 +1554,16 @@
       result: varint
    packet:
       name: varint =>
-      - settings
-      - cookie_response
-      - custom_payload
-      - finish_configuration
-      - keep_alive
-      - pong
-      - resource_pack_receive
-      - select_known_packs
-      - custom_report_details
-      - server_links
+         - settings
+         - cookie_response
+         - custom_payload
+         - finish_configuration
+         - keep_alive
+         - pong
+         - resource_pack_receive
+         - select_known_packs
+         - custom_report_details
+         - server_links
       params: name ?
          if settings: packet_common_settings
          if cookie_response: packet_common_cookie_response
@@ -1450,34 +1578,34 @@
 ^play.toClient.types:
    SlotDisplay:
       type: varint =>
-      - empty
-      - any_fuel
-      - item
-      - item_stack
-      - tag
-      - smithing_trim
-      - with_remainder
-      - composite
+         - empty
+         - any_fuel
+         - item
+         - item_stack
+         - tag
+         - smithing_trim #TODO: Old versions have typo
+         - with_remainder
+         - composite
       data: type ?
          if empty or any_fuel: void
          if item: varint
          if item_stack: Slot
          if tag: string
-         if simthing_trim:
+         if smithing_trim:
             base: SlotDisplay
             material: SlotDisplay
-            pattern: SlotDisplay
+            pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "ArmorTrimPattern" } }]
          if with_remainder:
             input: SlotDisplay
             remainder: SlotDisplay
          if composite: SlotDisplay[]varint
    RecipeDisplay:
       type: varint =>
-      - crafting_shapeless
-      - crafting_shaped
-      - furnace
-      - stonecutter
-      - smithing
+         - crafting_shapeless
+         - crafting_shaped
+         - furnace
+         - stonecutter
+         - smithing
       data: type ?
          if crafting_shapeless:
             ingredients: SlotDisplay[]varint
@@ -1512,10 +1640,10 @@
       name: string
       hashedSeed: i64
       gamemode: i8 =>
-      - survival
-      - creative
-      - adventure
-      - spectator
+         - survival
+         - creative
+         - adventure
+         - spectator
       previousGamemode: u8
       isDebug: bool
       isFlat: bool
@@ -1540,13 +1668,6 @@
       velocityX: i16
       velocityY: i16
       velocityZ: i16
-   # MC: ClientboundAddExperienceOrbPacket
-   packet_spawn_entity_experience_orb:
-      entityId: varint
-      x: f64
-      y: f64
-      z: f64
-      count: i16
    # MC: ClientboundAnimatePacket
    packet_animation:
       entityId: varint
@@ -1745,6 +1866,7 @@
       chunkX: i32
    # MC: ClientboundGameEventPacket
    packet_game_state_change:
+      #TODO: Should be a mapper
       reason: u8
       gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
@@ -1773,13 +1895,10 @@
    packet_map_chunk:
       x: i32
       z: i32
-      heightmaps: anonymousNbt
-      chunkData: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
+      heightmaps: []varint
+         type: varint
+         data: i64[]varint
+      chunkData: ByteArray
       blockEntities: chunkBlockEntity[]varint
       skyLightMask: i64[]varint
       blockLightMask: i64[]varint
@@ -1870,14 +1989,12 @@
          inputItem1:
             itemId: varint
             itemCount: varint
-            addedComponentCount: varint
-            components: SlotComponent[]$addedComponentCount
+            components: ExactComponentMatcher
          outputItem: Slot
          inputItem2?:
             itemId: varint
             itemCount: varint
-            addedComponentCount: varint
-            components: SlotComponent[]$addedComponentCount
+            components: ExactComponentMatcher
          tradeDisabled: bool
          nbTradeUses: i32
          maximumNbTradeUses: i32
@@ -1945,6 +2062,10 @@
    # MC: ClientboundPongResponsePacket
    packet_ping_response:
       id: i64
+   # MC: ClientboundTestInstanceBlockStatusPacket
+   packet_test_instance_block_status:
+      status: anonymousNbt
+      size?: vec3i
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
       windowId: ContainerID
@@ -1956,6 +2077,7 @@
       walkingSpeed: f32
    # MC: ClientboundPlayerChatPacket
    packet_player_chat:
+      globalIndex: varint
       senderUuid: UUID
       index: varint
       signature?: [
@@ -2078,19 +2200,19 @@
             group: optvarint
             # This ID corresponds to the "recipe_book_category" registry
             category: varint =>
-            - crafting_building_blocks
-            - crafting_redstone
-            - crafting_equipment
-            - crafting_misc
-            - furnace_food
-            - furnace_blocks
-            - furnace_misc
-            - blast_furnace_blocks
-            - blast_furnace_misc
-            - smoker_food
-            - stonecutter
-            - smithing
-            - campfire
+               - crafting_building_blocks
+               - crafting_redstone
+               - crafting_equipment
+               - crafting_misc
+               - furnace_food
+               - furnace_blocks
+               - furnace_misc
+               - blast_furnace_blocks
+               - blast_furnace_misc
+               - smoker_food
+               - stonecutter
+               - smithing
+               - campfire
             craftingRequirements?: IDSet[]varint
          flags: ["bitflags", {
             "type": "u8",
@@ -2278,6 +2400,7 @@
       contents?: Slot
    # MC: ClientboundSetPlayerTeamPacket
    packet_teams:
+      #TODO: this should be using a switch
       team: string
       mode: i8
       name: mode ?
@@ -2289,12 +2412,12 @@
          if 2: i8
          default: void
       nameTagVisibility: mode ?
-         if 0: string
-         if 2: string
+         if 0: varint
+         if 2: varint
          default: void
       collisionRule: mode ?
-         if 0: string
-         if 2: string
+         if 0: varint
+         if 2: varint
          default: void
       formatting: mode ?
          if 0: varint
@@ -2413,6 +2536,7 @@
    # MC: ClientboundUpdateAdvancementsPacket
    packet_advancements:
       reset: bool
+      showAdvancements: bool
       advancementMapping: []varint
          key: string
          value:
@@ -2447,28 +2571,28 @@
       entityId: varint
       properties: []varint
          key: varint =>
-         - generic.armor
-         - generic.armor_toughness
-         - generic.attack_damage
-         - generic.attack_knockback
-         - generic.attack_speed
-         - player.block_break_speed
-         - player.block_interaction_range
-         - player.entity_interaction_range
-         - generic.fall_damage_multiplier
-         - generic.flying_speed
-         - generic.follow_range
-         - generic.gravity
-         - generic.jump_strength
-         - generic.knockback_resistance
-         - generic.luck
-         - generic.max_absorption
-         - generic.max_health
-         - generic.movement_speed
-         - generic.safe_fall_distance
-         - generic.scale
-         - zombie.spawn_reinforcements
-         - generic.step_height
+            - generic.armor
+            - generic.armor_toughness
+            - generic.attack_damage
+            - generic.attack_knockback
+            - generic.attack_speed
+            - player.block_break_speed
+            - player.block_interaction_range
+            - player.entity_interaction_range
+            - generic.fall_damage_multiplier
+            - generic.flying_speed
+            - generic.follow_range
+            - generic.gravity
+            - generic.jump_strength
+            - generic.knockback_resistance
+            - generic.luck
+            - generic.max_absorption
+            - generic.max_health
+            - generic.movement_speed
+            - generic.safe_fall_distance
+            - generic.scale
+            - zombie.spawn_reinforcements
+            - generic.step_height
          value: f64
          modifiers: []varint
             uuid: string
@@ -2513,7 +2637,6 @@
       name: varint =>
       - bundle_delimiter
       - spawn_entity
-      - spawn_entity_experience_orb
       - animation
       - statistics
       - acknowledge_player_digging
@@ -2567,6 +2690,7 @@
       - open_window
       - open_sign_entity
       - ping
+      - test_instance_block_status
       - ping_response
       - craft_recipe_response
       - abilities
@@ -2645,7 +2769,6 @@
       params: name ?
          if bundle_delimiter: void
          if spawn_entity: packet_spawn_entity
-         if spawn_entity_experience_orb: packet_spawn_entity_experience_orb
          if animation: packet_animation
          if statistics: packet_statistics
          if acknowledge_player_digging: packet_acknowledge_player_digging
@@ -2699,6 +2822,7 @@
          if open_window: packet_open_window
          if open_sign_entity: packet_open_sign_entity
          if ping: packet_ping
+         if test_instance_block_status: packet_test_instance_block_status
          if ping_response: packet_ping_response
          if craft_recipe_response: packet_craft_recipe_response
          if abilities: packet_abilities
@@ -2816,6 +2940,7 @@
             "count": 3
          }
       ]
+      checksum: i8
    # MC: ServerboundChatPacket
    packet_chat_message:
       message: string
@@ -2834,6 +2959,7 @@
             "count": 3
          }
       ]
+      checksum: i8
    # MC: ServerboundChatSessionUpdatePacket
    packet_chat_session_update:
       sessionUUID: UUID
@@ -2869,8 +2995,8 @@
       mode: varint
       changedSlots: []varint
          location: i16
-         item: Slot
-      cursorItem: Slot
+         item?: HashedStack
+      cursorItem?: HashedStack
    # MC: ServerboundContainerClosePacket
    packet_close_window:
       windowId: ContainerID
@@ -3053,7 +3179,7 @@
    # MC: ServerboundSetCreativeModeSlotPacket
    packet_set_creative_slot:
       slot: i16
-      item: Slot
+      item: UntrustedSlot
    # MC: ServerboundSetJigsawBlockPacket
    packet_update_jigsaw_block:
       location: position
@@ -3081,7 +3207,11 @@
       metadata: string
       integrity: f32
       seed: varint
-      flags: u8
+      flags: u8 =>
+         - ignore_entities
+         - show_air
+         - show_bounding_box
+         - strict
    # MC: ServerboundSignUpdatePacket
    packet_update_sign:
       location: position
@@ -3112,6 +3242,16 @@
       hand: varint
       sequence: varint
       rotation: vec2f
+   # MC: ServerboundSetTestBlockPacket
+   packet_set_test_block:
+      position: position
+      mode: varint
+      message: string
+   # MC: ServerboundTestInstanceBlockActionPacket
+   packet_test_instance_block_action:
+      pos: position
+      action: varint
+      data: TestInstanceBlockEntity
 
    packet:
       name: varint =>
@@ -3162,6 +3302,7 @@
       - pong
       - recipe_book
       - displayed_recipe
+      - set_test_block
       - name_item
       - resource_pack_receive
       - advancement_tab
@@ -3178,6 +3319,7 @@
       - spectate
       - block_place
       - use_item
+      - test_instance_block_action
       params: name ?
          if teleport_confirm: packet_teleport_confirm
          if query_block_nbt: packet_query_block_nbt
@@ -3224,6 +3366,7 @@
          if pong: packet_pong
          if recipe_book: packet_recipe_book
          if displayed_recipe: packet_displayed_recipe
+         if set_test_block: packet_set_test_block
          if name_item: packet_name_item
          if resource_pack_receive: packet_resource_pack_receive
          if advancement_tab: packet_advancement_tab
@@ -3240,3 +3383,4 @@
          if spectate: packet_spectate
          if block_place: packet_block_place
          if use_item: packet_use_item
+         if test_instance_block_action: packet_test_instance_block_action
