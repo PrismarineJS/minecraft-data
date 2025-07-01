@@ -83,6 +83,8 @@ a { text-decoration: none; }
 
 
 
+
+
 <tr><td><a href="#types.slot">Type</a><td class='name'><a href="#types.slot">slot</a></td></tr>
 
 <tr><td><a href="#types.entityMetadataItem">Type</a><td class='name'><a href="#types.entityMetadataItem">entityMetadataItem</a></td></tr>
@@ -622,8 +624,8 @@ a { text-decoration: none; }
 </table></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>requirements</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>requirements</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name field-implicit'><span class='name'>__307</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
-<tr><td class='field-name'><span class='name'>__307</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+<tr><td class='field-name field-implicit'><span class='name'>__304</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>__304</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table></td></tr>
@@ -1152,35 +1154,39 @@ a { text-decoration: none; }
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>action </td><td>varint</td><td></td></tr>
+<tr><td class='name field-name'>action </td><td colspan=2  class="vpad"><div style='padding:8px'>varint <span class='tag tag-enum'>enum</span></div><table>
+  <tr><td class='name'>0</td><td class='name'>add player</td><td></td></tr>
+  <tr><td class='name'>1</td><td class='name'>update game mode</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>update latency</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>update display name</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>remove player</td><td></td></tr>
+</table></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>data</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>data</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name name'>UUID </td><td>UUID</td><td></td></tr>
-<tr><td><b class='name'>name</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 0</span> </td><td>string</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
-</table></td></tr>
-<tr><td><b class='name'>properties</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name field-implicit'><span class='name'><span class='fake'>is 0</span></span> length</td><td class="field-implicit">varint</td><td ></td></tr>
-<tr><td class='field-name'><span class='name'><span class='fake'>is 0</span></span> <div class="tag tag-array">array</div></td><td colspan=2><table>
+<tr><td class='field-name name'>uuid </td><td>UUID</td><td></td></tr>
+<tr><td><b class='name'>&#128257;</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
+<tr><td class='name'><span class='fake'>is add player</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>name </td><td>string</td><td></td></tr>
+<tr><td class='field-name field-implicit'><span class='name'>properties</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
+<tr><td class='field-name'><span class='name'>properties</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>name </td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>value </td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>signature <div class='tag tag-optional'>optional</div></td><td>string</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
+<tr><td class='field-name name'>gamemode </td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>ping </td><td>varint</td><td></td></tr>
+<tr><td class='field-name name'>displayName <div class='tag tag-optional'>optional</div></td><td>string</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>gamemode</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 0</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 1</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
+<tr><td class='name'><span class='fake'>is update game mode</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>gamemode </td><td>varint</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>ping</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 0</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 2</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
+<tr><td class='name'><span class='fake'>is update latency</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>ping </td><td>varint</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>displayName</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
+<tr><td class='name'><span class='fake'>is update display name</span> </td><td colspan=2 class='bordered'><table>
+<tr><td class='field-name name'>displayName <div class='tag tag-optional'>optional</div></td><td>string</td><td></td></tr>
+</table></td></tr>
+<tr><td class='field-name name'><span class='fake'>is remove player</span> </td><td>void</td><td></td></tr>
 </table></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>

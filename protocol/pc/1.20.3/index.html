@@ -87,11 +87,17 @@ a { text-decoration: none; }
 
 
 
+
+
+
+
 <tr><td><a href="#types.vec3f">Type</a><td class='name'><a href="#types.vec3f">vec3f</a></td></tr>
 <tr><td><a href="#types.vec4f">Type</a><td class='name'><a href="#types.vec4f">vec4f</a></td></tr>
 <tr><td><a href="#types.vec3f64">Type</a><td class='name'><a href="#types.vec3f64">vec3f64</a></td></tr>
+<tr><td><a href="#types.ItemSoundEvent">Type</a><td class='name'><a href="#types.ItemSoundEvent">ItemSoundEvent</a></td></tr>
+
 <tr><td><a href="#types.slot">Type</a><td class='name'><a href="#types.slot">slot</a></td></tr>
-<tr><td><a href="#types.particle">Type</a><td class='name'><a href="#types.particle">particle</a></td></tr>
+<tr><td><a href="#types.Particle">Type</a><td class='name'><a href="#types.Particle">Particle</a></td></tr>
 <tr><td><a href="#types.particleData">Type</a><td class='name'><a href="#types.particleData">particleData</a></td></tr>
 <tr><td><a href="#types.ingredient">Type</a><td class='name'><a href="#types.ingredient">ingredient</a></td></tr>
 
@@ -143,6 +149,16 @@ a { text-decoration: none; }
 <tr><td class='field-name name'>y </td><td>f64</td><td></td></tr>
 <tr><td class='field-name name'>z </td><td>f64</td><td></td></tr>
 </table><br/><hr/><br/>
+<div class="packet-header" id="types.ItemSoundEvent">
+<a href="#types.ItemSoundEvent"><div class='packet-id bound-datatype'>Type</div><div class='packet-name name'>ItemSoundEvent</div></a>
+  <span style='vertical-align:middle;float:right'>Datatype</span>
+</div><br/>
+    
+<p></p>
+<table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
+<tr><td class='field-name name'>soundName </td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>fixedRange <div class='tag tag-optional'>optional</div></td><td>f32</td><td></td></tr>
+</table><br/><hr/><br/>
 <div class="packet-header" id="types.slot">
 <a href="#types.slot"><div class='packet-id bound-datatype'>Type</div><div class='packet-name name'>slot</div></a>
   <span style='vertical-align:middle;float:right'>Datatype</span>
@@ -160,14 +176,124 @@ a { text-decoration: none; }
 </table></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
-<div class="packet-header" id="types.particle">
-<a href="#types.particle"><div class='packet-id bound-datatype'>Type</div><div class='packet-name name'>particle</div></a>
+<div class="packet-header" id="types.Particle">
+<a href="#types.Particle"><div class='packet-id bound-datatype'>Type</div><div class='packet-name name'>Particle</div></a>
   <span style='vertical-align:middle;float:right'>Datatype</span>
 </div><br/>
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>particleId </td><td>varint</td><td></td></tr>
+<tr><td class='name field-name'>type </td><td colspan=2  class="vpad"><div style='padding:8px'>varint <span class='tag tag-enum'>enum</span></div><table>
+  <tr><td class='name'>0</td><td class='name'>angry villager</td><td><p>See client/net/minecraft/core/particles/ParticleTypes.java</p></td></tr>
+  <tr><td class='name'>1</td><td class='name'>block</td><td></td></tr>
+  <tr><td class='name'>2</td><td class='name'>block marker</td><td></td></tr>
+  <tr><td class='name'>3</td><td class='name'>bubble</td><td></td></tr>
+  <tr><td class='name'>4</td><td class='name'>cloud</td><td></td></tr>
+  <tr><td class='name'>5</td><td class='name'>crit</td><td></td></tr>
+  <tr><td class='name'>6</td><td class='name'>damage indicator</td><td></td></tr>
+  <tr><td class='name'>7</td><td class='name'>dragon breath</td><td></td></tr>
+  <tr><td class='name'>8</td><td class='name'>dripping lava</td><td></td></tr>
+  <tr><td class='name'>9</td><td class='name'>falling lava</td><td></td></tr>
+  <tr><td class='name'>10</td><td class='name'>landing lava</td><td></td></tr>
+  <tr><td class='name'>11</td><td class='name'>dripping water</td><td></td></tr>
+  <tr><td class='name'>12</td><td class='name'>falling water</td><td></td></tr>
+  <tr><td class='name'>13</td><td class='name'>dust</td><td></td></tr>
+  <tr><td class='name'>14</td><td class='name'>dust color transition</td><td></td></tr>
+  <tr><td class='name'>15</td><td class='name'>effect</td><td></td></tr>
+  <tr><td class='name'>16</td><td class='name'>elder guardian</td><td></td></tr>
+  <tr><td class='name'>17</td><td class='name'>enchanted hit</td><td></td></tr>
+  <tr><td class='name'>18</td><td class='name'>enchant</td><td></td></tr>
+  <tr><td class='name'>19</td><td class='name'>end rod</td><td></td></tr>
+  <tr><td class='name'>20</td><td class='name'>entity effect</td><td></td></tr>
+  <tr><td class='name'>21</td><td class='name'>explosion emitter</td><td></td></tr>
+  <tr><td class='name'>22</td><td class='name'>explosion</td><td></td></tr>
+  <tr><td class='name'>23</td><td class='name'>gust</td><td></td></tr>
+  <tr><td class='name'>24</td><td class='name'>small gust</td><td></td></tr>
+  <tr><td class='name'>25</td><td class='name'>gust emitter large</td><td></td></tr>
+  <tr><td class='name'>26</td><td class='name'>gust emitter small</td><td></td></tr>
+  <tr><td class='name'>27</td><td class='name'>sonic boom</td><td></td></tr>
+  <tr><td class='name'>28</td><td class='name'>falling dust</td><td></td></tr>
+  <tr><td class='name'>29</td><td class='name'>firework</td><td></td></tr>
+  <tr><td class='name'>30</td><td class='name'>fishing</td><td></td></tr>
+  <tr><td class='name'>31</td><td class='name'>flame</td><td></td></tr>
+  <tr><td class='name'>32</td><td class='name'>infested</td><td></td></tr>
+  <tr><td class='name'>33</td><td class='name'>cherry leaves</td><td></td></tr>
+  <tr><td class='name'>34</td><td class='name'>sculk soul</td><td></td></tr>
+  <tr><td class='name'>35</td><td class='name'>sculk charge</td><td></td></tr>
+  <tr><td class='name'>36</td><td class='name'>sculk charge pop</td><td></td></tr>
+  <tr><td class='name'>37</td><td class='name'>soul fire flame</td><td></td></tr>
+  <tr><td class='name'>38</td><td class='name'>soul</td><td></td></tr>
+  <tr><td class='name'>39</td><td class='name'>flash</td><td></td></tr>
+  <tr><td class='name'>40</td><td class='name'>happy villager</td><td></td></tr>
+  <tr><td class='name'>41</td><td class='name'>composter</td><td></td></tr>
+  <tr><td class='name'>42</td><td class='name'>heart</td><td></td></tr>
+  <tr><td class='name'>43</td><td class='name'>instant effect</td><td></td></tr>
+  <tr><td class='name'>44</td><td class='name'>item</td><td></td></tr>
+  <tr><td class='name'>45</td><td class='name'>vibration</td><td></td></tr>
+  <tr><td class='name'>46</td><td class='name'>item slime</td><td></td></tr>
+  <tr><td class='name'>47</td><td class='name'>item cobweb</td><td></td></tr>
+  <tr><td class='name'>48</td><td class='name'>item snowball</td><td></td></tr>
+  <tr><td class='name'>49</td><td class='name'>large smoke</td><td></td></tr>
+  <tr><td class='name'>50</td><td class='name'>lava</td><td></td></tr>
+  <tr><td class='name'>51</td><td class='name'>mycelium</td><td></td></tr>
+  <tr><td class='name'>52</td><td class='name'>note</td><td></td></tr>
+  <tr><td class='name'>53</td><td class='name'>poof</td><td></td></tr>
+  <tr><td class='name'>54</td><td class='name'>portal</td><td></td></tr>
+  <tr><td class='name'>55</td><td class='name'>rain</td><td></td></tr>
+  <tr><td class='name'>56</td><td class='name'>smoke</td><td></td></tr>
+  <tr><td class='name'>57</td><td class='name'>white smoke</td><td></td></tr>
+  <tr><td class='name'>58</td><td class='name'>sneeze</td><td></td></tr>
+  <tr><td class='name'>59</td><td class='name'>spit</td><td></td></tr>
+  <tr><td class='name'>60</td><td class='name'>squid ink</td><td></td></tr>
+  <tr><td class='name'>61</td><td class='name'>sweep attack</td><td></td></tr>
+  <tr><td class='name'>62</td><td class='name'>totem of undying</td><td></td></tr>
+  <tr><td class='name'>63</td><td class='name'>underwater</td><td></td></tr>
+  <tr><td class='name'>64</td><td class='name'>splash</td><td></td></tr>
+  <tr><td class='name'>65</td><td class='name'>witch</td><td></td></tr>
+  <tr><td class='name'>66</td><td class='name'>bubble pop</td><td></td></tr>
+  <tr><td class='name'>67</td><td class='name'>current down</td><td></td></tr>
+  <tr><td class='name'>68</td><td class='name'>bubble column up</td><td></td></tr>
+  <tr><td class='name'>69</td><td class='name'>nautilus</td><td></td></tr>
+  <tr><td class='name'>70</td><td class='name'>dolphin</td><td></td></tr>
+  <tr><td class='name'>71</td><td class='name'>campfire cosy smoke</td><td></td></tr>
+  <tr><td class='name'>72</td><td class='name'>campfire signal smoke</td><td></td></tr>
+  <tr><td class='name'>73</td><td class='name'>dripping honey</td><td></td></tr>
+  <tr><td class='name'>74</td><td class='name'>falling honey</td><td></td></tr>
+  <tr><td class='name'>75</td><td class='name'>landing honey</td><td></td></tr>
+  <tr><td class='name'>76</td><td class='name'>falling nectar</td><td></td></tr>
+  <tr><td class='name'>77</td><td class='name'>falling spore blossom</td><td></td></tr>
+  <tr><td class='name'>78</td><td class='name'>ash</td><td></td></tr>
+  <tr><td class='name'>79</td><td class='name'>crimson spore</td><td></td></tr>
+  <tr><td class='name'>80</td><td class='name'>warped spore</td><td></td></tr>
+  <tr><td class='name'>81</td><td class='name'>spore blossom air</td><td></td></tr>
+  <tr><td class='name'>82</td><td class='name'>dripping obsidian tear</td><td></td></tr>
+  <tr><td class='name'>83</td><td class='name'>falling obsidian tear</td><td></td></tr>
+  <tr><td class='name'>84</td><td class='name'>landing obsidian tear</td><td></td></tr>
+  <tr><td class='name'>85</td><td class='name'>reverse portal</td><td></td></tr>
+  <tr><td class='name'>86</td><td class='name'>white ash</td><td></td></tr>
+  <tr><td class='name'>87</td><td class='name'>small flame</td><td></td></tr>
+  <tr><td class='name'>88</td><td class='name'>snowflake</td><td></td></tr>
+  <tr><td class='name'>89</td><td class='name'>dripping dripstone lava</td><td></td></tr>
+  <tr><td class='name'>90</td><td class='name'>falling dripstone lava</td><td></td></tr>
+  <tr><td class='name'>91</td><td class='name'>dripping dripstone water</td><td></td></tr>
+  <tr><td class='name'>92</td><td class='name'>falling dripstone water</td><td></td></tr>
+  <tr><td class='name'>93</td><td class='name'>glow squid ink</td><td></td></tr>
+  <tr><td class='name'>94</td><td class='name'>glow</td><td></td></tr>
+  <tr><td class='name'>95</td><td class='name'>wax on</td><td></td></tr>
+  <tr><td class='name'>96</td><td class='name'>wax off</td><td></td></tr>
+  <tr><td class='name'>97</td><td class='name'>electric spark</td><td></td></tr>
+  <tr><td class='name'>98</td><td class='name'>scrape</td><td></td></tr>
+  <tr><td class='name'>99</td><td class='name'>shriek</td><td></td></tr>
+  <tr><td class='name'>100</td><td class='name'>egg crack</td><td></td></tr>
+  <tr><td class='name'>101</td><td class='name'>dust plume</td><td></td></tr>
+  <tr><td class='name'>102</td><td class='name'>trial spawner detected player</td><td></td></tr>
+  <tr><td class='name'>103</td><td class='name'>trial spawner detected player ominous</td><td></td></tr>
+  <tr><td class='name'>104</td><td class='name'>vault connection</td><td></td></tr>
+  <tr><td class='name'>105</td><td class='name'>dust pillar</td><td></td></tr>
+  <tr><td class='name'>106</td><td class='name'>ominous spawning</td><td></td></tr>
+  <tr><td class='name'>107</td><td class='name'>raid omen</td><td></td></tr>
+  <tr><td class='name'>108</td><td class='name'>trial omen</td><td></td></tr>
+</table></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="types.particleData">
 <a href="#types.particleData"><div class='packet-id bound-datatype'>Type</div><div class='packet-name name'>particleData</div></a>
@@ -300,7 +426,7 @@ a { text-decoration: none; }
 <tr><td class='field-name name'><span class='fake'>is block state</span> </td><td>varint</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is optional block state</span> </td><td>optvarint</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is compound tag</span> </td><td>anonymousNbt</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is particle</span> </td><td><a href="#types.particle">particle</a></td><td></td></tr>
+<tr><td class='field-name name'><span class='fake'>is particle</span> </td><td><a href="#types.Particle">Particle</a></td><td></td></tr>
 <tr><td class='name'><span class='fake'>is villager data</span> </td><td colspan=2 class='bordered'><table>
 <tr><td class='field-name name'>villagerType </td><td>varint</td><td></td></tr>
 <tr><td class='field-name name'>villagerProfession </td><td>varint</td><td></td></tr>
@@ -386,7 +512,7 @@ a { text-decoration: none; }
 <tr><td class='field-name name'>name </td><td>string</td><td></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>properties</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>properties</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name name'>key </td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>name </td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>value </td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>signature <div class='tag tag-optional'>optional</div></td><td>string</td><td></td></tr>
 </table></td></tr>
@@ -1483,8 +1609,8 @@ MC: ServerboundKeepAlivePacket</p></p>
 </table></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>requirements</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>requirements</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name field-implicit'><span class='name'>__915</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
-<tr><td class='field-name'><span class='name'>__915</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
+<tr><td class='field-name field-implicit'><span class='name'>__1026</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>__1026</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>sendsTelemtryData </td><td>bool</td><td></td></tr>
 </table></td></tr>
@@ -1827,15 +1953,9 @@ MC: ClientboundCommandSuggestionsPacket</p></p>
 <tr><td class='field-name name'>playerMotionY </td><td>f32</td><td></td></tr>
 <tr><td class='field-name name'>playerMotionZ </td><td>f32</td><td></td></tr>
 <tr><td class='field-name name'>block interaction type </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'>small explosion particle </td><td>particle</td><td></td></tr>
-<tr><td class='field-name name'>large explosion particle </td><td>particle</td><td></td></tr>
-<tr><td class='field-name name'>soundId </td><td>varint</td><td></td></tr>
-<tr><td><b class='name'>&#128257;</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>soundId</span></div></i></td><td colspan=2><table>
-<tr><td class='name'><span class='fake'>is 0</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>soundName </td><td>string</td><td></td></tr>
-<tr><td class='field-name name'>range <div class='tag tag-optional'>optional</div></td><td>f32</td><td></td></tr>
-</table></td></tr>
-</table></td></tr>
+<tr><td class='field-name name'>small explosion particle </td><td>Particle</td><td></td></tr>
+<tr><td class='field-name name'>large explosion particle </td><td>Particle</td><td></td></tr>
+<tr><td class='field-name name'>sound </td><td>ItemSoundHolder</td><td></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="play.toClient.types.packet_unload_chunk">
 <a href="#play.toClient.types.packet_unload_chunk"><div class='packet-id bound-client'>31</div><div class='packet-name name'>packet unload chunk</div></a>
@@ -1899,13 +2019,13 @@ MC: ClientboundCommandSuggestionsPacket</p></p>
 <tr><td class='field-name'><span class='name'>emptyBlockLightMask</span> <div class="tag tag-array">array</div></td><td>i64</td><td></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>skyLight</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>skyLight</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name field-implicit'><span class='name'>__1146</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
-<tr><td class='field-name'><span class='name'>__1146</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
+<tr><td class='field-name field-implicit'><span class='name'>__1251</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>__1251</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>blockLight</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>blockLight</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name field-implicit'><span class='name'>__1148</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
-<tr><td class='field-name'><span class='name'>__1148</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
+<tr><td class='field-name field-implicit'><span class='name'>__1253</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>__1253</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="play.toClient.types.packet_world_event">
@@ -1957,13 +2077,13 @@ MC: ClientboundCommandSuggestionsPacket</p></p>
 <tr><td class='field-name'><span class='name'>emptyBlockLightMask</span> <div class="tag tag-array">array</div></td><td>i64</td><td></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>skyLight</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>skyLight</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name field-implicit'><span class='name'>__1182</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
-<tr><td class='field-name'><span class='name'>__1182</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
+<tr><td class='field-name field-implicit'><span class='name'>__1287</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>__1287</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>blockLight</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>blockLight</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name field-implicit'><span class='name'>__1184</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
-<tr><td class='field-name'><span class='name'>__1184</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
+<tr><td class='field-name field-implicit'><span class='name'>__1289</span> length</td><td class="field-implicit">varint</td><td rowspan=2></td></tr>
+<tr><td class='field-name'><span class='name'>__1289</span> <div class="tag tag-array">array</div></td><td>u8</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="play.toClient.types.packet_login">
@@ -2219,186 +2339,30 @@ MC: ClientboundPlayerCombatKillPacket</p></p>
     
 <p><p>MC: ClientboundPlayerInfoUpdatePacket</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>action </td><td>i8</td><td></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>data</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>data</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
 <tr><td class='field-name name'>uuid </td><td>UUID</td><td></td></tr>
-<tr><td><b class='name'>player</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 1</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 3</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 5</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 7</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 9</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 11</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 13</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 15</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 17</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 19</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 21</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 23</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 25</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 27</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 29</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 31</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 33</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 35</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 37</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 39</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 41</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 43</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 45</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 47</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 49</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 51</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 53</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 55</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 57</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 59</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 61</span> </td><td>game_profile</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 63</span> </td><td>game_profile</td><td></td></tr>
+<tr><td><b class='name'>player</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action/add player</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span> </td><td>game_profile</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>chatSession</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 2</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 3</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 6</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 7</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 10</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 11</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 14</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 15</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 18</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 19</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 22</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 23</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 26</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 27</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 30</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 31</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 34</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 35</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 38</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 39</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 42</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 43</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 46</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 47</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 50</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 51</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 54</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 55</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 58</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 59</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 62</span> </td><td>chat_session</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 63</span> </td><td>chat_session</td><td></td></tr>
+<tr><td><b class='name'>chatSession</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action/initialize chat</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span> </td><td>chat_session</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>gamemode</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 4</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 5</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 6</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 7</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 12</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 13</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 14</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 15</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 20</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 21</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 22</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 23</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 28</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 29</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 30</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 31</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 36</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 37</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 38</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 39</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 44</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 45</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 46</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 47</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 52</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 53</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 54</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 55</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 60</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 61</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 62</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 63</span> </td><td>varint</td><td></td></tr>
+<tr><td><b class='name'>gamemode</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action/update game mode</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span> </td><td>varint</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>listed</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 8</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 9</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 10</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 11</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 12</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 13</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 14</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 15</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 24</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 25</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 26</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 27</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 28</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 29</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 30</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 31</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 40</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 41</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 42</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 43</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 44</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 45</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 46</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 47</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 56</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 57</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 58</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 59</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 60</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 61</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 62</span> </td><td>bool</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 63</span> </td><td>bool</td><td></td></tr>
+<tr><td><b class='name'>listed</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action/update listed</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span> </td><td>varint</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>latency</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
-<tr><td class='field-name name'><span class='fake'>is 16</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 17</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 18</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 19</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 20</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 21</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 22</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 23</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 24</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 25</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 26</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 27</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 28</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 29</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 30</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 31</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 48</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 49</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 50</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 51</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 52</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 53</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 54</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 55</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 56</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 57</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 58</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 59</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 60</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 61</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 62</span> </td><td>varint</td><td></td></tr>
-<tr><td class='field-name name'><span class='fake'>is 63</span> </td><td>varint</td><td></td></tr>
+<tr><td><b class='name'>latency</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action/update latency</span></div></i></td><td colspan=2><table>
+<tr><td class='field-name name'><span class='fake'>is true</span> </td><td>varint</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
 </table></td></tr>
-<tr><td><b class='name'>displayName</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action</span></div></i></td><td colspan=2><table>
+<tr><td><b class='name'>displayName</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>../action/update display name</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
 </table></td></tr>
 </table></td></tr>
@@ -2821,14 +2785,7 @@ MC: ClientboundPlayerCombatKillPacket</p></p>
     
 <p><p>MC: ClientboundSoundPacket</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='field-name name'>soundId </td><td>varint</td><td></td></tr>
-<tr><td><b class='name'>soundEvent</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>soundId</span></div></i></td><td colspan=2><table>
-<tr><td class='name'><span class='fake'>is 0</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>resource </td><td>string</td><td></td></tr>
-<tr><td class='field-name name'>range <div class='tag tag-optional'>optional</div></td><td>f32</td><td></td></tr>
-</table></td></tr>
-<tr><td class='field-name name'><span class='fake'>default</span> </td><td>void</td><td></td></tr>
-</table></td></tr>
+<tr><td class='field-name name'>sound </td><td>ItemSoundHolder</td><td></td></tr>
 <tr><td class='field-name name'>soundCategory </td><td>soundSource</td><td></td></tr>
 <tr><td class='field-name name'>x </td><td>i32</td><td></td></tr>
 <tr><td class='field-name name'>y </td><td>i32</td><td></td></tr>
@@ -2893,7 +2850,7 @@ MC: ClientboundPlayerCombatKillPacket</p></p>
 <tr><td class='field-name name'>entityId </td><td>varint</td><td></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>properties</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>properties</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td class='field-name name'>key </td><td>string</td><td></td></tr>
+<tr><td class='field-name name'>name </td><td>string</td><td></td></tr>
 <tr><td class='field-name name'>value </td><td>f64</td><td></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>modifiers</span> length</td><td class="field-implicit">varint</td><td ></td></tr>
 <tr><td class='field-name'><span class='name'>modifiers</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
@@ -2962,8 +2919,8 @@ MC: ClientboundPlayerCombatKillPacket</p></p>
 <tr><td class='field-name name'>height </td><td>varint</td><td></td></tr>
 <tr><td colspan=2 class="vpad"><i>Length for <span class='name'>ingredients</span> below is <b class='name'>width</b> from above</td><td ></i></td></tr>
 <tr><td class='field-name'><span class='name'>ingredients</span> <div class="tag tag-array">array</div></td><td colspan=2><table>
-<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>__1965</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
-<tr><td class='field-name'><span class='name'>__1965</span> <div class="tag tag-array">array</div></td><td>ingredient</td><td></td></tr>
+<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>__1794</span> below is <b class='name'>height</b> from above</td><td rowspan=2></i></td></tr>
+<tr><td class='field-name'><span class='name'>__1794</span> <div class="tag tag-array">array</div></td><td>ingredient</td><td></td></tr>
 </table></td></tr>
 <tr><td class='field-name name'>result </td><td>slot</td><td></td></tr>
 <tr><td class='field-name name'>showNotification </td><td>bool</td><td></td></tr>
