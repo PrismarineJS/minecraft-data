@@ -24,6 +24,8 @@ These YAML files can be found in data/pc/latest and data/bedrock/latest. Old pro
 
 In bedrock data, types and packets are sperated into proto.yml and types.yml files. On pc there is one single proto.yml file with all packets and types for all the states, and these states are sperated under different top-level regions like `^handshaking.toClient.types` and `^play.toServer.types` (which both inherit from the top `^types`).
 
+Note: Minecraft Java Edition uses big endian encoding by default, whereas Minecraft Bedrock Edition uses little endian. Note that varints are always little endian.
+
 ```yml
 # This defines a new data structure, a ProtoDef container.
 Position:
@@ -31,8 +33,8 @@ Position:
     x: li32
     # `z` is a 32-bit LE *unsigned* integer
     z: lu32
-    # `b` is a 32-bit LE floating point
-    y: lf32
+    # `b` is an **optional** 32-bit LE floating point
+    y?: lf32
 
 # Fields starting with `packet_` are structs representing Minecraft packets
 packet_player_position:
@@ -91,7 +93,7 @@ function read_position(stream) {
     const ret = {}
     ret.x = stream.readLI32()
     ret.z = stream.readLU32()
-    ret.y = stream.readLF32()
+    if (stream.readBool()) ret.y = stream.readLF32()
     return ret
 }
 
