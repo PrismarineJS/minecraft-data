@@ -2055,10 +2055,6 @@
    # MC: ClientboundPongResponsePacket
    packet_ping_response:
       id: i64
-   # MC: ClientboundTestInstanceBlockStatusPacket
-   packet_test_instance_block_status:
-      status: anonymousNbt
-      size?: vec3i
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
       windowId: ContainerID
@@ -2518,6 +2514,10 @@
       yaw: i8
       pitch: i8
       onGround: bool
+   # MC: ClientboundTestInstanceBlockStatusPacket
+   packet_test_instance_block_status:
+      status: anonymousNbt
+      size?: vec3i
    # MC: ClientboundTickingStatePacket
    packet_set_ticking_state:
       tick_rate: f32
@@ -2683,7 +2683,6 @@
       - open_window
       - open_sign_entity
       - ping
-      - test_instance_block_status
       - ping_response
       - craft_recipe_response
       - abilities
@@ -2748,6 +2747,7 @@
       - nbt_query_response
       - collect
       - entity_teleport
+      - test_instance_block_status
       - set_ticking_state
       - step_tick
       - transfer
@@ -2815,7 +2815,6 @@
          if open_window: packet_open_window
          if open_sign_entity: packet_open_sign_entity
          if ping: packet_ping
-         if test_instance_block_status: packet_test_instance_block_status
          if ping_response: packet_ping_response
          if craft_recipe_response: packet_craft_recipe_response
          if abilities: packet_abilities
@@ -2880,6 +2879,7 @@
          if nbt_query_response: packet_nbt_query_response
          if collect: packet_collect
          if entity_teleport: packet_entity_teleport
+         if test_instance_block_status: packet_test_instance_block_status
          if set_ticking_state: packet_set_ticking_state
          if step_tick: packet_step_tick
          if transfer: packet_common_transfer
