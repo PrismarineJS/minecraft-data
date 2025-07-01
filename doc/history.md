@@ -1,3 +1,9 @@
+## 3.92.0
+* [PC protocol updates and refactor (#948)](https://github.com/PrismarineJS/minecraft-data/commit/1a0bb5380450a3b1559af47b48fb9be772531741) (thanks @extremeheat)
+* [add 1.21.6 data (#1028)](https://github.com/PrismarineJS/minecraft-data/commit/724b1b1d1de57b2b4e4da42a6cf9a5bd2bbd4cae) (thanks @bedrock-bot)
+* [doc: Add optional example in protocol.md](https://github.com/PrismarineJS/minecraft-data/commit/75c7e93be0ce3d2810f9bcb4d2d234aec6049496) (thanks @extremeheat)
+* [Add 1.21.7 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97efb66f1b4d5e42806d4ded033727638df90525) (thanks @github-actions[bot])
+
 ## 3.91.0
 * [Add missing data version values in protocol version file (#1024)](https://github.com/PrismarineJS/minecraft-data/commit/72533f88da564797d59b618de59835c7984a79d5) (thanks @rom1504)
 * [Add some 1.21.5 data (#995)](https://github.com/PrismarineJS/minecraft-data/commit/f9ea32fedfb44b8cc4b41c3b41e178a96c690907) (thanks @RomainNeup)
