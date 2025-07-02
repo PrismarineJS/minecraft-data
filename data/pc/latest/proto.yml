@@ -585,13 +585,14 @@
             removeComponents: []$removedComponentCount
                type: SlotComponentType
 
-   HashedStack:
+   HashedSlot:
       itemId: varint
-      count: varint
-      addedComponents: []varint
-         typeId: varint
+      itemCount: varint
+      components: []varint
+         type: SlotComponentType
          hash: i32
-      removedComponents: varint[]varint
+      removeComponents: []varint
+         type: SlotComponentType
 
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
@@ -2988,8 +2989,8 @@
       mode: varint
       changedSlots: []varint
          location: i16
-         item?: HashedStack
-      cursorItem?: HashedStack
+         item?: HashedSlot
+      cursorItem?: HashedSlot
    # MC: ServerboundContainerClosePacket
    packet_close_window:
       windowId: ContainerID

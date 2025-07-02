@@ -1972,7 +1972,7 @@
         }
       ]
     ],
-    "HashedStack": [
+    "HashedSlot": [
       "container",
       [
         {
@@ -1980,11 +1980,11 @@
           "type": "varint"
         },
         {
-          "name": "count",
+          "name": "itemCount",
           "type": "varint"
         },
         {
-          "name": "addedComponents",
+          "name": "components",
           "type": [
             "array",
             {
@@ -1993,8 +1993,8 @@
                 "container",
                 [
                   {
-                    "name": "typeId",
-                    "type": "varint"
+                    "name": "type",
+                    "type": "SlotComponentType"
                   },
                   {
                     "name": "hash",
@@ -2006,12 +2006,20 @@
           ]
         },
         {
-          "name": "removedComponents",
+          "name": "removeComponents",
           "type": [
             "array",
             {
               "countType": "varint",
-              "type": "varint"
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "type",
+                    "type": "SlotComponentType"
+                  }
+                ]
+              ]
             }
           ]
         }
@@ -8763,7 +8771,7 @@
                         "name": "item",
                         "type": [
                           "option",
-                          "HashedStack"
+                          "HashedSlot"
                         ]
                       }
                     ]
@@ -8775,7 +8783,7 @@
               "name": "cursorItem",
               "type": [
                 "option",
-                "HashedStack"
+                "HashedSlot"
               ]
             }
           ]
