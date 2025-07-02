@@ -3224,6 +3224,17 @@
    # MC: ServerboundTeleportToEntityPacket
    packet_spectate:
       target: UUID
+   # MC: ServerboundTestInstanceBlockActionPacket
+   packet_test_instance_block_action:
+      pos: position
+      action: varint
+      data:
+         test?: string
+         size: vec3i
+         rotation: varint
+         ignoreEntities: bool
+         status: varint
+         errorMessage?: anonymousNbt
    # MC: ServerboundUseItemOnPacket
    packet_block_place:
       hand: varint
@@ -3240,17 +3251,6 @@
       hand: varint
       sequence: varint
       rotation: vec2f
-   # MC: ServerboundTestInstanceBlockActionPacket
-   packet_test_instance_block_action:
-      pos: position
-      action: varint
-      data:
-         test?: string
-         size: vec3i
-         rotation: varint
-         ignoreEntities: bool
-         status: varint
-         errorMessage?: anonymousNbt
 
    packet:
       name: varint =>
@@ -3315,10 +3315,10 @@
       - set_test_block
       - update_sign
       - arm_animation
+      - test_instance_block_action
       - spectate
       - block_place
       - use_item
-      - test_instance_block_action
       params: name ?
          if teleport_confirm: packet_teleport_confirm
          if query_block_nbt: packet_query_block_nbt
@@ -3379,7 +3379,7 @@
          if set_test_block: packet_set_test_block
          if update_sign: packet_update_sign
          if arm_animation: packet_arm_animation
+         if test_instance_block_action: packet_test_instance_block_action
          if spectate: packet_spectate
          if block_place: packet_block_place
          if use_item: packet_use_item
-         if test_instance_block_action: packet_test_instance_block_action
