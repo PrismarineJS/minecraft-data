@@ -560,11 +560,11 @@
    # but it uses the special UntrustedSlotComponent type for its component list.
    # It's optional because the player might be clearing the slot.
    UntrustedSlot:
-      present: bool
-      item: present ?
-         if true:
+      itemCount: varint
+      _: itemCount ?
+         if 0: void
+         default:
             itemId: varint
-            itemCount: varint
             addedComponentCount: varint
             removedComponentCount: varint
             components: UntrustedSlotComponent[]$addedComponentCount

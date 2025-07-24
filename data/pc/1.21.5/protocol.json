@@ -1840,67 +1840,64 @@
       "container",
       [
         {
-          "name": "present",
-          "type": "bool"
+          "name": "itemCount",
+          "type": "varint"
         },
         {
-          "name": "item",
+          "anon": true,
           "type": [
             "switch",
             {
-              "compareTo": "present",
+              "compareTo": "itemCount",
               "fields": {
-                "true": [
-                  "container",
-                  [
-                    {
-                      "name": "itemId",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "itemCount",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "addedComponentCount",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "removedComponentCount",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "components",
-                      "type": [
-                        "array",
-                        {
-                          "count": "addedComponentCount",
-                          "type": "UntrustedSlotComponent"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "removeComponents",
-                      "type": [
-                        "array",
-                        {
-                          "count": "removedComponentCount",
-                          "type": [
-                            "container",
-                            [
-                              {
-                                "name": "type",
-                                "type": "SlotComponentType"
-                              }
-                            ]
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                ],
+                "0": "void",
                 "false": "void"
-              }
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "itemId",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "addedComponentCount",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "removedComponentCount",
+                    "type": "varint"
+                  },
+                  {
+                    "name": "components",
+                    "type": [
+                      "array",
+                      {
+                        "count": "addedComponentCount",
+                        "type": "UntrustedSlotComponent"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "removeComponents",
+                    "type": [
+                      "array",
+                      {
+                        "count": "removedComponentCount",
+                        "type": [
+                          "container",
+                          [
+                            {
+                              "name": "type",
+                              "type": "SlotComponentType"
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              ]
             }
           ]
         }
