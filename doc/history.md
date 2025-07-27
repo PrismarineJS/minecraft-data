@@ -1,3 +1,8 @@
+## 3.93.0
+* [Add bedrock v1.21.93 to versions (#1032)](https://github.com/PrismarineJS/minecraft-data/commit/015c1c53fd4595c2226f729cb019d53514c91c32) (thanks @CreeperG16)
+* [manually update some of 1.21.4 materials.json (#1033)](https://github.com/PrismarineJS/minecraft-data/commit/8dcb6a1b09777ef34a8db8dde879d2a65de4e65c) (thanks @Gjum)
+* [fix: typo in SlotDisplay `smithing_trim` (#1031)](https://github.com/PrismarineJS/minecraft-data/commit/8071a1626422ddd3e9a8ab971edd9337f7b6d702) (thanks @patyhank)
+
 ## 3.92.0
 * [PC protocol updates and refactor (#948)](https://github.com/PrismarineJS/minecraft-data/commit/1a0bb5380450a3b1559af47b48fb9be772531741) (thanks @extremeheat)
 * [add 1.21.6 data (#1028)](https://github.com/PrismarineJS/minecraft-data/commit/724b1b1d1de57b2b4e4da42a6cf9a5bd2bbd4cae) (thanks @bedrock-bot)
