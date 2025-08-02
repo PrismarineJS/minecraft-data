@@ -173,7 +173,7 @@
          if custom_name: anonymousNbt
          if item_name: anonymousNbt
          if item_model: string
-         if lore: anonOptionalNbt[]varint
+         if lore: anonymousNbt[]varint
          if rarity: varint =>
          - common
          - uncommon
@@ -347,7 +347,11 @@
          if entity_data: anonymousNbt
          if bucket_entity_data: anonymousNbt
          if block_entity_data: anonymousNbt
-         if instrument: ["registryEntryHolder", { "baseName": "instrumentId", "otherwise": { "name": "data", "type": "InstrumentData" } }]
+         if instrument:
+            hasHolder: bool
+            data: hasHolder ?
+               if true: ["registryEntryHolder", { "baseName": "instrumentId", "otherwise": { "name": "data", "type": "InstrumentData" } }]
+               if false: string
          if provides_trim_material:
             hasHolder: bool
             material: hasHolder ?
