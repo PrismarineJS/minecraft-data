@@ -164,7 +164,7 @@
       type: SlotComponentType
       ## Ref: client/net/minecraft/core/component/DataComponents.java
       data: type ?
-         ## TODO: look into how nbt works here
+         ## 'Unit' MC type is functionally void
          if custom_data: anonymousNbt
          if max_stack_size: varint
          if max_damage: varint
@@ -179,7 +179,7 @@
          - uncommon
          - rare
          - epic
-         if enchantments:
+         if enchantments or stored_enchantments:
             enchantments: []varint
                id: varint
                level: varint
@@ -206,7 +206,13 @@
                - armor
                - body
                - saddle
-            showTooltip: bool
+            display:
+               type: varint =>
+                  - default
+                  - hidden
+                  - override
+               component: type ?
+                  if override: anonymousNbt
          if custom_model_data:
             floats: f32[]varint
             flags: bool[]varint
@@ -296,17 +302,14 @@
             swappable: bool
             damageable: bool
             equipOnInteract: bool
+            shearable: bool
+            shearingSound: ItemSoundHolder
          if repairable:
             items: IDSet
          if glider: void
          if tooltip_style: string
          if death_protection:
             effects: ItemConsumeEffect[]varint
-         if stored_enchantments:
-            enchantments: []varint
-               # The ID of the enchantment in the enchantment registry.
-               id: varint
-               level: varint
          if dyed_color: i32
          if map_color: i32
          if map_id: varint
@@ -795,6 +798,7 @@
       7: player
       8: ambient
       9: voice
+      10: ui
    packedChunkPos:
       z: i32
       x: i32
@@ -948,7 +952,12 @@
          [
             {
                "name": "unused",
-               "size": 3,
+               "size": 2,
+               "signed": false
+            },
+            {
+               "name": "allows_restricted",
+               "size": 1,
                "signed": false
             },
             {
@@ -1001,6 +1010,7 @@
             - minecraft:item_stack
             - minecraft:item_predicate
             - minecraft:color
+            - minecraft:hex_color # 1.21.6
             - minecraft:component
             - minecraft:style
             - minecraft:message
@@ -1038,6 +1048,7 @@
             - minecraft:loot_table # 1.20.5
             - minecraft:loot_predicate # 1.20.5
             - minecraft:loot_modifier # 1.20.5
+            - minecraft:dialog # 1.21.6
             - minecraft:uuid
             properties: parser ?
                if brigadier:bool: void
@@ -1183,6 +1194,7 @@
                if minecraft:item_stack: void
                if minecraft:item_predicate: void
                if minecraft:color: void
+               if minecraft:hex_color: void
                if minecraft:component: void
                if minecraft:message: void
                if minecraft:nbt: void
@@ -1221,11 +1233,12 @@
                if minecraft:gamemode: void
                if minecraft:time:
                   min: i32
-               if minecraft:resource_or_tag or minecraft:resource_or_tag_key or minecraft:resource or minecraft:resource_key or minecraft:resource_selector:
+               if minecraft:resource_or_tag or minecraft:resource_or_tag_key or minecraft:resource_key or minecraft:resource_selector:
                   registry: string
                if minecraft:template_mirror: void
                if minecraft:template_rotation: void
                if minecraft:heightmap: void
+               if minecraft:dialog: void
                if minecraft:uuid: void
             suggestionType: ../flags/has_custom_suggestions ?
                if 1: string
@@ -1308,46 +1321,13 @@
          unknownType: hasKnownType ?
             if false: anonymousNbt
          link: string
-
-   # 1.21.6 - Dialog System Types
-   DialogButtonAction: varint =>
-      - close
-      - url
-      - file
-      - copy_to_clipboard
-      - custom
-   DialogButton:
-      text: anonymousNbt
-      hasAction: bool
-      action: hasAction ?
-         if true:
-            type: DialogButtonAction
-            value: string
-   Dialog:
-      title: anonymousNbt
-      content: anonymousNbt
-      buttons: DialogButton[]varint
-      hasWarningScreen: bool
-      warningScreen: hasWarningScreen ?
-         if true:
-            title: anonymousNbt
-            content: anonymousNbt
-            checkText?: anonymousNbt
-            okText: anonymousNbt
-   
-   # 1.21.6 - Waypoint System Types  
-   WaypointOperation: varint =>
-      - track
-      - untrack
-      - update
-   TrackedWaypoint:
+   # MC: ClientboundClearDialogPacket
+   packet_common_clear_dialog:
+      # empty
+   # MC: ServerboundCustomClickActionPacket
+   packet_common_custom_click_action:
       id: string
-      position: position
-      name: anonymousNbt
-      color: varint
-      hasAzimuth: bool
-      azimuth: hasAzimuth ?
-         if true: f32
+      payload: ByteArray # length-prefixed NBT
 
 ^handshaking.toClient.types:
    packet:
@@ -1526,6 +1506,9 @@
          tagType: string
          tags: tags
    ## (Select known packs is common)
+   # MC: ClientboundShowDialogConfigurationPacket
+   packet_show_dialog:
+      dialog: anonymousNbt
    packet:
       name: varint =>
          - cookie_request
@@ -1545,6 +1528,8 @@
          - select_known_packs
          - custom_report_details
          - server_links
+         - clear_dialog
+         - show_dialog
       params: name ?
          if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
@@ -1563,6 +1548,8 @@
          if select_known_packs: packet_common_select_known_packs
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
+         if clear_dialog: packet_common_clear_dialog
+         if show_dialog: packet_show_dialog
 ^configuration.toServer.types:
    ## (Settings is Common) ##
    ## (Cookie Response is Common) ##
@@ -1593,8 +1580,7 @@
          - pong
          - resource_pack_receive
          - select_known_packs
-         - custom_report_details
-         - server_links
+         - custom_click_action
       params: name ?
          if settings: packet_common_settings
          if cookie_response: packet_common_cookie_response
@@ -1604,8 +1590,7 @@
          if pong: packet_pong
          if resource_pack_receive: packet_resource_pack_receive
          if select_known_packs: packet_common_select_known_packs
-         if custom_report_details: packet_common_custom_report_details
-         if server_links: packet_common_server_links
+         if custom_click_action: packet_common_custom_click_action
 ^play.toClient.types:
    SlotDisplay:
       type: varint =>
@@ -1614,7 +1599,7 @@
          - item
          - item_stack
          - tag
-         - smithing_trim #TODO: Old versions have typo
+         - smithing_trim
          - with_remainder
          - composite
       data: type ?
@@ -1758,7 +1743,11 @@
          default: void
    # MC: ClientboundChangeDifficultyPacket
    packet_difficulty:
-      difficulty: u8
+      difficulty: varint =>
+         0: peaceful
+         1: easy
+         2: normal
+         3: hard
       difficultyLocked: bool
    # MC: ClientboundChunkBatchFinishedPacket
    packet_chunk_batch_finished:
@@ -1897,8 +1886,21 @@
       chunkX: i32
    # MC: ClientboundGameEventPacket
    packet_game_state_change:
-      #TODO: Should be a mapper
-      reason: u8
+      reason: u8 =>
+         0: no_respawn_block_available
+         1: start_raining
+         2: stop_raining
+         3: change_game_mode
+         4: win_game
+         5: demo_event
+         6: play_arrow_hit_sound
+         7: rain_level_change
+         8: thunder_level_change
+         9: puffer_fish_sting
+         10: guardian_elder_effect
+         11: immediate_respawn
+         12: limited_crafting
+         13: level_chunks_load_start
       gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
    packet_open_horse_window:
@@ -1927,7 +1929,13 @@
       x: i32
       z: i32
       heightmaps: []varint
-         type: varint
+         type: varint =>
+            0: world_surface_wg
+            1: world_surface
+            2: ocean_floor_wg
+            3: ocean_floor
+            4: motion_blocking
+            5: motion_blocking_no_leaves
          data: i64[]varint
       chunkData: ByteArray
       blockEntities: chunkBlockEntity[]varint
@@ -2250,15 +2258,14 @@
    packet_recipe_book_remove:
       recipeIds: varint[]varint
    # MC: ClientboundRecipeBookSettingsPacket
+   RecipeBookSetting:
+      open: bool
+      filtering: bool
    packet_recipe_book_settings:
-      craftingGuiOpen: bool
-      craftingFilteringCraftable: bool
-      smeltingGuiOpen: bool
-      smeltingFilteringCraftable: bool
-      blastGuiOpen: bool
-      blastFilteringCraftable: bool
-      smokerGuiOpen: bool
-      smokerFilteringCraftable: bool
+      crafting: RecipeBookSetting
+      furnace: RecipeBookSetting
+      blast: RecipeBookSetting
+      smoker: RecipeBookSetting
    # MC: ClientboundRemoveEntitiesPacket
    packet_entity_destroy:
       entityIds: varint[]varint
@@ -2427,41 +2434,38 @@
       contents: Slot
    # MC: ClientboundSetPlayerTeamPacket
    packet_teams:
-      #TODO: this should be using a switch
       team: string
-      mode: i8
-      name: mode ?
-         if 0: anonymousNbt
-         if 2: anonymousNbt
-         default: void
-      friendlyFire: mode ?
-         if 0: i8
-         if 2: i8
-         default: void
-      nameTagVisibility: mode ?
-         if 0: varint
-         if 2: varint
-         default: void
-      collisionRule: mode ?
-         if 0: varint
-         if 2: varint
-         default: void
-      formatting: mode ?
-         if 0: varint
-         if 2: varint
-         default: void
-      prefix: mode ?
-         if 0: anonymousNbt
-         if 2: anonymousNbt
-         default: void
-      suffix: mode ?
-         if 0: anonymousNbt
-         if 2: anonymousNbt
+      mode: i8 =>
+         - add
+         - remove
+         - change
+         - join
+         - leave
+      _: mode ?
+         if add or change:
+            name: anonymousNbt
+            flags: varint =>
+               - always
+               - never
+               - push_other_teams
+               - push_own_team
+            nameTagVisibility: varint =>
+               - always
+               - never
+               - hide_for_other_teams
+               - hide_for_own_team
+            collisionRule: varint =>
+               - always
+               - never
+               - push_other_teams
+               - push_own_team
+            formatting: varint
+            prefix: anonymousNbt
+            suffix: anonymousNbt
+            players: string[]varint
          default: void
       players: mode ?
-         if 0: string[]varint
-         if 3: string[]varint
-         if 4: string[]varint
+         if add or join or leave: string[]varint
          default: void
    # MC: ClientboundSetScorePacket
    packet_scoreboard_score:
@@ -2609,6 +2613,9 @@
             - generic.attack_speed
             - player.block_break_speed
             - player.block_interaction_range
+            - burning_time
+            - camera_distance
+            - explosion_knockback_resistance
             - player.entity_interaction_range
             - generic.fall_damage_multiplier
             - generic.flying_speed
@@ -2624,6 +2631,12 @@
             - generic.scale
             - zombie.spawn_reinforcements
             - generic.step_height
+            - submerged_mining_speed
+            - sweeping_damage_ratio
+            - tempt_range
+            - water_movement_efficiency
+            - waypoint_transmit_range
+            - waypoint_receive_range
          value: f64
          modifiers: []varint
             uuid: string
@@ -2663,18 +2676,33 @@
       id: varint
       accelerationPower: f64
    ## (ClientboundCustomReportDetailsPacket, ClientboundServerLinksPacket is common)
-
-   # MC: ClientboundShowDialogPacket
-   packet_show_dialog:
-      dialog: Dialog
-   # MC: ClientboundClearDialogPacket  
-   packet_clear_dialog:
-      # Empty packet
    # MC: ClientboundTrackedWaypointPacket
-   packet_waypoint:
-      operation: WaypointOperation
-      waypoint: TrackedWaypoint
-
+   packet_tracked_waypoint:
+      operation: varint =>
+         0: track
+         1: untrack
+         2: update
+      waypoint:
+         uuid?: UUID
+         id?: string
+         icon:
+            style: string
+            color?: i32 # RGB color with alpha fixed at FF
+         type: varint =>
+            0: empty
+            1: vec3i
+            2: chunk
+            3: azimuth
+         data: type ?
+            if vec3i: vec3i
+            if chunk:
+               chunkX: varint
+               chunkZ: varint
+            if azimuth: f32
+   ## (clear_dialog is common)
+   # MC: ClientboundShowDialogGamePacket
+   packet_show_dialog:
+      dialog: ["registryEntryHolder", { "baseName": "dialog", "otherwise": { "name": "data", "type": "anonymousNbt" } }]
    packet:
       name: varint =>
       - bundle_delimiter
@@ -2808,7 +2836,7 @@
       - set_projectile_power
       - custom_report_details
       - server_links
-      - waypoint
+      - tracked_waypoint
       - clear_dialog
       - show_dialog
       params: name ?
@@ -2943,8 +2971,8 @@
          if set_projectile_power: packet_set_projectile_power
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
-         if waypoint: packet_waypoint
-         if clear_dialog: packet_clear_dialog
+         if tracked_waypoint: packet_tracked_waypoint
+         if clear_dialog: packet_common_clear_dialog
          if show_dialog: packet_show_dialog
 
 ^play.toServer.types:
@@ -2961,7 +2989,18 @@
       selectedItemIndex: varint
    # MC: ServerboundChangeDifficultyPacket
    packet_set_difficulty:
-      newDifficulty: u8
+      newDifficulty: varint =>
+         0: peaceful
+         1: easy
+         2: normal
+         3: hard
+   # MC: ServerboundChangeGameModePacket
+   packet_change_gamemode:
+      mode: varint =>
+         0: survival
+         1: creative
+         2: adventure
+         3: spectator
    # MC: ServerboundChatAckPacket
    packet_message_acknowledgement:
       count: varint
@@ -3255,6 +3294,7 @@
       metadata: string
       integrity: f32
       seed: varint
+      # New `strict` flag
       flags: u8 =>
          - ignore_entities
          - show_air
@@ -3307,23 +3347,13 @@
       sequence: varint
       rotation: vec2f
 
-   # MC: ServerboundCustomClickActionPacket
-   packet_custom_click_action:
-      id: string
-      hasPayload: bool
-      payload: hasPayload ?
-         if true: anonymousNbt
-   # MC: ServerboundChangeGameModePacket  
-   packet_change_game_mode:
-      gameMode: varint
-
    packet:
       name: varint =>
       - teleport_confirm
       - query_block_nbt
       - select_bundle_item
       - set_difficulty
-      - change_game_mode
+      - change_gamemode
       - message_acknowledgement
       - chat_command
       - chat_command_signed
@@ -3381,8 +3411,8 @@
       - set_test_block
       - update_sign
       - arm_animation
-      - test_instance_block_action
       - spectate
+      - test_instance_block_action
       - block_place
       - use_item
       - custom_click_action
@@ -3391,7 +3421,7 @@
          if query_block_nbt: packet_query_block_nbt
          if select_bundle_item: packet_select_bundle_item
          if set_difficulty: packet_set_difficulty
-         if change_game_mode: packet_change_game_mode
+         if change_gamemode: packet_change_gamemode
          if message_acknowledgement: packet_message_acknowledgement
          if chat_command: packet_chat_command
          if chat_command_signed: packet_chat_command_signed
@@ -3409,6 +3439,7 @@
          if set_slot_state: packet_set_slot_state
          if cookie_response: packet_common_cookie_response
          if custom_payload: packet_custom_payload
+         if debug_sample_subscription: packet_debug_sample_subscription
          if edit_book: packet_edit_book
          if query_entity_nbt: packet_query_entity_nbt
          if use_entity: packet_use_entity
@@ -3447,8 +3478,8 @@
          if set_test_block: packet_set_test_block
          if update_sign: packet_update_sign
          if arm_animation: packet_arm_animation
-         if test_instance_block_action: packet_test_instance_block_action
          if spectate: packet_spectate
+         if test_instance_block_action: packet_test_instance_block_action
          if block_place: packet_block_place
          if use_item: packet_use_item
-         if custom_click_action: packet_custom_click_action
+         if custom_click_action: packet_common_custom_click_action
