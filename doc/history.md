@@ -1,3 +1,10 @@
+## 3.94.0
+* [Add pc 1.21.5 protocol data (#1029)](https://github.com/PrismarineJS/minecraft-data/commit/6d6e431dd22cd9d0fb9e8c5b7029f6f1311f7501) (thanks @extremeheat)
+* [Add 25w31a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/60bc124b73d6daa12e80179e963aa93a80a40d45) (thanks @github-actions[bot])
+* [Add bedrock 1.21.90 data (#1027)](https://github.com/PrismarineJS/minecraft-data/commit/e72f74ee618659bbbb15bfa97ae1c5fb194b4ad6) (thanks @bedrock-bot)
+* [Add 1.21.8 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/05369ec2ec1f1f927359e9c4e90c8346111ac1a8) (thanks @github-actions[bot])
+* [Add 1.21.8-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a333d737118f65f6161ebdd353b36481d168b5fd) (thanks @github-actions[bot])
+
 ## 3.93.0
 * [Add bedrock v1.21.93 to versions (#1032)](https://github.com/PrismarineJS/minecraft-data/commit/015c1c53fd4595c2226f729cb019d53514c91c32) (thanks @CreeperG16)
 * [manually update some of 1.21.4 materials.json (#1033)](https://github.com/PrismarineJS/minecraft-data/commit/8dcb6a1b09777ef34a8db8dde879d2a65de4e65c) (thanks @Gjum)
