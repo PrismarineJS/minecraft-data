@@ -2759,9 +2759,7 @@
       - world_border_size
       - world_border_warning_delay
       - world_border_warning_reach
-      - waypoint
       - camera
-      - clear_dialog
       - update_view_position
       - update_view_distance
       - set_cursor_item
@@ -2780,7 +2778,6 @@
       - teams
       - scoreboard_score
       - simulation_distance
-      - show_dialog
       - set_title_subtitle
       - update_time
       - set_title_text
@@ -2807,6 +2804,9 @@
       - set_projectile_power
       - custom_report_details
       - server_links
+      - waypoint
+      - clear_dialog
+      - show_dialog
       params: name ?
          if bundle_delimiter: void
          if spawn_entity: packet_spawn_entity
@@ -2894,9 +2894,7 @@
          if world_border_size: packet_world_border_size
          if world_border_warning_delay: packet_world_border_warning_delay
          if world_border_warning_reach: packet_world_border_warning_reach
-         if waypoint: packet_waypoint
          if camera: packet_camera
-         if clear_dialog: packet_clear_dialog
          if update_view_position: packet_update_view_position
          if update_view_distance: packet_update_view_distance
          if set_cursor_item: packet_set_cursor_item
@@ -2915,7 +2913,6 @@
          if teams: packet_teams
          if scoreboard_score: packet_scoreboard_score
          if simulation_distance: packet_simulation_distance
-         if show_dialog: packet_show_dialog
          if set_title_subtitle: packet_set_title_subtitle
          if update_time: packet_update_time
          if set_title_text: packet_set_title_text
@@ -2942,6 +2939,9 @@
          if set_projectile_power: packet_set_projectile_power
          if custom_report_details: packet_common_custom_report_details
          if server_links: packet_common_server_links
+         if waypoint: packet_waypoint
+         if clear_dialog: packet_clear_dialog
+         if show_dialog: packet_show_dialog
 
 ^play.toServer.types:
    # MC: ServerboundAcceptTeleportationPacket
@@ -3319,12 +3319,12 @@
       - query_block_nbt
       - select_bundle_item
       - set_difficulty
+      - change_game_mode
       - message_acknowledgement
       - chat_command
       - chat_command_signed
       - chat_message
       - chat_session_update
-      - change_game_mode
       - chunk_batch_received
       - client_command
       - tick_end
@@ -3337,7 +3337,6 @@
       - close_window
       - set_slot_state
       - cookie_response
-      - custom_click_action
       - custom_payload
       - debug_sample_subscription
       - edit_book
@@ -3382,17 +3381,18 @@
       - spectate
       - block_place
       - use_item
+      - custom_click_action
       params: name ?
          if teleport_confirm: packet_teleport_confirm
          if query_block_nbt: packet_query_block_nbt
          if select_bundle_item: packet_select_bundle_item
          if set_difficulty: packet_set_difficulty
+         if change_game_mode: packet_change_game_mode
          if message_acknowledgement: packet_message_acknowledgement
          if chat_command: packet_chat_command
          if chat_command_signed: packet_chat_command_signed
          if chat_message: packet_chat_message
          if chat_session_update: packet_chat_session_update
-         if change_game_mode: packet_change_game_mode
          if chunk_batch_received: packet_chunk_batch_received
          if client_command: packet_client_command
          if tick_end: packet_tick_end
@@ -3404,7 +3404,6 @@
          if close_window: packet_close_window
          if set_slot_state: packet_set_slot_state
          if cookie_response: packet_common_cookie_response
-         if custom_click_action: packet_custom_click_action
          if custom_payload: packet_custom_payload
          if edit_book: packet_edit_book
          if query_entity_nbt: packet_query_entity_nbt
@@ -3448,3 +3447,4 @@
          if spectate: packet_spectate
          if block_place: packet_block_place
          if use_item: packet_use_item
+         if custom_click_action: packet_custom_click_action
