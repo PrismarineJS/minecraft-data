@@ -34,7 +34,7 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
   }
 }
 
-async function createInitialPull (edition, issueNo, { version, protocolVersion }) {
+async function createInitialPull (edition, issueUrl, { version, protocolVersion }) {
   exec('cd tools/js && npm install')
   exec(`cd tools/js && npm run version ${edition} ${version} ${protocolVersion}`)
   const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '.').toLowerCase()
@@ -45,7 +45,7 @@ async function createInitialPull (edition, issueNo, { version, protocolVersion }
   exec(`git commit -m "${title}"`)
   exec(`git push origin ${branchName}`)
   //     createPullRequest(title: string, body: string, fromBranch: string, intoBranch?: string): Promise<{ number: number, url: string }>;
-  const pr = await github.createPullRequest(title, `${title}.\n\nRef: #${issueNo}`, branchName, 'master')
+  const pr = await github.createPullRequest(title, `${title}.\n\nRef: ${issueUrl}`, branchName, 'master')
   return pr
 }
 
@@ -112,13 +112,13 @@ async function updateManifestPC () {
     console.log('Opening issue', versionJson)
     const issuePayload = buildFirstIssue(title, latestVersionData, versionJson)
 
-    github.createIssue(issuePayload)
+    const issue = await github.createIssue(issuePayload)
 
     fs.writeFileSync('./issue.md', issuePayload.body)
-    console.log('OK, wrote to ./issue.md', issuePayload)
+    console.log('Created issue', issue)
 
     // Now create an initial PR with the new version data
-    const pr = await createInitialPull('pc', issueStatus.id, {
+    const pr = await createInitialPull('pc', issue.url, {
       minecraftVersion: versionJson.id,
       version: latestVersion,
       protocolVersion: versionJson.protocol_version
