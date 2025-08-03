@@ -272,7 +272,7 @@
                   "array",
                   {
                     "countType": "varint",
-                    "type": "anonOptionalNbt"
+                    "type": "anonymousNbt"
                   }
                 ],
                 "rarity": [
@@ -1023,14 +1023,35 @@
                 "bucket_entity_data": "anonymousNbt",
                 "block_entity_data": "anonymousNbt",
                 "instrument": [
-                  "registryEntryHolder",
-                  {
-                    "baseName": "instrumentId",
-                    "otherwise": {
+                  "container",
+                  [
+                    {
+                      "name": "hasHolder",
+                      "type": "bool"
+                    },
+                    {
                       "name": "data",
-                      "type": "InstrumentData"
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "hasHolder",
+                          "fields": {
+                            "true": [
+                              "registryEntryHolder",
+                              {
+                                "baseName": "instrumentId",
+                                "otherwise": {
+                                  "name": "data",
+                                  "type": "InstrumentData"
+                                }
+                              }
+                            ],
+                            "false": "string"
+                          }
+                        }
+                      ]
                     }
-                  }
+                  ]
                 ],
                 "provides_trim_material": [
                   "container",
@@ -8019,21 +8040,26 @@
                               "4": "generic.attack_speed",
                               "5": "player.block_break_speed",
                               "6": "player.block_interaction_range",
-                              "7": "player.entity_interaction_range",
-                              "8": "generic.fall_damage_multiplier",
-                              "9": "generic.flying_speed",
-                              "10": "generic.follow_range",
-                              "11": "generic.gravity",
-                              "12": "generic.jump_strength",
-                              "13": "generic.knockback_resistance",
-                              "14": "generic.luck",
-                              "15": "generic.max_absorption",
-                              "16": "generic.max_health",
-                              "17": "generic.movement_speed",
-                              "18": "generic.safe_fall_distance",
-                              "19": "generic.scale",
-                              "20": "zombie.spawn_reinforcements",
-                              "21": "generic.step_height"
+                              "7": "camera_distance",
+                              "8": "explosion_knockback_resistance",
+                              "9": "player.entity_interaction_range",
+                              "10": "generic.fall_damage_multiplier",
+                              "11": "generic.flying_speed",
+                              "12": "generic.follow_range",
+                              "13": "generic.gravity",
+                              "14": "generic.jump_strength",
+                              "15": "generic.knockback_resistance",
+                              "16": "generic.luck",
+                              "17": "generic.max_absorption",
+                              "18": "generic.max_health",
+                              "19": "generic.movement_speed",
+                              "20": "generic.safe_fall_distance",
+                              "21": "generic.scale",
+                              "22": "zombie.spawn_reinforcements",
+                              "23": "generic.step_height",
+                              "24": "submerged_mining_speed",
+                              "25": "sweeping_damage_ratio",
+                              "26": "tempt_range"
                             }
                           }
                         ]

@@ -1,10 +1,11 @@
 const fs = require('fs')
 const cp = require('child_process')
-const helper = require('gh-helpers')()
+const github = require('gh-helpers')()
+const exec = (cmd) => github.mock ? console.log('> ', cmd) : (console.log('> ', cmd), cp.execSync(cmd, { stdio: 'inherit' }))
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
-const download = (url, dest) => cp.execSync(`curl -L ${url} -o ${dest}`)
+const download = (url, dest) => exec(`curl -L ${url} -o ${dest}`)
 
 function buildFirstIssue (title, result, jarData) {
   const protocolVersion = jarData?.protocol_version || 'Failed to obtain from JAR'
@@ -33,6 +34,21 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
   }
 }
 
+async function createInitialPull (edition, issueNo, { version, protocolVersion }) {
+  exec('cd tools/js && npm install')
+  exec(`cd tools/js && npm run version ${edition} ${version} ${protocolVersion}`)
+  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '.').toLowerCase()
+  const branchName = `${edition}-${branchNameVersion}`
+  const title = `Initial data for ${edition} ${version}`
+  exec(`git checkout -b ${branchName}`)
+  exec(`git add --all`)
+  exec(`git commit -m "${title}"`)
+  exec(`git push origin ${branchName}`)
+  //     createPullRequest(title: string, body: string, fromBranch: string, intoBranch?: string): Promise<{ number: number, url: string }>;
+  const pr = await github.createPullRequest(title, `${title}.\n\nRef: #${issueNo}`, branchName, 'master')
+  return pr
+}
+
 const protocolVersions = {
   pc: require('../../data/pc/common/protocolVersions.json'),
   bedrock: require('../../data/bedrock/common/protocolVersions.json')
@@ -51,7 +67,7 @@ async function updateManifestPC () {
   const latestVersionIsSnapshot = latestVersionData.type !== 'release'
 
   const title = `Support Minecraft PC ${latestVersion}`
-  const issueStatus = await helper.findIssue({ titleIncludes: title }) || {}
+  const issueStatus = await github.findIssue({ titleIncludes: title }) || {}
 
   if (latestVersionIsSnapshot) {
     // don't make issues for snapshots
@@ -62,7 +78,7 @@ async function updateManifestPC () {
   } else {
     if (supportedVersions.pc.includes(latestVersion)) {
       if (issueStatus.isOpen) {
-        helper.close(issueStatus.id, `Closing as PC ${latestVersion} is now supported`)
+        github.close(issueStatus.id, `Closing as PC ${latestVersion} is now supported`)
       }
       console.log('Latest PC version is supported.')
       return
@@ -85,7 +101,7 @@ async function updateManifestPC () {
     } else {
       console.log('Latest PC version is not supported and we failed to load data. Opening issue...')
       const issuePayload = buildFirstIssue(title, latestVersionData)
-      helper.createIssue(issuePayload)
+      github.createIssue(issuePayload)
 
       fs.writeFileSync('./issue.md', issuePayload.body)
       console.log('OK, wrote to ./issue.md', issuePayload)
@@ -96,10 +112,19 @@ async function updateManifestPC () {
     console.log('Opening issue', versionJson)
     const issuePayload = buildFirstIssue(title, latestVersionData, versionJson)
 
-    helper.createIssue(issuePayload)
+    github.createIssue(issuePayload)
 
     fs.writeFileSync('./issue.md', issuePayload.body)
     console.log('OK, wrote to ./issue.md', issuePayload)
+
+    // Now create an initial PR with the new version data
+    const pr = await createInitialPull('pc', issueStatus.id, {
+      minecraftVersion: versionJson.id,
+      version: latestVersion,
+      protocolVersion: versionJson.protocol_version
+    })
+    console.log('Created PR', pr)
+    // TODO: submit a workflow dispatch to minecraft-data-generator
   }
 
   async function addEntryFor (releaseVersion, releaseData) {
