@@ -1,6 +1,7 @@
 const fs = require('fs')
 const { join } = require('path')
 
+const rootPath = join(__dirname, '..', '..')
 const data = join(__dirname, '..', '..', 'data')
 
 function getJSON (path) {
@@ -17,6 +18,16 @@ function alterJSON (path, callback) {
   if (callback(jsonContents) !== false) {
     writeJSON(path, jsonContents)
   }
+}
+
+function bumpReadmeVersion (edition, version) {
+  const readmePath = join(rootPath, 'README.md')
+  let readmeContents = fs.readFileSync(readmePath, 'utf-8')
+  if (!readmeContents.includes(version)) {
+    if (edition === 'pc') readmeContents = readmeContents.replace(' <!--NEXT PC-->', `${version}, <!--NEXT PC-->`)
+    if (edition === 'bedrock') readmeContents = readmeContents.replace(' <!--NEXT BEDROCK-->', `${version}, <!--NEXT BEDROCK-->`)
+  }
+  fs.writeFileSync(readmePath, readmeContents, 'utf-8')
 }
 
 function updateProtocol (edition, version, protocolVersionNumber) {
@@ -112,3 +123,4 @@ if (platforms[platform] === undefined) {
 }
 
 platforms[platform](platform, version, protocol)
+bumpReadmeVersion(platform, version)
