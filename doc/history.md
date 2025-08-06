@@ -1,3 +1,9 @@
+## 3.95.0
+* [Add bedrock 1.21.100 protocol data (#1041)](https://github.com/PrismarineJS/minecraft-data/commit/ae4cf26bd9a73478b6129ea404bef40db5e9f03e) (thanks @extremeheat)
+* [Fix pc "nbtNameForEnchant" feature versions (#986)](https://github.com/PrismarineJS/minecraft-data/commit/79ad67106787847f05faa68aaca3f3faea5cf9a1) (thanks @IKorzI)
+* [Mention minebase wrapper lib in readme (#1040)](https://github.com/PrismarineJS/minecraft-data/commit/24a38bc7746a5c280dad0c18567bd03c4afcec9f) (thanks @ItsDrike)
+* [Add 25w32a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/820cdf0c515422b30805fc91ff292861d5152aae) (thanks @github-actions[bot])
+
 ## 3.94.0
 * [Add pc 1.21.5 protocol data (#1029)](https://github.com/PrismarineJS/minecraft-data/commit/6d6e431dd22cd9d0fb9e8c5b7029f6f1311f7501) (thanks @extremeheat)
 * [Add 25w31a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/60bc124b73d6daa12e80179e963aa93a80a40d45) (thanks @github-actions[bot])
