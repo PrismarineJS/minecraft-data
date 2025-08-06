@@ -21,6 +21,7 @@ Minecraft-data is language independent, you can use it with these language speci
 | --- | --- | --- |
 | [node-minecraft-data](https://github.com/PrismarineJS/node-minecraft-data) | Node.js | everything |
 | [python-minecraft-data](https://github.com/SpockBotMC/python-minecraft-data) | python | everything |
+| [minebase](https://github.com/py-mine/minebase) | python | everything |
 | [McData](https://github.com/McEx/McData) | Elixir | protocol |
 | [ProtocolGen](https://github.com/Johni0702/ProtocolGen) | java | generated java files from protocol.json to read and write minecraft packets |
 | [mcdata](https://github.com/wlwanpan/mcdata) | Go | everything |
