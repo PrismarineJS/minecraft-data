@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.100
+!version: 1.21.93
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -454,7 +454,6 @@ packet_start_game:
    # its index in the expected block palette. This is useful for servers that wish to support multiple protocol versions
    # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
-   tick_death_systems: bool
    server_controlled_sound: bool
 
 packet_add_player:
@@ -3543,8 +3542,10 @@ packet_correct_player_move_prediction:
    position: vec3f
    # Delta is the change in position compared to what the client sent as its position at that specific tick.
    delta: vec3f
-   rotation: vec2f
-   angular_velocity: lf32
+   vehicle_rotation: prediction_type ?
+      if vehicle:
+         rotation: vec2f
+         angular_velocity?: lf32
    # OnGround specifies if the player was on the ground at the time of the tick below.
    on_ground: bool
    # Tick is the tick of the movement which was corrected by this packet.
@@ -4149,7 +4150,39 @@ packet_camera_instruction:
       runtime_id: li32
       # Ease represents the easing function that is used by the instruction.
       ease_data?:
-         type: EaseType
+         type: u8 =>
+            - Linear
+            - Spring
+            - InQuad
+            - OutQuad
+            - InOutQuad
+            - InCubic
+            - OutCubic
+            - InOutCubic
+            - InQuart
+            - OutQuart
+            - InOutQuart
+            - InQuint
+            - OutQuint
+            - InOutQuint
+            - InSine
+            - OutSine
+            - InOutSine
+            - InExpo
+            - OutExpo
+            - InOutExpo
+            - InCirc
+            - OutCirc
+            - InOutCirc
+            - InBounce
+            - OutBounce
+            - InOutBounce
+            - InBack
+            - OutBack
+            - InOutBack
+            - InElastic
+            - OutElastic
+            - InOutElastic
          duration: lf32
       position?: vec3f
       rotation?: vec2f
@@ -4175,11 +4208,6 @@ packet_camera_instruction:
       entity_unique_id: li64
    # RemoveTarget can be set to true to remove the current aim assist target.
    remove_target?: bool
-   fov?:
-      field_of_view: lf32
-      ease_time: lf32
-      ease_type: EaseType
-      clear: bool
 
 # Removed in 1.21.80
 packet_compressed_biome_definitions:
@@ -4369,7 +4397,6 @@ packet_camera_aim_assist:
    action: u8 =>
       - set
       - clear
-   show_debug_render: bool
 
 # ContainerRegistryCleanup is sent by the server to trigger a client-side cleanup of the dynamic container registry.
 packet_container_registry_cleanup:
