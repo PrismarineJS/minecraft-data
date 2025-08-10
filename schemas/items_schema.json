@@ -36,8 +36,26 @@
           "type": "string"
         }
       },
+      "fixedWith" : {
+        "description": "alias used in some editions for repairWith",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        }
+      },
       "maxDurability": {
         "description": "the amount of durability an item has before being damaged/used",
+        "type": "integer",
+        "minimum": 0
+      },
+      "durability": {
+        "description": "durability value for editions that specify it alongside maxDurability",
+        "type": "integer",
+        "minimum": 0
+      },
+      "metadata": {
+        "description": "legacy data value used in some editions at the item level",
         "type": "integer",
         "minimum": 0
       },
@@ -45,6 +63,11 @@
         "description": "The name of an item",
         "type": "string",
         "pattern": "\\S+"
+      },
+      "blockStateId": {
+        "description": "Block state id associated with this item in some editions",
+        "type": "integer",
+        "minimum": 0
       },
       "variations" : {
         "type" : "array",
@@ -57,14 +80,37 @@
             },
             "displayName":{
               "type":"string"
+            },
+            "id": {
+              "description": "The unique identifier for a variation (when applicable)",
+              "type": "integer",
+              "minimum": 0
+            },
+            "name": {
+              "description": "The name of a variation (when applicable)",
+              "type": "string",
+              "pattern": "\\S+"
+            },
+            "stackSize": {
+              "description": "Stack size for a variation (when applicable)",
+              "type": "integer",
+              "minimum": 0
+            },
+            "enchantCategories": {
+              "description": "describes categories of enchants this variation can use",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
             }
           },
           "required": ["metadata", "displayName"],
-          "additionalProperties": true
+          "additionalProperties": false
         }
       }
     },
     "required": ["id", "displayName", "stackSize", "name"],
-    "additionalProperties": true
+    "additionalProperties": false
   }
 }
