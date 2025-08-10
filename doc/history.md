@@ -1,3 +1,7 @@
+## 3.95.1
+* [Fix features schema inconsistencies and validation issues (#1047)](https://github.com/PrismarineJS/minecraft-data/commit/c949824c7a34c0f8a5ed2b3d0d3240a964eeadd5) (thanks @rom1504)
+* [Fix bedrock 1.21.100 packet_correct_player_move_prediction (#1044)](https://github.com/PrismarineJS/minecraft-data/commit/b6a81e62cf37e0eb9fdfb3477782219ff6b85adb) (thanks @TSL534)
+
 ## 3.95.0
 * [Add bedrock 1.21.100 protocol data (#1041)](https://github.com/PrismarineJS/minecraft-data/commit/ae4cf26bd9a73478b6129ea404bef40db5e9f03e) (thanks @extremeheat)
 * [Fix pc "nbtNameForEnchant" feature versions (#986)](https://github.com/PrismarineJS/minecraft-data/commit/79ad67106787847f05faa68aaca3f3faea5cf9a1) (thanks @IKorzI)
