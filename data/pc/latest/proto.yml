@@ -2683,8 +2683,12 @@
          1: untrack
          2: update
       waypoint:
-         uuid?: UUID
-         id?: string
+         hasUUID: bool
+         _: hasUUID ?
+            if true:
+               uuid: UUID
+            if false:
+               id: string
          icon:
             style: string
             color?: i32 # RGB color with alpha fixed at FF

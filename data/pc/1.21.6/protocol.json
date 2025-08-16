@@ -8438,17 +8438,36 @@
                 "container",
                 [
                   {
-                    "name": "uuid",
-                    "type": [
-                      "option",
-                      "UUID"
-                    ]
+                    "name": "hasUUID",
+                    "type": "bool"
                   },
                   {
-                    "name": "id",
+                    "anon": true,
                     "type": [
-                      "option",
-                      "string"
+                      "switch",
+                      {
+                        "compareTo": "hasUUID",
+                        "fields": {
+                          "true": [
+                            "container",
+                            [
+                              {
+                                "name": "uuid",
+                                "type": "UUID"
+                              }
+                            ]
+                          ],
+                          "false": [
+                            "container",
+                            [
+                              {
+                                "name": "id",
+                                "type": "string"
+                              }
+                            ]
+                          ]
+                        }
+                      }
                     ]
                   },
                   {
