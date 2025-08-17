@@ -24,8 +24,8 @@ function bumpReadmeVersion (edition, version) {
   const readmePath = join(rootPath, 'README.md')
   let readmeContents = fs.readFileSync(readmePath, 'utf-8')
   if (!readmeContents.includes(version)) {
-    if (edition === 'pc') readmeContents = readmeContents.replace(' <!--NEXT PC-->', `${version}, <!--NEXT PC-->`)
-    if (edition === 'bedrock') readmeContents = readmeContents.replace(' <!--NEXT BEDROCK-->', `${version}, <!--NEXT BEDROCK-->`)
+    if (edition === 'pc') readmeContents = readmeContents.replace('\n<!--NEXT PC-->', `, ${version}\n<!--NEXT PC-->`)
+    if (edition === 'bedrock') readmeContents = readmeContents.replace('\n<!--NEXT BEDROCK-->', `, ${version}\n<!--NEXT BEDROCK-->`)
   }
   fs.writeFileSync(readmePath, readmeContents, 'utf-8')
 }
