@@ -1,3 +1,6 @@
+## 3.97.0
+* [Revert "Fix pc "nbtNameForEnchant" feature versions (#986)"](https://github.com/PrismarineJS/minecraft-data/commit/34a88b5f770eb9f2b3d6a4ae8a5ec6a71b235327) (thanks @rom1504)
+
 ## 3.96.0
 * [Update proto.yml for Minecraft 1.21.6 (#1039)](https://github.com/PrismarineJS/minecraft-data/commit/09821c14cc7ced37ac2e2554bc6bc0f84c4390c7) (thanks @rom1504)
 * [Enforce no additional properties for enchantments (#1053)](https://github.com/PrismarineJS/minecraft-data/commit/c7509e277a28753663e5f48433f146eb17773f0d) (thanks @ItsDrike)
