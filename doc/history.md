@@ -1,3 +1,10 @@
+## 3.96.0
+* [Update proto.yml for Minecraft 1.21.6 (#1039)](https://github.com/PrismarineJS/minecraft-data/commit/09821c14cc7ced37ac2e2554bc6bc0f84c4390c7) (thanks @rom1504)
+* [Enforce no additional properties for enchantments (#1053)](https://github.com/PrismarineJS/minecraft-data/commit/c7509e277a28753663e5f48433f146eb17773f0d) (thanks @ItsDrike)
+* [Add 25w33a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a30c6c4732864d4c30b14e73f7732ce0f15406a3) (thanks @github-actions[bot])
+* [Fix biomes schema validation issues (#1049)](https://github.com/PrismarineJS/minecraft-data/commit/31e0a3f2e7df3ae932fa39159028e52be402937b) (thanks @ItsDrike)
+* [Make items schema strict and document missing fields (#1052)](https://github.com/PrismarineJS/minecraft-data/commit/db4139e7812e998220178d010cda73053e40f75c) (thanks @ItsDrike)
+
 ## 3.95.1
 * [Fix features schema inconsistencies and validation issues (#1047)](https://github.com/PrismarineJS/minecraft-data/commit/c949824c7a34c0f8a5ed2b3d0d3240a964eeadd5) (thanks @rom1504)
 * [Fix bedrock 1.21.100 packet_correct_player_move_prediction (#1044)](https://github.com/PrismarineJS/minecraft-data/commit/b6a81e62cf37e0eb9fdfb3477782219ff6b85adb) (thanks @TSL534)
