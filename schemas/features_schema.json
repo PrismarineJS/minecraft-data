@@ -16,16 +16,75 @@
         "type": "string",
         "pattern": ".+"
       },
+      "version": {
+        "description": "Single version where this feature applies",
+        "type": "string"
+      },
       "versions": {
-        "description": "A tuple that describes the range of versions in the range",
+        "description": "A tuple that describes the range of versions where this feature applies [minVersion, maxVersion]",
         "type": "array",
         "items": {
-          "title": "versionForFeatureIdentification",
-          "type": "string",
-          "minItems": 2,
-          "additionalItems": false
+          "type": "string"
+        },
+        "minItems": 2,
+        "maxItems": 2,
+        "additionalItems": false
+      },
+      "values": {
+        "description": "Version-specific values for features that have different values across versions",
+        "type": "array",
+        "items": {
+          "title": "versionSpecificValue",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "The value for this feature in the specified versions"
+            },
+            "version": {
+              "description": "Single version where this value applies",
+              "type": "string"
+            },
+            "versions": {
+              "description": "Version range where this value applies [minVersion, maxVersion]",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "additionalItems": false
+            }
+          },
+          "required": ["value"],
+          "oneOf": [
+            {
+              "required": ["version"],
+              "not": {"required": ["versions"]}
+            },
+            {
+              "required": ["versions"],
+              "not": {"required": ["version"]}
+            }
+          ],
+          "additionalProperties": false
         }
       }
-    }
+    },
+    "required": ["name", "description"],
+    "oneOf": [
+      {
+        "required": ["version"],
+        "not": {"anyOf": [{"required": ["versions"]}, {"required": ["values"]}]}
+      },
+      {
+        "required": ["versions"],
+        "not": {"anyOf": [{"required": ["version"]}, {"required": ["values"]}]}
+      },
+      {
+        "required": ["values"],
+        "not": {"anyOf": [{"required": ["version"]}, {"required": ["versions"]}]}
+      }
+    ],
+    "additionalProperties": false
   }
 }
