@@ -124,7 +124,18 @@ async function updateManifestPC () {
       protocolVersion: versionJson.protocol_version
     })
     console.log('Created PR', pr)
-    // TODO: submit a workflow dispatch to minecraft-data-generator
+    // Ask minecraft-data-generator to handle new update
+    const dispatchPayload = {
+      owner: 'PrismarineJS',
+      repo: 'minecraft-data-generator',
+      workflow: 'handle-mcdata-update.yml',
+      branch: 'main',
+      inputs: {
+        version: latestVersion
+      }
+    }
+    console.log('Sending workflow dispatch', dispatchPayload)
+    await github.sendWorkflowDispatch(dispatchPayload)
   }
 
   async function addEntryFor (releaseVersion, releaseData) {
