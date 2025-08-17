@@ -448,8 +448,22 @@
    packet_unload_chunk:   
       chunkX: i32
       chunkZ: i32
-   packet_game_state_change:   
-      reason: u8
+   packet_game_state_change:
+      reason: u8 =>
+         0: no_respawn_block_available
+         1: start_raining
+         2: stop_raining
+         3: change_game_mode
+         4: win_game
+         5: demo_event
+         6: play_arrow_hit_sound
+         7: rain_level_change
+         8: thunder_level_change
+         9: puffer_fish_sting
+         10: guardian_elder_effect
+         11: immediate_respawn
+         12: limited_crafting
+         13: level_chunks_load_start
       gameMode: f32
    packet_keep_alive:   
       keepAliveId: varint
@@ -1076,9 +1090,16 @@
       status: varint
       location: position
       face: i8
-   packet_entity_action:   
+   packet_entity_action:
       entityId: varint
-      actionId: varint
+      actionId: varint =>
+         - leave_bed
+         - start_sprinting
+         - stop_sprinting
+         - start_horse_jump
+         - stop_horse_jump
+         - open_vehicle_inventory
+         - start_elytra_flying
       jumpBoost: varint
    packet_steer_vehicle:   
       sideways: f32
