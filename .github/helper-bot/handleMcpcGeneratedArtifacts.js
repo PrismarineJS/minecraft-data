@@ -19,7 +19,7 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
   const branch = `pc-${branchNameVersion}`
   try {
-    exec('git', ['checkout', '-b', branch])
+    exec('git', ['checkout', '-B', branch])
   } catch (err) {
     console.error('Error checking out branch:', err)
     process.exit(1)
