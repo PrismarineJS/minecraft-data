@@ -9,8 +9,21 @@ const root = join(__dirname, '..', '..')
 async function handle (ourPR, genPullNo, version, artifactURL) {
   const dataPaths = require('../../data/dataPaths.json')
   const dataPath = dataPaths.pc[version]
+
+  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
+  const branch = `pc-${branchNameVersion}`
+  try {
+    exec('git', ['checkout', '-b', branch])
+  } catch (err) {
+    console.error('Error checking out branch:', err)
+    process.exit(1)
+  }
+
   const destDir = join(root, `./data/pc/${version}`)
-  if (!fs.existsSync(destDir)) return console.warn(`⚠️ Version ${version} not found (checked ${destDir}) ; cannot continue.`)
+  if (!fs.existsSync(destDir)) {
+    console.warn(`⚠️ Version ${version} not found (checked ${destDir}) ; cannot continue.`)
+    process.exit(1)
+  }
 
   // Update our PR body
   await github.updateIssue(ourPR.number, {
@@ -43,6 +56,11 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
 
   // Commit the new dataPath
   fs.writeFileSync(join(root, 'data', 'dataPaths.json'), JSON.stringify(dataPaths, null, 2))
+
+  // Now, we need to commit the changes
+  exec('git', ['add', '--all'])
+  exec('git', ['commit', '-m', `[Auto] Apply generated data from PrismarineJS/minecraft-data-generator#${genPullNo}`])
+  exec('git', ['push', 'origin', 'HEAD'])
 }
 
 async function main (version, genPullNo, artifactUrl) {

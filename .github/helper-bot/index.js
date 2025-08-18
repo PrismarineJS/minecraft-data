@@ -38,7 +38,7 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
 async function createInitialPull (edition, issueUrl, { version, protocolVersion }) {
   exec('cd tools/js && npm install')
   exec(`cd tools/js && npm run version ${edition} ${version} ${protocolVersion}`)
-  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '.').toLowerCase()
+  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
   const branchName = `${edition}-${branchNameVersion}`
   const title = `🎈 Add Minecraft ${edition} ${version} data`
   // First, delete any existing branch
@@ -55,7 +55,7 @@ Related:
 - Protocol Version: ${protocolVersion}
 <!--minecraft-data-generator-placeholder-->
 
-* You can help contribute to this PR by opening a PR against this <code>${branchName}</code> branch instead of <code>master</code>.
+* You can help contribute to this PR by opening a PR against this <code branch>${branchName}</code> branch instead of <code>master</code>.
 `
   const pr = await github.createPullRequest(title, body, branchName, 'master')
   return pr
