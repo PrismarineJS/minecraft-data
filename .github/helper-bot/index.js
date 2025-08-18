@@ -28,6 +28,7 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
   <tr><td><b>Data Version</b></td><td>${jarData?.world_version}</td>
   <tr><td><b>Java Version</b></td><td>${jarData?.java_version}</td>
 </table>
+
 <hr/>
 🤖 I am a bot, I check for updates every 2 hours without a trigger. You can close this issue to prevent any further updates.
     `
@@ -39,13 +40,24 @@ async function createInitialPull (edition, issueUrl, { version, protocolVersion 
   exec(`cd tools/js && npm run version ${edition} ${version} ${protocolVersion}`)
   const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '.').toLowerCase()
   const branchName = `${edition}-${branchNameVersion}`
-  const title = `Initial data for ${edition} ${version}`
+  const title = `🎈 Add Minecraft ${edition} ${version} data`
+  // First, delete any existing branch
+  exec(`git branch -D ${branchName} || true`)
   exec(`git checkout -b ${branchName}`)
-  exec(`git add --all`)
+  exec('git add --all')
   exec(`git commit -m "${title}"`)
-  exec(`git push origin ${branchName}`)
-  //     createPullRequest(title: string, body: string, fromBranch: string, intoBranch?: string): Promise<{ number: number, url: string }>;
-  const pr = await github.createPullRequest(title, `${title}.\n\nRef: ${issueUrl}`, branchName, 'master')
+  exec(`git push origin ${branchName} --force`)
+  const body = `
+This automated PR sets up the relevant boilerplate for Minecraft ${edition} version ${version}. Fixes ${issueUrl}.
+
+Related:
+- Issue: ${issueUrl}
+- Protocol Version: ${protocolVersion}
+<!--minecraft-data-generator-placeholder-->
+
+* You can help contribute to this PR by opening a PR against this <code>${branchName}</code> branch instead of <code>master</code>.
+`
+  const pr = await github.createPullRequest(title, body, branchName, 'master')
   return pr
 }
 
@@ -63,11 +75,21 @@ async function updateManifestPC () {
   // fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2))
   const knownVersions = protocolVersions.pc.reduce((acc, cur) => (acc[cur.minecraftVersion] = cur, acc), {})
   const latestVersion = manifest.latest.snapshot
+  const latestReleaseVersion = manifest.latest.release
   const latestVersionData = manifest.versions.find(v => v.id === latestVersion)
   const latestVersionIsSnapshot = latestVersionData.type !== 'release'
 
-  const title = `Support Minecraft PC ${latestVersion}`
+  const title = `Support Minecraft PC ${latestReleaseVersion}`
   const issueStatus = await github.findIssue({ titleIncludes: title }) || {}
+  console.log('issueStatus', issueStatus)
+
+  if (issueStatus?.isOpen) {
+    if (supportedVersions.pc.includes(latestReleaseVersion)) {
+      // If the issue is open and the latest release version is supported, we can close the issue
+      github.close(issueStatus.id, `Closing as PC ${latestReleaseVersion} is now supported`)
+      return
+    }
+  }
 
   if (latestVersionIsSnapshot) {
     // don't make issues for snapshots
@@ -75,19 +97,11 @@ async function updateManifestPC () {
       console.log('Latest version is a known snapshot, no work to do')
       return
     }
+  } else if (knownVersions[latestVersion]) {
+    console.log(`Latest PC version ${latestVersion} is known in protocolVersions.json, but not in versions.json (protocol version ${knownVersions[latestVersion].version})`)
+    return // We expect to have already handled this version.
   } else {
-    if (supportedVersions.pc.includes(latestVersion)) {
-      if (issueStatus.isOpen) {
-        github.close(issueStatus.id, `Closing as PC ${latestVersion} is now supported`)
-      }
-      console.log('Latest PC version is supported.')
-      return
-    } else if (knownVersions[latestVersion]) {
-      console.log(`Latest PC version ${latestVersion} is known in protocolVersions.json, but not in versions.json (protocol version ${knownVersions[latestVersion].version})`)
-      return
-    } else {
-      console.log(`Latest PC version ${latestVersion} is not known in protocolVersions.json, adding and making issue`)
-    }
+    console.log(`Latest PC version ${latestVersion} is not known in protocolVersions.json, adding and making issue`)
   }
 
   let versionJson
@@ -131,7 +145,9 @@ async function updateManifestPC () {
       workflow: 'handle-mcdata-update.yml',
       branch: 'main',
       inputs: {
-        version: latestVersion
+        version: latestVersion,
+        issue_number: issue?.number,
+        pr_number: pr?.number
       }
     }
     console.log('Sending workflow dispatch', dispatchPayload)

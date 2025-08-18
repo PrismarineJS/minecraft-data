@@ -1,0 +1,29 @@
+name: handle-mcpc-generator
+on:
+  workflow_dispatch:
+    inputs:
+      versions:
+        description: 'JSON stringified list of known versions in generator (last is expected to be latest)'
+        required: true
+        default: '["1.21.6"]'
+      mergedArtifactURL:
+        description: 'Merged artifact download URL'
+        required: true
+      prNumber:
+        description: 'Relevant minecraft-data-generator PR #'
+        required: false
+
+jobs:
+  update-mcdata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: npm install # install gh-helpers
+      - run: node .github/helper-bot/handleMcpcGeneratedArtifacts.js
+        env:
+          TRIGGER_MC_VERSIONS: ${{ github.event.inputs.versions }}
+          TRIGGER_PR_NO: ${{ github.event.inputs.prNumber }}
+          TRIGGER_ARTIFACT_URL: ${{ github.event.inputs.mergedArtifactURL }}
+          GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
