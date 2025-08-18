@@ -70,17 +70,16 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   exec('git', ['push', 'origin', branch])
 }
 
-async function main (version, genPullNo, artifactUrl) {
-  const prs = await github.findPullRequests({ titleIncludes: '🎈' })
-  console.log('Found PRs', prs)
-  for (const pr of prs) {
-    if (!pr.isOpen) continue
-    await handle(pr, genPullNo, version, artifactUrl)
-  }
+async function main (versions, genPullNo, artifactUrl) {
+  const version = versions.at(-1)
+  const pr = await github.findPullRequest({ titleIncludes: '🎈' })
+  console.log('Found PR', pr)
+  if (!pr.isOpen) continue
+  await handle(pr, genPullNo, version, artifactUrl)
 }
 
 main(
-  process.env.TRIGGER_MC_VERSIONS,
+  JSON.parse(process.env.TRIGGER_MC_VERSIONS),
   process.env.TRIGGER_PR_NO,
   process.env.TRIGGER_ARTIFACT_URL
 )
