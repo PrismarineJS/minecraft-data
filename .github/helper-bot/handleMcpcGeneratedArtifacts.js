@@ -60,7 +60,7 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   // Now, we need to commit the changes
   exec('git', ['add', '--all'])
   exec('git', ['commit', '-m', `[Auto] Apply generated data from PrismarineJS/minecraft-data-generator#${genPullNo}`])
-  exec('git', ['push', 'origin', 'HEAD'])
+  exec('git', ['push', 'origin', branch])
 }
 
 async function main (version, genPullNo, artifactUrl) {
