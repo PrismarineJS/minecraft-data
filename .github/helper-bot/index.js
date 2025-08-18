@@ -1,11 +1,14 @@
 const fs = require('fs')
-const cp = require('child_process')
 const github = require('gh-helpers')()
-const exec = (cmd) => github.mock ? console.log('> ', cmd) : (console.log('> ', cmd), cp.execSync(cmd, { stdio: 'inherit' }))
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
-const download = (url, dest) => exec(`curl -L ${url} -o ${dest}`)
+function exec (file, args, options = {}) {
+  const opts = { stdio: 'inherit', ...options }
+  console.log('> ', file, args.join(' '), options.cwd ? `(cwd: ${options.cwd})` : '')
+  return github.mock ? undefined : cp.execFileSync(file, args, opts)
+}
+const download = (url, dest) => exec('curl', ['-L', url, '-o', dest])
 
 function buildFirstIssue (title, result, jarData) {
   const protocolVersion = jarData?.protocol_version || 'Failed to obtain from JAR'
@@ -36,17 +39,23 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
 }
 
 async function createInitialPull (edition, issueUrl, { version, protocolVersion }) {
-  exec('cd tools/js && npm install')
-  exec(`cd tools/js && npm run version ${edition} ${version} ${protocolVersion}`)
+  exec('npm', ['install'], { cwd: 'tools/js' })
+  exec('npm', ['run', 'version', edition, version, protocolVersion], { cwd: 'tools/js' })
   const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
   const branchName = `${edition}-${branchNameVersion}`
   const title = `🎈 Add Minecraft ${edition} ${version} data`
   // First, delete any existing branch
-  exec(`git branch -D ${branchName} || true`)
-  exec(`git checkout -b ${branchName}`)
-  exec('git add --all')
-  exec(`git commit -m "${title}"`)
-  exec(`git push origin ${branchName} --force`)
+  try {
+    exec('git', ['branch', '-D', branchName])
+  } catch (e) {
+    // Branch doesn't exist, ignore error
+  }
+  exec('git', ['checkout', '-b', branchName])
+  exec('git', ['config', 'user.name', 'github-actions[bot]'])
+  exec('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
+  exec('git', ['add', '--all'])
+  exec('git', ['commit', '-m', title])
+  exec('git', ['push', 'origin', branchName, '--force'])
   const body = `
 This automated PR sets up the relevant boilerplate for Minecraft ${edition} version ${version}. Fixes ${issueUrl}.
 
@@ -168,8 +177,8 @@ async function updateManifestPC () {
     console.log(`Downloaded client jar ${releaseVersion}.jar (${clientJarSize} bytes), extracting its version.json...`)
 
     // unzip with tar / unzip, Actions image uses 7z
-    if (process.platform === 'win32') cp.execSync(`tar -xf ./${releaseVersion}.jar version.json`)
-    else cp.execSync(`7z -y e ./${releaseVersion}.jar version.json`, { stdio: 'inherit' })
+    if (process.platform === 'win32') exec('tar', ['-xf', `./${releaseVersion}.jar`, 'version.json'])
+    else exec('7z', ['-y', 'e', `./${releaseVersion}.jar`, 'version.json'])
     const versionJson = require('./version.json')
 
     let majorVersion
@@ -195,11 +204,11 @@ async function updateManifestPC () {
     if (process.env.CI) {
       console.log('Committing changes to protocolVersions.json')
       // https://github.com/actions/checkout/pull/1184
-      cp.execSync('git config user.name "github-actions[bot]"')
-      cp.execSync('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"')
-      cp.execSync('git add ../../data/pc/common/protocolVersions.json')
-      cp.execSync(`git commit -m "Add ${versionJson.id} to pc protocolVersions.json"`)
-      cp.execSync('git push')
+      exec('git', ['config', 'user.name', 'github-actions[bot]'])
+      exec('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
+      exec('git', ['add', '../../data/pc/common/protocolVersions.json'])
+      exec('git', ['commit', '-m', `Add ${versionJson.id} to pc protocolVersions.json`])
+      exec('git', ['push'])
     }
 
     return versionJson
