@@ -31,14 +31,12 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
     process.exit(1)
   }
 
-  // Update our PR body
   await github.updateIssue(ourPR.number, {
     body: ourPR.body.replace('<!--minecraft-data-generator-placeholder-->', `- https://github.com/PrismarineJS/minecraft-data-generator/pull/${genPullNo}`)
   })
 
   console.log('Handling PR:', ourPR)
 
-  // Ensure output dir exists
   fs.mkdirSync(artifactsDir, { recursive: true })
 
   // Download the artifacts. Since the repo is public we don't need any auth.

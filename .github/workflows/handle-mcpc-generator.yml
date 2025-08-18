@@ -20,8 +20,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: npm install # install gh-helpers
-      - run: node .github/helper-bot/handleMcpcGeneratedArtifacts.js
+      - run: cd .github/helper-bot && npm install
+      - run: cd .github/helper-bot && node handleMcpcGeneratedArtifacts.js
         env:
           TRIGGER_MC_VERSIONS: ${{ github.event.inputs.versions }}
           TRIGGER_PR_NO: ${{ github.event.inputs.prNumber }}
