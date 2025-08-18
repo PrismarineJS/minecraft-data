@@ -80,7 +80,7 @@ async function main (version, genPullNo, artifactUrl) {
 }
 
 main(
-  process.env.MC_VERSION,
+  process.env.TRIGGER_MC_VERSIONS,
   process.env.TRIGGER_PR_NO,
   process.env.TRIGGER_ARTIFACT_URL
 )
