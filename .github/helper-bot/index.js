@@ -161,6 +161,21 @@ async function updateManifestPC () {
     }
     console.log('Sending workflow dispatch', dispatchPayload)
     await github.sendWorkflowDispatch(dispatchPayload)
+    // Ask node-minecraft-protocol to handle new update
+    const nodeDispatchPayload = {
+      owner: 'PrismarineJS',
+      repo: 'node-minecraft-protocol',
+      workflow: 'update-from-minecraft-data.yml',
+      branch: 'main',
+      inputs: {
+        version: latestVersion,
+        issue_url: issue?.url,
+        pr_url: pr?.url
+      }
+    }
+    console.log('Sending workflow dispatch', nodeDispatchPayload)
+    await github.sendWorkflowDispatch(nodeDispatchPayload)
+    // node-minecraft-protocol would then dispatch to mineflayer
   }
 
   async function addEntryFor (releaseVersion, releaseData) {
