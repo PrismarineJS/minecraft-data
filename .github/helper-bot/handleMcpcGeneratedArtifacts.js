@@ -72,7 +72,7 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
 
 async function main (versions, genPullNo, artifactUrl) {
   const version = versions.at(-1)
-  const pr = await github.findPullRequest({ titleIncludes: '🎈' })
+  const pr = await github.findPullRequest({ titleIncludes: '🎈', author: null })
   console.log('Found PR', pr)
   if (pr && pr.isOpen) {
     await handle(pr, genPullNo, version, artifactUrl)
