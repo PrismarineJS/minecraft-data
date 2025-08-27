@@ -16,14 +16,10 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   const dataPaths = require('../../data/dataPaths.json')
   const dataPath = dataPaths.pc[version]
 
-  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
-  const branch = `pc-${branchNameVersion}`
-  try {
-    exec('git', ['checkout', '-B', branch])
-  } catch (err) {
-    console.error('Error checking out branch:', err)
-    process.exit(1)
-  }
+  const branch = ourPR.headBranch
+  exec('git', ['remote', 'add', 'fo', ourPR.headCloneURL])
+  exec('git', ['pull', 'fo', branch])
+  exec('git', ['checkout', branch])
 
   const destDir = join(root, `./data/pc/${version}`)
   if (!fs.existsSync(destDir) || !dataPath) {
@@ -67,7 +63,7 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   exec('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
   exec('git', ['add', '--all'])
   exec('git', ['commit', '-m', `[Auto] Apply generated data from PrismarineJS/minecraft-data-generator#${genPullNo}`])
-  exec('git', ['push', 'origin', branch])
+  exec('git', ['push', 'fo', branch])
 }
 
 async function main (versions, genPullNo, artifactUrl) {
@@ -75,7 +71,9 @@ async function main (versions, genPullNo, artifactUrl) {
   const pr = await github.findPullRequest({ titleIncludes: '🎈', author: null })
   console.log('Found PR', pr)
   if (pr && pr.isOpen) {
-    await handle(pr, genPullNo, version, artifactUrl)
+    const details = await github.getPullRequest(pr.id)
+    console.log('PR', details)
+    await handle(details, genPullNo, version, artifactUrl)
   } else {
     console.log('No PR found with "🎈" prefix')
     process.exit(1)
