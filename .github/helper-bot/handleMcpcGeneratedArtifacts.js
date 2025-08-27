@@ -39,12 +39,12 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
 
   fs.mkdirSync(artifactsDir, { recursive: true })
 
-  // Download the artifacts. Since the repo is public we don't need any auth.
-  exec('curl', ['-fSL', '--retry', '3', artifactURL, '-o', join(artifactsDir, 'artifacts.zip')])
+  // https://github.com/PrismarineJS/minecraft-data-generator/actions/runs/17261281146/artifacts/3861320839
+  const s = artifactURL.split('github.com/')[1]
+  const [ownerName, repoName, _actions, _runs, _runId, _artifacts, artifactId] = s
+  await github.downloadArtifactIdFrom(ownerName, repoName, artifactId, artifactsDir)
 
-  // Use 7z to extract only the `version` folder from the artifacts.zip
-  // Use 'x' to preserve directories; pass the path inside the archive as an argument
-  exec('7z', ['x', join(artifactsDir, 'artifacts.zip'), `${version}/*`, `-o${artifactsDir}`, '-y'])
+  console.log(fs.readdirSync(artifactsDir, { recursive: true }))
 
   // Now copy artifacts/${version}/*.json to data/pc/$version/*.json
   const versionArtifactsDir = join(artifactsDir, version)
@@ -74,8 +74,12 @@ async function main (versions, genPullNo, artifactUrl) {
   const version = versions.at(-1)
   const pr = await github.findPullRequest({ titleIncludes: '🎈' })
   console.log('Found PR', pr)
-  if (!pr.isOpen) return
-  await handle(pr, genPullNo, version, artifactUrl)
+  if (pr && pr.isOpen) {
+    await handle(pr, genPullNo, version, artifactUrl)
+  } else {
+    console.log('No PR found with "🎈" prefix')
+    process.exit(1)
+  }
 }
 
 main(
