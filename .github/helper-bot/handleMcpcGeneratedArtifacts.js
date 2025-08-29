@@ -48,8 +48,12 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   fs.mkdirSync(artifactsDir, { recursive: true })
 
   // https://github.com/PrismarineJS/minecraft-data-generator/actions/runs/17261281146/artifacts/3861320839
-  const s = artifactURL.split('github.com/')[1]
-  const [ownerName, repoName, _actions, _runs, _runId, _artifacts, artifactId] = s.split('/')
+  const parts = s ? s.split('/') : []
+  if (parts.length < 7) {
+    console.error(`Malformed artifactURL: expected at least 7 parts after 'github.com/', got ${parts.length}. URL: ${artifactURL}`)
+    process.exit(1)
+  }
+  const [ownerName, repoName, _actions, _runs, _runId, _artifacts, artifactId] = parts
   console.log('Downloading artifacts', { ownerName, repoName, artifactId, artifactsDir })
   await github.artifacts.downloadIdFrom(ownerName, repoName, artifactId, artifactsDir)
 
