@@ -37,7 +37,7 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
     process.exit(1)
   }
 
-  if (ourPR.body) { 
+  if (ourPR.body) {
     await github.updateIssue(ourPR.number, {
       body: ourPR.body.replace('<!--minecraft-data-generator-placeholder-->', `- https://github.com/PrismarineJS/minecraft-data-generator/pull/${genPullNo}`)
     })
