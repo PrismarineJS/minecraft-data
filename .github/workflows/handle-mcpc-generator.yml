@@ -20,10 +20,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v3
       - run: cd .github/helper-bot && npm install
       - run: cd .github/helper-bot && node handleMcpcGeneratedArtifacts.js
         env:
           TRIGGER_MC_VERSIONS: ${{ github.event.inputs.versions }}
           TRIGGER_PR_NO: ${{ github.event.inputs.prNumber }}
           TRIGGER_ARTIFACT_URL: ${{ github.event.inputs.mergedArtifactURL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}

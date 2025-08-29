@@ -90,7 +90,7 @@ async function updateManifestPC () {
   const latestVersionIsSnapshot = latestVersionData.type !== 'release'
 
   const title = `Support Minecraft PC ${latestReleaseVersion}`
-  const issueStatus = await github.findIssue({ titleIncludes: title }) || {}
+  const issueStatus = await github.findIssue({ titleIncludes: title, author: null }) || {}
   console.log('issueStatus', issueStatus)
 
   if (issueStatus?.isOpen) {
