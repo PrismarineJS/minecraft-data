@@ -20,6 +20,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v3
       - run: cd .github/helper-bot && npm install
       - run: cd .github/helper-bot && node handleMcpcGeneratedArtifacts.js
         env:
