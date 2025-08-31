@@ -1,5 +1,4 @@
 const fs = require('fs')
-const cp = require('child_process')
 const { join } = require('path')
 
 const rootPath = join(__dirname, '..', '..')
