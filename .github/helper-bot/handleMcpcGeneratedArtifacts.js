@@ -71,6 +71,9 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   // Commit the new dataPath
   fs.writeFileSync(join(root, 'data', 'dataPaths.json'), JSON.stringify(dataPaths, null, 2))
 
+  // Try to run the extractPcEntityMetadata.js script
+  cp.execSync(`npm install && node extractPcEntityMetadata.js ${version}`, { cwd: join(root, 'tools', 'js'), stdio: 'inherit' })
+
   // Now, we need to commit the changes
   exec('git', ['config', 'user.name', 'github-actions[bot]'])
   exec('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
