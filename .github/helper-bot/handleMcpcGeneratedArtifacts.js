@@ -3,7 +3,7 @@ const cp = require('child_process')
 const github = require('gh-helpers')()
 const { join } = require('path')
 
-function exec (file, args, options = {}) {
+function exec (file, args = [], options = {}) {
   const opts = { stdio: 'inherit', ...options }
   console.log('> ', file, args.join(' '), options.cwd ? `(cwd: ${options.cwd})` : '')
   return github.mock ? undefined : cp.execFileSync(file, args, opts)
@@ -13,38 +13,47 @@ const artifactsDir = join(__dirname, './artifacts')
 const root = join(__dirname, '..', '..')
 
 async function handle (ourPR, genPullNo, version, artifactURL) {
-  const dataPaths = require('../../data/dataPaths.json')
-  const dataPath = dataPaths.pc[version]
+  // if external PR:
+  // const branch = ourPR.headBranch
+  // exec('git', ['remote', 'add', 'fo', ourPR.headCloneURL])
+  // exec('git', ['fetch', 'fo', branch])
+  // exec('git', ['checkout', '-b', branch, `fo/` + branch])
 
   const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
   const branch = `pc-${branchNameVersion}`
   try {
-    exec('git', ['checkout', '-B', branch])
+    exec('git', ['switch', branch])
   } catch (err) {
     console.error('Error checking out branch:', err)
     process.exit(1)
   }
 
+  const dataPaths = require('../../data/dataPaths.json')
+  const dataPath = dataPaths.pc[version]
+
   const destDir = join(root, `./data/pc/${version}`)
   if (!fs.existsSync(destDir) || !dataPath) {
-    console.warn(`⚠️ Version ${version} not found (checked ${destDir}) ; cannot continue.`)
+    console.warn(`⚠️ Version ${version} not found (checked ${destDir}) ; cannot continue.`, fs.existsSync(destDir), dataPath)
     process.exit(1)
   }
 
-  await github.updateIssue(ourPR.number, {
-    body: ourPR.body.replace('<!--minecraft-data-generator-placeholder-->', `- https://github.com/PrismarineJS/minecraft-data-generator/pull/${genPullNo}`)
-  })
+  if (ourPR.body) {
+    await github.updateIssue(ourPR.number, {
+      body: ourPR.body.replace('<!--minecraft-data-generator-placeholder-->', `- https://github.com/PrismarineJS/minecraft-data-generator/pull/${genPullNo}`)
+    })
+  }
 
   console.log('Handling PR:', ourPR)
 
   fs.mkdirSync(artifactsDir, { recursive: true })
 
-  // Download the artifacts. Since the repo is public we don't need any auth.
-  exec('curl', ['-fSL', '--retry', '3', artifactURL, '-o', join(artifactsDir, 'artifacts.zip')])
+  // https://github.com/PrismarineJS/minecraft-data-generator/actions/runs/17261281146/artifacts/3861320839
+  const s = artifactURL.split('github.com/')[1]
+  const [ownerName, repoName, _actions, _runs, _runId, _artifacts, artifactId] = s.split('/')
+  console.log('Downloading artifacts', { ownerName, repoName, artifactId, artifactsDir })
+  await github.artifacts.downloadIdFrom(ownerName, repoName, artifactId, artifactsDir)
 
-  // Use 7z to extract only the `version` folder from the artifacts.zip
-  // Use 'x' to preserve directories; pass the path inside the archive as an argument
-  exec('7z', ['x', join(artifactsDir, 'artifacts.zip'), `${version}/*`, `-o${artifactsDir}`, '-y'])
+  console.log(fs.readdirSync(artifactsDir))
 
   // Now copy artifacts/${version}/*.json to data/pc/$version/*.json
   const versionArtifactsDir = join(artifactsDir, version)
@@ -72,10 +81,15 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
 
 async function main (versions, genPullNo, artifactUrl) {
   const version = versions.at(-1)
-  const pr = await github.findPullRequest({ titleIncludes: '🎈' })
+  const pr = await github.findPullRequest({ titleIncludes: '🎈', author: null })
   console.log('Found PR', pr)
-  if (!pr.isOpen) return
-  await handle(pr, genPullNo, version, artifactUrl)
+  if (pr && pr.isOpen) {
+    const details = await github.getPullRequest(pr.id)
+    console.log('PR', details)
+    await handle(details, genPullNo, version, artifactUrl)
+  } else {
+    process.exit(1)
+  }
 }
 
 main(

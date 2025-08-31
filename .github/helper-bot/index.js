@@ -68,6 +68,7 @@ Related:
 * You can help contribute to this PR by opening a PR against this <code branch>${branchName}</code> branch instead of <code>master</code>.
 `
   const pr = await github.createPullRequest(title, body, branchName, 'master')
+  pr.branchName = branchName
   return pr
 }
 
@@ -90,7 +91,7 @@ async function updateManifestPC () {
   const latestVersionIsSnapshot = latestVersionData.type !== 'release'
 
   const title = `Support Minecraft PC ${latestReleaseVersion}`
-  const issueStatus = await github.findIssue({ titleIncludes: title }) || {}
+  const issueStatus = await github.findIssue({ titleIncludes: title, author: null }) || {}
   console.log('issueStatus', issueStatus)
 
   if (issueStatus?.isOpen) {
@@ -167,11 +168,11 @@ async function updateManifestPC () {
       owner: 'PrismarineJS',
       repo: 'node-minecraft-protocol',
       workflow: 'update-from-minecraft-data.yml',
-      branch: 'main',
+      branch: 'master',
       inputs: {
-        version: latestVersion,
-        issue_url: issue?.url,
-        pr_url: pr?.url
+        new_mc_version: latestVersion,
+        mcdata_branch: pr.branchName,
+        mcdata_pr_url: pr.url
       }
     }
     console.log('Sending workflow dispatch', nodeDispatchPayload)
