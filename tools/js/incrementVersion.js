@@ -103,7 +103,6 @@ function updateProtocol (edition, version, protocolVersionNumber) {
   if (didUpdateProtocol) {
     const protoYmlUpdate = protoYml.replace(/!version: [0-9.]+/, `!version: ${version}`)
     fs.writeFileSync(join(dataRoot, 'latest', 'proto.yml'), protoYmlUpdate, 'utf-8')
-    cp.execSync(`npm install && npm run build`, { cwd: __dirname, stdio: 'inherit' })
   }
 }
 
