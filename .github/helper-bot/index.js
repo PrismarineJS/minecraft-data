@@ -82,7 +82,56 @@ const supportedVersions = {
   bedrock: require('../../data/bedrock/common/versions.json')
 }
 
+async function handleTestVersion(testVersion, mockVersionData) {
+  console.log(`🧪 Processing test version: ${testVersion}`)
+  const title = `[TEST] Support Minecraft PC ${testVersion}`
+  const issueStatus = await github.findIssue({ titleIncludes: title, author: null }) || {}
+  
+  if (!issueStatus?.isOpen) {
+    // Create test issue 
+    console.log('Creating test issue...')
+    const issuePayload = buildFirstIssue(title, mockVersionData, { protocol_version: 999, name: testVersion })
+    const issue = await github.createIssue(issuePayload)
+    console.log(`Created test issue: ${issue.url}`)
+    
+    // Create test PR
+    console.log('Creating test PR...')
+    try {
+      const pr = await createInitialPull('pc', issue.url, { version: testVersion, protocolVersion: 999 })
+      console.log(`Created test PR: ${pr.url}`)
+      
+      // Trigger minecraft-data-generator
+      console.log('Triggering minecraft-data-generator...')
+      await github.triggerWorkflow('PrismarineJS/minecraft-data-generator', 'handle-mcdata-update.yml', {
+        version: testVersion,
+        pr_number: pr.number.toString(),
+        issue_number: issue.number.toString()
+      })
+      console.log('✅ Test automation chain initiated!')
+    } catch (e) {
+      console.error('Failed to create test PR or trigger generator:', e)
+    }
+  } else {
+    console.log('Test issue already exists, skipping...')
+  }
+}
+
 async function updateManifestPC () {
+  // Check for test version injection
+  const testVersion = process.env.TEST_VERSION
+  if (testVersion) {
+    console.log(`🧪 TEST MODE: Injecting test version ${testVersion}`)
+    // Create mock version data for testing
+    const mockVersionData = {
+      id: testVersion,
+      type: 'release', 
+      releaseTime: new Date().toISOString(),
+      time: new Date().toISOString(),
+      url: 'https://example.com/test.jar'
+    }
+    return await handleTestVersion(testVersion, mockVersionData)
+  }
+
   const manifest = await fetch(pcManifestURL).then(res => res.json())
   // fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2))
   const knownVersions = protocolVersions.pc.reduce((acc, cur) => (acc[cur.minecraftVersion] = cur, acc), {})

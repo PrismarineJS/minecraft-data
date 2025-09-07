@@ -1,6 +1,12 @@
 name: Update Helper
 on:
   workflow_dispatch:
+    inputs:
+      test_version:
+        description: 'Test version to inject (for testing only)'
+        required: false
+        default: ''
+        type: string
   schedule:
     - cron: "0 */2 * * *"
 
@@ -24,3 +30,4 @@ jobs:
       working-directory: .github/helper-bot
       env:
         GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+        TEST_VERSION: ${{ github.event.inputs.test_version }}

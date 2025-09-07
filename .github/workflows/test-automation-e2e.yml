@@ -29,7 +29,7 @@ jobs:
       run: |
         echo "🚀 Triggering update-helper to simulate new version detection"
         echo "Test version: ${{ steps.version.outputs.version }}"
-        gh workflow run update-helper.yml
+        gh workflow run update-helper.yml -f test_version="${{ steps.version.outputs.version }}"
         
         echo "✅ Update helper triggered!"
         echo ""
