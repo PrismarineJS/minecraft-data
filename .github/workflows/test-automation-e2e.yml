@@ -1,0 +1,49 @@
+name: Test Automation Chain
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_version:
+        description: 'Test version (e.g., 1.99.99-test)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  
+    steps:
+    - name: Generate test version
+      id: version
+      run: |
+        if [ -n "${{ github.event.inputs.test_version }}" ]; then
+          TEST_VERSION="${{ github.event.inputs.test_version }}"
+        else
+          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+          TEST_VERSION="1.99.99-test-${TIMESTAMP}"
+        fi
+        echo "version=${TEST_VERSION}" >> $GITHUB_OUTPUT
+        echo "🧪 Testing automation chain with: ${TEST_VERSION}"
+    
+    - name: Trigger update helper (simulates new version detection)
+      run: |
+        echo "🚀 Triggering update-helper to simulate new version detection"
+        echo "Test version: ${{ steps.version.outputs.version }}"
+        gh workflow run update-helper.yml
+        
+        echo "✅ Update helper triggered!"
+        echo ""
+        echo "This simulates the natural flow when a new Minecraft version is released:"
+        echo "1. 🔍 update-helper detects 'new version'"
+        echo "2. 🏭 minecraft-data-generator gets triggered"
+        echo "3. 📊 minecraft-data processes generated data"
+        echo "4. 🔗 node-minecraft-protocol gets triggered" 
+        echo "5. 🤖 mineflayer gets triggered"
+        echo ""
+        echo "🔍 Check for PRs in all repos in 10-15 minutes:"
+        echo "- https://github.com/PrismarineJS/minecraft-data/pulls"
+        echo "- https://github.com/PrismarineJS/node-minecraft-protocol/pulls"
+        echo "- https://github.com/PrismarineJS/mineflayer/pulls"
+        echo "- https://github.com/PrismarineJS/minecraft-data-generator/pulls"
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
