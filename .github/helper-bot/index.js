@@ -42,6 +42,7 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
 async function createInitialPull (edition, issueUrl, { version, protocolVersion }) {
   exec('npm', ['install'], { cwd: 'tools/js' })
   exec('npm', ['run', 'version', edition, version, protocolVersion], { cwd: 'tools/js' })
+  exec('npm', ['run', 'build'], { cwd: 'tools/js' })
   const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
   const branchName = `${edition}-${branchNameVersion}`
   const title = `🎈 Add Minecraft ${edition} ${version} data`
