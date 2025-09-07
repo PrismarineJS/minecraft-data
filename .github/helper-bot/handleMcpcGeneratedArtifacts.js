@@ -2,6 +2,7 @@ const fs = require('fs')
 const cp = require('child_process')
 const github = require('gh-helpers')()
 const { join } = require('path')
+const { extractPcEntityMetadata } = require('../../tools/js/extractPcEntityMetadata')
 
 function exec (file, args = [], options = {}) {
   const opts = { stdio: 'inherit', ...options }
@@ -13,16 +14,18 @@ const artifactsDir = join(__dirname, './artifacts')
 const root = join(__dirname, '..', '..')
 
 async function handle (ourPR, genPullNo, version, artifactURL) {
+  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
+  const branch = ourPR.headBranch || `pc-${branchNameVersion}`
+  exec('git', ['pull', 'origin'])
+
   // if external PR:
   // const branch = ourPR.headBranch
   // exec('git', ['remote', 'add', 'fo', ourPR.headCloneURL])
   // exec('git', ['fetch', 'fo', branch])
   // exec('git', ['checkout', '-b', branch, `fo/` + branch])
 
-  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
-  const branch = `pc-${branchNameVersion}`
   try {
-    exec('git', ['switch', branch])
+    exec('git', ['checkout', branch])
   } catch (err) {
     console.error('Error checking out branch:', err)
     process.exit(1)
@@ -71,8 +74,12 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   // Commit the new dataPath
   fs.writeFileSync(join(root, 'data', 'dataPaths.json'), JSON.stringify(dataPaths, null, 2))
 
-  // Try to run the extractPcEntityMetadata.js script
-  cp.execSync(`npm install && node extractPcEntityMetadata.js ${version}`, { cwd: join(root, 'tools', 'js'), stdio: 'inherit' })
+  try {
+    process.chdir(join(__dirname, '../../tools/js'))
+    extractPcEntityMetadata(version, version, { write: true, cloneIfMissing: true })
+  } catch (e) {
+    console.log('Failed to extract PC entity metadata', e)
+  }
 
   // Now, we need to commit the changes
   exec('git', ['config', 'user.name', 'github-actions[bot]'])
