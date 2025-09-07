@@ -1,0 +1,71 @@
+name: Cleanup Test Artifacts
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run daily at 02:00 UTC to cleanup old test artifacts
+    - cron: "0 2 * * *"
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cleanup old test PRs and branches
+      run: |
+        echo "🧹 Starting cleanup of test artifacts across PrismarineJS repositories..."
+        
+        REPOS=("PrismarineJS/minecraft-data" "PrismarineJS/node-minecraft-protocol" "PrismarineJS/mineflayer")
+        
+        for repo in "${REPOS[@]}"; do
+          echo "Cleaning up $repo..."
+          
+          # Close old test PRs (older than 1 day)
+          gh pr list --repo "$repo" --search "is:open [TEST]" --json number,createdAt,title --jq '.[] | select((.createdAt | strptime("%Y-%m-%dT%H:%M:%SZ") | mktime) < (now - 86400)) | {number, title, createdAt}' | while IFS= read -r line; do
+            if [ -n "$line" ]; then
+              pr_number=$(echo "$line" | jq -r '.number')
+              title=$(echo "$line" | jq -r '.title')
+              created=$(echo "$line" | jq -r '.createdAt')
+              
+              gh pr close "$pr_number" --repo "$repo" --comment "🧹 Auto-closing old test PR (created: $created)"
+              echo "  ✅ Closed test PR #$pr_number: $title"
+            fi
+          done
+          
+          # Delete old test branches (older than 1 day)
+          gh api "repos/$repo/git/refs" --jq '.[] | select(.ref | contains("test")) | {ref: .ref, url: .object.url}' | while IFS= read -r line; do
+            if [ -n "$line" ]; then
+              ref=$(echo "$line" | jq -r '.ref')
+              object_url=$(echo "$line" | jq -r '.url')
+              
+              # Get commit date for the branch
+              commit_date=$(gh api "$object_url" --jq '.author.date')
+              commit_timestamp=$(date -d "$commit_date" +%s)
+              current_timestamp=$(date +%s)
+              age_hours=$(( (current_timestamp - commit_timestamp) / 3600 ))
+              
+              if [ "$age_hours" -gt 24 ]; then
+                branch_name=${ref#refs/heads/}
+                gh api -X DELETE "repos/$repo/git/refs/heads/$branch_name" 2>/dev/null || echo "    ⚠️ Could not delete branch $branch_name"
+                echo "  ✅ Deleted old test branch: $branch_name (age: ${age_hours}h)"
+              fi
+            fi
+          done
+          
+          echo "  🏁 Finished cleanup for $repo"
+        done
+        
+        echo "🎉 Cleanup completed across all repositories"
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+    
+    - name: Report cleanup stats
+      run: |
+        echo "## 🧹 Daily Test Artifact Cleanup Report"
+        echo ""
+        echo "**Timestamp:** $(date -Iseconds)"
+        echo "**Repositories cleaned:** PrismarineJS/minecraft-data, PrismarineJS/node-minecraft-protocol, PrismarineJS/mineflayer"
+        echo ""
+        echo "Cleanup criteria:"
+        echo "- 🗑️ Test PRs older than 24 hours"
+        echo "- 🌳 Test branches older than 24 hours"
+        echo "- 🏷️ Items marked with [TEST] prefix"

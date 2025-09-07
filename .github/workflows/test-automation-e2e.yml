@@ -1,0 +1,237 @@
+name: Test Automation End-to-End
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_version:
+        description: 'Test version to use (default: auto-generated)'
+        required: false
+        default: ''
+        type: string
+      cleanup_after:
+        description: 'Auto-cleanup test artifacts after completion'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  generate-test-data:
+    runs-on: ubuntu-latest
+    outputs:
+      test_version: ${{ steps.generate.outputs.test_version }}
+      test_branch: ${{ steps.generate.outputs.test_branch }}
+      timestamp: ${{ steps.generate.outputs.timestamp }}
+    steps:
+    - name: Generate test version
+      id: generate
+      run: |
+        if [ -n "${{ github.event.inputs.test_version }}" ]; then
+          TEST_VERSION="${{ github.event.inputs.test_version }}"
+        else
+          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+          TEST_VERSION="1.99.99-test-${TIMESTAMP}"
+        fi
+        TEST_BRANCH="test-${TEST_VERSION//[^a-zA-Z0-9]/_}"
+        echo "test_version=${TEST_VERSION}" >> $GITHUB_OUTPUT
+        echo "test_branch=${TEST_BRANCH}" >> $GITHUB_OUTPUT
+        echo "timestamp=$(date +"%Y%m%d-%H%M%S")" >> $GITHUB_OUTPUT
+        echo "Generated test version: ${TEST_VERSION}"
+        echo "Generated test branch: ${TEST_BRANCH}"
+
+  test-minecraft-data:
+    needs: generate-test-data
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+    
+    - name: Create test version data
+      run: |
+        cd tools/js
+        npm install
+        # Create mock version data
+        mkdir -p test-data
+        cat > test-data/test-version.json << EOF
+        {
+          "id": "${{ needs.generate-test-data.outputs.test_version }}",
+          "type": "release",
+          "releaseTime": "$(date -Iseconds)",
+          "time": "$(date -Iseconds)",
+          "complianceLevel": 1,
+          "url": "https://example.com/test.jar"
+        }
+        EOF
+    
+    - name: Simulate version addition
+      run: |
+        cd tools/js
+        # Add test version to versions.json
+        TEST_VERSION="${{ needs.generate-test-data.outputs.test_version }}"
+        if ! grep -q "$TEST_VERSION" ../../data/pc/common/versions.json; then
+          # Add to versions.json (simulate what the real script does)
+          jq --arg version "$TEST_VERSION" '. += [$version]' ../../data/pc/common/versions.json > tmp.json
+          mv tmp.json ../../data/pc/common/versions.json
+        fi
+    
+    - name: Create test branch and PR
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        
+        BRANCH_NAME="${{ needs.generate-test-data.outputs.test_branch }}"
+        git checkout -b "$BRANCH_NAME"
+        git add --all
+        git commit -m "[TEST] Add test version ${{ needs.generate-test-data.outputs.test_version }}"
+        git push origin "$BRANCH_NAME" --force
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+    
+    - name: Create test PR
+      run: |
+        gh pr create \
+          --title "[TEST] 🎈 ${{ needs.generate-test-data.outputs.test_version }}" \
+          --body "**🧪 This is an automated test PR**
+
+        Testing the automation pipeline with version ${{ needs.generate-test-data.outputs.test_version }}
+        
+        Generated at: ${{ needs.generate-test-data.outputs.timestamp }}
+        
+        This PR will be auto-closed after testing completes." \
+          --head "${{ needs.generate-test-data.outputs.test_branch }}" \
+          --base master
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+
+  trigger-downstream:
+    needs: [generate-test-data, test-minecraft-data]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger node-minecraft-protocol test
+      run: |
+        gh workflow run update-from-minecraft-data.yml \
+          --repo PrismarineJS/node-minecraft-protocol \
+          -f new_mc_version="${{ needs.generate-test-data.outputs.test_version }}" \
+          -f mcdata_branch="${{ needs.generate-test-data.outputs.test_branch }}" \
+          -f mcdata_pr_url="https://github.com/PrismarineJS/minecraft-data/pulls?q=is%3Apr+${{ needs.generate-test-data.outputs.test_version }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+    
+    - name: Wait for node-minecraft-protocol completion
+      run: |
+        echo "Waiting 30 seconds for downstream workflow to start..."
+        sleep 30
+        
+        # Check if PR was created
+        TIMEOUT=300
+        ELAPSED=0
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          if gh pr list --repo PrismarineJS/node-minecraft-protocol --search "🎈 ${{ needs.generate-test-data.outputs.test_version }}" --json number --jq '.[0].number' | grep -q .; then
+            echo "✅ node-minecraft-protocol PR created successfully"
+            break
+          fi
+          sleep 10
+          ELAPSED=$((ELAPSED + 10))
+        done
+        
+        if [ $ELAPSED -ge $TIMEOUT ]; then
+          echo "❌ Timeout waiting for node-minecraft-protocol PR"
+          exit 1
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+    
+    - name: Check mineflayer automation
+      run: |
+        # Wait for mineflayer PR
+        TIMEOUT=300
+        ELAPSED=0
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          if gh pr list --repo PrismarineJS/mineflayer --search "🎈 ${{ needs.generate-test-data.outputs.test_version }}" --json number --jq '.[0].number' | grep -q .; then
+            echo "✅ mineflayer PR created successfully"
+            break
+          fi
+          sleep 10
+          ELAPSED=$((ELAPSED + 10))
+        done
+        
+        if [ $ELAPSED -ge $TIMEOUT ]; then
+          echo "❌ Timeout waiting for mineflayer PR"
+          exit 1
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+
+  cleanup:
+    needs: [generate-test-data, trigger-downstream]
+    if: always() && github.event.inputs.cleanup_after == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Close test PRs
+      run: |
+        # Close test PRs in all repos
+        for repo in "PrismarineJS/minecraft-data" "PrismarineJS/node-minecraft-protocol" "PrismarineJS/mineflayer"; do
+          echo "Cleaning up test PRs in $repo..."
+          
+          # Find and close test PRs
+          gh pr list --repo "$repo" --search "🎈 ${{ needs.generate-test-data.outputs.test_version }}" --json number --jq '.[].number' | while read -r pr_num; do
+            if [ -n "$pr_num" ]; then
+              gh pr close "$pr_num" --repo "$repo" --comment "🧹 Auto-closing test PR after successful end-to-end test"
+              echo "Closed PR #$pr_num in $repo"
+            fi
+          done
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+    
+    - name: Delete test branches
+      run: |
+        # Delete test branches in all repos
+        for repo in "PrismarineJS/minecraft-data" "PrismarineJS/node-minecraft-protocol" "PrismarineJS/mineflayer"; do
+          echo "Cleaning up test branches in $repo..."
+          
+          # Find test branches for this version
+          TEST_BRANCH_PATTERN="${{ needs.generate-test-data.outputs.test_version //[^a-zA-Z0-9]/_}}"
+          
+          # Delete branches that match our test pattern
+          gh api "repos/$repo/git/refs" --jq '.[] | select(.ref | contains("test")) | select(.ref | contains("'$TEST_BRANCH_PATTERN'")) | .ref' | while read -r ref; do
+            if [ -n "$ref" ]; then
+              BRANCH_NAME=${ref#refs/heads/}
+              gh api -X DELETE "repos/$repo/git/refs/heads/$BRANCH_NAME" || echo "Failed to delete $BRANCH_NAME in $repo"
+              echo "Deleted branch $BRANCH_NAME in $repo"
+            fi
+          done
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+
+  report:
+    needs: [generate-test-data, trigger-downstream]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+    - name: Test Summary
+      run: |
+        echo "## 🧪 End-to-End Automation Test Results"
+        echo ""
+        echo "**Test Version:** ${{ needs.generate-test-data.outputs.test_version }}"
+        echo "**Timestamp:** ${{ needs.generate-test-data.outputs.timestamp }}"
+        echo ""
+        
+        if [ "${{ needs.trigger-downstream.result }}" = "success" ]; then
+          echo "✅ **SUCCESS**: All automation workflows completed successfully"
+          echo ""
+          echo "**Verified Components:**"
+          echo "- ✅ minecraft-data version processing"
+          echo "- ✅ node-minecraft-protocol workflow triggering"  
+          echo "- ✅ mineflayer workflow triggering"
+          echo "- ✅ Cross-repository automation chain"
+        else
+          echo "❌ **FAILED**: Automation test failed"
+          echo ""
+          echo "Check the workflow logs for details."
+        fi
