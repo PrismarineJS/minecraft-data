@@ -1,15 +1,66 @@
 const fs = require('fs')
 const cp = require('child_process')
-const github = require('gh-helpers')()
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
 
+// Initialize github helper - can be mocked for testing
+let github
+try {
+  github = require('gh-helpers')()
+} catch (e) {
+  // For testing environment, create mock
+  github = { 
+    mock: true, 
+    createPullRequest: () => {}, 
+    sendWorkflowDispatch: () => {},
+    findIssue: () => {},
+    close: () => {},
+    createIssue: () => {}
+  }
+}
+
+// Testable functions
 function exec (file, args, options = {}) {
   const opts = { stdio: 'inherit', ...options }
   console.log('> ', file, args.join(' '), options.cwd ? `(cwd: ${options.cwd})` : '')
   return github.mock ? undefined : cp.execFileSync(file, args, opts)
 }
-const download = (url, dest) => exec('curl', ['-L', url, '-o', dest])
+
+function download(url, dest) {
+  return exec('curl', ['-L', url, '-o', dest])
+}
+
+function sanitizeVersion(version) {
+  return version?.replace(/[^a-zA-Z0-9_.]/g, '_')
+}
+
+function generateBranchName(edition, version) {
+  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
+  return `${edition}-${branchNameVersion}`
+}
+
+function createPRBody(edition, version, issueUrl, protocolVersion, branchName) {
+  return `
+This automated PR sets up the relevant boilerplate for Minecraft ${edition} version ${version}. Fixes ${issueUrl}.
+
+Related:
+- Issue: ${issueUrl}
+- Protocol Version: ${protocolVersion}
+<!--minecraft-data-generator-placeholder-->
+
+* You can help contribute to this PR by opening a PR against this <code branch>${branchName}</code> branch instead of <code>master</code>.
+`
+}
+
+function createWorkflowDispatch(repo, workflow, inputs) {
+  return {
+    owner: 'PrismarineJS',
+    repo,
+    workflow,
+    branch: repo === 'minecraft-data-generator' ? 'main' : 'master',
+    inputs
+  }
+}
 
 function buildFirstIssue (title, result, jarData) {
   const protocolVersion = jarData?.protocol_version || 'Failed to obtain from JAR'
@@ -43,8 +94,7 @@ async function createInitialPull (edition, issueUrl, { version, protocolVersion 
   exec('npm', ['install'], { cwd: 'tools/js' })
   exec('npm', ['run', 'version', edition, version, protocolVersion], { cwd: 'tools/js' })
   exec('npm', ['run', 'build'], { cwd: 'tools/js' })
-  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
-  const branchName = `${edition}-${branchNameVersion}`
+  const branchName = generateBranchName(edition, version)
   const title = `🎈 Add Minecraft ${edition} ${version} data`
   // First, delete any existing branch
   try {
@@ -58,16 +108,7 @@ async function createInitialPull (edition, issueUrl, { version, protocolVersion 
   exec('git', ['add', '--all'])
   exec('git', ['commit', '-m', title])
   exec('git', ['push', 'origin', branchName, '--force'])
-  const body = `
-This automated PR sets up the relevant boilerplate for Minecraft ${edition} version ${version}. Fixes ${issueUrl}.
-
-Related:
-- Issue: ${issueUrl}
-- Protocol Version: ${protocolVersion}
-<!--minecraft-data-generator-placeholder-->
-
-* You can help contribute to this PR by opening a PR against this <code branch>${branchName}</code> branch instead of <code>master</code>.
-`
+  const body = createPRBody(edition, version, issueUrl, protocolVersion, branchName)
   const pr = await github.createPullRequest(title, body, branchName, 'master')
   pr.branchName = branchName
   return pr
@@ -151,31 +192,19 @@ async function updateManifestPC () {
     })
     console.log('Created PR', pr)
     // Ask minecraft-data-generator to handle new update
-    const dispatchPayload = {
-      owner: 'PrismarineJS',
-      repo: 'minecraft-data-generator',
-      workflow: 'handle-mcdata-update.yml',
-      branch: 'main',
-      inputs: {
-        version: latestVersion,
-        issue_number: issue?.number,
-        pr_number: pr?.number
-      }
-    }
+    const dispatchPayload = createWorkflowDispatch('minecraft-data-generator', 'handle-mcdata-update.yml', {
+      version: latestVersion,
+      issue_number: issue?.number,
+      pr_number: pr?.number
+    })
     console.log('Sending workflow dispatch', dispatchPayload)
     await github.sendWorkflowDispatch(dispatchPayload)
     // Ask node-minecraft-protocol to handle new update
-    const nodeDispatchPayload = {
-      owner: 'PrismarineJS',
-      repo: 'node-minecraft-protocol',
-      workflow: 'update-from-minecraft-data.yml',
-      branch: 'master',
-      inputs: {
-        new_mc_version: latestVersion,
-        mcdata_branch: pr.branchName,
-        mcdata_pr_url: pr.url
-      }
-    }
+    const nodeDispatchPayload = createWorkflowDispatch('node-minecraft-protocol', 'update-from-minecraft-data.yml', {
+      new_mc_version: latestVersion,
+      mcdata_branch: pr.branchName,
+      mcdata_pr_url: pr.url
+    })
     console.log('Sending workflow dispatch', nodeDispatchPayload)
     await github.sendWorkflowDispatch(nodeDispatchPayload)
     // node-minecraft-protocol would then dispatch to mineflayer
@@ -233,4 +262,19 @@ async function updateManifestPC () {
   }
 }
 
-updateManifestPC()
+// Export for testing
+module.exports = {
+  sanitizeVersion,
+  buildFirstIssue,
+  generateBranchName,
+  createPRBody,
+  createWorkflowDispatch,
+  createInitialPull,
+  updateManifestPC,
+  setGithub: (mockGithub) => { github = mockGithub }
+}
+
+// Run main function if called directly
+if (require.main === module) {
+  updateManifestPC()
+}

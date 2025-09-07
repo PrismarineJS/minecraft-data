@@ -1,167 +1,199 @@
 const sinon = require('sinon')
+const fs = require('fs')
 const assert = require('assert')
+const path = require('path')
 
-describe('Helper Bot', function() {
-  let originalEnv
+// Import the actual implementation
+const helperBot = require('../index')
 
+describe('Minecraft Data Helper Bot', function() {
+  let fsStub
+  
   beforeEach(function() {
-    originalEnv = process.env
-    process.env = { ...originalEnv }
-    sinon.reset()
+    fsStub = sinon.stub(fs, 'readFileSync')
   })
 
   afterEach(function() {
-    process.env = originalEnv
     sinon.restore()
   })
 
-  describe('Version Validation', function() {
-    it('should validate version format correctly', function() {
-      const validVersions = ['1.21.8', '1.99.99-test-123456', '24w01a']
-      const invalidVersions = ['', '1.21', 'invalid', '1.21.8.9']
+  describe('sanitizeVersion', function() {
+    it('should sanitize version strings correctly', function() {
+      const testCases = [
+        { input: '1.21.9', expected: '1.21.9' },
+        { input: '1.21.9-test', expected: '1.21.9_test' },
+        { input: '24w01a', expected: '24w01a' },
+        { input: 'invalid!@#$%^&*()', expected: 'invalid__________' },
+        { input: undefined, expected: undefined }
+      ]
       
-      validVersions.forEach(version => {
-        assert(version.match(/^[\d\w.-]+$/), `${version} should be valid`)
+      testCases.forEach(({ input, expected }) => {
+        const result = helperBot.sanitizeVersion(input)
+        assert.strictEqual(result, expected, `sanitizeVersion('${input}') should return '${expected}'`)
       })
+    })
+  })
 
-      invalidVersions.forEach(version => {
-        if (version === '') {
-          assert(!version.match(/^[\d\w.-]+$/), `${version} should be invalid`)
-        } else {
-          // These might still match the pattern, which is fine
+  describe('generateBranchName', function() {
+    it('should create correct branch names', function() {
+      const testCases = [
+        { edition: 'pc', version: '1.21.9', expected: 'pc-1_21_9' },
+        { edition: 'bedrock', version: '1.21.9-test', expected: 'bedrock-1_21_9_test' },
+        { edition: 'pc', version: '24w01a', expected: 'pc-24w01a' },
+        { edition: 'pc', version: 'test!@#', expected: 'pc-test___' }
+      ]
+      
+      testCases.forEach(({ edition, version, expected }) => {
+        const result = helperBot.generateBranchName(edition, version)
+        assert.strictEqual(result, expected, `generateBranchName('${edition}', '${version}') should return '${expected}'`)
+      })
+    })
+  })
+
+  describe('buildFirstIssue', function() {
+    it('should create correct issue format', function() {
+      const title = 'Support Minecraft PC 1.21.9'
+      const result = {
+        id: '1.21.9',
+        type: 'release',
+        releaseTime: '2024-01-01T00:00:00Z'
+      }
+      const jarData = {
+        protocol_version: 767,
+        name: 'Minecraft 1.21.9',
+        world_version: 3955,
+        java_version: 21
+      }
+      
+      const issue = helperBot.buildFirstIssue(title, result, jarData)
+      
+      assert.strictEqual(issue.title, title)
+      assert(issue.body.includes('version **1.21.9**'), 'Should contain version')
+      assert(issue.body.includes('Protocol ID</b></td><td>767'), 'Should contain protocol version')
+      assert(issue.body.includes('Data Version</b></td><td>3955'), 'Should contain data version')
+      assert(issue.body.includes('Java Version</b></td><td>21'), 'Should contain Java version')
+      assert(issue.body.includes('2024-01-01T00:00:00Z'), 'Should contain release date')
+    })
+
+    it('should handle missing jar data', function() {
+      const title = 'Support Minecraft PC 1.21.9'
+      const result = {
+        id: '1.21.9',
+        type: 'release',
+        releaseTime: '2024-01-01T00:00:00Z'
+      }
+      
+      const issue = helperBot.buildFirstIssue(title, result)
+      
+      assert(issue.body.includes('Failed to obtain from JAR'), 'Should handle missing protocol version')
+      assert(issue.body.includes('<td>1.21.9</td>'), 'Should use result.id as name')
+    })
+  })
+
+  describe('createPRBody', function() {
+    it('should create correct PR body format', function() {
+      const edition = 'pc'
+      const version = '1.21.9'
+      const issueUrl = 'https://github.com/test/issues/123'
+      const protocolVersion = 767
+      const branchName = 'pc-1_21_9'
+      
+      const body = helperBot.createPRBody(edition, version, issueUrl, protocolVersion, branchName)
+      
+      assert(body.includes(`Minecraft ${edition} version ${version}`), 'Should contain edition and version')
+      assert(body.includes(`Fixes ${issueUrl}`), 'Should contain issue URL')
+      assert(body.includes(`Protocol Version: ${protocolVersion}`), 'Should contain protocol version')
+      assert(body.includes(`${branchName}</code> branch`), 'Should contain branch name')
+      assert(body.includes('master'), 'Should reference master branch')
+    })
+  })
+
+  describe('createWorkflowDispatch', function() {
+    it('should create correct workflow dispatch payload for minecraft-data-generator', function() {
+      const repo = 'minecraft-data-generator'
+      const workflow = 'handle-mcdata-update.yml'
+      const inputs = {
+        version: '1.21.9',
+        issue_number: 123,
+        pr_number: 456
+      }
+      
+      const result = helperBot.createWorkflowDispatch(repo, workflow, inputs)
+      
+      const expected = {
+        owner: 'PrismarineJS',
+        repo: 'minecraft-data-generator',
+        workflow: 'handle-mcdata-update.yml',
+        branch: 'main',
+        inputs: {
+          version: '1.21.9',
+          issue_number: 123,
+          pr_number: 456
         }
-      })
-    })
-
-    it('should handle protocol version mapping', function() {
-      const testVersion = '1.99.99-test-123456'
-      const protocolVersion = 999
-      assert.strictEqual(protocolVersion, 999, 'Test versions should use protocol 999')
-    })
-  })
-
-  describe('Environment Variable Handling', function() {
-    it('should detect test version from environment', function() {
-      process.env.TEST_VERSION = '1.99.99-test-123456'
-      assert.strictEqual(process.env.TEST_VERSION, '1.99.99-test-123456')
-    })
-
-    it('should work without test version', function() {
-      delete process.env.TEST_VERSION
-      assert.strictEqual(process.env.TEST_VERSION, undefined)
-    })
-  })
-
-  describe('Issue and PR Creation Logic', function() {
-    it('should create issue with correct format', function() {
-      const testVersion = '1.99.99-test-format'
-      const title = `[TEST] Support Minecraft PC ${testVersion}`
+      }
       
-      assert(title.includes('[TEST]'), 'Title should contain [TEST] prefix')
-      assert(title.includes(testVersion), 'Title should contain version')
-      assert(title.includes('Support Minecraft PC'), 'Title should contain support text')
+      assert.deepStrictEqual(result, expected, 'Should create correct dispatch payload')
     })
 
-    it('should create PR with correct branch naming', function() {
-      const testVersion = '1.99.99-test-branch'
-      const branchName = 'pc-' + testVersion.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
+    it('should create correct workflow dispatch payload for node-minecraft-protocol', function() {
+      const repo = 'node-minecraft-protocol'
+      const workflow = 'update-from-minecraft-data.yml'
+      const inputs = {
+        new_mc_version: '1.21.9',
+        mcdata_branch: 'pc-1_21_9',
+        mcdata_pr_url: 'https://github.com/test/pr/456'
+      }
       
-      assert.strictEqual(branchName, 'pc-1_99_99_test_branch')
-    })
-
-    it('should handle different version formats for branching', function() {
-      const testCases = [
-        { input: '1.21.8', expected: 'pc-1_21_8' },
-        { input: '1.99.99-test-123', expected: 'pc-1_99_99_test_123' },
-        { input: '24w01a', expected: 'pc-24w01a' }
-      ]
-
-      testCases.forEach(({ input, expected }) => {
-        const branchName = 'pc-' + input.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
-        assert.strictEqual(branchName, expected)
-      })
+      const result = helperBot.createWorkflowDispatch(repo, workflow, inputs)
+      
+      const expected = {
+        owner: 'PrismarineJS',
+        repo: 'node-minecraft-protocol',
+        workflow: 'update-from-minecraft-data.yml',
+        branch: 'master',
+        inputs: {
+          new_mc_version: '1.21.9',
+          mcdata_branch: 'pc-1_21_9',
+          mcdata_pr_url: 'https://github.com/test/pr/456'
+        }
+      }
+      
+      assert.deepStrictEqual(result, expected, 'Should create correct dispatch payload with master branch')
     })
   })
 
-  describe('Utility Functions', function() {
-    it('should sanitize version strings', function() {
-      const testCases = [
-        { input: '1.21.8', expected: '1.21.8' },
-        { input: '1.21.8-test', expected: '1.21.8_test' },
-        { input: 'invalid!@#', expected: 'invalid___' },
-        { input: '24w01a', expected: '24w01a' }
-      ]
+  describe('Integration Tests', function() {
+    beforeEach(function() {
+      sinon.restore()
+      // Stub all file operations
+      sinon.stub(fs, 'readFileSync')
+      sinon.stub(fs, 'writeFileSync')
+    })
+
+    it('should handle version sanitization in full process', function() {
+      const result = helperBot.sanitizeVersion('1.21.9-test!@#')
+      assert.strictEqual(result, '1.21.9_test___', 'sanitizeVersion preserves dots and underscores')
       
-      testCases.forEach(({ input, expected }) => {
-        const sanitized = input.replace(/[^a-zA-Z0-9_.]/g, '_')
-        assert.strictEqual(sanitized, expected)
-      })
+      const branchName = helperBot.generateBranchName('pc', '1.21.9-test!@#')
+      assert.strictEqual(branchName, 'pc-1_21_9_test___', 'generateBranchName replaces non-alphanumeric')
     })
 
-    it('should handle edge cases in version processing', function() {
-      // Test empty string
-      const empty = ''
-      const sanitizedEmpty = empty.replace(/[^a-zA-Z0-9_.]/g, '_')
-      assert.strictEqual(sanitizedEmpty, '')
-
-      // Test special characters
-      const special = 'test@#$%^&*()'
-      const sanitizedSpecial = special.replace(/[^a-zA-Z0-9_.]/g, '_')
-      assert.strictEqual(sanitizedSpecial, 'test_________')
-
-      // Test numbers and letters only
-      const clean = 'test123'
-      const sanitizedClean = clean.replace(/[^a-zA-Z0-9_.]/g, '_')
-      assert.strictEqual(sanitizedClean, 'test123')
-    })
-  })
-
-  describe('Configuration and Constants', function() {
-    it('should have correct issue template structure', function() {
-      const testVersion = '1.21.9'
-      const expectedElements = [
-        'A new Minecraft Java Edition version is available',
-        'Protocol Details',
-        'Protocol ID',
-        'Release Date',
-        'Release Type',
-        'Data Version',
-        'Java Version'
-      ]
-
-      // Mock issue body creation
-      const issueBody = `
-A new Minecraft Java Edition version is available (as of 2023-01-01T00:00:00Z), version **${testVersion}**
-## Official Changelog
-* https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs
-## Protocol Details
-<table>
-  <tr><td><b>Name</b></td><td>${testVersion}</td>
-  <tr><td><b>Protocol ID</b></td><td>999</td>
-  <tr><td><b>Release Date</b></td><td>2023-01-01T00:00:00Z</td>
-  <tr><td><b>Release Type</b></td><td>release</td>
-  <tr><td><b>Data Version</b></td><td>4440</td>
-  <tr><td><b>Java Version</b></td><td>21</td>
-</table>
-      `
-
-      expectedElements.forEach(element => {
-        assert(issueBody.includes(element), `Issue body should contain: ${element}`)
-      })
+    it('should create consistent branch names and PR bodies', function() {
+      const edition = 'pc'
+      const version = '1.21.9'
+      const branchName = helperBot.generateBranchName(edition, version)
+      const prBody = helperBot.createPRBody(edition, version, 'test-url', 767, branchName)
+      
+      assert(prBody.includes(branchName), 'PR body should reference the generated branch name')
+      assert.strictEqual(branchName, 'pc-1_21_9', 'Branch name should be consistent')
     })
 
-    it('should use correct repository URLs', function() {
-      const expectedRepos = [
-        'PrismarineJS/minecraft-data-generator',
-        'PrismarineJS/minecraft-data',
-        'PrismarineJS/node-minecraft-protocol',
-        'PrismarineJS/mineflayer'
-      ]
-
-      expectedRepos.forEach(repo => {
-        assert(repo.startsWith('PrismarineJS/'), `Repository should be in PrismarineJS org: ${repo}`)
-        assert(repo.includes('minecraft') || repo.includes('mineflayer'), `Repository should be minecraft-related: ${repo}`)
-      })
+    it('should create workflow dispatch payloads with correct branch names', function() {
+      const generatorDispatch = helperBot.createWorkflowDispatch('minecraft-data-generator', 'test.yml', {})
+      const protocolDispatch = helperBot.createWorkflowDispatch('node-minecraft-protocol', 'test.yml', {})
+      
+      assert.strictEqual(generatorDispatch.branch, 'main', 'minecraft-data-generator should use main branch')
+      assert.strictEqual(protocolDispatch.branch, 'master', 'node-minecraft-protocol should use master branch')
     })
   })
 })
