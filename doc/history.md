@@ -1,3 +1,19 @@
+## 3.98.0
+* [🎈 Pc1.21.8 (#1070)](https://github.com/PrismarineJS/minecraft-data/commit/7bfe410e80c5332074de6726dec8df6ad8c80ae1) (thanks @extremeheat)
+* [Add 25w36b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fdd13b6a4bd46a7a9de1c5de8a7cb7abf715960f) (thanks @github-actions[bot])
+* [Add 25w36a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4358ffe27a81ad4f7aa54f62b30217d54165d3ad) (thanks @github-actions[bot])
+* [Fix update workflow](https://github.com/PrismarineJS/minecraft-data/commit/752a52d70ae2ad18bfdf01d8d7eac289f12807fa) (thanks @extremeheat)
+* [Fix handle-mcpc-generator.yml (#1071)](https://github.com/PrismarineJS/minecraft-data/commit/063c333d8e60fe012a6734126479fce4a3324e35) (thanks @extremeheat)
+* [Add pc 1.21.7 data (#1069)](https://github.com/PrismarineJS/minecraft-data/commit/1d6d9d408bf567e9a6f3fadd2aa079a50d8097d0) (thanks @Maks-gaming)
+* [Add 25w35a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/549e5a83ea72193eaa6eac8462e01957af6f832f) (thanks @github-actions[bot])
+* [Fix & cleanup the tints schema (#1056)](https://github.com/PrismarineJS/minecraft-data/commit/78d6e14a467fa719cb922e5bdc49275df4785860) (thanks @ItsDrike)
+* [Handle dispatch from PrismarineJS/minecraft-data-generator (#1063)](https://github.com/PrismarineJS/minecraft-data/commit/c903b774986cd025950df3a9240d8fade1885070) (thanks @extremeheat)
+* [Fix commands schema & enforce no additional properties (#1066)](https://github.com/PrismarineJS/minecraft-data/commit/5c47e32b57981d30cf9c5c15ac75633253680ea9) (thanks @ItsDrike)
+* [Disallow additional properties in blockMappings schema (#1067)](https://github.com/PrismarineJS/minecraft-data/commit/de073027b68530fc0dd6de2ec921386a839145f7) (thanks @ItsDrike)
+* [Ensure consistency between versions.json and dataPaths.json (#1068)](https://github.com/PrismarineJS/minecraft-data/commit/3075b6e8ad0778dfe134122ad65cb2f8f69632f3) (thanks @ItsDrike)
+* [Add 25w34b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/46e60659d98b922f503c6b8f986564d5d38985ea) (thanks @github-actions[bot])
+* [Add 25w34a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0e3d40eb9a8c03c46b16fea594a30d4daa8a98a1) (thanks @github-actions[bot])
+
 ## 3.97.0
 * [Revert "Fix pc "nbtNameForEnchant" feature versions (#986)"](https://github.com/PrismarineJS/minecraft-data/commit/34a88b5f770eb9f2b3d6a4ae8a5ec6a71b235327) (thanks @rom1504)
 
