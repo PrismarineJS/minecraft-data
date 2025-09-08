@@ -1,14 +1,8 @@
 const fs = require('fs')
-const cp = require('child_process')
 const github = require('gh-helpers')()
 const { join } = require('path')
 const { extractPcEntityMetadata } = require('../../tools/js/extractPcEntityMetadata')
-
-function exec (file, args = [], options = {}) {
-  const opts = { stdio: 'inherit', ...options }
-  console.log('> ', file, args.join(' '), options.cwd ? `(cwd: ${options.cwd})` : '')
-  return github.mock ? undefined : cp.execFileSync(file, args, opts)
-}
+const { exec, createInitialPR } = require('./utils')
 
 const artifactsDir = join(__dirname, './artifacts')
 const root = join(__dirname, '..', '..')
@@ -52,7 +46,7 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
 
   // https://github.com/PrismarineJS/minecraft-data-generator/actions/runs/17261281146/artifacts/3861320839
   const s = artifactURL.split('github.com/')[1]
-  const [ownerName, repoName, _actions, _runs, _runId, _artifacts, artifactId] = s.split('/')
+  const [ownerName, repoName, _actions, _runs, _runId, _artifacts, artifactId] = s.split('/') // eslint-disable-line
   console.log('Downloading artifacts', { ownerName, repoName, artifactId, artifactsDir })
   await github.artifacts.downloadIdFrom(ownerName, repoName, artifactId, artifactsDir)
 
@@ -89,12 +83,21 @@ async function handle (ourPR, genPullNo, version, artifactURL) {
   exec('git', ['push', 'origin', branch])
 }
 
-async function main (versions, genPullNo, artifactUrl) {
+async function main (versions, genPullNo, artifactUrl, createPR) {
   const version = versions.at(-1)
   const pr = await github.findPullRequest({ titleIncludes: '🎈', author: null })
   console.log('Found PR', pr)
   if (pr && pr.isOpen) {
     const details = await github.getPullRequest(pr.id)
+    console.log('PR', details)
+    await handle(details, genPullNo, version, artifactUrl)
+  } else if (createPR) {
+    const pr = await createInitialPR('pc', '(This issue was created for a minecraft-data-generator PR)', {
+      version,
+      protocolVersion: null
+    })
+    console.log('Created PR', pr)
+    const details = await github.getPullRequest(pr.number)
     console.log('PR', details)
     await handle(details, genPullNo, version, artifactUrl)
   } else {
@@ -105,5 +108,6 @@ async function main (versions, genPullNo, artifactUrl) {
 main(
   JSON.parse(process.env.TRIGGER_MC_VERSIONS),
   process.env.TRIGGER_PR_NO,
-  process.env.TRIGGER_ARTIFACT_URL
+  process.env.TRIGGER_ARTIFACT_URL,
+  process.env.CREATE_PR_IF_NONE
 )

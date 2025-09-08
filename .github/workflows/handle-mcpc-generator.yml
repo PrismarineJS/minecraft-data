@@ -12,6 +12,10 @@ on:
       prNumber:
         description: 'Relevant minecraft-data-generator PR #'
         required: false
+      createPr:
+        description: 'Whether to create a new PR if none exists'
+        required: false
+        default: 'false'
 
 jobs:
   update-mcdata:
@@ -34,3 +38,4 @@ jobs:
           TRIGGER_PR_NO: ${{ github.event.inputs.prNumber }}
           TRIGGER_ARTIFACT_URL: ${{ github.event.inputs.mergedArtifactURL }}
           GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+          CREATE_PR_IF_NONE: ${{ github.event.inputs.createPr }}

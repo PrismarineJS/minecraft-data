@@ -1,14 +1,10 @@
+/* eslint-disable no-return-assign, no-sequences */
 const fs = require('fs')
-const cp = require('child_process')
 const github = require('gh-helpers')()
 const pcManifestURL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json'
 const changelogURL = 'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
+const { exec, createInitialPR } = require('./utils')
 
-function exec (file, args, options = {}) {
-  const opts = { stdio: 'inherit', ...options }
-  console.log('> ', file, args.join(' '), options.cwd ? `(cwd: ${options.cwd})` : '')
-  return github.mock ? undefined : cp.execFileSync(file, args, opts)
-}
 const download = (url, dest) => exec('curl', ['-L', url, '-o', dest])
 
 function buildFirstIssue (title, result, jarData) {
@@ -37,40 +33,6 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
 🤖 I am a bot, I check for updates every 2 hours without a trigger. You can close this issue to prevent any further updates.
     `
   }
-}
-
-async function createInitialPull (edition, issueUrl, { version, protocolVersion }) {
-  exec('npm', ['install'], { cwd: 'tools/js' })
-  exec('npm', ['run', 'version', edition, version, protocolVersion], { cwd: 'tools/js' })
-  exec('npm', ['run', 'build'], { cwd: 'tools/js' })
-  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
-  const branchName = `${edition}-${branchNameVersion}`
-  const title = `🎈 Add Minecraft ${edition} ${version} data`
-  // First, delete any existing branch
-  try {
-    exec('git', ['branch', '-D', branchName])
-  } catch (e) {
-    // Branch doesn't exist, ignore error
-  }
-  exec('git', ['checkout', '-b', branchName])
-  exec('git', ['config', 'user.name', 'github-actions[bot]'])
-  exec('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
-  exec('git', ['add', '--all'])
-  exec('git', ['commit', '-m', title])
-  exec('git', ['push', 'origin', branchName, '--force'])
-  const body = `
-This automated PR sets up the relevant boilerplate for Minecraft ${edition} version ${version}. Fixes ${issueUrl}.
-
-Related:
-- Issue: ${issueUrl}
-- Protocol Version: ${protocolVersion}
-<!--minecraft-data-generator-placeholder-->
-
-* You can help contribute to this PR by opening a PR against this <code branch>${branchName}</code> branch instead of <code>master</code>.
-`
-  const pr = await github.createPullRequest(title, body, branchName, 'master')
-  pr.branchName = branchName
-  return pr
 }
 
 const protocolVersions = {
@@ -144,7 +106,7 @@ async function updateManifestPC () {
     console.log('Created issue', issue)
 
     // Now create an initial PR with the new version data
-    const pr = await createInitialPull('pc', issue.url, {
+    const pr = await createInitialPR('pc', issue.url, {
       minecraftVersion: versionJson.id,
       version: latestVersion,
       protocolVersion: versionJson.protocol_version
