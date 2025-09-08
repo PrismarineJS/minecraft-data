@@ -7,12 +7,22 @@ function exec (file, args = [], options = {}) {
   return github.mock ? undefined : cp.execFileSync(file, args, opts)
 }
 
+// Sometimes node/npm not in path...?
+let npm = 'npm'
+let node = 'node'
+try {
+  exec('npm', ['--version']).toString().trim()
+} catch (e) {
+  npm = process.execPath.replace(/node$/, 'npm')
+  node = process.execPath
+}
+
 const sanitizeBranch = (branchName) => branchName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
 
 async function createInitialPR (edition, issueUrl, { version, protocolVersion }) {
-  exec('npm', ['install'], { cwd: 'tools/js' })
-  exec('npm', ['run', 'version', edition, version, protocolVersion], { cwd: 'tools/js' })
-  exec('npm', ['run', 'build'], { cwd: 'tools/js' })
+  exec(npm, ['install'], { cwd: 'tools/js' })
+  exec(npm, ['run', 'version', edition, version, protocolVersion], { cwd: 'tools/js' })
+  exec(npm, ['run', 'build'], { cwd: 'tools/js' })
   const branchNameVersion = sanitizeBranch(version)
   const branchName = `${edition}-${branchNameVersion}`
   const title = `🎈 Add Minecraft ${edition} ${version} data`
