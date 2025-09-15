@@ -1,28 +1,20 @@
 const cp = require('child_process')
 const github = require('gh-helpers')()
+const path = require('path')
 
 function exec (file, args = [], options = {}) {
-  const opts = { stdio: 'inherit', ...options }
+  const opts = { stdio: ['inherit', 'inherit', 'inherit'], ...options }
   console.log('> ', file, args.join(' '), options.cwd ? `(cwd: ${options.cwd})` : '')
   return github.mock ? undefined : cp.execFileSync(file, args, opts)
 }
 
-// Sometimes node/npm not in path...?
-let npm = 'npm'
-let node = 'node'
-try {
-  exec('npm', ['--version']).toString().trim()
-} catch (e) {
-  npm = process.execPath.replace(/node$/, 'npm')
-  node = process.execPath
-}
-
+const toolsJs = path.join(__dirname, '..', '..', 'tools', 'js')
 const sanitizeBranch = (branchName) => branchName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
 
 async function createInitialPR (edition, issueUrl, { version, protocolVersion }) {
-  exec(npm, ['install'], { cwd: 'tools/js' })
-  exec(npm, ['run', 'version', edition, version, protocolVersion], { cwd: 'tools/js' })
-  exec(npm, ['run', 'build'], { cwd: 'tools/js' })
+  exec(process.execPath, ['install'], { cwd: toolsJs })
+  exec(process.execPath, ['run', 'version', edition, version, protocolVersion], { cwd: toolsJs })
+  exec(process.execPath, ['run', 'build'], { cwd: toolsJs })
   const branchNameVersion = sanitizeBranch(version)
   const branchName = `${edition}-${branchNameVersion}`
   const title = `🎈 Add Minecraft ${edition} ${version} data`
