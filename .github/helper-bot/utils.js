@@ -13,7 +13,7 @@ const sanitizeBranch = (branchName) => branchName.replace(/[^a-zA-Z0-9]/g, '_').
 
 async function createInitialPR (edition, issueUrl, { version, protocolVersion }) {
   exec(process.execPath, ['install'], { cwd: toolsJs })
-  exec(process.execPath, ['run', 'version', edition, version, protocolVersion], { cwd: toolsJs })
+  if (protocolVersion) exec(process.execPath, ['run', 'version', edition, version, protocolVersion], { cwd: toolsJs })
   exec(process.execPath, ['run', 'build'], { cwd: toolsJs })
   const branchNameVersion = sanitizeBranch(version)
   const branchName = `${edition}-${branchNameVersion}`

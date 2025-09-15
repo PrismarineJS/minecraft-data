@@ -7,10 +7,10 @@ const { exec, createInitialPR } = require('./utils')
 const artifactsDir = join(__dirname, './artifacts')
 const root = join(__dirname, '..', '..')
 
-async function handle (ourPR, genPullNo, version, artifactURL) {
+async function handle (ourPR, genPullNo, version, artifactURL, shouldPull) {
   const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
   const branch = ourPR.headBranch || `pc-${branchNameVersion}`
-  exec('git', ['pull', 'origin'])
+  if (shouldPull) exec('git', ['pull', 'origin'])
 
   // if external PR:
   // const branch = ourPR.headBranch
@@ -90,7 +90,7 @@ async function main (versions, genPullNo, artifactUrl, createPR) {
   if (pr && pr.isOpen) {
     const details = await github.getPullRequest(pr.id)
     console.log('PR', details)
-    await handle(details, genPullNo, version, artifactUrl)
+    await handle(details, genPullNo, version, artifactUrl, true)
   } else if (createPR) {
     const pr = await createInitialPR('pc', '(This issue was created for a minecraft-data-generator PR)', {
       version,
@@ -99,7 +99,7 @@ async function main (versions, genPullNo, artifactUrl, createPR) {
     console.log('Created PR', pr)
     const details = await github.getPullRequest(pr.number)
     console.log('PR', details)
-    await handle(details, genPullNo, version, artifactUrl)
+    await handle(details, genPullNo, version, artifactUrl, false)
   } else {
     process.exit(1)
   }
