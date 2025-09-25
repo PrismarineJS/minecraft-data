@@ -36,9 +36,8 @@ describe('audit version regression in dataPaths', function () {
         // Track the highest version index seen for each data type
         const highestVersionIndexForDataType = {}
 
-        // Iterate through versions in chronological order
+        // Iterate through versions in chronological order, but only process ones in dataPaths
         for (const version of versions) {
-          // Skip versions that don't exist in dataPaths
           if (!platformData[version]) continue
 
           const versionData = platformData[version]
@@ -50,7 +49,7 @@ describe('audit version regression in dataPaths', function () {
 
             const [dataPathPlatform, dataPathVersion] = pathParts
 
-            // Skip cross-platform references
+            // Skip cross-platform references (e.g., bedrock data pointing to pc data)
             if (dataPathPlatform !== platform) continue
 
             // Get the chronological index of the data path version
@@ -71,43 +70,14 @@ describe('audit version regression in dataPaths', function () {
             // Check if current data path is older than the highest we've seen
             const previousHighest = highestVersionIndexForDataType[dataType]
             if (dataPathIndex < previousHighest.index) {
-              // Skip flagging pre-releases and release candidates for using older data,
-              // as this appears to be intentional behavior (they reuse previous stable data)
-              const isPreRelease = version.includes('-pre') || version.includes('-rc')
-
-              // Skip flagging snapshots for using older data, as they are development versions
-              const isSnapshot = version.includes('w') && /^\d+w\d+[a-z]?$/.test(version)
-
-              // Skip certain data types that are commonly shared across versions
-              const isProtocolType = ['protocol', 'version', 'proto'].includes(dataType)
-
-              // Check if this is a minor release using the same protocol as its major release
-              // e.g., 1.10.1 using pc/1.10 protocol when 1.10-pre1 used pc/1.10-pre1
-              const isSameBaseMajorVersion = (() => {
-                if (!isProtocolType) return false
-
-                // Extract base version (e.g., "1.10" from "1.10.1")
-                const currentBaseParts = version.split('.')
-                const currentBase = currentBaseParts.slice(0, 2).join('.') // e.g., "1.10"
-
-                // Extract base version from data path (e.g., "1.10" from "pc/1.10")
-                const dataPathBaseParts = dataPathVersion.split('.')
-                const dataPathBase = dataPathBaseParts.slice(0, 2).join('.') // e.g., "1.10"
-
-                return currentBase === dataPathBase
-              })()
-
-              // Only flag clear regressions in stable releases
-              if (!isPreRelease && !isSnapshot && !isSameBaseMajorVersion) {
-                assert.fail(
-                  `Version regression detected in ${platform}:\n` +
-                  `  Version: ${version}\n` +
-                  `  Data type: ${dataType}\n` +
-                  `  Current path: ${dataPath} (index: ${dataPathIndex})\n` +
-                  `  Expected at least: ${previousHighest.version} (index: ${previousHighest.index})\n` +
-                  '  A newer version should not point to older data than previously seen.'
-                )
-              }
+              assert.fail(
+                `Version regression detected in ${platform}:\n` +
+                `  Version: ${version}\n` +
+                `  Data type: ${dataType}\n` +
+                `  Current path: ${dataPath} (index: ${dataPathIndex})\n` +
+                `  Expected at least: ${previousHighest.version} (index: ${previousHighest.index})\n` +
+                '  A newer version should not point to older data than previously seen.'
+              )
             }
 
             // Update the highest version if current is newer
