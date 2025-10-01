@@ -172,55 +172,7 @@
         }
       }
     ],
-    "GameRule": [
-      "container",
-      [
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "editable",
-          "type": "bool"
-        },
-        {
-          "name": "type",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "1": "bool",
-                "2": "int",
-                "3": "float"
-              }
-            }
-          ]
-        },
-        {
-          "name": "value",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type",
-              "fields": {
-                "bool": "bool",
-                "int": "zigzag32",
-                "float": "lf32"
-              }
-            }
-          ]
-        }
-      ]
-    ],
-    "GameRules": [
-      "array",
-      {
-        "countType": "varint",
-        "type": "GameRule"
-      }
-    ],
-    "GameRuleChanged": [
+    "GameRuleI32": [
       "container",
       [
         {
@@ -261,12 +213,46 @@
         }
       ]
     ],
-    "GameRulesChanged": [
-      "array",
-      {
-        "countType": "varint",
-        "type": "GameRuleChanged"
-      }
+    "GameRulesVarint": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "editable",
+          "type": "bool"
+        },
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "1": "bool",
+                "2": "int",
+                "3": "float"
+              }
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "bool": "bool",
+                "int": "varint",
+                "float": "lf32"
+              }
+            }
+          ]
+        }
+      ]
     ],
     "Blob": [
       "container",
@@ -1088,7 +1074,8 @@
           "collidable",
           "wasd_air_controlled",
           "does_server_auth_only_dismount",
-          "body_rotation_always_follows_head"
+          "body_rotation_always_follows_head",
+          "can_use_vertical_movement_action"
         ]
       }
     ],
@@ -1327,7 +1314,8 @@
               "mappings": {
                 "0": "click_block",
                 "1": "click_air",
-                "2": "break_block"
+                "2": "break_block",
+                "3": "attack"
               }
             }
           ]
@@ -3839,7 +3827,7 @@
           "35": "Land",
           "36": "Saddle",
           "37": "Armor",
-          "38": "MobArmorStandPlace",
+          "38": "ArmorStandPlace",
           "39": "AddChest",
           "40": "Throw",
           "41": "Attack",
@@ -3862,7 +3850,7 @@
           "58": "LargeBlast",
           "59": "Twinkle",
           "60": "Remedy",
-          "61": "Infect",
+          "61": "Unfect",
           "62": "LevelUp",
           "63": "BowHit",
           "64": "BulletHit",
@@ -4179,51 +4167,51 @@
           "375": "Listening",
           "376": "Heartbeat",
           "377": "HornBreak",
-          "378": "SculkPlace",
+          "378": "_",
           "379": "SculkSpread",
           "380": "SculkCharge",
           "381": "SculkSensorPlace",
           "382": "SculkShriekerPlace",
-          "383": "goat_call_0",
-          "384": "goat_call_1",
-          "385": "goat_call_2",
-          "386": "goat_call_3",
-          "387": "goat_call_4",
-          "388": "goat_call_5",
-          "389": "goat_call_6",
-          "390": "goat_call_7",
-          "391": "goat_call_8",
-          "392": "goat_call_9",
-          "393": "goat_harmony_0",
-          "394": "goat_harmony_1",
-          "395": "goat_harmony_2",
-          "396": "goat_harmony_3",
-          "397": "goat_harmony_4",
-          "398": "goat_harmony_5",
-          "399": "goat_harmony_6",
-          "400": "goat_harmony_7",
-          "401": "goat_harmony_8",
-          "402": "goat_harmony_9",
-          "403": "goat_melody_0",
-          "404": "goat_melody_1",
-          "405": "goat_melody_2",
-          "406": "goat_melody_3",
-          "407": "goat_melody_4",
-          "408": "goat_melody_5",
-          "409": "goat_melody_6",
-          "410": "goat_melody_7",
-          "411": "goat_melody_8",
-          "412": "goat_melody_9",
-          "413": "goat_bass_0",
-          "414": "goat_bass_1",
-          "415": "goat_bass_2",
-          "416": "goat_bass_3",
-          "417": "goat_bass_4",
-          "418": "goat_bass_5",
-          "419": "goat_bass_6",
-          "420": "goat_bass_7",
-          "421": "goat_bass_8",
-          "422": "goat_bass_9",
+          "383": "GoatCall0",
+          "384": "GoatCall1",
+          "385": "GoatCall2",
+          "386": "GoatCall3",
+          "387": "GoatCall4",
+          "388": "GoatCall5",
+          "389": "GoatCall6",
+          "390": "GoatCall7",
+          "391": "GoatCall8",
+          "392": "GoatCall9",
+          "393": "GoatHarmony0",
+          "394": "GoatHarmony1",
+          "395": "GoatHarmony2",
+          "396": "GoatHarmony3",
+          "397": "GoatHarmony4",
+          "398": "GoatHarmony5",
+          "399": "GoatHarmony6",
+          "400": "GoatHarmony7",
+          "401": "GoatHarmony8",
+          "402": "GoatHarmony9",
+          "403": "GoatMelody0",
+          "404": "GoatMelody1",
+          "405": "GoatMelody2",
+          "406": "GoatMelody3",
+          "407": "GoatMelody4",
+          "408": "GoatMelody5",
+          "409": "GoatMelody6",
+          "410": "GoatMelody7",
+          "411": "GoatMelody8",
+          "412": "GoatMelody9",
+          "413": "GoatBass0",
+          "414": "GoatBass1",
+          "415": "GoatBass2",
+          "416": "GoatBass3",
+          "417": "GoatBass4",
+          "418": "GoatBass5",
+          "419": "GoatBass6",
+          "420": "GoatBass7",
+          "421": "GoatBass8",
+          "422": "GoatBass9",
           "423": "_",
           "424": "_",
           "425": "_",
@@ -4278,89 +4266,95 @@
           "474": "HoglinZombified",
           "475": "AmbientUnderwaterEnter",
           "476": "AmbientUnderwaterExit",
-          "477": "bottle_fill",
-          "478": "bottle_empty",
-          "479": "crafter_craft",
-          "480": "crafter_fail",
-          "481": "block_decorated_pot_insert",
-          "482": "block_decorated_pot_insert_fail",
-          "483": "crafter_disable_slot",
-          "484": "trial_spawner_open_shutter",
-          "485": "trial_spawner_eject_item",
-          "486": "trial_spawner_detect_player",
-          "487": "trial_spawner_spawn_mob",
-          "488": "trial_spawner_close_shutter",
-          "489": "trial_spawner_ambient",
-          "490": "block_copper_bulb_turn_on",
-          "491": "block_copper_bulb_turn_off",
-          "492": "ambient_in_air",
-          "493": "breeze_wind_charge_burst",
-          "494": "imitate_breeze",
-          "495": "mob_armadillo_brush",
-          "496": "mob_armadillo_scute_drop",
-          "497": "armor_equip_wolf",
-          "498": "armor_unequip_wolf",
-          "499": "reflect",
-          "500": "vault_open_shutter",
-          "501": "vault_close_shutter",
-          "502": "vault_eject_item",
-          "503": "vault_insert_item",
-          "504": "vault_insert_item_fail",
-          "505": "vault_ambient",
-          "506": "vault_activate",
-          "507": "vault_deactivate",
-          "508": "hurt_reduced",
-          "509": "wind_charge_burst",
-          "510": "imitate_drowned",
-          "511": "imitate_creaking",
-          "512": "bundle_insert_failed",
-          "513": "sponge_absorb",
-          "514": "_",
-          "515": "block_creaking_heart_trail",
-          "516": "creaking_heart_spawn",
-          "517": "activate",
-          "518": "deactivate",
-          "519": "freeze",
-          "520": "unfreeze",
-          "521": "open",
-          "522": "open_long",
-          "523": "close",
-          "524": "close_long",
-          "525": "imitate_phantom",
-          "526": "imitate_zoglin",
-          "527": "imitate_guardian",
-          "528": "imitate_ravager",
-          "529": "imitate_pillager",
-          "530": "place_in_water",
-          "531": "state_change",
-          "532": "imitate_happy_ghast",
-          "533": "unique_generic",
-          "534": "record_tears",
-          "535": "the_end_light_flash",
-          "536": "lead_leash",
-          "537": "lead_unleash",
-          "538": "lead_break",
-          "539": "unsaddle",
-          "540": "equip_copper",
-          "541": "armor_crack_wolf",
-          "542": "armor_break_wolf",
-          "543": "armor_repair_wolf",
-          "544": "mace_smash_air",
-          "545": "mace_smash_ground",
-          "546": "trail_spawner_charge_activate",
-          "547": "trail_spawner_ambient_ominous",
-          "548": "ominous_item_spawner_spawn_item",
-          "549": "ominous_bottle_end_use",
-          "550": "mace_smash_heavy_ground",
-          "551": "ominous_item_spawner_spawn_item_begin",
-          "552": "_",
-          "553": "apply_effect_bad_omen",
-          "554": "apply_effect_raid_omen",
-          "555": "apply_effect_trial_omen",
-          "556": "ominous_item_spawner_about_to_spawn_item",
-          "557": "record_creator",
-          "558": "record_creator_music_box",
-          "559": "record_precipice"
+          "477": "BottleFill",
+          "478": "BottleEmpty",
+          "479": "CrafterCraft",
+          "480": "CrafterFail",
+          "481": "DecoratedPotInsert",
+          "482": "DecoratedPotInsertFail",
+          "483": "CrafterDisableSlot",
+          "484": "TrialSpawnerOpenShutter",
+          "485": "TrialSpawnerEjectItem",
+          "486": "TrialSpawnerDetectPlayer",
+          "487": "TrialSpawnerSpawnMob",
+          "488": "TrialSpawnerCloseShutter",
+          "489": "TrialSpawnerAmbient",
+          "490": "CopperBulbTurnOn",
+          "491": "CopperBulbTurnOff",
+          "492": "AmbientInAir",
+          "493": "BreezeWindChargeBurst",
+          "494": "ImitateBreeze",
+          "495": "ArmadilloBrush",
+          "496": "ArmadilloScuteDrop",
+          "497": "EquipWolf",
+          "498": "UnequipWolf",
+          "499": "Reflect",
+          "500": "VaultOpenShutter",
+          "501": "VaultCloseShutter",
+          "502": "VaultEjectItem",
+          "503": "VaultInsertItem",
+          "504": "VaultInsertItemFail",
+          "505": "VaultAmbient",
+          "506": "VaultActivate",
+          "507": "VaultDeactive",
+          "508": "HurtReduced",
+          "509": "WindChargeBurst",
+          "510": "ImitateBogged",
+          "511": "WolfArmourCrack",
+          "512": "WolfArmourBreak",
+          "513": "WolfArmourRepair",
+          "514": "MaceSmashAir",
+          "515": "MaceSmashGround",
+          "516": "TrialSpawnerChargeActivate",
+          "517": "TrialSpawnerAmbientOminous",
+          "518": "OminiousItemSpawnerSpawnItem",
+          "519": "OminousBottleEndUse",
+          "520": "MaceHeavySmashGround",
+          "521": "OminousItemSpawnerSpawnItemBegin",
+          "522": "_",
+          "523": "ApplyEffectBadOmen",
+          "524": "ApplyEffectRaidOmen",
+          "525": "ApplyEffectTrialOmen",
+          "526": "OminousItemSpawnerAboutToSpawnItem",
+          "527": "RecordCreator",
+          "528": "RecordCreatorMusicBox",
+          "529": "RecordPrecipice",
+          "530": "VaultRejectRewardedPlayer",
+          "531": "ImitateDrowned",
+          "532": "ImitateCreaking",
+          "533": "BundleInsertFailed",
+          "534": "SpongeAbsorb",
+          "535": "_",
+          "536": "BlockCreakingHeartTrail",
+          "537": "CreakingHeartSpawn",
+          "538": "Activate",
+          "539": "Deactivate",
+          "540": "Freeze",
+          "541": "Unfreeze",
+          "542": "Open",
+          "543": "OpenLong",
+          "544": "Close",
+          "545": "CloseLong",
+          "546": "ImitatePhantom",
+          "547": "ImitateZoglin",
+          "548": "ImitateGuardian",
+          "549": "ImitateRavager",
+          "550": "ImitatePillager",
+          "551": "PlaceInWater",
+          "552": "StateChange",
+          "553": "ImitateHappyGhast",
+          "554": "UniqueGeneric",
+          "555": "RecordTears",
+          "556": "TheEndLightFlash",
+          "557": "LeadLeash",
+          "558": "LeadUnleash",
+          "559": "LeadBreak",
+          "560": "Unsaddle",
+          "561": "EquipCopper",
+          "562": "RecordLavaChicken",
+          "563": "PlaceItem",
+          "564": "SingleItemSwap",
+          "565": "MultiItemSwap"
         }
       }
     ],
@@ -5014,6 +5008,13 @@
           ]
         },
         {
+          "name": "has_default_overworld_surface",
+          "type": [
+            "option",
+            "bool"
+          ]
+        },
+        {
           "name": "has_swamp_surface",
           "type": "bool"
         },
@@ -5077,22 +5078,6 @@
         },
         {
           "name": "downfall",
-          "type": "lf32"
-        },
-        {
-          "name": "red_spore_density",
-          "type": "lf32"
-        },
-        {
-          "name": "blue_spore_density",
-          "type": "lf32"
-        },
-        {
-          "name": "ash_density",
-          "type": "lf32"
-        },
-        {
-          "name": "white_ash_density",
           "type": "lf32"
         },
         {
@@ -5815,7 +5800,8 @@
                 "325": "player_update_entity_overrides",
                 "326": "player_location",
                 "327": "clientbound_controls_scheme",
-                "328": "server_script_debug_drawer"
+                "328": "server_script_debug_drawer",
+                "329": "serverbound_pack_setting_change"
               }
             }
           ]
@@ -6048,7 +6034,8 @@
                 "player_update_entity_overrides": "packet_player_update_entity_overrides",
                 "player_location": "packet_player_location",
                 "clientbound_controls_scheme": "packet_clientbound_controls_scheme",
-                "server_script_debug_drawer": "packet_server_script_debug_drawer"
+                "server_script_debug_drawer": "packet_server_script_debug_drawer",
+                "serverbound_pack_setting_change": "packet_serverbound_pack_setting_change"
               }
             }
           ]
@@ -6627,7 +6614,13 @@
         },
         {
           "name": "gamerules",
-          "type": "GameRules"
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "GameRuleVarint"
+            }
+          ]
         },
         {
           "name": "experiments",
@@ -7367,6 +7360,12 @@
                 "3613": "particle_trial_spawner_ejecting",
                 "3614": "particle_wind_explosion",
                 "3615": "particle_wolf_armor_break",
+                "3616": "ominous_item_spawner",
+                "3617": "creaking_crumble",
+                "3618": "pale_oak_leaves",
+                "3619": "eyeblossom_open",
+                "3620": "eyeblossom_close",
+                "3621": "green_flame",
                 "4000": "set_data",
                 "9800": "players_sleeping",
                 "9801": "sleeping_players",
@@ -8716,7 +8715,13 @@
       [
         {
           "name": "rules",
-          "type": "GameRulesChanged"
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "GameRuleI32"
+            }
+          ]
         }
       ]
     ],
@@ -11675,83 +11680,41 @@
       "container",
       [
         {
-          "name": "type",
-          "type": "ArmorDamageType"
-        },
-        {
-          "name": "helmet_damage",
+          "name": "entries",
           "type": [
-            "switch",
+            "array",
             {
-              "compareTo": "type.head",
-              "fields": {
-                "true": "zigzag32"
-              }
-            }
-          ]
-        },
-        {
-          "name": "chestplate_damage",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type.chest",
-              "fields": {
-                "true": "zigzag32"
-              }
-            }
-          ]
-        },
-        {
-          "name": "leggings_damage",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type.legs",
-              "fields": {
-                "true": "zigzag32"
-              }
-            }
-          ]
-        },
-        {
-          "name": "boots_damage",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type.feet",
-              "fields": {
-                "true": "zigzag32"
-              }
-            }
-          ]
-        },
-        {
-          "name": "body_damage",
-          "type": [
-            "switch",
-            {
-              "compareTo": "type.body",
-              "fields": {
-                "true": "zigzag32"
-              }
+              "countType": "varint",
+              "type": "ArmorDamageEntry"
             }
           ]
         }
       ]
     ],
-    "ArmorDamageType": [
-      "bitflags",
-      {
-        "type": "u8",
-        "flags": {
-          "head": 1,
-          "chest": 2,
-          "legs": 4,
-          "feet": 8,
-          "body": 16
+    "ArmorDamageEntry": [
+      "container",
+      [
+        {
+          "name": "armor_slot",
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "helmet",
+                "1": "chestplate",
+                "2": "leggings",
+                "3": "boots",
+                "4": "body"
+              }
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "type": "li16"
         }
-      }
+      ]
     ],
     "packet_code_builder": [
       "container",
@@ -14360,6 +14323,55 @@
                 ]
               ]
             }
+          ]
+        }
+      ]
+    ],
+    "packet_serverbound_pack_setting_change": [
+      "container",
+      [
+        {
+          "name": "pack_id",
+          "type": "uuid"
+        },
+        {
+          "name": "pack_setting",
+          "type": [
+            "container",
+            [
+              {
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "name": "type",
+                "type": [
+                  "mapper",
+                  {
+                    "type": "u8",
+                    "mappings": {
+                      "0": "float",
+                      "1": "bool",
+                      "2": "string"
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "value",
+                "type": [
+                  "switch",
+                  {
+                    "compareTo": "type",
+                    "fields": {
+                      "float": "lf32",
+                      "bool": "bool",
+                      "string": "string"
+                    }
+                  }
+                ]
+              }
+            ]
           ]
         }
       ]
