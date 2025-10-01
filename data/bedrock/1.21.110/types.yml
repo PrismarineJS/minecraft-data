@@ -40,18 +40,32 @@ GameMode: zigzag32 =>
    6: spectator
 
 GameRule:
-   name: string
-   editable: bool
-   type: varint =>
-      1: bool
-      2: int
-      3: float
-   value: type?
-      if bool: bool
-      if int: zigzag32
-      if float: lf32
+  name: string
+  editable: bool
+  type: varint =>
+    1: bool
+    2: int
+    3: float
+  value: type?
+    if bool: bool
+    if int: zigzag32
+    if float: lf32
 
 GameRules: GameRule[]varint
+
+GameRuleChanged:
+  name: string
+  editable: bool
+  type: varint =>
+    1: bool
+    2: int
+    3: float
+  value: type?
+    if bool: bool
+    if int: li32
+    if float: lf32
+
+GameRulesChanged: GameRuleChanged[]varint
 
 # CacheBlob represents a blob as used in the client side blob cache protocol. It holds a hash of its data and
 # the full data of it.
@@ -2542,14 +2556,8 @@ BiomeDefinition:
    temperature: lf32
    # Downfall is the amount that precipitation affects colours and block changes.
    downfall: lf32
-   # RedSporeDensity is the density of red spore precipitation visuals.
-   red_spore_density: lf32
-   # BlueSporeDensity is the density of blue spore precipitation visuals.
-   blue_spore_density: lf32
-   # AshDensity is the density of ash precipitation visuals.
-   ash_density: lf32
-   # WhiteAshDensity is the density of white ash precipitation visuals.
-   white_ash_density: lf32
+   # Changes leaves turning white in snow
+   snow_foliage: lf32
    # Depth ...
    depth: lf32
    # Scale ...
