@@ -39,29 +39,19 @@ GameMode: zigzag32 =>
    5: fallback
    6: spectator
 
-GameRuleI32:
-  name: string
-  editable: bool
-  type: varint =>
-    1: bool
-    2: int
-    3: float
-  value: type?
-    if bool: bool
-    if int: li32
-    if float: lf32
+GameRule:
+   name: string
+   editable: bool
+   type: varint =>
+      1: bool
+      2: int
+      3: float
+   value: type?
+      if bool: bool
+      if int: zigzag32
+      if float: lf32
 
-GameRuleVarint:
-  name: string
-  editable: bool
-  type: varint =>
-    1: bool
-    2: int
-    3: float
-  value: type?
-    if bool: bool
-    if int: varint
-    if float: lf32
+GameRules: GameRule[]varint
 
 # CacheBlob represents a blob as used in the client side blob cache protocol. It holds a hash of its data and
 # the full data of it.
@@ -488,8 +478,7 @@ MetadataFlags2: [ "bitflags", {
       "collidable",
       "wasd_air_controlled",
       "does_server_auth_only_dismount",
-      "body_rotation_always_follows_head",
-      "can_use_vertical_movement_action"
+      "body_rotation_always_follows_head"
    ]
 }]
 
@@ -559,7 +548,6 @@ TransactionUseItem:
       # Block breaking like left click. When using server auth block breaking as specified in StartGamePacket this is never sent.
       # Instead, block actions are supplied in Player Auth Input.
       2: break_block
-      3: attack
    # TriggerType is the type of the trigger that caused the inventory transaction. It is one of the trigger
    # types found in the constants above. If TriggerType is TriggerTypePlayerInput, the transaction is from
    # the initial input of the player. If it is TriggerTypeSimulationTick, the transaction is from a simulation
@@ -1662,7 +1650,7 @@ SoundType: varint =>
    - Land
    - Saddle
    - Armor
-   - ArmorStandPlace
+   - MobArmorStandPlace
    - AddChest
    - Throw
    - Attack
@@ -1685,7 +1673,7 @@ SoundType: varint =>
    - LargeBlast
    - Twinkle
    - Remedy
-   - Unfect
+   - Infect
    - LevelUp
    - BowHit
    - BulletHit
@@ -2002,51 +1990,51 @@ SoundType: varint =>
    - Listening
    - Heartbeat
    - HornBreak
-   - _
+   - SculkPlace
    - SculkSpread
    - SculkCharge
    - SculkSensorPlace
    - SculkShriekerPlace
-   - GoatCall0
-   - GoatCall1
-   - GoatCall2
-   - GoatCall3
-   - GoatCall4
-   - GoatCall5
-   - GoatCall6
-   - GoatCall7
-   - GoatCall8
-   - GoatCall9
-   - GoatHarmony0
-   - GoatHarmony1
-   - GoatHarmony2
-   - GoatHarmony3
-   - GoatHarmony4
-   - GoatHarmony5
-   - GoatHarmony6
-   - GoatHarmony7
-   - GoatHarmony8
-   - GoatHarmony9
-   - GoatMelody0
-   - GoatMelody1
-   - GoatMelody2
-   - GoatMelody3
-   - GoatMelody4
-   - GoatMelody5
-   - GoatMelody6
-   - GoatMelody7
-   - GoatMelody8
-   - GoatMelody9
-   - GoatBass0
-   - GoatBass1
-   - GoatBass2
-   - GoatBass3
-   - GoatBass4
-   - GoatBass5
-   - GoatBass6
-   - GoatBass7
-   - GoatBass8
-   - GoatBass9
+   - goat_call_0
+   - goat_call_1
+   - goat_call_2
+   - goat_call_3
+   - goat_call_4
+   - goat_call_5
+   - goat_call_6
+   - goat_call_7
+   - goat_call_8
+   - goat_call_9
+   - goat_harmony_0
+   - goat_harmony_1
+   - goat_harmony_2
+   - goat_harmony_3
+   - goat_harmony_4
+   - goat_harmony_5
+   - goat_harmony_6
+   - goat_harmony_7
+   - goat_harmony_8
+   - goat_harmony_9
+   - goat_melody_0
+   - goat_melody_1
+   - goat_melody_2
+   - goat_melody_3
+   - goat_melody_4
+   - goat_melody_5
+   - goat_melody_6
+   - goat_melody_7
+   - goat_melody_8
+   - goat_melody_9
+   - goat_bass_0
+   - goat_bass_1
+   - goat_bass_2
+   - goat_bass_3
+   - goat_bass_4
+   - goat_bass_5
+   - goat_bass_6
+   - goat_bass_7
+   - goat_bass_8
+   - goat_bass_9
    - _
    - _
    - _
@@ -2101,95 +2089,89 @@ SoundType: varint =>
    - HoglinZombified
    - AmbientUnderwaterEnter
    - AmbientUnderwaterExit
-   - BottleFill
-   - BottleEmpty
-   - CrafterCraft
-   - CrafterFail
-   - DecoratedPotInsert
-   - DecoratedPotInsertFail
-   - CrafterDisableSlot
-   - TrialSpawnerOpenShutter
-   - TrialSpawnerEjectItem
-   - TrialSpawnerDetectPlayer
-   - TrialSpawnerSpawnMob
-   - TrialSpawnerCloseShutter
-   - TrialSpawnerAmbient
-   - CopperBulbTurnOn
-   - CopperBulbTurnOff
-   - AmbientInAir
-   - BreezeWindChargeBurst
-   - ImitateBreeze
-   - ArmadilloBrush
-   - ArmadilloScuteDrop
-   - EquipWolf
-   - UnequipWolf
-   - Reflect
-   - VaultOpenShutter
-   - VaultCloseShutter
-   - VaultEjectItem
-   - VaultInsertItem
-   - VaultInsertItemFail
-   - VaultAmbient
-   - VaultActivate
-   - VaultDeactive
-   - HurtReduced
-   - WindChargeBurst
-   - ImitateBogged
-   - WolfArmourCrack
-   - WolfArmourBreak
-   - WolfArmourRepair
-   - MaceSmashAir
-   - MaceSmashGround
-   - TrialSpawnerChargeActivate
-   - TrialSpawnerAmbientOminous
-   - OminiousItemSpawnerSpawnItem
-   - OminousBottleEndUse
-   - MaceHeavySmashGround
-   - OminousItemSpawnerSpawnItemBegin
+   - bottle_fill
+   - bottle_empty
+   - crafter_craft
+   - crafter_fail
+   - block_decorated_pot_insert
+   - block_decorated_pot_insert_fail
+   - crafter_disable_slot
+   - trial_spawner_open_shutter
+   - trial_spawner_eject_item
+   - trial_spawner_detect_player
+   - trial_spawner_spawn_mob
+   - trial_spawner_close_shutter
+   - trial_spawner_ambient
+   - block_copper_bulb_turn_on
+   - block_copper_bulb_turn_off
+   - ambient_in_air
+   - breeze_wind_charge_burst
+   - imitate_breeze
+   - mob_armadillo_brush
+   - mob_armadillo_scute_drop
+   - armor_equip_wolf
+   - armor_unequip_wolf
+   - reflect
+   - vault_open_shutter
+   - vault_close_shutter
+   - vault_eject_item
+   - vault_insert_item
+   - vault_insert_item_fail
+   - vault_ambient
+   - vault_activate
+   - vault_deactivate
+   - hurt_reduced
+   - wind_charge_burst
+   - imitate_drowned
+   - imitate_creaking
+   - bundle_insert_failed
+   - sponge_absorb
    - _
-   - ApplyEffectBadOmen
-   - ApplyEffectRaidOmen
-   - ApplyEffectTrialOmen
-   - OminousItemSpawnerAboutToSpawnItem
-   - RecordCreator
-   - RecordCreatorMusicBox
-   - RecordPrecipice
-   - VaultRejectRewardedPlayer
-   - ImitateDrowned
-   - ImitateCreaking
-   - BundleInsertFailed
-   - SpongeAbsorb
+   - block_creaking_heart_trail
+   - creaking_heart_spawn
+   - activate
+   - deactivate
+   - freeze
+   - unfreeze
+   - open
+   - open_long
+   - close
+   - close_long
+   - imitate_phantom
+   - imitate_zoglin
+   - imitate_guardian
+   - imitate_ravager
+   - imitate_pillager
+   - place_in_water
+   - state_change
+   - imitate_happy_ghast
+   - unique_generic
+   - record_tears
+   - the_end_light_flash
+   - lead_leash
+   - lead_unleash
+   - lead_break
+   - unsaddle
+   - equip_copper
+   - armor_crack_wolf
+   - armor_break_wolf
+   - armor_repair_wolf
+   - mace_smash_air
+   - mace_smash_ground
+   - trail_spawner_charge_activate
+   - trail_spawner_ambient_ominous
+   - ominous_item_spawner_spawn_item
+   - ominous_bottle_end_use
+   - mace_smash_heavy_ground
+   - ominous_item_spawner_spawn_item_begin
    - _
-   - BlockCreakingHeartTrail
-   - CreakingHeartSpawn
-   - Activate
-   - Deactivate
-   - Freeze
-   - Unfreeze
-   - Open
-   - OpenLong
-   - Close
-   - CloseLong
-   - ImitatePhantom
-   - ImitateZoglin
-   - ImitateGuardian
-   - ImitateRavager
-   - ImitatePillager
-   - PlaceInWater
-   - StateChange
-   - ImitateHappyGhast
-   - UniqueGeneric
-   - RecordTears
-   - TheEndLightFlash
-   - LeadLeash
-   - LeadUnleash
-   - LeadBreak
-   - Unsaddle
-   - EquipCopper
-   - RecordLavaChicken
-   - PlaceItem
-   - SingleItemSwap
-   - MultiItemSwap
+   - apply_effect_bad_omen
+   - apply_effect_raid_omen
+   - apply_effect_trial_omen
+   - ominous_item_spawner_about_to_spawn_item
+   - record_creator
+   - record_creator_music_box
+   - record_precipice
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2560,8 +2542,14 @@ BiomeDefinition:
    temperature: lf32
    # Downfall is the amount that precipitation affects colours and block changes.
    downfall: lf32
-   # Changes leaves turning white in snow
-   snow_foliage: lf32
+   # RedSporeDensity is the density of red spore precipitation visuals.
+   red_spore_density: lf32
+   # BlueSporeDensity is the density of blue spore precipitation visuals.
+   blue_spore_density: lf32
+   # AshDensity is the density of ash precipitation visuals.
+   ash_density: lf32
+   # WhiteAshDensity is the density of white ash precipitation visuals.
+   white_ash_density: lf32
    # Depth ...
    depth: lf32
    # Scale ...
@@ -2590,8 +2578,6 @@ BiomeChunkGeneration:
    surface_material_adjustments?: BiomeElementData[]varint
    # SurfaceMaterials is a set of materials to use for the surface layers of the biome.
    surface_materials?: BiomeSurfaceMaterial
-   # HasDefaultOverworldSurface is true if the biome has a default overworld surface.
-   has_default_overworld_surface?: bool
    # HasSwampSurface is true if the biome has a swamp surface.
    has_swamp_surface: bool
    # HasFrozenOceanSurface is true if the biome has a frozen ocean surface.
@@ -2616,6 +2602,14 @@ BiomeClimate:
    temperature: lf32
    # Downfall is the amount that precipitation affects colours and block changes.
    downfall: lf32
+   # RedSporeDensity is the density of red spore precipitation visuals.
+   red_spore_density: lf32
+   # BlueSporeDensity is the density of blue spore precipitation visuals.
+   blue_spore_density: lf32
+   # AshDensity is the density of ash precipitation visuals.
+   ash_density: lf32
+   # WhiteAshDensity is the density of white ash precipitation visuals.
+   white_ash_density: lf32
    # SnowAccumulationMin is the minimum amount of snow that can accumulate in the biome, every 0.125 is
    # another layer of snow.
    snow_accumulation_min: lf32
