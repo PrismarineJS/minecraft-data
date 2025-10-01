@@ -1,3 +1,19 @@
+## 3.99.0
+* [Add bedrock 1.21.111 protocol data (#1091)](https://github.com/PrismarineJS/minecraft-data/commit/9006e979f31c246107e44180fc18024db152cf70) (thanks @extremeheat)
+* [workflows: fix helper pm](https://github.com/PrismarineJS/minecraft-data/commit/da809b24f3d3c726f17ad80c425ef71896c0a233) (thanks @extremeheat)
+* [Add 1.21.9 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e8f1549e5209dcc419ae39dc2892c674f9668369) (thanks @github-actions[bot])
+* [Add 1.21.9-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7e91091246735cc3fd9cffb3fc89e22a88bab7fb) (thanks @github-actions[bot])
+* [Create copilot-instructions.md](https://github.com/PrismarineJS/minecraft-data/commit/9d24941a1372dfb774fd6a9cb2d4e2fb9add3d42) (thanks @extremeheat)
+* [bedrock: fix steve skin paths in 1.21.70+ (#1084)](https://github.com/PrismarineJS/minecraft-data/commit/449328e7fec760765e4ffa6a9400b9b153a95b62) (thanks @thejfkvis)
+* [Add 1.21.9-pre4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0d000dfba58ceffa72309002829a45c5fc6654d7) (thanks @github-actions[bot])
+* [Add 1.21.9-pre3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5f0e11b18f455e7adcf3e132afde2fbaaeee6db1) (thanks @github-actions[bot])
+* [Add 1.21.9-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/33a617d1e1359806214c229912f2c48496d7b350) (thanks @github-actions[bot])
+* [Add 1.21.9-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bc11a85215a05c0bb6324b6b5e374db9368f66d9) (thanks @github-actions[bot])
+* [workflow: don't run version script on non-version update PR](https://github.com/PrismarineJS/minecraft-data/commit/c3b6d976abd787736f721719e1cac08dcbb17dc8) (thanks @extremeheat)
+* [Allow mcpc-generator workflow to open PR (#1078)](https://github.com/PrismarineJS/minecraft-data/commit/d4113bfab5cf933ab73749f655d4396eb693cbd8) (thanks @extremeheat)
+* [Add 25w37a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/362b990c64251fec3be3c823b0a2f27fae05f7d4) (thanks @github-actions[bot])
+* [Use PAT_PASSWORD for consistency with downstream repos (#1073)](https://github.com/PrismarineJS/minecraft-data/commit/a0df234a58a94d0ac8a897509add6544a02cbb5b) (thanks @rom1504)
+
 ## 3.98.0
 * [🎈 Pc1.21.8 (#1070)](https://github.com/PrismarineJS/minecraft-data/commit/7bfe410e80c5332074de6726dec8df6ad8c80ae1) (thanks @extremeheat)
 * [Add 25w36b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fdd13b6a4bd46a7a9de1c5de8a7cb7abf715960f) (thanks @github-actions[bot])
