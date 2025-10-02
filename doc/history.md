@@ -1,3 +1,6 @@
+## 3.99.1
+* [Fix bedrock 1.21.111 protocol version](https://github.com/PrismarineJS/minecraft-data/commit/c471c4b65e3bfc205ae47f2586aed6c2b226932b) (thanks @extremeheat)
+
 ## 3.99.0
 * [Add bedrock 1.21.111 protocol data (#1091)](https://github.com/PrismarineJS/minecraft-data/commit/9006e979f31c246107e44180fc18024db152cf70) (thanks @extremeheat)
 * [bedrock: fix steve skin paths in 1.21.70+ (#1084)](https://github.com/PrismarineJS/minecraft-data/commit/449328e7fec760765e4ffa6a9400b9b153a95b62) (thanks @thejfkvis)
