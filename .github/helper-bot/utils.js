@@ -18,7 +18,7 @@ async function createInitialPR (edition, issueUrl, { version, protocolVersion })
   if (protocolVersion) exec(pm, ['run', 'version', edition, version, protocolVersion], { cwd: toolsJs })
   exec(pm, ['run', 'build'], { cwd: toolsJs })
   const branchNameVersion = sanitizeBranch(version)
-  const branchName = `${edition}-${branchNameVersion}`
+  const branchName = `${edition}_${branchNameVersion}`
   const title = `🎈 Add Minecraft ${edition} ${version} data`
   // First, delete any existing branch
   try {
