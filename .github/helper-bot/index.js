@@ -174,8 +174,8 @@ async function openIssueAndDispatch (title, versionJson, latestVersionData, late
     branch: 'main',
     inputs: {
       version: latestVersion,
-      issue_number: issue?.number,
-      pr_number: pr?.number
+      issue_number: String(issue?.number),
+      pr_number: String(pr?.number)
     }
   }
   console.log('Sending workflow dispatch', dispatchPayload)
