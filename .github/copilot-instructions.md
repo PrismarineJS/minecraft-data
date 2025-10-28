@@ -57,7 +57,30 @@ Not all data is generated. Some data (like protocol schemas) is manually curated
 
 ### Protocol data
 
-We use a special yaml-like DSL to generate protocol.json files. Refer to doc/protocol.md for info.
-These files are stored inside proto.yml files in the latest/ folder (like bedrock/latest/proto.yml) for the latest version, otherwise in the versioned folder (like pc/1.20/proto.yml).
+We use a special YAML-like DSL to generate protocol.json files. Refer to doc/protocol.md for info.
+These files are stored inside proto.yml (and an imported types.yml support file on bedrock) files in the latest/ folder (like bedrock/latest/proto.yml) for the latest version, otherwise in the versioned folder (like pc/1.20/proto.yml).
 
- Notably, run `npm run build` in tools/js to regenerate protocol.json files after making changes to the protocol yaml files. So, don't make changes to protocol.json files directly. Instead, update the relevant proto.yml file in latest/ and regenerate protocol.json by running `npm run build` in tools/js.
+👉 Run `npm run build` in tools/js to regenerate protocol.json files after making changes to the protocol yaml files.
+
+❌ Don't make changes to protocol.json files directly. Instead, update the relevant proto.yml file in latest/ and regenerate protocol.json by running `npm run build` in tools/js.
+
+If you need to edit many files at once, consider writing a simple Node.js script to replace. E.g., from `cd tools/js && npm i && node __replace_something.js`):
+```js
+const cp = require('child_process')
+const fs = require('fs')
+const glob = require('glob')
+const pcVersionsOrdered = require('../../data/pc/common/versions.json')
+const after1_20_5 = pcVersionsOrdered.slice(pcVersionsOrdered.indexOf('1.20.5')) // everything after 1.20.5...
+for (const version of pcVersionsOrdered) {
+  // globSync, fs.readFileSync...fs.writeFileSync ; avoid async
+}
+```
+
+## Testing
+
+**Always** go into `tools/js` and run tests after data changes to ensure local tests are passing:
+```sh
+cd tools/js
+npm install
+npm test -- --bail 2>&1 | tail -100
+```
