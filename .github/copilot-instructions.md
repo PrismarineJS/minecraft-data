@@ -31,6 +31,15 @@ This will ensure all data matches schema among other checks.
 
 There are no 'releases' in this repo beyond updating the data itself. Instead, we have a workflow that will automatically create tagged releases if the user runs the /makerelease slash command, so you can inform the user about that if a release is needed.
 
+## Testing
+Always run tests after data changes to ensure local tests are passing:
+
+```sh
+cd tools/js
+npm install
+npm test -- --bail 2>&1 | tail -100
+```
+
 ## Data
 
 Most data is generated with data generators. For mcpc, data is generated with [minecraft-data-generator](https://github.com/PrismarineJS/minecraft-data-generator).
@@ -74,13 +83,4 @@ const after1_20_5 = pcVersionsOrdered.slice(pcVersionsOrdered.indexOf('1.20.5'))
 for (const version of pcVersionsOrdered) {
   // globSync, fs.readFileSync...fs.writeFileSync ; avoid async
 }
-```
-
-## Testing
-
-**Always** go into `tools/js` and run tests after data changes to ensure local tests are passing:
-```sh
-cd tools/js
-npm install
-npm test -- --bail 2>&1 | tail -100
 ```
