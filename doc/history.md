@@ -1,3 +1,13 @@
+## 3.100.0
+* [bedrock: Add Bedrock 1.21.120 protocol data (#1107)](https://github.com/PrismarineJS/minecraft-data/commit/c65397236fcc41f26f5c5e0c0e94313f85f3f13c) (thanks @extremeheat)
+* [pc: fix packet_chat_message checksum type in PC V1.21.8 (#1083)](https://github.com/PrismarineJS/minecraft-data/commit/53ba02aad998dde33d67acf743a4bd166f8f310c) (thanks @kang-indie-hacker)
+* [bedrock: Add bedrock 1.21.100 data (#1087)](https://github.com/PrismarineJS/minecraft-data/commit/a3b4415d486195906eb4c3ed4ce214b76ba57d4b) (thanks @mc-zuri)
+* [pc: add missing packet mapper entries for 1.20.5 - 1.21.5 (#1088)](https://github.com/PrismarineJS/minecraft-data/commit/92437456e7fe90fa6fabebc22787b680b75e5581) (thanks @Titlehhhh)
+* [pc: Fix pc 1.8 spawn_entity packet structure (#1106)](https://github.com/PrismarineJS/minecraft-data/commit/3f0dd2ac525607b21be7cd6ddd003fa9057a72d2) (thanks @Copilot)
+* [pc: Make packet_common_cookie_response value field optional in 1.20.5+ (#1104)](https://github.com/PrismarineJS/minecraft-data/commit/3f77f6c913bcc328081e696e17f87a51316a1d51) (thanks @Copilot)
+* [bedrock: Fix malformed YAML syntax for _enum_type in Bedrock protocol definitions (#1103)](https://github.com/PrismarineJS/minecraft-data/commit/71f38e633942d241ec017223a009bd7bb6419fbc) (thanks @Copilot)
+* [test: Add version regression test and fix data path inconsistencies (#1086)](https://github.com/PrismarineJS/minecraft-data/commit/8c3dc6e973c271d4155fb12582b207db6fe6e40a) (thanks @Copilot)
+
 ## 3.99.1
 * [Fix bedrock 1.21.111 protocol version](https://github.com/PrismarineJS/minecraft-data/commit/c471c4b65e3bfc205ae47f2586aed6c2b226932b) (thanks @extremeheat)
 
