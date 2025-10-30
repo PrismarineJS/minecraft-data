@@ -84,3 +84,10 @@ for (const version of pcVersionsOrdered) {
   // globSync, fs.readFileSync...fs.writeFileSync ; avoid async
 }
 ```
+
+When updating, apply minimum required changes when possible.
+
+1. Do not rename fields or packets unless their value has changed, even if they may have 'officially' changed. If their values *have* significantly changed (varint -> i32 maybe insignificant from primitive standpoint, string to number is), it maybe a good idea to rename the field or packet.
+2. Do not rename existing enums or other data, even if they were renamed in the game. You may add or remove data as is needed as this does not unnecessarily affect existing code relying on old names.
+3. Always read the information in doc/protocol.md to understand our YAML format.
+4. Try to inline types as much as possible--this includes mappers and switch statements. Don't create extra types unless they are actually re-used in multiple places, or very large to warrant seperation.
