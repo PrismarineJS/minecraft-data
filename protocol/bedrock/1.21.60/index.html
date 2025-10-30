@@ -5297,11 +5297,11 @@ arguments, and some of those arguments can have 'enum' values, which are a list 
 values for the argument. The serialization is rather complex and involves palettes like chunks.</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>values len </td><td>varint</td><td><p>The length of the enums for all the command parameters in this packet</p></td></tr>
-<tr><td class='field-name name'>_enum_type </td><td>["enum_size_based_on_values_len"]</td><td><p>Not read from stream: instead calculated from the <code>values_len</code> field<br/>
+<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>enum values</span> below is <b class='name'>values len</b> from above</td><td rowspan=2><p>Not read from stream: instead calculated from the <code>values_len</code> field<br/>
 If the values<em>len < 0xff => byte,
 If the values</em>len < 0xffff => short,
-If the values_len < 0xffffff => int</p></td></tr>
-<tr><td colspan=2 class="vpad"><i>Length for <span class='name'>enum values</span> below is <b class='name'>values len</b> from above</td><td rowspan=2><p>Here all the enum values for all of the possible commands are stored to one array palette</p></i></td></tr>
+If the values_len < 0xffffff => int
+Here all the enum values for all of the possible commands are stored to one array palette</p></i></td></tr>
 <tr><td class='field-name'><span class='name'>enum values</span> <div class="tag tag-array">array</div></td><td>string</td><td></td></tr>
 <tr><td class='field-name field-implicit'><span class='name'>chained subcommand values</span> length</td><td class="field-implicit">varint</td><td rowspan=2><p>chained<em>subcommand</em>values is a slice of all chained subcommand names. chained<em>subcommand</em>values generally should
 contain each possible value only once. chained_subcommands are built by pointing to entries in this slice.</p></td></tr>

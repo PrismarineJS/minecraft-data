@@ -1302,7 +1302,7 @@ They are defined here to avoid duplication.</p></p>
 <p><p>MC: ServerboundCookieResponsePacket</p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
 <tr><td class='field-name name'>key </td><td>string</td><td></td></tr>
-<tr><td class='field-name name'>value </td><td>ByteArray</td><td></td></tr>
+<tr><td class='field-name name'>value <div class='tag tag-optional'>optional</div></td><td>ByteArray</td><td></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="types.packet_common_select_known_packs">
 <a href="#types.packet_common_select_known_packs"><div class='packet-id bound-datatype'>Type</div><div class='packet-name name'>packet common select known packs</div></a>
@@ -2229,7 +2229,7 @@ MC: ServerboundKeepAlivePacket</p></p>
 
 <tr><td><a href="#play.toClient.types.packet_tags">0x78</a></td><td><a href="#play.toClient.types.packet_tags">packet_tags</a></td></tr>
 
-<tr><td><a href="#play.toClient.types.packet_set_projectile_power">Type</a><td class='name'><a href="#play.toClient.types.packet_set_projectile_power">packet_set_projectile_power</a></td></tr>
+<tr><td><a href="#play.toClient.types.packet_set_projectile_power">0x79</a></td><td><a href="#play.toClient.types.packet_set_projectile_power">packet_set_projectile_power</a></td></tr>
 <tr><td><a href="#play.toClient.types.packet">Type</a><td class='name'><a href="#play.toClient.types.packet">packet</a></td></tr>
   </tbody>
   </table><br/><hr/>
@@ -3984,8 +3984,8 @@ flags: ["bitfield", [
 </table></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="play.toClient.types.packet_set_projectile_power">
-<a href="#play.toClient.types.packet_set_projectile_power"><div class='packet-id bound-client'>Type</div><div class='packet-name name'>packet set projectile power</div></a>
-  <span style='vertical-align:middle;float:right'>play / toClient / packet_set_projectile_power</span>
+<a href="#play.toClient.types.packet_set_projectile_power"><div class='packet-id bound-client'>121</div><div class='packet-name name'>packet set projectile power</div></a>
+  <span style='vertical-align:middle;float:right'>play / toClient / packet_set_projectile_power (0x79)</span>
 </div><br/>
     
 <p><p>MC: ClientboundProjectilePowerPacket</p></p>
@@ -4122,6 +4122,9 @@ flags: ["bitfield", [
   <tr><td class='name'>118</td><td class='name'>entity effect</td><td></td></tr>
   <tr><td class='name'>119</td><td class='name'>declare recipes</td><td></td></tr>
   <tr><td class='name'>120</td><td class='name'>tags</td><td></td></tr>
+  <tr><td class='name'>121</td><td class='name'>set projectile power</td><td></td></tr>
+  <tr><td class='name'>122</td><td class='name'>custom report details</td><td></td></tr>
+  <tr><td class='name'>123</td><td class='name'>server links</td><td></td></tr>
 </table></td></tr>
 <tr><td><b class='name'>params</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>name</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>is bundle delimiter</span> </td><td>void</td><td></td></tr>
@@ -4245,6 +4248,9 @@ flags: ["bitfield", [
 <tr><td class='field-name name'><span class='fake'>is entity effect</span> </td><td><a href="#play.toClient.types.packet_entity_effect">packet_entity_effect</a></td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is declare recipes</span> </td><td><a href="#play.toClient.types.packet_declare_recipes">packet_declare_recipes</a></td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is tags</span> </td><td><a href="#play.toClient.types.packet_tags">packet_tags</a></td><td></td></tr>
+<tr><td class='field-name name'><span class='fake'>is set projectile power</span> </td><td><a href="#play.toClient.types.packet_set_projectile_power">packet_set_projectile_power</a></td><td></td></tr>
+<tr><td class='field-name name'><span class='fake'>is custom report details</span> </td><td>packet_common_custom_report_details</td><td></td></tr>
+<tr><td class='field-name name'><span class='fake'>is server links</span> </td><td>packet_common_server_links</td><td></td></tr>
 </table></td></tr>
 </table><br/><hr/><br/></div></div>
 <div id="play.toServer.types" class="sticky-container"><a href="#play.toServer.types"><div class='container sticky-header'>play / toServer / types</div></a>
@@ -4287,7 +4293,7 @@ flags: ["bitfield", [
 
 <tr><td><a href="#play.toServer.types.packet_custom_payload">0x12</a></td><td><a href="#play.toServer.types.packet_custom_payload">packet_custom_payload</a></td></tr>
 
-<tr><td><a href="#play.toServer.types.packet_debug_sample_subscription">Type</a><td class='name'><a href="#play.toServer.types.packet_debug_sample_subscription">packet_debug_sample_subscription</a></td></tr>
+<tr><td><a href="#play.toServer.types.packet_debug_sample_subscription">0x13</a></td><td><a href="#play.toServer.types.packet_debug_sample_subscription">packet_debug_sample_subscription</a></td></tr>
 
 <tr><td><a href="#play.toServer.types.packet_edit_book">0x14</a></td><td><a href="#play.toServer.types.packet_edit_book">packet_edit_book</a></td></tr>
 
@@ -4550,8 +4556,8 @@ MC: ServerboundContainerButtonClickPacket</p></p>
 <tr><td class='field-name name'>data </td><td>restBuffer</td><td></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="play.toServer.types.packet_debug_sample_subscription">
-<a href="#play.toServer.types.packet_debug_sample_subscription"><div class='packet-id bound-server'>Type</div><div class='packet-name name'>packet debug sample subscription</div></a>
-  <span style='vertical-align:middle;float:right'>play / toServer / packet_debug_sample_subscription</span>
+<a href="#play.toServer.types.packet_debug_sample_subscription"><div class='packet-id bound-server'>19</div><div class='packet-name name'>packet debug sample subscription</div></a>
+  <span style='vertical-align:middle;float:right'>play / toServer / packet_debug_sample_subscription (0x13)</span>
 </div><br/>
     
 <p><p>MC: ServerboundDebugSampleSubscriptionPacket</p></p>
@@ -5086,6 +5092,7 @@ MC: ServerboundContainerButtonClickPacket</p></p>
 <tr><td class='field-name name'><span class='fake'>is set slot state</span> </td><td><a href="#play.toServer.types.packet_set_slot_state">packet_set_slot_state</a></td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is cookie response</span> </td><td>packet_common_cookie_response</td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is custom payload</span> </td><td><a href="#play.toServer.types.packet_custom_payload">packet_custom_payload</a></td><td></td></tr>
+<tr><td class='field-name name'><span class='fake'>is debug sample subscription</span> </td><td><a href="#play.toServer.types.packet_debug_sample_subscription">packet_debug_sample_subscription</a></td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is edit book</span> </td><td><a href="#play.toServer.types.packet_edit_book">packet_edit_book</a></td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is query entity nbt</span> </td><td><a href="#play.toServer.types.packet_query_entity_nbt">packet_query_entity_nbt</a></td><td></td></tr>
 <tr><td class='field-name name'><span class='fake'>is use entity</span> </td><td><a href="#play.toServer.types.packet_use_entity">packet_use_entity</a></td><td></td></tr>
