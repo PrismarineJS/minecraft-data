@@ -2416,6 +2416,27 @@ CameraPresets:
       - player_relative_strafe
 
 
+# CameraRotationOption represents a rotation keyframe option for spline instructions.
+CameraRotationOption:
+   # Value is the rotation value for the keyframe.
+   value: vec3f
+   # Time is the time of the keyframe within the spline.
+   time: lf32
+
+# CameraSplineInstruction represents a camera spline instruction definition.
+CameraSplineInstruction:
+   # TotalTime is the total time for the spline animation.
+   total_time: lf32
+   # EaseType is the type of easing function applied to the spline.
+   ease_type: CameraSplineEaseType
+   # Curve is the list of curve points defining the spline.
+   curve: vec3f[]varint
+   # ProgressKeyFrames is a list of key frames for the spline progress.
+   progress_key_frames: vec2f[]varint
+   # RotationOptions is a list of rotation keyframes for the spline.
+   rotation_options: CameraRotationOption[]varint
+
+
 DisconnectFailReason: zigzag32 =>
    - unknown
    - cant_connect_no_internet
@@ -2609,6 +2630,8 @@ BiomeChunkGeneration:
    # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
    # weighted biomes.
    legacy_rules?: BiomeConditionalTransformation[]varint
+   # ReplacementsData is a list of biome replacement data.
+   replacements_data?: BiomeReplacementData[]varint
 
 # BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
 BiomeClimate:
@@ -2812,6 +2835,21 @@ BiomeConditionalTransformation:
    # transformation to be applied.
    min_passing_neighbours: lu32
 
+# BiomeReplacementData represents data for biome replacements.
+BiomeReplacementData:
+   # Biome is the biome ID to replace.
+   biome: li16
+   # Dimension is the dimension ID where the replacement applies.
+   dimension: li16
+   # TargetBiomes is a list of target biome IDs for the replacement.
+   target_biomes: li16[]varint
+   # Amount is the amount of replacement to apply.
+   amount: lf32
+   # NoiseFrequencyScale is the noise frequency scale to use for replacement selection.
+   noise_frequency_scale: lf32
+   # ReplacementIndex is the index of the replacement.
+   replacement_index: lu32
+
 EaseType: u8 =>
    - Linear
    - Spring
@@ -2845,3 +2883,16 @@ EaseType: u8 =>
    - InElastic
    - OutElastic
    - InOutElastic
+
+CameraSplineEaseType: u8 =>
+   - catmull_rom
+   - linear
+
+ParameterKeyframeValue:
+   # Time is the time of the keyframe.
+   time: lf32
+   # Value is the value at the keyframe.
+   value: vec3f
+
+GraphicsOverrideParameterType: u8 =>
+   - sky_zenith_color
