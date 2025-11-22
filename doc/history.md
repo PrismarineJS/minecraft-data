@@ -1,3 +1,11 @@
+## 3.101.0
+* [Add bedrock 1.21.124 protocol data (#1110)](https://github.com/PrismarineJS/minecraft-data/commit/e3bc56f073699fbff3d86a5fabeb56a513a54216) (thanks @extremeheat)
+* [Add 1.21.11-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a56aac2cf69c06d3665e039d747bbd19b6f1d109) (thanks @github-actions[bot])
+* [Add 1.21.11-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/1494806d600685885c0199eec736cc4907ff0723) (thanks @github-actions[bot])
+* [Add bedrock 1.21.111 data (#1094)](https://github.com/PrismarineJS/minecraft-data/commit/edfc78fe849b0203672a7fe1f533971ab56732d6) (thanks @mc-zuri)
+* [Add 25w46a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/b0892222b5868d37f00b4c02f834d7cc31734ed5) (thanks @github-actions[bot])
+* [Add 25w45a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c3073256eb6f2fd019989bfb8add709b47cd01f9) (thanks @github-actions[bot])
+
 ## 3.100.0
 * [bedrock: Add Bedrock 1.21.120 protocol data (#1107)](https://github.com/PrismarineJS/minecraft-data/commit/c65397236fcc41f26f5c5e0c0e94313f85f3f13c) (thanks @extremeheat)
 * [pc: fix packet_chat_message checksum type in PC V1.21.8 (#1083)](https://github.com/PrismarineJS/minecraft-data/commit/53ba02aad998dde33d67acf743a4bd166f8f310c) (thanks @kang-indie-hacker)
