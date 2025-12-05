@@ -157,8 +157,6 @@ async function openIssueAndDispatch (title, versionJson, latestVersionData, late
   const issuePayload = buildFirstIssue(title, latestVersionData, versionJson)
 
   const issue = await github.createIssue(issuePayload)
-
-  fs.writeFileSync('./issue.md', issuePayload.body)
   console.log('Created issue', issue)
 
   // Now create an initial PR with the new version data
@@ -176,8 +174,8 @@ async function openIssueAndDispatch (title, versionJson, latestVersionData, late
     branch: 'main',
     inputs: {
       version: latestVersion,
-      issue_number: issue?.number,
-      pr_number: pr?.number
+      issue_number: String(issue?.number),
+      pr_number: String(pr?.number)
     }
   }
   console.log('Sending workflow dispatch', dispatchPayload)

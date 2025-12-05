@@ -1052,7 +1052,7 @@
    # MC: ServerboundCookieResponsePacket
    packet_common_cookie_response:
       key: string
-      value: ByteArray
+      value?: ByteArray
    # MC: ServerboundSelectKnownPacks
    # MC: ClientboundSelectKnownPacks
    packet_common_select_known_packs:
@@ -2444,6 +2444,7 @@
       - entity_effect
       - declare_recipes
       - tags
+      - set_projectile_power
       params: name ?
          if bundle_delimiter: void
          if spawn_entity: packet_spawn_entity
@@ -2566,6 +2567,7 @@
          if entity_effect: packet_entity_effect
          if declare_recipes: packet_declare_recipes
          if tags: packet_tags
+         if set_projectile_power: packet_set_projectile_power
 
 ^play.toServer.types:
    # MC: ServerboundAcceptTeleportationPacket
@@ -2959,6 +2961,7 @@
          if set_slot_state: packet_set_slot_state
          if cookie_response: packet_common_cookie_response
          if custom_payload: packet_custom_payload
+         if debug_sample_subscription: packet_debug_sample_subscription
          if edit_book: packet_edit_book
          if query_entity_nbt: packet_query_entity_nbt
          if use_entity: packet_use_entity
