@@ -1919,6 +1919,18 @@
       portalTeleportBoundary: varint
       warningBlocks: varint
       warningTime: varint
+   # Placeholder packets for 1.21.10 protocol compatibility
+   # These are inserted to shift packet IDs so keep_alive is at 0x2b and login at 0x30
+   packet_placeholder_26:
+      data: restBuffer
+   packet_placeholder_27:
+      data: restBuffer
+   packet_placeholder_28:
+      data: restBuffer
+   packet_placeholder_29:
+      data: restBuffer
+   packet_placeholder_2a:
+      data: restBuffer
    # MC: ClientboundKeepAlivePacket
    packet_keep_alive:
       keepAliveId: i64
@@ -2743,6 +2755,11 @@
       - open_horse_window
       - hurt_animation
       - initialize_world_border
+      - placeholder_26
+      - placeholder_27
+      - placeholder_28
+      - placeholder_29
+      - placeholder_2a
       - keep_alive
       - map_chunk
       - world_event
@@ -2878,6 +2895,11 @@
          if open_horse_window: packet_open_horse_window
          if hurt_animation: packet_hurt_animation
          if initialize_world_border: packet_initialize_world_border
+         if placeholder_26: packet_placeholder_26
+         if placeholder_27: packet_placeholder_27
+         if placeholder_28: packet_placeholder_28
+         if placeholder_29: packet_placeholder_29
+         if placeholder_2a: packet_placeholder_2a
          if keep_alive: packet_keep_alive
          if map_chunk: packet_map_chunk
          if world_event: packet_world_event
