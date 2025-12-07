@@ -1691,9 +1691,6 @@
       yaw: i8
       headPitch: i8
       objectData: varint
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
    # MC: ClientboundAnimatePacket
    packet_animation:
       entityId: varint
@@ -2392,9 +2389,8 @@
    # MC: ClientboundSetEntityMotionPacket
    packet_entity_velocity:
       entityId: varint
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
+      # Velocity data format changed in 1.21.9, capturing as restBuffer for now
+      data: restBuffer
    # MC: ClientboundSetEquipmentPacket
    packet_entity_equipment:
       entityId: varint
