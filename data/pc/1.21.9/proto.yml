@@ -19,6 +19,7 @@
    f32: native
    f64: native
    UUID: native
+   lpvec3: native
    option: native
    entityMetadataLoop: native
    topBitSetTerminatedArray: native
@@ -1673,11 +1674,14 @@
       previousGamemode: u8
       isDebug: bool
       isFlat: bool
-      death?:
-         dimensionName: string
-         location: position
+      death?: RespawnData
       portalCooldown: varint
       seaLevel: varint
+   RespawnData:
+      dimensionName: string
+      location: position
+      yaw: f32
+      pitch: f32
 
    # MC: ClientboundAddEntityPacket
    packet_spawn_entity:
@@ -1687,6 +1691,7 @@
       x: f64
       y: f64
       z: f64
+      movement: lpvec3
       pitch: i8
       yaw: i8
       headPitch: i8
@@ -2372,8 +2377,10 @@
       contents: Slot
    # MC: ClientboundSetDefaultSpawnPositionPacket
    packet_spawn_position:
+      dimensionName: string
       location: position
-      angle: f32
+      yaw: f32
+      pitch: f32
    # MC: ClientboundSetDisplayObjectivePacket
    packet_scoreboard_display_objective:
       position: varint
@@ -2389,8 +2396,7 @@
    # MC: ClientboundSetEntityMotionPacket
    packet_entity_velocity:
       entityId: varint
-      # Velocity data format changed in 1.21.9, capturing as restBuffer for now
-      data: restBuffer
+      velocity: lpvec3
    # MC: ClientboundSetEquipmentPacket
    packet_entity_equipment:
       entityId: varint
