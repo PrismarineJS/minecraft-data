@@ -1796,12 +1796,6 @@ packet_available_commands:
    !bound: client
    # The length of the enums for all the command parameters in this packet
    values_len: varint
-   # Not read from stream: instead calculated from the `values_len` field
-   #
-   # If the values_len < 0xff => byte,
-   # If the values_len < 0xffff => short,
-   # If the values_len < 0xffffff => int
-   _enum_type: ["enum_size_based_on_values_len"]
    # Here all the enum values for all of the possible commands are stored to one array palette
    enum_values: string[]$values_len
    # chained_subcommand_values is a slice of all chained subcommand names. chained_subcommand_values generally should
@@ -1816,7 +1810,7 @@ packet_available_commands:
    enums: []varint
       # The name of the enum
       name: string
-      # The values in the enum 
+      # The values in the enum. In 1.21.130 this is always lu32.
       values: lu32[]varint
    # chained_subcommands is a slice of all subcommands that are followed by a chained command. An example usage of this
    # is /execute which allows you to run another command as another entity or at a different position etc.
@@ -1826,21 +1820,23 @@ packet_available_commands:
       name: string
       # values contains the index and parameter type of the chained subcommand.
       values: []varint
-         # index is the index of the argument in the ChainedSubcommandValues slice from the AvailableCommands packet. This is
-         # then used to set the type specified by the Value field below.
-         index: lu16
-         # value is a combination of the flags above and specified the type of argument. Unlike regular parameter types,
-         # this should NOT contain any of the special flags (valid, enum, suffixed or soft enum) but only the basic types.
-         value: lu16
+         # index is the index of the argument in the ChainedSubcommandValues slice.
+         # In 1.21.130 this changed from lu16 to varint.
+         index: varint
+         # value is a combination of the flags above.
+         # In 1.21.130 this changed from lu16 to varint.
+         value: varint
    command_data: []varint
       name: string
       description: string
       flags: lu16
+      # Permission level changed from u8 to string in 1.21.130
       permission_level: string
       alias: li32
       # chained_subcommand_offsets is a slice of offsets that all point to a different chained_subcommand from the
       # chained_subcommands slice in the available_commands packet.
-      chained_subcommand_offsets: lu16[]varint
+      # In 1.21.130 this changed from lu16 to lu32.
+      chained_subcommand_offsets: lu32[]varint
       # The list of overload parameters for this command
       overloads: []varint
          # chaining determines if the parameters use chained subcommands or not.
