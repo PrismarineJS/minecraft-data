@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.130
+!version: 1.21.124
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -165,6 +165,8 @@ packet_resource_pack_stack:
    # If the resource pack must be accepted for the player to join the server.
    must_accept: bool
    # [inline]
+   behavior_packs: ResourcePackIdVersions
+   # [inline]
    resource_packs: ResourcePackIdVersions
    game_version: string
    experiments: Experiments # ??? such random fields
@@ -190,29 +192,8 @@ packet_resource_pack_client_response:
 packet_text:
    !id: 0x09
    !bound: both
-   # NeedsTranslation specifies if any of the messages need to be translated.
-   needs_translation: bool
-   category: u8 =>
-      0: message_only
-      1: authored
-      2: parameters
-   _: category ?
-      if message_only:
-         raw: string
-         tip: string
-         system_message: string
-         text_object_whisper: string
-         text_object_announcement: string
-         text_object: string
-      if authored:
-         chat: string
-         whisper: string
-         announcement: string
-      if parameters:
-         translate: string
-         popup: string
-         jukebox_popup: string
-   # TextType is the type of the text sent.
+   # TextType is the type of the text sent. When a client sends this to the server, it should always be
+   # TextTypeChat. If the server sends it, it may be one of the other text types above.
    type: u8 =>
       0: raw
       1: chat
@@ -226,6 +207,10 @@ packet_text:
       9: json_whisper
       10: json
       11: json_announcement
+   # NeedsTranslation specifies if any of the messages need to be translated. It seems that where % is found
+   # in translatable text types, these are translated regardless of this bool. Translatable text types
+   # include TextTypeTip, TextTypePopup and TextTypeJukeboxPopup.
+   needs_translation: bool
    _: type?
       if chat or whisper or announcement:
          source_name: string
@@ -241,10 +226,9 @@ packet_text:
    # Nintendo Switch). It is otherwise an empty string, and is used to decide which players are able to
    # chat with each other.
    platform_chat_id: string
-   # FilteredMessage is a filtered version of Message with all the profanity removed.
-   has_filtered_message: bool
-   filtered_message: has_filtered_message ?
-      if true: string
+   # FilteredMessage is a filtered version of Message with all the profanity removed. The client will use
+   # this over Message if this field is not empty and they have the "Filter Profanity" setting enabled.
+   filtered_message: string
 # For additional information and examples of all the chat types above, see here: https://imgur.com/a/KhcFscg
 
 
@@ -470,6 +454,7 @@ packet_start_game:
    # its index in the expected block palette. This is useful for servers that wish to support multiple protocol versions
    # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
+   tick_death_systems: bool
    server_controlled_sound: bool
 
 packet_add_player:
@@ -1048,7 +1033,6 @@ packet_mob_effect:
    particles: bool
    duration: zigzag32
    tick: varint64
-   ambient: bool
 
 packet_update_attributes:
    !id: 0x1d
@@ -1100,10 +1084,11 @@ packet_interact:
    # TargetEntityRuntimeID is the runtime ID of the entity that the player interacted with. This is empty
    # for the InteractActionOpenInventory action type.
    target_entity_id: varint64
-   # Position associated with the ActionType above.
-   has_position: bool
-   position: has_position ?
-      if true: vec3f
+   # Position associated with the ActionType above. For the InteractActionMouseOverEntity, this is the
+   # position relative to the entity moused over over which the player hovered with its mouse/touch. For the
+   # InteractActionLeaveVehicle, this is the position that the player spawns at after leaving the vehicle.
+   position: action_id ?
+      if mouse_over_entity or leave_vehicle: vec3f
 
 packet_block_pick_request:
    !id: 0x22
@@ -1198,7 +1183,7 @@ packet_set_spawn_position:
 packet_animate:
    !id: 0x2c
    !bound: both
-   action_id: u8 =>
+   action_id: zigzag32 =>
       # Unused
       0: none
       # Server bound notification to swing the player's arm. Server is expected to rebroadcast to all that should see the arm move.
@@ -1211,12 +1196,18 @@ packet_animate:
       4: critical_hit
       # Unused
       5: magic_critical_hit
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
+      128: row_right
+      # Sent every tick the client is in a boat exclusively in legacy client authoritative movement.
+      # See Player Auth Input for how to compute this in the latest protocol.
+      129: row_left
    runtime_entity_id: varint64
    # Data holds an action-specific value whose meaning depends on the animation type.
    data: lf32
-   has_swing_source: bool
-   swing_source: has_swing_source ?
-      if true: string
+   _: action_id ?
+      if row_right or row_left:
+         rowing_time: lf32
 
 packet_respawn:
    !id: 0x2d
@@ -1796,6 +1787,12 @@ packet_available_commands:
    !bound: client
    # The length of the enums for all the command parameters in this packet
    values_len: varint
+   # Not read from stream: instead calculated from the `values_len` field
+   #
+   # If the values_len < 0xff => byte,
+   # If the values_len < 0xffff => short,
+   # If the values_len < 0xffffff => int
+   _enum_type: ["enum_size_based_on_values_len"]
    # Here all the enum values for all of the possible commands are stored to one array palette
    enum_values: string[]$values_len
    # chained_subcommand_values is a slice of all chained subcommand names. chained_subcommand_values generally should
@@ -1810,8 +1807,13 @@ packet_available_commands:
    enums: []varint
       # The name of the enum
       name: string
-      # The values in the enum. In 1.21.130 this is always lu32.
-      values: lu32[]varint
+      # The values in the enum 
+      values: []varint
+         # The indexes to value in the palette
+         _: ../_enum_type?
+            if byte: u8
+            if short: lu16
+            if int: lu32
    # chained_subcommands is a slice of all subcommands that are followed by a chained command. An example usage of this
    # is /execute which allows you to run another command as another entity or at a different position etc.
    chained_subcommands: []varint
@@ -1820,23 +1822,21 @@ packet_available_commands:
       name: string
       # values contains the index and parameter type of the chained subcommand.
       values: []varint
-         # index is the index of the argument in the ChainedSubcommandValues slice.
-         # In 1.21.130 this changed from lu16 to varint.
-         index: varint
-         # value is a combination of the flags above.
-         # In 1.21.130 this changed from lu16 to varint.
-         value: varint
+         # index is the index of the argument in the ChainedSubcommandValues slice from the AvailableCommands packet. This is
+         # then used to set the type specified by the Value field below.
+         index: lu16
+         # value is a combination of the flags above and specified the type of argument. Unlike regular parameter types,
+         # this should NOT contain any of the special flags (valid, enum, suffixed or soft enum) but only the basic types.
+         value: lu16
    command_data: []varint
       name: string
       description: string
       flags: lu16
-      # Permission level changed from u8 to string in 1.21.130
-      permission_level: string
+      permission_level: u8
       alias: li32
       # chained_subcommand_offsets is a slice of offsets that all point to a different chained_subcommand from the
       # chained_subcommands slice in the available_commands packet.
-      # In 1.21.130 this changed from lu16 to lu32.
-      chained_subcommand_offsets: lu32[]varint
+      chained_subcommand_offsets: lu16[]varint
       # The list of overload parameters for this command
       overloads: []varint
          # chaining determines if the parameters use chained subcommands or not.
@@ -1921,7 +1921,7 @@ packet_command_request:
    internal: bool
    # Specifies the version of the command to run, relative to the current Minecraft version. Should be set
    # to 52 as of 1.19.62
-   version: string
+   version: varint
 
 
 # CommandBlockUpdate is sent by the client to update a command block at a specific position. The command
@@ -1985,26 +1985,33 @@ packet_command_output:
    # messages in this packet to the right origin, depending on what is sent here.
    origin: CommandOrigin
    # OutputType specifies the type of output that is sent.
-   # OutputType specifies the type of output that is sent.
-   output_type: string
+   output_type: i8 =>
+      1: last
+      2: silent
+      3: all
+      4: data_set
    # SuccessCount is the amount of times that a command was executed successfully as a result of the command
    # that was requested. For servers, this is usually a rather meaningless fields, but for vanilla, this is
    # applicable for commands created with Functions.
-   success_count: lu32
+   success_count: varint
    # OutputMessages is a list of all output messages that should be sent to the player. Whether they are
    # shown or not, depends on the type of the messages.
    output: []varint
-      # Message is the message that is sent to the client in the chat window.
-      message_id: string
-      # Success indicates if the output message was one of a successful command execution.
+      # Success indicates if the output message was one of a successful command execution. If set to true, the
+      # output message is by default coloured white, whereas if set to false, the message is by default
+      # coloured red.
       success: bool
+      # Message is the message that is sent to the client in the chat window. It may either be simply a
+      # message or a translated built-in string like 'commands.tp.success.coordinates', combined with specific
+      # parameters below.
+      message_id: string
       # Parameters is a list of parameters that serve to supply the message sent with additional information,
       # such as the position that a player was teleported to or the effect that was applied to an entity.
       # These parameters only apply for the Minecraft built-in command output.
       parameters: string[]varint
-   has_data: bool
-   data: has_data ?
-      if true: string
+   data_set: output_type ?
+      if data_set: string
+      default: void
 
 
 # UpdateTrade is sent by the server to update the trades offered by a villager to a player. It is sent at the
@@ -3561,12 +3568,27 @@ packet_filter_text_packet:
 packet_debug_renderer:
    !id: 0xa4
    !bound: client
-   type: string
-   has_data: bool
-   data: has_data ?
-      if true: DebugMarkerData
-
-
+   # Type is the type of action. It is one of the constants above.
+   type: li32 =>
+      1: clear
+      2: add_cube
+   _: type ?
+      if clear: void
+      if add_cube:
+         # Text is the text that is displayed above the debug.
+         text: string
+         # Position is the position to spawn the debug on.
+         position: vec3f
+         # Red is the red value from the RGBA colour rendered on the debug.
+         red: lf32
+         # Green is the green value from the RGBA colour rendered on the debug.
+         green: lf32
+         # Blue is the blue value from the RGBA colour rendered on the debug.
+         blue: lf32
+         # Alpha is the alpha value from the RGBA colour rendered on the debug.
+         alpha: lf32
+         # Duration is how long the debug will last in the world for. It is measured in milliseconds.
+         duration: li64
 
 # Sent by the server to synchronize/update entity properties as NBT, an alternative to Set Entity Data.
 packet_sync_entity_property:
@@ -4400,15 +4422,11 @@ packet_camera_aim_assist_presets:
       block_priorities: []varint
          id: string
          priority: li32
-      block_tags: varint[]varint
       entity_default?: li32
       block_default?: li32
    presets: []varint
       id: string
-      exclusion_settings:
-         blocks: string[]varint
-         entities: string[]varint
-         block_tags: string[]varint
+      exclude_blocks: string[]varint
       target_liquids: string[]varint
       item_settings: []varint
          # Identifier of the item to apply the settings to.
@@ -4558,7 +4576,7 @@ packet_serverbound_pack_setting_change:
    pack_id: uuid
    pack_setting:
       name: string
-      type: varint =>
+      type: u8 =>
          - float
          - bool
          - string
@@ -4567,44 +4585,6 @@ packet_serverbound_pack_setting_change:
          if bool: bool
          if string: string
 
-packet_clientbound_data_store:
-   !id: 0x14a
-   !bound: client
-   entries: []varint
-      type: varint =>
-         0: update
-         1: change
-         2: removal
-      _: type ?
-         if update:
-            name: string
-            property: string
-            path: string
-            data_type: varint =>
-               0: double
-               1: bool
-               2: string
-            data: data_type ?
-               if double: lf64
-               if bool: bool
-               if string: string
-            update_count: varint
-         if change:
-            name: string
-            property: string
-            update_count: varint
-            # TODO: This packet maybe defined wrong. Needs further investigation
-            data_type: varint =>
-               0: double
-               1: bool
-               2: string
-            data: data_type ?
-               if double: lf64
-               if bool: bool
-               if string: string
-         if removal:
-            name: string
-
 packet_graphics_override_parameter:
    !id: 0x14b
    !bound: client
@@ -4612,19 +4592,3 @@ packet_graphics_override_parameter:
    biome_identifier: string
    parameter_type: GraphicsOverrideParameterType
    reset: bool
-
-packet_serverbound_data_store:
-   !id: 0x14c
-   !bound: server
-   name: string
-   property: string
-   path: string
-   data_type: varint =>
-      0: double
-      1: bool
-      2: string
-   data: data_type ?
-      if double: lf64
-      if bool: bool
-      if string: string
-   update_count: varint
