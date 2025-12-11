@@ -1,4 +1,4 @@
-!version: 1.21.9
+!version: 1.21.8
 !StartDocs: true
 
 ^types:
@@ -1275,7 +1275,7 @@
    # MC: ServerboundCookieResponsePacket
    packet_common_cookie_response:
       key: string
-      value?: ByteArray
+      value: ByteArray
    # MC: ServerboundSelectKnownPacks
    # MC: ClientboundSelectKnownPacks
    packet_common_select_known_packs:
@@ -1509,9 +1509,6 @@
    # MC: ClientboundShowDialogConfigurationPacket
    packet_show_dialog:
       dialog: anonymousNbt
-   # MC: ClientboundCodeOfConductPacket
-   packet_code_of_conduct:
-      codeOfConduct: string
    packet:
       name: varint =>
          - cookie_request
@@ -1533,7 +1530,6 @@
          - server_links
          - clear_dialog
          - show_dialog
-         - code_of_conduct
       params: name ?
          if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
@@ -1554,7 +1550,6 @@
          if server_links: packet_common_server_links
          if clear_dialog: packet_common_clear_dialog
          if show_dialog: packet_show_dialog
-         if code_of_conduct: packet_code_of_conduct
 ^configuration.toServer.types:
    ## (Settings is Common) ##
    ## (Cookie Response is Common) ##
@@ -1575,9 +1570,6 @@
    packet_resource_pack_receive:
       uuid: UUID
       result: varint
-   # MC: ServerboundAcceptCodeOfConductPacket
-   packet_accept_code_of_conduct:
-      # Empty
    packet:
       name: varint =>
          - settings
@@ -1589,7 +1581,6 @@
          - resource_pack_receive
          - select_known_packs
          - custom_click_action
-         - accept_code_of_conduct
       params: name ?
          if settings: packet_common_settings
          if cookie_response: packet_common_cookie_response
@@ -1600,7 +1591,6 @@
          if resource_pack_receive: packet_resource_pack_receive
          if select_known_packs: packet_common_select_known_packs
          if custom_click_action: packet_common_custom_click_action
-         if accept_code_of_conduct: packet_accept_code_of_conduct
 ^play.toClient.types:
    SlotDisplay:
       type: varint =>
@@ -1826,37 +1816,10 @@
       sourceCauseId: varint
       sourceDirectId: varint
       sourcePosition?: vec3f64
-   # MC: ClientboundDebugBlockValuePacket
-   packet_debug_block_value:
-      position: position
-      subscription: varint
-      hasValue: bool
-      value?: restBuffer
-   # MC: ClientboundDebugChunkValuePacket
-   packet_debug_chunk_value:
-      chunkX: i32
-      chunkZ: i32
-      subscription: varint
-      hasValue: bool
-      value?: restBuffer
-   # MC: ClientboundDebugEntityValuePacket
-   packet_debug_entity_value:
-      entityId: varint
-      subscription: varint
-      hasValue: bool
-      value?: restBuffer
-   # MC: ClientboundDebugEventPacket
-   packet_debug_event:
-      subscription: varint
-      value: restBuffer
    # MC: ClientboundDebugSamplePacket
    packet_debug_sample:
       sample: i64[]varint
       type: varint
-   # MC: ClientboundGameTestHighlightPosPacket
-   packet_game_test_highlight_pos:
-      absolutePos: position
-      relativePos: position
    # MC: ClientboundDeleteChatPacket
    packet_hide_message:
       id: varint
@@ -2770,10 +2733,6 @@
       - chat_suggestions
       - custom_payload
       - damage_event
-      - debug_block_value
-      - debug_chunk_value
-      - debug_entity_value
-      - debug_event
       - debug_sample
       - hide_message
       - kick_disconnect
@@ -2783,7 +2742,6 @@
       - explosion
       - unload_chunk
       - game_state_change
-      - game_test_highlight_pos
       - open_horse_window
       - hurt_animation
       - initialize_world_border
@@ -2910,10 +2868,6 @@
          if chat_suggestions: packet_chat_suggestions
          if custom_payload: packet_custom_payload
          if damage_event: packet_damage_event
-         if debug_block_value: packet_debug_block_value
-         if debug_chunk_value: packet_debug_chunk_value
-         if debug_entity_value: packet_debug_entity_value
-         if debug_event: packet_debug_event
          if debug_sample: packet_debug_sample
          if hide_message: packet_hide_message
          if kick_disconnect: packet_kick_disconnect
@@ -2923,7 +2877,6 @@
          if explosion: packet_explosion
          if unload_chunk: packet_unload_chunk
          if game_state_change: packet_game_state_change
-         if game_test_highlight_pos: packet_game_test_highlight_pos
          if open_horse_window: packet_open_horse_window
          if hurt_animation: packet_hurt_animation
          if initialize_world_border: packet_initialize_world_border
@@ -3095,7 +3048,7 @@
             "count": 3
          }
       ]
-      checksum: u8
+      checksum: i8
    # MC: ServerboundChatSessionUpdatePacket
    packet_chat_session_update:
       sessionUUID: UUID
@@ -3146,9 +3099,9 @@
    packet_custom_payload:
       channel: string
       data: restBuffer
-   # MC: ServerboundDebugSubscriptionRequestPacket
-   packet_debug_subscription_request:
-      subscriptions: varint[]varint
+   # MC: ServerboundDebugSampleSubscriptionPacket
+   packet_debug_sample_subscription:
+      type: varint
    # MC: ServerboundEditBookPacket
    packet_edit_book:
       hand: varint
@@ -3428,7 +3381,7 @@
       - set_slot_state
       - cookie_response
       - custom_payload
-      - debug_subscription_request
+      - debug_sample_subscription
       - edit_book
       - query_entity_nbt
       - use_entity
@@ -3495,7 +3448,7 @@
          if set_slot_state: packet_set_slot_state
          if cookie_response: packet_common_cookie_response
          if custom_payload: packet_custom_payload
-         if debug_subscription_request: packet_debug_subscription_request
+         if debug_sample_subscription: packet_debug_sample_subscription
          if edit_book: packet_edit_book
          if query_entity_nbt: packet_query_entity_nbt
          if use_entity: packet_use_entity
