@@ -4589,7 +4589,15 @@ packet_clientbound_data_store:
             name: string
             property: string
             update_count: varint
-            data: restBuffer
+            # TODO: This packet maybe defined wrong. Needs further investigation
+            data_type: varint =>
+               0: double
+               1: bool
+               2: string
+            data: data_type ?
+               if double: lf64
+               if bool: bool
+               if string: string
          if removal:
             name: string
 
