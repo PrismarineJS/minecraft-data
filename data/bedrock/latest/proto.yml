@@ -226,6 +226,15 @@ packet_text:
       9: json_whisper
       10: json
       11: json_announcement
+   _: type?
+      if chat or whisper or announcement:
+         source_name: string
+         message: string
+      if raw or tip or system or json_whisper or json or json_announcement:
+         message: string
+      if translation or popup or jukebox_popup:
+         message: string
+         parameters: string[]varint
    # The XUID of the player who sent this message.
    xuid: string
    # PlatformChatID is an identifier only set for particular platforms when chatting (presumably only for
@@ -461,7 +470,6 @@ packet_start_game:
    # its index in the expected block palette. This is useful for servers that wish to support multiple protocol versions
    # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
-   tick_death_systems: bool
    server_controlled_sound: bool
 
 packet_add_player:
@@ -1828,7 +1836,7 @@ packet_available_commands:
       name: string
       description: string
       flags: lu16
-      permission_level: u8
+      permission_level: string
       alias: li32
       # chained_subcommand_offsets is a slice of offsets that all point to a different chained_subcommand from the
       # chained_subcommands slice in the available_commands packet.
