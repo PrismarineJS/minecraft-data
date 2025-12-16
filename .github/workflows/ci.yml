@@ -2,62 +2,26 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    branches: 
-      - master
+    branches: [ master ]
 
 jobs:
-  Lint:
+  build:
+
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 22.x
-      uses: actions/setup-node@v1.4.4
-      with:
-        node-version: 22.x
-    - run: npm i && npm run lint
-  PrepareSupportedVersions:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 22.x
-      uses: actions/setup-node@v1.4.4
-      with:
-        node-version: 22.x
-    - id: set-matrix
-      run: |
-        node -e "
-          const supportedVersions = require('./src/version').supportedVersions;
-          console.log('matrix='+JSON.stringify({'include': supportedVersions.map(mcVersion => ({mcVersion}))}))
-        " >> $GITHUB_OUTPUT
-  test:
-    needs: PrepareSupportedVersions
-    runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.PrepareSupportedVersions.outputs.matrix)}}
-      fail-fast: false
+      matrix:
+        node-version: [22.x]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 22.x
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
-        node-version: 22.x
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: '21'
-        distribution: 'adopt'
-    - name: Install dependencies
-      run: npm install
-    - run: cd node_modules && cd minecraft-data && mv minecraft-data minecraft-data-old && git clone -b pc-1_21_9 https://github.com/PrismarineJS/minecraft-data --depth 1 && node bin/generate_data.js
-    - run: curl -o node_modules/protodef/src/serializer.js https://raw.githubusercontent.com/extremeheat/node-protodef/refs/heads/dlog/src/serializer.js && curl -o node_modules/protodef/src/compiler.js https://raw.githubusercontent.com/extremeheat/node-protodef/refs/heads/dlog/src/compiler.js
-
-    - name: Run tests
-      run: npm run mochaTest -- -g ${{ matrix.mcVersion }}v
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+      working-directory: tools/js
+    - run: npm test
+      working-directory: tools/js
