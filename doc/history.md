@@ -1,3 +1,8 @@
+## 3.102.1
+* [bedrock: fix type for packet_biome_definition_list in 1.21.111+ (#1129)](https://github.com/PrismarineJS/minecraft-data/commit/aa8c52f8f8e53f6340ad4ee222b50aa2f4ad525f) (thanks @mc-zuri)
+* [bedrock: fix type for packet_command_request.version in 1.21.130 (#1127)](https://github.com/PrismarineJS/minecraft-data/commit/cf5fbc5bf7638a334834e66c8fc3efaf14a56519) (thanks @mc-zuri)
+* [Add 26.1-snapshot-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5d2847d3aefde292ef7e95c90c91a5fb74bcfa4a) (thanks @github-actions[bot])
+
 ## 3.102.0
 * [Add Bedrock 1.21.130 protocol data (#1123)](https://github.com/PrismarineJS/minecraft-data/commit/f02ae17f958229ecf73cd42d87e1958d6992ebff) (thanks @extremeheat)
 
