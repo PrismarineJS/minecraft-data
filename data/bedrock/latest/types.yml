@@ -1221,23 +1221,7 @@ CommandOrigin:
    # Origin is one of the values above that specifies the origin of the command. The origin may change,
    # depending on what part of the client actually called the command. The command may be issued by a
    # websocket server, for example.
-   type: varint =>
-      0: player
-      1: block
-      2: minecart_block
-      3: dev_console
-      4: test
-      5: automation_player
-      6: client_automation
-      7: dedicated_server
-      8: entity
-      9: virtual
-      10: game_argument
-      11: entity_server
-      12: precompiled
-      13: game_director_entity_server # ?
-      14: script
-      15: executor
+   type: string
 
    # UUID is the UUID of the command called. This UUID is a bit odd as it is not specified by the server. It
    # is not clear what exactly this UUID is meant to identify, but it is unique for each command called.
@@ -1250,9 +1234,7 @@ CommandOrigin:
    # PlayerUniqueID is an ID that identifies the player, the same as the one found in the AdventureSettings
    # packet. Filling it out with 0 seems to work.
    # PlayerUniqueID is only written if Origin is CommandOriginDevConsole or CommandOriginTest.
-   player_entity_id: type?
-      if dev_console or test:
-         player_entity_id: zigzag64
+   player_entity_id: lu64
 
 # MapTrackedObject is an object on a map that is 'tracked' by the client, such as an entity or a block. This
 # object may move, which is handled client-side.
