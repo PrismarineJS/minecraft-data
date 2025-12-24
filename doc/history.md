@@ -1,3 +1,5 @@
+## 3.102.3
+
 ## 3.102.2
 * [Revert "bedrock: fix type for packet_command_request.version in 1.21.130 (#1127)" (#1133)](https://github.com/PrismarineJS/minecraft-data/commit/96cb35679d536f2811d765b2f3bbcb7dc2855ac4) (thanks @extremeheat)
 
