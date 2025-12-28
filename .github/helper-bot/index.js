@@ -97,50 +97,7 @@ async function updateManifestPC () {
   }
 
   if (!latestVersionIsSnapshot && !issueStatus.isOpen && !issueStatus.isClosed) {
-    console.log('Opening issue', versionJson)
-    const issuePayload = buildFirstIssue(title, latestVersionData, versionJson)
-
-    const issue = await github.createIssue(issuePayload)
-
-    fs.writeFileSync('./issue.md', issuePayload.body)
-    console.log('Created issue', issue)
-
-    // Now create an initial PR with the new version data
-    const pr = await createInitialPR('pc', issue.url, {
-      minecraftVersion: versionJson.id,
-      version: latestVersion,
-      protocolVersion: versionJson.protocol_version
-    })
-    console.log('Created PR', pr)
-    // Ask minecraft-data-generator to handle new update
-    const dispatchPayload = {
-      owner: 'PrismarineJS',
-      repo: 'minecraft-data-generator',
-      workflow: 'handle-mcdata-update.yml',
-      branch: 'main',
-      inputs: {
-        version: latestVersion,
-        issue_number: issue?.number,
-        pr_number: pr?.number
-      }
-    }
-    console.log('Sending workflow dispatch', dispatchPayload)
-    await github.sendWorkflowDispatch(dispatchPayload)
-    // Ask node-minecraft-protocol to handle new update
-    const nodeDispatchPayload = {
-      owner: 'PrismarineJS',
-      repo: 'node-minecraft-protocol',
-      workflow: 'update-from-minecraft-data.yml',
-      branch: 'master',
-      inputs: {
-        new_mc_version: latestVersion,
-        mcdata_branch: pr.branchName,
-        mcdata_pr_url: pr.url
-      }
-    }
-    console.log('Sending workflow dispatch', nodeDispatchPayload)
-    await github.sendWorkflowDispatch(nodeDispatchPayload)
-    // node-minecraft-protocol would then dispatch to mineflayer
+    await openIssueAndDispatch(title, versionJson, latestVersionData, latestVersion)
   }
 
   async function addEntryFor (releaseVersion, releaseData) {
@@ -195,4 +152,63 @@ async function updateManifestPC () {
   }
 }
 
-updateManifestPC()
+async function openIssueAndDispatch (title, versionJson, latestVersionData, latestVersion) {
+  console.log('Opening issue', versionJson)
+  const issuePayload = buildFirstIssue(title, latestVersionData, versionJson)
+
+  const issue = await github.createIssue(issuePayload)
+  console.log('Created issue', issue)
+
+  // Now create an initial PR with the new version data
+  const pr = await createInitialPR('pc', issue.url, {
+    minecraftVersion: versionJson.id,
+    version: latestVersion,
+    protocolVersion: versionJson.protocol_version
+  })
+  console.log('Created PR', pr)
+  // Ask minecraft-data-generator to handle new update
+  const dispatchPayload = {
+    owner: 'PrismarineJS',
+    repo: 'minecraft-data-generator',
+    workflow: 'handle-mcdata-update.yml',
+    branch: 'main',
+    inputs: {
+      version: latestVersion,
+      issue_number: String(issue?.number),
+      pr_number: String(pr?.number)
+    }
+  }
+  console.log('Sending workflow dispatch', dispatchPayload)
+  await github.sendWorkflowDispatch(dispatchPayload)
+  // Ask node-minecraft-protocol to handle new update
+  const nodeDispatchPayload = {
+    owner: 'PrismarineJS',
+    repo: 'node-minecraft-protocol',
+    workflow: 'update-from-minecraft-data.yml',
+    branch: 'master',
+    inputs: {
+      new_mc_version: latestVersion,
+      mcdata_branch: pr.branchName,
+      mcdata_pr_url: pr.url
+    }
+  }
+  console.log('Sending workflow dispatch', nodeDispatchPayload)
+  await github.sendWorkflowDispatch(nodeDispatchPayload)
+  // node-minecraft-protocol would then dispatch to mineflayer
+
+  return { issue, pr }
+}
+
+if (process.env.FORCE_CREATE_PR) {
+  const payload = JSON.parse(process.env.FORCE_CREATE_PR)
+  openIssueAndDispatch(payload.title, payload.versionJson, payload.latestVersionData, payload.latestVersion).then(() => {
+    console.log('Done with manual PR')
+  }).catch(err => {
+    console.error('Failed to do manual PR', err)
+    process.exit(1)
+  })
+} else {
+  updateManifestPC()
+}
+
+module.exports = { openIssueAndDispatch, updateManifestPC }

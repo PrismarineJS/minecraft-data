@@ -2,6 +2,8 @@ const cp = require('child_process')
 const github = require('gh-helpers')()
 const path = require('path')
 
+const pm = process.versions.bun ? process.execPath : 'npm'
+
 function exec (file, args = [], options = {}) {
   const opts = { stdio: ['inherit', 'inherit', 'inherit'], ...options }
   console.log('> ', file, args.join(' '), options.cwd ? `(cwd: ${options.cwd})` : '')
@@ -12,11 +14,11 @@ const toolsJs = path.join(__dirname, '..', '..', 'tools', 'js')
 const sanitizeBranch = (branchName) => branchName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
 
 async function createInitialPR (edition, issueUrl, { version, protocolVersion }) {
-  exec(process.execPath, ['install'], { cwd: toolsJs })
-  if (protocolVersion) exec(process.execPath, ['run', 'version', edition, version, protocolVersion], { cwd: toolsJs })
-  exec(process.execPath, ['run', 'build'], { cwd: toolsJs })
+  exec(pm, ['install'], { cwd: toolsJs })
+  if (protocolVersion) exec(pm, ['run', 'version', edition, version, protocolVersion], { cwd: toolsJs })
+  exec(pm, ['run', 'build'], { cwd: toolsJs })
   const branchNameVersion = sanitizeBranch(version)
-  const branchName = `${edition}-${branchNameVersion}`
+  const branchName = `${edition}_${branchNameVersion}`
   const title = `🎈 Add Minecraft ${edition} ${version} data`
   // First, delete any existing branch
   try {

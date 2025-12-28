@@ -1,6 +1,11 @@
 name: Update Helper
 on:
   workflow_dispatch:
+    inputs:
+      createPr:
+        description: 'If provided, force create an update PR. JSON encoded payload {title, versionJson, latestVersionData, latestVersion}'
+        required: false
+        default: ''
   schedule:
     - cron: "0 */2 * * *"
 
@@ -24,3 +29,4 @@ jobs:
       working-directory: .github/helper-bot
       env:
         GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+        FORCE_CREATE_PR: ${{ github.event.inputs.createPr }}
