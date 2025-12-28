@@ -1,3 +1,8 @@
+## 3.102.3
+* [bedrock protocol: use ZigZag64 instead of VarInt64 in packet_player_location (#1081)](https://github.com/PrismarineJS/minecraft-data/commit/803fce17e9cbefdba4013a772698c68a7792bb7f) (thanks @Snowbelldog)
+* [pc: Fix packet_explosion partial packet issue 1.21.4 - 1.21.8 (#1114)](https://github.com/PrismarineJS/minecraft-data/commit/c7048f26a8f60f75f3634817b4507bc49b575fae) (thanks @Rohan2460)
+* [bedrock: Fix 1.21.130 protocol command request origin (#1132)](https://github.com/PrismarineJS/minecraft-data/commit/d8ac281faba737d27bccc627ca0e1bd9b5231315) (thanks @mc-zuri)
+
 ## 3.102.2
 * [Revert "bedrock: fix type for packet_command_request.version in 1.21.130 (#1127)" (#1133)](https://github.com/PrismarineJS/minecraft-data/commit/96cb35679d536f2811d765b2f3bbcb7dc2855ac4) (thanks @extremeheat)
 
