@@ -2277,39 +2277,18 @@ client-side after the response is sent to the client.</p></td></tr>
     
 <p></p>
 <table class='table-bordered'><thead><tr><td>Field Name</td><td>Field Type</td><td>Notes</td></tr></thead>
-<tr><td class='name field-name'>type </td><td colspan=2  class="vpad"><div style='padding:8px'>varint <span class='tag tag-enum'>enum</span></div><table>
-  <tr><td class='name'>0</td><td class='name'>player</td><td><p>Origin is one of the values above that specifies the origin of the command. The origin may change,
+<tr><td class='field-name name'>type </td><td>string</td><td><p>Origin is one of the values above that specifies the origin of the command. The origin may change,
 depending on what part of the client actually called the command. The command may be issued by a
 websocket server, for example.</p></td></tr>
-  <tr><td class='name'>1</td><td class='name'>block</td><td></td></tr>
-  <tr><td class='name'>2</td><td class='name'>minecart block</td><td></td></tr>
-  <tr><td class='name'>3</td><td class='name'>dev console</td><td></td></tr>
-  <tr><td class='name'>4</td><td class='name'>test</td><td></td></tr>
-  <tr><td class='name'>5</td><td class='name'>automation player</td><td></td></tr>
-  <tr><td class='name'>6</td><td class='name'>client automation</td><td></td></tr>
-  <tr><td class='name'>7</td><td class='name'>dedicated server</td><td></td></tr>
-  <tr><td class='name'>8</td><td class='name'>entity</td><td></td></tr>
-  <tr><td class='name'>9</td><td class='name'>virtual</td><td></td></tr>
-  <tr><td class='name'>10</td><td class='name'>game argument</td><td></td></tr>
-  <tr><td class='name'>11</td><td class='name'>entity server</td><td></td></tr>
-  <tr><td class='name'>12</td><td class='name'>precompiled</td><td></td></tr>
-  <tr><td class='name'>13</td><td class='name'>game director entity server</td><td></td></tr>
-  <tr><td class='name'>14</td><td class='name'>script</td><td></td></tr>
-  <tr><td class='name'>15</td><td class='name'>executor</td><td></td></tr>
-</table></td></tr>
 <tr><td class='field-name name'>uuid </td><td>uuid</td><td><p>UUID is the UUID of the command called. This UUID is a bit odd as it is not specified by the server. It
 is not clear what exactly this UUID is meant to identify, but it is unique for each command called.</p></td></tr>
 <tr><td class='field-name name'>request id </td><td>string</td><td><p>RequestID is an ID that identifies the request of the client. The server should send a CommandOrigin
 with the same request ID to ensure it can be matched with the request by the caller of the command.
 This is especially important for websocket servers and it seems that this field is only non-empty for
 these websocket servers.</p></td></tr>
-<tr><td><b class='name'>player entity id</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
-<tr><td class='name'><span class='fake'>is dev console or test</span> </td><td colspan=2 class='bordered'><table>
-<tr><td class='field-name name'>player entity id </td><td>zigzag64</td><td><p>PlayerUniqueID is an ID that identifies the player, the same as the one found in the AdventureSettings
+<tr><td class='field-name name'>player entity id </td><td>li64</td><td><p>PlayerUniqueID is an ID that identifies the player, the same as the one found in the AdventureSettings
 packet. Filling it out with 0 seems to work.
 PlayerUniqueID is only written if Origin is CommandOriginDevConsole or CommandOriginTest.</p></td></tr>
-</table></td></tr>
-</table></td></tr>
 </table><br/><hr/><br/>
 <div class="packet-header" id="TrackedObject">
 <a href="#TrackedObject"><div class='packet-id bound-datatype'>Type</div><div class='packet-name name'>TrackedObject</div></a>
@@ -8770,7 +8749,7 @@ PlayerUpdateEntityOverridesTypeFloat.</p></td></tr>
   <tr><td class='name'>0</td><td class='name'>coordinates</td><td><p>Type is the action that is being performed. It is one of the constants above.</p></td></tr>
   <tr><td class='name'>1</td><td class='name'>type hide</td><td></td></tr>
 </table></td></tr>
-<tr><td class='field-name name'>entity unique id </td><td>varint64</td><td></td></tr>
+<tr><td class='field-name name'>entity unique id </td><td>zigzag64</td><td></td></tr>
 <tr><td><b class='name'>position</b><br/><br/><i><div class='tag tag-switch'>if <span class='name'>type</span></div></i></td><td colspan=2><table>
 <tr><td class='field-name name'><span class='fake'>is coordinates</span> </td><td><a href="#vec3f">vec3f</a></td><td></td></tr>
 </table></td></tr>
