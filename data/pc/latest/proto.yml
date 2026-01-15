@@ -33,6 +33,7 @@
    anonOptionalNbt: native
    registryEntryHolder: native
    registryEntryHolderSet: native
+   lpVec3: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: ["pstring", { "countType": "varint" }]
    vec2f:
@@ -347,9 +348,10 @@
             material: ["registryEntryHolder", { "baseName": "materialId", "otherwise": { "name": "data", "type": "ArmorTrimMaterial" } }]
             pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "ArmorTrimPattern" } }]
          if debug_stick_state: anonymousNbt
-         if entity_data: anonymousNbt
+         if entity_data or block_entity_data:
+            type: varint
+            data: anonymousNbt
          if bucket_entity_data: anonymousNbt
-         if block_entity_data: anonymousNbt
          if instrument:
             hasHolder: bool
             data: hasHolder ?
@@ -370,26 +372,14 @@
          if recipes: anonymousNbt
          if lodestone_tracker:
             # Specified if this lodestone points to a position; otherwise it spins randomly.
-            globalPosition?:
-               dimension: string
-               # The position the compass points to. Only present if Has Global Position is true.
-               position: position
+            globalPosition?: GlobalPos
             # Whether the component is removed when the associated lodestone is broken.
             tracked: bool
          if firework_explosion: ItemFireworkExplosion
          if fireworks:
             flightDuration: varint
             explosions: ItemFireworkExplosion[]varint
-         if profile:
-            # If the profile has a name, max 16 characters.
-            name?: string
-            uuid?: UUID
-            properties: []varint
-               # Max 64 characters
-               name: string
-               value: string
-               # Max 1024 characters
-               signature?: string
+         if profile: ResolvableProfile
          if note_block_sound: string
          if banner_patterns:
             layers: BannerPatternLayer[]varint
@@ -600,6 +590,208 @@
          hash: i32
       removeComponents: []varint
          type: SlotComponentType
+   
+   RespawnData:
+      globalPos: GlobalPos
+      yaw: f32
+      pitch: f32
+
+   GlobalPos:
+      dimensionName: string
+      location: position
+
+   DebugStructureInfo:
+      boundingBoxMin: position
+      boundingBoxMax: position
+      pieces: []varint
+         boundingBoxMin: position
+         boundingBoxMax: position
+         isStart: bool
+      
+   Node:
+      x: i32
+      y: i32
+      z: i32
+      walkedDistance: f32
+      costMalus: f32
+      closed: bool
+      type: varint =>
+         - blocked
+         - open
+         - walkable
+         - walkable_door
+         - trapdoor
+         - powder_snow
+         - danger_powder_snow
+         - fence
+         - lava
+         - water
+         - water_border
+         - rail
+         - unpassable_rail
+         - danger_fire
+         - damage_fire
+         - danger_other
+         - damage_other
+         - door_open
+         - door_wood_closed
+         - door_iron_closed
+         - breach
+         - leaves
+         - sticky_honey
+         - cocoa
+         - damage_cautious
+         - danger_trapdoor
+      f: f32
+      
+   PathDebugData:
+      openSet: Node[]varint
+      closedSet: Node[]varint
+      targetNodes: Node[]varint
+      
+   Path:
+      reached: bool
+      nextNodeIndex: i32
+      target: position
+      nodes: Node[]varint
+      debugData: PathDebugData
+
+   DebugSubscriptionDataType: varint =>
+      - DedicatedServerTickTime
+      - Bees
+      - Brains
+      - Breezes
+      - GoalSelectors
+      - EntityPaths
+      - EntityBlockIntersections
+      - BeeHives
+      - Pois
+      - RedstoneWireOrientations
+      - VillageSections
+      - Raids
+      - Structures
+      - GameEventListeners
+      - NeighborUpdates
+      - GameEvents
+
+   DebugSubscriptionUpdate:
+      type: DebugSubscriptionDataType
+      value?: type ?
+         if DedicatedServerTickTime or VillageSections: void
+         if Bees: # DebugSubscriptionDataBeeInfo
+            hivePos?: position
+            flowerPos?: position
+            travelTicks: varint
+            blacklistedHives: position[]varint
+         if Brains: # DebugSubscriptionDataBrainDump
+            name: string
+            profession: string
+            xp: i32
+            health: f32
+            maxHealth: f32
+            inventory: string
+            wantsGolem: bool
+            angerLevel: i32
+            activities: string[]varint
+            behaviors: string[]varint
+            memories: string[]varint
+            gossips: string[]varint
+            pois: position[]varint
+            potentialPois: position[]varint
+         if Breezes: # DebugSubscriptionDataBreezeInfo
+            attackTarget?: varint
+            jumpTarget?: position
+         if GoalSelectors: # DebugSubscriptionDataGoalInfo
+            goals: []varint
+               priority: varint
+               running: bool
+               name: string
+         if EntityPaths: # DebugSubscriptionDataPathInfo
+            path: Path
+            maxNodeDistance: f32
+         if EntityBlockIntersections: # DebugSubscriptionDataEntityBlockIntersection
+            id: varint
+         if BeeHives: # DebugSubscriptionDataHiveInfo
+            type: varint
+            occupantCount: varint
+            honeyLevel: varint
+            sedated: bool
+         if Pois: # DebugSubscriptionDataPoiInfo
+            pos: position
+            poiType: varint
+            freeTicketCount: varint
+         if RedstoneWireOrientations: # DebugSubscriptionDataOrientation
+            index: varint
+         if Raids: # DebugSubscriptionDataRaids
+            positions: position[]varint
+         if Structures: # DebugSubscriptionDataStructures
+            structures: DebugStructureInfo[]varint
+         if GameEventListeners: # DebugSubscriptionDataGameEventListenerInfo
+            listenerRadius: varint
+         if NeighborUpdates: # DebugSubscriptionDataNeighbor
+            pos: position
+         if GameEvents: # DebugSubscriptionDataGameEventInfo
+            event: varint
+            pos: vec3f64
+         
+   DebugSubscriptionEvent:
+      type: DebugSubscriptionDataType
+      value: type ?
+         if DedicatedServerTickTime or VillageSections: void
+         if Bees: # DebugSubscriptionDataBeeInfo
+            hivePos?: position
+            flowerPos?: position
+            travelTicks: varint
+            blacklistedHives: position[]varint
+         if Brains: # DebugSubscriptionDataBrainDump
+            name: string
+            profession: string
+            xp: i32
+            health: f32
+            maxHealth: f32
+            inventory: string
+            wantsGolem: bool
+            angerLevel: i32
+            activities: string[]varint
+            behaviors: string[]varint
+            memories: string[]varint
+            gossips: string[]varint
+            pois: position[]varint
+            potentialPois: position[]varint
+         if Breezes: # DebugSubscriptionDataBreezeInfo
+            attackTarget?: varint
+            jumpTarget?: position
+         if GoalSelectors: # DebugSubscriptionDataGoalInfo
+            priority: varint
+            running: bool
+            name: string
+         if EntityPaths: # DebugSubscriptionDataPathInfo
+            path: Path
+            maxNodeDistance: f32
+         if EntityBlockIntersections: # DebugSubscriptionDataEntityBlockIntersection
+            id: varint
+         if BeeHives: # DebugSubscriptionDataHiveInfo
+            type: varint
+            occupantCount: varint
+            honeyLevel: varint
+            sedated: bool
+         if Pois: # DebugSubscriptionDataPoiInfo
+            pos: position
+            poiType: varint
+            freeTicketCount: varint
+         if RedstoneWireOrientations: # DebugSubscriptionDataOrientation
+            index: varint
+         if Raids: # DebugSubscriptionDataRaids
+            positions: position[]varint
+         if Structures: # DebugSubscriptionDataStructures
+            structures: DebugStructureInfo[]varint
+         if GameEventListeners: # DebugSubscriptionDataGameEventListenerInfo
+            listenerRadius: varint
+         if NeighborUpdates: # DebugSubscriptionDataNeighbor
+            pos: position
+         if GameEvents: # DebugSubscriptionDataGameEventInfo
+            event: varint
+            pos: vec3f64
 
    Particle:
       # See client/net/minecraft/core/particles/ParticleTypes.java
@@ -609,6 +801,7 @@
          - block_marker
          - bubble
          - cloud
+         - copper_fire_flame
          - crit
          - damage_indicator
          - dragon_breath
@@ -766,6 +959,12 @@
             color: u8
          if tinted_leaves: i32
          if firefly: void
+         if dragon_breath:
+            power: f32
+         if effect or instant_effect:
+            color: i32
+            power: f32
+         if flash: i32
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -831,7 +1030,6 @@
       - optional_uuid
       - block_state
       - optional_block_state
-      - compound_tag
       - particle
       - particles
       - villager_data
@@ -848,8 +1046,11 @@
       - painting_variant
       - sniffer_state
       - armadillo_state
+      - copper_golem_state
+      - weathering_copper_golem_state
       - vector3
       - quaternion
+      - resolvable_profile
       value: type ?
          if byte: i8
          if int: varint
@@ -870,7 +1071,6 @@
          if optional_uuid: ["option", "UUID"]
          if block_state: varint
          if optional_block_state: optvarint
-         if compound_tag: anonymousNbt
          if particle: Particle
          if particles: Particle[]varint
          if villager_data:
@@ -893,8 +1093,11 @@
          }]
          if sniffer_state: varint
          if armadillo_state: varint
+         if copper_golem_state: varint
+         if weathering_copper_golem_state: varint
          if vector3: vec3f
          if quaternion: vec4f
+         if resolvable_profile: ResolvableProfile
    EntityMetadataPaintingVariant:
       width: i32
       height: i32
@@ -942,10 +1145,34 @@
          ]
    game_profile:
       name: string
-      properties: []varint
-         name: string
-         value: string
-         signature?: string
+      properties: GameProfileProperty[]varint
+   GameProfileProperty:
+      name: string
+      value: string
+      signature?: string
+   ResolvableProfile:
+      type: varint =>
+         - partial
+         - complete
+      _: type ?
+         if partial: PartialResolvableProfile
+         if complete: GameProfile
+      skinPatch: PlayerSkinPatch
+   PartialResolvableProfile:
+      name?: string
+      uuid?: UUID
+      properties: GameProfileProperty[]varint
+   GameProfile:
+      uuid: UUID
+      name: string
+      properties: GameProfileProperty[]varint
+   PlayerSkinPatch:
+      body?: string
+      cape?: string
+      elytra?: string
+      model?: varint =>
+         - wide
+         - slim
    command_node:
       flags: [
          "bitfield",
@@ -1470,6 +1697,9 @@
          if cookie_response: packet_common_cookie_response
 ^configuration.toClient.types:
    ## (Cookie Request is common)
+   # MC: ClientboundCodeOfConductPacket
+   packet_code_of_conduct:
+      codeOfConduct: string
    # MC: ClientboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
@@ -1530,6 +1760,7 @@
          - server_links
          - clear_dialog
          - show_dialog
+         - code_of_conduct
       params: name ?
          if cookie_request: packet_common_cookie_request
          if custom_payload: packet_custom_payload
@@ -1550,9 +1781,13 @@
          if server_links: packet_common_server_links
          if clear_dialog: packet_common_clear_dialog
          if show_dialog: packet_show_dialog
+         if code_of_conduct: packet_code_of_conduct
 ^configuration.toServer.types:
    ## (Settings is Common) ##
    ## (Cookie Response is Common) ##
+   # MC: ServerboundAcceptCodeOfConductPacket
+   packet_accept_code_of_conduct:
+      # Empty
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
@@ -1581,6 +1816,7 @@
          - resource_pack_receive
          - select_known_packs
          - custom_click_action
+         - accept_code_of_conduct
       params: name ?
          if settings: packet_common_settings
          if cookie_response: packet_common_cookie_response
@@ -1591,6 +1827,7 @@
          if resource_pack_receive: packet_resource_pack_receive
          if select_known_packs: packet_common_select_known_packs
          if custom_click_action: packet_common_custom_click_action
+         if accept_code_of_conduct: packet_accept_code_of_conduct
 ^play.toClient.types:
    SlotDisplay:
       type: varint =>
@@ -1663,11 +1900,13 @@
       previousGamemode: u8
       isDebug: bool
       isFlat: bool
-      death?:
-         dimensionName: string
-         location: position
+      death?: GlobalPos
       portalCooldown: varint
       seaLevel: varint
+   ExplosionParticleInfo:
+      particle: Particle
+      scaling: f32
+      speed: f32
 
    # MC: ClientboundAddEntityPacket
    packet_spawn_entity:
@@ -1677,13 +1916,11 @@
       x: f64
       y: f64
       z: f64
+      movement: lpVec3
       pitch: i8
       yaw: i8
       headPitch: i8
       objectData: varint
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
    # MC: ClientboundAnimatePacket
    packet_animation:
       entityId: varint
@@ -1816,6 +2053,21 @@
       sourceCauseId: varint
       sourceDirectId: varint
       sourcePosition?: vec3f64
+   # MC: ClientboundDebugBlockValuePacket
+   packet_debug_block_value:
+      blockPos: position
+      update: DebugSubscriptionUpdate
+   # MC: ClientboundDebugChunkValuePacket
+   packet_debug_chunk_value:
+      chunkPos: position
+      update: DebugSubscriptionUpdate
+   # MC: ClientboundEntityEntityValuePacket
+   packet_debug_entity_value:
+      entityId: varint
+      update: DebugSubscriptionUpdate
+   # MC: ClientboundDebugEventPacket
+   packet_debug_event:
+      event: DebugSubscriptionEvent
    # MC: ClientboundDebugSamplePacket
    packet_debug_sample:
       sample: i64[]varint
@@ -1874,12 +2126,13 @@
       onGround: bool
    # MC: ClientboundExplodePacket
    packet_explosion:
-      x: f64
-      y: f64
-      z: f64
-      playerKnockback?: vec3f
+      center: vec3f64
+      radius: f32
+      blockCount: i32
+      playerKnockback?: vec3f64
       explosionParticle: Particle
       sound: ItemSoundHolder
+      blockParticles: ExplosionParticleInfo[]varint
    # MC: ClientboundForgetLevelChunkPacket
    packet_unload_chunk:
       chunkZ: i32
@@ -1902,6 +2155,10 @@
          12: limited_crafting
          13: level_chunks_load_start
       gameMode: f32
+   # MC: ClientboundGameTestHighlightPosPacket
+   packet_game_test_highlight_pos:
+      absolutePos: position
+      relativePos: position
    # MC: ClientboundHorseScreenOpenPacket
    packet_open_horse_window:
       windowId: ContainerID
@@ -2223,7 +2480,9 @@
    # MC: ClientboundPlayerRotationPacket
    packet_player_rotation:
       yaw: f32
+      relativeYaw: bool
       pitch: f32
+      relativePitch: bool
 
    # MC: ClientboundRecipeBookAddPacket
    packet_recipe_book_add:
@@ -2337,9 +2596,7 @@
    packet_set_cursor_item:
       contents: Slot
    # MC: ClientboundSetDefaultSpawnPositionPacket
-   packet_spawn_position:
-      location: position
-      angle: f32
+   packet_spawn_position: RespawnData
    # MC: ClientboundSetDisplayObjectivePacket
    packet_scoreboard_display_objective:
       position: varint
@@ -2355,9 +2612,7 @@
    # MC: ClientboundSetEntityMotionPacket
    packet_entity_velocity:
       entityId: varint
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
+      movement: lpVec3
    # MC: ClientboundSetEquipmentPacket
    packet_entity_equipment:
       entityId: varint
@@ -2733,6 +2988,10 @@
       - chat_suggestions
       - custom_payload
       - damage_event
+      - debug_block_value
+      - debug_chunk_value
+      - debug_entity_value
+      - debug_event
       - debug_sample
       - hide_message
       - kick_disconnect
@@ -2742,6 +3001,7 @@
       - explosion
       - unload_chunk
       - game_state_change
+      - game_test_highlight_pos
       - open_horse_window
       - hurt_animation
       - initialize_world_border
@@ -2868,6 +3128,10 @@
          if chat_suggestions: packet_chat_suggestions
          if custom_payload: packet_custom_payload
          if damage_event: packet_damage_event
+         if debug_block_value: packet_debug_block_value
+         if debug_chunk_value: packet_debug_chunk_value
+         if debug_entity_value: packet_debug_entity_value
+         if debug_event: packet_debug_event
          if debug_sample: packet_debug_sample
          if hide_message: packet_hide_message
          if kick_disconnect: packet_kick_disconnect
@@ -2877,6 +3141,7 @@
          if explosion: packet_explosion
          if unload_chunk: packet_unload_chunk
          if game_state_change: packet_game_state_change
+         if game_test_highlight_pos: packet_game_test_highlight_pos
          if open_horse_window: packet_open_horse_window
          if hurt_animation: packet_hurt_animation
          if initialize_world_border: packet_initialize_world_border
@@ -2976,7 +3241,6 @@
          if tracked_waypoint: packet_tracked_waypoint
          if clear_dialog: packet_common_clear_dialog
          if show_dialog: packet_show_dialog
-
 ^play.toServer.types:
    # MC: ServerboundAcceptTeleportationPacket
    packet_teleport_confirm:
@@ -3099,9 +3363,9 @@
    packet_custom_payload:
       channel: string
       data: restBuffer
-   # MC: ServerboundDebugSampleSubscriptionPacket
-   packet_debug_sample_subscription:
-      type: varint
+   # MC: ServerboundDebugSubscriptionRequestPacket
+   packet_debug_subscription_request:
+      subscriptions: DebugSubscriptionDataType[]varint
    # MC: ServerboundEditBookPacket
    packet_edit_book:
       hand: varint
@@ -3381,7 +3645,7 @@
       - set_slot_state
       - cookie_response
       - custom_payload
-      - debug_sample_subscription
+      - debug_subscription_request
       - edit_book
       - query_entity_nbt
       - use_entity
@@ -3448,7 +3712,7 @@
          if set_slot_state: packet_set_slot_state
          if cookie_response: packet_common_cookie_response
          if custom_payload: packet_custom_payload
-         if debug_sample_subscription: packet_debug_sample_subscription
+         if debug_subscription_request: packet_debug_subscription_request
          if edit_book: packet_edit_book
          if query_entity_nbt: packet_query_entity_nbt
          if use_entity: packet_use_entity
