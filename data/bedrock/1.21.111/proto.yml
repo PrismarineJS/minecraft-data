@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.100
+!version: 1.21.111
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -340,7 +340,7 @@ packet_start_game:
    # Defines game rules currently active with their respective values. The value of these game
    #  rules may be either 'bool', 'Int32' or 'Float32'. Some game rules are server side only,
    #  and don't necessarily need to be sent to the client.
-   gamerules: GameRules
+   gamerules: GameRuleVarint[]varint
    experiments: Experiments
    experiments_previously_used: bool
    # Specifies if the world had the bonus map setting enabled when generating it.
@@ -724,6 +724,7 @@ packet_level_sound_event_old:
    is_baby_mob: bool
    is_global: bool
 
+# TODO: Check and verify old versions
 packet_level_event:
    !id: 0x19
    !bound: client
@@ -835,6 +836,13 @@ packet_level_event:
       3613: particle_trial_spawner_ejecting
       3614: particle_wind_explosion
       3615: particle_wolf_armor_break
+      3616: ominous_item_spawner
+      3617: creaking_crumble
+      3618: pale_oak_leaves
+      3619: eyeblossom_open
+      3620: eyeblossom_close
+      3621: green_flame
+      #
       4000: set_data
       9800: players_sleeping
       9801: sleeping_players
@@ -1679,7 +1687,7 @@ packet_chunk_radius_update:
 packet_game_rules_changed:
    !id: 0x48
    !bound: client
-   rules: GameRules
+   rules: GameRuleI32[]varint
 
 # Camera is sent by the server to use an Education Edition camera on a player. It produces an image
 # client-side.
@@ -1781,7 +1789,7 @@ packet_available_commands:
    # If the values_len < 0xff => byte,
    # If the values_len < 0xffff => short,
    # If the values_len < 0xffffff => int
-   _enum_type: '["enum_size_based_on_values_len"]'
+   _enum_type: ["enum_size_based_on_values_len"]
    # Here all the enum values for all of the possible commands are stored to one array palette
    enum_values: string[]$values_len
    # chained_subcommand_values is a slice of all chained subcommand names. chained_subcommand_values generally should
@@ -3320,33 +3328,16 @@ packet_item_stack_response:
 packet_player_armor_damage:
    !id: 0x95
    !bound: client
-   # Bitset holds a bitset of 4 bits that indicate which pieces of armour need to have damage dealt to them.
-   # The first bit, when toggled, is for a helmet, the second for the chestplate, the third for the leggings
-   # and the fourth for boots.
-   type: ArmorDamageType
-   helmet_damage: type.head ?
-      if true: zigzag32
-   chestplate_damage: type.chest ?
-      if true: zigzag32
-   leggings_damage: type.legs ?
-      if true: zigzag32
-   boots_damage: type.feet ?
-      if true: zigzag32
-   body_damage: type.body ?
-      if true: zigzag32
+   entries:  ArmorDamageEntry[]varint
 
-ArmorDamageType: [ "bitflags",
-   {
-      "type": "u8",
-      "flags": {
-         "head": 0b1,
-         "chest": 0b10,
-         "legs": 0b100,
-         "feet": 0b1000,
-         "body": 0b10000
-      }
-   }
-]
+ArmorDamageEntry:
+   armor_slot: u8 =>
+      0: helmet
+      1: chestplate
+      2: leggings
+      3: boots
+      4: body
+   damage: li16
 
 # CodeBuilder is an Education Edition packet sent by the server to the client to open the URL to a Code
 # Builder (websocket) server.
@@ -4571,3 +4562,19 @@ packet_server_script_debug_drawer:
       arrow_head_length?: lf32
       arrow_head_radius?: lf32
       segment_count?: u8
+
+# ServerBoundPackSettingChange
+packet_serverbound_pack_setting_change:
+   !id: 0x149
+   !bound: server
+   pack_id: uuid
+   pack_setting:
+      name: string
+      type: u8 =>
+         - float
+         - bool
+         - string
+      value: type ?
+         if float: lf32
+         if bool: bool
+         if string: string
