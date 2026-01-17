@@ -1739,9 +1739,6 @@
    # MC: ClientboundShowDialogConfigurationPacket
    packet_show_dialog:
       dialog: anonymousNbt
-   # MC: ClientboundCodeOfConductPacket
-   packet_code_of_conduct:
-      codeOfConduct: string
    packet:
       name: varint =>
          - cookie_request
@@ -1808,9 +1805,6 @@
    packet_resource_pack_receive:
       uuid: UUID
       result: varint
-   # MC: ServerboundAcceptCodeOfConductPacket
-   packet_accept_code_of_conduct:
-      # Empty
    packet:
       name: varint =>
          - settings
@@ -2065,8 +2059,7 @@
       update: DebugSubscriptionUpdate
    # MC: ClientboundDebugChunkValuePacket
    packet_debug_chunk_value:
-      chunkX: i32
-      chunkZ: i32
+      chunkPos: packedChunkPos
       update: DebugSubscriptionUpdate
    # MC: ClientboundEntityEntityValuePacket
    packet_debug_entity_value:
@@ -2079,10 +2072,6 @@
    packet_debug_sample:
       sample: i64[]varint
       type: varint
-   # MC: ClientboundGameTestHighlightPosPacket
-   packet_game_test_highlight_pos:
-      absolutePos: position
-      relativePos: position
    # MC: ClientboundDeleteChatPacket
    packet_hide_message:
       id: varint
