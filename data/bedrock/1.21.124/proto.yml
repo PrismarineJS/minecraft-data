@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.21.111
+!version: 1.21.124
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -1017,6 +1017,7 @@ packet_entity_event:
       76: grow_up
       77: vibration_detected
       78: drink_milk
+      79: wetness_stop
    data: zigzag32
 
 packet_mob_effect:
@@ -1202,9 +1203,11 @@ packet_animate:
       # See Player Auth Input for how to compute this in the latest protocol.
       129: row_left
    runtime_entity_id: varint64
+   # Data holds an action-specific value whose meaning depends on the animation type.
+   data: lf32
    _: action_id ?
       if row_right or row_left:
-         boat_rowing_time: lf32
+         rowing_time: lf32
 
 packet_respawn:
    !id: 0x2d
@@ -2250,11 +2253,10 @@ packet_structure_block_update:
 packet_show_store_offer:
    !id: 0x5b
    !bound: client
-   # OfferID is a string that identifies the offer for which a window should be opened. While typically a
-   # UUID, the ID could be anything.
-   offer_id: string
+   # OfferUUID is a UUID that identifies the offer for which a window should be opened.
+   offer_uuid: uuid
    # ShowAll specifies if all other offers of the same 'author' as the one of the offer associated with the
-   # OfferID should also be displayed, alongside the target offer.
+   # OfferUUID should also be displayed, alongside the target offer.
    redirect_type: u8 =>
       0: marketplace
       1: dressing_room
@@ -4171,6 +4173,9 @@ packet_camera_instruction:
       ease_time: lf32
       ease_type: EaseType
       clear: bool
+   spline?: CameraSplineInstruction
+   attach_to_entity?: li64
+   detach_from_entity?: bool
 
 # Removed in 1.21.80
 packet_compressed_biome_definitions:
@@ -4539,6 +4544,7 @@ packet_clientbound_controls_scheme:
       - player_relative
       - player_relative_strafe
 
+# ServerScriptDebugDrawer instructs the client to render debug shapes for development visualisations.
 packet_server_script_debug_drawer:
    !id: 0x148
    !bound: server
@@ -4578,3 +4584,11 @@ packet_serverbound_pack_setting_change:
          if float: lf32
          if bool: bool
          if string: string
+
+packet_graphics_override_parameter:
+   !id: 0x14b
+   !bound: client
+   values: ParameterKeyframeValue[]varint
+   biome_identifier: string
+   parameter_type: GraphicsOverrideParameterType
+   reset: bool
