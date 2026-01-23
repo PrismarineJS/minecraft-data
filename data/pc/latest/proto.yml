@@ -676,63 +676,66 @@
 
    DebugSubscriptionUpdate:
       type: DebugSubscriptionDataType
-      value?: type ?
-         if DedicatedServerTickTime or VillageSections: void
-         if Bees: # DebugSubscriptionDataBeeInfo
-            hivePos?: position
-            flowerPos?: position
-            travelTicks: varint
-            blacklistedHives: position[]varint
-         if Brains: # DebugSubscriptionDataBrainDump
-            name: string
-            profession: string
-            xp: i32
-            health: f32
-            maxHealth: f32
-            inventory: string
-            wantsGolem: bool
-            angerLevel: i32
-            activities: string[]varint
-            behaviors: string[]varint
-            memories: string[]varint
-            gossips: string[]varint
-            pois: position[]varint
-            potentialPois: position[]varint
-         if Breezes: # DebugSubscriptionDataBreezeInfo
-            attackTarget?: varint
-            jumpTarget?: position
-         if GoalSelectors: # DebugSubscriptionDataGoalInfo
-            goals: []varint
-               priority: varint
-               running: bool
-               name: string
-         if EntityPaths: # DebugSubscriptionDataPathInfo
-            path: Path
-            maxNodeDistance: f32
-         if EntityBlockIntersections: # DebugSubscriptionDataEntityBlockIntersection
-            id: varint
-         if BeeHives: # DebugSubscriptionDataHiveInfo
-            type: varint
-            occupantCount: varint
-            honeyLevel: varint
-            sedated: bool
-         if Pois: # DebugSubscriptionDataPoiInfo
-            pos: position
-            poiType: varint
-            freeTicketCount: varint
-         if RedstoneWireOrientations: # DebugSubscriptionDataOrientation
-            index: varint
-         if Raids: # DebugSubscriptionDataRaids
-            positions: position[]varint
-         if Structures: # DebugSubscriptionDataStructures
-            structures: DebugStructureInfo[]varint
-         if GameEventListeners: # DebugSubscriptionDataGameEventListenerInfo
-            listenerRadius: varint
-         if NeighborUpdates: # DebugSubscriptionDataNeighbor
-            pos: position
-         if GameEvents: # DebugSubscriptionDataGameEventInfo
-            event: varint
-            pos: vec3f64
+      _: type ?
+         if DedicatedServerTickTime: void
+         default:
+            payload?: type ?
+               if DedicatedServerTickTime or VillageSections: void
+               if Bees: # DebugSubscriptionDataBeeInfo
+                  hivePos?: position
+                  flowerPos?: position
+                  travelTicks: varint
+                  blacklistedHives: position[]varint
+               if Brains: # DebugSubscriptionDataBrainDump
+                  name: string
+                  profession: string
+                  xp: i32
+                  health: f32
+                  maxHealth: f32
+                  inventory: string
+                  wantsGolem: bool
+                  angerLevel: i32
+                  activities: string[]varint
+                  behaviors: string[]varint
+                  memories: string[]varint
+                  gossips: string[]varint
+                  pois: position[]varint
+                  potentialPois: position[]varint
+               if Breezes: # DebugSubscriptionDataBreezeInfo
+                  attackTarget?: varint
+                  jumpTarget?: position
+               if GoalSelectors: # DebugSubscriptionDataGoalInfo
+                  goals: []varint
+                     priority: varint
+                     running: bool
+                     name: string
+               if EntityPaths: # DebugSubscriptionDataPathInfo
+                  path: Path
+                  maxNodeDistance: f32
+               if EntityBlockIntersections: # DebugSubscriptionDataEntityBlockIntersection
+                  id: varint
+               if BeeHives: # DebugSubscriptionDataHiveInfo
+                  type: varint
+                  occupantCount: varint
+                  honeyLevel: varint
+                  sedated: bool
+               if Pois: # DebugSubscriptionDataPoiInfo
+                  pos: position
+                  poiType: varint
+                  freeTicketCount: varint
+               if RedstoneWireOrientations: # DebugSubscriptionDataOrientation
+                  index: varint
+               if Raids: # DebugSubscriptionDataRaids
+                  positions: position[]varint
+               if Structures: # DebugSubscriptionDataStructures
+                  structures: DebugStructureInfo[]varint
+               if GameEventListeners: # DebugSubscriptionDataGameEventListenerInfo
+                  listenerRadius: varint
+               if NeighborUpdates: # DebugSubscriptionDataNeighbor
+                  pos: position
+               if GameEvents: # DebugSubscriptionDataGameEventInfo
+                  event: varint
+                  pos: vec3f64
          
    DebugSubscriptionEvent:
       type: DebugSubscriptionDataType
@@ -1143,8 +1146,18 @@
                "countType": "varint"
             }
          ]
-   game_profile:
+   # No UUID
+   game_profile_name_prop:
       name: string
+      properties: GameProfileProperty[]varint
+   # With UUID
+   GameProfile:
+      uuid: UUID
+      name: string
+      properties: GameProfileProperty[]varint
+   PartialResolvableProfile:
+      name?: string
+      uuid?: UUID
       properties: GameProfileProperty[]varint
    GameProfileProperty:
       name: string
@@ -1158,14 +1171,6 @@
          if partial: PartialResolvableProfile
          if complete: GameProfile
       skinPatch: PlayerSkinPatch
-   PartialResolvableProfile:
-      name?: string
-      uuid?: UUID
-      properties: GameProfileProperty[]varint
-   GameProfile:
-      uuid: UUID
-      name: string
-      properties: GameProfileProperty[]varint
    PlayerSkinPatch:
       body?: string
       cape?: string
@@ -1903,10 +1908,6 @@
       death?: GlobalPos
       portalCooldown: varint
       seaLevel: varint
-   ExplosionParticleInfo:
-      particle: Particle
-      scaling: f32
-      speed: f32
 
    # MC: ClientboundAddEntityPacket
    packet_spawn_entity:
@@ -2124,6 +2125,13 @@
       yaw: f32
       pitch: f32
       onGround: bool
+   ExplosionParticleInfo:
+      particle: Particle
+      scaling: f32
+      speed: f32
+   ExplosionParticleEntry:
+      data: ExplosionParticleInfo
+      weight: varint
    # MC: ClientboundExplodePacket
    packet_explosion:
       center: vec3f64
@@ -2132,7 +2140,7 @@
       playerKnockback?: vec3f64
       explosionParticle: Particle
       sound: ItemSoundHolder
-      blockParticles: ExplosionParticleInfo[]varint
+      blockParticles: ExplosionParticleEntry[]varint
    # MC: ClientboundForgetLevelChunkPacket
    packet_unload_chunk:
       chunkZ: i32
@@ -2422,7 +2430,7 @@
       data: []varint
          uuid: UUID
          player: ../action/add_player ?
-            if true: game_profile
+            if true: game_profile_name_prop
             default: void
          chatSession: ../action/initialize_chat ?
             if true: chat_session
