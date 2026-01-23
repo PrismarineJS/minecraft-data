@@ -56,6 +56,10 @@
       x: varint
       y: varint
       z: varint
+   vec3i32:
+      x: i32
+      y: i32
+      z: i32
    IDSet: ["registryEntryHolderSet", {
       "base": { name: "name", type: "string" },
       "otherwise": { name: "ids", type: "varint" }
@@ -609,9 +613,7 @@
          isStart: bool
       
    Node:
-      x: i32
-      y: i32
-      z: i32
+      position: vec3i32
       walkedDistance: f32
       costMalus: f32
       closed: bool
@@ -1704,7 +1706,7 @@
    ## (Cookie Request is common)
    # MC: ClientboundCodeOfConductPacket
    packet_code_of_conduct:
-      codeOfConduct: string
+      contents: string
    # MC: ClientboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
@@ -2332,7 +2334,7 @@
       entityId: varint
       steps: []varint
          position: vec3f
-         movement: vec3f
+         velocity: vec3f
          yaw: f32
          pitch: f32
          weight: f32
@@ -2621,7 +2623,7 @@
    # MC: ClientboundSetEntityMotionPacket
    packet_entity_velocity:
       entityId: varint
-      movement: lpVec3
+      velocity: lpVec3
    # MC: ClientboundSetEquipmentPacket
    packet_entity_equipment:
       entityId: varint
