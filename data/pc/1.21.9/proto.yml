@@ -56,10 +56,6 @@
       x: varint
       y: varint
       z: varint
-   vec3i32:
-      x: i32
-      y: i32
-      z: i32
    IDSet: ["registryEntryHolderSet", {
       "base": { name: "name", type: "string" },
       "otherwise": { name: "ids", type: "varint" }
@@ -613,7 +609,9 @@
          isStart: bool
       
    Node:
-      position: vec3i32
+      x: i32
+      y: i32
+      z: i32
       walkedDistance: f32
       costMalus: f32
       closed: bool
@@ -678,66 +676,63 @@
 
    DebugSubscriptionUpdate:
       type: DebugSubscriptionDataType
-      _: type ?
-         if DedicatedServerTickTime: void
-         default:
-            payload?: type ?
-               if DedicatedServerTickTime or VillageSections: void
-               if Bees: # DebugSubscriptionDataBeeInfo
-                  hivePos?: position
-                  flowerPos?: position
-                  travelTicks: varint
-                  blacklistedHives: position[]varint
-               if Brains: # DebugSubscriptionDataBrainDump
-                  name: string
-                  profession: string
-                  xp: i32
-                  health: f32
-                  maxHealth: f32
-                  inventory: string
-                  wantsGolem: bool
-                  angerLevel: i32
-                  activities: string[]varint
-                  behaviors: string[]varint
-                  memories: string[]varint
-                  gossips: string[]varint
-                  pois: position[]varint
-                  potentialPois: position[]varint
-               if Breezes: # DebugSubscriptionDataBreezeInfo
-                  attackTarget?: varint
-                  jumpTarget?: position
-               if GoalSelectors: # DebugSubscriptionDataGoalInfo
-                  goals: []varint
-                     priority: varint
-                     running: bool
-                     name: string
-               if EntityPaths: # DebugSubscriptionDataPathInfo
-                  path: Path
-                  maxNodeDistance: f32
-               if EntityBlockIntersections: # DebugSubscriptionDataEntityBlockIntersection
-                  id: varint
-               if BeeHives: # DebugSubscriptionDataHiveInfo
-                  type: varint
-                  occupantCount: varint
-                  honeyLevel: varint
-                  sedated: bool
-               if Pois: # DebugSubscriptionDataPoiInfo
-                  pos: position
-                  poiType: varint
-                  freeTicketCount: varint
-               if RedstoneWireOrientations: # DebugSubscriptionDataOrientation
-                  index: varint
-               if Raids: # DebugSubscriptionDataRaids
-                  positions: position[]varint
-               if Structures: # DebugSubscriptionDataStructures
-                  structures: DebugStructureInfo[]varint
-               if GameEventListeners: # DebugSubscriptionDataGameEventListenerInfo
-                  listenerRadius: varint
-               if NeighborUpdates: # DebugSubscriptionDataNeighbor
-                  pos: position
-               if GameEvents: # DebugSubscriptionDataGameEventInfo
-                  event: varint
-                  pos: vec3f64
+      value?: type ?
+         if DedicatedServerTickTime or VillageSections: void
+         if Bees: # DebugSubscriptionDataBeeInfo
+            hivePos?: position
+            flowerPos?: position
+            travelTicks: varint
+            blacklistedHives: position[]varint
+         if Brains: # DebugSubscriptionDataBrainDump
+            name: string
+            profession: string
+            xp: i32
+            health: f32
+            maxHealth: f32
+            inventory: string
+            wantsGolem: bool
+            angerLevel: i32
+            activities: string[]varint
+            behaviors: string[]varint
+            memories: string[]varint
+            gossips: string[]varint
+            pois: position[]varint
+            potentialPois: position[]varint
+         if Breezes: # DebugSubscriptionDataBreezeInfo
+            attackTarget?: varint
+            jumpTarget?: position
+         if GoalSelectors: # DebugSubscriptionDataGoalInfo
+            goals: []varint
+               priority: varint
+               running: bool
+               name: string
+         if EntityPaths: # DebugSubscriptionDataPathInfo
+            path: Path
+            maxNodeDistance: f32
+         if EntityBlockIntersections: # DebugSubscriptionDataEntityBlockIntersection
+            id: varint
+         if BeeHives: # DebugSubscriptionDataHiveInfo
+            type: varint
+            occupantCount: varint
+            honeyLevel: varint
+            sedated: bool
+         if Pois: # DebugSubscriptionDataPoiInfo
+            pos: position
+            poiType: varint
+            freeTicketCount: varint
+         if RedstoneWireOrientations: # DebugSubscriptionDataOrientation
+            index: varint
+         if Raids: # DebugSubscriptionDataRaids
+            positions: position[]varint
+         if Structures: # DebugSubscriptionDataStructures
+            structures: DebugStructureInfo[]varint
+         if GameEventListeners: # DebugSubscriptionDataGameEventListenerInfo
+            listenerRadius: varint
+         if NeighborUpdates: # DebugSubscriptionDataNeighbor
+            pos: position
+         if GameEvents: # DebugSubscriptionDataGameEventInfo
+            event: varint
+            pos: vec3f64
          
    DebugSubscriptionEvent:
       type: DebugSubscriptionDataType
@@ -1090,8 +1085,8 @@
          if wolf_sound_variant: varint
          if frog_variant: varint
          if pig_variant: varint
-         if chicken_variant: varint
-         if optional_global_pos: ["option", "GlobalPos"]
+         if chicken_variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
+         if optional_global_pos: ["option", "string"]
          if painting_variant: ["registryEntryHolder", {
             "baseName": "variantId",
             "otherwise": { name: "variantData", type: "EntityMetadataPaintingVariant" }
@@ -1148,18 +1143,8 @@
                "countType": "varint"
             }
          ]
-   # No UUID
-   game_profile_name_prop:
+   game_profile:
       name: string
-      properties: GameProfileProperty[]varint
-   # With UUID
-   GameProfile:
-      uuid: UUID
-      name: string
-      properties: GameProfileProperty[]varint
-   PartialResolvableProfile:
-      name?: string
-      uuid?: UUID
       properties: GameProfileProperty[]varint
    GameProfileProperty:
       name: string
@@ -1173,6 +1158,14 @@
          if partial: PartialResolvableProfile
          if complete: GameProfile
       skinPatch: PlayerSkinPatch
+   PartialResolvableProfile:
+      name?: string
+      uuid?: UUID
+      properties: GameProfileProperty[]varint
+   GameProfile:
+      uuid: UUID
+      name: string
+      properties: GameProfileProperty[]varint
    PlayerSkinPatch:
       body?: string
       cape?: string
@@ -1706,7 +1699,7 @@
    ## (Cookie Request is common)
    # MC: ClientboundCodeOfConductPacket
    packet_code_of_conduct:
-      contents: string
+      codeOfConduct: string
    # MC: ClientboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
@@ -1910,6 +1903,10 @@
       death?: GlobalPos
       portalCooldown: varint
       seaLevel: varint
+   ExplosionParticleInfo:
+      particle: Particle
+      scaling: f32
+      speed: f32
 
    # MC: ClientboundAddEntityPacket
    packet_spawn_entity:
@@ -1919,8 +1916,7 @@
       x: f64
       y: f64
       z: f64
-      # TODO: Rename old fields
-      velocity: lpVec3
+      movement: lpVec3
       pitch: i8
       yaw: i8
       headPitch: i8
@@ -2128,13 +2124,6 @@
       yaw: f32
       pitch: f32
       onGround: bool
-   ExplosionParticleInfo:
-      particle: Particle
-      scaling: f32
-      speed: f32
-   ExplosionParticleEntry:
-      data: ExplosionParticleInfo
-      weight: varint
    # MC: ClientboundExplodePacket
    packet_explosion:
       center: vec3f64
@@ -2143,7 +2132,7 @@
       playerKnockback?: vec3f64
       explosionParticle: Particle
       sound: ItemSoundHolder
-      blockParticles: ExplosionParticleEntry[]varint
+      blockParticles: ExplosionParticleInfo[]varint
    # MC: ClientboundForgetLevelChunkPacket
    packet_unload_chunk:
       chunkZ: i32
@@ -2334,7 +2323,7 @@
       entityId: varint
       steps: []varint
          position: vec3f
-         velocity: vec3f
+         movement: vec3f
          yaw: f32
          pitch: f32
          weight: f32
@@ -2433,7 +2422,7 @@
       data: []varint
          uuid: UUID
          player: ../action/add_player ?
-            if true: game_profile_name_prop
+            if true: game_profile
             default: void
          chatSession: ../action/initialize_chat ?
             if true: chat_session
@@ -2623,7 +2612,7 @@
    # MC: ClientboundSetEntityMotionPacket
    packet_entity_velocity:
       entityId: varint
-      velocity: lpVec3
+      movement: lpVec3
    # MC: ClientboundSetEquipmentPacket
    packet_entity_equipment:
       entityId: varint
@@ -2955,10 +2944,7 @@
                id: string
          icon:
             style: string
-            color?:
-                red: u8
-                green: u8
-                blue: u8
+            color?: i32 # RGB color with alpha fixed at FF
          type: varint =>
             0: empty
             1: vec3i

@@ -31,6 +31,7 @@
     "anonOptionalNbt": "native",
     "registryEntryHolder": "native",
     "registryEntryHolderSet": "native",
+    "lpVec3": "native",
     "ByteArray": [
       "buffer",
       {
@@ -125,6 +126,23 @@
         {
           "name": "z",
           "type": "varint"
+        }
+      ]
+    ],
+    "vec3i32": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i32"
+        },
+        {
+          "name": "y",
+          "type": "i32"
+        },
+        {
+          "name": "z",
+          "type": "i32"
         }
       ]
     ],
@@ -1057,9 +1075,33 @@
                   ]
                 ],
                 "debug_stick_state": "anonymousNbt",
-                "entity_data": "anonymousNbt",
+                "entity_data": [
+                  "container",
+                  [
+                    {
+                      "name": "type",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "data",
+                      "type": "anonymousNbt"
+                    }
+                  ]
+                ],
+                "block_entity_data": [
+                  "container",
+                  [
+                    {
+                      "name": "type",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "data",
+                      "type": "anonymousNbt"
+                    }
+                  ]
+                ],
                 "bucket_entity_data": "anonymousNbt",
-                "block_entity_data": "anonymousNbt",
                 "instrument": [
                   "container",
                   [
@@ -1163,19 +1205,7 @@
                       "name": "globalPosition",
                       "type": [
                         "option",
-                        [
-                          "container",
-                          [
-                            {
-                              "name": "dimension",
-                              "type": "string"
-                            },
-                            {
-                              "name": "position",
-                              "type": "position"
-                            }
-                          ]
-                        ]
+                        "GlobalPos"
                       ]
                     },
                     {
@@ -1204,54 +1234,7 @@
                     }
                   ]
                 ],
-                "profile": [
-                  "container",
-                  [
-                    {
-                      "name": "name",
-                      "type": [
-                        "option",
-                        "string"
-                      ]
-                    },
-                    {
-                      "name": "uuid",
-                      "type": [
-                        "option",
-                        "UUID"
-                      ]
-                    },
-                    {
-                      "name": "properties",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": [
-                            "container",
-                            [
-                              {
-                                "name": "name",
-                                "type": "string"
-                              },
-                              {
-                                "name": "value",
-                                "type": "string"
-                              },
-                              {
-                                "name": "signature",
-                                "type": [
-                                  "option",
-                                  "string"
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                ],
+                "profile": "ResolvableProfile",
                 "note_block_sound": "string",
                 "banner_patterns": [
                   "container",
@@ -2081,6 +2064,897 @@
         }
       ]
     ],
+    "RespawnData": [
+      "container",
+      [
+        {
+          "name": "globalPos",
+          "type": "GlobalPos"
+        },
+        {
+          "name": "yaw",
+          "type": "f32"
+        },
+        {
+          "name": "pitch",
+          "type": "f32"
+        }
+      ]
+    ],
+    "GlobalPos": [
+      "container",
+      [
+        {
+          "name": "dimensionName",
+          "type": "string"
+        },
+        {
+          "name": "location",
+          "type": "position"
+        }
+      ]
+    ],
+    "DebugStructureInfo": [
+      "container",
+      [
+        {
+          "name": "boundingBoxMin",
+          "type": "position"
+        },
+        {
+          "name": "boundingBoxMax",
+          "type": "position"
+        },
+        {
+          "name": "pieces",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "boundingBoxMin",
+                    "type": "position"
+                  },
+                  {
+                    "name": "boundingBoxMax",
+                    "type": "position"
+                  },
+                  {
+                    "name": "isStart",
+                    "type": "bool"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "Node": [
+      "container",
+      [
+        {
+          "name": "position",
+          "type": "vec3i32"
+        },
+        {
+          "name": "walkedDistance",
+          "type": "f32"
+        },
+        {
+          "name": "costMalus",
+          "type": "f32"
+        },
+        {
+          "name": "closed",
+          "type": "bool"
+        },
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "blocked",
+                "1": "open",
+                "2": "walkable",
+                "3": "walkable_door",
+                "4": "trapdoor",
+                "5": "powder_snow",
+                "6": "danger_powder_snow",
+                "7": "fence",
+                "8": "lava",
+                "9": "water",
+                "10": "water_border",
+                "11": "rail",
+                "12": "unpassable_rail",
+                "13": "danger_fire",
+                "14": "damage_fire",
+                "15": "danger_other",
+                "16": "damage_other",
+                "17": "door_open",
+                "18": "door_wood_closed",
+                "19": "door_iron_closed",
+                "20": "breach",
+                "21": "leaves",
+                "22": "sticky_honey",
+                "23": "cocoa",
+                "24": "damage_cautious",
+                "25": "danger_trapdoor"
+              }
+            }
+          ]
+        },
+        {
+          "name": "f",
+          "type": "f32"
+        }
+      ]
+    ],
+    "PathDebugData": [
+      "container",
+      [
+        {
+          "name": "openSet",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "Node"
+            }
+          ]
+        },
+        {
+          "name": "closedSet",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "Node"
+            }
+          ]
+        },
+        {
+          "name": "targetNodes",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "Node"
+            }
+          ]
+        }
+      ]
+    ],
+    "Path": [
+      "container",
+      [
+        {
+          "name": "reached",
+          "type": "bool"
+        },
+        {
+          "name": "nextNodeIndex",
+          "type": "i32"
+        },
+        {
+          "name": "target",
+          "type": "position"
+        },
+        {
+          "name": "nodes",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "Node"
+            }
+          ]
+        },
+        {
+          "name": "debugData",
+          "type": "PathDebugData"
+        }
+      ]
+    ],
+    "DebugSubscriptionDataType": [
+      "mapper",
+      {
+        "type": "varint",
+        "mappings": {
+          "0": "DedicatedServerTickTime",
+          "1": "Bees",
+          "2": "Brains",
+          "3": "Breezes",
+          "4": "GoalSelectors",
+          "5": "EntityPaths",
+          "6": "EntityBlockIntersections",
+          "7": "BeeHives",
+          "8": "Pois",
+          "9": "RedstoneWireOrientations",
+          "10": "VillageSections",
+          "11": "Raids",
+          "12": "Structures",
+          "13": "GameEventListeners",
+          "14": "NeighborUpdates",
+          "15": "GameEvents"
+        }
+      }
+    ],
+    "DebugSubscriptionUpdate": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": "DebugSubscriptionDataType"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "DedicatedServerTickTime": "void"
+              },
+              "default": [
+                "container",
+                [
+                  {
+                    "name": "payload",
+                    "type": [
+                      "option",
+                      [
+                        "switch",
+                        {
+                          "compareTo": "type",
+                          "fields": {
+                            "DedicatedServerTickTime": "void",
+                            "VillageSections": "void",
+                            "Bees": [
+                              "container",
+                              [
+                                {
+                                  "name": "hivePos",
+                                  "type": [
+                                    "option",
+                                    "position"
+                                  ]
+                                },
+                                {
+                                  "name": "flowerPos",
+                                  "type": [
+                                    "option",
+                                    "position"
+                                  ]
+                                },
+                                {
+                                  "name": "travelTicks",
+                                  "type": "varint"
+                                },
+                                {
+                                  "name": "blacklistedHives",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "position"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "Brains": [
+                              "container",
+                              [
+                                {
+                                  "name": "name",
+                                  "type": "string"
+                                },
+                                {
+                                  "name": "profession",
+                                  "type": "string"
+                                },
+                                {
+                                  "name": "xp",
+                                  "type": "i32"
+                                },
+                                {
+                                  "name": "health",
+                                  "type": "f32"
+                                },
+                                {
+                                  "name": "maxHealth",
+                                  "type": "f32"
+                                },
+                                {
+                                  "name": "inventory",
+                                  "type": "string"
+                                },
+                                {
+                                  "name": "wantsGolem",
+                                  "type": "bool"
+                                },
+                                {
+                                  "name": "angerLevel",
+                                  "type": "i32"
+                                },
+                                {
+                                  "name": "activities",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "behaviors",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "memories",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "gossips",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "pois",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "position"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "potentialPois",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "position"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "Breezes": [
+                              "container",
+                              [
+                                {
+                                  "name": "attackTarget",
+                                  "type": [
+                                    "option",
+                                    "varint"
+                                  ]
+                                },
+                                {
+                                  "name": "jumpTarget",
+                                  "type": [
+                                    "option",
+                                    "position"
+                                  ]
+                                }
+                              ]
+                            ],
+                            "GoalSelectors": [
+                              "container",
+                              [
+                                {
+                                  "name": "goals",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": [
+                                        "container",
+                                        [
+                                          {
+                                            "name": "priority",
+                                            "type": "varint"
+                                          },
+                                          {
+                                            "name": "running",
+                                            "type": "bool"
+                                          },
+                                          {
+                                            "name": "name",
+                                            "type": "string"
+                                          }
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "EntityPaths": [
+                              "container",
+                              [
+                                {
+                                  "name": "path",
+                                  "type": "Path"
+                                },
+                                {
+                                  "name": "maxNodeDistance",
+                                  "type": "f32"
+                                }
+                              ]
+                            ],
+                            "EntityBlockIntersections": [
+                              "container",
+                              [
+                                {
+                                  "name": "id",
+                                  "type": "varint"
+                                }
+                              ]
+                            ],
+                            "BeeHives": [
+                              "container",
+                              [
+                                {
+                                  "name": "type",
+                                  "type": "varint"
+                                },
+                                {
+                                  "name": "occupantCount",
+                                  "type": "varint"
+                                },
+                                {
+                                  "name": "honeyLevel",
+                                  "type": "varint"
+                                },
+                                {
+                                  "name": "sedated",
+                                  "type": "bool"
+                                }
+                              ]
+                            ],
+                            "Pois": [
+                              "container",
+                              [
+                                {
+                                  "name": "pos",
+                                  "type": "position"
+                                },
+                                {
+                                  "name": "poiType",
+                                  "type": "varint"
+                                },
+                                {
+                                  "name": "freeTicketCount",
+                                  "type": "varint"
+                                }
+                              ]
+                            ],
+                            "RedstoneWireOrientations": [
+                              "container",
+                              [
+                                {
+                                  "name": "index",
+                                  "type": "varint"
+                                }
+                              ]
+                            ],
+                            "Raids": [
+                              "container",
+                              [
+                                {
+                                  "name": "positions",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "position"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "Structures": [
+                              "container",
+                              [
+                                {
+                                  "name": "structures",
+                                  "type": [
+                                    "array",
+                                    {
+                                      "countType": "varint",
+                                      "type": "DebugStructureInfo"
+                                    }
+                                  ]
+                                }
+                              ]
+                            ],
+                            "GameEventListeners": [
+                              "container",
+                              [
+                                {
+                                  "name": "listenerRadius",
+                                  "type": "varint"
+                                }
+                              ]
+                            ],
+                            "NeighborUpdates": [
+                              "container",
+                              [
+                                {
+                                  "name": "pos",
+                                  "type": "position"
+                                }
+                              ]
+                            ],
+                            "GameEvents": [
+                              "container",
+                              [
+                                {
+                                  "name": "event",
+                                  "type": "varint"
+                                },
+                                {
+                                  "name": "pos",
+                                  "type": "vec3f64"
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "DebugSubscriptionEvent": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": "DebugSubscriptionDataType"
+        },
+        {
+          "name": "value",
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "DedicatedServerTickTime": "void",
+                "VillageSections": "void",
+                "Bees": [
+                  "container",
+                  [
+                    {
+                      "name": "hivePos",
+                      "type": [
+                        "option",
+                        "position"
+                      ]
+                    },
+                    {
+                      "name": "flowerPos",
+                      "type": [
+                        "option",
+                        "position"
+                      ]
+                    },
+                    {
+                      "name": "travelTicks",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "blacklistedHives",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "position"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "Brains": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "profession",
+                      "type": "string"
+                    },
+                    {
+                      "name": "xp",
+                      "type": "i32"
+                    },
+                    {
+                      "name": "health",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "maxHealth",
+                      "type": "f32"
+                    },
+                    {
+                      "name": "inventory",
+                      "type": "string"
+                    },
+                    {
+                      "name": "wantsGolem",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "angerLevel",
+                      "type": "i32"
+                    },
+                    {
+                      "name": "activities",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "behaviors",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "memories",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "gossips",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "pois",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "position"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "potentialPois",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "position"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "Breezes": [
+                  "container",
+                  [
+                    {
+                      "name": "attackTarget",
+                      "type": [
+                        "option",
+                        "varint"
+                      ]
+                    },
+                    {
+                      "name": "jumpTarget",
+                      "type": [
+                        "option",
+                        "position"
+                      ]
+                    }
+                  ]
+                ],
+                "GoalSelectors": [
+                  "container",
+                  [
+                    {
+                      "name": "priority",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "running",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "name",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "EntityPaths": [
+                  "container",
+                  [
+                    {
+                      "name": "path",
+                      "type": "Path"
+                    },
+                    {
+                      "name": "maxNodeDistance",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "EntityBlockIntersections": [
+                  "container",
+                  [
+                    {
+                      "name": "id",
+                      "type": "varint"
+                    }
+                  ]
+                ],
+                "BeeHives": [
+                  "container",
+                  [
+                    {
+                      "name": "type",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "occupantCount",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "honeyLevel",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "sedated",
+                      "type": "bool"
+                    }
+                  ]
+                ],
+                "Pois": [
+                  "container",
+                  [
+                    {
+                      "name": "pos",
+                      "type": "position"
+                    },
+                    {
+                      "name": "poiType",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "freeTicketCount",
+                      "type": "varint"
+                    }
+                  ]
+                ],
+                "RedstoneWireOrientations": [
+                  "container",
+                  [
+                    {
+                      "name": "index",
+                      "type": "varint"
+                    }
+                  ]
+                ],
+                "Raids": [
+                  "container",
+                  [
+                    {
+                      "name": "positions",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "position"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "Structures": [
+                  "container",
+                  [
+                    {
+                      "name": "structures",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "DebugStructureInfo"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "GameEventListeners": [
+                  "container",
+                  [
+                    {
+                      "name": "listenerRadius",
+                      "type": "varint"
+                    }
+                  ]
+                ],
+                "NeighborUpdates": [
+                  "container",
+                  [
+                    {
+                      "name": "pos",
+                      "type": "position"
+                    }
+                  ]
+                ],
+                "GameEvents": [
+                  "container",
+                  [
+                    {
+                      "name": "event",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "pos",
+                      "type": "vec3f64"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
     "Particle": [
       "container",
       [
@@ -2096,115 +2970,116 @@
                 "2": "block_marker",
                 "3": "bubble",
                 "4": "cloud",
-                "5": "crit",
-                "6": "damage_indicator",
-                "7": "dragon_breath",
-                "8": "dripping_lava",
-                "9": "falling_lava",
-                "10": "landing_lava",
-                "11": "dripping_water",
-                "12": "falling_water",
-                "13": "dust",
-                "14": "dust_color_transition",
-                "15": "effect",
-                "16": "elder_guardian",
-                "17": "enchanted_hit",
-                "18": "enchant",
-                "19": "end_rod",
-                "20": "entity_effect",
-                "21": "explosion_emitter",
-                "22": "explosion",
-                "23": "gust",
-                "24": "small_gust",
-                "25": "gust_emitter_large",
-                "26": "gust_emitter_small",
-                "27": "sonic_boom",
-                "28": "falling_dust",
-                "29": "firework",
-                "30": "fishing",
-                "31": "flame",
-                "32": "infested",
-                "33": "cherry_leaves",
-                "34": "pale_oak_leaves",
-                "35": "tinted_leaves",
-                "36": "sculk_soul",
-                "37": "sculk_charge",
-                "38": "sculk_charge_pop",
-                "39": "soul_fire_flame",
-                "40": "soul",
-                "41": "flash",
-                "42": "happy_villager",
-                "43": "composter",
-                "44": "heart",
-                "45": "instant_effect",
-                "46": "item",
-                "47": "vibration",
-                "48": "trail",
-                "49": "item_slime",
-                "50": "item_cobweb",
-                "51": "item_snowball",
-                "52": "large_smoke",
-                "53": "lava",
-                "54": "mycelium",
-                "55": "note",
-                "56": "poof",
-                "57": "portal",
-                "58": "rain",
-                "59": "smoke",
-                "60": "white_smoke",
-                "61": "sneeze",
-                "62": "spit",
-                "63": "squid_ink",
-                "64": "sweep_attack",
-                "65": "totem_of_undying",
-                "66": "underwater",
-                "67": "splash",
-                "68": "witch",
-                "69": "bubble_pop",
-                "70": "current_down",
-                "71": "bubble_column_up",
-                "72": "nautilus",
-                "73": "dolphin",
-                "74": "campfire_cosy_smoke",
-                "75": "campfire_signal_smoke",
-                "76": "dripping_honey",
-                "77": "falling_honey",
-                "78": "landing_honey",
-                "79": "falling_nectar",
-                "80": "falling_spore_blossom",
-                "81": "ash",
-                "82": "crimson_spore",
-                "83": "warped_spore",
-                "84": "spore_blossom_air",
-                "85": "dripping_obsidian_tear",
-                "86": "falling_obsidian_tear",
-                "87": "landing_obsidian_tear",
-                "88": "reverse_portal",
-                "89": "white_ash",
-                "90": "small_flame",
-                "91": "snowflake",
-                "92": "dripping_dripstone_lava",
-                "93": "falling_dripstone_lava",
-                "94": "dripping_dripstone_water",
-                "95": "falling_dripstone_water",
-                "96": "glow_squid_ink",
-                "97": "glow",
-                "98": "wax_on",
-                "99": "wax_off",
-                "100": "electric_spark",
-                "101": "scrape",
-                "102": "shriek",
-                "103": "egg_crack",
-                "104": "dust_plume",
-                "105": "trial_spawner_detected_player",
-                "106": "trial_spawner_detected_player_ominous",
-                "107": "vault_connection",
-                "108": "dust_pillar",
-                "109": "ominous_spawning",
-                "110": "raid_omen",
-                "111": "trial_omen",
-                "112": "block_crumble",
-                "113": "firefly"
+                "5": "copper_fire_flame",
+                "6": "crit",
+                "7": "damage_indicator",
+                "8": "dragon_breath",
+                "9": "dripping_lava",
+                "10": "falling_lava",
+                "11": "landing_lava",
+                "12": "dripping_water",
+                "13": "falling_water",
+                "14": "dust",
+                "15": "dust_color_transition",
+                "16": "effect",
+                "17": "elder_guardian",
+                "18": "enchanted_hit",
+                "19": "enchant",
+                "20": "end_rod",
+                "21": "entity_effect",
+                "22": "explosion_emitter",
+                "23": "explosion",
+                "24": "gust",
+                "25": "small_gust",
+                "26": "gust_emitter_large",
+                "27": "gust_emitter_small",
+                "28": "sonic_boom",
+                "29": "falling_dust",
+                "30": "firework",
+                "31": "fishing",
+                "32": "flame",
+                "33": "infested",
+                "34": "cherry_leaves",
+                "35": "pale_oak_leaves",
+                "36": "tinted_leaves",
+                "37": "sculk_soul",
+                "38": "sculk_charge",
+                "39": "sculk_charge_pop",
+                "40": "soul_fire_flame",
+                "41": "soul",
+                "42": "flash",
+                "43": "happy_villager",
+                "44": "composter",
+                "45": "heart",
+                "46": "instant_effect",
+                "47": "item",
+                "48": "vibration",
+                "49": "trail",
+                "50": "item_slime",
+                "51": "item_cobweb",
+                "52": "item_snowball",
+                "53": "large_smoke",
+                "54": "lava",
+                "55": "mycelium",
+                "56": "note",
+                "57": "poof",
+                "58": "portal",
+                "59": "rain",
+                "60": "smoke",
+                "61": "white_smoke",
+                "62": "sneeze",
+                "63": "spit",
+                "64": "squid_ink",
+                "65": "sweep_attack",
+                "66": "totem_of_undying",
+                "67": "underwater",
+                "68": "splash",
+                "69": "witch",
+                "70": "bubble_pop",
+                "71": "current_down",
+                "72": "bubble_column_up",
+                "73": "nautilus",
+                "74": "dolphin",
+                "75": "campfire_cosy_smoke",
+                "76": "campfire_signal_smoke",
+                "77": "dripping_honey",
+                "78": "falling_honey",
+                "79": "landing_honey",
+                "80": "falling_nectar",
+                "81": "falling_spore_blossom",
+                "82": "ash",
+                "83": "crimson_spore",
+                "84": "warped_spore",
+                "85": "spore_blossom_air",
+                "86": "dripping_obsidian_tear",
+                "87": "falling_obsidian_tear",
+                "88": "landing_obsidian_tear",
+                "89": "reverse_portal",
+                "90": "white_ash",
+                "91": "small_flame",
+                "92": "snowflake",
+                "93": "dripping_dripstone_lava",
+                "94": "falling_dripstone_lava",
+                "95": "dripping_dripstone_water",
+                "96": "falling_dripstone_water",
+                "97": "glow_squid_ink",
+                "98": "glow",
+                "99": "wax_on",
+                "100": "wax_off",
+                "101": "electric_spark",
+                "102": "scrape",
+                "103": "shriek",
+                "104": "egg_crack",
+                "105": "dust_plume",
+                "106": "trial_spawner_detected_player",
+                "107": "trial_spawner_detected_player_ominous",
+                "108": "vault_connection",
+                "109": "dust_pillar",
+                "110": "ominous_spawning",
+                "111": "raid_omen",
+                "112": "trial_omen",
+                "113": "block_crumble",
+                "114": "firefly"
               }
             }
           ]
@@ -2340,7 +3215,43 @@
                   ]
                 ],
                 "tinted_leaves": "i32",
-                "firefly": "void"
+                "firefly": "void",
+                "dragon_breath": [
+                  "container",
+                  [
+                    {
+                      "name": "power",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "effect": [
+                  "container",
+                  [
+                    {
+                      "name": "color",
+                      "type": "i32"
+                    },
+                    {
+                      "name": "power",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "instant_effect": [
+                  "container",
+                  [
+                    {
+                      "name": "color",
+                      "type": "i32"
+                    },
+                    {
+                      "name": "power",
+                      "type": "f32"
+                    }
+                  ]
+                ],
+                "flash": "i32"
               }
             }
           ]
@@ -2469,25 +3380,27 @@
                 "13": "optional_uuid",
                 "14": "block_state",
                 "15": "optional_block_state",
-                "16": "compound_tag",
-                "17": "particle",
-                "18": "particles",
-                "19": "villager_data",
-                "20": "optional_unsigned_int",
-                "21": "pose",
-                "22": "cat_variant",
-                "23": "cow_variant",
-                "24": "wolf_variant",
-                "25": "wolf_sound_variant",
-                "26": "frog_variant",
-                "27": "pig_variant",
-                "28": "chicken_variant",
-                "29": "optional_global_pos",
-                "30": "painting_variant",
-                "31": "sniffer_state",
-                "32": "armadillo_state",
-                "33": "vector3",
-                "34": "quaternion"
+                "16": "particle",
+                "17": "particles",
+                "18": "villager_data",
+                "19": "optional_unsigned_int",
+                "20": "pose",
+                "21": "cat_variant",
+                "22": "cow_variant",
+                "23": "wolf_variant",
+                "24": "wolf_sound_variant",
+                "25": "frog_variant",
+                "26": "pig_variant",
+                "27": "chicken_variant",
+                "28": "optional_global_pos",
+                "29": "painting_variant",
+                "30": "sniffer_state",
+                "31": "armadillo_state",
+                "32": "copper_golem_state",
+                "33": "weathering_copper_golem_state",
+                "34": "vector3",
+                "35": "quaternion",
+                "36": "resolvable_profile"
               }
             }
           ]
@@ -2540,7 +3453,6 @@
                 ],
                 "block_state": "varint",
                 "optional_block_state": "optvarint",
-                "compound_tag": "anonymousNbt",
                 "particle": "Particle",
                 "particles": [
                   "array",
@@ -2574,19 +3486,10 @@
                 "wolf_sound_variant": "varint",
                 "frog_variant": "varint",
                 "pig_variant": "varint",
-                "chicken_variant": [
-                  "registryEntryHolder",
-                  {
-                    "baseName": "variantId",
-                    "otherwise": {
-                      "name": "variantData",
-                      "type": "string"
-                    }
-                  }
-                ],
+                "chicken_variant": "varint",
                 "optional_global_pos": [
                   "option",
-                  "string"
+                  "GlobalPos"
                 ],
                 "painting_variant": [
                   "registryEntryHolder",
@@ -2600,8 +3503,11 @@
                 ],
                 "sniffer_state": "varint",
                 "armadillo_state": "varint",
+                "copper_golem_state": "varint",
+                "weathering_copper_golem_state": "varint",
                 "vector3": "vec3f",
-                "quaternion": "vec4f"
+                "quaternion": "vec4f",
+                "resolvable_profile": "ResolvableProfile"
               }
             }
           ]
@@ -2748,7 +3654,7 @@
         ]
       ]
     ],
-    "game_profile": [
+    "game_profile_name_prop": [
       "container",
       [
         {
@@ -2761,27 +3667,157 @@
             "array",
             {
               "countType": "varint",
-              "type": [
-                "container",
-                [
-                  {
-                    "name": "name",
-                    "type": "string"
-                  },
-                  {
-                    "name": "value",
-                    "type": "string"
-                  },
-                  {
-                    "name": "signature",
-                    "type": [
-                      "option",
-                      "string"
-                    ]
-                  }
-                ]
-              ]
+              "type": "GameProfileProperty"
             }
+          ]
+        }
+      ]
+    ],
+    "GameProfile": [
+      "container",
+      [
+        {
+          "name": "uuid",
+          "type": "UUID"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "properties",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "GameProfileProperty"
+            }
+          ]
+        }
+      ]
+    ],
+    "PartialResolvableProfile": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "uuid",
+          "type": [
+            "option",
+            "UUID"
+          ]
+        },
+        {
+          "name": "properties",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "GameProfileProperty"
+            }
+          ]
+        }
+      ]
+    ],
+    "GameProfileProperty": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "signature",
+          "type": [
+            "option",
+            "string"
+          ]
+        }
+      ]
+    ],
+    "ResolvableProfile": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
+            {
+              "type": "varint",
+              "mappings": {
+                "0": "partial",
+                "1": "complete"
+              }
+            }
+          ]
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "partial": "PartialResolvableProfile",
+                "complete": "GameProfile"
+              }
+            }
+          ]
+        },
+        {
+          "name": "skinPatch",
+          "type": "PlayerSkinPatch"
+        }
+      ]
+    ],
+    "PlayerSkinPatch": [
+      "container",
+      [
+        {
+          "name": "body",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "cape",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "elytra",
+          "type": [
+            "option",
+            "string"
+          ]
+        },
+        {
+          "name": "model",
+          "type": [
+            "option",
+            [
+              "mapper",
+              {
+                "type": "varint",
+                "mappings": {
+                  "0": "wide",
+                  "1": "slim"
+                }
+              }
+            ]
           ]
         }
       ]
@@ -3423,7 +4459,10 @@
         },
         {
           "name": "value",
-          "type": "ByteArray"
+          "type": [
+            "option",
+            "ByteArray"
+          ]
         }
       ]
     ],
@@ -4067,6 +5106,15 @@
   "configuration": {
     "toClient": {
       "types": {
+        "packet_code_of_conduct": [
+          "container",
+          [
+            {
+              "name": "contents",
+              "type": "string"
+            }
+          ]
+        ],
         "packet_custom_payload": [
           "container",
           [
@@ -4228,7 +5276,8 @@
                     "0x0f": "custom_report_details",
                     "0x10": "server_links",
                     "0x11": "clear_dialog",
-                    "0x12": "show_dialog"
+                    "0x12": "show_dialog",
+                    "0x13": "code_of_conduct"
                   }
                 }
               ]
@@ -4258,7 +5307,8 @@
                     "custom_report_details": "packet_common_custom_report_details",
                     "server_links": "packet_common_server_links",
                     "clear_dialog": "packet_common_clear_dialog",
-                    "show_dialog": "packet_show_dialog"
+                    "show_dialog": "packet_show_dialog",
+                    "code_of_conduct": "packet_code_of_conduct"
                   }
                 }
               ]
@@ -4269,6 +5319,10 @@
     },
     "toServer": {
       "types": {
+        "packet_accept_code_of_conduct": [
+          "container",
+          []
+        ],
         "packet_custom_payload": [
           "container",
           [
@@ -4335,7 +5389,8 @@
                     "0x05": "pong",
                     "0x06": "resource_pack_receive",
                     "0x07": "select_known_packs",
-                    "0x08": "custom_click_action"
+                    "0x08": "custom_click_action",
+                    "0x09": "accept_code_of_conduct"
                   }
                 }
               ]
@@ -4355,7 +5410,8 @@
                     "pong": "packet_pong",
                     "resource_pack_receive": "packet_resource_pack_receive",
                     "select_known_packs": "packet_common_select_known_packs",
-                    "custom_click_action": "packet_common_custom_click_action"
+                    "custom_click_action": "packet_common_custom_click_action",
+                    "accept_code_of_conduct": "packet_accept_code_of_conduct"
                   }
                 }
               ]
@@ -4657,19 +5713,7 @@
               "name": "death",
               "type": [
                 "option",
-                [
-                  "container",
-                  [
-                    {
-                      "name": "dimensionName",
-                      "type": "string"
-                    },
-                    {
-                      "name": "location",
-                      "type": "position"
-                    }
-                  ]
-                ]
+                "GlobalPos"
               ]
             },
             {
@@ -4710,6 +5754,10 @@
               "type": "f64"
             },
             {
+              "name": "velocity",
+              "type": "lpVec3"
+            },
+            {
               "name": "pitch",
               "type": "i8"
             },
@@ -4724,18 +5772,6 @@
             {
               "name": "objectData",
               "type": "varint"
-            },
-            {
-              "name": "velocityX",
-              "type": "i16"
-            },
-            {
-              "name": "velocityY",
-              "type": "i16"
-            },
-            {
-              "name": "velocityZ",
-              "type": "i16"
             }
           ]
         ],
@@ -5224,6 +6260,54 @@
             }
           ]
         ],
+        "packet_debug_block_value": [
+          "container",
+          [
+            {
+              "name": "blockPos",
+              "type": "position"
+            },
+            {
+              "name": "update",
+              "type": "DebugSubscriptionUpdate"
+            }
+          ]
+        ],
+        "packet_debug_chunk_value": [
+          "container",
+          [
+            {
+              "name": "chunkPos",
+              "type": "packedChunkPos"
+            },
+            {
+              "name": "update",
+              "type": "DebugSubscriptionUpdate"
+            }
+          ]
+        ],
+        "packet_debug_entity_value": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "update",
+              "type": "DebugSubscriptionUpdate"
+            }
+          ]
+        ],
+        "packet_debug_event": [
+          "container",
+          [
+            {
+              "name": "event",
+              "type": "DebugSubscriptionEvent"
+            }
+          ]
+        ],
         "packet_debug_sample": [
           "container",
           [
@@ -5418,20 +6502,50 @@
             }
           ]
         ],
+        "ExplosionParticleInfo": [
+          "container",
+          [
+            {
+              "name": "particle",
+              "type": "Particle"
+            },
+            {
+              "name": "scaling",
+              "type": "f32"
+            },
+            {
+              "name": "speed",
+              "type": "f32"
+            }
+          ]
+        ],
+        "ExplosionParticleEntry": [
+          "container",
+          [
+            {
+              "name": "data",
+              "type": "ExplosionParticleInfo"
+            },
+            {
+              "name": "weight",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet_explosion": [
           "container",
           [
             {
-              "name": "x",
-              "type": "f64"
+              "name": "center",
+              "type": "vec3f64"
             },
             {
-              "name": "y",
-              "type": "f64"
+              "name": "radius",
+              "type": "f32"
             },
             {
-              "name": "z",
-              "type": "f64"
+              "name": "blockCount",
+              "type": "i32"
             },
             {
               "name": "playerKnockback",
@@ -5447,6 +6561,16 @@
             {
               "name": "sound",
               "type": "ItemSoundHolder"
+            },
+            {
+              "name": "blockParticles",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "ExplosionParticleEntry"
+                }
+              ]
             }
           ]
         ],
@@ -5494,6 +6618,19 @@
             {
               "name": "gameMode",
               "type": "f32"
+            }
+          ]
+        ],
+        "packet_game_test_highlight_pos": [
+          "container",
+          [
+            {
+              "name": "absolutePos",
+              "type": "position"
+            },
+            {
+              "name": "relativePos",
+              "type": "position"
             }
           ]
         ],
@@ -6234,7 +7371,7 @@
                         "type": "vec3f"
                       },
                       {
-                        "name": "movement",
+                        "name": "velocity",
                         "type": "vec3f"
                       },
                       {
@@ -6562,7 +7699,7 @@
                           {
                             "compareTo": "../action/add_player",
                             "fields": {
-                              "true": "game_profile"
+                              "true": "game_profile_name_prop"
                             },
                             "default": "void"
                           }
@@ -6790,8 +7927,16 @@
               "type": "f32"
             },
             {
+              "name": "relativeYaw",
+              "type": "bool"
+            },
+            {
               "name": "pitch",
               "type": "f32"
+            },
+            {
+              "name": "relativePitch",
+              "type": "bool"
             }
           ]
         ],
@@ -7179,19 +8324,7 @@
             }
           ]
         ],
-        "packet_spawn_position": [
-          "container",
-          [
-            {
-              "name": "location",
-              "type": "position"
-            },
-            {
-              "name": "angle",
-              "type": "f32"
-            }
-          ]
-        ],
+        "packet_spawn_position": "RespawnData",
         "packet_scoreboard_display_objective": [
           "container",
           [
@@ -7239,16 +8372,8 @@
               "type": "varint"
             },
             {
-              "name": "velocityX",
-              "type": "i16"
-            },
-            {
-              "name": "velocityY",
-              "type": "i16"
-            },
-            {
-              "name": "velocityZ",
-              "type": "i16"
+              "name": "velocity",
+              "type": "lpVec3"
             }
           ]
         ],
@@ -8590,114 +9715,119 @@
                     "0x17": "chat_suggestions",
                     "0x18": "custom_payload",
                     "0x19": "damage_event",
-                    "0x1a": "debug_sample",
-                    "0x1b": "hide_message",
-                    "0x1c": "kick_disconnect",
-                    "0x1d": "profileless_chat",
-                    "0x1e": "entity_status",
-                    "0x1f": "sync_entity_position",
-                    "0x20": "explosion",
-                    "0x21": "unload_chunk",
-                    "0x22": "game_state_change",
-                    "0x23": "open_horse_window",
-                    "0x24": "hurt_animation",
-                    "0x25": "initialize_world_border",
-                    "0x26": "keep_alive",
-                    "0x27": "map_chunk",
-                    "0x28": "world_event",
-                    "0x29": "world_particles",
-                    "0x2a": "update_light",
-                    "0x2b": "login",
-                    "0x2c": "map",
-                    "0x2d": "trade_list",
-                    "0x2e": "rel_entity_move",
-                    "0x2f": "entity_move_look",
-                    "0x30": "move_minecart",
-                    "0x31": "entity_look",
-                    "0x32": "vehicle_move",
-                    "0x33": "open_book",
-                    "0x34": "open_window",
-                    "0x35": "open_sign_entity",
-                    "0x36": "ping",
-                    "0x37": "ping_response",
-                    "0x38": "craft_recipe_response",
-                    "0x39": "abilities",
-                    "0x3a": "player_chat",
-                    "0x3b": "end_combat_event",
-                    "0x3c": "enter_combat_event",
-                    "0x3d": "death_combat_event",
-                    "0x3e": "player_remove",
-                    "0x3f": "player_info",
-                    "0x40": "face_player",
-                    "0x41": "position",
-                    "0x42": "player_rotation",
-                    "0x43": "recipe_book_add",
-                    "0x44": "recipe_book_remove",
-                    "0x45": "recipe_book_settings",
-                    "0x46": "entity_destroy",
-                    "0x47": "remove_entity_effect",
-                    "0x48": "reset_score",
-                    "0x49": "remove_resource_pack",
-                    "0x4a": "add_resource_pack",
-                    "0x4b": "respawn",
-                    "0x4c": "entity_head_rotation",
-                    "0x4d": "multi_block_change",
-                    "0x4e": "select_advancement_tab",
-                    "0x4f": "server_data",
-                    "0x50": "action_bar",
-                    "0x51": "world_border_center",
-                    "0x52": "world_border_lerp_size",
-                    "0x53": "world_border_size",
-                    "0x54": "world_border_warning_delay",
-                    "0x55": "world_border_warning_reach",
-                    "0x56": "camera",
-                    "0x57": "update_view_position",
-                    "0x58": "update_view_distance",
-                    "0x59": "set_cursor_item",
-                    "0x5a": "spawn_position",
-                    "0x5b": "scoreboard_display_objective",
-                    "0x5c": "entity_metadata",
-                    "0x5d": "attach_entity",
-                    "0x5e": "entity_velocity",
-                    "0x5f": "entity_equipment",
-                    "0x60": "experience",
-                    "0x61": "update_health",
-                    "0x62": "held_item_slot",
-                    "0x63": "scoreboard_objective",
-                    "0x64": "set_passengers",
-                    "0x65": "set_player_inventory",
-                    "0x66": "teams",
-                    "0x67": "scoreboard_score",
-                    "0x68": "simulation_distance",
-                    "0x69": "set_title_subtitle",
-                    "0x6a": "update_time",
-                    "0x6b": "set_title_text",
-                    "0x6c": "set_title_time",
-                    "0x6d": "entity_sound_effect",
-                    "0x6e": "sound_effect",
-                    "0x6f": "start_configuration",
-                    "0x70": "stop_sound",
-                    "0x71": "store_cookie",
-                    "0x72": "system_chat",
-                    "0x73": "playerlist_header",
-                    "0x74": "nbt_query_response",
-                    "0x75": "collect",
-                    "0x76": "entity_teleport",
-                    "0x77": "test_instance_block_status",
-                    "0x78": "set_ticking_state",
-                    "0x79": "step_tick",
-                    "0x7a": "transfer",
-                    "0x7b": "advancements",
-                    "0x7c": "entity_update_attributes",
-                    "0x7d": "entity_effect",
-                    "0x7e": "declare_recipes",
-                    "0x7f": "tags",
-                    "0x80": "set_projectile_power",
-                    "0x81": "custom_report_details",
-                    "0x82": "server_links",
-                    "0x83": "tracked_waypoint",
-                    "0x84": "clear_dialog",
-                    "0x85": "show_dialog"
+                    "0x1a": "debug_block_value",
+                    "0x1b": "debug_chunk_value",
+                    "0x1c": "debug_entity_value",
+                    "0x1d": "debug_event",
+                    "0x1e": "debug_sample",
+                    "0x1f": "hide_message",
+                    "0x20": "kick_disconnect",
+                    "0x21": "profileless_chat",
+                    "0x22": "entity_status",
+                    "0x23": "sync_entity_position",
+                    "0x24": "explosion",
+                    "0x25": "unload_chunk",
+                    "0x26": "game_state_change",
+                    "0x27": "game_test_highlight_pos",
+                    "0x28": "open_horse_window",
+                    "0x29": "hurt_animation",
+                    "0x2a": "initialize_world_border",
+                    "0x2b": "keep_alive",
+                    "0x2c": "map_chunk",
+                    "0x2d": "world_event",
+                    "0x2e": "world_particles",
+                    "0x2f": "update_light",
+                    "0x30": "login",
+                    "0x31": "map",
+                    "0x32": "trade_list",
+                    "0x33": "rel_entity_move",
+                    "0x34": "entity_move_look",
+                    "0x35": "move_minecart",
+                    "0x36": "entity_look",
+                    "0x37": "vehicle_move",
+                    "0x38": "open_book",
+                    "0x39": "open_window",
+                    "0x3a": "open_sign_entity",
+                    "0x3b": "ping",
+                    "0x3c": "ping_response",
+                    "0x3d": "craft_recipe_response",
+                    "0x3e": "abilities",
+                    "0x3f": "player_chat",
+                    "0x40": "end_combat_event",
+                    "0x41": "enter_combat_event",
+                    "0x42": "death_combat_event",
+                    "0x43": "player_remove",
+                    "0x44": "player_info",
+                    "0x45": "face_player",
+                    "0x46": "position",
+                    "0x47": "player_rotation",
+                    "0x48": "recipe_book_add",
+                    "0x49": "recipe_book_remove",
+                    "0x4a": "recipe_book_settings",
+                    "0x4b": "entity_destroy",
+                    "0x4c": "remove_entity_effect",
+                    "0x4d": "reset_score",
+                    "0x4e": "remove_resource_pack",
+                    "0x4f": "add_resource_pack",
+                    "0x50": "respawn",
+                    "0x51": "entity_head_rotation",
+                    "0x52": "multi_block_change",
+                    "0x53": "select_advancement_tab",
+                    "0x54": "server_data",
+                    "0x55": "action_bar",
+                    "0x56": "world_border_center",
+                    "0x57": "world_border_lerp_size",
+                    "0x58": "world_border_size",
+                    "0x59": "world_border_warning_delay",
+                    "0x5a": "world_border_warning_reach",
+                    "0x5b": "camera",
+                    "0x5c": "update_view_position",
+                    "0x5d": "update_view_distance",
+                    "0x5e": "set_cursor_item",
+                    "0x5f": "spawn_position",
+                    "0x60": "scoreboard_display_objective",
+                    "0x61": "entity_metadata",
+                    "0x62": "attach_entity",
+                    "0x63": "entity_velocity",
+                    "0x64": "entity_equipment",
+                    "0x65": "experience",
+                    "0x66": "update_health",
+                    "0x67": "held_item_slot",
+                    "0x68": "scoreboard_objective",
+                    "0x69": "set_passengers",
+                    "0x6a": "set_player_inventory",
+                    "0x6b": "teams",
+                    "0x6c": "scoreboard_score",
+                    "0x6d": "simulation_distance",
+                    "0x6e": "set_title_subtitle",
+                    "0x6f": "update_time",
+                    "0x70": "set_title_text",
+                    "0x71": "set_title_time",
+                    "0x72": "entity_sound_effect",
+                    "0x73": "sound_effect",
+                    "0x74": "start_configuration",
+                    "0x75": "stop_sound",
+                    "0x76": "store_cookie",
+                    "0x77": "system_chat",
+                    "0x78": "playerlist_header",
+                    "0x79": "nbt_query_response",
+                    "0x7a": "collect",
+                    "0x7b": "entity_teleport",
+                    "0x7c": "test_instance_block_status",
+                    "0x7d": "set_ticking_state",
+                    "0x7e": "step_tick",
+                    "0x7f": "transfer",
+                    "0x80": "advancements",
+                    "0x81": "entity_update_attributes",
+                    "0x82": "entity_effect",
+                    "0x83": "declare_recipes",
+                    "0x84": "tags",
+                    "0x85": "set_projectile_power",
+                    "0x86": "custom_report_details",
+                    "0x87": "server_links",
+                    "0x88": "tracked_waypoint",
+                    "0x89": "clear_dialog",
+                    "0x8a": "show_dialog"
                   }
                 }
               ]
@@ -8735,6 +9865,10 @@
                     "chat_suggestions": "packet_chat_suggestions",
                     "custom_payload": "packet_custom_payload",
                     "damage_event": "packet_damage_event",
+                    "debug_block_value": "packet_debug_block_value",
+                    "debug_chunk_value": "packet_debug_chunk_value",
+                    "debug_entity_value": "packet_debug_entity_value",
+                    "debug_event": "packet_debug_event",
                     "debug_sample": "packet_debug_sample",
                     "hide_message": "packet_hide_message",
                     "kick_disconnect": "packet_kick_disconnect",
@@ -8744,6 +9878,7 @@
                     "explosion": "packet_explosion",
                     "unload_chunk": "packet_unload_chunk",
                     "game_state_change": "packet_game_state_change",
+                    "game_test_highlight_pos": "packet_game_test_highlight_pos",
                     "open_horse_window": "packet_open_horse_window",
                     "hurt_animation": "packet_hurt_animation",
                     "initialize_world_border": "packet_initialize_world_border",
@@ -9049,7 +10184,7 @@
             },
             {
               "name": "checksum",
-              "type": "i8"
+              "type": "u8"
             }
           ]
         ],
@@ -9222,12 +10357,18 @@
             }
           ]
         ],
-        "packet_debug_sample_subscription": [
+        "packet_debug_subscription_request": [
           "container",
           [
             {
-              "name": "type",
-              "type": "varint"
+              "name": "subscriptions",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "DebugSubscriptionDataType"
+                }
+              ]
             }
           ]
         ],
@@ -10132,7 +11273,7 @@
                     "0x13": "set_slot_state",
                     "0x14": "cookie_response",
                     "0x15": "custom_payload",
-                    "0x16": "debug_sample_subscription",
+                    "0x16": "debug_subscription_request",
                     "0x17": "edit_book",
                     "0x18": "query_entity_nbt",
                     "0x19": "use_entity",
@@ -10209,7 +11350,7 @@
                     "set_slot_state": "packet_set_slot_state",
                     "cookie_response": "packet_common_cookie_response",
                     "custom_payload": "packet_custom_payload",
-                    "debug_sample_subscription": "packet_debug_sample_subscription",
+                    "debug_subscription_request": "packet_debug_subscription_request",
                     "edit_book": "packet_edit_book",
                     "query_entity_nbt": "packet_query_entity_nbt",
                     "use_entity": "packet_use_entity",
