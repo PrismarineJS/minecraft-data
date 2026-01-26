@@ -1,3 +1,9 @@
+## 3.103.0
+* [🎈 Add Minecraft pc 1.21.9/1.21.10 data (#1096)](https://github.com/PrismarineJS/minecraft-data/commit/c2609713383da7844bb8ce1e6cb580b767f04a53) (thanks @rom1504bot)
+* [Add 26.1-snapshot-4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6dac6d16330ebc9e4326b0d52cb71fcfac9bbb9c) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/1555cce4730cf7a830630b954d172c6f17e8600e) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9443ed0dec3b9b8cdfe82ddb8a8097a622df10a7) (thanks @github-actions[bot])
+
 ## 3.102.3
 * [bedrock protocol: use ZigZag64 instead of VarInt64 in packet_player_location (#1081)](https://github.com/PrismarineJS/minecraft-data/commit/803fce17e9cbefdba4013a772698c68a7792bb7f) (thanks @Snowbelldog)
 * [pc: Fix packet_explosion partial packet issue 1.21.4 - 1.21.8 (#1114)](https://github.com/PrismarineJS/minecraft-data/commit/c7048f26a8f60f75f3634817b4507bc49b575fae) (thanks @Rohan2460)
