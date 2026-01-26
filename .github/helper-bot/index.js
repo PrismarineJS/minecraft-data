@@ -31,6 +31,7 @@ A new Minecraft Java Edition version is available (as of ${date}), version **${r
 
 <hr/>
 🤖 I am a bot, I check for updates every 2 hours without a trigger. You can close this issue to prevent any further updates.
+<!-- RP: ${JSON.stringify({ title, versionJson: jarData, latestVersionData: result, latestVersion: result.id })} -->
     `
   }
 }
