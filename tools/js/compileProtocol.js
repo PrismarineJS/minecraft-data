@@ -73,8 +73,14 @@ function convert (edition, ver, path) {
 
 function validate (edition, ver, path) {
   process.chdir(path || join(__dirname, `../../data/${edition}/${ver}`))
-  console.log(process.cwd())
+  // console.log(process.cwd())
   const [version, json] = genProtoSchema(edition === 'bedrock')
+
+  if (path.endsWith('latest')) {
+    if (fs.existsSync(join(__dirname, `../../data/${edition}/${version}/proto.yml`))) {
+      throw Error(`Both ${edition}/latest/proto.yml and ${edition}/${version}/proto.yml exist for ${version}, please remove the latter.`)
+    }
+  }
 
   const expected = edition === 'bedrock'
     ? JSON.stringify({ types: json }, visitor, 2)
@@ -89,7 +95,7 @@ function validate (edition, ver, path) {
     throw Error(`${ver} (${version}) / protocol.json is desynced from yaml, please run 'npm run build'`)
   }
 
-  console.log('ok', `../${version}/protocol.json`)
+  // console.log('ok', `../${version}/protocol.json`)
   return version
 }
 
