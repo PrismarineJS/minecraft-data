@@ -1,3 +1,6 @@
+## 3.105.0
+* [🎈 Add Minecraft pc 1.21.11 data (#1144)](https://github.com/PrismarineJS/minecraft-data/commit/52cfa3ed1534226868dd6f1a6c47f16070e939ad) (thanks @rom1504bot)
+
 ## 3.104.0
 * [Add bedrock 1.26.0 (26.0, v924) protocol data (#1148)](https://github.com/PrismarineJS/minecraft-data/commit/0d7f0d71b7b032769aab9e236294e2a5dffd58a0) (thanks @extremeheat)
 * [Add 26.1-snapshot-6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/789670bbf2ae37c87bac50433bba57b106448b4c) (thanks @github-actions[bot])
