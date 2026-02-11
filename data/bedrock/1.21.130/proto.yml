@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.26.0
+!version: 1.21.130
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -196,6 +196,22 @@ packet_text:
       0: message_only
       1: authored
       2: parameters
+   _: category ?
+      if message_only:
+         raw: string
+         tip: string
+         system_message: string
+         text_object_whisper: string
+         text_object_announcement: string
+         text_object: string
+      if authored:
+         chat: string
+         whisper: string
+         announcement: string
+      if parameters:
+         translate: string
+         popup: string
+         jukebox_popup: string
    # TextType is the type of the text sent.
    type: u8 =>
       0: raw
@@ -398,6 +414,10 @@ packet_start_game:
       2: disabled
    # DisablePlayerInteractions is true if the client should ignore other players when interacting with the world.
    disable_player_interactions: bool
+   server_identifier: string
+   world_identifier: string
+   scenario_identifier: string
+   owner_identifier: string
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -451,14 +471,6 @@ packet_start_game:
    # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
    server_controlled_sound: bool
-   # New fields 1.26.0
-   has_server_join_info: bool
-   server_join_info: has_server_join_info ?
-      if true: ServerJoinInformation
-   server_identifier: string
-   scenario_identifier: string
-   world_identifier: string
-   owner_identifier: string
 
 packet_add_player:
    !id: 0x0c
@@ -2299,24 +2311,24 @@ packet_set_last_hurt_by:
 packet_book_edit:
    !id: 0x61
    !bound: server
-   inventory_slot: zigzag32
-   type: varint =>
+   type: u8 =>
       0: replace_page
       1: add_page
       2: delete_page
       3: swap_pages
       4: sign
+   slot: u8
    _: type?
       if replace_page or add_page:
-         page_number: zigzag32
+         page_number: u8
          text: string
          # Only available on Education Edition.
          photo_name: string
       if delete_page:
-         page_number: zigzag32
+         page_number: u8
       if swap_pages:
-         page1: zigzag32
-         page2: zigzag32
+         page1: u8
+         page2: u8
       if sign:
          title: string
          author: string
@@ -4213,15 +4225,15 @@ packet_set_player_inventory_options:
    - armor
    filtering: bool
    layout: zigzag32 =>
-      - none
-      - inventory_only
-      - default
-      - recipe_book_only
+   - none
+   - survival
+   - recipe_book
+   - creative
    crafting_layout: zigzag32 =>
-      - none
-      - inventory_only
-      - default
-      - recipe_book_only
+   - none
+   - survival
+   - recipe_book
+   - creative
 
 # SetHud is sent by the server to set the visibility of individual HUD elements on the client. It is
 # important to note that the client does not reset the state of the HUD elements after it leaves a server,
@@ -4311,7 +4323,6 @@ packet_serverbound_diagnostics:
    average_end_frame_time: lf32
    average_remainder_time_percent: lf32
    average_unaccounted_time_percent: lf32
-   memory_category_values: MemoryCategoryCounter[]varint
 
 # CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
 packet_camera_aim_assist:
@@ -4390,9 +4401,6 @@ packet_camera_aim_assist_presets:
          id: string
          priority: li32
       block_tags: varint[]varint
-      entity_type_families: []varint
-         id: string
-         priority: li32
       entity_default?: li32
       block_default?: li32
    presets: []varint
@@ -4401,7 +4409,6 @@ packet_camera_aim_assist_presets:
          blocks: string[]varint
          entities: string[]varint
          block_tags: string[]varint
-         entity_type_families: string[]varint
       target_liquids: string[]varint
       item_settings: []varint
          # Identifier of the item to apply the settings to.
@@ -4581,8 +4588,7 @@ packet_clientbound_data_store:
                if double: lf64
                if bool: bool
                if string: string
-            update_count: li32
-            path_update_count: li32
+            update_count: varint
          if change:
             name: string
             property: string
@@ -4603,8 +4609,6 @@ packet_graphics_override_parameter:
    !id: 0x14b
    !bound: client
    values: ParameterKeyframeValue[]varint
-   float_value: lf32
-   vec3_value: vec3f
    biome_identifier: string
    parameter_type: GraphicsOverrideParameterType
    reset: bool
@@ -4624,50 +4628,3 @@ packet_serverbound_data_store:
       if bool: bool
       if string: string
    update_count: varint
-   path_update_count: li32
-
-packet_clientbound_data_driven_ui_show_screen:
-   !id: 0x14d
-   !bound: client
-   screen_id: string
-
-packet_clientbound_data_driven_ui_close_all_screens:
-   !id: 0x14e
-   !bound: client
-
-packet_clientbound_data_driven_ui_reload:
-   !id: 0x14f
-   !bound: client
-
-packet_clientbound_texture_shift:
-   !id: 0x150
-   !bound: client
-   action: u8 =>
-      0: invalid
-      1: initialize
-      2: start
-      3: set_enabled
-      4: sync
-   collection_name: string
-   from_step: string
-   to_step: string
-   all_steps: string[]varint
-   current_length_ticks: varint64
-   total_length_ticks: varint64
-   enabled: bool
-
-packet_voxel_shapes:
-   !id: 0x151
-   !bound: client
-   shapes: VoxelShape[]varint
-   name_map: VoxelShapeNameEntry[]varint
-
-packet_camera_spline:
-   !id: 0x152
-   !bound: client
-   splines: CameraSplineDefinition[]varint
-
-packet_camera_aim_assist_actor_priority:
-   !id: 0x153
-   !bound: client
-   priority_data: CameraAimAssistActorPriorityData[]varint

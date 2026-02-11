@@ -327,9 +327,6 @@ MetadataDictionary: []varint
       133: bed_enter_position # blockpos
       134: seat_third_person_camera_radius
       135: seat_camera_relax_distance_smoothing
-      136: aim_assist_priority_preset_id
-      137: aim_assist_priority_category_id
-      138: aim_assist_priority_actor_id
    type: varint =>
       0: byte
       1: short
@@ -2188,25 +2185,6 @@ SoundType: varint =>
    - ImitateCamelHusk
    - ItemSpearUse
    - ItemWoodenSpearUse
-   - SaddleInWater
-   - ItemStoneSpearAttackHit
-   - ItemIronSpearAttackHit
-   - ItemCopperSpearAttackHit
-   - ItemGoldenSpearAttackHit
-   - ItemDiamondSpearAttackHit
-   - ItemNetheriteSpearAttackHit
-   - ItemStoneSpearAttackMiss
-   - ItemIronSpearAttackMiss
-   - ItemCopperSpearAttackMiss
-   - ItemGoldenSpearAttackMiss
-   - ItemDiamondSpearAttackMiss
-   - ItemNetheriteSpearAttackMiss
-   - ItemStoneSpearUse
-   - ItemIronSpearUse
-   - ItemCopperSpearUse
-   - ItemGoldenSpearUse
-   - ItemDiamondSpearUse
-   - ItemNetheriteSpearUse
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2439,154 +2417,19 @@ CameraRotationOption:
    value: vec3f
    # Time is the time of the keyframe within the spline.
    time: lf32
-   has_ease_type: bool
-   ease_type: has_ease_type ?
-      if true: u8
 
 # CameraSplineInstruction represents a camera spline instruction definition.
 CameraSplineInstruction:
    # TotalTime is the total time for the spline animation.
    total_time: lf32
-   has_spline_type: bool
-   spline_type: has_spline_type ?
-      if true: u8
+   # EaseType is the type of easing function applied to the spline.
+   ease_type: CameraSplineEaseType
    # Curve is the list of curve points defining the spline.
    curve: vec3f[]varint
    # ProgressKeyFrames is a list of key frames for the spline progress.
-   progress_key_frames: CameraProgressOption[]varint
+   progress_key_frames: vec2f[]varint
    # RotationOptions is a list of rotation keyframes for the spline.
    rotation_options: CameraRotationOption[]varint
-
-CameraProgressOption:
-   value: lf32
-   time: lf32
-   has_ease_type: bool
-   ease_type: has_ease_type ?
-      if true: u8
-
-CameraSplineDefinition:
-   name: string
-   instruction: CameraSplineInstruction
-
-CameraAimAssistActorPriorityData:
-   preset_index: li32
-   category_index: li32
-   actor_index: li32
-   priority: li32
-
-MemoryCategoryCounter:
-   category: u8 =>
-      - unknown
-      - invalid_size_unknown
-      - actor
-      - actor_animation
-      - actor_rendering
-      - balancer
-      - block_ticking_queues
-      - biome_storage
-      - cereal
-      - circuit_system
-      - client
-      - commands
-      - db_storage
-      - debug
-      - documentation
-      - ecs_systems
-      - fmod
-      - fonts
-      - im_gui
-      - input
-      - json_ui
-      - json_ui_control_factory_json
-      - json_ui_control_tree
-      - json_ui_control_tree_control_element
-      - json_ui_control_tree_populate_data_binding
-      - json_ui_control_tree_populate_focus
-      - json_ui_control_tree_populate_layout
-      - json_ui_control_tree_populate_other
-      - json_ui_control_tree_populate_sprite
-      - json_ui_control_tree_populate_text
-      - json_ui_control_tree_populate_tts
-      - json_ui_control_tree_visibility
-      - json_ui_create_ui
-      - json_ui_defs
-      - json_ui_layout_manager
-      - json_ui_layout_manager_remove_dependencies
-      - json_ui_layout_manager_init_variable
-      - languages
-      - level
-      - level_structures
-      - level_chunk
-      - level_chunk_gen
-      - level_chunk_gen_thread_local
-      - network
-      - marketplace
-      - material_dragon_compiled_definition
-      - material_dragon_material
-      - material_dragon_resource
-      - material_dragon_uniform_map
-      - material_render_material
-      - material_render_material_group
-      - material_variation_manager
-      - molang
-      - ore_ui
-      - persona
-      - player
-      - render_chunk
-      - render_chunk_index_buffer
-      - render_chunk_vertex_buffer
-      - rendering
-      - rendering_library
-      - request_log
-      - resource_packs
-      - sound
-      - sub_chunk_biome_data
-      - sub_chunk_block_data
-      - sub_chunk_light_data
-      - textures
-      - vr
-      - weather_renderer
-      - world_generator
-      - tasks
-      - test
-      - scripting
-      - scripting_runtime
-      - scripting_context
-      - scripting_context_bindings_mc
-      - scripting_context_bindings_gt
-      - scripting_context_run
-      - data_driven_ui
-      - data_driven_ui_defs
-   bytes: lu64
-
-VoxelCells:
-   x_size: u8
-   y_size: u8
-   z_size: u8
-   storage: u8[]varint
-
-VoxelShape:
-   cells: VoxelCells[]varint
-   x_coordinates: lf32[]varint
-   y_coordinates: lf32[]varint
-   z_coordinates: lf32[]varint
-
-VoxelShapeNameEntry:
-   name: string
-   id: lu16
-
-GatheringJoinInfo:
-   experience_id: string
-   experience_name: string
-   experience_world_id: string
-   experience_world_name: string
-   creator_id: string
-   store_id: string
-
-ServerJoinInformation:
-   has_gathering_info: bool
-   gathering_info: has_gathering_info ?
-      if true: GatheringJoinInfo
 
 
 DisconnectFailReason: zigzag32 =>
@@ -2713,17 +2556,6 @@ DisconnectFailReason: zigzag32 =>
    - realms_timeline_required
    - guest_withough_host
    - failed_to_join_experience
-   - host_signed_out
-   - script_watchdog_exception
-   - script_memory_limit_exceeded
-   - storage_low_during_gameplay
-   - storage_full_during_gameplay
-   - level_storage_corruption
-   - edition_mismatch_vanilla_to_edu
-   - edition_mismatch_edu_to_vanilla
-   - editor_mismatch_editor_to_vanilla
-   - editor_mismatch_vanilla_to_editor
-   - deny_listed
 
 FullContainerName:
    container_id: ContainerSlotType
@@ -2795,9 +2627,6 @@ BiomeChunkGeneration:
    legacy_rules?: BiomeConditionalTransformation[]varint
    # ReplacementsData is a list of biome replacement data.
    replacements_data?: BiomeReplacementData[]varint
-   has_village_type: bool
-   village_type: has_village_type ?
-      if true: u8
 
 # BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
 BiomeClimate:
@@ -3071,22 +2900,6 @@ GraphicsOverrideParameterType: u8 =>
    - sun_mie_strength
    - moon_mie_strength
    - sun_glare_shape
-   - chlorophyll
-   - cdom
-   - suspended_sediment
-   - waves_depth
-   - waves_frequency
-   - waves_frequency_scaling
-   - waves_speed
-   - waves_speed_scaling
-   - waves_shape
-   - waves_octaves
-   - waves_mix
-   - waves_pull
-   - waves_direction_increment
-   - midtones_contrast
-   - highlights_contrast
-   - shadows_contrast
 
 DebugMarkerData:
    text: string
