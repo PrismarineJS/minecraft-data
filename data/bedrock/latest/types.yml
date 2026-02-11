@@ -327,6 +327,9 @@ MetadataDictionary: []varint
       133: bed_enter_position # blockpos
       134: seat_third_person_camera_radius
       135: seat_camera_relax_distance_smoothing
+      136: aim_assist_priority_preset_id
+      137: aim_assist_priority_category_id
+      138: aim_assist_priority_actor_id
    type: varint =>
       0: byte
       1: short
@@ -342,6 +345,7 @@ MetadataDictionary: []varint
       if flags_extended: MetadataFlags2
       if seat_third_person_camera_radius: lf32
       if seat_camera_relax_distance_smoothing: lf32
+      if aim_assist_priority_preset_id or aim_assist_priority_category_id or aim_assist_priority_actor_id: string
       default: type ?
          if byte: i8
          if short: li16
@@ -2185,6 +2189,25 @@ SoundType: varint =>
    - ImitateCamelHusk
    - ItemSpearUse
    - ItemWoodenSpearUse
+   - SaddleInWater
+   - ItemStoneSpearAttackHit
+   - ItemIronSpearAttackHit
+   - ItemCopperSpearAttackHit
+   - ItemGoldenSpearAttackHit
+   - ItemDiamondSpearAttackHit
+   - ItemNetheriteSpearAttackHit
+   - ItemStoneSpearAttackMiss
+   - ItemIronSpearAttackMiss
+   - ItemCopperSpearAttackMiss
+   - ItemGoldenSpearAttackMiss
+   - ItemDiamondSpearAttackMiss
+   - ItemNetheriteSpearAttackMiss
+   - ItemStoneSpearUse
+   - ItemIronSpearUse
+   - ItemCopperSpearUse
+   - ItemGoldenSpearUse
+   - ItemDiamondSpearUse
+   - ItemNetheriteSpearUse
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2417,19 +2440,73 @@ CameraRotationOption:
    value: vec3f
    # Time is the time of the keyframe within the spline.
    time: lf32
+   has_ease_type: bool
+   ease_type: has_ease_type ?
+      if true: u8
 
 # CameraSplineInstruction represents a camera spline instruction definition.
 CameraSplineInstruction:
    # TotalTime is the total time for the spline animation.
    total_time: lf32
-   # EaseType is the type of easing function applied to the spline.
-   ease_type: CameraSplineEaseType
+   has_spline_type: bool
+   spline_type: has_spline_type ?
+      if true: u8
    # Curve is the list of curve points defining the spline.
    curve: vec3f[]varint
    # ProgressKeyFrames is a list of key frames for the spline progress.
-   progress_key_frames: vec2f[]varint
+   progress_key_frames: CameraProgressOption[]varint
    # RotationOptions is a list of rotation keyframes for the spline.
    rotation_options: CameraRotationOption[]varint
+
+CameraProgressOption:
+   value: lf32
+   time: lf32
+   has_ease_type: bool
+   ease_type: has_ease_type ?
+      if true: u8
+
+CameraSplineDefinition:
+   name: string
+   instruction: CameraSplineInstruction
+
+CameraAimAssistActorPriorityData:
+   preset_index: li32
+   category_index: li32
+   actor_index: li32
+   priority: li32
+
+MemoryCategoryCounter:
+   category: u8
+   bytes: lu64
+
+VoxelCells:
+   x_size: u8
+   y_size: u8
+   z_size: u8
+   storage: u8[]varint
+
+VoxelShape:
+   cells: VoxelCells
+   x_coordinates: lf32[]varint
+   y_coordinates: lf32[]varint
+   z_coordinates: lf32[]varint
+
+VoxelShapeNameEntry:
+   name: string
+   id: lu16
+
+GatheringJoinInfo:
+   experience_id: string
+   experience_name: string
+   experience_world_id: string
+   experience_world_name: string
+   creator_id: string
+   store_id: string
+
+ServerJoinInformation:
+   has_gathering_info: bool
+   gathering_info: has_gathering_info ?
+      if true: GatheringJoinInfo
 
 
 DisconnectFailReason: zigzag32 =>
@@ -2627,6 +2704,9 @@ BiomeChunkGeneration:
    legacy_rules?: BiomeConditionalTransformation[]varint
    # ReplacementsData is a list of biome replacement data.
    replacements_data?: BiomeReplacementData[]varint
+   has_village_type: bool
+   village_type: has_village_type ?
+      if true: u8
 
 # BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
 BiomeClimate:
@@ -2900,6 +2980,22 @@ GraphicsOverrideParameterType: u8 =>
    - sun_mie_strength
    - moon_mie_strength
    - sun_glare_shape
+   - chlorophyll
+   - cdom
+   - suspended_sediment
+   - waves_depth
+   - waves_frequency
+   - waves_frequency_scaling
+   - waves_speed
+   - waves_speed_scaling
+   - waves_shape
+   - waves_octaves
+   - waves_mix
+   - waves_pull
+   - waves_direction_increment
+   - midtones_contrast
+   - highlights_contrast
+   - shadows_contrast
 
 DebugMarkerData:
    text: string
