@@ -1,4 +1,4 @@
-!version: 1.21.11
+!version: 1.21.9
 !StartDocs: true
 
 ^types:
@@ -71,10 +71,7 @@
       - max_damage
       - damage
       - unbreakable
-      - use_effects
       - custom_name
-      - minimum_attack_charge
-      - damage_type
       - item_name
       - item_model
       - lore
@@ -96,7 +93,6 @@
       - damage_resistant
       - tool
       - weapon
-      - attack_range
       - enchantable
       - equippable
       - repairable
@@ -104,19 +100,16 @@
       - tooltip_style
       - death_protection
       - blocks_attacks
-      - piercing_weapon
-      - kinetic_weapon
-      - swing_animation
       - stored_enchantments
       - dyed_color
       - map_color
       - map_id
       - map_decorations
       - map_post_processing
+      - potion_duration_scale
       - charged_projectiles
       - bundle_contents
       - potion_contents
-      - potion_duration_scale
       - suspicious_stew_effects
       - writable_book_content
       - written_book_content
@@ -160,7 +153,6 @@
       - pig/variant
       - cow/variant
       - chicken/variant
-      - zomie_nautilus/variant
       - frog/variant
       - horse/variant
       - painting/variant
@@ -183,17 +175,7 @@
          if max_damage: varint
          if damage: varint
          if unbreakable: void
-         if use_effects:
-            can_sprint: bool
-            interact_vibrations: bool
-            speed_multiplier: f32
          if custom_name: anonymousNbt
-         if minimum_attack_charge: f32
-         if damage_type:
-            hasHolder: bool
-            damageType: hasHolder ?
-               if true: ["registryEntryHolder", { "baseName": "damageTypeId", "otherwise": { "name": "data", "type": "DamageTypeData" } }]
-               if false: string
          if item_name: anonymousNbt
          if item_model: string
          if lore: anonymousNbt[]varint
@@ -305,13 +287,6 @@
          if weapon:
             itemDamagePerAttack: varint
             disableBlockingForSeconds: f32
-         if attack_range:
-            minRange: f32
-            maxRange: f32
-            minCreativeRange: f32
-            maxCreativeRange: f32
-            hitboxMargin: f32
-            mobFactor: f32
          # Enchantment cost up to which the item can be enchanted
          if enchantable: varint
          if equippable:
@@ -340,27 +315,6 @@
          if tooltip_style: string
          if death_protection:
             effects: ItemConsumeEffect[]varint
-         if piercing_weapon:
-            dealsKnockback: bool
-            dismounts: bool
-            sound?: ItemSoundHolder
-            hitSound?: ItemSoundHolder
-         if kinetic_weapon:
-            contactCooldownTicks: varint
-            delayTicks: varint
-            dismountConditions?: KineticWeaponCondition
-            knockbackConditions?: KineticWeaponCondition
-            damageConditions?: KineticWeaponCondition
-            forwardMovement: f32
-            damageMultiplier: f32
-            sound?: ItemSoundHolder
-            hitSound?: ItemSoundHolder
-         if swing_animation:
-            type: varint =>
-               - none
-               - whack
-               - stab
-            duration: varint
          if dyed_color: i32
          if map_color: i32
          if map_id: varint
@@ -467,7 +421,6 @@
          if pig/variant: varint
          if cow/variant: varint
          if chicken/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
-         if zombie_nautilus/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
          if frog/variant: varint
          if horse/variant: varint
          if painting/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "data", "type": "EntityMetadataPaintingVariant" } }]
@@ -596,30 +549,6 @@
    BannerPatternLayer:
       pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "BannerPattern" } }]
       colorId: varint
-
-   DamageTypeData:
-      msgId: string
-      scaling: varint =>
-         - never
-         - when_caused_by_living_non_player
-         - always
-      exhaustion: f32
-      effects: varint =>
-         - hurt
-         - thorns
-         - drowning
-         - burning
-         - poking
-         - freezing
-      deathMessageType: varint =>
-         - default
-         - fall_variants
-         - intentional_game_design
-
-   KineticWeaponCondition:
-      maxDurationTicks: varint
-      minSpeed: f32
-      minRelativeSpeed: f32
 
    # This represents a single component within an UntrustedSlot.
    # The 'data' field is a varint-prefixed byte array that contains the actual component data.
@@ -1118,7 +1047,6 @@
       - frog_variant
       - pig_variant
       - chicken_variant
-      - zombie_nautilus_variant
       - optional_global_pos
       - painting_variant
       - sniffer_state
@@ -1128,7 +1056,6 @@
       - vector3
       - quaternion
       - resolvable_profile
-      - humanoid_arm
       value: type ?
          if byte: i8
          if int: varint
@@ -1164,7 +1091,6 @@
          if frog_variant: varint
          if pig_variant: varint
          if chicken_variant: varint
-         if zombie_nautilus_variant: varint
          if optional_global_pos: ["option", "GlobalPos"]
          if painting_variant: ["registryEntryHolder", {
             "baseName": "variantId",
@@ -1177,9 +1103,6 @@
          if vector3: vec3f
          if quaternion: vec4f
          if resolvable_profile: ResolvableProfile
-         if humanoid_arm: varint =>
-            - left
-            - right
    EntityMetadataPaintingVariant:
       width: i32
       height: i32
