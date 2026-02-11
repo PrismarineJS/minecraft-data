@@ -4882,7 +4882,95 @@
       [
         {
           "name": "category",
-          "type": "u8"
+          "type": [
+            "mapper",
+            {
+              "type": "u8",
+              "mappings": {
+                "0": "unknown",
+                "1": "invalid_size_unknown",
+                "2": "actor",
+                "3": "actor_animation",
+                "4": "actor_rendering",
+                "5": "balancer",
+                "6": "block_ticking_queues",
+                "7": "biome_storage",
+                "8": "cereal",
+                "9": "circuit_system",
+                "10": "client",
+                "11": "commands",
+                "12": "db_storage",
+                "13": "debug",
+                "14": "documentation",
+                "15": "ecs_systems",
+                "16": "fmod",
+                "17": "fonts",
+                "18": "im_gui",
+                "19": "input",
+                "20": "json_ui",
+                "21": "json_ui_control_factory_json",
+                "22": "json_ui_control_tree",
+                "23": "json_ui_control_tree_control_element",
+                "24": "json_ui_control_tree_populate_data_binding",
+                "25": "json_ui_control_tree_populate_focus",
+                "26": "json_ui_control_tree_populate_layout",
+                "27": "json_ui_control_tree_populate_other",
+                "28": "json_ui_control_tree_populate_sprite",
+                "29": "json_ui_control_tree_populate_text",
+                "30": "json_ui_control_tree_populate_tts",
+                "31": "json_ui_control_tree_visibility",
+                "32": "json_ui_create_ui",
+                "33": "json_ui_defs",
+                "34": "json_ui_layout_manager",
+                "35": "json_ui_layout_manager_remove_dependencies",
+                "36": "json_ui_layout_manager_init_variable",
+                "37": "languages",
+                "38": "level",
+                "39": "level_structures",
+                "40": "level_chunk",
+                "41": "level_chunk_gen",
+                "42": "level_chunk_gen_thread_local",
+                "43": "network",
+                "44": "marketplace",
+                "45": "material_dragon_compiled_definition",
+                "46": "material_dragon_material",
+                "47": "material_dragon_resource",
+                "48": "material_dragon_uniform_map",
+                "49": "material_render_material",
+                "50": "material_render_material_group",
+                "51": "material_variation_manager",
+                "52": "molang",
+                "53": "ore_ui",
+                "54": "persona",
+                "55": "player",
+                "56": "render_chunk",
+                "57": "render_chunk_index_buffer",
+                "58": "render_chunk_vertex_buffer",
+                "59": "rendering",
+                "60": "rendering_library",
+                "61": "request_log",
+                "62": "resource_packs",
+                "63": "sound",
+                "64": "sub_chunk_biome_data",
+                "65": "sub_chunk_block_data",
+                "66": "sub_chunk_light_data",
+                "67": "textures",
+                "68": "vr",
+                "69": "weather_renderer",
+                "70": "world_generator",
+                "71": "tasks",
+                "72": "test",
+                "73": "scripting",
+                "74": "scripting_runtime",
+                "75": "scripting_context",
+                "76": "scripting_context_bindings_mc",
+                "77": "scripting_context_bindings_gt",
+                "78": "scripting_context_run",
+                "79": "data_driven_ui",
+                "80": "data_driven_ui_defs"
+              }
+            }
+          ]
         },
         {
           "name": "bytes",
@@ -4922,7 +5010,13 @@
       [
         {
           "name": "cells",
-          "type": "VoxelCells"
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "VoxelCells"
+            }
+          ]
         },
         {
           "name": "x_coordinates",
@@ -5145,7 +5239,18 @@
           "118": "async_join_task_denied",
           "119": "realms_timeline_required",
           "120": "guest_withough_host",
-          "121": "failed_to_join_experience"
+          "121": "failed_to_join_experience",
+          "122": "host_signed_out",
+          "123": "script_watchdog_exception",
+          "124": "script_memory_limit_exceeded",
+          "125": "storage_low_during_gameplay",
+          "126": "storage_full_during_gameplay",
+          "127": "level_storage_corruption",
+          "128": "edition_mismatch_vanilla_to_edu",
+          "129": "edition_mismatch_edu_to_vanilla",
+          "130": "editor_mismatch_editor_to_vanilla",
+          "131": "editor_mismatch_vanilla_to_editor",
+          "132": "deny_listed"
         }
       }
     ],
@@ -14962,7 +15067,11 @@
                               },
                               {
                                 "name": "update_count",
-                                "type": "varint"
+                                "type": "li32"
+                              },
+                              {
+                                "name": "path_update_count",
+                                "type": "li32"
                               }
                             ]
                           ],
@@ -15112,6 +15221,10 @@
         {
           "name": "update_count",
           "type": "varint"
+        },
+        {
+          "name": "path_update_count",
+          "type": "li32"
         }
       ]
     ],
