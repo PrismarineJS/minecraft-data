@@ -30,6 +30,10 @@
    optionalNbt: native
    ByteArray: ["buffer", { "countType": "varint" }]
    string: ["pstring", { "countType": "varint" }]
+   vec3i16:
+      x: i16
+      y: i16
+      z: i16
    slot:   
       present: bool
       _: present ?
@@ -524,9 +528,7 @@
       pitch: i8
       yaw: i8
       objectData: i32
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
+      velocity: vec3i16
    packet_spawn_entity_experience_orb:   
       entityId: varint
       x: f64
@@ -543,9 +545,7 @@
       yaw: i8
       pitch: i8
       headPitch: i8
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
+      velocity: vec3i16
    packet_spawn_entity_painting:   
       entityId: varint
       entityUUID: UUID
@@ -1046,9 +1046,7 @@
       vehicleId: i32
    packet_entity_velocity:   
       entityId: varint
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
+      velocity: vec3i16
    packet_entity_equipment:   
       entityId: varint
       equipments: [
