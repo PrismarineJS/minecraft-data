@@ -447,61 +447,87 @@
                   ]
                 ],
                 "attribute_modifiers": [
-                  "container",
-                  [
-                    {
-                      "name": "attributes",
-                      "type": [
-                        "array",
+                  "array",
+                  {
+                    "countType": "varint",
+                    "type": [
+                      "container",
+                      [
                         {
-                          "countType": "varint",
+                          "name": "typeId",
+                          "type": "varint"
+                        },
+                        {
+                          "name": "name",
+                          "type": "string"
+                        },
+                        {
+                          "name": "value",
+                          "type": "f64"
+                        },
+                        {
+                          "name": "operation",
+                          "type": [
+                            "mapper",
+                            {
+                              "type": "varint",
+                              "mappings": {
+                                "0": "add",
+                                "1": "multiply_base",
+                                "2": "multiply_total"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "name": "slot",
+                          "type": [
+                            "mapper",
+                            {
+                              "type": "varint",
+                              "mappings": {
+                                "0": "any",
+                                "1": "main_hand",
+                                "2": "off_hand",
+                                "3": "hand",
+                                "4": "feet",
+                                "5": "legs",
+                                "6": "chest",
+                                "7": "head",
+                                "8": "armor",
+                                "9": "body",
+                                "10": "saddle"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "name": "display",
                           "type": [
                             "container",
                             [
                               {
-                                "name": "typeId",
-                                "type": "varint"
-                              },
-                              {
-                                "name": "name",
-                                "type": "string"
-                              },
-                              {
-                                "name": "value",
-                                "type": "f64"
-                              },
-                              {
-                                "name": "operation",
+                                "name": "type",
                                 "type": [
                                   "mapper",
                                   {
                                     "type": "varint",
                                     "mappings": {
-                                      "0": "add",
-                                      "1": "multiply_base",
-                                      "2": "multiply_total"
+                                      "0": "default",
+                                      "1": "hidden",
+                                      "2": "override"
                                     }
                                   }
                                 ]
                               },
                               {
-                                "name": "slot",
+                                "name": "component",
                                 "type": [
-                                  "mapper",
+                                  "switch",
                                   {
-                                    "type": "varint",
-                                    "mappings": {
-                                      "0": "any",
-                                      "1": "main_hand",
-                                      "2": "off_hand",
-                                      "3": "hand",
-                                      "4": "feet",
-                                      "5": "legs",
-                                      "6": "chest",
-                                      "7": "head",
-                                      "8": "armor",
-                                      "9": "body",
-                                      "10": "saddle"
+                                    "compareTo": "type",
+                                    "fields": {
+                                      "override": "anonymousNbt"
                                     }
                                   }
                                 ]
@@ -510,42 +536,8 @@
                           ]
                         }
                       ]
-                    },
-                    {
-                      "name": "display",
-                      "type": [
-                        "container",
-                        [
-                          {
-                            "name": "type",
-                            "type": [
-                              "mapper",
-                              {
-                                "type": "varint",
-                                "mappings": {
-                                  "0": "default",
-                                  "1": "hidden",
-                                  "2": "override"
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "name": "component",
-                            "type": [
-                              "switch",
-                              {
-                                "compareTo": "type",
-                                "fields": {
-                                  "override": "anonymousNbt"
-                                }
-                              }
-                            ]
-                          }
-                        ]
-                      ]
-                    }
-                  ]
+                    ]
+                  }
                 ],
                 "custom_model_data": [
                   "container",
