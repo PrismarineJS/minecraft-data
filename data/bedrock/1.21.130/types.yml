@@ -609,7 +609,7 @@ TransactionActions: []varint
       99999: craft
    _: source_type?
       if container or craft:
-         inventory_id: WindowIDVarint
+         inventory_id: WindowIDZigzag32
       if world_interaction:
          flags: varint
       if craft or craft_slot:
@@ -1439,7 +1439,7 @@ CommandPermissionLevelVarint: u8 =>
 # List of Window IDs. When a new container is opened (container_open), a new sequential Window ID is created.
 # Below window IDs are hard-coded and created when the game starts and the server does not 
 # send a `container_open` for them.
-WindowID: i8 =>
+WindowID_: =>
    -100: drop_contents
    -24: beacon
    -23: trading_output
@@ -1468,34 +1468,9 @@ WindowID: i8 =>
    123: fixed_inventory
    124: ui
 
-WindowIDVarint: varint =>
-   -100: drop_contents
-   -24: beacon
-   -23: trading_output
-   -22: trading_use_inputs
-   -21: trading_input_2
-   -20: trading_input_1
-   -17: enchant_output
-   -16: enchant_material
-   -15: enchant_input
-   -13: anvil_output
-   -12: anvil_result
-   -11: anvil_material
-   -10: container_input
-   -5: crafting_use_ingredient
-   -4: crafting_result
-   -3: crafting_remove_ingredient
-   -2: crafting_add_ingredient
-   -1: none
-   0: inventory
-   1: first
-   100: last
-   119: offhand
-   120: armor
-   121: creative
-   122: hotbar
-   123: fixed_inventory
-   124: ui
+WindowID: i8 => WindowID_
+WindowIDVarint: varint => WindowID_
+WindowIDZigzag32: zigzag32 => WindowID_
 
 WindowType: i8 =>
    -9: none
