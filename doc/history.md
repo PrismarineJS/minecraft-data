@@ -1,3 +1,19 @@
+## 3.105.1
+* [pc/protocol: Backport velocity naming changes (#1153)](https://github.com/PrismarineJS/minecraft-data/commit/7e72793ce9aa8235a0f9f9df755c2ee21b825af5) (thanks @SuperGamerTron)
+* [fix(bedrock/proto): mismatched field type in TransactionActions (#1157)](https://github.com/PrismarineJS/minecraft-data/commit/ffa565f17bbf1d5420c860cb29d72aa6e3af7153) (thanks @hax0r31337)
+* [Add 26.1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/d08d2cfb2b68617ccd510f483b911894cbdd82a2) (thanks @github-actions[bot])
+* [Add 26.1-rc-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/12a2792c1378f46b7dcbaaa9f5926718d2b7c4fe) (thanks @github-actions[bot])
+* [Add 26.1-rc-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/dcbf88b006a982f77de6e7df2ab4a3a1f21347e7) (thanks @github-actions[bot])
+* [Add 26.1-rc-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/1f4dbdda606cc6494411b8c1153166f2a47f6244) (thanks @github-actions[bot])
+* [Add 26.1-pre-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e1c2ee99ebe27b6f0c02eed48284524703895b50) (thanks @github-actions[bot])
+* [Add 26.1-pre-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/b659f5aa7b8c5986b1a55d0d27a91d77d7e5671e) (thanks @github-actions[bot])
+* [Add 26.1-pre-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4191606d353f09aa730c23d91560003d96bd7ec1) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-11 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/84c4d9f17043f21b2a0034c564b6064245c1279d) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-10 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/3e12d39f672a83e081a33ce5dd7c48229f6e572e) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-9 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e3b7e6bfaf3bfa77981b99bc4357ab8a4aea575c) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-8 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0e6fd9eba00a2f002065547db4d2832cae861a48) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-7 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f07441a9e5803e6fef7ae0a874ba7c615b6a9874) (thanks @github-actions[bot])
+
 ## 3.105.0
 * [🎈 Add Minecraft pc 1.21.11 data (#1144)](https://github.com/PrismarineJS/minecraft-data/commit/52cfa3ed1534226868dd6f1a6c47f16070e939ad) (thanks @rom1504bot)
 
