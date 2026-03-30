@@ -1,3 +1,6 @@
+## 3.106.0
+* [Update CI to Node 24 (#1163)](https://github.com/PrismarineJS/minecraft-data/commit/c5b35d3b1335b155c4d9aad5d92afb58c37e79c5) (thanks @rom1504)
+
 ## 3.105.1
 * [pc/protocol: Backport velocity naming changes (#1153)](https://github.com/PrismarineJS/minecraft-data/commit/7e72793ce9aa8235a0f9f9df755c2ee21b825af5) (thanks @SuperGamerTron)
 * [fix(bedrock/proto): mismatched field type in TransactionActions (#1157)](https://github.com/PrismarineJS/minecraft-data/commit/ffa565f17bbf1d5420c860cb29d72aa6e3af7153) (thanks @hax0r31337)
