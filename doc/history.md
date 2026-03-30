@@ -1,3 +1,6 @@
+## 3.109.0
+* [Fix recipe metadata for planks from logs in pre-1.13 versions (#1166)](https://github.com/PrismarineJS/minecraft-data/commit/f9b2eaeade48f5fe71e3b2bb28e929106064302c) (thanks @rom1504)
+
 ## 3.108.0
 * [Add bedrock 26.10 protocol data (#1162)](https://github.com/PrismarineJS/minecraft-data/commit/4b0f3436a01b24b652e1d5b02a4760cb9cc7830a) (thanks @extremeheat)
 
