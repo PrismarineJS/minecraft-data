@@ -1,4 +1,4 @@
-## 3.106.0
+## 3.107.0
 * [Update CI to Node 24 (#1163)](https://github.com/PrismarineJS/minecraft-data/commit/c5b35d3b1335b155c4d9aad5d92afb58c37e79c5) (thanks @rom1504)
 
 ## 3.105.1
