@@ -1,3 +1,6 @@
+## 3.108.0
+* [Add bedrock 26.10 protocol data (#1162)](https://github.com/PrismarineJS/minecraft-data/commit/4b0f3436a01b24b652e1d5b02a4760cb9cc7830a) (thanks @extremeheat)
+
 ## 3.107.0
 * [Update CI to Node 24 (#1163)](https://github.com/PrismarineJS/minecraft-data/commit/c5b35d3b1335b155c4d9aad5d92afb58c37e79c5) (thanks @rom1504)
 
