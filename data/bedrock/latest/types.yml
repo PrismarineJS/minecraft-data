@@ -330,6 +330,9 @@ MetadataDictionary: []varint
       136: aim_assist_priority_preset_id
       137: aim_assist_priority_category_id
       138: aim_assist_priority_actor_id
+      139: arrow_shooter_id
+      140: firework_direction
+      141: firework_shooter_id
    type: varint =>
       0: byte
       1: short
@@ -529,7 +532,7 @@ Rotation:
 
 BlockCoordinates: # mojang...
    x: zigzag32
-   y: varint
+   y: zigzag32
    z: zigzag32
 
 PlayerAttributes: []varint
@@ -597,6 +600,9 @@ TransactionUseItem:
    client_prediction: varint =>
    - failure
    - success
+   client_cooldown_state: u8 =>
+      0: off
+      1: on
 
 # Actions is a list of actions that took place, that form the inventory transaction together. Each of
 # these actions hold one slot in which one item was changed to another. In general, the combination of
@@ -612,7 +618,7 @@ TransactionActions: []varint
       99999: craft
    _: source_type?
       if container or craft:
-         inventory_id: WindowIDVarint
+         inventory_id: WindowIDZigzag32
       if world_interaction:
          flags: varint
       if craft or craft_slot:
@@ -1442,7 +1448,7 @@ CommandPermissionLevelVarint: u8 =>
 # List of Window IDs. When a new container is opened (container_open), a new sequential Window ID is created.
 # Below window IDs are hard-coded and created when the game starts and the server does not 
 # send a `container_open` for them.
-WindowID: i8 =>
+WindowID_: =>
    -100: drop_contents
    -24: beacon
    -23: trading_output
@@ -1471,34 +1477,9 @@ WindowID: i8 =>
    123: fixed_inventory
    124: ui
 
-WindowIDVarint: varint =>
-   -100: drop_contents
-   -24: beacon
-   -23: trading_output
-   -22: trading_use_inputs
-   -21: trading_input_2
-   -20: trading_input_1
-   -17: enchant_output
-   -16: enchant_material
-   -15: enchant_input
-   -13: anvil_output
-   -12: anvil_result
-   -11: anvil_material
-   -10: container_input
-   -5: crafting_use_ingredient
-   -4: crafting_result
-   -3: crafting_remove_ingredient
-   -2: crafting_add_ingredient
-   -1: none
-   0: inventory
-   1: first
-   100: last
-   119: offhand
-   120: armor
-   121: creative
-   122: hotbar
-   123: fixed_inventory
-   124: ui
+WindowID: i8 => WindowID_
+WindowIDVarint: varint => WindowID_
+WindowIDZigzag32: zigzag32 => WindowID_
 
 WindowType: i8 =>
    -9: none
@@ -1608,6 +1589,9 @@ ContainerSlotType: u8 =>
    - crafter
    - dynamic
    - registry # 125
+   - recipe_food
+   - recipe_blocks
+   - recipe_furnace_items
 
 SoundType: varint =>
    - ItemUseOn
@@ -2207,6 +2191,8 @@ SoundType: varint =>
    - ItemGoldenSpearUse
    - ItemDiamondSpearUse
    - ItemNetheriteSpearUse
+   - PauseGrowth
+   - ResetGrowth
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2441,7 +2427,7 @@ CameraRotationOption:
    time: lf32
    has_ease_type: bool
    ease_type: has_ease_type ?
-      if true: u8
+      if true: string
 
 # CameraSplineInstruction represents a camera spline instruction definition.
 CameraSplineInstruction:
@@ -2449,24 +2435,30 @@ CameraSplineInstruction:
    total_time: lf32
    has_spline_type: bool
    spline_type: has_spline_type ?
-      if true: u8
+      if true: string
    # Curve is the list of curve points defining the spline.
    curve: vec3f[]varint
    # ProgressKeyFrames is a list of key frames for the spline progress.
    progress_key_frames: CameraProgressOption[]varint
    # RotationOptions is a list of rotation keyframes for the spline.
    rotation_options: CameraRotationOption[]varint
+   spline_identifier?: string
+   load_from_json?: bool
 
 CameraProgressOption:
    value: lf32
    time: lf32
    has_ease_type: bool
    ease_type: has_ease_type ?
-      if true: u8
+      if true: string
 
 CameraSplineDefinition:
    name: string
-   instruction: CameraSplineInstruction
+   total_time: lf32
+   spline_type?: string
+   control_points: vec3f[]varint
+   progress_key_frames: CameraProgressOption[]varint
+   rotation_key_frames: CameraRotationOption[]varint
 
 CameraAimAssistActorPriorityData:
    preset_index: li32
@@ -2481,7 +2473,6 @@ MemoryCategoryCounter:
       - actor
       - actor_animation
       - actor_rendering
-      - balancer
       - block_ticking_queues
       - biome_storage
       - cereal
@@ -2519,6 +2510,7 @@ MemoryCategoryCounter:
       - level_chunk
       - level_chunk_gen
       - level_chunk_gen_thread_local
+      - light_volume_manager
       - network
       - marketplace
       - material_dragon_compiled_definition
@@ -2557,6 +2549,17 @@ MemoryCategoryCounter:
       - scripting_context_run
       - data_driven_ui
       - data_driven_ui_defs
+      - gameface
+      - gameface_system
+      - gameface_dom
+      - gameface_css
+      - gameface_display
+      - gameface_temp_allocator
+      - gameface_pool_allocator
+      - gameface_dump
+      - gameface_media
+      - gameface_json
+      - gameface_script_engine
    bytes: lu64
 
 VoxelCells:
@@ -2576,17 +2579,29 @@ VoxelShapeNameEntry:
    id: lu16
 
 GatheringJoinInfo:
-   experience_id: string
+   experience_id: uuid
    experience_name: string
-   experience_world_id: string
+   experience_world_id: uuid
    experience_world_name: string
    creator_id: string
+   unknown_uuid_1: uuid
+   unknown_uuid_2: uuid
+   server_id: string
+
+StoreEntryPointInfo:
    store_id: string
+   store_name: string
+
+PresenceInfo:
+   experience_name: string
+   world_name: string
 
 ServerJoinInformation:
    has_gathering_info: bool
    gathering_info: has_gathering_info ?
       if true: GatheringJoinInfo
+   store_entry_point_info?: StoreEntryPointInfo
+   presence_info?: PresenceInfo
 
 
 DisconnectFailReason: zigzag32 =>
@@ -3049,10 +3064,7 @@ EaseType: u8 =>
    - InElastic
    - OutElastic
    - InOutElastic
-
-CameraSplineEaseType: u8 =>
-   - catmull_rom
-   - linear
+   - InverseLerp
 
 ParameterKeyframeValue:
    # Time is the time of the keyframe.
@@ -3087,9 +3099,164 @@ GraphicsOverrideParameterType: u8 =>
    - midtones_contrast
    - highlights_contrast
    - shadows_contrast
+   - highlights_gain
+   - highlights_gamma
+   - highlights_offset
+   - highlights_saturation
+   - midtones_gain
+   - midtones_gamma
+   - midtones_offset
+   - midtones_saturation
+   - shadows_gain
+   - shadows_gamma
+   - shadows_offset
+   - shadows_saturation
+   - highlights_min
+   - shadows_max
+   - temperature
+   - sun_color
+   - sun_illuminance
+   - moon_color
+   - moon_illuminance
+   - flash_color
+   - flash_illuminance
+   - ambient_color
+   - ambient_illuminance
 
 DebugMarkerData:
    text: string
    position: vec3f
    color: lu32
    duration: lu64
+
+DataStorePropertyValue:
+   type: li32 =>
+      0: none
+      1: bool
+      2: int64
+      4: string
+      6: map
+   value: type ?
+      if none: void
+      if bool: bool
+      if int64: li64
+      if string: string
+      if map: DataStoreMapEntry[]varint
+
+DataStoreMapEntry:
+   key: string
+   value: DataStorePropertyValue
+
+DataStoreChangeEntry:
+   change_type: lu32 =>
+      0: update
+      1: change
+      2: removal
+   _: change_type ?
+      if update:
+         name: string
+         property: string
+         path: string
+         data_type: lu32 =>
+            0: double
+            1: bool
+            2: string
+         data: data_type ?
+            if double: lf64
+            if bool: bool
+            if string: string
+         update_count: lu32
+         path_update_count: lu32
+      if change:
+         name: string
+         property: string
+         update_count: lu32
+         new_value: DataStorePropertyValue
+      if removal:
+         name: string
+
+WaypointWorldPosition:
+   position: vec3f
+   dimension_id: zigzag32
+
+Waypoint:
+   update_flags: lu32
+   visible?: bool
+   world_position?: WaypointWorldPosition
+   texture_id?: lu32
+   color?: li32
+   client_position_authority?: bool
+   actor_unique_id?: zigzag64
+
+LocatorBarWaypoint:
+   group_handle: uuid
+   waypoint: Waypoint
+   action: u8 =>
+      0: none
+      1: add
+      2: remove
+      3: update
+
+SyncWorldClockStateData:
+   clock_id: varint64
+   time: zigzag32
+   paused: bool
+
+TimeMarkerData:
+   id: varint64
+   name: string
+   time: zigzag32
+   period?: li32
+
+WorldClockData:
+   id: varint64
+   name: string
+   time: zigzag32
+   paused: bool
+   time_markers: TimeMarkerData[]varint
+
+AttributeLayerSettings:
+   priority: li32
+   weight_type: varint =>
+      0: float
+      1: string
+   _: weight_type ?
+      if float:
+         float_weight: lf32
+      if string:
+         string_weight: string
+   enabled: bool
+   transitions_paused: bool
+
+AttributeData:
+   type: varint =>
+      0: bool
+      1: float
+      2: colour
+   _: type ?
+      if bool:
+         bool_value: bool
+         bool_operation?: li32
+      if float:
+         float_value: lf32
+         float_operation?: li32
+         float_constraint_min?: lf32
+         float_constraint_max?: lf32
+      if colour:
+         colour_value: li32
+         colour_operation?: li32
+
+EnvironmentAttributeData:
+   attribute_name: string
+   from_attribute?: AttributeData
+   attribute: AttributeData
+   to_attribute?: AttributeData
+   current_transition_ticks: lu32
+   total_transition_ticks: lu32
+   ease_type: li32
+
+AttributeLayerData:
+   name: string
+   dimension_id: zigzag32
+   settings: AttributeLayerSettings
+   environment_attributes: EnvironmentAttributeData[]varint

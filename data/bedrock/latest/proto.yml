@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.26.0
+!version: 26.10
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -4055,9 +4055,6 @@ packet_update_client_input_locks:
    !bound: client
    # Locks is an encoded bitset of all locks that are currently active. The locks are defined in the constants above.
    locks: InputLockFlags
-   # Position is the server's position of the client at the time the packet was sent. It is unclear what the exact
-   # purpose of this field is.
-   position: vec3f
 
 # Deprecated: ClientCheatAbility is deprecated as of 1.20.10.
 packet_client_cheat_ability:
@@ -4563,48 +4560,14 @@ packet_serverbound_pack_setting_change:
 packet_clientbound_data_store:
    !id: 0x14a
    !bound: client
-   entries: []varint
-      type: varint =>
-         0: update
-         1: change
-         2: removal
-      _: type ?
-         if update:
-            name: string
-            property: string
-            path: string
-            data_type: varint =>
-               0: double
-               1: bool
-               2: string
-            data: data_type ?
-               if double: lf64
-               if bool: bool
-               if string: string
-            update_count: li32
-            path_update_count: li32
-         if change:
-            name: string
-            property: string
-            update_count: varint
-            # TODO: This packet maybe defined wrong. Needs further investigation
-            data_type: varint =>
-               0: double
-               1: bool
-               2: string
-            data: data_type ?
-               if double: lf64
-               if bool: bool
-               if string: string
-         if removal:
-            name: string
+   updates: DataStoreChangeEntry[]varint
 
 packet_graphics_override_parameter:
    !id: 0x14b
    !bound: client
    values: ParameterKeyframeValue[]varint
-   float_value: lf32
-   vec3_value: vec3f
+   float_value?: lf32
+   vec3_value?: vec3f
    biome_identifier: string
    parameter_type: GraphicsOverrideParameterType
    reset: bool
@@ -4615,7 +4578,7 @@ packet_serverbound_data_store:
    name: string
    property: string
    path: string
-   data_type: varint =>
+   data_type: lu32 =>
       0: double
       1: bool
       2: string
@@ -4623,17 +4586,20 @@ packet_serverbound_data_store:
       if double: lf64
       if bool: bool
       if string: string
-   update_count: varint
-   path_update_count: li32
+   update_count: lu32
+   path_update_count: lu32
 
 packet_clientbound_data_driven_ui_show_screen:
    !id: 0x14d
    !bound: client
    screen_id: string
+   form_id: lu32
+   data_instance_id?: lu32
 
-packet_clientbound_data_driven_ui_close_all_screens:
+packet_clientbound_data_driven_ui_close_screen:
    !id: 0x14e
    !bound: client
+   form_id?: lu32
 
 packet_clientbound_data_driven_ui_reload:
    !id: 0x14f
@@ -4661,6 +4627,7 @@ packet_voxel_shapes:
    !bound: client
    shapes: VoxelShape[]varint
    name_map: VoxelShapeNameEntry[]varint
+   custom_shape_count: lu16
 
 packet_camera_spline:
    !id: 0x152
@@ -4671,3 +4638,72 @@ packet_camera_aim_assist_actor_priority:
    !id: 0x153
    !bound: client
    priority_data: CameraAimAssistActorPriorityData[]varint
+
+packet_resource_packs_ready_for_validation:
+   !id: 0x154
+   !bound: server
+
+packet_locator_bar:
+   !id: 0x155
+   !bound: client
+   waypoints: LocatorBarWaypoint[]varint
+
+packet_party_changed:
+   !id: 0x156
+   !bound: client
+   party_id: string
+
+packet_serverbound_data_driven_screen_closed:
+   !id: 0x157
+   !bound: server
+   form_id?: lu32
+   close_reason: u8 =>
+      0: programmatic_close
+      1: programmatic_close_all
+      2: client_canceled
+      3: user_busy
+      4: invalid_form
+
+packet_sync_world_clocks:
+   !id: 0x158
+   !bound: client
+   payload_type: varint =>
+      0: sync_state
+      1: initialize_registry
+      2: add_time_marker
+      3: remove_time_marker
+   _: payload_type ?
+      if sync_state:
+         sync_states: SyncWorldClockStateData[]varint
+      if initialize_registry:
+         clocks: WorldClockData[]varint
+      if add_time_marker:
+         add_clock_id: varint64
+         add_time_markers: TimeMarkerData[]varint
+      if remove_time_marker:
+         remove_clock_id: varint64
+         remove_time_marker_ids: varint64[]varint
+
+packet_clientbound_attribute_layer_sync:
+   !id: 0x159
+   !bound: client
+   payload_type: varint =>
+      0: update_layers
+      1: update_settings
+      2: update_environment
+      3: remove_environment
+   _: payload_type ?
+      if update_layers:
+         layers: AttributeLayerData[]varint
+      if update_settings:
+         layer_name: string
+         dimension_id: zigzag32
+         settings: AttributeLayerSettings
+      if update_environment:
+         layer_name: string
+         dimension_id: zigzag32
+         environment_attributes: EnvironmentAttributeData[]varint
+      if remove_environment:
+         layer_name: string
+         dimension_id: zigzag32
+         remove_attribute_names: string[]varint
