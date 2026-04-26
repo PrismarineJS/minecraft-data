@@ -1,44 +1,34 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "blockMappings",
+  "description": "Maps block names and states between PC and PE (Bedrock) versions.",
   "type": "array",
-  "items": [
-    {
+  "items": {
+    "type": "object",
+    "description": "A mapping between a PC and PE block.",
+    "properties": {
+      "pc": { "$ref": "#/$defs/blockRef", "description": "PC (Java Edition) block reference." },
+      "pe": { "$ref": "#/$defs/blockRef", "description": "PE (Bedrock Edition) block reference." }
+    },
+    "required": ["pc", "pe"],
+    "additionalProperties": false
+  },
+  "$defs": {
+    "blockRef": {
       "type": "object",
+      "description": "A reference to a block, including its name and states.",
       "properties": {
-        "pc": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "states": {
-              "type": "object"
-            }
-          },
-          "required": [
-            "name",
-            "states"
-          ]
+        "name": {
+          "type": "string",
+          "description": "The block's unique name identifier."
         },
-        "pe": {
+        "states": {
           "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "states": {
-              "type": "object"
-            }
-          },
-          "required": [
-            "name",
-            "states"
-          ]
+          "description": "The block's state properties as key-value pairs."
         }
       },
-      "required": [
-        "pc",
-        "pe"
-      ]
+      "required": ["name", "states"],
+      "additionalProperties": false
     }
-  ]
+  }
 }

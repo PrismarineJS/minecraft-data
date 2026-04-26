@@ -17,6 +17,7 @@
     "option": "native",
     "entityMetadataLoop": "native",
     "bitfield": "native",
+    "bitflags": "native",
     "container": "native",
     "switch": "native",
     "void": "native",
@@ -24,11 +25,34 @@
     "restBuffer": "native",
     "nbt": "native",
     "optionalNbt": "native",
+    "ByteArray": [
+      "buffer",
+      {
+        "countType": "varint"
+      }
+    ],
     "string": [
       "pstring",
       {
         "countType": "varint"
       }
+    ],
+    "vec3i16": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i16"
+        },
+        {
+          "name": "y",
+          "type": "i16"
+        },
+        {
+          "name": "z",
+          "type": "i16"
+        }
+      ]
     ],
     "slot": [
       "container",
@@ -826,53 +850,19 @@
             },
             {
               "name": "objectData",
+              "type": "i32"
+            },
+            {
+              "name": "velocity",
               "type": [
-                "container",
-                [
-                  {
-                    "name": "intField",
-                    "type": "i32"
+                "switch",
+                {
+                  "compareTo": "objectData",
+                  "fields": {
+                    "0": "void"
                   },
-                  {
-                    "name": "velocityX",
-                    "type": [
-                      "switch",
-                      {
-                        "compareTo": "intField",
-                        "fields": {
-                          "0": "void"
-                        },
-                        "default": "i16"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "velocityY",
-                    "type": [
-                      "switch",
-                      {
-                        "compareTo": "intField",
-                        "fields": {
-                          "0": "void"
-                        },
-                        "default": "i16"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "velocityZ",
-                    "type": [
-                      "switch",
-                      {
-                        "compareTo": "intField",
-                        "fields": {
-                          "0": "void"
-                        },
-                        "default": "i16"
-                      }
-                    ]
-                  }
-                ]
+                  "default": "vec3i16"
+                }
               ]
             }
           ]
@@ -913,16 +903,8 @@
               "type": "i8"
             },
             {
-              "name": "velocityX",
-              "type": "i16"
-            },
-            {
-              "name": "velocityY",
-              "type": "i16"
-            },
-            {
-              "name": "velocityZ",
-              "type": "i16"
+              "name": "velocity",
+              "type": "vec3i16"
             },
             {
               "name": "metadata",
@@ -984,16 +966,8 @@
               "type": "varint"
             },
             {
-              "name": "velocityX",
-              "type": "i16"
-            },
-            {
-              "name": "velocityY",
-              "type": "i16"
-            },
-            {
-              "name": "velocityZ",
-              "type": "i16"
+              "name": "velocity",
+              "type": "vec3i16"
             }
           ]
         ],
@@ -1981,7 +1955,19 @@
           [
             {
               "name": "action",
-              "type": "varint"
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "add_player",
+                    "1": "update_game_mode",
+                    "2": "update_latency",
+                    "3": "update_display_name",
+                    "4": "remove_player"
+                  }
+                }
+              ]
             },
             {
               "name": "data",
@@ -1993,105 +1979,101 @@
                     "container",
                     [
                       {
-                        "name": "UUID",
+                        "name": "uuid",
                         "type": "UUID"
                       },
                       {
-                        "name": "name",
+                        "anon": true,
                         "type": [
                           "switch",
                           {
                             "compareTo": "../action",
                             "fields": {
-                              "0": "string"
-                            },
-                            "default": "void"
-                          }
-                        ]
-                      },
-                      {
-                        "name": "properties",
-                        "type": [
-                          "switch",
-                          {
-                            "compareTo": "../action",
-                            "fields": {
-                              "0": [
-                                "array",
-                                {
-                                  "countType": "varint",
-                                  "type": [
-                                    "container",
-                                    [
+                              "add_player": [
+                                "container",
+                                [
+                                  {
+                                    "name": "name",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "properties",
+                                    "type": [
+                                      "array",
                                       {
-                                        "name": "name",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "name": "value",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "name": "signature",
+                                        "countType": "varint",
                                         "type": [
-                                          "option",
-                                          "string"
+                                          "container",
+                                          [
+                                            {
+                                              "name": "name",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "value",
+                                              "type": "string"
+                                            },
+                                            {
+                                              "name": "signature",
+                                              "type": [
+                                                "option",
+                                                "string"
+                                              ]
+                                            }
+                                          ]
                                         ]
                                       }
                                     ]
-                                  ]
-                                }
-                              ]
-                            },
-                            "default": "void"
-                          }
-                        ]
-                      },
-                      {
-                        "name": "gamemode",
-                        "type": [
-                          "switch",
-                          {
-                            "compareTo": "../action",
-                            "fields": {
-                              "0": "varint",
-                              "1": "varint"
-                            },
-                            "default": "void"
-                          }
-                        ]
-                      },
-                      {
-                        "name": "ping",
-                        "type": [
-                          "switch",
-                          {
-                            "compareTo": "../action",
-                            "fields": {
-                              "0": "varint",
-                              "2": "varint"
-                            },
-                            "default": "void"
-                          }
-                        ]
-                      },
-                      {
-                        "name": "displayName",
-                        "type": [
-                          "switch",
-                          {
-                            "compareTo": "../action",
-                            "fields": {
-                              "0": [
-                                "option",
-                                "string"
+                                  },
+                                  {
+                                    "name": "gamemode",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "ping",
+                                    "type": "varint"
+                                  },
+                                  {
+                                    "name": "displayName",
+                                    "type": [
+                                      "option",
+                                      "string"
+                                    ]
+                                  }
+                                ]
                               ],
-                              "3": [
-                                "option",
-                                "string"
-                              ]
-                            },
-                            "default": "void"
+                              "update_game_mode": [
+                                "container",
+                                [
+                                  {
+                                    "name": "gamemode",
+                                    "type": "varint"
+                                  }
+                                ]
+                              ],
+                              "update_latency": [
+                                "container",
+                                [
+                                  {
+                                    "name": "ping",
+                                    "type": "varint"
+                                  }
+                                ]
+                              ],
+                              "update_display_name": [
+                                "container",
+                                [
+                                  {
+                                    "name": "displayName",
+                                    "type": [
+                                      "option",
+                                      "string"
+                                    ]
+                                  }
+                                ]
+                              ],
+                              "remove_player": "void"
+                            }
                           }
                         ]
                       }

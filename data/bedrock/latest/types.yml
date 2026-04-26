@@ -39,19 +39,29 @@ GameMode: zigzag32 =>
    5: fallback
    6: spectator
 
-GameRule:
-   name: string
-   editable: bool
-   type: varint =>
-      1: bool
-      2: int
-      3: float
-   value: type?
-      if bool: bool
-      if int: zigzag32
-      if float: lf32
+GameRuleI32:
+  name: string
+  editable: bool
+  type: varint =>
+    1: bool
+    2: int
+    3: float
+  value: type?
+    if bool: bool
+    if int: li32
+    if float: lf32
 
-GameRules: GameRule[]varint
+GameRuleVarint:
+  name: string
+  editable: bool
+  type: varint =>
+    1: bool
+    2: int
+    3: float
+  value: type?
+    if bool: bool
+    if int: varint
+    if float: lf32
 
 # CacheBlob represents a blob as used in the client side blob cache protocol. It holds a hash of its data and
 # the full data of it.
@@ -315,6 +325,14 @@ MetadataDictionary: []varint
       131: visible_mob_effects # long
       132: filtered_name # string
       133: bed_enter_position # blockpos
+      134: seat_third_person_camera_radius
+      135: seat_camera_relax_distance_smoothing
+      136: aim_assist_priority_preset_id
+      137: aim_assist_priority_category_id
+      138: aim_assist_priority_actor_id
+      139: arrow_shooter_id
+      140: firework_direction
+      141: firework_shooter_id
    type: varint =>
       0: byte
       1: short
@@ -328,6 +346,8 @@ MetadataDictionary: []varint
    value: key ?
       if flags: MetadataFlags1
       if flags_extended: MetadataFlags2
+      if seat_third_person_camera_radius: lf32
+      if seat_camera_relax_distance_smoothing: lf32
       default: type ?
          if byte: i8
          if short: li16
@@ -472,7 +492,11 @@ MetadataFlags2: [ "bitflags", {
       "render_when_invisible",
       "body_rotation_axis_aligned",
       "collidable",
-      "wasd_air_controlled"
+      "wasd_air_controlled",
+      "does_server_auth_only_dismount",
+      "body_rotation_always_follows_head",
+      "can_use_vertical_movement_action",
+      "rotation_locked_to_vehicle"
    ]
 }]
 
@@ -508,7 +532,7 @@ Rotation:
 
 BlockCoordinates: # mojang...
    x: zigzag32
-   y: varint
+   y: zigzag32
    z: zigzag32
 
 PlayerAttributes: []varint
@@ -542,6 +566,7 @@ TransactionUseItem:
       # Block breaking like left click. When using server auth block breaking as specified in StartGamePacket this is never sent.
       # Instead, block actions are supplied in Player Auth Input.
       2: break_block
+      3: attack
    # TriggerType is the type of the trigger that caused the inventory transaction. It is one of the trigger
    # types found in the constants above. If TriggerType is TriggerTypePlayerInput, the transaction is from
    # the initial input of the player. If it is TriggerTypeSimulationTick, the transaction is from a simulation
@@ -575,6 +600,9 @@ TransactionUseItem:
    client_prediction: varint =>
    - failure
    - success
+   client_cooldown_state: u8 =>
+      0: off
+      1: on
 
 # Actions is a list of actions that took place, that form the inventory transaction together. Each of
 # these actions hold one slot in which one item was changed to another. In general, the combination of
@@ -590,7 +618,7 @@ TransactionActions: []varint
       99999: craft
    _: source_type?
       if container or craft:
-         inventory_id: WindowIDVarint
+         inventory_id: WindowIDZigzag32
       if world_interaction:
          flags: varint
       if craft or craft_slot:
@@ -896,6 +924,9 @@ PlayerRecords:
             is_teacher: bool
             is_host: bool
             is_subclient: bool
+            # PlayerColour is the colour of the player that is shown in UI elements, currently only used for the
+            # player locator bar.
+            player_color: li32
          if remove:
             uuid: uuid
    verified: type ?
@@ -953,6 +984,7 @@ Action: zigzag32 =>
    33: stop_crawling
    34: start_flying
    35: stop_flying
+   # Deprecated. Corresponds to Player Auth Input InputData::ClientAckServerData bit 44 Not sent when using server authoritative movement as specified in StartGamePacket. This is now deprecated because only server authoritative movement exists.
    36: received_server_data
    37: start_using_item
 
@@ -1198,23 +1230,7 @@ CommandOrigin:
    # Origin is one of the values above that specifies the origin of the command. The origin may change,
    # depending on what part of the client actually called the command. The command may be issued by a
    # websocket server, for example.
-   type: varint =>
-      0: player
-      1: block
-      2: minecart_block
-      3: dev_console
-      4: test
-      5: automation_player
-      6: client_automation
-      7: dedicated_server
-      8: entity
-      9: virtual
-      10: game_argument
-      11: entity_server
-      12: precompiled
-      13: game_director_entity_server # ?
-      14: script
-      15: executor
+   type: string
 
    # UUID is the UUID of the command called. This UUID is a bit odd as it is not specified by the server. It
    # is not clear what exactly this UUID is meant to identify, but it is unique for each command called.
@@ -1227,9 +1243,7 @@ CommandOrigin:
    # PlayerUniqueID is an ID that identifies the player, the same as the one found in the AdventureSettings
    # packet. Filling it out with 0 seems to work.
    # PlayerUniqueID is only written if Origin is CommandOriginDevConsole or CommandOriginTest.
-   player_entity_id: type?
-      if dev_console or test:
-         player_entity_id: zigzag64
+   player_entity_id: li64
 
 # MapTrackedObject is an object on a map that is 'tracked' by the client, such as an entity or a block. This
 # object may move, which is handled client-side.
@@ -1434,7 +1448,7 @@ CommandPermissionLevelVarint: u8 =>
 # List of Window IDs. When a new container is opened (container_open), a new sequential Window ID is created.
 # Below window IDs are hard-coded and created when the game starts and the server does not 
 # send a `container_open` for them.
-WindowID: i8 =>
+WindowID_: =>
    -100: drop_contents
    -24: beacon
    -23: trading_output
@@ -1463,34 +1477,9 @@ WindowID: i8 =>
    123: fixed_inventory
    124: ui
 
-WindowIDVarint: varint =>
-   -100: drop_contents
-   -24: beacon
-   -23: trading_output
-   -22: trading_use_inputs
-   -21: trading_input_2
-   -20: trading_input_1
-   -17: enchant_output
-   -16: enchant_material
-   -15: enchant_input
-   -13: anvil_output
-   -12: anvil_result
-   -11: anvil_material
-   -10: container_input
-   -5: crafting_use_ingredient
-   -4: crafting_result
-   -3: crafting_remove_ingredient
-   -2: crafting_add_ingredient
-   -1: none
-   0: inventory
-   1: first
-   100: last
-   119: offhand
-   120: armor
-   121: creative
-   122: hotbar
-   123: fixed_inventory
-   124: ui
+WindowID: i8 => WindowID_
+WindowIDVarint: varint => WindowID_
+WindowIDZigzag32: zigzag32 => WindowID_
 
 WindowType: i8 =>
    -9: none
@@ -1600,6 +1589,9 @@ ContainerSlotType: u8 =>
    - crafter
    - dynamic
    - registry # 125
+   - recipe_food
+   - recipe_blocks
+   - recipe_furnace_items
 
 SoundType: varint =>
    - ItemUseOn
@@ -1640,7 +1632,7 @@ SoundType: varint =>
    - Land
    - Saddle
    - Armor
-   - MobArmorStandPlace
+   - ArmorStandPlace
    - AddChest
    - Throw
    - Attack
@@ -1663,7 +1655,7 @@ SoundType: varint =>
    - LargeBlast
    - Twinkle
    - Remedy
-   - Infect
+   - Unfect
    - LevelUp
    - BowHit
    - BulletHit
@@ -1980,51 +1972,51 @@ SoundType: varint =>
    - Listening
    - Heartbeat
    - HornBreak
-   - SculkPlace
+   - _
    - SculkSpread
    - SculkCharge
    - SculkSensorPlace
    - SculkShriekerPlace
-   - goat_call_0
-   - goat_call_1
-   - goat_call_2
-   - goat_call_3
-   - goat_call_4
-   - goat_call_5
-   - goat_call_6
-   - goat_call_7
-   - goat_call_8
-   - goat_call_9
-   - goat_harmony_0
-   - goat_harmony_1
-   - goat_harmony_2
-   - goat_harmony_3
-   - goat_harmony_4
-   - goat_harmony_5
-   - goat_harmony_6
-   - goat_harmony_7
-   - goat_harmony_8
-   - goat_harmony_9
-   - goat_melody_0
-   - goat_melody_1
-   - goat_melody_2
-   - goat_melody_3
-   - goat_melody_4
-   - goat_melody_5
-   - goat_melody_6
-   - goat_melody_7
-   - goat_melody_8
-   - goat_melody_9
-   - goat_bass_0
-   - goat_bass_1
-   - goat_bass_2
-   - goat_bass_3
-   - goat_bass_4
-   - goat_bass_5
-   - goat_bass_6
-   - goat_bass_7
-   - goat_bass_8
-   - goat_bass_9
+   - GoatCall0
+   - GoatCall1
+   - GoatCall2
+   - GoatCall3
+   - GoatCall4
+   - GoatCall5
+   - GoatCall6
+   - GoatCall7
+   - GoatCall8
+   - GoatCall9
+   - GoatHarmony0
+   - GoatHarmony1
+   - GoatHarmony2
+   - GoatHarmony3
+   - GoatHarmony4
+   - GoatHarmony5
+   - GoatHarmony6
+   - GoatHarmony7
+   - GoatHarmony8
+   - GoatHarmony9
+   - GoatMelody0
+   - GoatMelody1
+   - GoatMelody2
+   - GoatMelody3
+   - GoatMelody4
+   - GoatMelody5
+   - GoatMelody6
+   - GoatMelody7
+   - GoatMelody8
+   - GoatMelody9
+   - GoatBass0
+   - GoatBass1
+   - GoatBass2
+   - GoatBass3
+   - GoatBass4
+   - GoatBass5
+   - GoatBass6
+   - GoatBass7
+   - GoatBass8
+   - GoatBass9
    - _
    - _
    - _
@@ -2079,61 +2071,128 @@ SoundType: varint =>
    - HoglinZombified
    - AmbientUnderwaterEnter
    - AmbientUnderwaterExit
-   - bottle_fill
-   - bottle_empty
-   - crafter_craft
-   - crafter_fail
-   - block_decorated_pot_insert
-   - block_decorated_pot_insert_fail
-   - crafter_disable_slot
-   - trial_spawner_open_shutter
-   - trial_spawner_eject_item
-   - trial_spawner_detect_player
-   - trial_spawner_spawn_mob
-   - trial_spawner_close_shutter
-   - trial_spawner_ambient
-   - block_copper_bulb_turn_on
-   - block_copper_bulb_turn_off
-   - ambient_in_air
-   - breeze_wind_charge_burst
-   - imitate_breeze
-   - mob_armadillo_brush
-   - mob_armadillo_scute_drop
-   - armor_equip_wolf
-   - armor_unequip_wolf
-   - reflect
-   - vault_open_shutter
-   - vault_close_shutter
-   - vault_eject_item
-   - vault_insert_item
-   - vault_insert_item_fail
-   - vault_ambient
-   - vault_activate
-   - vault_deactivate
-   - hurt_reduced
-   - wind_charge_burst
-   - imitate_drowned
-   - bundle_insert_failed
+   - BottleFill
+   - BottleEmpty
+   - CrafterCraft
+   - CrafterFail
+   - DecoratedPotInsert
+   - DecoratedPotInsertFail
+   - CrafterDisableSlot
+   - TrialSpawnerOpenShutter
+   - TrialSpawnerEjectItem
+   - TrialSpawnerDetectPlayer
+   - TrialSpawnerSpawnMob
+   - TrialSpawnerCloseShutter
+   - TrialSpawnerAmbient
+   - CopperBulbTurnOn
+   - CopperBulbTurnOff
+   - AmbientInAir
+   - BreezeWindChargeBurst
+   - ImitateBreeze
+   - ArmadilloBrush
+   - ArmadilloScuteDrop
+   - EquipWolf
+   - UnequipWolf
+   - Reflect
+   - VaultOpenShutter
+   - VaultCloseShutter
+   - VaultEjectItem
+   - VaultInsertItem
+   - VaultInsertItemFail
+   - VaultAmbient
+   - VaultActivate
+   - VaultDeactive
+   - HurtReduced
+   - WindChargeBurst
+   - ImitateBogged
+   - WolfArmourCrack
+   - WolfArmourBreak
+   - WolfArmourRepair
+   - MaceSmashAir
+   - MaceSmashGround
+   - TrialSpawnerChargeActivate
+   - TrialSpawnerAmbientOminous
+   - OminiousItemSpawnerSpawnItem
+   - OminousBottleEndUse
+   - MaceHeavySmashGround
+   - OminousItemSpawnerSpawnItemBegin
    - _
-   - armor_crack_wolf
-   - armor_break_wolf
-   - armor_repair_wolf
-   - mace_smash_air
-   - mace_smash_ground
-   - trail_spawner_charge_activate
-   - trail_spawner_ambient_ominous
-   - ominous_item_spawner_spawn_item
-   - ominous_bottle_end_use
-   - mace_smash_heavy_ground
-   - ominous_item_spawner_spawn_item_begin
+   - ApplyEffectBadOmen
+   - ApplyEffectRaidOmen
+   - ApplyEffectTrialOmen
+   - OminousItemSpawnerAboutToSpawnItem
+   - RecordCreator
+   - RecordCreatorMusicBox
+   - RecordPrecipice
+   - VaultRejectRewardedPlayer
+   - ImitateDrowned
+   - ImitateCreaking
+   - BundleInsertFailed
+   - SpongeAbsorb
    - _
-   - apply_effect_bad_omen
-   - apply_effect_raid_omen
-   - apply_effect_trial_omen
-   - ominous_item_spawner_about_to_spawn_item
-   - record_creator
-   - record_creator_music_box
-   - record_precipice
+   - BlockCreakingHeartTrail
+   - CreakingHeartSpawn
+   - Activate
+   - Deactivate
+   - Freeze
+   - Unfreeze
+   - Open
+   - OpenLong
+   - Close
+   - CloseLong
+   - ImitatePhantom
+   - ImitateZoglin
+   - ImitateGuardian
+   - ImitateRavager
+   - ImitatePillager
+   - PlaceInWater
+   - StateChange
+   - ImitateHappyGhast
+   - UniqueGeneric
+   - RecordTears
+   - TheEndLightFlash
+   - LeadLeash
+   - LeadUnleash
+   - LeadBreak
+   - Unsaddle
+   - EquipCopper
+   - RecordLavaChicken
+   - PlaceItem
+   - SingleItemSwap
+   - MultiItemSwap
+   - ItemEnchantLunge1
+   - ItemEnchantLunge2
+   - ItemEnchantLunge3
+   - AttackCritical
+   - ItemSpearAttackHit
+   - ItemSpearAttackMiss
+   - ItemWoodenSpearAttackHit
+   - ItemWoodenSpearAttackMiss
+   - ImitateParched
+   - ImitateCamelHusk
+   - ItemSpearUse
+   - ItemWoodenSpearUse
+   - SaddleInWater
+   - ItemStoneSpearAttackHit
+   - ItemIronSpearAttackHit
+   - ItemCopperSpearAttackHit
+   - ItemGoldenSpearAttackHit
+   - ItemDiamondSpearAttackHit
+   - ItemNetheriteSpearAttackHit
+   - ItemStoneSpearAttackMiss
+   - ItemIronSpearAttackMiss
+   - ItemCopperSpearAttackMiss
+   - ItemGoldenSpearAttackMiss
+   - ItemDiamondSpearAttackMiss
+   - ItemNetheriteSpearAttackMiss
+   - ItemStoneSpearUse
+   - ItemIronSpearUse
+   - ItemCopperSpearUse
+   - ItemGoldenSpearUse
+   - ItemDiamondSpearUse
+   - ItemNetheriteSpearUse
+   - PauseGrowth
+   - ResetGrowth
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2340,8 +2399,6 @@ CameraPresets:
    ## TODO: make this an enum afer adding proper optional support inside pdefyaml
    audio_listener?: u8
    player_effects?: bool
-   # align_target_and_camera_forward determines whether the camera should align the target and the camera forward or not.
-   align_target_and_camera_forward?: bool
    aim_assist?:
       # Preset is the ID of the preset that has previously been defined in the CameraAimAssistPresets packet.
       preset_id?: string
@@ -2354,6 +2411,198 @@ CameraPresets:
       # Distance is the maximum distance from the player's cursor should check for a target, if TargetMode is
       # set to target_mode distance.
       distance?: lf32
+   control_scheme?: u8 =>
+      - locked_player_relative_strafe
+      - camera_relative
+      - camera_relative_strafe
+      - player_relative
+      - player_relative_strafe
+
+
+# CameraRotationOption represents a rotation keyframe option for spline instructions.
+CameraRotationOption:
+   # Value is the rotation value for the keyframe.
+   value: vec3f
+   # Time is the time of the keyframe within the spline.
+   time: lf32
+   has_ease_type: bool
+   ease_type: has_ease_type ?
+      if true: string
+
+# CameraSplineInstruction represents a camera spline instruction definition.
+CameraSplineInstruction:
+   # TotalTime is the total time for the spline animation.
+   total_time: lf32
+   has_spline_type: bool
+   spline_type: has_spline_type ?
+      if true: string
+   # Curve is the list of curve points defining the spline.
+   curve: vec3f[]varint
+   # ProgressKeyFrames is a list of key frames for the spline progress.
+   progress_key_frames: CameraProgressOption[]varint
+   # RotationOptions is a list of rotation keyframes for the spline.
+   rotation_options: CameraRotationOption[]varint
+   spline_identifier?: string
+   load_from_json?: bool
+
+CameraProgressOption:
+   value: lf32
+   time: lf32
+   has_ease_type: bool
+   ease_type: has_ease_type ?
+      if true: string
+
+CameraSplineDefinition:
+   name: string
+   total_time: lf32
+   spline_type?: string
+   control_points: vec3f[]varint
+   progress_key_frames: CameraProgressOption[]varint
+   rotation_key_frames: CameraRotationOption[]varint
+
+CameraAimAssistActorPriorityData:
+   preset_index: li32
+   category_index: li32
+   actor_index: li32
+   priority: li32
+
+MemoryCategoryCounter:
+   category: u8 =>
+      - unknown
+      - invalid_size_unknown
+      - actor
+      - actor_animation
+      - actor_rendering
+      - block_ticking_queues
+      - biome_storage
+      - cereal
+      - circuit_system
+      - client
+      - commands
+      - db_storage
+      - debug
+      - documentation
+      - ecs_systems
+      - fmod
+      - fonts
+      - im_gui
+      - input
+      - json_ui
+      - json_ui_control_factory_json
+      - json_ui_control_tree
+      - json_ui_control_tree_control_element
+      - json_ui_control_tree_populate_data_binding
+      - json_ui_control_tree_populate_focus
+      - json_ui_control_tree_populate_layout
+      - json_ui_control_tree_populate_other
+      - json_ui_control_tree_populate_sprite
+      - json_ui_control_tree_populate_text
+      - json_ui_control_tree_populate_tts
+      - json_ui_control_tree_visibility
+      - json_ui_create_ui
+      - json_ui_defs
+      - json_ui_layout_manager
+      - json_ui_layout_manager_remove_dependencies
+      - json_ui_layout_manager_init_variable
+      - languages
+      - level
+      - level_structures
+      - level_chunk
+      - level_chunk_gen
+      - level_chunk_gen_thread_local
+      - light_volume_manager
+      - network
+      - marketplace
+      - material_dragon_compiled_definition
+      - material_dragon_material
+      - material_dragon_resource
+      - material_dragon_uniform_map
+      - material_render_material
+      - material_render_material_group
+      - material_variation_manager
+      - molang
+      - ore_ui
+      - persona
+      - player
+      - render_chunk
+      - render_chunk_index_buffer
+      - render_chunk_vertex_buffer
+      - rendering
+      - rendering_library
+      - request_log
+      - resource_packs
+      - sound
+      - sub_chunk_biome_data
+      - sub_chunk_block_data
+      - sub_chunk_light_data
+      - textures
+      - vr
+      - weather_renderer
+      - world_generator
+      - tasks
+      - test
+      - scripting
+      - scripting_runtime
+      - scripting_context
+      - scripting_context_bindings_mc
+      - scripting_context_bindings_gt
+      - scripting_context_run
+      - data_driven_ui
+      - data_driven_ui_defs
+      - gameface
+      - gameface_system
+      - gameface_dom
+      - gameface_css
+      - gameface_display
+      - gameface_temp_allocator
+      - gameface_pool_allocator
+      - gameface_dump
+      - gameface_media
+      - gameface_json
+      - gameface_script_engine
+   bytes: lu64
+
+VoxelCells:
+   x_size: u8
+   y_size: u8
+   z_size: u8
+   storage: u8[]varint
+
+VoxelShape:
+   cells: VoxelCells[]varint
+   x_coordinates: lf32[]varint
+   y_coordinates: lf32[]varint
+   z_coordinates: lf32[]varint
+
+VoxelShapeNameEntry:
+   name: string
+   id: lu16
+
+GatheringJoinInfo:
+   experience_id: uuid
+   experience_name: string
+   experience_world_id: uuid
+   experience_world_name: string
+   creator_id: string
+   unknown_uuid_1: uuid
+   unknown_uuid_2: uuid
+   server_id: string
+
+StoreEntryPointInfo:
+   store_id: string
+   store_name: string
+
+PresenceInfo:
+   experience_name: string
+   world_name: string
+
+ServerJoinInformation:
+   has_gathering_info: bool
+   gathering_info: has_gathering_info ?
+      if true: GatheringJoinInfo
+   store_entry_point_info?: StoreEntryPointInfo
+   presence_info?: PresenceInfo
+
 
 DisconnectFailReason: zigzag32 =>
    - unknown
@@ -2475,6 +2724,21 @@ DisconnectFailReason: zigzag32 =>
    - conn_client_signalling_error
    - sub_client_login_disabled
    - deep_link_trying_to_open_demo_world_while_signed_in
+   - async_join_task_denied
+   - realms_timeline_required
+   - guest_withough_host
+   - failed_to_join_experience
+   - host_signed_out
+   - script_watchdog_exception
+   - script_memory_limit_exceeded
+   - storage_low_during_gameplay
+   - storage_full_during_gameplay
+   - level_storage_corruption
+   - edition_mismatch_vanilla_to_edu
+   - edition_mismatch_edu_to_vanilla
+   - editor_mismatch_editor_to_vanilla
+   - editor_mismatch_vanilla_to_editor
+   - deny_listed
 
 FullContainerName:
    container_id: ContainerSlotType
@@ -2483,3 +2747,516 @@ FullContainerName:
 MovementEffectType: varint =>
    -1: invalid
    0: GLIDE_BOOST
+
+# BiomeDefinition represents a biome definition in the game. This can be a vanilla biome or a completely
+# custom biome.
+BiomeDefinition:
+   # NameIndex represents the index of the biome name in the string list from BiomeDefinitionListPacket.
+   name_index: li16
+   # BiomeID is the biome ID. This is optional and can be empty.
+   biome_id: lu16
+   # Temperature is the temperature of the biome, used for weather, biome behaviours and sky colour.
+   temperature: lf32
+   # Downfall is the amount that precipitation affects colours and block changes.
+   downfall: lf32
+   # Changes leaves turning white in snow
+   snow_foliage: lf32
+   # Depth ...
+   depth: lf32
+   # Scale ...
+   scale: lf32
+   # MapWaterColour is an ARGB value for the water colour on maps in the biome.
+   map_water_colour: li32
+   # Rain is true if the biome has rain, false if it is a dry biome.
+   rain: bool
+   # Tags are a list of indices of tags in the string list. These are used to group biomes together for
+   # biome generation and other purposes.
+   tags?: lu16[]varint
+   # ChunkGeneration is optional information to assist in client-side chunk generation.
+   chunk_generation?: BiomeChunkGeneration
+
+
+# BiomeChunkGeneration represents the information required for the client to generate chunks itself
+# to create the illusion of a larger render distance.
+BiomeChunkGeneration:
+   # Climate is optional information to specify the biome's climate.
+   climate?: BiomeClimate
+   # ConsolidatedFeatures is a list of features that are consolidated into a single feature.
+   consolidated_features?: BiomeConsolidatedFeature[]varint
+   # MountainParameters is optional information to specify the biome's mountain parameters.
+   mountain_parameters?: BiomeMountainParameters
+   # SurfaceMaterialAdjustments is a list of surface material adjustments.
+   surface_material_adjustments?: BiomeElementData[]varint
+   # SurfaceMaterials is a set of materials to use for the surface layers of the biome.
+   surface_materials?: BiomeSurfaceMaterial
+   # HasDefaultOverworldSurface is true if the biome has a default overworld surface.
+   has_default_overworld_surface: bool
+   # HasSwampSurface is true if the biome has a swamp surface.
+   has_swamp_surface: bool
+   # HasFrozenOceanSurface is true if the biome has a frozen ocean surface.
+   has_frozen_ocean_surface: bool
+   # HasEndSurface is true if the biome has an end surface.
+   has_end_surface: bool
+   # MesaSurface is optional information to specify the biome's mesa surface.
+   mesa_surface?: BiomeMesaSurface
+   # CappedSurface is optional information to specify the biome's capped surface, i.e. in the Nether.
+   capped_surface?: BiomeCappedSurface
+   # OverworldRules is optional information to specify the biome's overworld rules, such as rivers and hills.
+   overworld_rules?: BiomeOverworldRules
+   # MultiNoiseRules is optional information to specify the biome's multi-noise rules.
+   multi_noise_rules?: BiomeMultiNoiseRules
+   # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
+   # weighted biomes.
+   legacy_rules?: BiomeConditionalTransformation[]varint
+   # ReplacementsData is a list of biome replacement data.
+   replacements_data?: BiomeReplacementData[]varint
+   has_village_type: bool
+   village_type: has_village_type ?
+      if true: u8
+
+# BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
+BiomeClimate:
+   # Temperature is the temperature of the biome, used for weather, biome behaviours and sky colour.
+   temperature: lf32
+   # Downfall is the amount that precipitation affects colours and block changes.
+   downfall: lf32
+   # SnowAccumulationMin is the minimum amount of snow that can accumulate in the biome, every 0.125 is
+   # another layer of snow.
+   snow_accumulation_min: lf32
+   # SnowAccumulationMax is the maximum amount of snow that can accumulate in the biome, every 0.125 is
+   # another layer of snow.
+   snow_accumulation_max: lf32
+
+# BiomeMountainParameters specifies the parameters for a mountain biome.
+BiomeMountainParameters:
+   # SteepBlock is the runtime ID of the block to use for steep slopes.
+   steep_block: li32
+   # NorthSlopes is true if the biome has north slopes.
+   north_slopes: bool
+   # SouthSlopes is true if the biome has south slopes.
+   south_slopes: bool
+   # WestSlopes is true if the biome has west slopes.
+   west_slopes: bool
+   # EastSlopes is true if the biome has east slopes.
+   east_slopes: bool
+   # TopSlideEnabled is true if the biome has top slide enabled.
+   top_slide_enabled: bool
+
+# BiomeSurfaceMaterial specifies the materials to use for the surface layers of the biome.
+BiomeSurfaceMaterial:
+   # TopBlock is the runtime ID of the block to use for the top layer.
+   top_block: li32
+   # MidBlock is the runtime ID to use for the middle layers.
+   mid_block: li32
+   # SeaFloorBlock is the runtime ID to use for the sea floor.
+   sea_floor_block: li32
+   # FoundationBlock is the runtime ID to use for the foundation layers.
+   foundation_block: li32
+   # SeaBlock is the runtime ID to use for the sea layers.
+   sea_block: li32
+   # SeaFloorDepth is the depth of the sea floor, in blocks.
+   sea_floor_depth: li32
+
+# BiomeMesaSurface specifies the materials to use for the mesa biome.
+BiomeMesaSurface:
+   # ClayMaterial is the runtime ID of the block to use for clay layers.
+   clay_material: lu32
+   # HardClayMaterial is the runtime ID of the block to use for hard clay layers.
+   hard_clay_material: lu32
+   # BrycePillars is true if the biome has bryce pillars, which are tall spire-like structures.
+   bryce_pillars: bool
+   # HasForest is true if the biome has a forest.
+   has_forest: bool
+
+# BiomeCappedSurface specifies the materials to use for the capped surface of a biome, such as in the Nether.
+BiomeCappedSurface:
+   # FloorBlocks is a list of runtime IDs to use for the floor blocks.
+   floor_blocks: li32[]varint
+   # CeilingBlocks is a list of runtime IDs to use for the ceiling blocks.
+   ceiling_blocks: li32[]varint
+   # SeaBlock is an optional runtime ID to use for the sea block.
+   sea_block?: lu32
+   # FoundationBlock is an optional runtime ID to use for the foundation block.
+   foundation_block?: lu32
+   # BeachBlock is an optional runtime ID to use for the beach block.
+   beach_block?: lu32
+
+# BiomeMultiNoiseRules specifies the rules for multi-noise biomes, which are biomes that are defined by
+# multiple noise parameters instead of just temperature and humidity.
+BiomeMultiNoiseRules:
+   # Temperature is the temperature level of the biome.
+   temperature: lf32
+   # Humidity is the humidity level of the biome.
+   humidity: lf32
+   # Altitude is the altitude level of the biome.
+   altitude: lf32
+   # Weirdness is the weirdness level of the biome.
+   weirdness: lf32
+   # Weight is the weight of the biome, with a higher weight being more likely to be selected.
+   weight: lf32
+
+# BiomeWeight defines the weight for a biome, used for weighted randomness.
+BiomeWeight:
+   # Biome is the index of the biome name in the string list.
+   biome: li16
+   # Weight is the weight of the biome, with a higher weight being more likely to be selected.
+   weight: lu32
+
+# BiomeTemperatureWeight defines the weight for a temperature, used for weighted randomness.
+BiomeTemperatureWeight:
+   # Temperature is the temperature that can be selected.
+   temperature: zigzag32
+   # Weight is the weight of the temperature, with a higher weight being more likely to be selected.
+   weight: lu32
+
+# BiomeConsolidatedFeature represents a feature that is consolidated into a single feature for the biome.
+BiomeConsolidatedFeature:
+   # Scatter defines how the feature is scattered in the biome.
+   scatter: BiomeScatterParameter
+   # Feature is the index of the feature's name in the string list.
+   feature: li16
+   # Identifier is the index of the feature's identifier in the string list.
+   identifier: li16
+   # Pass is the index of the feature's pass in the string list.
+   pass: li16
+   # CanUseInternal is true if the feature can use internal features.
+   can_use_internal: bool
+
+BiomeScatterParameter:
+   # Coordinates is a list of coordinate rules to scatter the feature within.
+   coordinates: BiomeCoordinate[]varint
+   # EvaluationOrder is the order in which the coordinates are evaluated.
+   evaluation_order: zigzag32 => # BiomeCoordinateEvaluationOrder
+      0: xyz
+      1: xzy
+      2: yxz
+      3: yzx
+      4: zxy
+      5: zyx
+   # ChancePercentType is the type of expression operation to use for the chance percent.
+   chance_percent_type: zigzag32 # BiomeExpressionOp
+   # ChancePercent is the index of the chance expression in the string list.
+   chance_percent: li16
+   # ChanceNumerator is the numerator of the chance expression.
+   chance_numerator: li32
+   # ChanceDenominator is the denominator of the chance expression.
+   chance_denominator: li32
+   # IterationsType is the type of expression operation to use for the iterations.
+   iterations_type: zigzag32 # BiomeExpressionOp
+   # Iterations is the index of the iterations expression in the string list.
+   iterations: li16
+
+# BiomeCoordinate specifies coordinate rules for where features can be scattered in the biome.
+BiomeCoordinate:
+   # MinValueType is the type of expression operation to use for the minimum value.
+   min_value_type: zigzag32 # BiomeExpressionOp
+   # MinValue is the index of the minimum value expression in the string list.
+   min_value: li16
+   # MaxValueType is the type of expression operation to use for the maximum value.
+   max_value_type: zigzag32 # BiomeExpressionOp
+   # MaxValue is the index of the maximum value expression in the string list.
+   max_value: li16
+   # GridOffset is the offset of the grid, used for fixed grid and jittered grid distributions.
+   grid_offset: lu32
+   # GridStepSize is the step size of the grid, used for fixed grid and jittered grid distributions.
+   grid_step_size: lu32
+   # Distribution is the type of distribution to use for the coordinate.
+   distribution: zigzag32 => # BiomeRandomDistributionType
+      0: single_valued
+      1: uniform
+      2: gaussian
+      3: inverse_gaussian
+      4: fixed_grid
+      5: jittered_grid
+      6: triangle
+
+# BiomeElementData are set rules to adjust the surface materials of the biome.
+BiomeElementData:
+   # NoiseFrequencyScale is the frequency scale of the noise used to adjust the surface materials.
+   noise_frequency_scale: lf32
+   # NoiseLowerBound is the minimum noise value required to be selected.
+   noise_lower_bound: lf32
+   # NoiseUpperBound is the maximum noise value required to be selected.
+   noise_upper_bound: lf32
+   # HeightMinType is the type of expression operation to use for the minimum height.
+   height_min_type: zigzag32 # BiomeExpressionOp
+   # HeightMin is the index of the minimum height expression in the string list.
+   height_min: li16
+   # HeightMaxType is the type of expression operation to use for the maximum height.
+   height_max_type: zigzag32 # BiomeExpressionOp
+   # HeightMax is the index of the maximum height expression in the string list.
+   height_max: li16
+   # AdjustedMaterials is the materials to use for the surface layers of the biome if selected.
+   adjusted_materials: BiomeSurfaceMaterial
+
+# BiomeOverworldRules specifies a list of transformation rules to apply to different parts of the overworld.
+BiomeOverworldRules:
+   # HillsTransformations is a list of weighted biome transformations to apply to hills.
+   hills_transformations: BiomeWeight[]varint
+   # MutateTransformations is a list of weighted biome transformations to apply to mutated biomes.
+   mutate_transformations: BiomeWeight[]varint
+   # RiverTransformations is a list of weighted biome transformations to apply to rivers.
+   river_transformations: BiomeWeight[]varint
+   # ShoreTransformations is a list of weighted biome transformations to apply to shores.
+   shore_transformations: BiomeWeight[]varint
+   # PreHillsEdgeTransformations is a list of conditional transformations to apply to the edges of hills.
+   pre_hills_edge_transformations: BiomeConditionalTransformation[]varint
+   # PostShoreEdgeTransformations is a list of conditional transformations to apply to the edges of shores.
+   post_shore_edge_transformations: BiomeConditionalTransformation[]varint
+   # ClimateTransformations is a list of weighted temperature transformations to apply to the biome's climate.
+   climate_transformations: BiomeTemperatureWeight[]varint
+
+# BiomeConditionalTransformation is the legacy method of transforming biomes.
+BiomeConditionalTransformation:
+   # WeightedBiomes is a list of biomes and their weights.
+   weighted_biomes: BiomeWeight[]varint
+   # ConditionJSON is an index of the condition JSON data in the string list.
+   condition_json: li16
+   # MinPassingNeighbours is the minimum number of neighbours that must pass the condition for the
+   # transformation to be applied.
+   min_passing_neighbours: lu32
+
+# BiomeReplacementData represents data for biome replacements.
+BiomeReplacementData:
+   # Biome is the biome ID to replace.
+   biome: li16
+   # Dimension is the dimension ID where the replacement applies.
+   dimension: li16
+   # TargetBiomes is a list of target biome IDs for the replacement.
+   target_biomes: li16[]varint
+   # Amount is the amount of replacement to apply.
+   amount: lf32
+   # NoiseFrequencyScale is the noise frequency scale to use for replacement selection.
+   noise_frequency_scale: lf32
+   # ReplacementIndex is the index of the replacement.
+   replacement_index: lu32
+
+EaseType: u8 =>
+   - Linear
+   - Spring
+   - InQuad
+   - OutQuad
+   - InOutQuad
+   - InCubic
+   - OutCubic
+   - InOutCubic
+   - InQuart
+   - OutQuart
+   - InOutQuart
+   - InQuint
+   - OutQuint
+   - InOutQuint
+   - InSine
+   - OutSine
+   - InOutSine
+   - InExpo
+   - OutExpo
+   - InOutExpo
+   - InCirc
+   - OutCirc
+   - InOutCirc
+   - InBounce
+   - OutBounce
+   - InOutBounce
+   - InBack
+   - OutBack
+   - InOutBack
+   - InElastic
+   - OutElastic
+   - InOutElastic
+   - InverseLerp
+
+ParameterKeyframeValue:
+   # Time is the time of the keyframe.
+   time: lf32
+   # Value is the value at the keyframe.
+   value: vec3f
+
+GraphicsOverrideParameterType: u8 =>
+   - sky_zenith_color
+   - sky_horizon_color
+   - horizon_blend_min
+   - horizon_blend_max
+   - horizon_blend_start
+   - horizon_blend_mie_start
+   - rayleigh_strength
+   - sun_mie_strength
+   - moon_mie_strength
+   - sun_glare_shape
+   - chlorophyll
+   - cdom
+   - suspended_sediment
+   - waves_depth
+   - waves_frequency
+   - waves_frequency_scaling
+   - waves_speed
+   - waves_speed_scaling
+   - waves_shape
+   - waves_octaves
+   - waves_mix
+   - waves_pull
+   - waves_direction_increment
+   - midtones_contrast
+   - highlights_contrast
+   - shadows_contrast
+   - highlights_gain
+   - highlights_gamma
+   - highlights_offset
+   - highlights_saturation
+   - midtones_gain
+   - midtones_gamma
+   - midtones_offset
+   - midtones_saturation
+   - shadows_gain
+   - shadows_gamma
+   - shadows_offset
+   - shadows_saturation
+   - highlights_min
+   - shadows_max
+   - temperature
+   - sun_color
+   - sun_illuminance
+   - moon_color
+   - moon_illuminance
+   - flash_color
+   - flash_illuminance
+   - ambient_color
+   - ambient_illuminance
+
+DebugMarkerData:
+   text: string
+   position: vec3f
+   color: lu32
+   duration: lu64
+
+DataStorePropertyValue:
+   type: li32 =>
+      0: none
+      1: bool
+      2: int64
+      4: string
+      6: map
+   value: type ?
+      if none: void
+      if bool: bool
+      if int64: li64
+      if string: string
+      if map: DataStoreMapEntry[]varint
+
+DataStoreMapEntry:
+   key: string
+   value: DataStorePropertyValue
+
+DataStoreChangeEntry:
+   change_type: lu32 =>
+      0: update
+      1: change
+      2: removal
+   _: change_type ?
+      if update:
+         name: string
+         property: string
+         path: string
+         data_type: lu32 =>
+            0: double
+            1: bool
+            2: string
+         data: data_type ?
+            if double: lf64
+            if bool: bool
+            if string: string
+         update_count: lu32
+         path_update_count: lu32
+      if change:
+         name: string
+         property: string
+         update_count: lu32
+         new_value: DataStorePropertyValue
+      if removal:
+         name: string
+
+WaypointWorldPosition:
+   position: vec3f
+   dimension_id: zigzag32
+
+Waypoint:
+   update_flags: lu32
+   visible?: bool
+   world_position?: WaypointWorldPosition
+   texture_id?: lu32
+   color?: li32
+   client_position_authority?: bool
+   actor_unique_id?: zigzag64
+
+LocatorBarWaypoint:
+   group_handle: uuid
+   waypoint: Waypoint
+   action: u8 =>
+      0: none
+      1: add
+      2: remove
+      3: update
+
+SyncWorldClockStateData:
+   clock_id: varint64
+   time: zigzag32
+   paused: bool
+
+TimeMarkerData:
+   id: varint64
+   name: string
+   time: zigzag32
+   period?: li32
+
+WorldClockData:
+   id: varint64
+   name: string
+   time: zigzag32
+   paused: bool
+   time_markers: TimeMarkerData[]varint
+
+AttributeLayerSettings:
+   priority: li32
+   weight_type: varint =>
+      0: float
+      1: string
+   _: weight_type ?
+      if float:
+         float_weight: lf32
+      if string:
+         string_weight: string
+   enabled: bool
+   transitions_paused: bool
+
+AttributeData:
+   type: varint =>
+      0: bool
+      1: float
+      2: colour
+   _: type ?
+      if bool:
+         bool_value: bool
+         bool_operation?: li32
+      if float:
+         float_value: lf32
+         float_operation?: li32
+         float_constraint_min?: lf32
+         float_constraint_max?: lf32
+      if colour:
+         colour_value: li32
+         colour_operation?: li32
+
+EnvironmentAttributeData:
+   attribute_name: string
+   from_attribute?: AttributeData
+   attribute: AttributeData
+   to_attribute?: AttributeData
+   current_transition_ticks: lu32
+   total_transition_ticks: lu32
+   ease_type: li32
+
+AttributeLayerData:
+   name: string
+   dimension_id: zigzag32
+   settings: AttributeLayerSettings
+   environment_attributes: EnvironmentAttributeData[]varint

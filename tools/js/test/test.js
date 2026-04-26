@@ -24,6 +24,12 @@ require('./version_iterator')(function (p, versionString) {
       }
       if (instance) {
         it(dataName + '.json is valid', function () {
+          // Skip tints schema validation for PC 1.21.4, as it doesn't meet the
+          // maxItems: 1 check for the constant tints.
+          if (dataName === 'tints' && versionString === 'pc 1.21.4') {
+            this.skip()
+          }
+
           if (dataName === 'protocol') {
             const validator = new Validator()
 

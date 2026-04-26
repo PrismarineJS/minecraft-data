@@ -1,6 +1,11 @@
 name: Update Helper
 on:
   workflow_dispatch:
+    inputs:
+      createPr:
+        description: 'If provided, force create an update PR. JSON encoded payload {title, versionJson, latestVersionData, latestVersion}'
+        required: false
+        default: ''
   schedule:
     - cron: "0 */2 * * *"
 
@@ -16,10 +21,12 @@ jobs:
       with:
         node-version: 22.0.0
     - name: Install Github Actions toolkit
-      run: npm i gh-helpers
+      run: npm i
       working-directory: .github/helper-bot
     # The env vars contain the relevant trigger information, so we don't need to pass it
     - name: Runs helper
-      run: cd .github/helper-bot && node index.js
+      run: node index.js
+      working-directory: .github/helper-bot
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+        FORCE_CREATE_PR: ${{ github.event.inputs.createPr }}

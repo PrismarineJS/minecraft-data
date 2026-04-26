@@ -16,6 +16,7 @@
     "option": "native",
     "entityMetadataLoop": "native",
     "bitfield": "native",
+    "bitflags": "native",
     "container": "native",
     "switch": "native",
     "void": "native",
@@ -23,11 +24,34 @@
     "restBuffer": "native",
     "nbt": "native",
     "compressedNbt": "native",
+    "ByteArray": [
+      "buffer",
+      {
+        "countType": "varint"
+      }
+    ],
     "string": [
       "pstring",
       {
         "countType": "varint"
       }
+    ],
+    "vec3i16": [
+      "container",
+      [
+        {
+          "name": "x",
+          "type": "i16"
+        },
+        {
+          "name": "y",
+          "type": "i16"
+        },
+        {
+          "name": "z",
+          "type": "i16"
+        }
+      ]
     ],
     "slot": [
       "container",
@@ -954,16 +978,8 @@
               "type": "i8"
             },
             {
-              "name": "velocityX",
-              "type": "i16"
-            },
-            {
-              "name": "velocityY",
-              "type": "i16"
-            },
-            {
-              "name": "velocityZ",
-              "type": "i16"
+              "name": "velocity",
+              "type": "vec3i16"
             },
             {
               "name": "metadata",
@@ -1025,16 +1041,8 @@
               "type": "i32"
             },
             {
-              "name": "velocityX",
-              "type": "i16"
-            },
-            {
-              "name": "velocityY",
-              "type": "i16"
-            },
-            {
-              "name": "velocityZ",
-              "type": "i16"
+              "name": "velocity",
+              "type": "vec3i16"
             }
           ]
         ],

@@ -1764,7 +1764,7 @@ packet_available_commands:
    # If the values_len < 0xff => byte,
    # If the values_len < 0xffff => short,
    # If the values_len < 0xffffff => int
-   _enum_type: '["enum_size_based_on_values_len"]'
+   _enum_type: ["enum_size_based_on_values_len"]
    # Here all the enum values for all of the possible commands are stored to one array palette
    enum_values: string[]$values_len
    # chained_subcommand_values is a slice of all chained subcommand names. chained_subcommand_values generally should
@@ -3281,6 +3281,18 @@ ArmorDamageType: [ "bitflags",
    }
 ]
 
+# CodeBuilder is an Education Edition packet sent by the server to the client to open the URL to a Code
+# Builder (websocket) server.
+packet_code_builder:
+   !id: 0x96
+   !bound: client
+   # URL is the url to the Code Builder (websocket) server.
+   url: string
+   # ShouldOpenCodeBuilder specifies if the client should automatically open the Code Builder app. If set to
+   # true, the client will attempt to use the Code Builder app to connect to and interface with the server
+   # running at the URL above.
+   should_open_code_builder: bool
+
 # UpdatePlayerGameType is sent by the server to change the game mode of a player. It is functionally
 # identical to the SetPlayerGameType packet.
 packet_update_player_game_type:
@@ -3350,6 +3362,16 @@ packet_position_tracking_db_broadcast:
    # The tracking ID is also present as the 'id' field in the SerialisedData field.
    tracking_id: zigzag32
    nbt: nbt
+
+# DebugInfo is a packet sent by the server to the client. It does not seem to do anything when sent to the
+# normal client in 1.16.
+packet_debug_info:
+    !id: 0x9b
+    !bound: client
+    # PlayerUniqueID is the unique ID of the player that the packet is sent to.
+    player_unique_id: zigzag64
+    # Data is the debug data.
+    data: ByteArray
 
 # PacketViolationWarning is sent by the client when it receives an invalid packet from the server. It holds
 # some information on the error that occurred.

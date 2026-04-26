@@ -1,0 +1,39 @@
+name: handle-mcpc-generator
+on:
+  workflow_dispatch:
+    inputs:
+      versions:
+        description: 'JSON stringified list of known versions in generator (last is expected to be latest)'
+        required: true
+        default: '["1.21.6"]'
+      mergedArtifactURL:
+        description: 'Merged artifact download URL'
+        required: true
+      prNumber:
+        description: 'Relevant minecraft-data-generator PR #'
+        required: false
+      createPr:
+        description: 'Whether to create a new PR if none exists'
+        required: false
+        default: 'false'
+
+jobs:
+  update-mcdata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: cd .github/helper-bot && bun install
+      - run: cd tools/js && bun install
+      - run: bun handleMcpcGeneratedArtifacts.js
+        working-directory: .github/helper-bot
+        env:
+          TRIGGER_MC_VERSIONS: ${{ github.event.inputs.versions }}
+          TRIGGER_PR_NO: ${{ github.event.inputs.prNumber }}
+          TRIGGER_ARTIFACT_URL: ${{ github.event.inputs.mergedArtifactURL }}
+          GITHUB_TOKEN: ${{ secrets.PAT_PASSWORD }}
+          CREATE_PR_IF_NONE: ${{ github.event.inputs.createPr }}

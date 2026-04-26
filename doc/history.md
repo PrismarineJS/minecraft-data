@@ -1,3 +1,156 @@
+## 3.109.0
+* [Fix recipe metadata for planks from logs in pre-1.13 versions (#1166)](https://github.com/PrismarineJS/minecraft-data/commit/f9b2eaeade48f5fe71e3b2bb28e929106064302c) (thanks @rom1504)
+
+## 3.108.0
+* [Add bedrock 26.10 protocol data (#1162)](https://github.com/PrismarineJS/minecraft-data/commit/4b0f3436a01b24b652e1d5b02a4760cb9cc7830a) (thanks @extremeheat)
+
+## 3.107.0
+* [Update CI to Node 24 (#1163)](https://github.com/PrismarineJS/minecraft-data/commit/c5b35d3b1335b155c4d9aad5d92afb58c37e79c5) (thanks @rom1504)
+
+## 3.105.1
+* [pc/protocol: Backport velocity naming changes (#1153)](https://github.com/PrismarineJS/minecraft-data/commit/7e72793ce9aa8235a0f9f9df755c2ee21b825af5) (thanks @SuperGamerTron)
+* [fix(bedrock/proto): mismatched field type in TransactionActions (#1157)](https://github.com/PrismarineJS/minecraft-data/commit/ffa565f17bbf1d5420c860cb29d72aa6e3af7153) (thanks @hax0r31337)
+* Updates to protocolVersions.json
+
+
+## 3.105.0
+* [🎈 Add Minecraft pc 1.21.11 data (#1144)](https://github.com/PrismarineJS/minecraft-data/commit/52cfa3ed1534226868dd6f1a6c47f16070e939ad) (thanks @rom1504bot)
+
+## 3.104.0
+* [Add bedrock 1.26.0 (26.0, v924) protocol data (#1148)](https://github.com/PrismarineJS/minecraft-data/commit/0d7f0d71b7b032769aab9e236294e2a5dffd58a0) (thanks @extremeheat)
+* [Add 26.1-snapshot-6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/789670bbf2ae37c87bac50433bba57b106448b4c) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7350453dc63ac2a3fbfd4051768e67267ca4639c) (thanks @github-actions[bot])
+
+## 3.103.0
+* [🎈 Add Minecraft pc 1.21.9/1.21.10 data (#1096)](https://github.com/PrismarineJS/minecraft-data/commit/c2609713383da7844bb8ce1e6cb580b767f04a53) (thanks @rom1504bot)
+* [Add 26.1-snapshot-4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6dac6d16330ebc9e4326b0d52cb71fcfac9bbb9c) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/1555cce4730cf7a830630b954d172c6f17e8600e) (thanks @github-actions[bot])
+* [Add 26.1-snapshot-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9443ed0dec3b9b8cdfe82ddb8a8097a622df10a7) (thanks @github-actions[bot])
+
+## 3.102.3
+* [bedrock protocol: use ZigZag64 instead of VarInt64 in packet_player_location (#1081)](https://github.com/PrismarineJS/minecraft-data/commit/803fce17e9cbefdba4013a772698c68a7792bb7f) (thanks @Snowbelldog)
+* [pc: Fix packet_explosion partial packet issue 1.21.4 - 1.21.8 (#1114)](https://github.com/PrismarineJS/minecraft-data/commit/c7048f26a8f60f75f3634817b4507bc49b575fae) (thanks @Rohan2460)
+* [bedrock: Fix 1.21.130 protocol command request origin (#1132)](https://github.com/PrismarineJS/minecraft-data/commit/d8ac281faba737d27bccc627ca0e1bd9b5231315) (thanks @mc-zuri)
+
+## 3.102.2
+* [Revert "bedrock: fix type for packet_command_request.version in 1.21.130 (#1127)" (#1133)](https://github.com/PrismarineJS/minecraft-data/commit/96cb35679d536f2811d765b2f3bbcb7dc2855ac4) (thanks @extremeheat)
+
+## 3.102.1
+* [bedrock: fix type for packet_biome_definition_list in 1.21.111+ (#1129)](https://github.com/PrismarineJS/minecraft-data/commit/aa8c52f8f8e53f6340ad4ee222b50aa2f4ad525f) (thanks @mc-zuri)
+* [bedrock: fix type for packet_command_request.version in 1.21.130 (#1127)](https://github.com/PrismarineJS/minecraft-data/commit/cf5fbc5bf7638a334834e66c8fc3efaf14a56519) (thanks @mc-zuri)
+* [Add 26.1-snapshot-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5d2847d3aefde292ef7e95c90c91a5fb74bcfa4a) (thanks @github-actions[bot])
+
+## 3.102.0
+* [Add Bedrock 1.21.130 protocol data (#1123)](https://github.com/PrismarineJS/minecraft-data/commit/f02ae17f958229ecf73cd42d87e1958d6992ebff) (thanks @extremeheat)
+
+## 3.101.0
+* [Add bedrock 1.21.124 protocol data (#1110)](https://github.com/PrismarineJS/minecraft-data/commit/e3bc56f073699fbff3d86a5fabeb56a513a54216) (thanks @extremeheat)
+* [Add 1.21.11-pre2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a56aac2cf69c06d3665e039d747bbd19b6f1d109) (thanks @github-actions[bot])
+* [Add 1.21.11-pre1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/1494806d600685885c0199eec736cc4907ff0723) (thanks @github-actions[bot])
+* [Add bedrock 1.21.111 data (#1094)](https://github.com/PrismarineJS/minecraft-data/commit/edfc78fe849b0203672a7fe1f533971ab56732d6) (thanks @mc-zuri)
+* [Add 25w46a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/b0892222b5868d37f00b4c02f834d7cc31734ed5) (thanks @github-actions[bot])
+* [Add 25w45a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/c3073256eb6f2fd019989bfb8add709b47cd01f9) (thanks @github-actions[bot])
+
+## 3.100.0
+* [bedrock: Add Bedrock 1.21.120 protocol data (#1107)](https://github.com/PrismarineJS/minecraft-data/commit/c65397236fcc41f26f5c5e0c0e94313f85f3f13c) (thanks @extremeheat)
+* [pc: fix packet_chat_message checksum type in PC V1.21.8 (#1083)](https://github.com/PrismarineJS/minecraft-data/commit/53ba02aad998dde33d67acf743a4bd166f8f310c) (thanks @kang-indie-hacker)
+* [bedrock: Add bedrock 1.21.100 data (#1087)](https://github.com/PrismarineJS/minecraft-data/commit/a3b4415d486195906eb4c3ed4ce214b76ba57d4b) (thanks @mc-zuri)
+* [pc: add missing packet mapper entries for 1.20.5 - 1.21.5 (#1088)](https://github.com/PrismarineJS/minecraft-data/commit/92437456e7fe90fa6fabebc22787b680b75e5581) (thanks @Titlehhhh)
+* [pc: Fix pc 1.8 spawn_entity packet structure (#1106)](https://github.com/PrismarineJS/minecraft-data/commit/3f0dd2ac525607b21be7cd6ddd003fa9057a72d2) (thanks @Copilot)
+* [pc: Make packet_common_cookie_response value field optional in 1.20.5+ (#1104)](https://github.com/PrismarineJS/minecraft-data/commit/3f77f6c913bcc328081e696e17f87a51316a1d51) (thanks @Copilot)
+* [bedrock: Fix malformed YAML syntax for _enum_type in Bedrock protocol definitions (#1103)](https://github.com/PrismarineJS/minecraft-data/commit/71f38e633942d241ec017223a009bd7bb6419fbc) (thanks @Copilot)
+* [test: Add version regression test and fix data path inconsistencies (#1086)](https://github.com/PrismarineJS/minecraft-data/commit/8c3dc6e973c271d4155fb12582b207db6fe6e40a) (thanks @Copilot)
+
+## 3.99.1
+* [Fix bedrock 1.21.111 protocol version](https://github.com/PrismarineJS/minecraft-data/commit/c471c4b65e3bfc205ae47f2586aed6c2b226932b) (thanks @extremeheat)
+
+## 3.99.0
+* [Add bedrock 1.21.111 protocol data (#1091)](https://github.com/PrismarineJS/minecraft-data/commit/9006e979f31c246107e44180fc18024db152cf70) (thanks @extremeheat)
+* [bedrock: fix steve skin paths in 1.21.70+ (#1084)](https://github.com/PrismarineJS/minecraft-data/commit/449328e7fec760765e4ffa6a9400b9b153a95b62) (thanks @thejfkvis)
+* [Add to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/362b990c64251fec3be3c823b0a2f27fae05f7d4) (thanks @github-actions[bot])
+
+## 3.98.0
+* [🎈 Pc1.21.8 (#1070)](https://github.com/PrismarineJS/minecraft-data/commit/7bfe410e80c5332074de6726dec8df6ad8c80ae1) (thanks @extremeheat)
+* [Add 25w36b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/fdd13b6a4bd46a7a9de1c5de8a7cb7abf715960f) (thanks @github-actions[bot])
+* [Add 25w36a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4358ffe27a81ad4f7aa54f62b30217d54165d3ad) (thanks @github-actions[bot])
+* [Fix update workflow](https://github.com/PrismarineJS/minecraft-data/commit/752a52d70ae2ad18bfdf01d8d7eac289f12807fa) (thanks @extremeheat)
+* [Fix handle-mcpc-generator.yml (#1071)](https://github.com/PrismarineJS/minecraft-data/commit/063c333d8e60fe012a6734126479fce4a3324e35) (thanks @extremeheat)
+* [Add pc 1.21.7 data (#1069)](https://github.com/PrismarineJS/minecraft-data/commit/1d6d9d408bf567e9a6f3fadd2aa079a50d8097d0) (thanks @Maks-gaming)
+* [Add 25w35a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/549e5a83ea72193eaa6eac8462e01957af6f832f) (thanks @github-actions[bot])
+* [Fix & cleanup the tints schema (#1056)](https://github.com/PrismarineJS/minecraft-data/commit/78d6e14a467fa719cb922e5bdc49275df4785860) (thanks @ItsDrike)
+* [Handle dispatch from PrismarineJS/minecraft-data-generator (#1063)](https://github.com/PrismarineJS/minecraft-data/commit/c903b774986cd025950df3a9240d8fade1885070) (thanks @extremeheat)
+* [Fix commands schema & enforce no additional properties (#1066)](https://github.com/PrismarineJS/minecraft-data/commit/5c47e32b57981d30cf9c5c15ac75633253680ea9) (thanks @ItsDrike)
+* [Disallow additional properties in blockMappings schema (#1067)](https://github.com/PrismarineJS/minecraft-data/commit/de073027b68530fc0dd6de2ec921386a839145f7) (thanks @ItsDrike)
+* [Ensure consistency between versions.json and dataPaths.json (#1068)](https://github.com/PrismarineJS/minecraft-data/commit/3075b6e8ad0778dfe134122ad65cb2f8f69632f3) (thanks @ItsDrike)
+* [Add 25w34b to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/46e60659d98b922f503c6b8f986564d5d38985ea) (thanks @github-actions[bot])
+* [Add 25w34a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0e3d40eb9a8c03c46b16fea594a30d4daa8a98a1) (thanks @github-actions[bot])
+
+## 3.97.0
+* [Revert "Fix pc "nbtNameForEnchant" feature versions (#986)"](https://github.com/PrismarineJS/minecraft-data/commit/34a88b5f770eb9f2b3d6a4ae8a5ec6a71b235327) (thanks @rom1504)
+
+## 3.96.0
+* [Update proto.yml for Minecraft 1.21.6 (#1039)](https://github.com/PrismarineJS/minecraft-data/commit/09821c14cc7ced37ac2e2554bc6bc0f84c4390c7) (thanks @rom1504)
+* [Enforce no additional properties for enchantments (#1053)](https://github.com/PrismarineJS/minecraft-data/commit/c7509e277a28753663e5f48433f146eb17773f0d) (thanks @ItsDrike)
+* [Add 25w33a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a30c6c4732864d4c30b14e73f7732ce0f15406a3) (thanks @github-actions[bot])
+* [Fix biomes schema validation issues (#1049)](https://github.com/PrismarineJS/minecraft-data/commit/31e0a3f2e7df3ae932fa39159028e52be402937b) (thanks @ItsDrike)
+* [Make items schema strict and document missing fields (#1052)](https://github.com/PrismarineJS/minecraft-data/commit/db4139e7812e998220178d010cda73053e40f75c) (thanks @ItsDrike)
+
+## 3.95.1
+* [Fix features schema inconsistencies and validation issues (#1047)](https://github.com/PrismarineJS/minecraft-data/commit/c949824c7a34c0f8a5ed2b3d0d3240a964eeadd5) (thanks @rom1504)
+* [Fix bedrock 1.21.100 packet_correct_player_move_prediction (#1044)](https://github.com/PrismarineJS/minecraft-data/commit/b6a81e62cf37e0eb9fdfb3477782219ff6b85adb) (thanks @TSL534)
+
+## 3.95.0
+* [Add bedrock 1.21.100 protocol data (#1041)](https://github.com/PrismarineJS/minecraft-data/commit/ae4cf26bd9a73478b6129ea404bef40db5e9f03e) (thanks @extremeheat)
+* [Fix pc "nbtNameForEnchant" feature versions (#986)](https://github.com/PrismarineJS/minecraft-data/commit/79ad67106787847f05faa68aaca3f3faea5cf9a1) (thanks @IKorzI)
+* [Mention minebase wrapper lib in readme (#1040)](https://github.com/PrismarineJS/minecraft-data/commit/24a38bc7746a5c280dad0c18567bd03c4afcec9f) (thanks @ItsDrike)
+* [Add 25w32a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/820cdf0c515422b30805fc91ff292861d5152aae) (thanks @github-actions[bot])
+
+## 3.94.0
+* [Add pc 1.21.5 protocol data (#1029)](https://github.com/PrismarineJS/minecraft-data/commit/6d6e431dd22cd9d0fb9e8c5b7029f6f1311f7501) (thanks @extremeheat)
+* [Add 25w31a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/60bc124b73d6daa12e80179e963aa93a80a40d45) (thanks @github-actions[bot])
+* [Add bedrock 1.21.90 data (#1027)](https://github.com/PrismarineJS/minecraft-data/commit/e72f74ee618659bbbb15bfa97ae1c5fb194b4ad6) (thanks @bedrock-bot)
+* [Add 1.21.8 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/05369ec2ec1f1f927359e9c4e90c8346111ac1a8) (thanks @github-actions[bot])
+* [Add 1.21.8-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a333d737118f65f6161ebdd353b36481d168b5fd) (thanks @github-actions[bot])
+
+## 3.93.0
+* [Add bedrock v1.21.93 to versions (#1032)](https://github.com/PrismarineJS/minecraft-data/commit/015c1c53fd4595c2226f729cb019d53514c91c32) (thanks @CreeperG16)
+* [manually update some of 1.21.4 materials.json (#1033)](https://github.com/PrismarineJS/minecraft-data/commit/8dcb6a1b09777ef34a8db8dde879d2a65de4e65c) (thanks @Gjum)
+* [fix: typo in SlotDisplay `smithing_trim` (#1031)](https://github.com/PrismarineJS/minecraft-data/commit/8071a1626422ddd3e9a8ab971edd9337f7b6d702) (thanks @patyhank)
+
+## 3.92.0
+* [PC protocol updates and refactor (#948)](https://github.com/PrismarineJS/minecraft-data/commit/1a0bb5380450a3b1559af47b48fb9be772531741) (thanks @extremeheat)
+* [add 1.21.6 data (#1028)](https://github.com/PrismarineJS/minecraft-data/commit/724b1b1d1de57b2b4e4da42a6cf9a5bd2bbd4cae) (thanks @bedrock-bot)
+* [doc: Add optional example in protocol.md](https://github.com/PrismarineJS/minecraft-data/commit/75c7e93be0ce3d2810f9bcb4d2d234aec6049496) (thanks @extremeheat)
+* [Add 1.21.7 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97efb66f1b4d5e42806d4ded033727638df90525) (thanks @github-actions[bot])
+
+## 3.91.0
+* [Add missing data version values in protocol version file (#1024)](https://github.com/PrismarineJS/minecraft-data/commit/72533f88da564797d59b618de59835c7984a79d5) (thanks @rom1504)
+* [Add some 1.21.5 data (#995)](https://github.com/PrismarineJS/minecraft-data/commit/f9ea32fedfb44b8cc4b41c3b41e178a96c690907) (thanks @RomainNeup)
+* [Add 1.21.7-rc2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/0790f31720fffa6c65f04ce5fd5da12bbcf4f31b) (thanks @github-actions[bot])
+* [Add 1.21.7-rc1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/bfa42528b71ae2941ca92015e65be3c0cbcc1ddf) (thanks @github-actions[bot])
+
+## 3.90.0
+* [Add bedrock 1.21.90 protocol data (#1021)](https://github.com/PrismarineJS/minecraft-data/commit/06c2106a669deb24f0c14770874a0abeb116687b) (thanks @CreeperG16)
+* [bedrock: add v1.21.70 Steve Skin (#1004)](https://github.com/PrismarineJS/minecraft-data/commit/b1b05bb62907ab0c6508d6f52e44b753df065d54) (thanks @yowzaoppo)
+* [Add Bedrock 1.21.80 data (#1012)](https://github.com/PrismarineJS/minecraft-data/commit/23eff009e11d739dd2f2bfc782a440dc885ef7f3) (thanks @bedrock-bot)
+* [pc: fix editBookPacketUsesNbt feature version range (#1013)](https://github.com/PrismarineJS/minecraft-data/commit/52b59d8f13e9b8e8e29654b95ca7e00ba702464f) (thanks @autowert66)
+
+## 3.89.0
+* [Add some sound features](https://github.com/PrismarineJS/minecraft-data/commit/431245e650d88863f867b156a6b418b56797658b) (thanks @rom1504)
+
+## 3.88.0
+* [Add title features.](https://github.com/PrismarineJS/minecraft-data/commit/33ac15edaa7da6c4252b52fc8f3c05803437dd64) (thanks @rom1504)
+
+## 3.87.0
+* [Fix bug in packet experience.](https://github.com/PrismarineJS/minecraft-data/commit/a32f3880296467fbed19e5205b1d1d23331fffa8) (thanks @rom1504)
+* [Add 25w20a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9ba5dfb80f37415e2ac79c3dc15c5581d5738bfa) (thanks @github-actions[bot])
+
+## 3.86.0
+* [Add Bedrock 1.21.80 protocol data (#1010)](https://github.com/PrismarineJS/minecraft-data/commit/9d518a1e4387c0323e55fe58dd2edbf50f6a13d8) (thanks @extremeheat)
+* [Add data for bedrock 1.21.60 and 1.21.70 (#997)](https://github.com/PrismarineJS/minecraft-data/commit/57e34f79c2e9deac2e71888ba639f4cb01068c34) (thanks @bedrock-bot)
+* [bedrock: add code_builder packet to protocol (#1000)](https://github.com/PrismarineJS/minecraft-data/commit/e2debd1bca378c38b75c7fd2de0796ab7087cc63) (thanks @EntifiedOptics)
+* [Fix Bedrock protocol missing debug_info packet (#999)](https://github.com/PrismarineJS/minecraft-data/commit/c22521517fc708f387af874bd2ce603ae314541b) (thanks @EntifiedOptics)
+
 ## 3.85.0
 * [Add Bedrock 1.21.70 (785) protocol data (#990)](https://github.com/PrismarineJS/minecraft-data/commit/982946615de283af7709ccf2611844d3808a63b7) (thanks @CreeperG16)
 * [Fix bedrock ItemStackRequest packet fields (#988)](https://github.com/PrismarineJS/minecraft-data/commit/41aa5c7ed620a4b6b51892153fb8abe67b6ded8e) (thanks @EntifiedOptics)

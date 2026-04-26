@@ -1161,7 +1161,7 @@
                       [
                         {
                           "name": "inventory_id",
-                          "type": "WindowIDVarint"
+                          "type": "WindowIDZigzag32"
                         }
                       ]
                     ],
@@ -2928,6 +2928,41 @@
         }
       }
     ],
+    "WindowIDZigzag32": [
+      "mapper",
+      {
+        "type": "zigzag32",
+        "mappings": {
+          "0": "inventory",
+          "1": "first",
+          "100": "last",
+          "119": "offhand",
+          "120": "armor",
+          "121": "creative",
+          "122": "hotbar",
+          "123": "fixed_inventory",
+          "124": "ui",
+          "-100": "drop_contents",
+          "-24": "beacon",
+          "-23": "trading_output",
+          "-22": "trading_use_inputs",
+          "-21": "trading_input_2",
+          "-20": "trading_input_1",
+          "-17": "enchant_output",
+          "-16": "enchant_material",
+          "-15": "enchant_input",
+          "-13": "anvil_output",
+          "-12": "anvil_result",
+          "-11": "anvil_material",
+          "-10": "container_input",
+          "-5": "crafting_use_ingredient",
+          "-4": "crafting_result",
+          "-3": "crafting_remove_ingredient",
+          "-2": "crafting_add_ingredient",
+          "-1": "none"
+        }
+      }
+    ],
     "WindowType": [
       "mapper",
       {
@@ -3673,10 +3708,12 @@
                 "147": "item_stack_request",
                 "148": "item_stack_response",
                 "149": "player_armor_damage",
+                "150": "code_builder",
                 "151": "update_player_game_type",
                 "152": "emote_list",
                 "153": "position_tracking_db_broadcast",
                 "154": "position_tracking_db_request",
+                "155": "debug_info",
                 "156": "packet_violation_warning",
                 "157": "motion_prediction_hints",
                 "158": "animate_entity",
@@ -3846,10 +3883,12 @@
                 "item_stack_request": "packet_item_stack_request",
                 "item_stack_response": "packet_item_stack_response",
                 "player_armor_damage": "packet_player_armor_damage",
+                "code_builder": "packet_code_builder",
                 "update_player_game_type": "packet_update_player_game_type",
                 "emote_list": "packet_emote_list",
                 "position_tracking_db_request": "packet_position_tracking_db_request",
                 "position_tracking_db_broadcast": "packet_position_tracking_db_broadcast",
+                "debug_info": "packet_debug_info",
                 "packet_violation_warning": "packet_packet_violation_warning",
                 "motion_prediction_hints": "packet_motion_prediction_hints",
                 "animate_entity": "packet_animate_entity",
@@ -8694,6 +8733,19 @@
         }
       }
     ],
+    "packet_code_builder": [
+      "container",
+      [
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "should_open_code_builder",
+          "type": "bool"
+        }
+      ]
+    ],
     "packet_update_player_game_type": [
       "container",
       [
@@ -8771,6 +8823,19 @@
         {
           "name": "nbt",
           "type": "nbt"
+        }
+      ]
+    ],
+    "packet_debug_info": [
+      "container",
+      [
+        {
+          "name": "player_unique_id",
+          "type": "zigzag64"
+        },
+        {
+          "name": "data",
+          "type": "ByteArray"
         }
       ]
     ],

@@ -2,9 +2,10 @@
   "title": "biomes",
   "type": "array",
   "uniqueItems": true,
-  "items" : {
+  "items": {
     "title": "biome",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
       "id": {
         "description": "The unique identifier for a biome",
@@ -27,14 +28,15 @@
       },
       "precipitation": {
         "description": "The type of precipitation: none, rain or snow [before 1.19.4]",
-        "type": "string"
+        "type": "string",
+        "enum": ["none", "rain", "snow"]
       },
       "has_precipitation": {
         "description": "True if a biome has any precipitation (rain or snow) [1.19.4+]",
         "type": "boolean"
       },
       "dimension": {
-        "description": "The dimension of a biome: overworld, nether or end",
+        "description": "The dimension of a biome: overworld, nether, end, or the_end (bedrock)",
         "type": "string"
       },
       "displayName": {
@@ -52,6 +54,61 @@
         "type": "number",
         "minimum": 0,
         "maximum": 1
+      },
+      "depth": {
+        "description": "The depth/height variation of the biome terrain",
+        "type": "number"
+      },
+      "climates": {
+        "description": "Climate data for the biome",
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "temperature": {
+              "description": "Climate temperature value",
+              "type": "number"
+            },
+            "humidity": {
+              "description": "Climate humidity value",
+              "type": "number"
+            },
+            "altitude": {
+              "description": "Climate altitude value",
+              "type": "number"
+            },
+            "weirdness": {
+              "description": "Climate weirdness value",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Climate offset value",
+              "type": "number"
+            }
+          },
+          "required": [
+            "temperature",
+            "humidity",
+            "altitude",
+            "weirdness",
+            "offset"
+          ]
+        }
+      },
+      "name_legacy": {
+        "description": "Legacy name of the biome used in older versions",
+        "type": "string"
+      },
+      "parent": {
+        "description": "Parent biome name for variant biomes",
+        "type": "string"
+      },
+      "child": {
+        "description": "Child biome ID for variant biomes",
+        "type": "integer",
+        "minimum": 0
       }
     },
     "required": [
