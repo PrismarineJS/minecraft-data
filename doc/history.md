@@ -1,3 +1,16 @@
+## 3.109.1
+* [pc: Fix attribute_modifiers structure in protocol.json for 1.21.5-1.21.11 (#1155)](https://github.com/PrismarineJS/minecraft-data/commit/82a071ee6e80cd3c86f87c808e366c60a5b58f59) (thanks @reallyoldfogie)
+* [pc: SlotComponentType fixes for 1.21.5-1.21.11 (#1173)](https://github.com/PrismarineJS/minecraft-data/commit/fefacc72872f9c21273f0d2a9663cd34221efb6f) (thanks @reallyoldfogie)
+* [Add 26.2-snapshot-4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/862b5e2223b69d14130e8b4cd4ba0f9846cde5f9) (thanks @github-actions[bot])
+* [Add 26.2-snapshot-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/2e6ade1cde68ada3c3d2651674ab1c98a21a8544) (thanks @github-actions[bot])
+* [Add 26.2-snapshot-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/d5184d0975be5a05cc5438c5228189ae9725e899) (thanks @github-actions[bot])
+* [Add 26.1.2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/737931abe23cdf73a32281623f6a5cf7d4eb5850) (thanks @github-actions[bot])
+* [Add 26.1.2-rc-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5afb64cb6e45b662ead753207bef45ba8985b3fc) (thanks @github-actions[bot])
+* [Add 26.2-snapshot-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/96be018b1c40e65b7bfbc915a2b039c54fd698c1) (thanks @github-actions[bot])
+* [Add 26w14a to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/044b556878add4ada544a932c6e358b8781a3aad) (thanks @github-actions[bot])
+* [Add 26.1.1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/ecef4ed229f6271b4097f5dff6d2e027bf55a47a) (thanks @github-actions[bot])
+* [Add 26.1.1-rc-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/97dce3fa78f289d01e681e9581b8579d26063a0e) (thanks @github-actions[bot])
+
 ## 3.109.0
 * [Fix recipe metadata for planks from logs in pre-1.13 versions (#1166)](https://github.com/PrismarineJS/minecraft-data/commit/f9b2eaeade48f5fe71e3b2bb28e929106064302c) (thanks @rom1504)
 
