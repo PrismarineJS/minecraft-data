@@ -1,3 +1,10 @@
+## 3.110.0
+* [Add bedrock 1.26.20 protocol data (#1181)](https://github.com/PrismarineJS/minecraft-data/commit/a40d0f7607ad01d1e27e7736ef7f875c0b06c7b5) (thanks @extremeheat)
+* [Add blocks.json for Bedrock 26.10 (#1170)](https://github.com/PrismarineJS/minecraft-data/commit/c8f384109682caf87e502b2ddd6ce969ce5afba5) (thanks @M9CHKO)
+* [fix(bedrock/proto): mismatched field type in GatheringJoinInfo (#1180)](https://github.com/PrismarineJS/minecraft-data/commit/7b57b32c5b08a801ba217b2648a85811133ced9f) (thanks @hax0r31337)
+* [Add 26.2-snapshot-6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/29db718980ecc17e9ab8651e9e4a36eb33bffbaf) (thanks @github-actions[bot])
+* [Add 26.2-snapshot-5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5afbbdd287a6c955d0c46c10fc6ddf1f46fc8c0b) (thanks @github-actions[bot])
+
 ## 3.109.1
 * [pc: Fix attribute_modifiers structure in protocol.json for 1.21.5-1.21.11 (#1155)](https://github.com/PrismarineJS/minecraft-data/commit/82a071ee6e80cd3c86f87c808e366c60a5b58f59) (thanks @reallyoldfogie)
 * [pc: SlotComponentType fixes for 1.21.5-1.21.11 (#1173)](https://github.com/PrismarineJS/minecraft-data/commit/fefacc72872f9c21273f0d2a9663cd34221efb6f) (thanks @reallyoldfogie)
