@@ -129,19 +129,6 @@ ItemLegacy:
             if /ShieldItemID: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithBlockingTick" }]'
             default: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithoutBlockingTick" }]'
 
-ItemNew:
-   network_id: li16
-   count: lu16
-   metadata: varint
-   has_stack_id: bool
-   stack_id: has_stack_id ?
-      if true:
-         empty: varint
-         id: zigzag32
-      default: void
-   block_runtime_id: varint
-   extra_data: ByteArray
-
 # An "ItemStack" here represents an Item instance. You can think about it like a pointer
 # to an item class. The data for the class gets updated with the data in the `item` field
 # As of 1.16.220, now functionally the same as `Item` just without an extra boolean when
@@ -346,8 +333,6 @@ MetadataDictionary: []varint
       139: arrow_shooter_id
       140: firework_direction
       141: firework_shooter_id
-      142: reserved_139
-      143: nameplate_render_distance_max
    type: varint =>
       0: byte
       1: short
@@ -511,10 +496,7 @@ MetadataFlags2: [ "bitflags", {
       "does_server_auth_only_dismount",
       "body_rotation_always_follows_head",
       "can_use_vertical_movement_action",
-      "rotation_locked_to_vehicle",
-      "uses_legacy_friction",
-      "uses_uniform_air_drag",
-      "nameplate_depth_tested"
+      "rotation_locked_to_vehicle"
    ]
 }]
 
@@ -801,10 +783,10 @@ Recipes: []varint
    type: zigzag32 =>
       0: shapeless #'ENTRY_SHAPELESS',
       1: shaped #'ENTRY_SHAPED',
-      2: furnace # 'ENTRY_FURNACE', # removed 1.26.20
+      2: furnace # 'ENTRY_FURNACE',
       # `furnace_with_metadata` is a recipe specifically used for furnace-type crafting stations. It is equal to
       # `furnace`, except it has an input item with a specific metadata value, instead of any metadata value.
-      3: furnace_with_metadata # 'ENTRY_FURNACE_DATA', # removed 1.26.20
+      3: furnace_with_metadata # 'ENTRY_FURNACE_DATA', // has metadata
       4: multi #'ENTRY_MULTI', //TODO
       5: shulker_box #'ENTRY_SHULKER_BOX', //TODO
       6: shapeless_chemistry #'ENTRY_SHAPELESS_CHEMISTRY', //TODO
@@ -837,11 +819,11 @@ Recipes: []varint
          assume_symmetry: bool
          unlocking_requirement: RecipeUnlockingRequirement
          network_id: varint
-      if furnace: # removed 1.26.20
+      if furnace:
          input_id: zigzag32
          output: ItemLegacy
          block: string
-      if furnace_with_metadata: # removed 1.26.20
+      if furnace_with_metadata:
          input_id: zigzag32
          input_meta: zigzag32
          output: ItemLegacy
@@ -955,7 +937,7 @@ Enchant:
    level: u8
 
 EnchantOption:
-   cost: u8
+   cost: varint
    slot_flags: li32
    equip_enchants: Enchant[]varint
    held_enchants: Enchant[]varint
@@ -2211,8 +2193,6 @@ SoundType: varint =>
    - ItemNetheriteSpearUse
    - PauseGrowth
    - ResetGrowth
-   - PushedByPlayer
-   - Bounce
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2759,10 +2739,6 @@ DisconnectFailReason: zigzag32 =>
    - editor_mismatch_editor_to_vanilla
    - editor_mismatch_vanilla_to_editor
    - deny_listed
-   - nonce_missing
-   - nonce_not_found
-   - nonce_expired
-   - nonce_not_valid
 
 FullContainerName:
    container_id: ContainerSlotType
@@ -3146,9 +3122,6 @@ GraphicsOverrideParameterType: u8 =>
    - flash_illuminance
    - ambient_color
    - ambient_illuminance
-   - emissive_desaturation
-   - sky_intensity
-   - orbital_offset_degrees
 
 DebugMarkerData:
    text: string
@@ -3210,8 +3183,7 @@ Waypoint:
    update_flags: lu32
    visible?: bool
    world_position?: WaypointWorldPosition
-   texture_path?: string
-   icon_size?: vec2f
+   texture_id?: lu32
    color?: li32
    client_position_authority?: bool
    actor_unique_id?: zigzag64
@@ -3288,70 +3260,3 @@ AttributeLayerData:
    dimension_id: zigzag32
    settings: AttributeLayerSettings
    environment_attributes: EnvironmentAttributeData[]varint
-
-EntityDiagnosticTimingInfo:
-   display_name: string
-   entity: string
-   duration_nanos: lu64
-   percent_of_total: u8
-
-SystemDiagnosticTimingInfo:
-   display_name: string
-   system_index: lu64
-   duration_nanos: lu64
-   percent_of_total: u8
-
-PrimitiveShape:
-   network_id: varint64
-   type?: u8 =>
-      0: line
-      1: box
-      2: sphere
-      3: circle
-      4: text
-      5: arrow
-   location?: vec3f
-   scale?: lf32
-   rotation?: vec3f
-   total_time_left?: lf32
-   max_render_distance?: lf32
-   color?: li32
-   dimension_id?: zigzag32
-   attached_to_entity_id?: zigzag64
-   extra_shape_data: type ?
-      if line: ShapeLine
-      if box: ShapeBox
-      if sphere: ShapeSphere
-      if circle: ShapeCircle
-      if text: ShapeText
-      if arrow: ShapeArrow
-      default: void
-
-ShapeLine:
-   end_location: vec3f
-
-ShapeBox:
-   box_bound: vec3f
-
-ShapeSphere:
-   segment_count?: u8
-
-ShapeCircle:
-   segment_count?: u8
-
-ShapeText:
-   text: string
-   use_rotation?: bool
-   background_color?: li32
-   depth_test?: bool
-   show_backface?: bool
-   show_backface_text?: bool
-
-ShapeArrow:
-   end_location: vec3f
-   arrow_head_length: lf32
-   arrow_head_radius: lf32
-
-PartyInfo:
-   party_id: string
-   party_leader: bool
