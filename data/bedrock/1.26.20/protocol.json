@@ -569,8 +569,29 @@
           "type": "varint"
         },
         {
-          "name": "extra_data",
-          "type": "ByteArray"
+          "name": "extra",
+          "type": [
+            "switch",
+            {
+              "compareTo": "network_id",
+              "fields": {
+                "/ShieldItemID": [
+                  "encapsulated",
+                  {
+                    "lengthType": "varint",
+                    "type": "ItemExtraDataWithBlockingTick"
+                  }
+                ]
+              },
+              "default": [
+                "encapsulated",
+                {
+                  "lengthType": "varint",
+                  "type": "ItemExtraDataWithoutBlockingTick"
+                }
+              ]
+            }
+          ]
         }
       ]
     ],
