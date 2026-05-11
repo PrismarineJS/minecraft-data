@@ -1,3 +1,6 @@
+## 3.110.1
+* [bedrock: fix 1.26.20 parsing of ItemNew extra data (#1183)](https://github.com/PrismarineJS/minecraft-data/commit/a57d00f1f964443f82549869e5e7745e2329d306) (thanks @hax0r31337)
+
 ## 3.110.0
 * [Add bedrock 1.26.20 protocol data (#1181)](https://github.com/PrismarineJS/minecraft-data/commit/a40d0f7607ad01d1e27e7736ef7f875c0b06c7b5) (thanks @extremeheat)
 * [Add blocks.json for Bedrock 26.10 (#1170)](https://github.com/PrismarineJS/minecraft-data/commit/c8f384109682caf87e502b2ddd6ce969ce5afba5) (thanks @M9CHKO)
