@@ -140,7 +140,10 @@ ItemNew:
          id: zigzag32
       default: void
    block_runtime_id: varint
-   extra_data: ByteArray
+   extra: network_id ?
+      # The Shield Item ID is sent in the StartGame packet. It is usually 355 in vanilla.
+      if /ShieldItemID: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithBlockingTick" }]'
+      default: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithoutBlockingTick" }]'
 
 # An "ItemStack" here represents an Item instance. You can think about it like a pointer
 # to an item class. The data for the class gets updated with the data in the `item` field
