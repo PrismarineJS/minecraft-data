@@ -1,3 +1,7 @@
+## 3.110.2
+* [pc: Fix chat packet checksum field type mismatch (#1188)](https://github.com/PrismarineJS/minecraft-data/commit/0549f09f9413cb1f6f0a9ac7078739d4bee02033) (thanks @extremeheat)
+* [Add 26.2-snapshot-7 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f6294a7abd918710d0b7ec3f5e896dcfb1b5bc70) (thanks @github-actions[bot])
+
 ## 3.110.1
 * [bedrock: fix 1.26.20 parsing of ItemNew extra data (#1183)](https://github.com/PrismarineJS/minecraft-data/commit/a57d00f1f964443f82549869e5e7745e2329d306) (thanks @hax0r31337)
 
