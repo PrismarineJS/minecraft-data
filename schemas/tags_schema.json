@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "tags",
+  "description": "Registry tags extracted from the game's data/minecraft/tags/* registries. Maps each registry kind to its tags; each tag maps to the resolved list of registry entry names. Nested #tag references are flattened by the generator, so members are always concrete entries.",
+  "type": "object",
+  "properties": {
+    "block": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Tags over the block registry (e.g. minecraft:mineable/pickaxe, minecraft:needs_iron_tool)."
+    },
+    "item": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Tags over the item registry (e.g. minecraft:pickaxes, minecraft:logs)."
+    },
+    "fluid": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Tags over the fluid registry (e.g. minecraft:water, minecraft:lava)."
+    },
+    "entity_type": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Tags over the entity type registry (e.g. minecraft:skeletons, minecraft:raiders)."
+    }
+  },
+  "required": ["block", "item"],
+  "patternProperties": {
+    "^[a-z_/]+$": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Any additional registry kind the generator emits, including path-shaped ones (e.g. game_event, worldgen/biome) — same tag-map shape."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "tagMap": {
+      "type": "object",
+      "description": "Maps a namespaced tag name to its member entry names. Empty member lists are valid: vanilla ships empty tags (e.g. minecraft:incorrect_for_diamond_tool on 1.21.8).",
+      "patternProperties": {
+        "^[a-z0-9_.-]+:[a-z0-9_./-]+$": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_.-]+:[a-z0-9_./-]+$"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
