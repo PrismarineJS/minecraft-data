@@ -116,23 +116,6 @@ ItemExtraDataWithoutBlockingTick:
    can_destroy: ShortString[]li32
 
 # Same as below but without a "networkStackID" boolean
-ItemStackNetIdVariant:
-   type: varint =>
-      0: item_stack_net_id
-      1: item_stack_request_id
-      2: item_stack_legacy_request_id
-   id: zigzag32
-
-NetworkItemStackDescriptor:
-   network_id: li16
-   count: lu16
-   metadata: varint
-   net_id_variant?: ItemStackNetIdVariant
-   block_runtime_id: varint
-   extra_data: ByteArray
-
-NetworkItemStackDescriptors: NetworkItemStackDescriptor[]varint
-
 ItemLegacy:
    network_id: zigzag32
    _: network_id?
@@ -624,7 +607,7 @@ TransactionUseItem:
    hotbar_slot: zigzag32
    # HeldItem is the item that was held to interact with the block. The server should check if this item
    # is actually present in the HotBarSlot.
-   held_item: NetworkItemStackDescriptor
+   held_item: Item
    # Position is the position of the player at the time of interaction. For clicking a block, this is the
    # position at that time, whereas for breaking the block it is the position at the time of breaking.
    player_pos: vec3f
@@ -663,8 +646,8 @@ TransactionActions: []varint
          action: varint
       default: void
    slot: varint
-   old_item: NetworkItemStackDescriptor
-   new_item: NetworkItemStackDescriptor
+   old_item: Item
+   new_item: Item
 
 # The Minecraft bedrock inventory system was refactored, but not all inventory actions use the new packet.
 # This data structure holds actions that have not been updated to the new system.
@@ -731,7 +714,7 @@ Transaction:
          hotbar_slot: zigzag32
          # HeldItem is the item that was held to interact with the entity. The server should check if this item
          # is actually present in the HotBarSlot.
-         held_item: NetworkItemStackDescriptor
+         held_item: Item
          # Position is the position of the player at the time of clicking the entity.
          player_pos: vec3f
          # ClickedPosition is the position that was clicked relative to the entity's base coordinate. It can be
@@ -754,7 +737,7 @@ Transaction:
          hotbar_slot: zigzag32
          # HeldItem is the item that was released. The server should check if this item is actually present in the
          # HotBarSlot.
-         held_item: NetworkItemStackDescriptor
+         held_item: Item
          # HeadPosition is the position of the player's head at the time of releasing the item. This is used
          # mainly for purposes such as spawning eating particles at that position.
          head_pos: vec3f
@@ -1631,8 +1614,6 @@ ContainerSlotType: u8 =>
    - recipe_blocks
    - recipe_furnace_items
 
-SoundEventIdentifier: string
-
 SoundType: varint =>
    - ItemUseOn
    - Hit
@@ -2235,16 +2216,6 @@ SoundType: varint =>
    - ResetGrowth
    - PushedByPlayer
    - Bounce
-   - SlimeLanding
-   - AbsorbBlock
-   - EjectBlock
-   - GeyserEruptionStart
-   - GeyserEruptionActive
-   - RecordBounce
-   - BucketFillLandAnimal
-   - BucketEmptyLandAnimal
-   - GeyserContinuousEruptionStart
-   - GeyserContinuousEruptionActive
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2614,13 +2585,6 @@ MemoryCategoryCounter:
       - gameface_script_engine
    bytes: lu64
 
-WhiskerScopeDataSummary:
-   label: string
-   indentation: string
-   total_high_cost_ns: lu64
-   total_mid_cost_ns: lu64
-   total_low_cost_ns: lu64
-
 VoxelCells:
    x_size: u8
    y_size: u8
@@ -2647,17 +2611,13 @@ GatheringJoinInfo:
    scenario_id: string
    server_id: string
 
-ServerSoundHandle:
-   server_sound_handle: lu64
-
 StoreEntryPointInfo:
    store_id: string
    store_name: string
 
 PresenceInfo:
-   experience_name?: string
-   world_name?: string
-   rich_presence_id?: string
+   experience_name: string
+   world_name: string
 
 ServerJoinInformation:
    has_gathering_info: bool
@@ -2811,15 +2771,9 @@ FullContainerName:
    container_id: ContainerSlotType
    dynamic_container_id?: u32
 
-SubChunkPosOffset:
-   dx: i8
-   dy: i8
-   dz: i8
-
 MovementEffectType: varint =>
    -1: invalid
    0: GLIDE_BOOST
-   1: GEYSER_BOOST
 
 # BiomeDefinition represents a biome definition in the game. This can be a vanilla biome or a completely
 # custom biome.
@@ -3331,12 +3285,9 @@ EnvironmentAttributeData:
    current_transition_ticks: lu32
    total_transition_ticks: lu32
    ease_type: li32
-   local_transition_ticks: lu32
-   noise_transition: bool
 
 AttributeLayerData:
    name: string
-   noise_name?: string
    dimension_id: zigzag32
    settings: AttributeLayerSettings
    environment_attributes: EnvironmentAttributeData[]varint
@@ -3362,10 +3313,6 @@ PrimitiveShape:
       3: circle
       4: text
       5: arrow
-      6: cylinder
-      7: pyramid
-      8: ellipsoid
-      9: cone
    location?: vec3f
    scale?: lf32
    rotation?: vec3f
@@ -3381,10 +3328,6 @@ PrimitiveShape:
       if circle: ShapeCircle
       if text: ShapeText
       if arrow: ShapeArrow
-      if cylinder: ShapeCylinder
-      if pyramid: ShapePyramid
-      if ellipsoid: ShapeEllipsoid
-      if cone: ShapeCone
       default: void
 
 ShapeLine:
@@ -3394,30 +3337,10 @@ ShapeBox:
    box_bound: vec3f
 
 ShapeSphere:
-   segment_count: u8
-
-ShapeCylinder:
-   radius_x: vec2f
-   radius_z: vec2f
-   height: lf32
-   segment_count: u8
-
-ShapePyramid:
-   width: lf32
-   depth?: lf32
-   height: lf32
-
-ShapeEllipsoid:
-   radii: vec3f
-   segments_per_axis: u8
-
-ShapeCone:
-   radii: vec2f
-   height: lf32
-   segment_count: u8
+   segment_count?: u8
 
 ShapeCircle:
-   segment_count: u8
+   segment_count?: u8
 
 ShapeText:
    text: string
@@ -3431,7 +3354,6 @@ ShapeArrow:
    end_location: vec3f
    arrow_head_length: lf32
    arrow_head_radius: lf32
-   segment_count: u8
 
 PartyInfo:
    party_id: string
