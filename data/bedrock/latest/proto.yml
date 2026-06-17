@@ -412,8 +412,17 @@ packet_start_game:
    # Specifies if the world was a trial world, meaning features are limited and there 
    # is a time limit on the world.
    is_trial: bool
+
+   # SyncedPlayerMovementSettings
+   # The movement authority mode. As of 1.21.80+, vanilla servers use server-authoritative movement.
+   movement_authority: zigzag32 =>
+      0: client
+      1: server
+      2: server_with_rewind
+
    # RewindHistorySize is the amount of history to keep at maximum
    rewind_history_size: zigzag32
+
    # ServerAuthoritativeBlockBreaking specifies if block breaking should be sent through
    # packet.PlayerAuthInput or not. This field is somewhat redundant as it is always enabled if
    # server authoritative movement is enabled.
