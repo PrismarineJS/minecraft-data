@@ -1,15 +1,6 @@
 ## 3.111.0
 * [Add Bedrock 1.26.30 protocol data (#1202)](https://github.com/PrismarineJS/minecraft-data/commit/b992f5bf704f172358ddebcb46afea07924b5361) (thanks @extremeheat)
 * [Add 26.2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a31412e3f47ac77e32562d98b3c0c95c82f8bb73) (thanks @github-actions[bot])
-* [Add 26.2-rc-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/447756fcab17e3162152ceb71fafbdf9339365a9) (thanks @github-actions[bot])
-* [Add 26.2-rc-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/9b5463fbd7868f3c8bba67e8e794854e1c9eeead) (thanks @github-actions[bot])
-* [Add 26.2-pre-6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4dbf4c380272b62a57c290924dc0bb7f2f5d1a7c) (thanks @github-actions[bot])
-* [Add 26.2-pre-5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/3ba33db3a15955ac53f777a8ae8978522ae863eb) (thanks @github-actions[bot])
-* [Add 26.2-pre-4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/cb33be35615d6693fb127f498330de9f07301a11) (thanks @github-actions[bot])
-* [Add 26.2-pre-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/928942983692964e4870fc90b19d97bbff108e3c) (thanks @github-actions[bot])
-* [Add 26.2-pre-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6c76bf4bc8983b1d266062228c21837826ed718c) (thanks @github-actions[bot])
-* [Add 26.2-pre-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/05753b3831d92e1c2d89d932e039bdc006aca035) (thanks @github-actions[bot])
-* [Add 26.2-snapshot-8 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/56fa551d324c8374478fdf166461bb0b93226f3f) (thanks @github-actions[bot])
 
 ## 3.110.2
 * [pc: Fix chat packet checksum field type mismatch (#1188)](https://github.com/PrismarineJS/minecraft-data/commit/0549f09f9413cb1f6f0a9ac7078739d4bee02033) (thanks @extremeheat)
