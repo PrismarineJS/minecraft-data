@@ -307,8 +307,6 @@ packet_start_game:
    created_in_editor: bool
    # Whether the world was exported from editor mode
    exported_from_editor: bool
-   server_editor_connection_policy: zigzag32
-   allow_anonymous_block_drops_in_editor_worlds: bool
    # The time at which the day cycle was locked if the day cycle is disabled using the respective
    # game rule. The client will maIntain this time as Boolean as the day cycle is disabled.
    day_cycle_stop_time: zigzag32
@@ -400,6 +398,10 @@ packet_start_game:
       2: disabled
    # DisablePlayerInteractions is true if the client should ignore other players when interacting with the world.
    disable_player_interactions: bool
+   # ServerEditorConnectionPolicy controls the editor connection policy.
+   server_editor_connection_policy: zigzag32
+   # AllowAnonymousBlockDropsInEditorWorlds specifies if anonymous block
+   allow_anonymous_block_drops_in_editor_worlds: bool
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -448,12 +450,14 @@ packet_start_game:
    # ClientSideGeneration is true if the client should use the features registered in the FeatureRegistry packet to
    # generate terrain client-side to save on bandwidth.
    client_side_generation: bool
-   is_chat_logging: bool
    # UseBlockNetworkIDHashes is true if the client should use the hash of a block's name as its network ID rather than
    # its index in the expected block palette. This is useful for servers that wish to support multiple protocol versions
    # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
    server_controlled_sound: bool
+   # IsLoggingChat indicates that the server owner is logging chat messages
+   # on the server machine. Education Edition only.
+   is_chat_logging: bool
    # New fields 1.26.0
    has_server_join_info: bool
    server_join_info: has_server_join_info ?
