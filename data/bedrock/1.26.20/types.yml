@@ -172,23 +172,6 @@ Item:
             if /ShieldItemID: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithBlockingTick" }]'
             default: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithoutBlockingTick" }]'
 
-ItemV4NetIdVariant:
-   type: varint =>
-      0: item_stack_net_id
-      1: item_stack_request_id
-      2: item_stack_legacy_request_id
-   id: zigzag32
-
-ItemV4:
-   network_id: li16
-   count: lu16
-   metadata: varint
-   net_id_variant?: ItemV4NetIdVariant
-   block_runtime_id: varint
-   extra_data: ByteArray
-
-ItemV4s: ItemV4[]varint
-
 vec3i:
    x: zigzag32
    y: zigzag32
@@ -208,11 +191,6 @@ vec3f:
    x: lf32
    y: lf32
    z: lf32
-
-vec3i8:
-   x: i8
-   y: i8
-   z: i8
 
 vec2f:
    x: lf32
@@ -599,7 +577,7 @@ PlayerAttributes: []varint
 TransactionUseItem:
    # ActionType is the type of the UseItem inventory transaction. It is one of the action types found above,
    # and specifies the way the player interacted with the block.
-   action_type: zigzag32 =>
+   action_type: varint =>
       # Right click item use on a surface like placing a block
       0: click_block
       # Start right click and hold style item use or potentially interact with nothing.
@@ -614,7 +592,7 @@ TransactionUseItem:
    # types found in the constants above. If TriggerType is TriggerTypePlayerInput, the transaction is from
    # the initial input of the player. If it is TriggerTypeSimulationTick, the transaction is from a simulation
    # tick when the player is holding down the input.
-   trigger_type: u8 =>
+   trigger_type: varint =>
    - unknown
    - player_input
    - simulation_tick
@@ -623,7 +601,7 @@ TransactionUseItem:
    block_position: BlockCoordinates
    # BlockFace is the face of the block that was interacted with. When clicking the block, it is the face
    # clicked. When breaking the block, it is the face that was last being hit until the block broke.
-   face: u8
+   face: zigzag32
    # HotBarSlot is the hot bar slot that the player was holding while clicking the block. It should be used
    # to ensure that the hot bar slot and held item are correctly synchronised with the server.
    hotbar_slot: zigzag32
@@ -640,9 +618,9 @@ TransactionUseItem:
    # that the player's world client-side is synchronised with the server's.
    block_runtime_id: varint
    # ClientPrediction is the client's prediction on the output of the transaction.
-   client_prediction: u8 =>
-      - failure
-      - success
+   client_prediction: varint =>
+   - failure
+   - success
    client_cooldown_state: u8 =>
       0: off
       1: on
@@ -659,13 +637,17 @@ TransactionActions: []varint
       3: creative
       100: craft_slot
       99999: craft
-   container_presence: bool
-   window_id?: i8
-   flag_presence: bool
-   flags?: varint
+   _: source_type?
+      if container or craft:
+         inventory_id: WindowIDZigzag32
+      if world_interaction:
+         flags: varint
+      if craft or craft_slot:
+         action: varint
+      default: void
    slot: varint
-   old_item: ItemV4
-   new_item: ItemV4
+   old_item: Item
+   new_item: Item
 
 # The Minecraft bedrock inventory system was refactored, but not all inventory actions use the new packet.
 # This data structure holds actions that have not been updated to the new system.
@@ -680,16 +662,18 @@ TransactionLegacy:
    # `legacy_transactions` are only present if the LegacyRequestID is non-zero. These item slots inform the
    # server of the slots that were changed during the inventory transaction, and the server should send
    # back an ItemStackResponse packet with these slots present in it. (Or false with no slots, if rejected.)
-   legacy_transactions?: []varint
-      container_id: u8
-      changed_slots: []varint
-         slot_id: u8
+   legacy_transactions: legacy_request_id?
+      if 0: void
+      default: []varint
+         container_id: u8
+         changed_slots: []varint
+            slot_id: u8
 
 Transaction:
    # Old transaction system data
    legacy: TransactionLegacy
    # What type of transaction took place
-   transaction_type?: varint =>
+   transaction_type: varint =>
       # Sent for container UI operations depending on if ItemStackNetManager is enabled
       0: normal
       # Sent from server to client to reject a transaction
@@ -705,7 +689,7 @@ Transaction:
       # See ItemReleaseInventoryTransaction::ActionType for which it is.
       4: item_release
    # The list of inventory internal actions in this packet, e.g. inventory GUI actions
-   actions?: TransactionActions
+   actions: TransactionActions
    # Extra data if an intenal inventory transaction did not take place, e.g. use of an item 
    transaction_data: transaction_type?
       if normal or inventory_mismatch: void
@@ -720,7 +704,7 @@ Transaction:
          entity_runtime_id: varint64
          # ActionType is the type of the UseItemOnEntity inventory transaction. It is one of the action types
          # found in the constants above, and specifies the way the player interacted with the entity.
-         action_type: zigzag32 =>
+         action_type: varint =>
             # Right click interact with actor.
             0: interact
             # Left click style attack of actor or elytra spin attack. Server is expected to deal damage to the entity with visuals.
@@ -730,7 +714,7 @@ Transaction:
          hotbar_slot: zigzag32
          # HeldItem is the item that was held to interact with the entity. The server should check if this item
          # is actually present in the HotBarSlot.
-         held_item: ItemV4
+         held_item: Item
          # Position is the position of the player at the time of clicking the entity.
          player_pos: vec3f
          # ClickedPosition is the position that was clicked relative to the entity's base coordinate. It can be
@@ -743,7 +727,7 @@ Transaction:
          # in the constants above, and specifies the way the item was released.
          # As of 1.13, the ActionType is always 0. This field can be ignored, because releasing food (by consuming
          # it) or releasing a bow (to shoot an arrow) is essentially the same.
-         action_type: zigzag32 =>
+         action_type: varint =>
             # Release right click and hold style item use, like firing a bow
             0: release
             # Finish right click and hold style item use, like charging a crossbow
@@ -753,7 +737,7 @@ Transaction:
          hotbar_slot: zigzag32
          # HeldItem is the item that was released. The server should check if this item is actually present in the
          # HotBarSlot.
-         held_item: ItemV4
+         held_item: Item
          # HeadPosition is the position of the player's head at the time of releasing the item. This is used
          # mainly for purposes such as spawning eating particles at that position.
          head_pos: vec3f
@@ -2232,20 +2216,6 @@ SoundType: varint =>
    - ResetGrowth
    - PushedByPlayer
    - Bounce
-   - SlimeLanding
-   - AbsorbBlock
-   - EjectBlock
-   - GeyserEruptionStart
-   - GeyserEruptionActive
-   - RecordBounce
-   - BucketFillLandAnimal
-   - BucketEmptyLandAnimal
-   - GeyserContinuousEruptionStart
-   - GeyserContinuousEruptionActive
-
-# As of 1.26.30, sounds are now sent as strings with their registry name
-ServerSoundHandle: lu64
-SoundEventIdentifier: string
 
 # TODO: remove?
 LegacyEntityType: li32 =>
@@ -2646,9 +2616,8 @@ StoreEntryPointInfo:
    store_name: string
 
 PresenceInfo:
-   experience_name?: string
-   world_name?: string
-   rich_presence_id?: string
+   experience_name: string
+   world_name: string
 
 ServerJoinInformation:
    has_gathering_info: bool
@@ -2805,7 +2774,6 @@ FullContainerName:
 MovementEffectType: varint =>
    -1: invalid
    0: GLIDE_BOOST
-   1: GEYSER_BOOST
 
 # BiomeDefinition represents a biome definition in the game. This can be a vanilla biome or a completely
 # custom biome.
@@ -3335,13 +3303,6 @@ SystemDiagnosticTimingInfo:
    system_index: lu64
    duration_nanos: lu64
    percent_of_total: u8
-
-WhiskerScopeDataSummary:
-   label: string
-   indentation: string
-   total_high_cost_ns: lu64
-   total_mid_cost_ns: lu64
-   total_low_cost_ns: lu64
 
 PrimitiveShape:
    network_id: varint64
