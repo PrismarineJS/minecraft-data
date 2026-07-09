@@ -1,3 +1,40 @@
+## 3.111.0
+* [Add Bedrock 1.26.30 protocol data (#1202)](https://github.com/PrismarineJS/minecraft-data/commit/b992f5bf704f172358ddebcb46afea07924b5361) (thanks @extremeheat)
+* [Add 26.2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a31412e3f47ac77e32562d98b3c0c95c82f8bb73) (thanks @github-actions[bot])
+
+## 3.110.2
+* [pc: Fix chat packet checksum field type mismatch (#1188)](https://github.com/PrismarineJS/minecraft-data/commit/0549f09f9413cb1f6f0a9ac7078739d4bee02033) (thanks @extremeheat)
+* [Add 26.2-snapshot-7 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f6294a7abd918710d0b7ec3f5e896dcfb1b5bc70) (thanks @github-actions[bot])
+
+## 3.110.1
+* [bedrock: fix 1.26.20 parsing of ItemNew extra data (#1183)](https://github.com/PrismarineJS/minecraft-data/commit/a57d00f1f964443f82549869e5e7745e2329d306) (thanks @hax0r31337)
+
+## 3.110.0
+* [Add bedrock 1.26.20 protocol data (#1181)](https://github.com/PrismarineJS/minecraft-data/commit/a40d0f7607ad01d1e27e7736ef7f875c0b06c7b5) (thanks @extremeheat)
+* [Add blocks.json for Bedrock 26.10 (#1170)](https://github.com/PrismarineJS/minecraft-data/commit/c8f384109682caf87e502b2ddd6ce969ce5afba5) (thanks @M9CHKO)
+* [fix(bedrock/proto): mismatched field type in GatheringJoinInfo (#1180)](https://github.com/PrismarineJS/minecraft-data/commit/7b57b32c5b08a801ba217b2648a85811133ced9f) (thanks @hax0r31337)
+* [Add 26.2-snapshot-6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/29db718980ecc17e9ab8651e9e4a36eb33bffbaf) (thanks @github-actions[bot])
+* [Add 26.2-snapshot-5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/5afbbdd287a6c955d0c46c10fc6ddf1f46fc8c0b) (thanks @github-actions[bot])
+
+## 3.109.1
+* [pc: Fix attribute_modifiers structure in protocol.json for 1.21.5-1.21.11 (#1155)](https://github.com/PrismarineJS/minecraft-data/commit/82a071ee6e80cd3c86f87c808e366c60a5b58f59) (thanks @reallyoldfogie)
+* [pc: SlotComponentType fixes for 1.21.5-1.21.11 (#1173)](https://github.com/PrismarineJS/minecraft-data/commit/fefacc72872f9c21273f0d2a9663cd34221efb6f) (thanks @reallyoldfogie)
+
+## 3.109.0
+* [Fix recipe metadata for planks from logs in pre-1.13 versions (#1166)](https://github.com/PrismarineJS/minecraft-data/commit/f9b2eaeade48f5fe71e3b2bb28e929106064302c) (thanks @rom1504)
+
+## 3.108.0
+* [Add bedrock 26.10 protocol data (#1162)](https://github.com/PrismarineJS/minecraft-data/commit/4b0f3436a01b24b652e1d5b02a4760cb9cc7830a) (thanks @extremeheat)
+
+## 3.107.0
+* [Update CI to Node 24 (#1163)](https://github.com/PrismarineJS/minecraft-data/commit/c5b35d3b1335b155c4d9aad5d92afb58c37e79c5) (thanks @rom1504)
+
+## 3.105.1
+* [pc/protocol: Backport velocity naming changes (#1153)](https://github.com/PrismarineJS/minecraft-data/commit/7e72793ce9aa8235a0f9f9df755c2ee21b825af5) (thanks @SuperGamerTron)
+* [fix(bedrock/proto): mismatched field type in TransactionActions (#1157)](https://github.com/PrismarineJS/minecraft-data/commit/ffa565f17bbf1d5420c860cb29d72aa6e3af7153) (thanks @hax0r31337)
+* Updates to protocolVersions.json
+
+
 ## 3.105.0
 * [🎈 Add Minecraft pc 1.21.11 data (#1144)](https://github.com/PrismarineJS/minecraft-data/commit/52cfa3ed1534226868dd6f1a6c47f16070e939ad) (thanks @rom1504bot)
 

@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.26.0
+!version: 1.26.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -398,6 +398,10 @@ packet_start_game:
       2: disabled
    # DisablePlayerInteractions is true if the client should ignore other players when interacting with the world.
    disable_player_interactions: bool
+   # ServerEditorConnectionPolicy controls the editor connection policy.
+   server_editor_connection_policy: zigzag32
+   # AllowAnonymousBlockDropsInEditorWorlds specifies if anonymous block
+   allow_anonymous_block_drops_in_editor_worlds: bool
    # A base64 encoded world ID that is used to identify the world.
    level_id: string
    # The name of the world that the player is joining. Note that this field shows up
@@ -451,6 +455,9 @@ packet_start_game:
    # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
    server_controlled_sound: bool
+   # IsLoggingChat indicates that the server owner is logging chat messages
+   # on the server machine. Education Edition only.
+   is_chat_logging: bool
    # New fields 1.26.0
    has_server_join_info: bool
    server_join_info: has_server_join_info ?
@@ -1021,7 +1028,10 @@ packet_entity_event:
       77: vibration_detected
       78: drink_milk
       79: wetness_stop
+      80: kinetic_damage_dealt
+      81: hurt_without_receiving_damage
    data: zigzag32
+   fire_at_position?: vec3f
 
 packet_mob_effect:
    !id: 0x1c
@@ -1058,7 +1068,7 @@ packet_mob_equipment:
    !id: 0x1f
    !bound: both
    runtime_entity_id: varint64
-   item: Item
+   item: ItemNew
    slot: u8
    selected_slot: u8
    window_id: WindowID
@@ -1067,11 +1077,11 @@ packet_mob_armor_equipment:
    !id: 0x20
    !bound: both
    runtime_entity_id: varint64
-   helmet: Item
-   chestplate: Item
-   leggings: Item
-   boots: Item
-   body: Item
+   helmet: ItemV4
+   chestplate: ItemV4
+   leggings: ItemV4
+   boots: ItemV4
+   body: ItemV4
 
 # Interact is sent by the client when it interacts with another entity in some way. It used to be used for
 # normal entity and block interaction, but this is no longer the case now.
@@ -1273,13 +1283,13 @@ packet_inventory_content:
    window_id: WindowIDVarint
    # Content is the new content of the inventory. The length of this slice must be equal to the full size of
    # the inventory window updated.
-   input: ItemStacks
+   input: ItemV4s
    # Container is the protocol.FullContainerName that describes the container that the content is for.
    container: FullContainerName
    # storage_item is the item that is acting as the storage container for the inventory. If the inventory is
    # not a dynamic container then this field should be left empty. When set, only the item type is used by
    # the client and none of the other stack info.
-   storage_item: Item
+   storage_item: ItemV4
 
 # InventorySlot is sent by the server to update a single slot in one of the inventory windows that the client
 # currently has opened. Usually this is the main inventory, but it may also be the off hand or, for example,
@@ -1293,14 +1303,14 @@ packet_inventory_slot:
    # Slot is the index of the slot that the packet modifies. The new item will be set to the slot at this index.
    slot: varint
    # Container is the protocol.FullContainerName that describes the container that the content is for.
-   container: FullContainerName
+   container?: FullContainerName
    # storage_item is the item that is acting as the storage container for the inventory. If the inventory is
    # not a dynamic container then this field should be left empty. When set, only the item type is used by
    # the client and none of the other stack info.
-   storage_item: Item
+   storage_item?: ItemNew
    # NewItem is the item to be put in the slot at Slot. It will overwrite any item that may currently
    # be present in that slot.
-   item: Item
+   item: ItemNew
 
 # ContainerSetData is sent by the server to update specific data of a single container, meaning a block such
 # as a furnace or a brewing stand. This data is usually used by the client to display certain features
@@ -1704,8 +1714,9 @@ packet_camera:
 packet_boss_event:
    !id: 0x4a
    !bound: both
-   boss_entity_id: zigzag64
-   type: varint =>
+   target_entity_id: zigzag64
+   player_id: zigzag64
+   type: u8 =>
       # S2C: Shows the boss-bar to the player.
       0: show_bar
       # C2S: Registers a player to a boss fight.
@@ -1724,50 +1735,40 @@ packet_boss_event:
       7: texture
       # C2S: Client asking the server to resend all boss data.
       8: query
-   _: type?
-      if show_bar:
-         # BossBarTitle is the title shown above the boss bar. It currently does not function, and instead uses
-         # the name tag of the boss entity at all times. It is only set if the EventType is BossEventShow or
-         # BossEventTitle.
-         title: string
-         # FilteredBossBarTitle is a filtered version of BossBarTitle with all the
-         # profanity removed. The client will use this over BossBarTitle if this
-         # field is not empty and they have the "Filter Profanity" setting enabled.
-         filtered_title: string
-         # HealthPercentage is the percentage of health that is shown in the boss bar. It currently does not
-         # function, and instead uses the health percentage of the boss entity at all times. It is only set if the
-         # EventType is BossEventShow or BossEventHealthPercentage.
-         progress: lf32
-         # ScreenDarkening currently seems not to do anything.
-         screen_darkening: li16
-         # Colour is the colour of the boss bar that is shown when a player is subscribed. It currently does not
-         # function. It is only set if the EventType is BossEventShow, BossEventAppearanceProperties or
-         # BossEventTexture.
-         # Format is ARGB
-         color: varint
-         # Overlay is the overlay of the boss bar that is shown on top of the boss bar when a player is
-         # subscribed. It currently does not function. It is only set if the EventType is BossEventShow,
-         # BossEventAppearanceProperties or BossEventTexture.
-         overlay: varint
-      if register_player or unregister_player or query:
-         # PlayerUniqueID is the unique ID of the player that is registered to or unregistered from the boss
-         # fight. It is set if EventType is either BossEventRegisterPlayer or BossEventUnregisterPlayer.
-         player_id: zigzag64
-      if set_bar_progress:
-         progress: lf32
-      if set_bar_title:
-         title: string
-         # FilteredBossBarTitle is a filtered version of BossBarTitle with all the
-         # profanity removed. The client will use this over BossBarTitle if this
-         # field is not empty and they have the "Filter Profanity" setting enabled.
-         filtered_title: string
-      if update_properties:
-         screen_darkening: li16
-         color: varint
-         overlay: varint
-      if texture:
-         color: varint
-         overlay: varint
+   # BossBarTitle is the title shown above the boss bar. It currently does not function, and instead uses
+   # the name tag of the boss entity at all times. It is only set if the EventType is BossEventShow or
+   # BossEventTitle.
+   title: string
+   # FilteredBossBarTitle is a filtered version of BossBarTitle with all the
+   # profanity removed. The client will use this over BossBarTitle if this
+   # field is not empty and they have the "Filter Profanity" setting enabled.
+   filtered_title: string
+   # HealthPercentage is the percentage of health that is shown in the boss bar. It currently does not
+   # function, and instead uses the health percentage of the boss entity at all times. It is only set if the
+   # EventType is BossEventShow or BossEventHealthPercentage.
+   progress: lf32
+   # Colour is the colour of the boss bar that is shown when a player is subscribed. It currently does not
+   # function. It is only set if the EventType is BossEventShow, BossEventAppearanceProperties or
+   # BossEventTexture.
+   # Format is ARGB
+   color: u8 =>
+      0: pink
+      1: blue
+      2: red
+      3: green
+      4: yellow
+      5: purple
+      6: rebecca_purple
+      7: white
+   # Overlay is the overlay of the boss bar that is shown on top of the boss bar when a player is
+   # subscribed. It currently does not function. It is only set if the EventType is BossEventShow,
+   # BossEventAppearanceProperties or BossEventTexture.
+   overlay: u8 =>
+      0: progress
+      1: notched_6
+      2: notched_10
+      3: notched_12
+      4: notched_20
 
 packet_show_credits:
    !id: 0x4b
@@ -1852,7 +1853,7 @@ packet_available_commands:
                58: raw_text
                62: json
                71: block_states
-               74: command
+               75: command
             # In MC, this + prior field are combined to one 32bit bitfield
             enum_type: lu16 =>
                0x10: valid
@@ -2133,6 +2134,7 @@ packet_play_sound:
    coordinates: BlockCoordinates
    volume: lf32
    pitch: lf32
+   handle?: lu64
 
 packet_stop_sound:
    !id: 0x57
@@ -2776,7 +2778,7 @@ packet_level_sound_event:
    !bound: both
    # SoundType is the type of the sound to play. Some of the sound types
    # require additional data, which is set in the EventData field.
-   sound_id: SoundType
+   sound_id: SoundEventIdentifier
    # Position is the position of the sound event. The player will be able to hear the direction of the sound
    # based on what position is sent here.
    position: vec3f
@@ -2797,6 +2799,7 @@ packet_level_sound_event:
    # different sessions of the same world, but most servers simply fill the runtime ID of the entity out for
    # this field.
    entity_unique_id: li64
+   fire_at_position?: vec3f
 
 # LevelEventGeneric is sent by the server to send a 'generic' level event to the client. This packet sends an
 # NBT serialised object and may for that reason be used for any event holding additional data.
@@ -2918,15 +2921,11 @@ packet_update_block_properties:
 packet_client_cache_blob_status:
    !id: 0x87
    !bound: server
-   # The number of MISSes in this packet
-   misses: varint
-   # The number of HITs in this packet
-   haves: varint
    # A list of blob hashes that the client does not have a blob available for. The server
    # should send the blobs matching these hashes as soon as possible.
-   missing: lu64[]$misses
+   missing: lu64[]varint
    # A list of hashes that the client does have a cached blob for. Server doesn't need to send.
-   have: lu64[]$haves
+   have: lu64[]varint
 
 # ClientCacheMissResponse is part of the blob cache protocol. It is sent by the server in response to a
 # ClientCacheBlobStatus packet and contains the blob data of all blobs that the client acknowledged not to
@@ -3545,14 +3544,11 @@ packet_filter_text_packet:
    # FromServer indicates if the packet was sent by the server or not.
    from_server: bool
 
-# ClientBoundDebugRenderer is sent by the server to spawn an outlined cube on client-side.
-packet_debug_renderer:
+# PrimitiveShapes is a packet sent by the server to instruct the client to render one or more shapes in the world.
+packet_primitive_shapes:
    !id: 0xa4
    !bound: client
-   type: string
-   has_data: bool
-   data: has_data ?
-      if true: DebugMarkerData
+   shapes: PrimitiveShape[]varint
 
 
 
@@ -3718,12 +3714,9 @@ packet_subchunk_request:
    !id: 0xaf
    !bound: server
    dimension: zigzag32
+   requests: vec3i8[]varint
    # Origin point
-   origin: vec3i
-   requests: []lu32
-      dx: i8
-      dy: i8
-      dz: i8
+   origin: vec3li
 
 # ClientStartItemCooldown is sent by the client to the server to initiate a cooldown on an item. The purpose of this
 # packet isn't entirely clear.
@@ -3792,6 +3785,7 @@ packet_dimension_data:
          3: nether
          4: end
          5: void
+      dimension_type: zigzag32
 
 # AgentAction is an Education Edition packet sent from the server to the client to return a response to a
 # previously requested action.
@@ -4055,9 +4049,6 @@ packet_update_client_input_locks:
    !bound: client
    # Locks is an encoded bitset of all locks that are currently active. The locks are defined in the constants above.
    locks: InputLockFlags
-   # Position is the server's position of the client at the time the packet was sent. It is unclear what the exact
-   # purpose of this field is.
-   position: vec3f
 
 # Deprecated: ClientCheatAbility is deprecated as of 1.20.10.
 packet_client_cheat_ability:
@@ -4312,6 +4303,9 @@ packet_serverbound_diagnostics:
    average_remainder_time_percent: lf32
    average_unaccounted_time_percent: lf32
    memory_category_values: MemoryCategoryCounter[]varint
+   entity_diagnostics: EntityDiagnosticTimingInfo[]varint
+   system_diagnostics: SystemDiagnosticTimingInfo[]varint
+   whisker_scopes: WhiskerScopeDataSummary[]varint
 
 # CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
 packet_camera_aim_assist:
@@ -4444,6 +4438,9 @@ packet_client_movement_prediction_sync:
    jump_strength: lf32
    health: lf32
    hunger: lf32
+   unknown_attribute_1: lf32
+   unknown_attribute_2: lf32
+   unknown_attribute_3: lf32
    entity_runtime_id: varint64
    is_flying: bool
 
@@ -4455,6 +4452,7 @@ packet_update_client_options:
       - fancy
       - advanced
       - ray_traced
+   filter_profanity?: bool
 
 # PlayerVideoCapturePacket is sent by the server to start or stop video recording for a player. This packet
 # only works on development builds and has no effect on retail builds. When recording, the client will save
@@ -4563,51 +4561,18 @@ packet_serverbound_pack_setting_change:
 packet_clientbound_data_store:
    !id: 0x14a
    !bound: client
-   entries: []varint
-      type: varint =>
-         0: update
-         1: change
-         2: removal
-      _: type ?
-         if update:
-            name: string
-            property: string
-            path: string
-            data_type: varint =>
-               0: double
-               1: bool
-               2: string
-            data: data_type ?
-               if double: lf64
-               if bool: bool
-               if string: string
-            update_count: li32
-            path_update_count: li32
-         if change:
-            name: string
-            property: string
-            update_count: varint
-            # TODO: This packet maybe defined wrong. Needs further investigation
-            data_type: varint =>
-               0: double
-               1: bool
-               2: string
-            data: data_type ?
-               if double: lf64
-               if bool: bool
-               if string: string
-         if removal:
-            name: string
+   updates: DataStoreChangeEntry[]varint
 
 packet_graphics_override_parameter:
    !id: 0x14b
    !bound: client
    values: ParameterKeyframeValue[]varint
-   float_value: lf32
-   vec3_value: vec3f
+   float_value?: lf32
+   vec3_value?: vec3f
    biome_identifier: string
    parameter_type: GraphicsOverrideParameterType
    reset: bool
+   player_id?: string
 
 packet_serverbound_data_store:
    !id: 0x14c
@@ -4615,7 +4580,7 @@ packet_serverbound_data_store:
    name: string
    property: string
    path: string
-   data_type: varint =>
+   data_type: lu32 =>
       0: double
       1: bool
       2: string
@@ -4623,17 +4588,20 @@ packet_serverbound_data_store:
       if double: lf64
       if bool: bool
       if string: string
-   update_count: varint
-   path_update_count: li32
+   update_count: lu32
+   path_update_count: lu32
 
 packet_clientbound_data_driven_ui_show_screen:
    !id: 0x14d
    !bound: client
    screen_id: string
+   form_id: lu32
+   data_instance_id?: lu32
 
-packet_clientbound_data_driven_ui_close_all_screens:
+packet_clientbound_data_driven_ui_close_screen:
    !id: 0x14e
    !bound: client
+   form_id?: lu32
 
 packet_clientbound_data_driven_ui_reload:
    !id: 0x14f
@@ -4661,6 +4629,7 @@ packet_voxel_shapes:
    !bound: client
    shapes: VoxelShape[]varint
    name_map: VoxelShapeNameEntry[]varint
+   custom_shape_count: lu16
 
 packet_camera_spline:
    !id: 0x152
@@ -4671,3 +4640,102 @@ packet_camera_aim_assist_actor_priority:
    !id: 0x153
    !bound: client
    priority_data: CameraAimAssistActorPriorityData[]varint
+
+packet_resource_packs_ready_for_validation:
+   !id: 0x154
+   !bound: server
+
+packet_locator_bar:
+   !id: 0x155
+   !bound: client
+   waypoints: LocatorBarWaypoint[]varint
+
+packet_party_changed:
+   !id: 0x156
+   !bound: client
+   party_info?: PartyInfo
+
+packet_serverbound_data_driven_screen_closed:
+   !id: 0x157
+   !bound: server
+   form_id?: lu32
+   # Options:
+	# "programmaticclose"
+	# "programmaticcloseall"
+	# "clientcanceled"
+	# "userbusy"
+	# "invalidform"
+   close_reason: string
+
+packet_sync_world_clocks:
+   !id: 0x158
+   !bound: client
+   payload_type: varint =>
+      0: sync_state
+      1: initialize_registry
+      2: add_time_marker
+      3: remove_time_marker
+   _: payload_type ?
+      if sync_state:
+         sync_states: SyncWorldClockStateData[]varint
+      if initialize_registry:
+         clocks: WorldClockData[]varint
+      if add_time_marker:
+         add_clock_id: varint64
+         add_time_markers: TimeMarkerData[]varint
+      if remove_time_marker:
+         remove_clock_id: varint64
+         remove_time_marker_ids: varint64[]varint
+
+packet_clientbound_attribute_layer_sync:
+   !id: 0x159
+   !bound: client
+   payload_type: varint =>
+      0: update_layers
+      1: update_settings
+      2: update_environment
+      3: remove_environment
+   _: payload_type ?
+      if update_layers:
+         layers: AttributeLayerData[]varint
+      if update_settings:
+         layer_name: string
+         dimension_id: zigzag32
+         settings: AttributeLayerSettings
+      if update_environment:
+         layer_name: string
+         dimension_id: zigzag32
+         environment_attributes: EnvironmentAttributeData[]varint
+      if remove_environment:
+         layer_name: string
+         dimension_id: zigzag32
+         remove_attribute_names: string[]varint
+
+packet_server_store_info:
+   !id: 0x15a
+   !bound: client
+   store_info?: StoreEntryPointInfo
+
+packet_server_presence_info:
+   !id: 0x15b
+   !bound: client
+   presence_info?: PresenceInfo
+
+packet_clientbound_update_sound_data:
+   !id: 0x15c
+   !bound: client
+   server_sound_handle: ServerSoundHandle
+   sound_event: string
+
+packet_send_party_destination_cookie:
+   !id: 0x15d
+   !bound: client
+   cookie: string
+   intent: string
+   destination_name: string
+
+packet_party_destination_cookie_response:
+   !id: 0x15e
+   !bound: server
+   cookie: string
+   accepted: bool
