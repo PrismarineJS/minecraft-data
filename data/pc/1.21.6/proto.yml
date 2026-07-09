@@ -55,6 +55,10 @@
       x: varint
       y: varint
       z: varint
+   vec3i16:
+      x: i16
+      y: i16
+      z: i16
    IDSet: ["registryEntryHolderSet", {
       "base": { name: "name", type: "string" },
       "otherwise": { name: "ids", type: "varint" }
@@ -101,10 +105,10 @@
       - map_id
       - map_decorations
       - map_post_processing
-      - potion_duration_scale
       - charged_projectiles
       - bundle_contents
       - potion_contents
+      - potion_duration_scale
       - suspicious_stew_effects
       - writable_book_content
       - written_book_content
@@ -185,27 +189,26 @@
                level: varint
          if can_place_on or can_break:
             predicates: ItemBlockPredicate[]varint
-         if attribute_modifiers:
-            attributes: []varint
-               typeId: varint
-               name: string
-               value: f64
-               operation: varint =>
-               - add
-               - multiply_base
-               - multiply_total
-               slot: varint =>
-               - any
-               - main_hand
-               - off_hand
-               - hand
-               - feet
-               - legs
-               - chest
-               - head
-               - armor
-               - body
-               - saddle
+         if attribute_modifiers: []varint
+            typeId: varint
+            name: string
+            value: f64
+            operation: varint =>
+            - add
+            - multiply_base
+            - multiply_total
+            slot: varint =>
+            - any
+            - main_hand
+            - off_hand
+            - hand
+            - feet
+            - legs
+            - chest
+            - head
+            - armor
+            - body
+            - saddle
             display:
                type: varint =>
                   - default
@@ -1681,9 +1684,7 @@
       yaw: i8
       headPitch: i8
       objectData: varint
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
+      velocity: vec3i16
    # MC: ClientboundAnimatePacket
    packet_animation:
       entityId: varint
@@ -2355,9 +2356,7 @@
    # MC: ClientboundSetEntityMotionPacket
    packet_entity_velocity:
       entityId: varint
-      velocityX: i16
-      velocityY: i16
-      velocityZ: i16
+      velocity: vec3i16
    # MC: ClientboundSetEquipmentPacket
    packet_entity_equipment:
       entityId: varint
@@ -3032,7 +3031,7 @@
             "count": 3
          }
       ]
-      checksum: i8
+      checksum: u8
    # MC: ServerboundChatPacket
    packet_chat_message:
       message: string
@@ -3051,7 +3050,7 @@
             "count": 3
          }
       ]
-      checksum: i8
+      checksum: u8
    # MC: ServerboundChatSessionUpdatePacket
    packet_chat_session_update:
       sessionUUID: UUID
@@ -3077,7 +3076,7 @@
    # MC: ServerboundContainerButtonClickPacket
    packet_enchant_item:
       windowId: ContainerID
-      enchantment: i8
+      enchantment: varint
    # MC: ServerboundContainerClickPacket
    packet_window_click:
       windowId: ContainerID
