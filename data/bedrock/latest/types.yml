@@ -2846,6 +2846,25 @@ BiomeChunkGeneration:
    mountain_parameters?: BiomeMountainParameters
    # SurfaceMaterialAdjustments is a list of surface material adjustments.
    surface_material_adjustments?: BiomeElementData[]varint
+   # OverworldRules is optional information to specify the biome's overworld rules, such as rivers and hills.
+   overworld_rules?: BiomeOverworldRules
+   # MultiNoiseRules is optional information to specify the biome's multi-noise rules.
+   multi_noise_rules?: BiomeMultiNoiseRules
+   # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
+   # weighted biomes.
+   legacy_rules?: BiomeConditionalTransformation[]varint
+   # ReplacementsData is a list of biome replacement data.
+   replacements_data?: BiomeReplacementData[]varint
+   has_village_type: bool
+   village_type: has_village_type ?
+      if true: u8
+   # SurfaceBuilderData is optional information for surface building.
+   surface_builder_data?: BiomeSurfaceBuilderData
+   # SubsurfaceBuilderData is optional information for subsurface building.
+   subsurface_builder_data?: BiomeSurfaceBuilderData
+
+# BiomeSurfaceBuilderData specifies the surface building configuration for a biome.
+BiomeSurfaceBuilderData:
    # SurfaceMaterials is a set of materials to use for the surface layers of the biome.
    surface_materials?: BiomeSurfaceMaterial
    # HasDefaultOverworldSurface is true if the biome has a default overworld surface.
@@ -2860,18 +2879,21 @@ BiomeChunkGeneration:
    mesa_surface?: BiomeMesaSurface
    # CappedSurface is optional information to specify the biome's capped surface, i.e. in the Nether.
    capped_surface?: BiomeCappedSurface
-   # OverworldRules is optional information to specify the biome's overworld rules, such as rivers and hills.
-   overworld_rules?: BiomeOverworldRules
-   # MultiNoiseRules is optional information to specify the biome's multi-noise rules.
-   multi_noise_rules?: BiomeMultiNoiseRules
-   # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
-   # weighted biomes.
-   legacy_rules?: BiomeConditionalTransformation[]varint
-   # ReplacementsData is a list of biome replacement data.
-   replacements_data?: BiomeReplacementData[]varint
-   has_village_type: bool
-   village_type: has_village_type ?
-      if true: u8
+   # NoiseGradientSurface is optional information for noise gradient surface generation.
+   noise_gradient_surface?: BiomeNoiseGradientSurfaceData
+
+# BiomeNoiseGradientSurfaceData specifies noise gradient surface data for a biome.
+BiomeNoiseGradientSurfaceData:
+   # NonReplaceableBlocks is a list of block runtime IDs that cannot be replaced by the gradient.
+   non_replaceable_blocks: lu32[]varint
+   # GradientBlocks is a list of block runtime IDs to use for the gradient.
+   gradient_blocks: lu32[]varint
+   # NoiseSeedString is the seed string used for noise generation.
+   noise_seed_string: string
+   # FirstOctave is the first octave of the noise.
+   first_octave: li32
+   # Amplitudes is a list of amplitudes for each octave of the noise.
+   amplitudes: lf32[]varint
 
 # BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
 BiomeClimate:
