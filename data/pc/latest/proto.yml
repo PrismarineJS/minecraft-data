@@ -192,7 +192,7 @@
          if damage_type:
             hasHolder: bool
             damageType: hasHolder ?
-               if true: ["registryEntryHolder", { "baseName": "damageTypeId", "otherwise": { "name": "data", "type": "DamageTypeData" } }]
+               if true: varint
                if false: string
          if item_name: anonymousNbt
          if item_model: string
@@ -465,8 +465,16 @@
          if rabbit/variant: varint
          if pig/variant: varint
          if cow/variant: varint
-         if chicken/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
-         if zombie_nautilus/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
+         if chicken/variant:
+            hasHolder: bool
+            variant: hasHolder ?
+               if true: varint
+               if false: string
+         if zombie_nautilus/variant:
+            hasHolder: bool
+            variant: hasHolder ?
+               if true: varint
+               if false: string
          if frog/variant: varint
          if horse/variant: varint
          if painting/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "data", "type": "EntityMetadataPaintingVariant" } }]
@@ -595,25 +603,6 @@
    BannerPatternLayer:
       pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "BannerPattern" } }]
       colorId: varint
-
-   DamageTypeData:
-      msgId: string
-      scaling: varint =>
-         - never
-         - when_caused_by_living_non_player
-         - always
-      exhaustion: f32
-      effects: varint =>
-         - hurt
-         - thorns
-         - drowning
-         - burning
-         - poking
-         - freezing
-      deathMessageType: varint =>
-         - default
-         - fall_variants
-         - intentional_game_design
 
    KineticWeaponCondition:
       maxDurationTicks: varint
