@@ -1,4 +1,4 @@
-!version: 26.1
+!version: 1.21.11
 !StartDocs: true
 
 ^types:
@@ -107,9 +107,7 @@
       - piercing_weapon
       - kinetic_weapon
       - swing_animation
-      - additional_trade_cost
       - stored_enchantments
-      - dye
       - dyed_color
       - map_color
       - map_id
@@ -160,19 +158,15 @@
       - mooshroom/variant
       - rabbit/variant
       - pig/variant
-      - pig/sound_variant
       - cow/variant
-      - cow/sound_variant
       - chicken/variant
-      - chicken/sound_variant
-      - zomie_nautilus/variant
+      - zombie_nautilus/variant
       - frog/variant
       - horse/variant
       - painting/variant
       - llama/variant
       - axolotl/variant
       - cat/variant
-      - cat/sound_variant
       - cat/collar
       - sheep/color
       - shulker/color
@@ -214,26 +208,27 @@
                level: varint
          if can_place_on or can_break:
             predicates: ItemBlockPredicate[]varint
-         if attribute_modifiers: []varint
-            typeId: varint
-            name: string
-            value: f64
-            operation: varint =>
-            - add
-            - multiply_base
-            - multiply_total
-            slot: varint =>
-            - any
-            - main_hand
-            - off_hand
-            - hand
-            - feet
-            - legs
-            - chest
-            - head
-            - armor
-            - body
-            - saddle
+         if attribute_modifiers:
+            attributes: []varint
+               typeId: varint
+               name: string
+               value: f64
+               operation: varint =>
+               - add
+               - multiply_base
+               - multiply_total
+               slot: varint =>
+               - any
+               - main_hand
+               - off_hand
+               - hand
+               - feet
+               - legs
+               - chest
+               - head
+               - armor
+               - body
+               - saddle
             display:
                type: varint =>
                   - default
@@ -366,8 +361,6 @@
                - whack
                - stab
             duration: varint
-         if additional_trade_cost: varint
-         if dye: DyeColor
          if dyed_color: i32
          if map_color: i32
          if map_id: varint
@@ -440,7 +433,7 @@
          if note_block_sound: string
          if banner_patterns:
             layers: BannerPatternLayer[]varint
-         if base_color: DyeColor
+         if base_color: varint
          if pot_decorations:
             # The ID of the items in the item registry.
             decorations: varint[]varint
@@ -462,21 +455,18 @@
          if villager/variant: varint
          if wolf/variant: varint
          if wolf/sound_variant: varint
-         if wolf/collar: DyeColor
+         if wolf/collar: varint
          if fox/variant: varint
          if salmon/size: varint
          if parrot/variant: varint
          if tropical_fish/pattern: varint
-         if tropical_fish/base_color: DyeColor
-         if tropical_fish/pattern_color: DyeColor
+         if tropical_fish/base_color: varint
+         if tropical_fish/pattern_color: varint
          if mooshroom/variant: varint
          if rabbit/variant: varint
          if pig/variant: varint
-         if pig/sound_variant: varint
          if cow/variant: varint
-         if cow/sound_variant: varint
          if chicken/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
-         if chicken/sound_variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
          if zombie_nautilus/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
          if frog/variant: varint
          if horse/variant: varint
@@ -484,10 +474,9 @@
          if llama/variant: varint
          if axolotl/variant: varint
          if cat/variant: varint
-         if cat/sound_variant: varint
-         if cat/collar: DyeColor
-         if sheep/color: DyeColor
-         if shulker/color: DyeColor
+         if cat/collar: varint
+         if sheep/color: varint
+         if shulker/color: varint
  
    ItemSoundEvent:
       soundName: string
@@ -631,24 +620,6 @@
       maxDurationTicks: varint
       minSpeed: f32
       minRelativeSpeed: f32
-   
-   DyeColor: varint =>
-      - white
-      - orange
-      - magenta
-      - light_blue
-      - yellow
-      - lime
-      - pink
-      - gray
-      - light_gray
-      - cyan
-      - purple
-      - blue
-      - brown
-      - green
-      - red
-      - black
 
    # This represents a single component within an UntrustedSlot.
    # The 'data' field is a varint-prefixed byte array that contains the actual component data.
@@ -951,8 +922,6 @@
          - item
          - vibration
          - trail
-         - pause_mob_growth
-         - reset_mob_growth
          - item_slime
          - item_cobweb
          - item_snowball
@@ -1143,16 +1112,12 @@
       - optional_unsigned_int
       - pose
       - cat_variant
-      - cat_sound_variant
       - cow_variant
-      - cow_sound_variant
       - wolf_variant
       - wolf_sound_variant
       - frog_variant
       - pig_variant
-      - pig_sound_variant
       - chicken_variant
-      - chicken_sound_variant
       - zombie_nautilus_variant
       - optional_global_pos
       - painting_variant
@@ -1193,16 +1158,12 @@
          if optional_unsigned_int: optvarint
          if pose: varint
          if cat_variant: varint
-         if cat_sound_variant: varint
          if cow_variant: varint
-         if cow_sound_variant: varint
          if wolf_variant: varint
          if wolf_sound_variant: varint
          if frog_variant: varint
          if pig_variant: varint
-         if pig_sound_variant: varint
          if chicken_variant: varint
-         if chicken_sound_variant: varint
          if zombie_nautilus_variant: varint
          if optional_global_pos: ["option", "GlobalPos"]
          if painting_variant: ["registryEntryHolder", {
@@ -1296,9 +1257,6 @@
       model?: varint =>
          - wide
          - slim
-   GameRule:
-      name: string
-      value: string
    command_node:
       flags: [
          "bitfield",
@@ -1959,28 +1917,17 @@
       type: varint =>
          - empty
          - any_fuel
-         - with_any_potion
-         - only_with_component
          - item
          - item_stack
          - tag
-         - dyed_slot_demo
          - smithing_trim
          - with_remainder
          - composite
       data: type ?
          if empty or any_fuel: void
-         if with_any_potion:
-            base: SlotDisplay
-         if only_with_component:
-            source: SlotDisplay
-            component: SlotComponentType
          if item: varint
          if item_stack: Slot
          if tag: string
-         if dyed_slot_demo:
-            dye: SlotDisplay
-            target: SlotDisplay
          if smithing_trim:
             base: SlotDisplay
             material: SlotDisplay
@@ -2049,6 +1996,7 @@
       x: f64
       y: f64
       z: f64
+      # TODO: Rename old fields
       velocity: lpVec3
       pitch: i8
       yaw: i8
@@ -2295,9 +2243,6 @@
          12: limited_crafting
          13: level_chunks_load_start
       gameMode: f32
-   # MC: ClientboundGameRuleValuesPacket
-   packet_game_rule_values:
-      values: GameRule[]varint
    # MC: ClientboundGameTestHighlightPosPacket
    packet_game_test_highlight_pos:
       absolutePos: position
@@ -2391,9 +2336,6 @@
       doLimitedCrafting: bool
       worldState: SpawnInfo
       enforcesSecureChat: bool
-   # MC: CLientboundLowDiskSpaceWarningPacket
-   packet_low_disk_space_warning:
-      # Empty
    # MC: ClientboundMapItemDataPacket
    packet_map:
       itemDamage: varint
@@ -2886,11 +2828,8 @@
    # MC: ClientboundSetTimePacket
    packet_update_time:
       age: i64
-      clockUpdates: []varint
-         id: varint
-         totalTicks: varlong
-         partialTick: f32
-         rate: f32
+      time: i64
+      tickDayTime: bool
    # MC: ClientboundSetTitleTextPacket
    packet_set_title_text:
       text: anonymousNbt
@@ -3153,7 +3092,6 @@
       - explosion
       - unload_chunk
       - game_state_change
-      - game_rule_values
       - game_test_highlight_pos
       - open_horse_window
       - hurt_animation
@@ -3164,7 +3102,6 @@
       - world_particles
       - update_light
       - login
-      - low_disk_space_warning
       - map
       - trade_list
       - rel_entity_move
@@ -3295,7 +3232,6 @@
          if explosion: packet_explosion
          if unload_chunk: packet_unload_chunk
          if game_state_change: packet_game_state_change
-         if game_rule_values: packet_game_rule_values
          if game_test_highlight_pos: packet_game_test_highlight_pos
          if open_horse_window: packet_open_horse_window
          if hurt_animation: packet_hurt_animation
@@ -3306,7 +3242,6 @@
          if world_particles: packet_world_particles
          if update_light: packet_update_light
          if login: packet_login
-         if low_disk_space_warning: packet_low_disk_space_warning
          if map: packet_map
          if trade_list: packet_trade_list
          if rel_entity_move: packet_rel_entity_move
@@ -3401,9 +3336,6 @@
    # MC: ServerboundAcceptTeleportationPacket
    packet_teleport_confirm:
       teleportId: varint
-   # MC: ServerboundAttackPacket
-   packet_attack:
-      entityId: varint
    # MC: ServerboundBlockEntityTagQueryPacket
    packet_query_block_nbt:
       transactionId: varint
@@ -3452,7 +3384,7 @@
             "count": 3
          }
       ]
-      checksum: u8
+      checksum: i8
    # MC: ServerboundChatPacket
    packet_chat_message:
       message: string
@@ -3483,10 +3415,7 @@
       chunksPerTick: f32
    # MC: ServerboundClientCommandPacket
    packet_client_command:
-      actionId: varint =>
-         - perform_respawn
-         - request_stats
-         - request_gamerule_values
+      actionId: varint
    # MC: ServerboundClientTickEndPacket
    packet_tick_end:
       # Empty
@@ -3500,7 +3429,7 @@
    # MC: ServerboundContainerButtonClickPacket
    packet_enchant_item:
       windowId: ContainerID
-      enchantment: varint
+      enchantment: i8
    # MC: ServerboundContainerClickPacket
    packet_window_click:
       windowId: ContainerID
@@ -3540,10 +3469,20 @@
    # MC: ServerboundInteractPacket
    packet_use_entity:
       target: varint
-      hand: varint =>
-         - main_hand
-         - off_hand
-      location: lpVec3
+      mouse: varint
+      x: mouse ?
+         if 2: f32
+         default: void
+      y: mouse ?
+         if 2: f32
+         default: void
+      z: mouse ?
+         if 2: f32
+         default: void
+      hand: mouse ?
+         if 0: varint
+         if 2: varint
+         default: void
       sneaking: bool
    # MC: ServerboundJigsawGeneratePacket
    packet_generate_structure:
@@ -3692,9 +3631,6 @@
    packet_set_creative_slot:
       slot: i16
       item: UntrustedSlot
-   # MC: ServerboundSetGameRulePacket
-   packet_set_game_rule:
-      entries: GameRule[]varint
    # MC: ServerboundSetJigsawBlockPacket
    packet_update_jigsaw_block:
       location: position
@@ -3741,9 +3677,6 @@
       text2: string
       text3: string
       text4: string
-   # MC: ServerboundSpectateEntityPacket
-   packet_spectate_entity:
-      entityId: varint
    # MC: ServerboundSwingPacket
    packet_arm_animation:
       hand: varint
@@ -3781,7 +3714,6 @@
    packet:
       name: varint =>
       - teleport_confirm
-      - attack
       - query_block_nbt
       - select_bundle_item
       - set_difficulty
@@ -3838,12 +3770,10 @@
       - update_command_block
       - update_command_block_minecart
       - set_creative_slot
-      - set_game_rule
       - update_jigsaw_block
       - update_structure_block
       - set_test_block
       - update_sign
-      - spectate_entity
       - arm_animation
       - spectate
       - test_instance_block_action
@@ -3852,7 +3782,6 @@
       - custom_click_action
       params: name ?
          if teleport_confirm: packet_teleport_confirm
-         if attack: packet_attack
          if query_block_nbt: packet_query_block_nbt
          if select_bundle_item: packet_select_bundle_item
          if set_difficulty: packet_set_difficulty
@@ -3908,12 +3837,10 @@
          if update_command_block: packet_update_command_block
          if update_command_block_minecart: packet_update_command_block_minecart
          if set_creative_slot: packet_set_creative_slot
-         if set_game_rule: packet_set_game_rule
          if update_jigsaw_block: packet_update_jigsaw_block
          if update_structure_block: packet_update_structure_block
          if set_test_block: packet_set_test_block
          if update_sign: packet_update_sign
-         if spectate_entity: packet_spectate_entity
          if arm_animation: packet_arm_animation
          if spectate: packet_spectate
          if test_instance_block_action: packet_test_instance_block_action
