@@ -87,18 +87,19 @@ function extractPcEntityMetadata (version, mcdataVersion = version, opts = {}) {
   }
   const write = opts.write !== false
   const cloneIfMissing = opts.cloneIfMissing !== false
+  const sourceDir = `mcsrc-${version}`
 
-  if (!fs.existsSync(version)) {
+  if (!fs.existsSync(sourceDir)) {
     if (!cloneIfMissing) {
-      throw new Error(`Version directory "${version}" does not exist`)
+      throw new Error(`Version directory "${sourceDir}" does not exist`)
     }
-    cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${version} --depth 1`, { stdio: 'inherit' })
+    cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${sourceDir} --depth 1`, { stdio: 'inherit' })
   }
 
-  const serializers = getEntityMetadataSerializers(version)
-  const [classNameToRegistryName, entityNameToClass] = getEntityTypes(version)
+  const serializers = getEntityMetadataSerializers(sourceDir)
+  const [classNameToRegistryName, entityNameToClass] = getEntityTypes(sourceDir)
 
-  const allEntityFiles = globSync(`${version}/**/entity/**/*.java`)
+  const allEntityFiles = globSync(`${sourceDir}/**/entity/**/*.java`)
   const allEntityFileCodes = Object.fromEntries(allEntityFiles.map(file => [
     file.split(/\\|\//g).pop().replace('.java', ''),
     fs.readFileSync(file, 'utf8')
