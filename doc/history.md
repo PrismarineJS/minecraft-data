@@ -1,3 +1,17 @@
+## 3.112.0
+* [pc: Add sendsClientTickEndPacket feature flag for 1.21.2+ (#1208)](https://github.com/PrismarineJS/minecraft-data/commit/bfd1a28e9daabf204ba4551a57596aefabc7b281) (thanks @iiroak)
+* [bedrock: 1.20 biomes data update (#1191)](https://github.com/PrismarineJS/minecraft-data/commit/78de6d266edec766198770dfa7b45f1027be2ff2) (thanks @nootbook011)
+* [pc: Add anvilNameLengthIsFifty feature flag (1.17+) (#1207)](https://github.com/PrismarineJS/minecraft-data/commit/600d9f05d7ef9d623032216843faea160b49ebbd) (thanks @AlphaDinosaur89)
+* [🎈 Add Minecraft pc 26.1 data (#1160)](https://github.com/PrismarineJS/minecraft-data/commit/58d24389309b26db59454cf8b7813ad688beeb55) (thanks @rom1504bot)
+* [Add 26.3-snapshot-5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8c1feade0fa792a16ac3ff8f9ba6dd55c8e252ff) (thanks @github-actions[bot])
+* [Add 26.3-snapshot-4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/7048d46b7c95328e508b2732137a6020acb9971c) (thanks @github-actions[bot])
+* [pc: Add feature flag for lpVec3 entity velocity (#1206)](https://github.com/PrismarineJS/minecraft-data/commit/bcb2efc1fefb5e5394fa3b1ec106e27c502069ff) (thanks @GenerelSchwerz)
+* [Add 26.3-snapshot-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/6ec59288287e4045331eaa47ee8fb104278f6b98) (thanks @github-actions[bot])
+* [pc: Fix 1.21 enchant_item button id integer type to varint (#1201)](https://github.com/PrismarineJS/minecraft-data/commit/8633dbdf56fb2e054d2e8206da2ef183d8b436ad) (thanks @atiweb)
+* [Add 26.3-snapshot-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e76d604e3d95a52ab56ceed76ef561f155c944ad) (thanks @github-actions[bot])
+* [Add bedrock block data for 1.26.0-1.26.30 (#1192)](https://github.com/PrismarineJS/minecraft-data/commit/9001b1ead1b14b554b88978ff97bcfe7233a2b31) (thanks @mc-zuri)
+* [Add 26.3-snapshot-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a8cf733fe44f3069f87f63e7ec3d74b521840ded) (thanks @github-actions[bot])
+
 ## 3.111.0
 * [Add Bedrock 1.26.30 protocol data (#1202)](https://github.com/PrismarineJS/minecraft-data/commit/b992f5bf704f172358ddebcb46afea07924b5361) (thanks @extremeheat)
 * [Add 26.2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/a31412e3f47ac77e32562d98b3c0c95c82f8bb73) (thanks @github-actions[bot])
