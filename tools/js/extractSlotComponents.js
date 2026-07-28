@@ -1,6 +1,7 @@
 const fs = require('fs')
 const cp = require('child_process')
 const version = process.argv[2]
+const sourceDir = `mcsrc-${version}`
 const extractTypes = process.argv[3] === '-types'
 
 if (!version) {
@@ -8,11 +9,11 @@ if (!version) {
   process.exit(1)
 }
 
-if (!fs.existsSync(version)) {
-  cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${version} --depth 1`, { stdio: 'inherit' })
+if (!fs.existsSync(sourceDir)) {
+  cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${sourceDir} --depth 1`, { stdio: 'inherit' })
 }
 
-const componentsFile = fs.readFileSync(`./${version}/client/net/minecraft/core/component/DataComponents.java`, 'utf8')
+const componentsFile = fs.readFileSync(`./${sourceDir}/client/net/minecraft/core/component/DataComponents.java`, 'utf8')
 const nameRe = /register\("(.+)",/gm
 const typeRe = /\((.+?)\).*?;/gm
 const nameMatches = componentsFile.matchAll(nameRe)
