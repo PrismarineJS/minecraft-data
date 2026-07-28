@@ -206,69 +206,75 @@
           "38": "piercing_weapon",
           "39": "kinetic_weapon",
           "40": "swing_animation",
-          "41": "stored_enchantments",
-          "42": "dyed_color",
-          "43": "map_color",
-          "44": "map_id",
-          "45": "map_decorations",
-          "46": "map_post_processing",
-          "47": "charged_projectiles",
-          "48": "bundle_contents",
-          "49": "potion_contents",
-          "50": "potion_duration_scale",
-          "51": "suspicious_stew_effects",
-          "52": "writable_book_content",
-          "53": "written_book_content",
-          "54": "trim",
-          "55": "debug_stick_state",
-          "56": "entity_data",
-          "57": "bucket_entity_data",
-          "58": "block_entity_data",
-          "59": "instrument",
-          "60": "provides_trim_material",
-          "61": "ominous_bottle_amplifier",
-          "62": "jukebox_playable",
-          "63": "provides_banner_patterns",
-          "64": "recipes",
-          "65": "lodestone_tracker",
-          "66": "firework_explosion",
-          "67": "fireworks",
-          "68": "profile",
-          "69": "note_block_sound",
-          "70": "banner_patterns",
-          "71": "base_color",
-          "72": "pot_decorations",
-          "73": "container",
-          "74": "block_state",
-          "75": "bees",
-          "76": "lock",
-          "77": "container_loot",
-          "78": "break_sound",
-          "79": "villager/variant",
-          "80": "wolf/variant",
-          "81": "wolf/sound_variant",
-          "82": "wolf/collar",
-          "83": "fox/variant",
-          "84": "salmon/size",
-          "85": "parrot/variant",
-          "86": "tropical_fish/pattern",
-          "87": "tropical_fish/base_color",
-          "88": "tropical_fish/pattern_color",
-          "89": "mooshroom/variant",
-          "90": "rabbit/variant",
-          "91": "pig/variant",
-          "92": "cow/variant",
-          "93": "chicken/variant",
-          "94": "zombie_nautilus/variant",
-          "95": "frog/variant",
-          "96": "horse/variant",
-          "97": "painting/variant",
-          "98": "llama/variant",
-          "99": "axolotl/variant",
-          "100": "cat/variant",
-          "101": "cat/collar",
-          "102": "sheep/color",
-          "103": "shulker/color"
+          "41": "additional_trade_cost",
+          "42": "stored_enchantments",
+          "43": "dye",
+          "44": "dyed_color",
+          "45": "map_color",
+          "46": "map_id",
+          "47": "map_decorations",
+          "48": "map_post_processing",
+          "49": "charged_projectiles",
+          "50": "bundle_contents",
+          "51": "potion_contents",
+          "52": "potion_duration_scale",
+          "53": "suspicious_stew_effects",
+          "54": "writable_book_content",
+          "55": "written_book_content",
+          "56": "trim",
+          "57": "debug_stick_state",
+          "58": "entity_data",
+          "59": "bucket_entity_data",
+          "60": "block_entity_data",
+          "61": "instrument",
+          "62": "provides_trim_material",
+          "63": "ominous_bottle_amplifier",
+          "64": "jukebox_playable",
+          "65": "provides_banner_patterns",
+          "66": "recipes",
+          "67": "lodestone_tracker",
+          "68": "firework_explosion",
+          "69": "fireworks",
+          "70": "profile",
+          "71": "note_block_sound",
+          "72": "banner_patterns",
+          "73": "base_color",
+          "74": "pot_decorations",
+          "75": "container",
+          "76": "block_state",
+          "77": "bees",
+          "78": "lock",
+          "79": "container_loot",
+          "80": "break_sound",
+          "81": "villager/variant",
+          "82": "wolf/variant",
+          "83": "wolf/sound_variant",
+          "84": "wolf/collar",
+          "85": "fox/variant",
+          "86": "salmon/size",
+          "87": "parrot/variant",
+          "88": "tropical_fish/pattern",
+          "89": "tropical_fish/base_color",
+          "90": "tropical_fish/pattern_color",
+          "91": "mooshroom/variant",
+          "92": "rabbit/variant",
+          "93": "pig/variant",
+          "94": "pig/sound_variant",
+          "95": "cow/variant",
+          "96": "cow/sound_variant",
+          "97": "chicken/variant",
+          "98": "chicken/sound_variant",
+          "99": "zomie_nautilus/variant",
+          "100": "frog/variant",
+          "101": "horse/variant",
+          "102": "painting/variant",
+          "103": "llama/variant",
+          "104": "axolotl/variant",
+          "105": "cat/variant",
+          "106": "cat/sound_variant",
+          "107": "cat/collar",
+          "108": "sheep/color",
+          "109": "shulker/color"
         }
       }
     ],
@@ -447,61 +453,87 @@
                   ]
                 ],
                 "attribute_modifiers": [
-                  "container",
-                  [
-                    {
-                      "name": "attributes",
-                      "type": [
-                        "array",
+                  "array",
+                  {
+                    "countType": "varint",
+                    "type": [
+                      "container",
+                      [
                         {
-                          "countType": "varint",
+                          "name": "typeId",
+                          "type": "varint"
+                        },
+                        {
+                          "name": "name",
+                          "type": "string"
+                        },
+                        {
+                          "name": "value",
+                          "type": "f64"
+                        },
+                        {
+                          "name": "operation",
+                          "type": [
+                            "mapper",
+                            {
+                              "type": "varint",
+                              "mappings": {
+                                "0": "add",
+                                "1": "multiply_base",
+                                "2": "multiply_total"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "name": "slot",
+                          "type": [
+                            "mapper",
+                            {
+                              "type": "varint",
+                              "mappings": {
+                                "0": "any",
+                                "1": "main_hand",
+                                "2": "off_hand",
+                                "3": "hand",
+                                "4": "feet",
+                                "5": "legs",
+                                "6": "chest",
+                                "7": "head",
+                                "8": "armor",
+                                "9": "body",
+                                "10": "saddle"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "name": "display",
                           "type": [
                             "container",
                             [
                               {
-                                "name": "typeId",
-                                "type": "varint"
-                              },
-                              {
-                                "name": "name",
-                                "type": "string"
-                              },
-                              {
-                                "name": "value",
-                                "type": "f64"
-                              },
-                              {
-                                "name": "operation",
+                                "name": "type",
                                 "type": [
                                   "mapper",
                                   {
                                     "type": "varint",
                                     "mappings": {
-                                      "0": "add",
-                                      "1": "multiply_base",
-                                      "2": "multiply_total"
+                                      "0": "default",
+                                      "1": "hidden",
+                                      "2": "override"
                                     }
                                   }
                                 ]
                               },
                               {
-                                "name": "slot",
+                                "name": "component",
                                 "type": [
-                                  "mapper",
+                                  "switch",
                                   {
-                                    "type": "varint",
-                                    "mappings": {
-                                      "0": "any",
-                                      "1": "main_hand",
-                                      "2": "off_hand",
-                                      "3": "hand",
-                                      "4": "feet",
-                                      "5": "legs",
-                                      "6": "chest",
-                                      "7": "head",
-                                      "8": "armor",
-                                      "9": "body",
-                                      "10": "saddle"
+                                    "compareTo": "type",
+                                    "fields": {
+                                      "override": "anonymousNbt"
                                     }
                                   }
                                 ]
@@ -510,42 +542,8 @@
                           ]
                         }
                       ]
-                    },
-                    {
-                      "name": "display",
-                      "type": [
-                        "container",
-                        [
-                          {
-                            "name": "type",
-                            "type": [
-                              "mapper",
-                              {
-                                "type": "varint",
-                                "mappings": {
-                                  "0": "default",
-                                  "1": "hidden",
-                                  "2": "override"
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "name": "component",
-                            "type": [
-                              "switch",
-                              {
-                                "compareTo": "type",
-                                "fields": {
-                                  "override": "anonymousNbt"
-                                }
-                              }
-                            ]
-                          }
-                        ]
-                      ]
-                    }
-                  ]
+                    ]
+                  }
                 ],
                 "custom_model_data": [
                   "container",
@@ -1083,6 +1081,8 @@
                     }
                   ]
                 ],
+                "additional_trade_cost": "varint",
+                "dye": "DyeColor",
                 "dyed_color": "i32",
                 "map_color": "i32",
                 "map_id": "varint",
@@ -1443,7 +1443,7 @@
                     }
                   ]
                 ],
-                "base_color": "varint",
+                "base_color": "DyeColor",
                 "pot_decorations": [
                   "container",
                   [
@@ -1538,18 +1538,30 @@
                 "villager/variant": "varint",
                 "wolf/variant": "varint",
                 "wolf/sound_variant": "varint",
-                "wolf/collar": "varint",
+                "wolf/collar": "DyeColor",
                 "fox/variant": "varint",
                 "salmon/size": "varint",
                 "parrot/variant": "varint",
                 "tropical_fish/pattern": "varint",
-                "tropical_fish/base_color": "varint",
-                "tropical_fish/pattern_color": "varint",
+                "tropical_fish/base_color": "DyeColor",
+                "tropical_fish/pattern_color": "DyeColor",
                 "mooshroom/variant": "varint",
                 "rabbit/variant": "varint",
                 "pig/variant": "varint",
+                "pig/sound_variant": "varint",
                 "cow/variant": "varint",
+                "cow/sound_variant": "varint",
                 "chicken/variant": [
+                  "registryEntryHolder",
+                  {
+                    "baseName": "variantId",
+                    "otherwise": {
+                      "name": "variantData",
+                      "type": "string"
+                    }
+                  }
+                ],
+                "chicken/sound_variant": [
                   "registryEntryHolder",
                   {
                     "baseName": "variantId",
@@ -1584,9 +1596,10 @@
                 "llama/variant": "varint",
                 "axolotl/variant": "varint",
                 "cat/variant": "varint",
-                "cat/collar": "varint",
-                "sheep/color": "varint",
-                "shulker/color": "varint"
+                "cat/sound_variant": "varint",
+                "cat/collar": "DyeColor",
+                "sheep/color": "DyeColor",
+                "shulker/color": "DyeColor"
               }
             }
           ]
@@ -2141,6 +2154,30 @@
           "type": "f32"
         }
       ]
+    ],
+    "DyeColor": [
+      "mapper",
+      {
+        "type": "varint",
+        "mappings": {
+          "0": "white",
+          "1": "orange",
+          "2": "magenta",
+          "3": "light_blue",
+          "4": "yellow",
+          "5": "lime",
+          "6": "pink",
+          "7": "gray",
+          "8": "light_gray",
+          "9": "cyan",
+          "10": "purple",
+          "11": "blue",
+          "12": "brown",
+          "13": "green",
+          "14": "red",
+          "15": "black"
+        }
+      }
     ],
     "UntrustedSlotComponent": [
       "container",
@@ -3292,71 +3329,73 @@
                 "47": "item",
                 "48": "vibration",
                 "49": "trail",
-                "50": "item_slime",
-                "51": "item_cobweb",
-                "52": "item_snowball",
-                "53": "large_smoke",
-                "54": "lava",
-                "55": "mycelium",
-                "56": "note",
-                "57": "poof",
-                "58": "portal",
-                "59": "rain",
-                "60": "smoke",
-                "61": "white_smoke",
-                "62": "sneeze",
-                "63": "spit",
-                "64": "squid_ink",
-                "65": "sweep_attack",
-                "66": "totem_of_undying",
-                "67": "underwater",
-                "68": "splash",
-                "69": "witch",
-                "70": "bubble_pop",
-                "71": "current_down",
-                "72": "bubble_column_up",
-                "73": "nautilus",
-                "74": "dolphin",
-                "75": "campfire_cosy_smoke",
-                "76": "campfire_signal_smoke",
-                "77": "dripping_honey",
-                "78": "falling_honey",
-                "79": "landing_honey",
-                "80": "falling_nectar",
-                "81": "falling_spore_blossom",
-                "82": "ash",
-                "83": "crimson_spore",
-                "84": "warped_spore",
-                "85": "spore_blossom_air",
-                "86": "dripping_obsidian_tear",
-                "87": "falling_obsidian_tear",
-                "88": "landing_obsidian_tear",
-                "89": "reverse_portal",
-                "90": "white_ash",
-                "91": "small_flame",
-                "92": "snowflake",
-                "93": "dripping_dripstone_lava",
-                "94": "falling_dripstone_lava",
-                "95": "dripping_dripstone_water",
-                "96": "falling_dripstone_water",
-                "97": "glow_squid_ink",
-                "98": "glow",
-                "99": "wax_on",
-                "100": "wax_off",
-                "101": "electric_spark",
-                "102": "scrape",
-                "103": "shriek",
-                "104": "egg_crack",
-                "105": "dust_plume",
-                "106": "trial_spawner_detected_player",
-                "107": "trial_spawner_detected_player_ominous",
-                "108": "vault_connection",
-                "109": "dust_pillar",
-                "110": "ominous_spawning",
-                "111": "raid_omen",
-                "112": "trial_omen",
-                "113": "block_crumble",
-                "114": "firefly"
+                "50": "pause_mob_growth",
+                "51": "reset_mob_growth",
+                "52": "item_slime",
+                "53": "item_cobweb",
+                "54": "item_snowball",
+                "55": "large_smoke",
+                "56": "lava",
+                "57": "mycelium",
+                "58": "note",
+                "59": "poof",
+                "60": "portal",
+                "61": "rain",
+                "62": "smoke",
+                "63": "white_smoke",
+                "64": "sneeze",
+                "65": "spit",
+                "66": "squid_ink",
+                "67": "sweep_attack",
+                "68": "totem_of_undying",
+                "69": "underwater",
+                "70": "splash",
+                "71": "witch",
+                "72": "bubble_pop",
+                "73": "current_down",
+                "74": "bubble_column_up",
+                "75": "nautilus",
+                "76": "dolphin",
+                "77": "campfire_cosy_smoke",
+                "78": "campfire_signal_smoke",
+                "79": "dripping_honey",
+                "80": "falling_honey",
+                "81": "landing_honey",
+                "82": "falling_nectar",
+                "83": "falling_spore_blossom",
+                "84": "ash",
+                "85": "crimson_spore",
+                "86": "warped_spore",
+                "87": "spore_blossom_air",
+                "88": "dripping_obsidian_tear",
+                "89": "falling_obsidian_tear",
+                "90": "landing_obsidian_tear",
+                "91": "reverse_portal",
+                "92": "white_ash",
+                "93": "small_flame",
+                "94": "snowflake",
+                "95": "dripping_dripstone_lava",
+                "96": "falling_dripstone_lava",
+                "97": "dripping_dripstone_water",
+                "98": "falling_dripstone_water",
+                "99": "glow_squid_ink",
+                "100": "glow",
+                "101": "wax_on",
+                "102": "wax_off",
+                "103": "electric_spark",
+                "104": "scrape",
+                "105": "shriek",
+                "106": "egg_crack",
+                "107": "dust_plume",
+                "108": "trial_spawner_detected_player",
+                "109": "trial_spawner_detected_player_ominous",
+                "110": "vault_connection",
+                "111": "dust_pillar",
+                "112": "ominous_spawning",
+                "113": "raid_omen",
+                "114": "trial_omen",
+                "115": "block_crumble",
+                "116": "firefly"
               }
             }
           ]
@@ -3663,23 +3702,27 @@
                 "19": "optional_unsigned_int",
                 "20": "pose",
                 "21": "cat_variant",
-                "22": "cow_variant",
-                "23": "wolf_variant",
-                "24": "wolf_sound_variant",
-                "25": "frog_variant",
-                "26": "pig_variant",
-                "27": "chicken_variant",
-                "28": "zombie_nautilus_variant",
-                "29": "optional_global_pos",
-                "30": "painting_variant",
-                "31": "sniffer_state",
-                "32": "armadillo_state",
-                "33": "copper_golem_state",
-                "34": "weathering_copper_golem_state",
-                "35": "vector3",
-                "36": "quaternion",
-                "37": "resolvable_profile",
-                "38": "humanoid_arm"
+                "22": "cat_sound_variant",
+                "23": "cow_variant",
+                "24": "cow_sound_variant",
+                "25": "wolf_variant",
+                "26": "wolf_sound_variant",
+                "27": "frog_variant",
+                "28": "pig_variant",
+                "29": "pig_sound_variant",
+                "30": "chicken_variant",
+                "31": "chicken_sound_variant",
+                "32": "zombie_nautilus_variant",
+                "33": "optional_global_pos",
+                "34": "painting_variant",
+                "35": "sniffer_state",
+                "36": "armadillo_state",
+                "37": "copper_golem_state",
+                "38": "weathering_copper_golem_state",
+                "39": "vector3",
+                "40": "quaternion",
+                "41": "resolvable_profile",
+                "42": "humanoid_arm"
               }
             }
           ]
@@ -3760,12 +3803,16 @@
                 "optional_unsigned_int": "optvarint",
                 "pose": "varint",
                 "cat_variant": "varint",
+                "cat_sound_variant": "varint",
                 "cow_variant": "varint",
+                "cow_sound_variant": "varint",
                 "wolf_variant": "varint",
                 "wolf_sound_variant": "varint",
                 "frog_variant": "varint",
                 "pig_variant": "varint",
+                "pig_sound_variant": "varint",
                 "chicken_variant": "varint",
+                "chicken_sound_variant": "varint",
                 "zombie_nautilus_variant": "varint",
                 "optional_global_pos": [
                   "option",
@@ -4109,6 +4156,19 @@
               }
             ]
           ]
+        }
+      ]
+    ],
+    "GameRule": [
+      "container",
+      [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "type": "string"
         }
       ]
     ],
@@ -5726,12 +5786,15 @@
                   "mappings": {
                     "0": "empty",
                     "1": "any_fuel",
-                    "2": "item",
-                    "3": "item_stack",
-                    "4": "tag",
-                    "5": "smithing_trim",
-                    "6": "with_remainder",
-                    "7": "composite"
+                    "2": "with_any_potion",
+                    "3": "only_with_component",
+                    "4": "item",
+                    "5": "item_stack",
+                    "6": "tag",
+                    "7": "dyed_slot_demo",
+                    "8": "smithing_trim",
+                    "9": "with_remainder",
+                    "10": "composite"
                   }
                 }
               ]
@@ -5745,9 +5808,44 @@
                   "fields": {
                     "empty": "void",
                     "any_fuel": "void",
+                    "with_any_potion": [
+                      "container",
+                      [
+                        {
+                          "name": "base",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ],
+                    "only_with_component": [
+                      "container",
+                      [
+                        {
+                          "name": "source",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "component",
+                          "type": "SlotComponentType"
+                        }
+                      ]
+                    ],
                     "item": "varint",
                     "item_stack": "Slot",
                     "tag": "string",
+                    "dyed_slot_demo": [
+                      "container",
+                      [
+                        {
+                          "name": "dye",
+                          "type": "SlotDisplay"
+                        },
+                        {
+                          "name": "target",
+                          "type": "SlotDisplay"
+                        }
+                      ]
+                    ],
                     "smithing_trim": [
                       "container",
                       [
@@ -6911,6 +7009,21 @@
             }
           ]
         ],
+        "packet_game_rule_values": [
+          "container",
+          [
+            {
+              "name": "values",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "GameRule"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_game_test_highlight_pos": [
           "container",
           [
@@ -7349,6 +7462,10 @@
               "type": "bool"
             }
           ]
+        ],
+        "packet_low_disk_space_warning": [
+          "container",
+          []
         ],
         "packet_map": [
           "container",
@@ -9136,12 +9253,34 @@
               "type": "i64"
             },
             {
-              "name": "time",
-              "type": "i64"
-            },
-            {
-              "name": "tickDayTime",
-              "type": "bool"
+              "name": "clockUpdates",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "id",
+                        "type": "varint"
+                      },
+                      {
+                        "name": "totalTicks",
+                        "type": "varlong"
+                      },
+                      {
+                        "name": "partialTick",
+                        "type": "f32"
+                      },
+                      {
+                        "name": "rate",
+                        "type": "f32"
+                      }
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         ],
@@ -10018,106 +10157,108 @@
                     "0x24": "explosion",
                     "0x25": "unload_chunk",
                     "0x26": "game_state_change",
-                    "0x27": "game_test_highlight_pos",
-                    "0x28": "open_horse_window",
-                    "0x29": "hurt_animation",
-                    "0x2a": "initialize_world_border",
-                    "0x2b": "keep_alive",
-                    "0x2c": "map_chunk",
-                    "0x2d": "world_event",
-                    "0x2e": "world_particles",
-                    "0x2f": "update_light",
-                    "0x30": "login",
-                    "0x31": "map",
-                    "0x32": "trade_list",
-                    "0x33": "rel_entity_move",
-                    "0x34": "entity_move_look",
-                    "0x35": "move_minecart",
-                    "0x36": "entity_look",
-                    "0x37": "vehicle_move",
-                    "0x38": "open_book",
-                    "0x39": "open_window",
-                    "0x3a": "open_sign_entity",
-                    "0x3b": "ping",
-                    "0x3c": "ping_response",
-                    "0x3d": "craft_recipe_response",
-                    "0x3e": "abilities",
-                    "0x3f": "player_chat",
-                    "0x40": "end_combat_event",
-                    "0x41": "enter_combat_event",
-                    "0x42": "death_combat_event",
-                    "0x43": "player_remove",
-                    "0x44": "player_info",
-                    "0x45": "face_player",
-                    "0x46": "position",
-                    "0x47": "player_rotation",
-                    "0x48": "recipe_book_add",
-                    "0x49": "recipe_book_remove",
-                    "0x4a": "recipe_book_settings",
-                    "0x4b": "entity_destroy",
-                    "0x4c": "remove_entity_effect",
-                    "0x4d": "reset_score",
-                    "0x4e": "remove_resource_pack",
-                    "0x4f": "add_resource_pack",
-                    "0x50": "respawn",
-                    "0x51": "entity_head_rotation",
-                    "0x52": "multi_block_change",
-                    "0x53": "select_advancement_tab",
-                    "0x54": "server_data",
-                    "0x55": "action_bar",
-                    "0x56": "world_border_center",
-                    "0x57": "world_border_lerp_size",
-                    "0x58": "world_border_size",
-                    "0x59": "world_border_warning_delay",
-                    "0x5a": "world_border_warning_reach",
-                    "0x5b": "camera",
-                    "0x5c": "update_view_position",
-                    "0x5d": "update_view_distance",
-                    "0x5e": "set_cursor_item",
-                    "0x5f": "spawn_position",
-                    "0x60": "scoreboard_display_objective",
-                    "0x61": "entity_metadata",
-                    "0x62": "attach_entity",
-                    "0x63": "entity_velocity",
-                    "0x64": "entity_equipment",
-                    "0x65": "experience",
-                    "0x66": "update_health",
-                    "0x67": "held_item_slot",
-                    "0x68": "scoreboard_objective",
-                    "0x69": "set_passengers",
-                    "0x6a": "set_player_inventory",
-                    "0x6b": "teams",
-                    "0x6c": "scoreboard_score",
-                    "0x6d": "simulation_distance",
-                    "0x6e": "set_title_subtitle",
-                    "0x6f": "update_time",
-                    "0x70": "set_title_text",
-                    "0x71": "set_title_time",
-                    "0x72": "entity_sound_effect",
-                    "0x73": "sound_effect",
-                    "0x74": "start_configuration",
-                    "0x75": "stop_sound",
-                    "0x76": "store_cookie",
-                    "0x77": "system_chat",
-                    "0x78": "playerlist_header",
-                    "0x79": "nbt_query_response",
-                    "0x7a": "collect",
-                    "0x7b": "entity_teleport",
-                    "0x7c": "test_instance_block_status",
-                    "0x7d": "set_ticking_state",
-                    "0x7e": "step_tick",
-                    "0x7f": "transfer",
-                    "0x80": "advancements",
-                    "0x81": "entity_update_attributes",
-                    "0x82": "entity_effect",
-                    "0x83": "declare_recipes",
-                    "0x84": "tags",
-                    "0x85": "set_projectile_power",
-                    "0x86": "custom_report_details",
-                    "0x87": "server_links",
-                    "0x88": "tracked_waypoint",
-                    "0x89": "clear_dialog",
-                    "0x8a": "show_dialog"
+                    "0x27": "game_rule_values",
+                    "0x28": "game_test_highlight_pos",
+                    "0x29": "open_horse_window",
+                    "0x2a": "hurt_animation",
+                    "0x2b": "initialize_world_border",
+                    "0x2c": "keep_alive",
+                    "0x2d": "map_chunk",
+                    "0x2e": "world_event",
+                    "0x2f": "world_particles",
+                    "0x30": "update_light",
+                    "0x31": "login",
+                    "0x32": "low_disk_space_warning",
+                    "0x33": "map",
+                    "0x34": "trade_list",
+                    "0x35": "rel_entity_move",
+                    "0x36": "entity_move_look",
+                    "0x37": "move_minecart",
+                    "0x38": "entity_look",
+                    "0x39": "vehicle_move",
+                    "0x3a": "open_book",
+                    "0x3b": "open_window",
+                    "0x3c": "open_sign_entity",
+                    "0x3d": "ping",
+                    "0x3e": "ping_response",
+                    "0x3f": "craft_recipe_response",
+                    "0x40": "abilities",
+                    "0x41": "player_chat",
+                    "0x42": "end_combat_event",
+                    "0x43": "enter_combat_event",
+                    "0x44": "death_combat_event",
+                    "0x45": "player_remove",
+                    "0x46": "player_info",
+                    "0x47": "face_player",
+                    "0x48": "position",
+                    "0x49": "player_rotation",
+                    "0x4a": "recipe_book_add",
+                    "0x4b": "recipe_book_remove",
+                    "0x4c": "recipe_book_settings",
+                    "0x4d": "entity_destroy",
+                    "0x4e": "remove_entity_effect",
+                    "0x4f": "reset_score",
+                    "0x50": "remove_resource_pack",
+                    "0x51": "add_resource_pack",
+                    "0x52": "respawn",
+                    "0x53": "entity_head_rotation",
+                    "0x54": "multi_block_change",
+                    "0x55": "select_advancement_tab",
+                    "0x56": "server_data",
+                    "0x57": "action_bar",
+                    "0x58": "world_border_center",
+                    "0x59": "world_border_lerp_size",
+                    "0x5a": "world_border_size",
+                    "0x5b": "world_border_warning_delay",
+                    "0x5c": "world_border_warning_reach",
+                    "0x5d": "camera",
+                    "0x5e": "update_view_position",
+                    "0x5f": "update_view_distance",
+                    "0x60": "set_cursor_item",
+                    "0x61": "spawn_position",
+                    "0x62": "scoreboard_display_objective",
+                    "0x63": "entity_metadata",
+                    "0x64": "attach_entity",
+                    "0x65": "entity_velocity",
+                    "0x66": "entity_equipment",
+                    "0x67": "experience",
+                    "0x68": "update_health",
+                    "0x69": "held_item_slot",
+                    "0x6a": "scoreboard_objective",
+                    "0x6b": "set_passengers",
+                    "0x6c": "set_player_inventory",
+                    "0x6d": "teams",
+                    "0x6e": "scoreboard_score",
+                    "0x6f": "simulation_distance",
+                    "0x70": "set_title_subtitle",
+                    "0x71": "update_time",
+                    "0x72": "set_title_text",
+                    "0x73": "set_title_time",
+                    "0x74": "entity_sound_effect",
+                    "0x75": "sound_effect",
+                    "0x76": "start_configuration",
+                    "0x77": "stop_sound",
+                    "0x78": "store_cookie",
+                    "0x79": "system_chat",
+                    "0x7a": "playerlist_header",
+                    "0x7b": "nbt_query_response",
+                    "0x7c": "collect",
+                    "0x7d": "entity_teleport",
+                    "0x7e": "test_instance_block_status",
+                    "0x7f": "set_ticking_state",
+                    "0x80": "step_tick",
+                    "0x81": "transfer",
+                    "0x82": "advancements",
+                    "0x83": "entity_update_attributes",
+                    "0x84": "entity_effect",
+                    "0x85": "declare_recipes",
+                    "0x86": "tags",
+                    "0x87": "set_projectile_power",
+                    "0x88": "custom_report_details",
+                    "0x89": "server_links",
+                    "0x8a": "tracked_waypoint",
+                    "0x8b": "clear_dialog",
+                    "0x8c": "show_dialog"
                   }
                 }
               ]
@@ -10168,6 +10309,7 @@
                     "explosion": "packet_explosion",
                     "unload_chunk": "packet_unload_chunk",
                     "game_state_change": "packet_game_state_change",
+                    "game_rule_values": "packet_game_rule_values",
                     "game_test_highlight_pos": "packet_game_test_highlight_pos",
                     "open_horse_window": "packet_open_horse_window",
                     "hurt_animation": "packet_hurt_animation",
@@ -10178,6 +10320,7 @@
                     "world_particles": "packet_world_particles",
                     "update_light": "packet_update_light",
                     "login": "packet_login",
+                    "low_disk_space_warning": "packet_low_disk_space_warning",
                     "map": "packet_map",
                     "trade_list": "packet_trade_list",
                     "rel_entity_move": "packet_rel_entity_move",
@@ -10283,6 +10426,15 @@
           [
             {
               "name": "teleportId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_attack": [
+          "container",
+          [
+            {
+              "name": "entityId",
               "type": "varint"
             }
           ]
@@ -10428,7 +10580,7 @@
             },
             {
               "name": "checksum",
-              "type": "i8"
+              "type": "u8"
             }
           ]
         ],
@@ -10513,7 +10665,17 @@
           [
             {
               "name": "actionId",
-              "type": "varint"
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "perform_respawn",
+                    "1": "request_stats",
+                    "2": "request_gamerule_values"
+                  }
+                }
+              ]
             }
           ]
         ],
@@ -10547,7 +10709,7 @@
             },
             {
               "name": "enchantment",
-              "type": "i8"
+              "type": "varint"
             }
           ]
         ],
@@ -10709,61 +10871,21 @@
               "type": "varint"
             },
             {
-              "name": "mouse",
-              "type": "varint"
-            },
-            {
-              "name": "x",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "mouse",
-                  "fields": {
-                    "2": "f32"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "y",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "mouse",
-                  "fields": {
-                    "2": "f32"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
-              "name": "z",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "mouse",
-                  "fields": {
-                    "2": "f32"
-                  },
-                  "default": "void"
-                }
-              ]
-            },
-            {
               "name": "hand",
               "type": [
-                "switch",
+                "mapper",
                 {
-                  "compareTo": "mouse",
-                  "fields": {
-                    "0": "varint",
-                    "2": "varint"
-                  },
-                  "default": "void"
+                  "type": "varint",
+                  "mappings": {
+                    "0": "main_hand",
+                    "1": "off_hand"
+                  }
                 }
               ]
+            },
+            {
+              "name": "location",
+              "type": "lpVec3"
             },
             {
               "name": "sneaking",
@@ -11241,6 +11363,21 @@
             }
           ]
         ],
+        "packet_set_game_rule": [
+          "container",
+          [
+            {
+              "name": "entries",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "GameRule"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_update_jigsaw_block": [
           "container",
           [
@@ -11404,6 +11541,15 @@
             }
           ]
         ],
+        "packet_spectate_entity": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet_arm_animation": [
           "container",
           [
@@ -11542,71 +11688,74 @@
                   "type": "varint",
                   "mappings": {
                     "0x00": "teleport_confirm",
-                    "0x01": "query_block_nbt",
-                    "0x02": "select_bundle_item",
-                    "0x03": "set_difficulty",
-                    "0x04": "change_gamemode",
-                    "0x05": "message_acknowledgement",
-                    "0x06": "chat_command",
-                    "0x07": "chat_command_signed",
-                    "0x08": "chat_message",
-                    "0x09": "chat_session_update",
-                    "0x0a": "chunk_batch_received",
-                    "0x0b": "client_command",
-                    "0x0c": "tick_end",
-                    "0x0d": "settings",
-                    "0x0e": "tab_complete",
-                    "0x0f": "configuration_acknowledged",
-                    "0x10": "enchant_item",
-                    "0x11": "window_click",
-                    "0x12": "close_window",
-                    "0x13": "set_slot_state",
-                    "0x14": "cookie_response",
-                    "0x15": "custom_payload",
-                    "0x16": "debug_subscription_request",
-                    "0x17": "edit_book",
-                    "0x18": "query_entity_nbt",
-                    "0x19": "use_entity",
-                    "0x1a": "generate_structure",
-                    "0x1b": "keep_alive",
-                    "0x1c": "lock_difficulty",
-                    "0x1d": "position",
-                    "0x1e": "position_look",
-                    "0x1f": "look",
-                    "0x20": "flying",
-                    "0x21": "vehicle_move",
-                    "0x22": "steer_boat",
-                    "0x23": "pick_item_from_block",
-                    "0x24": "pick_item_from_entity",
-                    "0x25": "ping_request",
-                    "0x26": "craft_recipe_request",
-                    "0x27": "abilities",
-                    "0x28": "block_dig",
-                    "0x29": "entity_action",
-                    "0x2a": "player_input",
-                    "0x2b": "player_loaded",
-                    "0x2c": "pong",
-                    "0x2d": "recipe_book",
-                    "0x2e": "displayed_recipe",
-                    "0x2f": "name_item",
-                    "0x30": "resource_pack_receive",
-                    "0x31": "advancement_tab",
-                    "0x32": "select_trade",
-                    "0x33": "set_beacon_effect",
-                    "0x34": "held_item_slot",
-                    "0x35": "update_command_block",
-                    "0x36": "update_command_block_minecart",
-                    "0x37": "set_creative_slot",
-                    "0x38": "update_jigsaw_block",
-                    "0x39": "update_structure_block",
-                    "0x3a": "set_test_block",
-                    "0x3b": "update_sign",
-                    "0x3c": "arm_animation",
-                    "0x3d": "spectate",
-                    "0x3e": "test_instance_block_action",
-                    "0x3f": "block_place",
-                    "0x40": "use_item",
-                    "0x41": "custom_click_action"
+                    "0x01": "attack",
+                    "0x02": "query_block_nbt",
+                    "0x03": "select_bundle_item",
+                    "0x04": "set_difficulty",
+                    "0x05": "change_gamemode",
+                    "0x06": "message_acknowledgement",
+                    "0x07": "chat_command",
+                    "0x08": "chat_command_signed",
+                    "0x09": "chat_message",
+                    "0x0a": "chat_session_update",
+                    "0x0b": "chunk_batch_received",
+                    "0x0c": "client_command",
+                    "0x0d": "tick_end",
+                    "0x0e": "settings",
+                    "0x0f": "tab_complete",
+                    "0x10": "configuration_acknowledged",
+                    "0x11": "enchant_item",
+                    "0x12": "window_click",
+                    "0x13": "close_window",
+                    "0x14": "set_slot_state",
+                    "0x15": "cookie_response",
+                    "0x16": "custom_payload",
+                    "0x17": "debug_subscription_request",
+                    "0x18": "edit_book",
+                    "0x19": "query_entity_nbt",
+                    "0x1a": "use_entity",
+                    "0x1b": "generate_structure",
+                    "0x1c": "keep_alive",
+                    "0x1d": "lock_difficulty",
+                    "0x1e": "position",
+                    "0x1f": "position_look",
+                    "0x20": "look",
+                    "0x21": "flying",
+                    "0x22": "vehicle_move",
+                    "0x23": "steer_boat",
+                    "0x24": "pick_item_from_block",
+                    "0x25": "pick_item_from_entity",
+                    "0x26": "ping_request",
+                    "0x27": "craft_recipe_request",
+                    "0x28": "abilities",
+                    "0x29": "block_dig",
+                    "0x2a": "entity_action",
+                    "0x2b": "player_input",
+                    "0x2c": "player_loaded",
+                    "0x2d": "pong",
+                    "0x2e": "recipe_book",
+                    "0x2f": "displayed_recipe",
+                    "0x30": "name_item",
+                    "0x31": "resource_pack_receive",
+                    "0x32": "advancement_tab",
+                    "0x33": "select_trade",
+                    "0x34": "set_beacon_effect",
+                    "0x35": "held_item_slot",
+                    "0x36": "update_command_block",
+                    "0x37": "update_command_block_minecart",
+                    "0x38": "set_creative_slot",
+                    "0x39": "set_game_rule",
+                    "0x3a": "update_jigsaw_block",
+                    "0x3b": "update_structure_block",
+                    "0x3c": "set_test_block",
+                    "0x3d": "update_sign",
+                    "0x3e": "spectate_entity",
+                    "0x3f": "arm_animation",
+                    "0x40": "spectate",
+                    "0x41": "test_instance_block_action",
+                    "0x42": "block_place",
+                    "0x43": "use_item",
+                    "0x44": "custom_click_action"
                   }
                 }
               ]
@@ -11619,6 +11768,7 @@
                   "compareTo": "name",
                   "fields": {
                     "teleport_confirm": "packet_teleport_confirm",
+                    "attack": "packet_attack",
                     "query_block_nbt": "packet_query_block_nbt",
                     "select_bundle_item": "packet_select_bundle_item",
                     "set_difficulty": "packet_set_difficulty",
@@ -11674,10 +11824,12 @@
                     "update_command_block": "packet_update_command_block",
                     "update_command_block_minecart": "packet_update_command_block_minecart",
                     "set_creative_slot": "packet_set_creative_slot",
+                    "set_game_rule": "packet_set_game_rule",
                     "update_jigsaw_block": "packet_update_jigsaw_block",
                     "update_structure_block": "packet_update_structure_block",
                     "set_test_block": "packet_set_test_block",
                     "update_sign": "packet_update_sign",
+                    "spectate_entity": "packet_spectate_entity",
                     "arm_animation": "packet_arm_animation",
                     "spectate": "packet_spectate",
                     "test_instance_block_action": "packet_test_instance_block_action",
