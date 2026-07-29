@@ -1,13 +1,14 @@
 const fs = require('fs')
 const cp = require('child_process')
 const version = process.argv[2]
+const sourceDir = `mcsrc-${version}`
 if (!version) {
   console.log('Usage: node extractPcFoods.js <version>')
   process.exit(1)
 }
 
-if (!fs.existsSync(version)) {
-  cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${version} --depth 1`, { stdio: 'inherit' })
+if (!fs.existsSync(sourceDir)) {
+  cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${sourceDir} --depth 1`, { stdio: 'inherit' })
 }
 
 const mcDataItems = require(`../../data/pc/${version}/items.json`)
@@ -16,7 +17,7 @@ function getItemDataFor (itemName) {
   return mcDataItems.find(e => e.name === itemName)
 }
 
-const foodsFile = fs.readFileSync(`./${version}/client/net/minecraft/world/food/Foods.java`, 'utf8')
+const foodsFile = fs.readFileSync(`./${sourceDir}/client/net/minecraft/world/food/Foods.java`, 'utf8')
 
 function add (name, satMod, nut) {
   console.log(name, satMod, nut)
