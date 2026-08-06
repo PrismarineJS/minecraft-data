@@ -3113,7 +3113,10 @@ packet_player_auth_input:
    transaction_presence: bool
    transaction?:
       legacy: TransactionLegacy
-      actions: TransactionActions
+      # The actions carry their own presence byte and optional, unlike the plain
+      # optional the InventoryTransaction packet wraps them in.
+      actions_presence: bool
+      actions?: TransactionActions
       data: TransactionUseItem
    item_stack_request_presence: bool
    item_stack_request?: ItemStackRequest
