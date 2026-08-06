@@ -3108,29 +3108,29 @@ packet_player_auth_input:
    # Delta was the delta between the old and the new position. There isn't any practical use for this field
    # as it can be calculated by the server itself.
    delta: vec3f
-   # As of 1.26.40 none of the sections below are gated on the input flags any more. Each is wrapped in two
-   # nested optionals, of which the outer one is always written as present.
-   transaction_section?:
-      transaction?:
-         legacy: TransactionLegacy
-         actions: TransactionActions
-         data: TransactionUseItem
-   item_stack_request_section?:
-      item_stack_request?: ItemStackRequest
-   block_action_section?:
-      block_action?: []varint
-         action: Action
-         # As of 1.26.40 the position and face are always written, whatever the action is.
-         # BlockPosition is the position of the target block, if the action with the ActionType set concerned a
-         # block. If that is not the case, the block position will be zero.
-         position: vec3i
-         # BlockFace is the face of the target block that was touched. If the action with the ActionType set
-         # concerned a block. If not, the face is always 0.
-         face: zigzag32
-   vehicle_rotation_section?:
-      vehicle_rotation?: vec2f
-   predicted_vehicle_section?:
-      predicted_vehicle?: zigzag64
+   # As of 1.26.40 none of the fields below are gated on the input flags any more. Each is preceded by a
+   # presence byte (always written as true) and is then written as its own optional.
+   transaction_presence: bool
+   transaction?:
+      legacy: TransactionLegacy
+      actions: TransactionActions
+      data: TransactionUseItem
+   item_stack_request_presence: bool
+   item_stack_request?: ItemStackRequest
+   block_action_presence: bool
+   block_action?: []varint
+      action: Action
+      # As of 1.26.40 the position and face are always written, whatever the action is.
+      # BlockPosition is the position of the target block, if the action with the ActionType set concerned a
+      # block. If that is not the case, the block position will be zero.
+      position: vec3i
+      # BlockFace is the face of the target block that was touched. If the action with the ActionType set
+      # concerned a block. If not, the face is always 0.
+      face: zigzag32
+   vehicle_rotation_presence: bool
+   vehicle_rotation?: vec2f
+   predicted_vehicle_presence: bool
+   predicted_vehicle?: zigzag64
    # AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
    # values which are created using an analogue input.
    analogue_move_vector: vec2f

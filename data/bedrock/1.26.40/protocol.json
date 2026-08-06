@@ -2991,90 +2991,76 @@
               "type": "zigzag32"
             },
             {
-              "name": "_",
+              "name": "containers_presence",
+              "type": "bool"
+            },
+            {
+              "name": "containers",
               "type": [
                 "option",
                 [
-                  "container",
-                  [
-                    {
-                      "name": "containers",
-                      "type": [
-                        "option",
-                        [
-                          "array",
-                          {
-                            "countType": "varint",
-                            "type": [
-                              "container",
-                              [
-                                {
-                                  "name": "slot_type",
-                                  "type": "FullContainerName"
-                                },
-                                {
-                                  "name": "slots",
-                                  "type": [
-                                    "array",
-                                    {
-                                      "countType": "varint",
-                                      "type": [
-                                        "container",
-                                        [
-                                          {
-                                            "name": "slot",
-                                            "type": "u8"
-                                          },
-                                          {
-                                            "name": "hotbar_slot",
-                                            "type": "u8"
-                                          },
-                                          {
-                                            "name": "count",
-                                            "type": "u8"
-                                          },
-                                          {
-                                            "name": "_",
-                                            "type": [
-                                              "option",
-                                              [
-                                                "container",
-                                                [
-                                                  {
-                                                    "name": "item_stack_id",
-                                                    "type": [
-                                                      "option",
-                                                      "zigzag32"
-                                                    ]
-                                                  }
-                                                ]
-                                              ]
-                                            ]
-                                          },
-                                          {
-                                            "name": "custom_name",
-                                            "type": "string"
-                                          },
-                                          {
-                                            "name": "filtered_custom_name",
-                                            "type": "string"
-                                          },
-                                          {
-                                            "name": "durability_correction",
-                                            "type": "zigzag32"
-                                          }
-                                        ]
-                                      ]
-                                    }
-                                  ]
-                                }
+                  "array",
+                  {
+                    "countType": "varint",
+                    "type": [
+                      "container",
+                      [
+                        {
+                          "name": "slot_type",
+                          "type": "FullContainerName"
+                        },
+                        {
+                          "name": "slots",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "slot",
+                                    "type": "u8"
+                                  },
+                                  {
+                                    "name": "hotbar_slot",
+                                    "type": "u8"
+                                  },
+                                  {
+                                    "name": "count",
+                                    "type": "u8"
+                                  },
+                                  {
+                                    "name": "item_stack_id_presence",
+                                    "type": "bool"
+                                  },
+                                  {
+                                    "name": "item_stack_id",
+                                    "type": [
+                                      "option",
+                                      "zigzag32"
+                                    ]
+                                  },
+                                  {
+                                    "name": "custom_name",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "filtered_custom_name",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "name": "durability_correction",
+                                    "type": "zigzag32"
+                                  }
+                                ]
                               ]
-                            ]
-                          }
-                        ]
+                            }
+                          ]
+                        }
                       ]
-                    }
-                  ]
+                    ]
+                  }
                 ]
               ]
             }
@@ -12911,131 +12897,96 @@
           "type": "vec3f"
         },
         {
-          "name": "transaction_section",
+          "name": "transaction_presence",
+          "type": "bool"
+        },
+        {
+          "name": "transaction",
           "type": [
             "option",
             [
               "container",
               [
                 {
-                  "name": "transaction",
-                  "type": [
-                    "option",
-                    [
-                      "container",
-                      [
-                        {
-                          "name": "legacy",
-                          "type": "TransactionLegacy"
-                        },
-                        {
-                          "name": "actions",
-                          "type": "TransactionActions"
-                        },
-                        {
-                          "name": "data",
-                          "type": "TransactionUseItem"
-                        }
-                      ]
-                    ]
-                  ]
+                  "name": "legacy",
+                  "type": "TransactionLegacy"
+                },
+                {
+                  "name": "actions",
+                  "type": "TransactionActions"
+                },
+                {
+                  "name": "data",
+                  "type": "TransactionUseItem"
                 }
               ]
             ]
           ]
         },
         {
-          "name": "item_stack_request_section",
+          "name": "item_stack_request_presence",
+          "type": "bool"
+        },
+        {
+          "name": "item_stack_request",
+          "type": [
+            "option",
+            "ItemStackRequest"
+          ]
+        },
+        {
+          "name": "block_action_presence",
+          "type": "bool"
+        },
+        {
+          "name": "block_action",
           "type": [
             "option",
             [
-              "container",
-              [
-                {
-                  "name": "item_stack_request",
-                  "type": [
-                    "option",
-                    "ItemStackRequest"
+              "array",
+              {
+                "countType": "varint",
+                "type": [
+                  "container",
+                  [
+                    {
+                      "name": "action",
+                      "type": "Action"
+                    },
+                    {
+                      "name": "position",
+                      "type": "vec3i"
+                    },
+                    {
+                      "name": "face",
+                      "type": "zigzag32"
+                    }
                   ]
-                }
-              ]
+                ]
+              }
             ]
           ]
         },
         {
-          "name": "block_action_section",
+          "name": "vehicle_rotation_presence",
+          "type": "bool"
+        },
+        {
+          "name": "vehicle_rotation",
           "type": [
             "option",
-            [
-              "container",
-              [
-                {
-                  "name": "block_action",
-                  "type": [
-                    "option",
-                    [
-                      "array",
-                      {
-                        "countType": "varint",
-                        "type": [
-                          "container",
-                          [
-                            {
-                              "name": "action",
-                              "type": "Action"
-                            },
-                            {
-                              "name": "position",
-                              "type": "vec3i"
-                            },
-                            {
-                              "name": "face",
-                              "type": "zigzag32"
-                            }
-                          ]
-                        ]
-                      }
-                    ]
-                  ]
-                }
-              ]
-            ]
+            "vec2f"
           ]
         },
         {
-          "name": "vehicle_rotation_section",
-          "type": [
-            "option",
-            [
-              "container",
-              [
-                {
-                  "name": "vehicle_rotation",
-                  "type": [
-                    "option",
-                    "vec2f"
-                  ]
-                }
-              ]
-            ]
-          ]
+          "name": "predicted_vehicle_presence",
+          "type": "bool"
         },
         {
-          "name": "predicted_vehicle_section",
+          "name": "predicted_vehicle",
           "type": [
             "option",
-            [
-              "container",
-              [
-                {
-                  "name": "predicted_vehicle",
-                  "type": [
-                    "option",
-                    "zigzag64"
-                  ]
-                }
-              ]
-            ]
+            "zigzag64"
           ]
         },
         {

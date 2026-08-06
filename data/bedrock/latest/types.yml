@@ -1259,38 +1259,38 @@ ItemStackResponses: []varint
    # RequestID is the unique ID of the request that this response is in reaction to. If rejected, the client
    # will undo the actions from the request with this ID.
    request_id: zigzag32
-   # As of 1.26.40 the container list no longer depends on the status: it is wrapped in two nested
-   # optionals instead. The outer one is always written as present.
-   _?:
-      # ContainerInfo holds information on the containers that had their contents changed as a result of the
-      # request. Absent when there are no containers to report.
-      containers?: []varint
-         # ContainerID is the container ID of the container that the slots that follow are in. For the main
-         # inventory, this value seems to be 0x1b. For the cursor, this value seems to be 0x3a. For the crafting
-         # grid, this value seems to be 0x0d.
-         # * actually, this is ContainerSlotType - used by the inventory system that specifies the type of slot
-         slot_type: FullContainerName
-         # SlotInfo holds information on what item stack should be present in specific slots in the container.
-         slots: []varint
-            # Slot and HotbarSlot seem to be the same value every time: The slot that was actually changed. I'm not
-            # sure if these slots ever differ.
-            slot: u8
-            hotbar_slot: u8
-            # Count is the total count of the item stack. This count will be shown client-side after the response is
-            # sent to the client.
-            count: u8
-            # StackNetworkID is the network ID of the new stack at a specific slot. As of 1.26.40 it is wrapped
-            # in two nested optionals, of which the outer one is always written as present.
-            _?:
-               item_stack_id?: zigzag32
-            # CustomName is the custom name of the item stack. It is used in relation to text filtering.
-            custom_name: string
-            # FilteredCustomName is a filtered version of CustomName with all the profanity removed. The client will
-            # use this over CustomName if this field is not empty and they have the "Filter Profanity" setting enabled.
-            filtered_custom_name: string
-            # DurabilityCorrection is the current durability of the item stack. This durability will be shown
-            # client-side after the response is sent to the client.
-            durability_correction: zigzag32
+   # As of 1.26.40 the container list no longer depends on the status: it is preceded by a presence byte
+   # (always written as true) and is then written as an optional.
+   containers_presence: bool
+   # ContainerInfo holds information on the containers that had their contents changed as a result of the
+   # request. Absent when there are no containers to report.
+   containers?: []varint
+      # ContainerID is the container ID of the container that the slots that follow are in. For the main
+      # inventory, this value seems to be 0x1b. For the cursor, this value seems to be 0x3a. For the crafting
+      # grid, this value seems to be 0x0d.
+      # * actually, this is ContainerSlotType - used by the inventory system that specifies the type of slot
+      slot_type: FullContainerName
+      # SlotInfo holds information on what item stack should be present in specific slots in the container.
+      slots: []varint
+         # Slot and HotbarSlot seem to be the same value every time: The slot that was actually changed. I'm not
+         # sure if these slots ever differ.
+         slot: u8
+         hotbar_slot: u8
+         # Count is the total count of the item stack. This count will be shown client-side after the response is
+         # sent to the client.
+         count: u8
+         # StackNetworkID is the network ID of the new stack at a specific slot. As of 1.26.40 it is preceded
+         # by a presence byte (always written as true) and is then written as an optional.
+         item_stack_id_presence: bool
+         item_stack_id?: zigzag32
+         # CustomName is the custom name of the item stack. It is used in relation to text filtering.
+         custom_name: string
+         # FilteredCustomName is a filtered version of CustomName with all the profanity removed. The client will
+         # use this over CustomName if this field is not empty and they have the "Filter Profanity" setting enabled.
+         filtered_custom_name: string
+         # DurabilityCorrection is the current durability of the item stack. This durability will be shown
+         # client-side after the response is sent to the client.
+         durability_correction: zigzag32
 
 
 CommandOrigin:
