@@ -1,3 +1,8 @@
+## 3.113.0
+* [Add Bedrock 1.26.40 protocol data & some improvements (#1213)](https://github.com/PrismarineJS/minecraft-data/commit/1f8ed563bfe7a4e46de2c08c6cdd3d17e9b43edb) (thanks @hax0r31337)
+* [Add 26.3-snapshot-7 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/62e67ac6a37ab215c84af70fe6097df814b6e8e8) (thanks @github-actions[bot])
+* [Add 26.3-snapshot-6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/e426427e0b3c0456654e646c2291d2fd9e91ee1c) (thanks @github-actions[bot])
+
 ## 3.112.0
 * [pc: Add sendsClientTickEndPacket feature flag for 1.21.2+ (#1208)](https://github.com/PrismarineJS/minecraft-data/commit/bfd1a28e9daabf204ba4551a57596aefabc7b281) (thanks @iiroak)
 * [bedrock: 1.20 biomes data update (#1191)](https://github.com/PrismarineJS/minecraft-data/commit/78de6d266edec766198770dfa7b45f1027be2ff2) (thanks @nootbook011)
