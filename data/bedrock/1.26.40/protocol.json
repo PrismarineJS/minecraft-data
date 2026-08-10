@@ -51,6 +51,8 @@
     "bitflags": "native",
     "restBuffer": "native",
     "encapsulated": "native",
+    "maybeIncompleteArray": "native",
+    "optionalOnRemaining": "native",
     "nbt": "native",
     "lnbt": "native",
     "nbtLoop": "native",
@@ -2259,77 +2261,78 @@
         }
       ]
     ],
-    "PlayerRecords": [
-      "array",
-      {
-        "countType": "varint",
-        "type": [
-          "container",
-          [
+    "PlayerRecord": [
+      "container",
+      [
+        {
+          "name": "type",
+          "type": [
+            "mapper",
             {
-              "name": "type",
-              "type": [
-                "mapper",
-                {
-                  "type": "varint",
-                  "mappings": {
-                    "0": "remove",
-                    "1": "add"
-                  }
-                }
-              ]
-            },
-            {
-              "name": "legacy_type",
-              "type": "u8"
-            },
-            {
-              "anon": true,
-              "type": [
-                "switch",
-                {
-                  "compareTo": "type",
-                  "fields": {
-                    "add": [
-                      "container",
-                      [
-                        {
-                          "name": "uuid",
-                          "type": "uuid"
-                        },
-                        {
-                          "name": "entity_unique_id",
-                          "type": "zigzag64"
-                        },
-                        {
-                          "name": "username",
-                          "type": "string"
-                        },
-                        {
-                          "name": "xbox_user_id",
-                          "type": "string"
-                        },
-                        {
-                          "name": "platform_chat_id",
-                          "type": "string"
-                        }
-                      ]
-                    ],
-                    "remove": [
-                      "container",
-                      [
-                        {
-                          "name": "uuid",
-                          "type": "uuid"
-                        }
-                      ]
-                    ]
-                  }
-                }
-              ]
+              "type": "varint",
+              "mappings": {
+                "0": "remove",
+                "1": "add"
+              }
             }
           ]
-        ]
+        },
+        {
+          "name": "legacy_type",
+          "type": "u8"
+        },
+        {
+          "anon": true,
+          "type": [
+            "switch",
+            {
+              "compareTo": "type",
+              "fields": {
+                "add": [
+                  "container",
+                  [
+                    {
+                      "name": "uuid",
+                      "type": "uuid"
+                    },
+                    {
+                      "name": "entity_unique_id",
+                      "type": "zigzag64"
+                    },
+                    {
+                      "name": "username",
+                      "type": "string"
+                    },
+                    {
+                      "name": "xbox_user_id",
+                      "type": "string"
+                    },
+                    {
+                      "name": "platform_chat_id",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "remove": [
+                  "container",
+                  [
+                    {
+                      "name": "uuid",
+                      "type": "uuid"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "PlayerRecords": [
+      "maybeIncompleteArray",
+      {
+        "countType": "varint",
+        "type": "PlayerRecord"
       }
     ],
     "Enchant": [
@@ -5277,21 +5280,32 @@
           "119": "realms_timeline_required",
           "120": "guest_withough_host",
           "121": "failed_to_join_experience",
-          "122": "host_signed_out",
-          "123": "script_watchdog_exception",
-          "124": "script_memory_limit_exceeded",
-          "125": "storage_low_during_gameplay",
-          "126": "storage_full_during_gameplay",
-          "127": "level_storage_corruption",
-          "128": "edition_mismatch_vanilla_to_edu",
-          "129": "edition_mismatch_edu_to_vanilla",
-          "130": "editor_mismatch_editor_to_vanilla",
-          "131": "editor_mismatch_vanilla_to_editor",
-          "132": "deny_listed",
-          "133": "nonce_missing",
-          "134": "nonce_not_found",
-          "135": "nonce_expired",
-          "136": "nonce_not_valid"
+          "122": "nethernet_data_channel_closed",
+          "123": "discovery_environment_mismatch",
+          "124": "host_without_keys",
+          "125": "host_signed_out",
+          "126": "script_watchdog_exception",
+          "127": "script_memory_limit_exceeded",
+          "128": "storage_low_during_gameplay",
+          "129": "storage_full_during_gameplay",
+          "130": "level_storage_corruption",
+          "131": "edition_mismatch_vanilla_to_edu",
+          "132": "edition_mismatch_edu_to_vanilla",
+          "133": "editor_mismatch_editor_to_vanilla",
+          "134": "editor_mismatch_vanilla_to_editor",
+          "135": "deny_listed",
+          "136": "nonce_missing",
+          "137": "nonce_not_found",
+          "138": "nonce_expired",
+          "139": "nonce_not_valid",
+          "140": "host_disconnected",
+          "141": "editor_join_intent_policy_failure",
+          "142": "nethernet_identity_not_allowed",
+          "143": "invalid_name",
+          "144": "expired_token",
+          "145": "host_accepts_no_type_of_auth",
+          "146": "not_authenticated_fast_fail",
+          "147": "editor_not_allowed"
         }
       }
     ],
@@ -8552,7 +8566,12 @@
         },
         {
           "name": "device_os",
-          "type": "DeviceOS"
+          "type": [
+            "optionalOnRemaining",
+            {
+              "type": "DeviceOS"
+            }
+          ]
         }
       ]
     ],

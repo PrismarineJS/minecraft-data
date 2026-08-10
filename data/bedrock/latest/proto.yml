@@ -19,6 +19,8 @@ byterot: native
 bitflags: native
 restBuffer: native
 encapsulated: native
+maybeIncompleteArray: native
+optionalOnRemaining: native
 nbt: native                                           # NBT
 lnbt: native
 nbtLoop: native
@@ -534,7 +536,7 @@ packet_add_player:
    device_id: string
    # BuildPlatform is the build platform/device OS of the player that is about to be added, as it sent in
    # the Login packet when joining.
-   device_os: DeviceOS
+   device_os: '["optionalOnRemaining", { "type": "DeviceOS" }]'
 
 packet_add_entity:
    !id: 0x0d
