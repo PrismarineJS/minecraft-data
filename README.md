@@ -104,13 +104,13 @@ Projects that provide data:
 | Project name | Language | Source | Data provided |
 | --- | --- | --- | --- |
 | [minecraft-wiki-extractor](https://github.com/PrismarineJS/minecraft-wiki-extractor) | Node.js | [minecraft wiki](https://minecraft.wiki) | blocks, items, entities, recipes |
-| [mcdevs-wiki-extractor](https://github.com/PrismarineJS/mcdevs-wiki-extractor) | Node.js | [wiki.vg](http://wiki.vg/Protocol) | a partial protocol, entities |
+| [mcdevs-wiki-extractor](https://github.com/PrismarineJS/mcdevs-wiki-extractor) | Node.js | [minecraft.wiki](https://minecraft.wiki/w/Java_Edition_protocol) | a partial protocol, entities |
 | [node-minecraft-extractor](https://github.com/PrismarineJS/node-minecraft-extractor) | Node.js | merge between wiki.vg and mcwiki | a complete entities file |
 | [minecraft-jar-extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) | Node.js | minecraft server jar | a very partial but completely up to date protocol |
 | [minecraft-jar-extractor in python](https://github.com/pangeacake/minecraft-jar-extractor) | Python | minecraft server jar | about the same protocol information as minecraft-jar-extractor in node.js |
 | [burger](https://github.com/mcdevs/Burger) with [burger-extractor](https://github.com/PrismarineJS/burger-extractor) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
 | [burger 1.16](https://github.com/Pokechu22/Burger/tree/1.16-dev)  | --//-- | --// -- | --//-- |
-| [command-generator](https://github.com/Miro-Andrin/mc-data-command-generator) | Python | [Minecraft data generator](https://wiki.vg/Data_Generators) | Data used for parsing all vanilla server commands. |
+| [command-generator](https://github.com/Miro-Andrin/mc-data-command-generator) | Python | [Minecraft data generator](https://minecraft.wiki/w/Tutorials/Running_the_data_generator) | Data used for parsing all vanilla server commands. |
 | [minecraft-data-generator](https://github.com/Archengius/minecraft-data-generator) | Java | minecraft client | biomes, block collision shapes, blocks, effects, enchantments, entities, foods, items, particles, tints. Required Fabric updated to the provided minecraft version. |
 
 
@@ -118,11 +118,11 @@ Pages interesting to manually update the data if necessary:
 
 | Page | Data |
 | ---- | ---- |
-| [wiki.vg Inventory page](http://wiki.vg/Inventory) | windows |
-| [wiki.vg](http://wiki.vg/Block_Actions) | instruments |
+| [minecraft.wiki Inventory page](https://minecraft.wiki/w/Java_Edition_protocol/Inventory) | windows |
+| [minecraft.wiki](https://minecraft.wiki/w/Java_Edition_protocol#Block_Action) | instruments |
 | [a mineflayer PR](https://github.com/PrismarineJS/mineflayer/pull/197) | biomes |
 | [mcwiki effects page](https://minecraft.wiki/w/Effect) | effects |
-| [wiki.vg protocol version numbers](http://wiki.vg/Protocol_version_numbers) | protocolVersions |
+| [minecraft.wiki protocol version numbers](https://minecraft.wiki/w/Protocol_version) | protocolVersions |
 
 ## Data quality
 
