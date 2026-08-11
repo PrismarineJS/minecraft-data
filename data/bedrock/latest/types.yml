@@ -931,7 +931,7 @@ Skin:
 # As of 1.26.40 the packet-wide action is gone: every record carries its own action, written first as an
 # unsigned varint (1 = add, 0 = remove) and then again as the legacy action ordinal byte (0 = add,
 # 1 = remove). The trailing array of skin-verified booleans was removed as well.
-PlayerRecords: []varint
+PlayerRecord:
    type: varint =>
       0: remove
       1: add
@@ -945,6 +945,10 @@ PlayerRecords: []varint
          platform_chat_id: string
       if remove:
          uuid: uuid
+
+# BDS 1.26.40 may declare more records than it actually writes. Player List is a packet-bounded payload, so
+# treat the declared count as an upper bound and stop decoding once the packet buffer is exhausted.
+PlayerRecords: '["maybeIncompleteArray", { "countType": "varint", "type": "PlayerRecord" }]'
 
 Enchant:
    id: u8
@@ -2807,6 +2811,9 @@ DisconnectFailReason: zigzag32 =>
    - realms_timeline_required
    - guest_withough_host
    - failed_to_join_experience
+   - nethernet_data_channel_closed
+   - discovery_environment_mismatch
+   - host_without_keys
    - host_signed_out
    - script_watchdog_exception
    - script_memory_limit_exceeded
@@ -2822,6 +2829,14 @@ DisconnectFailReason: zigzag32 =>
    - nonce_not_found
    - nonce_expired
    - nonce_not_valid
+   - host_disconnected
+   - editor_join_intent_policy_failure
+   - nethernet_identity_not_allowed
+   - invalid_name
+   - expired_token
+   - host_accepts_no_type_of_auth
+   - not_authenticated_fast_fail
+   - editor_not_allowed
 
 FullContainerName:
    container_id: ContainerSlotType
