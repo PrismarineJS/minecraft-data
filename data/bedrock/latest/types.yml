@@ -931,6 +931,7 @@ Skin:
 # As of 1.26.40 the packet-wide action is gone: every record carries its own action, written first as an
 # unsigned varint (1 = add, 0 = remove) and then again as the legacy action ordinal byte (0 = add,
 # 1 = remove). The trailing array of skin-verified booleans was removed as well.
+# Add records still include build platform, skin, and the host flags. The client reads these fields.
 PlayerRecord:
    type: varint =>
       0: remove
@@ -943,6 +944,12 @@ PlayerRecord:
          username: string
          xbox_user_id: string
          platform_chat_id: string
+         build_platform: li32
+         skin_data: Skin
+         is_teacher: bool
+         is_host: bool
+         is_subclient: bool
+         player_color: li32
       if remove:
          uuid: uuid
 
