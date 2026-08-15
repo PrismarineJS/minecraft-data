@@ -1,5 +1,4 @@
 ## 3.113.2
-* [tools/js: fix pc entity metadata extraction script CLI clone args (#1221)](https://github.com/PrismarineJS/minecraft-data/commit/a50876bb20da6c74258024c0e439a5487129c377) (thanks @anupamme)
 * [pc: Add sendsPlayerLoadedPacket feature flag for 1.21.4+ (#1224)](https://github.com/PrismarineJS/minecraft-data/commit/e7253ab2dc9ee4c21b2b445dfa9c74b268ec47fb) (thanks @aibengineering)
 * [Update dead wiki.vg links to minecraft.wiki (#1223)](https://github.com/PrismarineJS/minecraft-data/commit/42062dc822092b15ef79ca6bcff8bcfd2c6393d9) (thanks @narcis-dev)
 * [fix(pc): entity metadata chicken_variant is a plain varint on 1.21.5-1.21.8 (#1225)](https://github.com/PrismarineJS/minecraft-data/commit/0d307cc86518b7f88718cf1ef368ae4c0d13fbc2) (thanks @davidbegin)
