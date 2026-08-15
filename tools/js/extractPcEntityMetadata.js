@@ -93,7 +93,7 @@ function extractPcEntityMetadata (version, mcdataVersion = version, opts = {}) {
     if (!cloneIfMissing) {
       throw new Error(`Version directory "${sourceDir}" does not exist`)
     }
-    cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${sourceDir} --depth 1`, { stdio: 'inherit' })
+    cp.execFileSync('git', ['clone', '-b', `client${version}`, 'https://github.com/extremeheat/extracted_minecraft_data.git', sourceDir, '--depth', '1'], { stdio: 'inherit' })
   }
 
   const serializers = getEntityMetadataSerializers(sourceDir)
