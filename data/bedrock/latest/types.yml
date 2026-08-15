@@ -905,7 +905,7 @@ Skin:
    arm_size: u8 =>
       0: slim
       1: wide
-   skin_color: li32
+   skin_color: i32
    personal_pieces: []varint
       piece_id: string
       piece_type: PersonaPieceType
@@ -915,7 +915,7 @@ Skin:
    piece_tint_colors: []varint
       # The piece type is still sent by name here, unlike in the persona pieces above.
       piece_type: string
-      colors: '["array", { "count": 4, "type": "li32" }]'
+      colors: '["array", { "count": 4, "type": "i32" }]'
    premium: bool
    persona: bool
    # PersonaCapeOnClassicSkin specifies if the skin had a Persona cape (in-game skin creator cape) equipped
@@ -943,11 +943,19 @@ PlayerRecord:
          username: string
          xbox_user_id: string
          platform_chat_id: string
+         build_platform: li32
+         skin_data: Skin
+         is_teacher: bool
+         is_host: bool
+         is_subclient: bool
+         # PlayerColour is the colour of the player that is shown in UI elements, currently only used for the
+         # player locator bar. Since 1.26.40 this is encoded as big-endian ARGB.
+         player_color: i32
       if remove:
          uuid: uuid
 
-# BDS 1.26.40 may declare more records than it actually writes. Player List is a packet-bounded payload, so
-# treat the declared count as an upper bound and stop decoding once the packet buffer is exhausted.
+# BDS 1.26.40 may truncate the final record. Player List is a packet-bounded payload, so treat the declared
+# count as an upper bound and stop decoding when the packet ends, including midway through the final record.
 PlayerRecords: '["maybeIncompleteArray", { "countType": "varint", "type": "PlayerRecord" }]'
 
 Enchant:
