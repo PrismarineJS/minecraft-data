@@ -1,3 +1,10 @@
+## 3.113.2
+* [pc: Add sendsPlayerLoadedPacket feature flag for 1.21.4+ (#1224)](https://github.com/PrismarineJS/minecraft-data/commit/e7253ab2dc9ee4c21b2b445dfa9c74b268ec47fb) (thanks @aibengineering)
+* [Update dead wiki.vg links to minecraft.wiki (#1223)](https://github.com/PrismarineJS/minecraft-data/commit/42062dc822092b15ef79ca6bcff8bcfd2c6393d9) (thanks @narcis-dev)
+* [fix(pc): entity metadata chicken_variant is a plain varint on 1.21.5-1.21.8 (#1225)](https://github.com/PrismarineJS/minecraft-data/commit/0d307cc86518b7f88718cf1ef368ae4c0d13fbc2) (thanks @davidbegin)
+* [bedrock protocol: Fix 1.26.40/1.26.44 player records packet (#1227)](https://github.com/PrismarineJS/minecraft-data/commit/a93fe7b61c934b27e44247c8d98ef9d9170796f7) (thanks @extremeheat)
+* [Add 26.3-snapshot-8 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8a80816cbfb3fe2b609f2cde4e57796c8033af61) (thanks @github-actions[bot])
+
 ## 3.113.1
 * [Fix Bedrock 1.26.40 malformed packets (#1217)](https://github.com/PrismarineJS/minecraft-data/commit/596ba5bfcb89030a6ad487c36dd31da2abeaf497) (thanks @extremeheat)
 
