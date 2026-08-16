@@ -5,15 +5,21 @@
 const fs = require('fs')
 const { join } = require('path')
 const { parse, compile } = require('protodef-yaml')
+const { resolveProtoDelta } = require('./protoDelta')
 
 function getJSON (path) {
   return JSON.parse(fs.readFileSync(path, 'utf-8'))
 }
 
 // Parse the YML files and turn to JSON
-function genProtoSchema (createPacketMap) {
+function genProtoSchema (createPacketMap, edition) {
+  // If proto.yml is a !base delta, resolve the chain into a full protocol
+  // file set first (no-op for full protos, which keep using the file on disk)
+  const delta = resolveProtoDelta(edition, process.cwd(), join(__dirname, '../../data'))
+  const protoInput = delta ? delta.files : './proto.yml'
+
   // Create the packet_map.yml from proto.yml
-  const parsed = parse('./proto.yml')
+  const parsed = parse(protoInput)
   const version = parsed['!version']
 
   if (createPacketMap) {
@@ -41,7 +47,12 @@ function genProtoSchema (createPacketMap) {
     fs.writeFileSync('./packet_map.yml', t)
   }
 
-  const json = compile('./proto.yml')
+  if (delta && fs.existsSync('./packet_map.yml')) {
+    // protodef-yaml only resolves !imports from disk for file inputs; feed the
+    // generated packet map into the resolved file set
+    delta.files['packet_map.yml'] = fs.readFileSync('./packet_map.yml', 'utf8')
+  }
+  const json = compile(protoInput)
   fs.rmSync('./packet_map.yml', { force: true }) // temp file
   return [version, json]
 }
@@ -79,7 +90,7 @@ function sortKeys (value, isTopLevel = false) {
 
 function convert (edition, ver, path) {
   process.chdir(path || join(__dirname, `../../data/${edition}/${ver}`))
-  const [version, json] = genProtoSchema(edition === 'bedrock')
+  const [version, json] = genProtoSchema(edition === 'bedrock', edition)
   fs.mkdirSync(`../${version}`, { recursive: true })
   if (edition === 'bedrock') {
     fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: sortKeys(json, true) }, visitor, 2))
@@ -92,7 +103,7 @@ function convert (edition, ver, path) {
 function validate (edition, ver, path) {
   process.chdir(path || join(__dirname, `../../data/${edition}/${ver}`))
   // console.log(process.cwd())
-  const [version, json] = genProtoSchema(edition === 'bedrock')
+  const [version, json] = genProtoSchema(edition === 'bedrock', edition)
 
   if (path.endsWith('latest')) {
     if (fs.existsSync(join(__dirname, `../../data/${edition}/${version}/proto.yml`))) {

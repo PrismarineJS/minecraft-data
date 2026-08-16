@@ -1,62 +1,20 @@
 !version: 1.20.5
-!StartDocs: true
+!base: 1.20.3
 
 ^types:
-   varint: native
-   varlong: native
-   optvarint: varint
-   pstring: native
-   buffer: native
-   u8: native
-   u16: native
-   u32: native
-   u64: native
-   i8: native
-   i16: native
-   i32: native
-   i64: native
-   bool: native
-   f32: native
-   f64: native
-   UUID: native
-   option: native
-   entityMetadataLoop: native
-   topBitSetTerminatedArray: native
-   bitfield: native
-   bitflags: native
-   container: native
-   switch: native
-   void: native
-   array: native
-   restBuffer: native
-   anonymousNbt: native
-   anonOptionalNbt: native
-   registryEntryHolder: native
-   registryEntryHolderSet: native
-   ByteArray: ["buffer", { "countType": "varint" }]
-   string: ["pstring", { "countType": "varint" }]
-   vec3f:
-      x: f32
-      y: f32
-      z: f32
-   vec4f:
-      x: f32
-      y: f32
-      z: f32
-      w: f32
-   vec3f64:
-      x: f64
-      y: f64
-      z: f64
-   vec3i16:
-      x: i16
-      y: i16
-      z: i16
+   slot: !delete
+
+   particleData: !delete
+
+   entityMetadataItem: !delete
+
    IDSet: ["registryEntryHolderSet", {
       "base": { name: "name", type: "string" },
       "otherwise": { name: "ids", type: "varint" }
    }]
+
    ContainerID: u8
+
    SlotComponentType: varint =>
       - custom_data
       - max_stack_size
@@ -170,7 +128,7 @@
          if creative_slot_lock: void
          if enchantment_glint_override: bool
          if intangible_projectile: anonymousNbt
-         if food: 
+         if food:
             nutrition: varint
             # How much saturation will be given after consuming the item.
             saturationModifier: f32
@@ -288,14 +246,6 @@
          if lock: anonymousNbt
          if container_loot: anonymousNbt
 
-   ItemSoundEvent:
-      soundName: string
-      fixedRange?: f32
-   ItemSoundHolder: ["registryEntryHolder", {
-      "baseName": "soundId",
-      "otherwise": { name: "data", type: "ItemSoundEvent" }
-   }]
-
    ItemFireworkExplosion:
       shape: varint =>
          - small_ball
@@ -334,7 +284,6 @@
             minValue: string
             maxValue: string
 
-
    ItemBlockPredicate:
       blockSet?: ["registryEntryHolderSet", {
          "base": { name: "name", type: "string" },
@@ -347,6 +296,7 @@
       # The raw text of the page. TextComponent, max 1024 characters.
       content: string
       filteredContent?: string
+
    ItemWrittenBookPage:
       content: anonymousNbt
       filteredContent: anonOptionalNbt
@@ -374,6 +324,7 @@
    BannerPattern:
       assetId: string
       translationKey: string
+
    BannerPatternLayer:
       pattern: ["registryEntryHolder", { "baseName": "patternId", "otherwise": { "name": "data", "type": "BannerPattern" } }]
       colorId: varint
@@ -546,51 +497,9 @@
                   entityId: varint
                   entityEyeHeight: f32
             ticks: varint
+
    ingredient: Slot[]varint
-   position: [
-      "bitfield",
-      [
-         {
-            "name": "x",
-            "size": 26,
-            "signed": true
-         },
-         {
-            "name": "z",
-            "size": 26,
-            "signed": true
-         },
-         {
-            "name": "y",
-            "size": 12,
-            "signed": true
-         }
-      ]
-   ]
-   soundSource: varint =>
-      0: master
-      1: music
-      2: record
-      3: weather
-      4: block
-      5: hostile
-      6: neutral
-      7: player
-      8: ambient
-      9: voice
-   packedChunkPos:
-      z: i32
-      x: i32
-   previousMessages: []varint
-      id: varint
-      signature: id ?
-         if 0: [
-            "buffer",
-            {
-               "count": 256
-            }
-         ]
-         default: void
+
    entityMetadataEntry:
       key: u8
       type: varint =>
@@ -669,12 +578,14 @@
          if armadillo_state: varint
          if vector3: vec3f
          if quaternion: vec4f
+
    EntityMetadataPaintingVariant:
       width: i32
       height: i32
       assetId: string
       title?: anonymousNbt
       author?: anonymousNbt
+
    EntityMetadataWolfVariant:
       wildTexture: string
       tameTexture: string
@@ -682,8 +593,7 @@
       biome: IDSet
 
    entityMetadata: ["entityMetadataLoop", { "endVal": 255, "type": "entityMetadataEntry" }]
-   minecraft_simple_recipe_format:
-      category: varint
+
    minecraft_smelting_format:
       group: string
       category: varint
@@ -691,50 +601,7 @@
       result: Slot
       experience: f32
       cookTime: varint
-   tags: []varint
-      tagName: string
-      entries: varint[]varint
-   chunkBlockEntity:
-      _: [
-         "bitfield",
-         [
-            {
-               "name": "x",
-               "size": 4,
-               "signed": false
-            },
-            {
-               "name": "z",
-               "size": 4,
-               "signed": false
-            }
-         ]
-      ]
-      y: i16
-      type: varint
-      nbtData: anonOptionalNbt
-   chat_session?:
-      uuid: UUID
-      publicKey:
-         expireTime: i64
-         keyBytes: [
-            "buffer",
-            {
-               "countType": "varint"
-            }
-         ]
-         keySignature: [
-            "buffer",
-            {
-               "countType": "varint"
-            }
-         ]
-   game_profile:
-      name: string
-      properties: []varint
-         name: string
-         value: string
-         signature?: string
+
    command_node:
       flags: [
          "bitfield",
@@ -1028,6 +895,7 @@
             suggestionType: ../flags/has_custom_suggestions ?
                if 1: string
                default: void
+
    # # Shared Packets
    # These are packets that are shared between multiple states.
    # They are defined here to avoid duplication.
@@ -1042,21 +910,26 @@
       mainHand: varint
       enableTextFiltering: bool
       enableServerListing: bool
+
    # MC: ClientboundCookieRequestPacket
    packet_common_cookie_request:
       cookie: string
+
    # MC: ClientboundStoreCookiePacket
    packet_common_store_cookie:
       key: string
       value: ByteArray
+
    # MC: ClientboundTransferPacket
    packet_common_transfer:
       host: string
       port: varint
+
    # MC: ServerboundCookieResponsePacket
    packet_common_cookie_response:
       key: string
       value?: ByteArray
+
    # MC: ServerboundSelectKnownPacks
    # MC: ClientboundSelectKnownPacks
    packet_common_select_known_packs:
@@ -1064,9 +937,11 @@
          namespace: string
          id: string
          version: string
+
    # MC: ClientboundResourcePackPopPacket
    packet_common_remove_resource_pack:
       uuid?: UUID
+
    # MC: ClientboundResourcePackPushPacket
    packet_common_add_resource_pack:
       uuid: UUID
@@ -1075,57 +950,7 @@
       forced: bool
       promptMessage?: anonymousNbt
 
-^handshaking.toClient.types:
-   packet:
-      name: varint =>
-      params: ["switch",{"compareTo":"name","fields":{}}]
-^handshaking.toServer.types:
-   packet_set_protocol:
-      protocolVersion: varint
-      serverHost: string
-      serverPort: u16
-      nextState: varint
-   packet_legacy_server_list_ping:
-      payload: u8
-   packet:
-      name: varint =>
-         0x00: set_protocol
-         0xfe: legacy_server_list_ping
-      params: name ?
-         if set_protocol: packet_set_protocol
-         if legacy_server_list_ping: packet_legacy_server_list_ping
-^status.toClient.types:
-   # MC: ClientboundStatusResponsePacket
-   packet_server_info:
-      response: string
-   # MC: ClientboundPongResponsePacket
-   packet_ping:
-      time: i64
-   packet:
-      name: varint =>
-         0x00: server_info
-         0x01: ping
-      params: name ?
-         if server_info: packet_server_info
-         if ping: packet_ping
-^status.toServer.types:
-   # MC: ServerboundStatusRequestPacket
-   packet_ping_start:
-      # Empty
-   # MC: ServerboundPingRequestPacket
-   packet_ping:
-      time: i64
-   packet:
-      name: varint =>
-         0x00: ping_start
-         0x01: ping
-      params: name ?
-         if ping_start: packet_ping_start
-         if ping: packet_ping
 ^login.toClient.types:
-   # MC: ClientboundLoginDisconnectPacket
-   packet_disconnect:
-      reason: string
    # MC: ClientboundHelloPacket
    packet_encryption_begin:
       serverId: string
@@ -1142,6 +967,7 @@
          }
       ]
       shouldAuthenticate: bool
+
    # MC: ClientboundGameProfilePacket
    packet_success:
       uuid: UUID
@@ -1151,14 +977,7 @@
          value: string
          signature?: string
       strictErrorHandling: bool
-   # MC: ClientboundLoginCompressionPacket
-   packet_compress:
-      threshold: varint
-   # MC: ClientboundCustomQueryPacket
-   packet_login_plugin_request:
-      messageId: varint
-      channel: string
-      data: restBuffer
+
    ## (Cookie Request is Common) ##
    packet:
       name: varint =>
@@ -1175,32 +994,8 @@
          if compress: packet_compress
          if login_plugin_request: packet_login_plugin_request
          if cookie_request: packet_common_cookie_request
+
 ^login.toServer.types:
-   # MC: ServerboundHelloPacket
-   packet_login_start:
-      username: string
-      playerUUID: UUID
-   # MC: ServerboundKeyPacket
-   packet_encryption_begin:
-      sharedSecret: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-      verifyToken: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-   # MC: ServerboundCustomQueryAnswerPacket
-   packet_login_plugin_response:
-      messageId: varint
-      data?: restBuffer
-   # MC: ServerboundLoginAcknowledgedPacket
-   packet_login_acknowledged:
-      # Empty
    ## (Cookie Response is Common) ##
    packet:
       name: varint =>
@@ -1215,27 +1010,22 @@
          if login_plugin_response: packet_login_plugin_response
          if login_acknowledged: packet_login_acknowledged
          if cookie_response: packet_common_cookie_response
+
 ^configuration.toClient.types:
+   packet_remove_resource_pack: !delete
+
+   packet_add_resource_pack: !delete
+
    ## (Cookie Request is common)
    # MC: ClientboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
       data: restBuffer
-   # MC: ClientboundDisconnectPacket
-   packet_disconnect:
-      reason: anonymousNbt
-   # MC: ClientboundFinishConfigurationPacket
-   packet_finish_configuration:
-      # Empty
-   # MC: ClientboundKeepAlivePacket
-   packet_keep_alive:
-      keepAliveId: i64
-   # MC: ClientboundPingPacket
-   packet_ping:
-      id: i32
+
    # MC: ClientboundResetChatPacket
    packet_reset_chat:
       # Empty
+
    # MC: ClientboundRegistryDataPacket
    packet_registry_data:
       # The server can send multiple registries
@@ -1243,15 +1033,12 @@
       entries: []varint
          key: string
          value?: anonymousNbt
+
    ## (Store cookie and Transfer are Common) ##
    # MC: ClientboundUpdateEnabledFeaturesPacket
    packet_feature_flags:
       features: string[]varint
-   # MC: ClientboundUpdateTagsPacket
-   packet_tags:
-      tags: []varint
-         tagType: string
-         tags: tags
+
    ## (Select known packs is common)
    packet:
       name: varint =>
@@ -1286,26 +1073,17 @@
          if feature_flags: packet_feature_flags
          if tags: packet_tags
          if select_known_packs: packet_common_select_known_packs
+
 ^configuration.toServer.types:
+   packet_settings: !delete
+
    ## (Settings is Common) ##
    ## (Cookie Response is Common) ##
    # MC: ServerboundCustomPayloadPacket
    packet_custom_payload:
       channel: string
       data: restBuffer
-   # MC: ServerboundFinishConfigurationPacket
-   packet_finish_configuration:
-      # Empty
-   # MC: ServerboundKeepAlivePacket
-   packet_keep_alive:
-      keepAliveId: i64
-   # MC: ServerboundPongPacket
-   packet_pong:
-      id: i32
-   # MC: ServerboundResourcePackPacket
-   packet_resource_pack_receive:
-      uuid: UUID
-      result: varint
+
    packet:
       name: varint =>
       - settings
@@ -1325,7 +1103,12 @@
          if pong: packet_pong
          if resource_pack_receive: packet_resource_pack_receive
          if select_known_packs: packet_common_select_known_packs
+
 ^play.toClient.types:
+   packet_remove_resource_pack: !delete
+
+   packet_add_resource_pack: !delete
+
    # World state information for spawn and respawn packets
    SpawnInfo:
       dimension: varint
@@ -1344,171 +1127,46 @@
          location: position
       portalCooldown: varint
 
-   # MC: ClientboundAddEntityPacket
-   packet_spawn_entity:
-      entityId: varint
-      objectUUID: UUID
-      type: varint
-      x: f64
-      y: f64
-      z: f64
-      pitch: i8
-      yaw: i8
-      headPitch: i8
-      objectData: varint
-      velocity: vec3i16
-   # MC: ClientboundAddExperienceOrbPacket
-   packet_spawn_entity_experience_orb:
-      entityId: varint
-      x: f64
-      y: f64
-      z: f64
-      count: i16
-   # MC: ClientboundAnimatePacket
-   packet_animation:
-      entityId: varint
-      animation: u8
-   # MC: ClientboundAwardStatsPacket
-   packet_statistics:
-      entries: []varint
-         categoryId: varint
-         statisticId: varint
-         value: varint
-   # MC: ClientboundBlockChangedAckPacket
-   packet_acknowledge_player_digging:
-      sequenceId: varint
-   # MC: ClientboundBlockDestructionPacket
-   packet_block_break_animation:
-      entityId: varint
-      location: position
-      destroyStage: i8
-   # MC: ClientboundBlockEntityDataPacket
-   packet_tile_entity_data:
-      location: position
-      action: varint
-      nbtData: anonOptionalNbt
-   # MC: ClientboundBlockEventPacket
-   packet_block_action:
-      location: position
-      byte1: u8
-      byte2: u8
-      blockId: varint
-   # MC: ClientboundBlockUpdatePacket
-   packet_block_change:
-      location: position
-      type: varint
-   # MC: ClientboundBossEventPacket
-   packet_boss_bar:
-      entityUUID: UUID
-      action: varint
-      title: action ?
-         if 0: anonymousNbt
-         if 3: anonymousNbt
-         default: void
-      health: action ?
-         if 0: f32
-         if 2: f32
-         default: void
-      color: action ?
-         if 0: varint
-         if 4: varint
-         default: void
-      dividers: action ?
-         if 0: varint
-         if 4: varint
-         default: void
-      flags: action ?
-         if 0: u8
-         if 5: u8
-         default: void
-   # MC: ClientboundChangeDifficultyPacket
-   packet_difficulty:
-      difficulty: u8
-      difficultyLocked: bool
-   # MC: ClientboundChunkBatchFinishedPacket
-   packet_chunk_batch_finished:
-      batchSize: varint
-   # MC: ClientboundChunkBatchStartPacket
-   packet_chunk_batch_start:
-      # Empty
    # MC: ClientboundChunksBiomesPacket
    packet_chunk_biomes:
       biomes: []varint
          position: packedChunkPos
          data: ByteArray
-   # MC: ClientboundClearTitlesPacket
-   packet_clear_titles:
-      reset: bool
-   # MC: ClientboundCommandSuggestionsPacket
-   packet_tab_complete:
-      transactionId: varint
-      start: varint
-      length: varint
-      matches: []varint
-         match: string
-         tooltip?: anonymousNbt
-   # MC: ClientboundCommandsPacket
-   packet_declare_commands:
-      nodes: command_node[]varint
-      rootIndex: varint
+
    # MC: ClientboundContainerClosePacket
    packet_close_window:
       windowId: ContainerID
+
    # MC: ClientboundContainerSetContentPacket
    packet_window_items:
       windowId: ContainerID
       stateId: varint
       items: Slot[]varint
       carriedItem: Slot
+
    # MC: ClientboundContainerSetDataPacket
    packet_craft_progress_bar:
       windowId: ContainerID
       property: i16
       value: i16
+
    # MC: ClientboundContainerSetSlotPacket
    packet_set_slot:
       windowId: ContainerID
       stateId: varint
       slot: i16
       item: Slot
+
    ## (Cookie Request is Common)
    # MC: ClientboundCooldownPacket
    packet_set_cooldown:
       itemID: varint
       cooldownTicks: varint
-   # MC: ClientboundCustomChatCompletionsPacket
-   packet_chat_suggestions:
-      action: varint
-      entries: string[]varint
-   # MC: ClientboundCustomPayloadPacket
-   packet_custom_payload:
-      channel: string
-      data: restBuffer
-   # MC: ClientboundDamageEventPacket
-   packet_damage_event:
-      entityId: varint
-      sourceTypeId: varint
-      sourceCauseId: varint
-      sourceDirectId: varint
-      sourcePosition?: vec3f64
+
    # MC: ClientboundDebugSamplePacket
    packet_debug_sample:
       sample: i64[]varint
       type: varint
-   # MC: ClientboundDeleteChatPacket
-   packet_hide_message:
-      id: varint
-      signature: id ?
-         if 0: [
-            "buffer",
-            {
-               "count": 256
-            }
-         ]
-         default: void
-   # MC: ClientboundDisconnectPacket
-   packet_kick_disconnect:
-      reason: anonymousNbt
 
    ## client\net\minecraft\network\chat\ChatTypeDecoration.java
    ## via client\net\minecraft\network\chat\ChatType.java
@@ -1516,97 +1174,22 @@
       - content
       - sender
       - target
+
    ChatType:
       translationKey: string
       parameters: ChatTypeParameterType[]varint
       style: anonymousNbt
+
    ChatTypes:
       chat: ChatType
       narration: ChatType
 
-   # MC: ClientboundDisguisedChatPacket
-   packet_profileless_chat:
-      message: anonymousNbt
-      type: varint
-      name: anonymousNbt
-      target?: anonymousNbt
-   # MC: ClientboundEntityEventPacket
-   packet_entity_status:
-      entityId: i32
-      entityStatus: i8
-   # MC: ClientboundExplodePacket
-   packet_explosion:
-      x: f64
-      y: f64
-      z: f64
-      radius: f32
-      affectedBlockOffsets: []varint
-         x: i8
-         y: i8
-         z: i8
-      playerMotionX: f32
-      playerMotionY: f32
-      playerMotionZ: f32
-      block_interaction_type: varint
-      small_explosion_particle: Particle
-      large_explosion_particle: Particle
-      sound: ItemSoundHolder
-   # MC: ClientboundForgetLevelChunkPacket
-   packet_unload_chunk:
-      chunkZ: i32
-      chunkX: i32
-   # MC: ClientboundGameEventPacket
-   packet_game_state_change:
-      reason: u8
-      gameMode: f32
    # MC: ClientboundHorseScreenOpenPacket
    packet_open_horse_window:
       windowId: ContainerID
       nbSlots: varint
       entityId: i32
-   # MC: ClientboundHurtAnimationPacket
-   packet_hurt_animation:
-      entityId: varint
-      yaw: f32
-   # MC: ClientboundInitializeBorderPacket
-   packet_initialize_world_border:
-      x: f64
-      z: f64
-      oldDiameter: f64
-      newDiameter: f64
-      speed: varint
-      portalTeleportBoundary: varint
-      warningBlocks: varint
-      warningTime: varint
-   # MC: ClientboundKeepAlivePacket
-   packet_keep_alive:
-      keepAliveId: i64
-   # MC: ClientboundLevelChunkWithLightPacket
-   packet_map_chunk:
-      x: i32
-      z: i32
-      heightmaps: anonymousNbt
-      chunkData: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-      blockEntities: chunkBlockEntity[]varint
-      skyLightMask: i64[]varint
-      blockLightMask: i64[]varint
-      emptySkyLightMask: i64[]varint
-      emptyBlockLightMask: i64[]varint
-      skyLight: []varint
-         _: u8[]varint
-      blockLight: []varint
-         _: u8[]varint
-   # MC: ClientboundLevelEventPacket
-   packet_world_event:
-      effectId: i32
-      location: position
-      data: i32
-      global: bool
+
    # MC: ClientboundLevelParticlesPacket
    packet_world_particles:
       longDistance: bool
@@ -1619,18 +1202,7 @@
       velocityOffset: f32
       amount: i32
       particle: Particle
-   # MC: ClientboundLightUpdatePacket
-   packet_update_light:
-      chunkX: varint
-      chunkZ: varint
-      skyLightMask: i64[]varint
-      blockLightMask: i64[]varint
-      emptySkyLightMask: i64[]varint
-      emptyBlockLightMask: i64[]varint
-      skyLight: []varint
-         _: u8[]varint
-      blockLight: []varint
-         _: u8[]varint
+
    # MC: ClientboundLoginPacket
    packet_login:
       entityId: i32
@@ -1644,35 +1216,7 @@
       doLimitedCrafting: bool
       worldState: SpawnInfo
       enforcesSecureChat: bool
-   # MC: ClientboundMapItemDataPacket
-   packet_map:
-      itemDamage: varint
-      scale: i8
-      locked: bool
-      icons?: []varint
-         type: varint
-         x: i8
-         z: i8
-         direction: u8
-         displayName?: anonymousNbt
-      columns: u8
-      rows: columns ?
-         if 0: void
-         default: u8
-      x: columns ?
-         if 0: void
-         default: u8
-      y: columns ?
-         if 0: void
-         default: u8
-      data: columns ?
-         if 0: void
-         default: [
-            "buffer",
-            {
-               "countType": "varint"
-            }
-         ]
+
    # MC: ClientboundMerchantOffersPacket
    packet_trade_list:
       windowId: ContainerID
@@ -1700,150 +1244,18 @@
       experience: varint
       isRegularVillager: bool
       canRestock: bool
-   # MC: ClientboundMoveEntityPacket.Pos
-   packet_rel_entity_move:
-      entityId: varint
-      dX: i16
-      dY: i16
-      dZ: i16
-      onGround: bool
-   # MC: ClientboundMoveEntityPacket.PosRot
-   packet_entity_move_look:
-      entityId: varint
-      dX: i16
-      dY: i16
-      dZ: i16
-      yaw: i8
-      pitch: i8
-      onGround: bool
-   # MC: ClientboundMoveEntityPacket.Rot
-   packet_entity_look:
-      entityId: varint
-      yaw: i8
-      pitch: i8
-      onGround: bool
-   # MC: ClientboundMoveVehiclePacket
-   packet_vehicle_move:
-      x: f64
-      y: f64
-      z: f64
-      yaw: f32
-      pitch: f32
-   # MC: ClientboundOpenBookPacket
-   packet_open_book:
-      hand: varint
-   # MC: ClientboundOpenScreenPacket
-   packet_open_window:
-      windowId: varint
-      inventoryType: varint
-      windowTitle: anonymousNbt
-   # MC: ClientboundOpenSignEditorPacket
-   packet_open_sign_entity:
-      location: position
-      isFrontText: bool
-   # MC: ClientboundPingPacket
-   packet_ping:
-      id: i32
-   # MC: ClientboundPongResponsePacket
-   packet_ping_response:
-      id: i64
+
    # MC: ClientboundPlaceGhostRecipePacket
    packet_craft_recipe_response:
       windowId: ContainerID
       recipe: string
-   # MC: ClientboundPlayerAbilitiesPacket
-   packet_abilities:
-      flags: i8
-      flyingSpeed: f32
-      walkingSpeed: f32
-   # MC: ClientboundPlayerChatPacket
-   packet_player_chat:
-      senderUuid: UUID
-      index: varint
-      signature?: [
-         "buffer",
-         {
-            "count": 256
-         }
-      ]
-      plainMessage: string
-      timestamp: i64
-      salt: i64
-      previousMessages: previousMessages
-      unsignedChatContent?: anonymousNbt
-      filterType: varint
-      filterTypeMask: filterType ?
-         if 2: i64[]varint
-         default: void
-      type: varint
-      networkName: anonymousNbt
-      networkTargetName?: anonymousNbt
-   # MC: ClientboundPlayerCombatEndPacket
-   packet_end_combat_event:
-      duration: varint
-   # MC: ClientboundPlayerCombatEnterPacket
-   packet_enter_combat_event:
-      # Empty
-   # MC: ClientboundPlayerCombatKillPacket
-   packet_death_combat_event:
-      playerId: varint
-      message: anonymousNbt
-   # MC: ClientboundPlayerInfoRemovePacket
-   packet_player_remove:
-      players: UUID[]varint
-   # MC: ClientboundPlayerInfoUpdatePacket
-   packet_player_info:
-      ## ClientboundPlayerInfoUpdatePacket.java#L160
-      action: ["bitflags", {
-         "type": "u8",
-         "flags": [
-            "add_player",
-            "initialize_chat",
-            "update_game_mode",
-            "update_listed",
-            "update_latency",
-            "update_display_name"
-         ]
-      }]
-      data: []varint
-         uuid: UUID
-         player: ../action/add_player ?
-            if true: game_profile
-            default: void
-         chatSession: ../action/initialize_chat ?
-            if true: chat_session
-            default: void
-         gamemode: ../action/update_game_mode ?
-            if true: varint
-            default: void
-         listed: ../action/update_listed ?
-            if true: varint
-            default: void
-         latency: ../action/update_latency ?
-            if true: varint
-            default: void
-         displayName: ../action/update_display_name ?
-            if true: ["option", "anonymousNbt"]
-            default: void
-   # MC: ClientboundPlayerLookAtPacket
-   packet_face_player:
-      feet_eyes: varint
-      x: f64
-      y: f64
-      z: f64
-      isEntity: bool
-      entityId: isEntity ?
-         if true: varint
-         default: void
-      entity_feet_eyes: isEntity ?
-         if true: varint
-         default: void
 
    # Relative.java
    PositionUpdateRelatives: ["bitflags", {
       "type": "u8",
       "flags": ["x", "y", "z", "yaw", "pitch"]
    }]
+
    # MC: ClientboundPlayerPositionPacket
    packet_position:
       x: f64
@@ -1853,41 +1265,13 @@
       pitch: f32
       flags: PositionUpdateRelatives
       teleportId: varint
-   # MC: ClientboundRecipePacket
-   packet_unlock_recipes:
-      action: varint
-      craftingBookOpen: bool
-      filteringCraftable: bool
-      smeltingBookOpen: bool
-      filteringSmeltable: bool
-      blastFurnaceOpen: bool
-      filteringBlastFurnace: bool
-      smokerBookOpen: bool
-      filteringSmoker: bool
-      recipes1: string[]varint
-      recipes2: action ?
-         if 0: string[]varint
-         default: void
-   # MC: ClientboundRemoveEntitiesPacket
-   packet_entity_destroy:
-      entityIds: varint[]varint
-   # MC: ClientboundRemoveMobEffectPacket
-   packet_remove_entity_effect:
-      entityId: varint
-      effectId: varint
-   # MC: ClientboundResetScorePacket
-   packet_reset_score:
-      entity_name: string
-      objective_name?: string
+
    # MC: ClientboundRespawnPacket
    packet_respawn:
       worldState: SpawnInfo
       # Bit field: 0b1 - KEEP_ATTRIBUTE_MODIFIERS, 0b10 - KEEP_ENTITY_DATA
       copyMetadata: u8
-   # MC: ClientboundRotateHeadPacket
-   packet_entity_head_rotation:
-      entityId: varint
-      headYaw: i8
+
    # MC: ClientboundSectionBlocksUpdatePacket
    packet_multi_block_change:
       chunkCoordinates: [ "bitfield", [
@@ -1896,67 +1280,12 @@
          { "name": "y", "size": 20, "signed": true }
       ]]
       records: varint[]varint
-   # MC: ClientboundSelectAdvancementsTabPacket
-   packet_select_advancement_tab:
-      id?: string
+
    # MC: ClientboundServerDataPacket
    packet_server_data:
       motd: anonymousNbt
       iconBytes?: ByteArray
-   # MC: ClientboundSetActionBarTextPacket
-   packet_action_bar:
-      text: anonymousNbt
-   # MC: ClientboundSetBorderCenterPacket
-   packet_world_border_center:
-      x: f64
-      z: f64
-   # MC: ClientboundSetBorderLerpSizePacket
-   packet_world_border_lerp_size:
-      oldDiameter: f64
-      newDiameter: f64
-      speed: varint
-   # MC: ClientboundSetBorderSizePacket
-   packet_world_border_size:
-      diameter: f64
-   # MC: ClientboundSetBorderWarningDelayPacket
-   packet_world_border_warning_delay:
-      warningTime: varint
-   # MC: ClientboundSetBorderWarningDistancePacket
-   packet_world_border_warning_reach:
-      warningBlocks: varint
-   # MC: ClientboundSetCameraPacket
-   packet_camera:
-      cameraId: varint
-   # MC: ClientboundSetCarriedItemPacket
-   packet_held_item_slot:
-      slot: i8
-   # MC: ClientboundSetChunkCacheCenterPacket
-   packet_update_view_position:
-      chunkX: varint
-      chunkZ: varint
-   # MC: ClientboundSetChunkCacheRadiusPacket
-   packet_update_view_distance:
-      viewDistance: varint
-   # MC: ClientboundSetDefaultSpawnPositionPacket
-   packet_spawn_position:
-      location: position
-      angle: f32
-   # MC: ClientboundSetDisplayObjectivePacket
-   packet_scoreboard_display_objective:
-      position: varint
-      name: string
-   # MC: ClientboundSetEntityDataPacket
-   packet_entity_metadata:
-      entityId: varint
-      metadata: entityMetadata
-   # MC: ClientboundSetEntityLinkPacket
-   packet_attach_entity:
-      entityId: i32
-      vehicleId: i32
-   # MC: ClientboundSetEntityMotionPacket
-   packet_entity_velocity:
-      entityId: varint
-      velocity: vec3i16
+
    # MC: ClientboundSetEquipmentPacket
    packet_entity_equipment:
       entityId: varint
@@ -1978,118 +1307,7 @@
             ]
          }
       ]
-   # MC: ClientboundSetExperiencePacket
-   packet_experience:
-      experienceBar: f32
-      level: varint
-      totalExperience: varint
-   # MC: ClientboundSetHealthPacket
-   packet_update_health:
-      health: f32
-      food: varint
-      foodSaturation: f32
-   # MC: ClientboundSetObjectivePacket
-   packet_scoreboard_objective:
-      name: string
-      action: i8
-      displayText: action ?
-         if 0: anonymousNbt
-         if 2: anonymousNbt
-         default: void
-      type: action ?
-         if 0: varint
-         if 2: varint
-         default: void
-      number_format: action ?
-         if 0: [
-            "option",
-            "varint"
-         ]
-         if 2: [
-            "option",
-            "varint"
-         ]
-         default: void
-      styling: action ?
-         if 0: number_format ?
-            if 1: anonymousNbt
-            if 2: anonymousNbt
-            default: void
-         if 2: number_format ?
-            if 1: anonymousNbt
-            if 2: anonymousNbt
-            default: void
-         default: void
-   # MC: ClientboundSetPassengersPacket
-   packet_set_passengers:
-      entityId: varint
-      passengers: varint[]varint
-   # MC: ClientboundSetPlayerTeamPacket
-   packet_teams:
-      team: string
-      mode: i8
-      name: mode ?
-         if 0: anonymousNbt
-         if 2: anonymousNbt
-         default: void
-      friendlyFire: mode ?
-         if 0: i8
-         if 2: i8
-         default: void
-      nameTagVisibility: mode ?
-         if 0: string
-         if 2: string
-         default: void
-      collisionRule: mode ?
-         if 0: string
-         if 2: string
-         default: void
-      formatting: mode ?
-         if 0: varint
-         if 2: varint
-         default: void
-      prefix: mode ?
-         if 0: anonymousNbt
-         if 2: anonymousNbt
-         default: void
-      suffix: mode ?
-         if 0: anonymousNbt
-         if 2: anonymousNbt
-         default: void
-      players: mode ?
-         if 0: string[]varint
-         if 3: string[]varint
-         if 4: string[]varint
-         default: void
-   # MC: ClientboundSetScorePacket
-   packet_scoreboard_score:
-      itemName: string
-      scoreName: string
-      value: varint
-      display_name?: anonymousNbt
-      number_format?: varint
-      styling: number_format ?
-         if 1: anonymousNbt
-         if 2: anonymousNbt
-         default: void
-   # MC: ClientboundSetSimulationDistancePacket
-   packet_simulation_distance:
-      distance: varint
-   # MC: ClientboundSetSubtitleTextPacket
-   packet_set_title_subtitle:
-      text: anonymousNbt
-   # MC: ClientboundSetTimePacket
-   packet_update_time:
-      age: i64
-      time: i64
-   # MC: ClientboundSetTitleTextPacket
-   packet_set_title_text:
-      text: anonymousNbt
-   # MC: ClientboundSetTitlesAnimationPacket
-   packet_set_title_time:
-      fadeIn: i32
-      stay: i32
-      fadeOut: i32
+
    # MC: ClientboundSoundEntityPacket
    packet_entity_sound_effect:
       sound: ItemSoundHolder
@@ -2098,64 +1316,13 @@
       volume: f32
       pitch: f32
       seed: i64
-   # MC: ClientboundSoundPacket
-   packet_sound_effect:
-      sound: ItemSoundHolder
-      soundCategory: soundSource
-      x: i32
-      y: i32
-      z: i32
-      volume: f32
-      pitch: f32
-      seed: i64
-   # MC: ClientboundStartConfigurationPacket
-   packet_start_configuration:
-      # Empty
-   # MC: ClientboundStopSoundPacket
-   packet_stop_sound:
-      flags: i8
-      source: flags ?
-         if 1: varint
-         if 3: varint
-         default: void
-      sound: flags ?
-         if 2: string
-         if 3: string
-         default: void
+
    ## (Store Cookie is Common)
    # MC: ClientboundSystemChatPacket
    packet_system_chat:
       content: anonymousNbt
       isActionBar: bool
-   # MC: ClientboundTabListPacket
-   packet_playerlist_header:
-      header: anonymousNbt
-      footer: anonymousNbt
-   # MC: ClientboundTagQueryPacket
-   packet_nbt_query_response:
-      transactionId: varint
-      nbt: anonOptionalNbt
-   # MC: ClientboundTakeItemEntityPacket
-   packet_collect:
-      collectedEntityId: varint
-      collectorEntityId: varint
-      pickupItemCount: varint
-   # MC: ClientboundTeleportEntityPacket
-   packet_entity_teleport:
-      entityId: varint
-      x: f64
-      y: f64
-      z: f64
-      yaw: i8
-      pitch: i8
-      onGround: bool
-   # MC: ClientboundTickingStatePacket
-   packet_set_ticking_state:
-      tick_rate: f32
-      is_frozen: bool
-   # MC: ClientboundTickingStepPacket
-   packet_step_tick:
-      tick_steps: varint
+
    ## (Transfer is common)
    # MC: ClientboundUpdateAdvancementsPacket
    packet_advancements:
@@ -2189,6 +1356,7 @@
          value: []varint
             criterionIdentifier: string
             criterionProgress?: i64
+
    # MC: ClientboundUpdateAttributesPacket
    packet_entity_update_attributes:
       entityId: varint
@@ -2221,6 +1389,7 @@
             uuid: UUID
             amount: f64
             operation: i8
+
    # MC: ClientboundUpdateMobEffectPacket
    packet_entity_effect:
       entityId: varint
@@ -2236,6 +1405,7 @@
       #    { "name": "blend", "size": 1 }
       # ]]
       flags: u8
+
    # MC: ClientboundUpdateRecipesPacket
    packet_declare_recipes:
       recipes: []varint
@@ -2311,11 +1481,7 @@
                base: ingredient
                addition: ingredient
             if minecraft:crafting_decorated_pot: minecraft_simple_recipe_format
-   # MC: ClientboundUpdateTagsPacket
-   packet_tags:
-      tags: []varint
-         tagType: string
-         tags: tags
+
    # MC: ClientboundProjectilePowerPacket
    packet_set_projectile_power:
       id: varint
@@ -2570,22 +1736,17 @@
          if set_projectile_power: packet_set_projectile_power
 
 ^play.toServer.types:
-   # MC: ServerboundAcceptTeleportationPacket
-   packet_teleport_confirm:
-      teleportId: varint
+   packet_settings: !delete
+
    # MC: ServerboundBlockEntityTagQueryPacket
    packet_query_block_nbt:
       transactionId: varint
       location: position
-   # MC: ServerboundChangeDifficultyPacket
-   packet_set_difficulty:
-      newDifficulty: u8
-   # MC: ServerboundChatAckPacket
-   packet_message_acknowledgement:
-      count: varint
+
    # MC: ServerboundChatCommandPacket
    packet_chat_command:
       command: string
+
    # MC: ServerboundChatCommandSignedPacket
    packet_chat_command_signed:
       command: string
@@ -2606,48 +1767,20 @@
             "count": 3
          }
       ]
-   # MC: ServerboundChatPacket
-   packet_chat_message:
-      message: string
-      timestamp: i64
-      salt: i64
-      signature?: [
-         "buffer",
-         {
-            "count": 256
-         }
-      ]
-      offset: varint
-      acknowledged: [
-         "buffer",
-         {
-            "count": 3
-         }
-      ]
+
    # MC: ServerboundChatSessionUpdatePacket
    packet_chat_session_update:
       sessionUUID: UUID
       expireTime: i64
       publicKey: ByteArray
       signature: ByteArray
-   # MC: ServerboundChunkBatchReceivedPacket
-   packet_chunk_batch_received:
-      chunksPerTick: f32
-   # MC: ServerboundClientCommandPacket
-   packet_client_command:
-      actionId: varint
+
    ## (Settings is common) ##
    # MC: ServerboundCommandSuggestionPacket
    packet_tab_complete:
       transactionId: varint
       text: string
-   # MC: ServerboundConfigurationAcknowledgedPacket
-   packet_configuration_acknowledged:
-      # Empty
-   # MC: ServerboundContainerButtonClickPacket
-   packet_enchant_item:
-      windowId: i8
-      enchantment: i8
+
    # MC: ServerboundContainerClickPacket
    packet_window_click:
       windowId: ContainerID
@@ -2659,227 +1792,19 @@
          location: i16
          item: Slot
       cursorItem: Slot
+
    # MC: ServerboundContainerClosePacket
    packet_close_window:
       windowId: ContainerID
-   # MC: ServerboundContainerSlotStateChangedPacket
-   packet_set_slot_state:
-      slot_id: varint
-      window_id: varint
-      state: bool
-   # MC: ServerboundCustomPayloadPacket
-   packet_custom_payload:
-      channel: string
-      data: restBuffer
+
    # MC: ServerboundDebugSampleSubscriptionPacket
    packet_debug_sample_subscription:
       type: varint
-   # MC: ServerboundEditBookPacket
-   packet_edit_book:
-      hand: varint
-      pages: string[]varint
-      title?: string
-   # MC: ServerboundEntityTagQuery
-   packet_query_entity_nbt:
-      transactionId: varint
-      entityId: varint
-   # MC: ServerboundInteractPacket
-   packet_use_entity:
-      target: varint
-      mouse: varint
-      x: mouse ?
-         if 2: f32
-         default: void
-      y: mouse ?
-         if 2: f32
-         default: void
-      z: mouse ?
-         if 2: f32
-         default: void
-      hand: mouse ?
-         if 0: varint
-         if 2: varint
-         default: void
-      sneaking: bool
-   # MC: ServerboundJigsawGeneratePacket
-   packet_generate_structure:
-      location: position
-      levels: varint
-      keepJigsaws: bool
-   # MC: ServerboundKeepAlivePacket
-   packet_keep_alive:
-      keepAliveId: i64
-   # MC: ServerboundLockDifficultyPacket
-   packet_lock_difficulty:
-      locked: bool
-   # MC: ServerboundMovePlayerPacket.Pos
-   packet_position:
-      x: f64
-      y: f64
-      z: f64
-      onGround: bool
-   # MC: ServerboundMovePlayerPacket.PosRot
-   packet_position_look:
-      x: f64
-      y: f64
-      z: f64
-      yaw: f32
-      pitch: f32
-      onGround: bool
-   # MC: ServerboundMovePlayerPacket.Rot
-   packet_look:
-      yaw: f32
-      pitch: f32
-      onGround: bool
-   # MC: ServerboundMovePlayerPacket.StatusOnly
-   packet_flying:
-      onGround: bool
-   # MC: ServerboundMoveVehiclePacket
-   packet_vehicle_move:
-      x: f64
-      y: f64
-      z: f64
-      yaw: f32
-      pitch: f32
-   # MC: ServerboundPaddleBoatPacket
-   packet_steer_boat:
-      leftPaddle: bool
-      rightPaddle: bool
-   # MC: ServerboundPickItemPacket
-   packet_pick_item:
-      slot: varint
-   # MC: ServerboundPingRequestPacket
-   packet_ping_request:
-      id: i64
-   # MC: ServerboundPlaceRecipePacket
-   packet_craft_recipe_request:
-      windowId: i8
-      recipe: string
-      makeAll: bool
-   # MC: ServerboundPlayerAbilitiesPacket
-   packet_abilities:
-      flags: i8
-   # MC: ServerboundPlayerActionPacket
-   packet_block_dig:
-      status: varint
-      location: position
-      face: i8
-      sequence: varint
-   # MC: ServerboundPlayerCommandPacket
-   packet_entity_action:
-      entityId: varint
-      actionId: varint
-      jumpBoost: varint
-   # MC: ServerboundPlayerInputPacket
-   packet_steer_vehicle:
-      sideways: f32
-      forward: f32
-      jump: u8
-   # MC: ServerboundPongPacket
-   packet_pong:
-      id: i32
-   # MC: ServerboundRecipeBookChangeSettingsPacket
-   packet_recipe_book:
-      bookId: varint
-      bookOpen: bool
-      filterActive: bool
-   # MC: ServerboundRecipeBookSeenRecipePacket
-   packet_displayed_recipe:
-      recipeId: string
-   # MC: ServerboundRenameItemPacket
-   packet_name_item:
-      name: string
-   # MC: ServerboundResourcePackPacket
-   packet_resource_pack_receive:
-      uuid: UUID
-      result: varint
-   # MC: ServerboundSeenAdvancementsPacket
-   packet_advancement_tab:
-      action: varint
-      tabId: action ?
-         if 0: string
-         if 1: void
-   # MC: ServerboundSelectTradePacket
-   packet_select_trade:
-      slot: varint
-   # MC: ServerboundSetBeaconPacket
-   packet_set_beacon_effect:
-      primary_effect?: varint
-      secondary_effect?: varint
-   # MC: ServerboundSetCarriedItemPacket
-   packet_held_item_slot:
-      slotId: i16
-   # MC: ServerboundSetCommandBlockPacket
-   packet_update_command_block:
-      location: position
-      command: string
-      mode: varint
-      flags: u8
-   # MC: ServerboundSetCommandMinecartPacket
-   packet_update_command_block_minecart:
-      entityId: varint
-      command: string
-      track_output: bool
+
    # MC: ServerboundSetCreativeModeSlotPacket
    packet_set_creative_slot:
       slot: i16
       item: Slot
-   # MC: ServerboundSetJigsawBlockPacket
-   packet_update_jigsaw_block:
-      location: position
-      name: string
-      target: string
-      pool: string
-      finalState: string
-      jointType: string
-      selection_priority: varint
-      placement_priority: varint
-   # MC: ServerboundSetStructureBlockPacket
-   packet_update_structure_block:
-      location: position
-      action: varint
-      mode: varint
-      name: string
-      offset_x: i8
-      offset_y: i8
-      offset_z: i8
-      size_x: i8
-      size_y: i8
-      size_z: i8
-      mirror: varint
-      rotation: varint
-      metadata: string
-      integrity: f32
-      seed: varint
-      flags: u8
-   # MC: ServerboundSignUpdatePacket
-   packet_update_sign:
-      location: position
-      isFrontText: bool
-      text1: string
-      text2: string
-      text3: string
-      text4: string
-   # MC: ServerboundSwingPacket
-   packet_arm_animation:
-      hand: varint
-   # MC: ServerboundTeleportToEntityPacket
-   packet_spectate:
-      target: UUID
-   # MC: ServerboundUseItemOnPacket
-   packet_block_place:
-      hand: varint
-      location: position
-      direction: varint
-      cursorX: f32
-      cursorY: f32
-      cursorZ: f32
-      insideBlock: bool
-      sequence: varint
-   # MC: ServerboundUseItemPacket
-   packet_use_item:
-      hand: varint
-      sequence: varint
 
    packet:
       name: varint =>

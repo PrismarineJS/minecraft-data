@@ -1,126 +1,22 @@
 !version: 1.19.3
+!base: 1.19.2
 
 ^types:
-   varint: native
    varlong: native
-   optvarint: varint
-   pstring: native
-   buffer: native
-   u8: native
-   u16: native
-   u32: native
-   u64: native
-   i8: native
-   i16: native
-   i32: native
-   i64: native
-   bool: native
-   f32: native
-   f64: native
-   UUID: native
-   option: native
-   entityMetadataLoop: native
-   topBitSetTerminatedArray: native
-   bitfield: native
-   bitflags: native
-   container: native
-   switch: native
-   void: native
-   array: native
-   restBuffer: native
-   nbt: native
-   optionalNbt: native
+
    registryEntryHolder: native
+
    registryEntryHolderSet: native
-   ByteArray: ["buffer", { "countType": "varint" }]
-   string: ["pstring", { "countType": "varint" }]
-   vec3i16:
-      x: i16
-      y: i16
-      z: i16
-   slot:   
-      present: bool
-      _: present ?
-         if false: void
-         if true:         
-            itemId: varint
-            itemCount: i8
-            nbtData: optionalNbt
+
    ItemSoundEvent:
       soundName: string
       fixedRange?: f32
+
    ItemSoundHolder: ["registryEntryHolder", {
       "baseName": "soundId",
       "otherwise": { name: "data", type: "ItemSoundEvent" }
    }]
-   particle:   
-      particleId: varint
-      data: [
-         "particleData",
-         {
-            "compareTo": "particleId"
-         }
-      ]
-   particleData: $compareTo ?
-      if 2:      
-         blockState: varint
-      if 3:      
-         blockState: varint
-      if 14:      
-         red: f32
-         green: f32
-         blue: f32
-         scale: f32
-      if 15:      
-         fromRed: f32
-         fromGreen: f32
-         fromBlue: f32
-         scale: f32
-         toRed: f32
-         toGreen: f32
-         toBlue: f32
-      if 25:      
-         blockState: varint
-      if 30:      
-         rotation: f32
-      if 39:      
-         item: slot
-      if 40:      
-         positionType: string
-         entityId: positionType ?
-            if minecraft:entity: varint
-            default: void
-         entityEyeHeight: positionType ?
-            if minecraft:entity: varint
-            default: void
-         destination: positionType ?
-            if minecraft:block: position
-            if minecraft:entity: varint
-         ticks: varint
-      if 92:      
-         delayInTicksBeforeShown: varint
-      default: void
-   ingredient: slot[]varint
-   position: [
-      "bitfield",
-      [
-         {
-            "name": "x",
-            "size": 26,
-            "signed": true
-         },
-         {
-            "name": "z",
-            "size": 26,
-            "signed": true
-         },
-         {
-            "name": "y",
-            "size": 12,
-            "signed": true
-         }
-      ]
-   ]
+
    soundSource: varint =>
       0: master
       1: music
@@ -132,6 +28,7 @@
       7: player
       8: ambient
       9: voice
+
    previousMessages: []varint
       id: varint
       signature: id ?
@@ -142,6 +39,7 @@
             }
          ]
          default: void
+
    entityMetadataItem: $compareTo ?
       if 0: i8
       if 1: varint
@@ -155,7 +53,7 @@
       ]
       if 7: slot
       if 8: bool
-      if 9:      
+      if 9:
          pitch: f32
          yaw: f32
          roll: f32
@@ -172,7 +70,7 @@
       if 14: varint
       if 15: nbt
       if 16: particle
-      if 17:      
+      if 17:
          villagerType: varint
          villagerProfession: varint
          level: varint
@@ -185,76 +83,21 @@
          "string"
       ]
       if 23: varint
-   entityMetadata: [
-      "entityMetadataLoop",
-      {
-         "endVal": 255,
-         "type": [
-            "container",
-            [
-               {
-                  "anon": true,
-                  "type": [
-                     "container",
-                     [
-                        {
-                           "name": "key",
-                           "type": "u8"
-                        },
-                        {
-                           "name": "type",
-                           "type": "varint"
-                        }
-                     ]
-                  ]
-               },
-               {
-                  "name": "value",
-                  "type": [
-                     "entityMetadataItem",
-                     {
-                        "compareTo": "type"
-                     }
-                  ]
-               }
-            ]
-         ]
-      }
-   ]
-   minecraft_simple_recipe_format:   
+
+   minecraft_simple_recipe_format:
       category: varint
-   minecraft_smelting_format:   
+
+   minecraft_smelting_format:
       group: string
       category: varint
       ingredient: ingredient
       result: slot
       experience: f32
       cookTime: varint
-   tags: []varint
-      tagName: string
-      entries: varint[]varint
-   chunkBlockEntity:   
-      _: [
-         "bitfield",
-         [
-            {
-               "name": "x",
-               "size": 4,
-               "signed": false
-            },
-            {
-               "name": "z",
-               "size": 4,
-               "signed": false
-            }
-         ]
-      ]
-      y: i16
-      type: varint
-      nbtData: optionalNbt
-   chat_session?:   
+
+   chat_session?:
       uuid: UUID
-      publicKey:      
+      publicKey:
          expireTime: i64
          keyBytes: [
             "buffer",
@@ -268,13 +111,15 @@
                "countType": "varint"
             }
          ]
-   game_profile:   
+
+   game_profile:
       name: string
       properties: []varint
          name: string
          value: string
          signature?: string
-   command_node:   
+
+   command_node:
       flags: [
          "bitfield",
          [
@@ -311,9 +156,9 @@
          default: void
       extraNodeData: flags/command_node_type ?
          if 0: void
-         if 1:         
+         if 1:
             name: string
-         if 2:         
+         if 2:
             name: string
             parser: varint =>
                0: brigadier:bool
@@ -366,7 +211,7 @@
                47: minecraft:uuid
             properties: parser ?
                if brigadier:bool: void
-               if brigadier:float:               
+               if brigadier:float:
                   flags: [
                      "bitfield",
                      [
@@ -393,7 +238,7 @@
                   max: flags/max_present ?
                      if 1: f32
                      default: void
-               if brigadier:double:               
+               if brigadier:double:
                   flags: [
                      "bitfield",
                      [
@@ -420,7 +265,7 @@
                   max: flags/max_present ?
                      if 1: f64
                      default: void
-               if brigadier:integer:               
+               if brigadier:integer:
                   flags: [
                      "bitfield",
                      [
@@ -447,7 +292,7 @@
                   max: flags/max_present ?
                      if 1: i32
                      default: void
-               if brigadier:long:               
+               if brigadier:long:
                   flags: [
                      "bitfield",
                      [
@@ -545,13 +390,13 @@
                if minecraft:dimension: void
                if minecraft:gamemode: void
                if minecraft:time: void
-               if minecraft:resource_or_tag:               
+               if minecraft:resource_or_tag:
                   registry: string
-               if minecraft:resource_or_tag_key:               
+               if minecraft:resource_or_tag_key:
                   registry: string
-               if minecraft:resource:               
+               if minecraft:resource:
                   registry: string
-               if minecraft:resource_key:               
+               if minecraft:resource_key:
                   registry: string
                if minecraft:template_mirror: void
                if minecraft:template_rotation: void
@@ -560,102 +405,12 @@
                if 1: string
                default: void
 
-^handshaking.toClient.types:
-   packet:   
-      name: varint =>
-      params: ["switch",{"compareTo":"name","fields":{}}]
-
-^handshaking.toServer.types:
-   packet_set_protocol:   
-      protocolVersion: varint
-      serverHost: string
-      serverPort: u16
-      nextState: varint
-   packet_legacy_server_list_ping:   
-      payload: u8
-   packet:   
-      name: varint =>
-         0x00: set_protocol
-         0xfe: legacy_server_list_ping
-      params: name ?
-         if set_protocol: packet_set_protocol
-         if legacy_server_list_ping: packet_legacy_server_list_ping
-
-^status.toClient.types:
-   packet_server_info:   
-      response: string
-   packet_ping:   
-      time: i64
-   packet:   
-      name: varint =>
-         0x00: server_info
-         0x01: ping
-      params: name ?
-         if server_info: packet_server_info
-         if ping: packet_ping
-
-^status.toServer.types:
-   packet_ping_start:   
-      # Empty
-   packet_ping:   
-      time: i64
-   packet:   
-      name: varint =>
-         0x00: ping_start
-         0x01: ping
-      params: name ?
-         if ping_start: packet_ping_start
-         if ping: packet_ping
-
-^login.toClient.types:
-   packet_disconnect:   
-      reason: string
-   packet_encryption_begin:   
-      serverId: string
-      publicKey: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-      verifyToken: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-   packet_success:   
-      uuid: UUID
-      username: string
-      properties: []varint
-         name: string
-         value: string
-         signature?: string
-   packet_compress:   
-      threshold: varint
-   packet_login_plugin_request:   
-      messageId: varint
-      channel: string
-      data: restBuffer
-   packet:   
-      name: varint =>
-         0x00: disconnect
-         0x01: encryption_begin
-         0x02: success
-         0x03: compress
-         0x04: login_plugin_request
-      params: name ?
-         if disconnect: packet_disconnect
-         if encryption_begin: packet_encryption_begin
-         if success: packet_success
-         if compress: packet_compress
-         if login_plugin_request: packet_login_plugin_request
-
 ^login.toServer.types:
-   packet_login_start:   
+   packet_login_start:
       username: string
       playerUUID?: UUID
-   packet_encryption_begin:   
+
+   packet_encryption_begin:
       sharedSecret: [
          "buffer",
          {
@@ -668,226 +423,17 @@
             "countType": "varint"
          }
       ]
-   packet_login_plugin_response:   
-      messageId: varint
-      data?: restBuffer
-   packet:   
-      name: varint =>
-         0x00: login_start
-         0x01: encryption_begin
-         0x02: login_plugin_response
-      params: name ?
-         if login_start: packet_login_start
-         if encryption_begin: packet_encryption_begin
-         if login_plugin_response: packet_login_plugin_response
 
 ^play.toClient.types:
-   packet_spawn_entity:   
-      entityId: varint
-      objectUUID: UUID
-      type: varint
-      x: f64
-      y: f64
-      z: f64
-      pitch: i8
-      yaw: i8
-      headPitch: i8
-      objectData: varint
-      velocity: vec3i16
-   packet_spawn_entity_experience_orb:   
-      entityId: varint
-      x: f64
-      y: f64
-      z: f64
-      count: i16
-   packet_named_entity_spawn:   
-      entityId: varint
-      playerUUID: UUID
-      x: f64
-      y: f64
-      z: f64
-      yaw: i8
-      pitch: i8
-   packet_animation:   
-      entityId: varint
-      animation: u8
-   packet_statistics:   
-      entries: []varint
-         categoryId: varint
-         statisticId: varint
-         value: varint
-   packet_advancements:   
-      reset: bool
-      advancementMapping: []varint
-         key: string
-         value:         
-            parentId?: string
-            displayData?:            
-               title: string
-               description: string
-               icon: slot
-               frameType: varint
-               flags: [
-                  "bitfield",
-                  [
-                     {
-                        "name": "_unused",
-                        "size": 29,
-                        "signed": false
-                     },
-                     {
-                        "name": "hidden",
-                        "size": 1,
-                        "signed": false
-                     },
-                     {
-                        "name": "show_toast",
-                        "size": 1,
-                        "signed": false
-                     },
-                     {
-                        "name": "has_background_texture",
-                        "size": 1,
-                        "signed": false
-                     }
-                  ]
-               ]
-               backgroundTexture: flags/has_background_texture ?
-                  if 1: string
-                  default: void
-               xCord: f32
-               yCord: f32
-            criteria: []varint
-               key: string
-               value: void
-            requirements: []varint
-               _: string[]varint
-      identifiers: string[]varint
-      progressMapping: []varint
-         key: string
-         value: []varint
-            criterionIdentifier: string
-            criterionProgress?: i64
-   packet_block_break_animation:   
-      entityId: varint
-      location: position
-      destroyStage: i8
-   packet_tile_entity_data:   
-      location: position
-      action: varint
-      nbtData: optionalNbt
-   packet_block_action:   
-      location: position
-      byte1: u8
-      byte2: u8
-      blockId: varint
-   packet_block_change:   
-      location: position
-      type: varint
-   packet_boss_bar:   
-      entityUUID: UUID
-      action: varint
-      title: action ?
-         if 0: string
-         if 3: string
-         default: void
-      health: action ?
-         if 0: f32
-         if 2: f32
-         default: void
-      color: action ?
-         if 0: varint
-         if 4: varint
-         default: void
-      dividers: action ?
-         if 0: varint
-         if 4: varint
-         default: void
-      flags: action ?
-         if 0: u8
-         if 5: u8
-         default: void
-   packet_difficulty:   
-      difficulty: u8
-      difficultyLocked: bool
-   packet_tab_complete:   
-      transactionId: varint
-      start: varint
-      length: varint
-      matches: []varint
-         match: string
-         tooltip?: string
-   packet_declare_commands:   
-      nodes: command_node[]varint
-      rootIndex: varint
-   packet_face_player:   
-      feet_eyes: varint
-      x: f64
-      y: f64
-      z: f64
-      isEntity: bool
-      entityId: isEntity ?
-         if true: varint
-         default: void
-      entity_feet_eyes: isEntity ?
-         if true: string
-         default: void
-   packet_nbt_query_response:   
-      transactionId: varint
-      nbt: optionalNbt
-   packet_multi_block_change:   
-      chunkCoordinates: [
-         "bitfield",
-         [
-            {
-               "name": "x",
-               "size": 22,
-               "signed": true
-            },
-            {
-               "name": "z",
-               "size": 22,
-               "signed": true
-            },
-            {
-               "name": "y",
-               "size": 20,
-               "signed": true
-            }
-         ]
-      ]
-      suppressLightUpdates: bool
-      records: varint[]varint
-   packet_close_window:   
-      windowId: u8
-   packet_open_window:   
-      windowId: varint
-      inventoryType: varint
-      windowTitle: string
-   packet_window_items:   
-      windowId: u8
-      stateId: varint
-      items: slot[]varint
-      carriedItem: slot
-   packet_craft_progress_bar:   
-      windowId: u8
-      property: i16
-      value: i16
-   packet_set_slot:   
-      windowId: i8
-      stateId: varint
-      slot: i16
-      item: slot
-   packet_set_cooldown:   
-      itemID: varint
-      cooldownTicks: varint
-   packet_chat_suggestions:   
-      action: varint
-      entries: string[]varint
-   packet_custom_payload:   
-      channel: string
-      data: restBuffer
-   packet_hide_message:   
+   packet_named_sound_effect: !delete
+
+   packet_chat_preview: !delete
+
+   packet_should_display_chat_preview: !delete
+
+   packet_message_header: !delete
+
+   packet_hide_message:
       id: varint
       signature: id ?
          if 0: [
@@ -897,17 +443,14 @@
             }
          ]
          default: void
-   packet_kick_disconnect:   
-      reason: string
-   packet_profileless_chat:   
+
+   packet_profileless_chat:
       message: string
       type: varint
       name: string
       target?: string
-   packet_entity_status:   
-      entityId: i32
-      entityStatus: i8
-   packet_explosion:   
+
+   packet_explosion:
       x: f64
       y: f64
       z: f64
@@ -919,174 +462,8 @@
       playerMotionX: f32
       playerMotionY: f32
       playerMotionZ: f32
-   packet_unload_chunk:   
-      chunkX: i32
-      chunkZ: i32
-   packet_game_state_change:   
-      reason: u8
-      gameMode: f32
-   packet_open_horse_window:   
-      windowId: u8
-      nbSlots: varint
-      entityId: i32
-   packet_keep_alive:   
-      keepAliveId: i64
-   packet_map_chunk:   
-      x: i32
-      z: i32
-      heightmaps: nbt
-      chunkData: [
-         "buffer",
-         {
-            "countType": "varint"
-         }
-      ]
-      blockEntities: chunkBlockEntity[]varint
-      trustEdges: bool
-      skyLightMask: i64[]varint
-      blockLightMask: i64[]varint
-      emptySkyLightMask: i64[]varint
-      emptyBlockLightMask: i64[]varint
-      skyLight: []varint
-         _: u8[]varint
-      blockLight: []varint
-         _: u8[]varint
-   packet_world_event:   
-      effectId: i32
-      location: position
-      data: i32
-      global: bool
-   packet_world_particles:   
-      particleId: varint
-      longDistance: bool
-      x: f64
-      y: f64
-      z: f64
-      offsetX: f32
-      offsetY: f32
-      offsetZ: f32
-      particleData: f32
-      particles: i32
-      data: [
-         "particleData",
-         {
-            "compareTo": "particleId"
-         }
-      ]
-   packet_update_light:   
-      chunkX: varint
-      chunkZ: varint
-      trustEdges: bool
-      skyLightMask: i64[]varint
-      blockLightMask: i64[]varint
-      emptySkyLightMask: i64[]varint
-      emptyBlockLightMask: i64[]varint
-      skyLight: []varint
-         _: u8[]varint
-      blockLight: []varint
-         _: u8[]varint
-   packet_login:   
-      entityId: i32
-      isHardcore: bool
-      gameMode: u8
-      previousGameMode: i8
-      worldNames: string[]varint
-      dimensionCodec: nbt
-      worldType: string
-      worldName: string
-      hashedSeed: i64
-      maxPlayers: varint
-      viewDistance: varint
-      simulationDistance: varint
-      reducedDebugInfo: bool
-      enableRespawnScreen: bool
-      isDebug: bool
-      isFlat: bool
-      death?:      
-         dimensionName: string
-         location: position
-   packet_map:   
-      itemDamage: varint
-      scale: i8
-      locked: bool
-      icons?: []varint
-         type: varint
-         x: i8
-         z: i8
-         direction: u8
-         displayName?: string
-      columns: u8
-      rows: columns ?
-         if 0: void
-         default: u8
-      x: columns ?
-         if 0: void
-         default: u8
-      y: columns ?
-         if 0: void
-         default: u8
-      data: columns ?
-         if 0: void
-         default: [
-            "buffer",
-            {
-               "countType": "varint"
-            }
-         ]
-   packet_trade_list:   
-      windowId: varint
-      trades: []varint
-         inputItem1: slot
-         outputItem: slot
-         inputItem2: slot
-         tradeDisabled: bool
-         nbTradeUses: i32
-         maximumNbTradeUses: i32
-         xp: i32
-         specialPrice: i32
-         priceMultiplier: f32
-         demand: i32
-      villagerLevel: varint
-      experience: varint
-      isRegularVillager: bool
-      canRestock: bool
-   packet_rel_entity_move:   
-      entityId: varint
-      dX: i16
-      dY: i16
-      dZ: i16
-      onGround: bool
-   packet_entity_move_look:   
-      entityId: varint
-      dX: i16
-      dY: i16
-      dZ: i16
-      yaw: i8
-      pitch: i8
-      onGround: bool
-   packet_entity_look:   
-      entityId: varint
-      yaw: i8
-      pitch: i8
-      onGround: bool
-   packet_vehicle_move:   
-      x: f64
-      y: f64
-      z: f64
-      yaw: f32
-      pitch: f32
-   packet_open_book:   
-      hand: varint
-   packet_open_sign_entity:   
-      location: position
-   packet_craft_recipe_response:   
-      windowId: i8
-      recipe: string
-   packet_abilities:   
-      flags: i8
-      flyingSpeed: f32
-      walkingSpeed: f32
-   packet_player_chat:   
+
+   packet_player_chat:
       senderUuid: UUID
       index: varint
       signature?: [
@@ -1107,18 +484,11 @@
       type: varint
       networkName: string
       networkTargetName?: string
-   packet_end_combat_event:   
-      duration: varint
-      entityId: i32
-   packet_enter_combat_event:   
-      # Empty
-   packet_death_combat_event:   
-      playerId: varint
-      entityId: i32
-      message: string
-   packet_player_remove:   
+
+   packet_player_remove:
       players: UUID[]varint
-   packet_player_info:   
+
+   packet_player_info:
       ## ClientboundPlayerInfoUpdatePacket.java#L160
       action: ["bitflags", {
          "type": "u8",
@@ -1151,170 +521,11 @@
          displayName: ../action/update_display_name ?
             if true: ["option", "string"]
             default: void
-   packet_position:   
-      x: f64
-      y: f64
-      z: f64
-      yaw: f32
-      pitch: f32
-      flags: i8
-      teleportId: varint
-      dismountVehicle: bool
-   packet_unlock_recipes:   
-      action: varint
-      craftingBookOpen: bool
-      filteringCraftable: bool
-      smeltingBookOpen: bool
-      filteringSmeltable: bool
-      blastFurnaceOpen: bool
-      filteringBlastFurnace: bool
-      smokerBookOpen: bool
-      filteringSmoker: bool
-      recipes1: string[]varint
-      recipes2: action ?
-         if 0: string[]varint
-         default: void
-   packet_entity_destroy:   
-      entityIds: varint[]varint
-   packet_remove_entity_effect:   
-      entityId: varint
-      effectId: varint
-   packet_resource_pack_send:   
-      url: string
-      hash: string
-      forced: bool
-      promptMessage?: string
-   packet_respawn:   
-      dimension: string
-      worldName: string
-      hashedSeed: i64
-      gamemode: i8
-      previousGamemode: u8
-      isDebug: bool
-      isFlat: bool
-      copyMetadata: bool
-      death?:      
-         dimensionName: string
-         location: position
-   packet_entity_head_rotation:   
-      entityId: varint
-      headYaw: i8
-   packet_camera:   
-      cameraId: varint
-   packet_held_item_slot:   
-      slot: i8
-   packet_update_view_position:   
-      chunkX: varint
-      chunkZ: varint
-   packet_update_view_distance:   
-      viewDistance: varint
-   packet_scoreboard_display_objective:   
-      position: i8
-      name: string
-   packet_entity_metadata:   
-      entityId: varint
-      metadata: entityMetadata
-   packet_attach_entity:   
-      entityId: i32
-      vehicleId: i32
-   packet_entity_velocity:   
-      entityId: varint
-      velocity: vec3i16
-   packet_entity_equipment:   
-      entityId: varint
-      equipments: [
-         "topBitSetTerminatedArray",
-         {
-            "type": [
-               "container",
-               [
-                  {
-                     "name": "slot",
-                     "type": "i8"
-                  },
-                  {
-                     "name": "item",
-                     "type": "slot"
-                  }
-               ]
-            ]
-         }
-      ]
-   packet_experience:   
-      experienceBar: f32
-      level: varint
-      totalExperience: varint
-   packet_update_health:   
-      health: f32
-      food: varint
-      foodSaturation: f32
-   packet_scoreboard_objective:   
-      name: string
-      action: i8
-      displayText: action ?
-         if 0: string
-         if 2: string
-         default: void
-      type: action ?
-         if 0: varint
-         if 2: varint
-         default: void
-   packet_set_passengers:   
-      entityId: varint
-      passengers: varint[]varint
-   packet_teams:   
-      team: string
-      mode: i8
-      name: mode ?
-         if 0: string
-         if 2: string
-         default: void
-      friendlyFire: mode ?
-         if 0: i8
-         if 2: i8
-         default: void
-      nameTagVisibility: mode ?
-         if 0: string
-         if 2: string
-         default: void
-      collisionRule: mode ?
-         if 0: string
-         if 2: string
-         default: void
-      formatting: mode ?
-         if 0: varint
-         if 2: varint
-         default: void
-      prefix: mode ?
-         if 0: string
-         if 2: string
-         default: void
-      suffix: mode ?
-         if 0: string
-         if 2: string
-         default: void
-      players: mode ?
-         if 0: string[]varint
-         if 3: string[]varint
-         if 4: string[]varint
-         default: void
-   packet_scoreboard_score:   
-      itemName: string
-      action: varint
-      scoreName: string
-      value: action ?
-         if 1: void
-         default: varint
-   packet_spawn_position:   
-      location: position
-      angle: f32
-   packet_update_time:   
-      age: i64
-      time: i64
-   packet_entity_sound_effect:   
+
+   packet_entity_sound_effect:
       soundId: varint
       soundEvent: soundId ?
-         if 0:         
+         if 0:
             resource: string
             range?: f32
          default: void
@@ -1323,17 +534,8 @@
       volume: f32
       pitch: f32
       seed: i64
-   packet_stop_sound:   
-      flags: i8
-      source: flags ?
-         if 1: varint
-         if 3: varint
-         default: void
-      sound: flags ?
-         if 2: string
-         if 3: string
-         default: void
-   packet_sound_effect:   
+
+   packet_sound_effect:
       sound: ItemSoundHolder
       soundCategory: soundSource
       x: i32
@@ -1342,59 +544,26 @@
       volume: f32
       pitch: f32
       seed: i64
-   packet_system_chat:   
-      content: string
-      isActionBar: bool
-   packet_playerlist_header:   
-      header: string
-      footer: string
-   packet_collect:   
-      collectedEntityId: varint
-      collectorEntityId: varint
-      pickupItemCount: varint
-   packet_entity_teleport:   
-      entityId: varint
-      x: f64
-      y: f64
-      z: f64
-      yaw: i8
-      pitch: i8
-      onGround: bool
-   packet_entity_update_attributes:   
-      entityId: varint
-      properties: []varint
-         name: string
-         value: f64
-         modifiers: []varint
-            uuid: UUID
-            amount: f64
-            operation: i8
-   packet_feature_flags:   
+
+   packet_feature_flags:
       features: string[]varint
-   packet_entity_effect:   
-      entityId: varint
-      effectId: varint
-      amplifier: i8
-      duration: varint
-      hideParticles: i8
-      factorCodec?: nbt
-   packet_select_advancement_tab:   
-      id?: string
-   packet_server_data:   
+
+   packet_server_data:
       motd?: string
       icon?: string
       enforcesSecureChat: bool
-   packet_declare_recipes:   
+
+   packet_declare_recipes:
       recipes: []varint
          type: string
          recipeId: string
          data: type ?
-            if minecraft:crafting_shapeless:            
+            if minecraft:crafting_shapeless:
                group: string
                category: varint
                ingredients: ingredient[]varint
                result: slot
-            if minecraft:crafting_shaped:            
+            if minecraft:crafting_shaped:
                width: varint
                height: varint
                group: string
@@ -1420,59 +589,16 @@
             if minecraft:blasting: minecraft_smelting_format
             if minecraft:smoking: minecraft_smelting_format
             if minecraft:campfire_cooking: minecraft_smelting_format
-            if minecraft:stonecutting:            
+            if minecraft:stonecutting:
                group: string
                ingredient: ingredient
                result: slot
-            if minecraft:smithing:            
+            if minecraft:smithing:
                base: ingredient
                addition: ingredient
                result: slot
-   packet_tags:   
-      tags: []varint
-         tagType: string
-         tags: tags
-   packet_acknowledge_player_digging:   
-      sequenceId: varint
-   packet_clear_titles:   
-      reset: bool
-   packet_initialize_world_border:   
-      x: f64
-      z: f64
-      oldDiameter: f64
-      newDiameter: f64
-      speed: varint
-      portalTeleportBoundary: varint
-      warningBlocks: varint
-      warningTime: varint
-   packet_action_bar:   
-      text: string
-   packet_world_border_center:   
-      x: f64
-      z: f64
-   packet_world_border_lerp_size:   
-      oldDiameter: f64
-      newDiameter: f64
-      speed: varint
-   packet_world_border_size:   
-      diameter: f64
-   packet_world_border_warning_delay:   
-      warningTime: varint
-   packet_world_border_warning_reach:   
-      warningBlocks: varint
-   packet_ping:   
-      id: i32
-   packet_set_title_subtitle:   
-      text: string
-   packet_set_title_text:   
-      text: string
-   packet_set_title_time:   
-      fadeIn: i32
-      stay: i32
-      fadeOut: i32
-   packet_simulation_distance:   
-      distance: varint
-   packet:   
+
+   packet:
       name: varint =>
          0x00: spawn_entity
          0x01: spawn_entity_experience_orb
@@ -1691,12 +817,9 @@
          if tags: packet_tags
 
 ^play.toServer.types:
-   packet_teleport_confirm:   
-      teleportId: varint
-   packet_query_block_nbt:   
-      transactionId: varint
-      location: position
-   packet_chat_command:   
+   packet_chat_preview: !delete
+
+   packet_chat_command:
       command: string
       timestamp: i64
       salt: i64
@@ -1715,7 +838,8 @@
             "count": 3
          }
       ]
-   packet_chat_message:   
+
+   packet_chat_message:
       message: string
       timestamp: i64
       salt: i64
@@ -1732,205 +856,11 @@
             "count": 3
          }
       ]
-   packet_set_difficulty:   
-      newDifficulty: u8
-   packet_message_acknowledgement:   
+
+   packet_message_acknowledgement:
       count: varint
-   packet_edit_book:   
-      hand: varint
-      pages: string[]varint
-      title?: string
-   packet_query_entity_nbt:   
-      transactionId: varint
-      entityId: varint
-   packet_pick_item:   
-      slot: varint
-   packet_name_item:   
-      name: string
-   packet_select_trade:   
-      slot: varint
-   packet_set_beacon_effect:   
-      primary_effect?: varint
-      secondary_effect?: varint
-   packet_update_command_block:   
-      location: position
-      command: string
-      mode: varint
-      flags: u8
-   packet_update_command_block_minecart:   
-      entityId: varint
-      command: string
-      track_output: bool
-   packet_update_structure_block:   
-      location: position
-      action: varint
-      mode: varint
-      name: string
-      offset_x: i8
-      offset_y: i8
-      offset_z: i8
-      size_x: i8
-      size_y: i8
-      size_z: i8
-      mirror: varint
-      rotation: varint
-      metadata: string
-      integrity: f32
-      seed: varint
-      flags: u8
-   packet_tab_complete:   
-      transactionId: varint
-      text: string
-   packet_client_command:   
-      actionId: varint
-   packet_settings:   
-      locale: string
-      viewDistance: i8
-      chatFlags: varint
-      chatColors: bool
-      skinParts: u8
-      mainHand: varint
-      enableTextFiltering: bool
-      enableServerListing: bool
-   packet_enchant_item:   
-      windowId: i8
-      enchantment: i8
-   packet_window_click:   
-      windowId: u8
-      stateId: varint
-      slot: i16
-      mouseButton: i8
-      mode: varint
-      changedSlots: []varint
-         location: i16
-         item: slot
-      cursorItem: slot
-   packet_close_window:   
-      windowId: u8
-   packet_custom_payload:   
-      channel: string
-      data: restBuffer
-   packet_use_entity:   
-      target: varint
-      mouse: varint
-      x: mouse ?
-         if 2: f32
-         default: void
-      y: mouse ?
-         if 2: f32
-         default: void
-      z: mouse ?
-         if 2: f32
-         default: void
-      hand: mouse ?
-         if 0: varint
-         if 2: varint
-         default: void
-      sneaking: bool
-   packet_generate_structure:   
-      location: position
-      levels: varint
-      keepJigsaws: bool
-   packet_keep_alive:   
-      keepAliveId: i64
-   packet_lock_difficulty:   
-      locked: bool
-   packet_position:   
-      x: f64
-      y: f64
-      z: f64
-      onGround: bool
-   packet_position_look:   
-      x: f64
-      y: f64
-      z: f64
-      yaw: f32
-      pitch: f32
-      onGround: bool
-   packet_look:   
-      yaw: f32
-      pitch: f32
-      onGround: bool
-   packet_flying:   
-      onGround: bool
-   packet_vehicle_move:   
-      x: f64
-      y: f64
-      z: f64
-      yaw: f32
-      pitch: f32
-   packet_steer_boat:   
-      leftPaddle: bool
-      rightPaddle: bool
-   packet_craft_recipe_request:   
-      windowId: i8
-      recipe: string
-      makeAll: bool
-   packet_abilities:   
-      flags: i8
-   packet_block_dig:   
-      status: varint
-      location: position
-      face: i8
-      sequence: varint
-   packet_entity_action:   
-      entityId: varint
-      actionId: varint
-      jumpBoost: varint
-   packet_steer_vehicle:   
-      sideways: f32
-      forward: f32
-      jump: u8
-   packet_displayed_recipe:   
-      recipeId: string
-   packet_recipe_book:   
-      bookId: varint
-      bookOpen: bool
-      filterActive: bool
-   packet_resource_pack_receive:   
-      result: varint
-   packet_held_item_slot:   
-      slotId: i16
-   packet_set_creative_slot:   
-      slot: i16
-      item: slot
-   packet_update_jigsaw_block:   
-      location: position
-      name: string
-      target: string
-      pool: string
-      finalState: string
-      jointType: string
-   packet_update_sign:   
-      location: position
-      text1: string
-      text2: string
-      text3: string
-      text4: string
-   packet_arm_animation:   
-      hand: varint
-   packet_spectate:   
-      target: UUID
-   packet_block_place:   
-      hand: varint
-      location: position
-      direction: varint
-      cursorX: f32
-      cursorY: f32
-      cursorZ: f32
-      insideBlock: bool
-      sequence: varint
-   packet_use_item:   
-      hand: varint
-      sequence: varint
-   packet_advancement_tab:   
-      action: varint
-      tabId: action ?
-         if 0: string
-         if 1: void
-   packet_pong:   
-      id: i32
-   packet_chat_session_update:   
+
+   packet_chat_session_update:
       sessionUUID: UUID
       expireTime: i64
       publicKey: [
@@ -1945,7 +875,8 @@
             "countType": "varint"
          }
       ]
-   packet:   
+
+   packet:
       name: varint =>
          0x00: teleport_confirm
          0x01: query_block_nbt

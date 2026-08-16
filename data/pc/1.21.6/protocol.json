@@ -4067,307 +4067,6 @@
       }
     }
   },
-  "configuration": {
-    "toClient": {
-      "types": {
-        "packet": [
-          "container",
-          [
-            {
-              "name": "name",
-              "type": [
-                "mapper",
-                {
-                  "mappings": {
-                    "0x00": "cookie_request",
-                    "0x01": "custom_payload",
-                    "0x02": "disconnect",
-                    "0x03": "finish_configuration",
-                    "0x04": "keep_alive",
-                    "0x05": "ping",
-                    "0x06": "reset_chat",
-                    "0x07": "registry_data",
-                    "0x08": "remove_resource_pack",
-                    "0x09": "add_resource_pack",
-                    "0x0a": "store_cookie",
-                    "0x0b": "transfer",
-                    "0x0c": "feature_flags",
-                    "0x0d": "tags",
-                    "0x0e": "select_known_packs",
-                    "0x0f": "custom_report_details",
-                    "0x10": "server_links",
-                    "0x11": "clear_dialog",
-                    "0x12": "show_dialog"
-                  },
-                  "type": "varint"
-                }
-              ]
-            },
-            {
-              "name": "params",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "name",
-                  "fields": {
-                    "add_resource_pack": "packet_common_add_resource_pack",
-                    "clear_dialog": "packet_common_clear_dialog",
-                    "cookie_request": "packet_common_cookie_request",
-                    "custom_payload": "packet_custom_payload",
-                    "custom_report_details": "packet_common_custom_report_details",
-                    "disconnect": "packet_disconnect",
-                    "feature_flags": "packet_feature_flags",
-                    "finish_configuration": "packet_finish_configuration",
-                    "keep_alive": "packet_keep_alive",
-                    "ping": "packet_ping",
-                    "registry_data": "packet_registry_data",
-                    "remove_resource_pack": "packet_common_remove_resource_pack",
-                    "reset_chat": "packet_reset_chat",
-                    "select_known_packs": "packet_common_select_known_packs",
-                    "server_links": "packet_common_server_links",
-                    "show_dialog": "packet_show_dialog",
-                    "store_cookie": "packet_common_store_cookie",
-                    "tags": "packet_tags",
-                    "transfer": "packet_common_transfer"
-                  }
-                }
-              ]
-            }
-          ]
-        ],
-        "packet_custom_payload": [
-          "container",
-          [
-            {
-              "name": "channel",
-              "type": "string"
-            },
-            {
-              "name": "data",
-              "type": "restBuffer"
-            }
-          ]
-        ],
-        "packet_disconnect": [
-          "container",
-          [
-            {
-              "name": "reason",
-              "type": "anonymousNbt"
-            }
-          ]
-        ],
-        "packet_feature_flags": [
-          "container",
-          [
-            {
-              "name": "features",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": "string"
-                }
-              ]
-            }
-          ]
-        ],
-        "packet_finish_configuration": [
-          "container",
-          []
-        ],
-        "packet_keep_alive": [
-          "container",
-          [
-            {
-              "name": "keepAliveId",
-              "type": "i64"
-            }
-          ]
-        ],
-        "packet_ping": [
-          "container",
-          [
-            {
-              "name": "id",
-              "type": "i32"
-            }
-          ]
-        ],
-        "packet_registry_data": [
-          "container",
-          [
-            {
-              "name": "id",
-              "type": "string"
-            },
-            {
-              "name": "entries",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "key",
-                        "type": "string"
-                      },
-                      {
-                        "name": "value",
-                        "type": [
-                          "option",
-                          "anonymousNbt"
-                        ]
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        ],
-        "packet_reset_chat": [
-          "container",
-          []
-        ],
-        "packet_show_dialog": [
-          "container",
-          [
-            {
-              "name": "dialog",
-              "type": "anonymousNbt"
-            }
-          ]
-        ],
-        "packet_tags": [
-          "container",
-          [
-            {
-              "name": "tags",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "tagType",
-                        "type": "string"
-                      },
-                      {
-                        "name": "tags",
-                        "type": "tags"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        ]
-      }
-    },
-    "toServer": {
-      "types": {
-        "packet": [
-          "container",
-          [
-            {
-              "name": "name",
-              "type": [
-                "mapper",
-                {
-                  "mappings": {
-                    "0x00": "settings",
-                    "0x01": "cookie_response",
-                    "0x02": "custom_payload",
-                    "0x03": "finish_configuration",
-                    "0x04": "keep_alive",
-                    "0x05": "pong",
-                    "0x06": "resource_pack_receive",
-                    "0x07": "select_known_packs",
-                    "0x08": "custom_click_action"
-                  },
-                  "type": "varint"
-                }
-              ]
-            },
-            {
-              "name": "params",
-              "type": [
-                "switch",
-                {
-                  "compareTo": "name",
-                  "fields": {
-                    "cookie_response": "packet_common_cookie_response",
-                    "custom_click_action": "packet_common_custom_click_action",
-                    "custom_payload": "packet_custom_payload",
-                    "finish_configuration": "packet_finish_configuration",
-                    "keep_alive": "packet_keep_alive",
-                    "pong": "packet_pong",
-                    "resource_pack_receive": "packet_resource_pack_receive",
-                    "select_known_packs": "packet_common_select_known_packs",
-                    "settings": "packet_common_settings"
-                  }
-                }
-              ]
-            }
-          ]
-        ],
-        "packet_custom_payload": [
-          "container",
-          [
-            {
-              "name": "channel",
-              "type": "string"
-            },
-            {
-              "name": "data",
-              "type": "restBuffer"
-            }
-          ]
-        ],
-        "packet_finish_configuration": [
-          "container",
-          []
-        ],
-        "packet_keep_alive": [
-          "container",
-          [
-            {
-              "name": "keepAliveId",
-              "type": "i64"
-            }
-          ]
-        ],
-        "packet_pong": [
-          "container",
-          [
-            {
-              "name": "id",
-              "type": "i32"
-            }
-          ]
-        ],
-        "packet_resource_pack_receive": [
-          "container",
-          [
-            {
-              "name": "uuid",
-              "type": "UUID"
-            },
-            {
-              "name": "result",
-              "type": "varint"
-            }
-          ]
-        ]
-      }
-    }
-  },
   "play": {
     "toClient": {
       "types": {
@@ -10243,6 +9942,307 @@
                 "option",
                 "HashedSlot"
               ]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "toClient": {
+      "types": {
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "mappings": {
+                    "0x00": "cookie_request",
+                    "0x01": "custom_payload",
+                    "0x02": "disconnect",
+                    "0x03": "finish_configuration",
+                    "0x04": "keep_alive",
+                    "0x05": "ping",
+                    "0x06": "reset_chat",
+                    "0x07": "registry_data",
+                    "0x08": "remove_resource_pack",
+                    "0x09": "add_resource_pack",
+                    "0x0a": "store_cookie",
+                    "0x0b": "transfer",
+                    "0x0c": "feature_flags",
+                    "0x0d": "tags",
+                    "0x0e": "select_known_packs",
+                    "0x0f": "custom_report_details",
+                    "0x10": "server_links",
+                    "0x11": "clear_dialog",
+                    "0x12": "show_dialog"
+                  },
+                  "type": "varint"
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "add_resource_pack": "packet_common_add_resource_pack",
+                    "clear_dialog": "packet_common_clear_dialog",
+                    "cookie_request": "packet_common_cookie_request",
+                    "custom_payload": "packet_custom_payload",
+                    "custom_report_details": "packet_common_custom_report_details",
+                    "disconnect": "packet_disconnect",
+                    "feature_flags": "packet_feature_flags",
+                    "finish_configuration": "packet_finish_configuration",
+                    "keep_alive": "packet_keep_alive",
+                    "ping": "packet_ping",
+                    "registry_data": "packet_registry_data",
+                    "remove_resource_pack": "packet_common_remove_resource_pack",
+                    "reset_chat": "packet_reset_chat",
+                    "select_known_packs": "packet_common_select_known_packs",
+                    "server_links": "packet_common_server_links",
+                    "show_dialog": "packet_show_dialog",
+                    "store_cookie": "packet_common_store_cookie",
+                    "tags": "packet_tags",
+                    "transfer": "packet_common_transfer"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_custom_payload": [
+          "container",
+          [
+            {
+              "name": "channel",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "type": "restBuffer"
+            }
+          ]
+        ],
+        "packet_disconnect": [
+          "container",
+          [
+            {
+              "name": "reason",
+              "type": "anonymousNbt"
+            }
+          ]
+        ],
+        "packet_feature_flags": [
+          "container",
+          [
+            {
+              "name": "features",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_finish_configuration": [
+          "container",
+          []
+        ],
+        "packet_keep_alive": [
+          "container",
+          [
+            {
+              "name": "keepAliveId",
+              "type": "i64"
+            }
+          ]
+        ],
+        "packet_ping": [
+          "container",
+          [
+            {
+              "name": "id",
+              "type": "i32"
+            }
+          ]
+        ],
+        "packet_registry_data": [
+          "container",
+          [
+            {
+              "name": "id",
+              "type": "string"
+            },
+            {
+              "name": "entries",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "key",
+                        "type": "string"
+                      },
+                      {
+                        "name": "value",
+                        "type": [
+                          "option",
+                          "anonymousNbt"
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_reset_chat": [
+          "container",
+          []
+        ],
+        "packet_show_dialog": [
+          "container",
+          [
+            {
+              "name": "dialog",
+              "type": "anonymousNbt"
+            }
+          ]
+        ],
+        "packet_tags": [
+          "container",
+          [
+            {
+              "name": "tags",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "tagType",
+                        "type": "string"
+                      },
+                      {
+                        "name": "tags",
+                        "type": "tags"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "toServer": {
+      "types": {
+        "packet": [
+          "container",
+          [
+            {
+              "name": "name",
+              "type": [
+                "mapper",
+                {
+                  "mappings": {
+                    "0x00": "settings",
+                    "0x01": "cookie_response",
+                    "0x02": "custom_payload",
+                    "0x03": "finish_configuration",
+                    "0x04": "keep_alive",
+                    "0x05": "pong",
+                    "0x06": "resource_pack_receive",
+                    "0x07": "select_known_packs",
+                    "0x08": "custom_click_action"
+                  },
+                  "type": "varint"
+                }
+              ]
+            },
+            {
+              "name": "params",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "name",
+                  "fields": {
+                    "cookie_response": "packet_common_cookie_response",
+                    "custom_click_action": "packet_common_custom_click_action",
+                    "custom_payload": "packet_custom_payload",
+                    "finish_configuration": "packet_finish_configuration",
+                    "keep_alive": "packet_keep_alive",
+                    "pong": "packet_pong",
+                    "resource_pack_receive": "packet_resource_pack_receive",
+                    "select_known_packs": "packet_common_select_known_packs",
+                    "settings": "packet_common_settings"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "packet_custom_payload": [
+          "container",
+          [
+            {
+              "name": "channel",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "type": "restBuffer"
+            }
+          ]
+        ],
+        "packet_finish_configuration": [
+          "container",
+          []
+        ],
+        "packet_keep_alive": [
+          "container",
+          [
+            {
+              "name": "keepAliveId",
+              "type": "i64"
+            }
+          ]
+        ],
+        "packet_pong": [
+          "container",
+          [
+            {
+              "name": "id",
+              "type": "i32"
+            }
+          ]
+        ],
+        "packet_resource_pack_receive": [
+          "container",
+          [
+            {
+              "name": "uuid",
+              "type": "UUID"
+            },
+            {
+              "name": "result",
+              "type": "varint"
             }
           ]
         ]
