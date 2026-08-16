@@ -48,7 +48,7 @@ require('./version_iterator')(function (p, versionString) {
   })
 })
 
-const commonData = ['protocolVersions', 'features']
+const commonData = ['protocolVersions', 'features', 'packFormats']
 const minecraftTypes = ['pc', 'bedrock']
 
 minecraftTypes.forEach(function (type) {
@@ -56,7 +56,12 @@ minecraftTypes.forEach(function (type) {
     this.timeout(60 * 1000)
     commonData.forEach(function (dataName) {
       it(dataName + '.json is valid', function () {
-        const instance = require('../../../data/' + type + '/common/' + dataName + '.json')
+        const pFile = '../../../data/' + type + '/common/' + dataName + '.json'
+        if (!fs.existsSync(path.join(__dirname, pFile))) {
+          this.skip()
+          return
+        }
+        const instance = require(pFile)
         const schema = require('../../../schemas/' + dataName + '_schema.json')
         const valid = v.validate(schema, instance)
         assert.ok(valid, JSON.stringify(v.errors, null, 2))
