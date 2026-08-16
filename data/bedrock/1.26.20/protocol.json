@@ -160,7 +160,6 @@
     "GameMode": [
       "mapper",
       {
-        "type": "zigzag32",
         "mappings": {
           "0": "survival",
           "1": "creative",
@@ -169,7 +168,8 @@
           "4": "creative_spectator",
           "5": "fallback",
           "6": "spectator"
-        }
+        },
+        "type": "zigzag32"
       }
     ],
     "GameRuleI32": [
@@ -188,12 +188,12 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "1": "bool",
                 "2": "int",
                 "3": "float"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -205,8 +205,8 @@
               "compareTo": "type",
               "fields": {
                 "bool": "bool",
-                "int": "li32",
-                "float": "lf32"
+                "float": "lf32",
+                "int": "li32"
               }
             }
           ]
@@ -229,12 +229,12 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "1": "bool",
                 "2": "int",
                 "3": "float"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -246,8 +246,8 @@
               "compareTo": "type",
               "fields": {
                 "bool": "bool",
-                "int": "varint",
-                "float": "lf32"
+                "float": "lf32",
+                "int": "varint"
               }
             }
           ]
@@ -310,12 +310,12 @@
               "type": [
                 "mapper",
                 {
-                  "type": "zigzag32",
                   "mappings": {
                     "0": "legacy",
                     "1": "data_driven",
                     "2": "none"
-                  }
+                  },
+                  "type": "zigzag32"
                 }
               ]
             },
@@ -335,11 +335,11 @@
           "type": [
             "mapper",
             {
-              "type": "lu16",
               "mappings": {
                 "0": "false",
                 "65535": "true"
-              }
+              },
+              "type": "lu16"
             }
           ]
         },
@@ -349,6 +349,7 @@
             "switch",
             {
               "compareTo": "has_nbt",
+              "default": "void",
               "fields": {
                 "true": [
                   "container",
@@ -363,8 +364,7 @@
                     }
                   ]
                 ]
-              },
-              "default": "void"
+              }
             }
           ]
         },
@@ -402,11 +402,11 @@
           "type": [
             "mapper",
             {
-              "type": "lu16",
               "mappings": {
                 "0": "false",
                 "65535": "true"
-              }
+              },
+              "type": "lu16"
             }
           ]
         },
@@ -416,6 +416,7 @@
             "switch",
             {
               "compareTo": "has_nbt",
+              "default": "void",
               "fields": {
                 "true": [
                   "container",
@@ -430,8 +431,7 @@
                     }
                   ]
                 ]
-              },
-              "default": "void"
+              }
             }
           ]
         },
@@ -470,9 +470,6 @@
             "switch",
             {
               "compareTo": "network_id",
-              "fields": {
-                "0": "void"
-              },
               "default": [
                 "container",
                 [
@@ -494,6 +491,13 @@
                       "switch",
                       {
                         "compareTo": "network_id",
+                        "default": [
+                          "encapsulated",
+                          {
+                            "lengthType": "varint",
+                            "type": "ItemExtraDataWithoutBlockingTick"
+                          }
+                        ],
                         "fields": {
                           "/ShieldItemID": [
                             "encapsulated",
@@ -502,19 +506,15 @@
                               "type": "ItemExtraDataWithBlockingTick"
                             }
                           ]
-                        },
-                        "default": [
-                          "encapsulated",
-                          {
-                            "lengthType": "varint",
-                            "type": "ItemExtraDataWithoutBlockingTick"
-                          }
-                        ]
+                        }
                       }
                     ]
                   }
                 ]
-              ]
+              ],
+              "fields": {
+                "0": "void"
+              }
             }
           ]
         }
@@ -533,9 +533,6 @@
             "switch",
             {
               "compareTo": "network_id",
-              "fields": {
-                "0": "void"
-              },
               "default": [
                 "container",
                 [
@@ -557,10 +554,10 @@
                       "switch",
                       {
                         "compareTo": "has_stack_id",
+                        "default": "zigzag32",
                         "fields": {
                           "0": "void"
-                        },
-                        "default": "zigzag32"
+                        }
                       }
                     ]
                   },
@@ -574,6 +571,13 @@
                       "switch",
                       {
                         "compareTo": "network_id",
+                        "default": [
+                          "encapsulated",
+                          {
+                            "lengthType": "varint",
+                            "type": "ItemExtraDataWithoutBlockingTick"
+                          }
+                        ],
                         "fields": {
                           "/ShieldItemID": [
                             "encapsulated",
@@ -582,19 +586,15 @@
                               "type": "ItemExtraDataWithBlockingTick"
                             }
                           ]
-                        },
-                        "default": [
-                          "encapsulated",
-                          {
-                            "lengthType": "varint",
-                            "type": "ItemExtraDataWithoutBlockingTick"
-                          }
-                        ]
+                        }
                       }
                     ]
                   }
                 ]
-              ]
+              ],
+              "fields": {
+                "0": "void"
+              }
             }
           ]
         }
@@ -608,12 +608,12 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "item_stack_net_id",
                 "1": "item_stack_request_id",
                 "2": "item_stack_legacy_request_id"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -648,10 +648,10 @@
             "switch",
             {
               "compareTo": "has_stack_id",
+              "default": "void",
               "fields": {
                 "true": "ItemV4NetIdVariant"
-              },
-              "default": "void"
+              }
             }
           ]
         },
@@ -665,6 +665,13 @@
             "switch",
             {
               "compareTo": "network_id",
+              "default": [
+                "encapsulated",
+                {
+                  "lengthType": "varint",
+                  "type": "ItemExtraDataWithoutBlockingTick"
+                }
+              ],
               "fields": {
                 "/ShieldItemID": [
                   "encapsulated",
@@ -673,14 +680,7 @@
                     "type": "ItemExtraDataWithBlockingTick"
                   }
                 ]
-              },
-              "default": [
-                "encapsulated",
-                {
-                  "lengthType": "varint",
-                  "type": "ItemExtraDataWithoutBlockingTick"
-                }
-              ]
+              }
             }
           ]
         }
@@ -824,7 +824,6 @@
               "type": [
                 "mapper",
                 {
-                  "type": "varint",
                   "mappings": {
                     "0": "flags",
                     "1": "health",
@@ -969,7 +968,8 @@
                     "141": "firework_shooter_id",
                     "142": "reserved_139",
                     "143": "nameplate_render_distance_max"
-                  }
+                  },
+                  "type": "varint"
                 }
               ]
             },
@@ -978,7 +978,6 @@
               "type": [
                 "mapper",
                 {
-                  "type": "varint",
                   "mappings": {
                     "0": "byte",
                     "1": "short",
@@ -989,7 +988,8 @@
                     "6": "vec3i",
                     "7": "long",
                     "8": "vec3f"
-                  }
+                  },
+                  "type": "varint"
                 }
               ]
             },
@@ -999,29 +999,29 @@
                 "switch",
                 {
                   "compareTo": "key",
-                  "fields": {
-                    "flags": "MetadataFlags1",
-                    "flags_extended": "MetadataFlags2",
-                    "seat_third_person_camera_radius": "lf32",
-                    "seat_camera_relax_distance_smoothing": "lf32"
-                  },
                   "default": [
                     "switch",
                     {
                       "compareTo": "type",
                       "fields": {
                         "byte": "i8",
-                        "short": "li16",
-                        "int": "zigzag32",
-                        "float": "lf32",
-                        "string": "string",
                         "compound": "nbt",
-                        "vec3i": "vec3i",
+                        "float": "lf32",
+                        "int": "zigzag32",
                         "long": "zigzag64",
-                        "vec3f": "vec3f"
+                        "short": "li16",
+                        "string": "string",
+                        "vec3f": "vec3f",
+                        "vec3i": "vec3i"
                       }
                     }
-                  ]
+                  ],
+                  "fields": {
+                    "flags": "MetadataFlags1",
+                    "flags_extended": "MetadataFlags2",
+                    "seat_camera_relax_distance_smoothing": "lf32",
+                    "seat_third_person_camera_radius": "lf32"
+                  }
                 }
               ]
             }
@@ -1032,7 +1032,6 @@
     "MetadataFlags1": [
       "bitflags",
       {
-        "type": "zigzag64",
         "big": true,
         "flags": [
           "onfire",
@@ -1100,13 +1099,13 @@
           "transition_sitting",
           "eating",
           "laying_down"
-        ]
+        ],
+        "type": "zigzag64"
       }
     ],
     "MetadataFlags2": [
       "bitflags",
       {
-        "type": "zigzag64",
         "big": true,
         "flags": [
           "sneezing",
@@ -1174,7 +1173,8 @@
           "uses_legacy_friction",
           "uses_uniform_air_drag",
           "nameplate_depth_tested"
-        ]
+        ],
+        "type": "zigzag64"
       }
     ],
     "Link": [
@@ -1408,13 +1408,13 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "click_block",
                 "1": "click_air",
                 "2": "break_block",
                 "3": "attack"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -1423,12 +1423,12 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "unknown",
                 "1": "player_input",
                 "2": "simulation_tick"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -1465,11 +1465,11 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "failure",
                 "1": "success"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -1478,11 +1478,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "off",
                 "1": "on"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -1500,7 +1500,6 @@
               "type": [
                 "mapper",
                 {
-                  "type": "varint",
                   "mappings": {
                     "0": "container",
                     "1": "global",
@@ -1508,7 +1507,8 @@
                     "3": "creative",
                     "100": "craft_slot",
                     "99999": "craft"
-                  }
+                  },
+                  "type": "varint"
                 }
               ]
             },
@@ -1518,6 +1518,7 @@
                 "switch",
                 {
                   "compareTo": "source_type",
+                  "default": "void",
                   "fields": {
                     "container": [
                       "container",
@@ -1537,15 +1538,6 @@
                         }
                       ]
                     ],
-                    "world_interaction": [
-                      "container",
-                      [
-                        {
-                          "name": "flags",
-                          "type": "varint"
-                        }
-                      ]
-                    ],
                     "craft_slot": [
                       "container",
                       [
@@ -1554,9 +1546,17 @@
                           "type": "varint"
                         }
                       ]
+                    ],
+                    "world_interaction": [
+                      "container",
+                      [
+                        {
+                          "name": "flags",
+                          "type": "varint"
+                        }
+                      ]
                     ]
-                  },
-                  "default": "void"
+                  }
                 }
               ]
             },
@@ -1589,9 +1589,6 @@
             "switch",
             {
               "compareTo": "legacy_request_id",
-              "fields": {
-                "0": "void"
-              },
               "default": [
                 "array",
                 {
@@ -1624,7 +1621,10 @@
                     ]
                   ]
                 }
-              ]
+              ],
+              "fields": {
+                "0": "void"
+              }
             }
           ]
         }
@@ -1642,14 +1642,14 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "normal",
                 "1": "inventory_mismatch",
                 "2": "item_use",
                 "3": "item_use_on_entity",
                 "4": "item_release"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -1664,8 +1664,37 @@
             {
               "compareTo": "transaction_type",
               "fields": {
-                "normal": "void",
                 "inventory_mismatch": "void",
+                "item_release": [
+                  "container",
+                  [
+                    {
+                      "name": "action_type",
+                      "type": [
+                        "mapper",
+                        {
+                          "mappings": {
+                            "0": "release",
+                            "1": "consume"
+                          },
+                          "type": "varint"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "hotbar_slot",
+                      "type": "zigzag32"
+                    },
+                    {
+                      "name": "held_item",
+                      "type": "Item"
+                    },
+                    {
+                      "name": "head_pos",
+                      "type": "vec3f"
+                    }
+                  ]
+                ],
                 "item_use": "TransactionUseItem",
                 "item_use_on_entity": [
                   "container",
@@ -1679,11 +1708,11 @@
                       "type": [
                         "mapper",
                         {
-                          "type": "varint",
                           "mappings": {
                             "0": "interact",
                             "1": "attack"
-                          }
+                          },
+                          "type": "varint"
                         }
                       ]
                     },
@@ -1705,36 +1734,7 @@
                     }
                   ]
                 ],
-                "item_release": [
-                  "container",
-                  [
-                    {
-                      "name": "action_type",
-                      "type": [
-                        "mapper",
-                        {
-                          "type": "varint",
-                          "mappings": {
-                            "0": "release",
-                            "1": "consume"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "name": "hotbar_slot",
-                      "type": "zigzag32"
-                    },
-                    {
-                      "name": "held_item",
-                      "type": "Item"
-                    },
-                    {
-                      "name": "head_pos",
-                      "type": "vec3f"
-                    }
-                  ]
-                ]
+                "normal": "void"
               }
             }
           ]
@@ -1756,7 +1756,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "invalid",
                 "1": "int_id_meta",
@@ -1764,7 +1763,8 @@
                 "3": "item_tag",
                 "4": "string_id_meta",
                 "5": "complex_alias"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -1775,6 +1775,15 @@
             {
               "compareTo": "type",
               "fields": {
+                "complex_alias": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    }
+                  ]
+                ],
                 "int_id_meta": [
                   "container",
                   [
@@ -1788,12 +1797,21 @@
                         "switch",
                         {
                           "compareTo": "network_id",
+                          "default": "li16",
                           "fields": {
                             "0": "void"
-                          },
-                          "default": "li16"
+                          }
                         }
                       ]
+                    }
+                  ]
+                ],
+                "item_tag": [
+                  "container",
+                  [
+                    {
+                      "name": "tag",
+                      "type": "string"
                     }
                   ]
                 ],
@@ -1810,15 +1828,6 @@
                     }
                   ]
                 ],
-                "item_tag": [
-                  "container",
-                  [
-                    {
-                      "name": "tag",
-                      "type": "string"
-                    }
-                  ]
-                ],
                 "string_id_meta": [
                   "container",
                   [
@@ -1829,15 +1838,6 @@
                     {
                       "name": "metadata",
                       "type": "li16"
-                    }
-                  ]
-                ],
-                "complex_alias": [
-                  "container",
-                  [
-                    {
-                      "name": "name",
-                      "type": "string"
                     }
                   ]
                 ]
@@ -1921,7 +1921,6 @@
               "type": [
                 "mapper",
                 {
-                  "type": "zigzag32",
                   "mappings": {
                     "0": "shapeless",
                     "1": "shaped",
@@ -1933,7 +1932,8 @@
                     "7": "shaped_chemistry",
                     "8": "smithing_transform",
                     "9": "smithing_trim"
-                  }
+                  },
+                  "type": "zigzag32"
                 }
               ]
             },
@@ -1944,146 +1944,50 @@
                 {
                   "compareTo": "type",
                   "fields": {
-                    "shapeless": [
+                    "furnace": [
                       "container",
                       [
                         {
-                          "name": "recipe_id",
-                          "type": "LatinString"
-                        },
-                        {
-                          "name": "input",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "RecipeIngredient"
-                            }
-                          ]
+                          "name": "input_id",
+                          "type": "zigzag32"
                         },
                         {
                           "name": "output",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "ItemLegacy"
-                            }
-                          ]
-                        },
-                        {
-                          "name": "uuid",
-                          "type": "uuid"
+                          "type": "ItemLegacy"
                         },
                         {
                           "name": "block",
                           "type": "string"
-                        },
-                        {
-                          "name": "priority",
-                          "type": "zigzag32"
-                        },
-                        {
-                          "name": "unlocking_requirement",
-                          "type": "RecipeUnlockingRequirement"
-                        },
-                        {
-                          "name": "network_id",
-                          "type": "varint"
                         }
                       ]
                     ],
-                    "shulker_box": [
+                    "furnace_with_metadata": [
                       "container",
                       [
                         {
-                          "name": "recipe_id",
-                          "type": "LatinString"
+                          "name": "input_id",
+                          "type": "zigzag32"
                         },
                         {
-                          "name": "input",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "RecipeIngredient"
-                            }
-                          ]
+                          "name": "input_meta",
+                          "type": "zigzag32"
                         },
                         {
                           "name": "output",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "ItemLegacy"
-                            }
-                          ]
-                        },
-                        {
-                          "name": "uuid",
-                          "type": "uuid"
+                          "type": "ItemLegacy"
                         },
                         {
                           "name": "block",
                           "type": "string"
-                        },
-                        {
-                          "name": "priority",
-                          "type": "zigzag32"
-                        },
-                        {
-                          "name": "unlocking_requirement",
-                          "type": "RecipeUnlockingRequirement"
-                        },
-                        {
-                          "name": "network_id",
-                          "type": "varint"
                         }
                       ]
                     ],
-                    "shapeless_chemistry": [
+                    "multi": [
                       "container",
                       [
                         {
-                          "name": "recipe_id",
-                          "type": "LatinString"
-                        },
-                        {
-                          "name": "input",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "RecipeIngredient"
-                            }
-                          ]
-                        },
-                        {
-                          "name": "output",
-                          "type": [
-                            "array",
-                            {
-                              "countType": "varint",
-                              "type": "ItemLegacy"
-                            }
-                          ]
-                        },
-                        {
                           "name": "uuid",
                           "type": "uuid"
-                        },
-                        {
-                          "name": "block",
-                          "type": "string"
-                        },
-                        {
-                          "name": "priority",
-                          "type": "zigzag32"
-                        },
-                        {
-                          "name": "unlocking_requirement",
-                          "type": "RecipeUnlockingRequirement"
                         },
                         {
                           "name": "network_id",
@@ -2225,50 +2129,146 @@
                         }
                       ]
                     ],
-                    "furnace": [
+                    "shapeless": [
                       "container",
                       [
                         {
-                          "name": "input_id",
-                          "type": "zigzag32"
+                          "name": "recipe_id",
+                          "type": "LatinString"
+                        },
+                        {
+                          "name": "input",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "RecipeIngredient"
+                            }
+                          ]
                         },
                         {
                           "name": "output",
-                          "type": "ItemLegacy"
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "ItemLegacy"
+                            }
+                          ]
                         },
-                        {
-                          "name": "block",
-                          "type": "string"
-                        }
-                      ]
-                    ],
-                    "furnace_with_metadata": [
-                      "container",
-                      [
-                        {
-                          "name": "input_id",
-                          "type": "zigzag32"
-                        },
-                        {
-                          "name": "input_meta",
-                          "type": "zigzag32"
-                        },
-                        {
-                          "name": "output",
-                          "type": "ItemLegacy"
-                        },
-                        {
-                          "name": "block",
-                          "type": "string"
-                        }
-                      ]
-                    ],
-                    "multi": [
-                      "container",
-                      [
                         {
                           "name": "uuid",
                           "type": "uuid"
+                        },
+                        {
+                          "name": "block",
+                          "type": "string"
+                        },
+                        {
+                          "name": "priority",
+                          "type": "zigzag32"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
+                    ],
+                    "shapeless_chemistry": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "LatinString"
+                        },
+                        {
+                          "name": "input",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "RecipeIngredient"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "output",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "ItemLegacy"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "uuid",
+                          "type": "uuid"
+                        },
+                        {
+                          "name": "block",
+                          "type": "string"
+                        },
+                        {
+                          "name": "priority",
+                          "type": "zigzag32"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
+                        },
+                        {
+                          "name": "network_id",
+                          "type": "varint"
+                        }
+                      ]
+                    ],
+                    "shulker_box": [
+                      "container",
+                      [
+                        {
+                          "name": "recipe_id",
+                          "type": "LatinString"
+                        },
+                        {
+                          "name": "input",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "RecipeIngredient"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "output",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": "ItemLegacy"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "uuid",
+                          "type": "uuid"
+                        },
+                        {
+                          "name": "block",
+                          "type": "string"
+                        },
+                        {
+                          "name": "priority",
+                          "type": "zigzag32"
+                        },
+                        {
+                          "name": "unlocking_requirement",
+                          "type": "RecipeUnlockingRequirement"
                         },
                         {
                           "name": "network_id",
@@ -2354,13 +2354,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "always_unlocked",
                 "2": "player_in_water",
                 "3": "player_has_many_items"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -2574,11 +2574,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "add",
                 "1": "remove"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -2748,7 +2748,6 @@
     "Action": [
       "mapper",
       {
-        "type": "zigzag32",
         "mappings": {
           "0": "start_break",
           "1": "abort_break",
@@ -2788,7 +2787,8 @@
           "35": "stop_flying",
           "36": "received_server_data",
           "37": "start_using_item"
-        }
+        },
+        "type": "zigzag32"
       }
     ],
     "StackRequestSlotInfo": [
@@ -2829,7 +2829,6 @@
                     "type": [
                       "mapper",
                       {
-                        "type": "u8",
                         "mappings": {
                           "0": "take",
                           "1": "place",
@@ -2851,7 +2850,8 @@
                           "17": "craft_loom_request",
                           "18": "non_implemented",
                           "19": "results_deprecated"
-                        }
+                        },
+                        "type": "u8"
                       }
                     ]
                   },
@@ -2862,114 +2862,16 @@
                       {
                         "compareTo": "type_id",
                         "fields": {
-                          "take": [
+                          "beacon_payment": [
                             "container",
                             [
                               {
-                                "name": "count",
-                                "type": "u8"
+                                "name": "primary_effect",
+                                "type": "zigzag32"
                               },
                               {
-                                "name": "source",
-                                "type": "StackRequestSlotInfo"
-                              },
-                              {
-                                "name": "destination",
-                                "type": "StackRequestSlotInfo"
-                              }
-                            ]
-                          ],
-                          "place": [
-                            "container",
-                            [
-                              {
-                                "name": "count",
-                                "type": "u8"
-                              },
-                              {
-                                "name": "source",
-                                "type": "StackRequestSlotInfo"
-                              },
-                              {
-                                "name": "destination",
-                                "type": "StackRequestSlotInfo"
-                              }
-                            ]
-                          ],
-                          "place_in_container": [
-                            "container",
-                            [
-                              {
-                                "name": "count",
-                                "type": "u8"
-                              },
-                              {
-                                "name": "source",
-                                "type": "StackRequestSlotInfo"
-                              },
-                              {
-                                "name": "destination",
-                                "type": "StackRequestSlotInfo"
-                              }
-                            ]
-                          ],
-                          "take_out_container": [
-                            "container",
-                            [
-                              {
-                                "name": "count",
-                                "type": "u8"
-                              },
-                              {
-                                "name": "source",
-                                "type": "StackRequestSlotInfo"
-                              },
-                              {
-                                "name": "destination",
-                                "type": "StackRequestSlotInfo"
-                              }
-                            ]
-                          ],
-                          "swap": [
-                            "container",
-                            [
-                              {
-                                "name": "source",
-                                "type": "StackRequestSlotInfo"
-                              },
-                              {
-                                "name": "destination",
-                                "type": "StackRequestSlotInfo"
-                              }
-                            ]
-                          ],
-                          "drop": [
-                            "container",
-                            [
-                              {
-                                "name": "count",
-                                "type": "u8"
-                              },
-                              {
-                                "name": "source",
-                                "type": "StackRequestSlotInfo"
-                              },
-                              {
-                                "name": "randomly",
-                                "type": "bool"
-                              }
-                            ]
-                          ],
-                          "destroy": [
-                            "container",
-                            [
-                              {
-                                "name": "count",
-                                "type": "u8"
-                              },
-                              {
-                                "name": "source",
-                                "type": "StackRequestSlotInfo"
+                                "name": "secondary_effect",
+                                "type": "zigzag32"
                               }
                             ]
                           ],
@@ -2986,42 +2888,46 @@
                               }
                             ]
                           ],
-                          "create": [
+                          "craft_creative": [
                             "container",
                             [
                               {
-                                "name": "result_slot_id",
+                                "name": "item_id",
+                                "type": "varint"
+                              },
+                              {
+                                "name": "times_crafted",
                                 "type": "u8"
                               }
                             ]
                           ],
-                          "beacon_payment": [
+                          "craft_grindstone_request": [
                             "container",
                             [
                               {
-                                "name": "primary_effect",
-                                "type": "zigzag32"
+                                "name": "recipe_network_id",
+                                "type": "varint"
                               },
                               {
-                                "name": "secondary_effect",
-                                "type": "zigzag32"
+                                "name": "times_crafted",
+                                "type": "u8"
+                              },
+                              {
+                                "name": "cost",
+                                "type": "varint"
                               }
                             ]
                           ],
-                          "mine_block": [
+                          "craft_loom_request": [
                             "container",
                             [
                               {
-                                "name": "hotbar_slot",
-                                "type": "zigzag32"
+                                "name": "pattern",
+                                "type": "string"
                               },
                               {
-                                "name": "predicted_durability",
-                                "type": "zigzag32"
-                              },
-                              {
-                                "name": "network_id",
-                                "type": "zigzag32"
+                                "name": "times_crafted",
+                                "type": "u8"
                               }
                             ]
                           ],
@@ -3065,19 +2971,63 @@
                               }
                             ]
                           ],
-                          "craft_creative": [
+                          "create": [
                             "container",
                             [
                               {
-                                "name": "item_id",
-                                "type": "varint"
-                              },
-                              {
-                                "name": "times_crafted",
+                                "name": "result_slot_id",
                                 "type": "u8"
                               }
                             ]
                           ],
+                          "destroy": [
+                            "container",
+                            [
+                              {
+                                "name": "count",
+                                "type": "u8"
+                              },
+                              {
+                                "name": "source",
+                                "type": "StackRequestSlotInfo"
+                              }
+                            ]
+                          ],
+                          "drop": [
+                            "container",
+                            [
+                              {
+                                "name": "count",
+                                "type": "u8"
+                              },
+                              {
+                                "name": "source",
+                                "type": "StackRequestSlotInfo"
+                              },
+                              {
+                                "name": "randomly",
+                                "type": "bool"
+                              }
+                            ]
+                          ],
+                          "mine_block": [
+                            "container",
+                            [
+                              {
+                                "name": "hotbar_slot",
+                                "type": "zigzag32"
+                              },
+                              {
+                                "name": "predicted_durability",
+                                "type": "zigzag32"
+                              },
+                              {
+                                "name": "network_id",
+                                "type": "zigzag32"
+                              }
+                            ]
+                          ],
+                          "non_implemented": "void",
                           "optional": [
                             "container",
                             [
@@ -3091,37 +3041,40 @@
                               }
                             ]
                           ],
-                          "craft_grindstone_request": [
+                          "place": [
                             "container",
                             [
                               {
-                                "name": "recipe_network_id",
-                                "type": "varint"
-                              },
-                              {
-                                "name": "times_crafted",
+                                "name": "count",
                                 "type": "u8"
                               },
                               {
-                                "name": "cost",
-                                "type": "varint"
+                                "name": "source",
+                                "type": "StackRequestSlotInfo"
+                              },
+                              {
+                                "name": "destination",
+                                "type": "StackRequestSlotInfo"
                               }
                             ]
                           ],
-                          "craft_loom_request": [
+                          "place_in_container": [
                             "container",
                             [
                               {
-                                "name": "pattern",
-                                "type": "string"
+                                "name": "count",
+                                "type": "u8"
                               },
                               {
-                                "name": "times_crafted",
-                                "type": "u8"
+                                "name": "source",
+                                "type": "StackRequestSlotInfo"
+                              },
+                              {
+                                "name": "destination",
+                                "type": "StackRequestSlotInfo"
                               }
                             ]
                           ],
-                          "non_implemented": "void",
                           "results_deprecated": [
                             "container",
                             [
@@ -3138,6 +3091,53 @@
                               {
                                 "name": "times_crafted",
                                 "type": "u8"
+                              }
+                            ]
+                          ],
+                          "swap": [
+                            "container",
+                            [
+                              {
+                                "name": "source",
+                                "type": "StackRequestSlotInfo"
+                              },
+                              {
+                                "name": "destination",
+                                "type": "StackRequestSlotInfo"
+                              }
+                            ]
+                          ],
+                          "take": [
+                            "container",
+                            [
+                              {
+                                "name": "count",
+                                "type": "u8"
+                              },
+                              {
+                                "name": "source",
+                                "type": "StackRequestSlotInfo"
+                              },
+                              {
+                                "name": "destination",
+                                "type": "StackRequestSlotInfo"
+                              }
+                            ]
+                          ],
+                          "take_out_container": [
+                            "container",
+                            [
+                              {
+                                "name": "count",
+                                "type": "u8"
+                              },
+                              {
+                                "name": "source",
+                                "type": "StackRequestSlotInfo"
+                              },
+                              {
+                                "name": "destination",
+                                "type": "StackRequestSlotInfo"
                               }
                             ]
                           ]
@@ -3165,7 +3165,6 @@
           "type": [
             "mapper",
             {
-              "type": "li32",
               "mappings": {
                 "0": "chat_public",
                 "1": "chat_whisper",
@@ -3181,7 +3180,8 @@
                 "11": "kick_command",
                 "12": "title_command",
                 "13": "summon_command"
-              }
+              },
+              "type": "li32"
             }
           ]
         }
@@ -3199,11 +3199,11 @@
               "type": [
                 "mapper",
                 {
-                  "type": "u8",
                   "mappings": {
                     "0": "ok",
                     "1": "error"
-                  }
+                  },
+                  "type": "u8"
                 }
               ]
             },
@@ -3320,11 +3320,11 @@
           "type": [
             "mapper",
             {
-              "type": "li32",
               "mappings": {
                 "0": "entity",
                 "1": "block"
-              }
+              },
+              "type": "li32"
             }
           ]
         },
@@ -3362,7 +3362,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "marker_white",
                 "1": "marker_green",
@@ -3412,7 +3411,8 @@
                 "45": "village_taiga",
                 "46": "jungle_temple",
                 "47": "witch_hut"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -3474,13 +3474,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "90_deg",
                 "2": "180_deg",
                 "3": "270_deg"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -3489,13 +3489,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "x_axis",
                 "2": "z_axis",
                 "3": "both_axes"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -3504,12 +3504,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "layers",
                 "2": "blocks"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -3581,12 +3581,12 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "entity",
                 "1": "create",
                 "2": "destroy"
-              }
+              },
+              "type": "varint"
             }
           ]
         }
@@ -3620,19 +3620,18 @@
     "PermissionLevel": [
       "mapper",
       {
-        "type": "u8",
         "mappings": {
           "0": "visitor",
           "1": "member",
           "2": "operator",
           "3": "custom"
-        }
+        },
+        "type": "u8"
       }
     ],
     "CommandPermissionLevel": [
       "mapper",
       {
-        "type": "u8",
         "mappings": {
           "0": "normal",
           "1": "operator",
@@ -3640,13 +3639,13 @@
           "3": "host",
           "4": "owner",
           "5": "internal"
-        }
+        },
+        "type": "u8"
       }
     ],
     "CommandPermissionLevelVarint": [
       "mapper",
       {
-        "type": "u8",
         "mappings": {
           "0": "normal",
           "1": "operator",
@@ -3654,13 +3653,13 @@
           "3": "host",
           "4": "owner",
           "5": "internal"
-        }
+        },
+        "type": "u8"
       }
     ],
     "WindowID": [
       "mapper",
       {
-        "type": "i8",
         "mappings": {
           "0": "inventory",
           "1": "first",
@@ -3671,31 +3670,31 @@
           "122": "hotbar",
           "123": "fixed_inventory",
           "124": "ui",
-          "-100": "drop_contents",
-          "-24": "beacon",
-          "-23": "trading_output",
-          "-22": "trading_use_inputs",
-          "-21": "trading_input_2",
-          "-20": "trading_input_1",
-          "-17": "enchant_output",
-          "-16": "enchant_material",
-          "-15": "enchant_input",
-          "-13": "anvil_output",
-          "-12": "anvil_result",
-          "-11": "anvil_material",
+          "-1": "none",
           "-10": "container_input",
-          "-5": "crafting_use_ingredient",
-          "-4": "crafting_result",
-          "-3": "crafting_remove_ingredient",
+          "-100": "drop_contents",
+          "-11": "anvil_material",
+          "-12": "anvil_result",
+          "-13": "anvil_output",
+          "-15": "enchant_input",
+          "-16": "enchant_material",
+          "-17": "enchant_output",
           "-2": "crafting_add_ingredient",
-          "-1": "none"
-        }
+          "-20": "trading_input_1",
+          "-21": "trading_input_2",
+          "-22": "trading_use_inputs",
+          "-23": "trading_output",
+          "-24": "beacon",
+          "-3": "crafting_remove_ingredient",
+          "-4": "crafting_result",
+          "-5": "crafting_use_ingredient"
+        },
+        "type": "i8"
       }
     ],
     "WindowIDVarint": [
       "mapper",
       {
-        "type": "varint",
         "mappings": {
           "0": "inventory",
           "1": "first",
@@ -3706,31 +3705,31 @@
           "122": "hotbar",
           "123": "fixed_inventory",
           "124": "ui",
-          "-100": "drop_contents",
-          "-24": "beacon",
-          "-23": "trading_output",
-          "-22": "trading_use_inputs",
-          "-21": "trading_input_2",
-          "-20": "trading_input_1",
-          "-17": "enchant_output",
-          "-16": "enchant_material",
-          "-15": "enchant_input",
-          "-13": "anvil_output",
-          "-12": "anvil_result",
-          "-11": "anvil_material",
+          "-1": "none",
           "-10": "container_input",
-          "-5": "crafting_use_ingredient",
-          "-4": "crafting_result",
-          "-3": "crafting_remove_ingredient",
+          "-100": "drop_contents",
+          "-11": "anvil_material",
+          "-12": "anvil_result",
+          "-13": "anvil_output",
+          "-15": "enchant_input",
+          "-16": "enchant_material",
+          "-17": "enchant_output",
           "-2": "crafting_add_ingredient",
-          "-1": "none"
-        }
+          "-20": "trading_input_1",
+          "-21": "trading_input_2",
+          "-22": "trading_use_inputs",
+          "-23": "trading_output",
+          "-24": "beacon",
+          "-3": "crafting_remove_ingredient",
+          "-4": "crafting_result",
+          "-5": "crafting_use_ingredient"
+        },
+        "type": "varint"
       }
     ],
     "WindowIDZigzag32": [
       "mapper",
       {
-        "type": "zigzag32",
         "mappings": {
           "0": "inventory",
           "1": "first",
@@ -3741,31 +3740,31 @@
           "122": "hotbar",
           "123": "fixed_inventory",
           "124": "ui",
-          "-100": "drop_contents",
-          "-24": "beacon",
-          "-23": "trading_output",
-          "-22": "trading_use_inputs",
-          "-21": "trading_input_2",
-          "-20": "trading_input_1",
-          "-17": "enchant_output",
-          "-16": "enchant_material",
-          "-15": "enchant_input",
-          "-13": "anvil_output",
-          "-12": "anvil_result",
-          "-11": "anvil_material",
+          "-1": "none",
           "-10": "container_input",
-          "-5": "crafting_use_ingredient",
-          "-4": "crafting_result",
-          "-3": "crafting_remove_ingredient",
+          "-100": "drop_contents",
+          "-11": "anvil_material",
+          "-12": "anvil_result",
+          "-13": "anvil_output",
+          "-15": "enchant_input",
+          "-16": "enchant_material",
+          "-17": "enchant_output",
           "-2": "crafting_add_ingredient",
-          "-1": "none"
-        }
+          "-20": "trading_input_1",
+          "-21": "trading_input_2",
+          "-22": "trading_use_inputs",
+          "-23": "trading_output",
+          "-24": "beacon",
+          "-3": "crafting_remove_ingredient",
+          "-4": "crafting_result",
+          "-5": "crafting_use_ingredient"
+        },
+        "type": "zigzag32"
       }
     ],
     "WindowType": [
       "mapper",
       {
-        "type": "i8",
         "mappings": {
           "0": "container",
           "1": "workbench",
@@ -3804,15 +3803,15 @@
           "34": "chest_boat",
           "35": "decorated_pot",
           "36": "crafter",
-          "-9": "none",
-          "-1": "inventory"
-        }
+          "-1": "inventory",
+          "-9": "none"
+        },
+        "type": "i8"
       }
     ],
     "ContainerSlotType": [
       "mapper",
       {
-        "type": "u8",
         "mappings": {
           "0": "anvil_input",
           "1": "anvil_material",
@@ -3882,13 +3881,13 @@
           "65": "recipe_food",
           "66": "recipe_blocks",
           "67": "recipe_furnace_items"
-        }
+        },
+        "type": "u8"
       }
     ],
     "SoundType": [
       "mapper",
       {
-        "type": "varint",
         "mappings": {
           "0": "ItemUseOn",
           "1": "Hit",
@@ -4491,13 +4490,13 @@
           "598": "ResetGrowth",
           "599": "PushedByPlayer",
           "600": "Bounce"
-        }
+        },
+        "type": "varint"
       }
     ],
     "LegacyEntityType": [
       "mapper",
       {
-        "type": "li32",
         "mappings": {
           "10": "chicken",
           "11": "cow",
@@ -4599,13 +4598,13 @@
           "111": "tropicalfish",
           "112": "cod",
           "113": "panda"
-        }
+        },
+        "type": "li32"
       }
     ],
     "DeviceOS": [
       "mapper",
       {
-        "type": "li32",
         "mappings": {
           "0": "Undefined",
           "1": "Android",
@@ -4623,13 +4622,13 @@
           "13": "Xbox",
           "14": "WindowsPhone",
           "15": "Linux"
-        }
+        },
+        "type": "li32"
       }
     ],
     "AbilitySet": [
       "bitflags",
       {
-        "type": "lu32",
         "flags": [
           "build",
           "mine",
@@ -4652,7 +4651,8 @@
           "privileged_builder",
           "vertical_fly_speed",
           "count"
-        ]
+        ],
+        "type": "lu32"
       }
     ],
     "AbilityLayers": [
@@ -4663,7 +4663,6 @@
           "type": [
             "mapper",
             {
-              "type": "lu16",
               "mappings": {
                 "0": "cache",
                 "1": "base",
@@ -4671,7 +4670,8 @@
                 "3": "commands",
                 "4": "editor",
                 "5": "loading_screen"
-              }
+              },
+              "type": "lu16"
             }
           ]
         },
@@ -4828,11 +4828,11 @@
                     [
                       "mapper",
                       {
-                        "type": "li32",
                         "mappings": {
                           "0": "angle",
                           "1": "distance"
-                        }
+                        },
+                        "type": "li32"
                       }
                     ]
                   ]
@@ -4862,14 +4862,14 @@
             [
               "mapper",
               {
-                "type": "u8",
                 "mappings": {
                   "0": "locked_player_relative_strafe",
                   "1": "camera_relative",
                   "2": "camera_relative_strafe",
                   "3": "player_relative",
                   "4": "player_relative_strafe"
-                }
+                },
+                "type": "u8"
               }
             ]
           ]
@@ -5082,7 +5082,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "unknown",
                 "1": "invalid_size_unknown",
@@ -5176,7 +5175,8 @@
                 "89": "gameface_media",
                 "90": "gameface_json",
                 "91": "gameface_script_engine"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -5372,7 +5372,6 @@
     "DisconnectFailReason": [
       "mapper",
       {
-        "type": "zigzag32",
         "mappings": {
           "0": "unknown",
           "1": "cant_connect_no_internet",
@@ -5511,7 +5510,8 @@
           "134": "nonce_not_found",
           "135": "nonce_expired",
           "136": "nonce_not_valid"
-        }
+        },
+        "type": "zigzag32"
       }
     ],
     "FullContainerName": [
@@ -5533,11 +5533,11 @@
     "MovementEffectType": [
       "mapper",
       {
-        "type": "varint",
         "mappings": {
           "0": "GLIDE_BOOST",
           "-1": "invalid"
-        }
+        },
+        "type": "varint"
       }
     ],
     "BiomeDefinition": [
@@ -6048,7 +6048,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "xyz",
                 "1": "xzy",
@@ -6056,7 +6055,8 @@
                 "3": "yzx",
                 "4": "zxy",
                 "5": "zyx"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -6118,7 +6118,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "single_valued",
                 "1": "uniform",
@@ -6127,7 +6126,8 @@
                 "4": "fixed_grid",
                 "5": "jittered_grid",
                 "6": "triangle"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         }
@@ -6306,7 +6306,6 @@
     "EaseType": [
       "mapper",
       {
-        "type": "u8",
         "mappings": {
           "0": "Linear",
           "1": "Spring",
@@ -6341,7 +6340,8 @@
           "30": "OutElastic",
           "31": "InOutElastic",
           "32": "InverseLerp"
-        }
+        },
+        "type": "u8"
       }
     ],
     "ParameterKeyframeValue": [
@@ -6360,7 +6360,6 @@
     "GraphicsOverrideParameterType": [
       "mapper",
       {
-        "type": "u8",
         "mappings": {
           "0": "sky_zenith_color",
           "1": "sky_horizon_color",
@@ -6414,7 +6413,8 @@
           "49": "emissive_desaturation",
           "50": "sky_intensity",
           "51": "orbital_offset_degrees"
-        }
+        },
+        "type": "u8"
       }
     ],
     "DebugMarkerData": [
@@ -6446,14 +6446,14 @@
           "type": [
             "mapper",
             {
-              "type": "li32",
               "mappings": {
                 "0": "none",
                 "1": "bool",
                 "2": "int64",
                 "4": "string",
                 "6": "map"
-              }
+              },
+              "type": "li32"
             }
           ]
         },
@@ -6464,17 +6464,17 @@
             {
               "compareTo": "type",
               "fields": {
-                "none": "void",
                 "bool": "bool",
                 "int64": "li64",
-                "string": "string",
                 "map": [
                   "array",
                   {
                     "countType": "varint",
                     "type": "DataStoreMapEntry"
                   }
-                ]
+                ],
+                "none": "void",
+                "string": "string"
               }
             }
           ]
@@ -6502,12 +6502,12 @@
           "type": [
             "mapper",
             {
-              "type": "lu32",
               "mappings": {
                 "0": "update",
                 "1": "change",
                 "2": "removal"
-              }
+              },
+              "type": "lu32"
             }
           ]
         },
@@ -6518,59 +6518,6 @@
             {
               "compareTo": "change_type",
               "fields": {
-                "update": [
-                  "container",
-                  [
-                    {
-                      "name": "name",
-                      "type": "string"
-                    },
-                    {
-                      "name": "property",
-                      "type": "string"
-                    },
-                    {
-                      "name": "path",
-                      "type": "string"
-                    },
-                    {
-                      "name": "data_type",
-                      "type": [
-                        "mapper",
-                        {
-                          "type": "lu32",
-                          "mappings": {
-                            "0": "double",
-                            "1": "bool",
-                            "2": "string"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "name": "data",
-                      "type": [
-                        "switch",
-                        {
-                          "compareTo": "data_type",
-                          "fields": {
-                            "double": "lf64",
-                            "bool": "bool",
-                            "string": "string"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "name": "update_count",
-                      "type": "lu32"
-                    },
-                    {
-                      "name": "path_update_count",
-                      "type": "lu32"
-                    }
-                  ]
-                ],
                 "change": [
                   "container",
                   [
@@ -6598,6 +6545,59 @@
                     {
                       "name": "name",
                       "type": "string"
+                    }
+                  ]
+                ],
+                "update": [
+                  "container",
+                  [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "property",
+                      "type": "string"
+                    },
+                    {
+                      "name": "path",
+                      "type": "string"
+                    },
+                    {
+                      "name": "data_type",
+                      "type": [
+                        "mapper",
+                        {
+                          "mappings": {
+                            "0": "double",
+                            "1": "bool",
+                            "2": "string"
+                          },
+                          "type": "lu32"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "data",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "data_type",
+                          "fields": {
+                            "bool": "bool",
+                            "double": "lf64",
+                            "string": "string"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "update_count",
+                      "type": "lu32"
+                    },
+                    {
+                      "name": "path_update_count",
+                      "type": "lu32"
                     }
                   ]
                 ]
@@ -6694,13 +6694,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "add",
                 "2": "remove",
                 "3": "update"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -6790,11 +6790,11 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "float",
                 "1": "string"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -6845,12 +6845,12 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "bool",
                 "1": "float",
                 "2": "colour"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -6870,6 +6870,22 @@
                     },
                     {
                       "name": "bool_operation",
+                      "type": [
+                        "option",
+                        "li32"
+                      ]
+                    }
+                  ]
+                ],
+                "colour": [
+                  "container",
+                  [
+                    {
+                      "name": "colour_value",
+                      "type": "li32"
+                    },
+                    {
+                      "name": "colour_operation",
                       "type": [
                         "option",
                         "li32"
@@ -6903,22 +6919,6 @@
                       "type": [
                         "option",
                         "lf32"
-                      ]
-                    }
-                  ]
-                ],
-                "colour": [
-                  "container",
-                  [
-                    {
-                      "name": "colour_value",
-                      "type": "li32"
-                    },
-                    {
-                      "name": "colour_operation",
-                      "type": [
-                        "option",
-                        "li32"
                       ]
                     }
                   ]
@@ -7051,7 +7051,6 @@
             [
               "mapper",
               {
-                "type": "u8",
                 "mappings": {
                   "0": "line",
                   "1": "box",
@@ -7059,7 +7058,8 @@
                   "3": "circle",
                   "4": "text",
                   "5": "arrow"
-                }
+                },
+                "type": "u8"
               }
             ]
           ]
@@ -7126,15 +7126,15 @@
             "switch",
             {
               "compareTo": "type",
+              "default": "void",
               "fields": {
-                "line": "ShapeLine",
+                "arrow": "ShapeArrow",
                 "box": "ShapeBox",
-                "sphere": "ShapeSphere",
                 "circle": "ShapeCircle",
-                "text": "ShapeText",
-                "arrow": "ShapeArrow"
-              },
-              "default": "void"
+                "line": "ShapeLine",
+                "sphere": "ShapeSphere",
+                "text": "ShapeText"
+              }
             }
           ]
         }
@@ -7264,7 +7264,6 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "1": "login",
                 "2": "play_status",
@@ -7507,7 +7506,8 @@
                 "345": "clientbound_attribute_layer_sync",
                 "346": "server_store_info",
                 "347": "server_presence_info"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -7518,247 +7518,247 @@
             {
               "compareTo": "name",
               "fields": {
-                "login": "packet_login",
-                "play_status": "packet_play_status",
-                "server_to_client_handshake": "packet_server_to_client_handshake",
-                "client_to_server_handshake": "packet_client_to_server_handshake",
-                "disconnect": "packet_disconnect",
-                "resource_packs_info": "packet_resource_packs_info",
-                "resource_pack_stack": "packet_resource_pack_stack",
-                "resource_pack_client_response": "packet_resource_pack_client_response",
-                "text": "packet_text",
-                "set_time": "packet_set_time",
-                "start_game": "packet_start_game",
-                "add_player": "packet_add_player",
-                "add_entity": "packet_add_entity",
-                "remove_entity": "packet_remove_entity",
-                "add_item_entity": "packet_add_item_entity",
-                "take_item_entity": "packet_take_item_entity",
-                "move_entity": "packet_move_entity",
-                "move_player": "packet_move_player",
-                "rider_jump": "packet_rider_jump",
-                "update_block": "packet_update_block",
-                "add_painting": "packet_add_painting",
-                "tick_sync": "packet_tick_sync",
-                "level_sound_event_old": "packet_level_sound_event_old",
-                "level_event": "packet_level_event",
-                "block_event": "packet_block_event",
-                "entity_event": "packet_entity_event",
-                "mob_effect": "packet_mob_effect",
-                "update_attributes": "packet_update_attributes",
-                "inventory_transaction": "packet_inventory_transaction",
-                "mob_equipment": "packet_mob_equipment",
-                "mob_armor_equipment": "packet_mob_armor_equipment",
-                "interact": "packet_interact",
-                "block_pick_request": "packet_block_pick_request",
-                "entity_pick_request": "packet_entity_pick_request",
-                "player_action": "packet_player_action",
-                "hurt_armor": "packet_hurt_armor",
-                "set_entity_data": "packet_set_entity_data",
-                "set_entity_motion": "packet_set_entity_motion",
-                "set_entity_link": "packet_set_entity_link",
-                "set_health": "packet_set_health",
-                "set_spawn_position": "packet_set_spawn_position",
-                "animate": "packet_animate",
-                "respawn": "packet_respawn",
-                "container_open": "packet_container_open",
-                "container_close": "packet_container_close",
-                "player_hotbar": "packet_player_hotbar",
-                "inventory_content": "packet_inventory_content",
-                "inventory_slot": "packet_inventory_slot",
-                "container_set_data": "packet_container_set_data",
-                "crafting_data": "packet_crafting_data",
-                "crafting_event": "packet_crafting_event",
-                "gui_data_pick_item": "packet_gui_data_pick_item",
-                "adventure_settings": "packet_adventure_settings",
-                "block_entity_data": "packet_block_entity_data",
-                "player_input": "packet_player_input",
-                "level_chunk": "packet_level_chunk",
-                "set_commands_enabled": "packet_set_commands_enabled",
-                "set_difficulty": "packet_set_difficulty",
-                "change_dimension": "packet_change_dimension",
-                "set_player_game_type": "packet_set_player_game_type",
-                "player_list": "packet_player_list",
-                "simple_event": "packet_simple_event",
-                "event": "packet_event",
-                "spawn_experience_orb": "packet_spawn_experience_orb",
-                "clientbound_map_item_data": "packet_clientbound_map_item_data",
-                "map_info_request": "packet_map_info_request",
-                "request_chunk_radius": "packet_request_chunk_radius",
-                "chunk_radius_update": "packet_chunk_radius_update",
-                "game_rules_changed": "packet_game_rules_changed",
-                "camera": "packet_camera",
-                "boss_event": "packet_boss_event",
-                "show_credits": "packet_show_credits",
-                "available_commands": "packet_available_commands",
-                "command_request": "packet_command_request",
-                "command_block_update": "packet_command_block_update",
-                "command_output": "packet_command_output",
-                "update_trade": "packet_update_trade",
-                "update_equipment": "packet_update_equipment",
-                "resource_pack_data_info": "packet_resource_pack_data_info",
-                "resource_pack_chunk_data": "packet_resource_pack_chunk_data",
-                "resource_pack_chunk_request": "packet_resource_pack_chunk_request",
-                "transfer": "packet_transfer",
-                "play_sound": "packet_play_sound",
-                "stop_sound": "packet_stop_sound",
-                "set_title": "packet_set_title",
                 "add_behavior_tree": "packet_add_behavior_tree",
-                "structure_block_update": "packet_structure_block_update",
-                "show_store_offer": "packet_show_store_offer",
-                "purchase_receipt": "packet_purchase_receipt",
-                "player_skin": "packet_player_skin",
-                "sub_client_login": "packet_sub_client_login",
-                "initiate_web_socket_connection": "packet_initiate_web_socket_connection",
-                "set_last_hurt_by": "packet_set_last_hurt_by",
-                "book_edit": "packet_book_edit",
-                "npc_request": "packet_npc_request",
-                "photo_transfer": "packet_photo_transfer",
-                "modal_form_request": "packet_modal_form_request",
-                "modal_form_response": "packet_modal_form_response",
-                "server_settings_request": "packet_server_settings_request",
-                "server_settings_response": "packet_server_settings_response",
-                "show_profile": "packet_show_profile",
-                "set_default_game_type": "packet_set_default_game_type",
-                "remove_objective": "packet_remove_objective",
-                "set_display_objective": "packet_set_display_objective",
-                "set_score": "packet_set_score",
-                "lab_table": "packet_lab_table",
-                "update_block_synced": "packet_update_block_synced",
-                "move_entity_delta": "packet_move_entity_delta",
-                "set_scoreboard_identity": "packet_set_scoreboard_identity",
-                "set_local_player_as_initialized": "packet_set_local_player_as_initialized",
-                "update_soft_enum": "packet_update_soft_enum",
-                "network_stack_latency": "packet_network_stack_latency",
-                "script_custom_event": "packet_script_custom_event",
-                "spawn_particle_effect": "packet_spawn_particle_effect",
+                "add_entity": "packet_add_entity",
+                "add_item_entity": "packet_add_item_entity",
+                "add_painting": "packet_add_painting",
+                "add_player": "packet_add_player",
+                "add_volume_entity": "packet_add_volume_entity",
+                "adventure_settings": "packet_adventure_settings",
+                "agent_action": "packet_agent_action",
+                "agent_animation": "packet_agent_animation",
+                "animate": "packet_animate",
+                "animate_entity": "packet_animate_entity",
+                "anvil_damage": "packet_anvil_damage",
+                "available_commands": "packet_available_commands",
                 "available_entity_identifiers": "packet_available_entity_identifiers",
-                "level_sound_event_v2": "packet_level_sound_event_v2",
-                "network_chunk_publisher_update": "packet_network_chunk_publisher_update",
+                "award_achievement": "packet_award_achievement",
                 "biome_definition_list": "packet_biome_definition_list",
-                "level_sound_event": "packet_level_sound_event",
-                "level_event_generic": "packet_level_event_generic",
-                "lectern_update": "packet_lectern_update",
-                "video_stream_connect": "packet_video_stream_connect",
-                "client_cache_status": "packet_client_cache_status",
-                "on_screen_texture_animation": "packet_on_screen_texture_animation",
-                "map_create_locked_copy": "packet_map_create_locked_copy",
-                "structure_template_data_export_request": "packet_structure_template_data_export_request",
-                "structure_template_data_export_response": "packet_structure_template_data_export_response",
-                "update_block_properties": "packet_update_block_properties",
+                "block_entity_data": "packet_block_entity_data",
+                "block_event": "packet_block_event",
+                "block_pick_request": "packet_block_pick_request",
+                "book_edit": "packet_book_edit",
+                "boss_event": "packet_boss_event",
+                "camera": "packet_camera",
+                "camera_aim_assist": "packet_camera_aim_assist",
+                "camera_aim_assist_actor_priority": "packet_camera_aim_assist_actor_priority",
+                "camera_aim_assist_presets": "packet_camera_aim_assist_presets",
+                "camera_instruction": "packet_camera_instruction",
+                "camera_presets": "packet_camera_presets",
+                "camera_shake": "packet_camera_shake",
+                "camera_spline": "packet_camera_spline",
+                "change_dimension": "packet_change_dimension",
+                "change_mob_property": "packet_change_mob_property",
+                "chunk_radius_update": "packet_chunk_radius_update",
                 "client_cache_blob_status": "packet_client_cache_blob_status",
                 "client_cache_miss_response": "packet_client_cache_miss_response",
-                "education_settings": "packet_education_settings",
-                "emote": "packet_emote",
-                "multiplayer_settings": "packet_multiplayer_settings",
-                "settings_command": "packet_settings_command",
-                "anvil_damage": "packet_anvil_damage",
-                "completed_using_item": "packet_completed_using_item",
-                "network_settings": "packet_network_settings",
-                "player_auth_input": "packet_player_auth_input",
-                "creative_content": "packet_creative_content",
-                "player_enchant_options": "packet_player_enchant_options",
-                "item_stack_request": "packet_item_stack_request",
-                "item_stack_response": "packet_item_stack_response",
-                "player_armor_damage": "packet_player_armor_damage",
-                "code_builder": "packet_code_builder",
-                "update_player_game_type": "packet_update_player_game_type",
-                "emote_list": "packet_emote_list",
-                "position_tracking_db_request": "packet_position_tracking_db_request",
-                "position_tracking_db_broadcast": "packet_position_tracking_db_broadcast",
-                "debug_info": "packet_debug_info",
-                "packet_violation_warning": "packet_packet_violation_warning",
-                "motion_prediction_hints": "packet_motion_prediction_hints",
-                "animate_entity": "packet_animate_entity",
-                "camera_shake": "packet_camera_shake",
-                "player_fog": "packet_player_fog",
-                "correct_player_move_prediction": "packet_correct_player_move_prediction",
-                "item_registry": "packet_item_registry",
-                "filter_text_packet": "packet_filter_text_packet",
-                "primitive_shapes": "packet_primitive_shapes",
-                "sync_entity_property": "packet_sync_entity_property",
-                "add_volume_entity": "packet_add_volume_entity",
-                "remove_volume_entity": "packet_remove_volume_entity",
-                "simulation_type": "packet_simulation_type",
-                "npc_dialogue": "packet_npc_dialogue",
-                "edu_uri_resource_packet": "packet_edu_uri_resource_packet",
-                "create_photo": "packet_create_photo",
-                "update_subchunk_blocks": "packet_update_subchunk_blocks",
-                "photo_info_request": "packet_photo_info_request",
-                "subchunk": "packet_subchunk",
-                "subchunk_request": "packet_subchunk_request",
-                "client_start_item_cooldown": "packet_client_start_item_cooldown",
-                "script_message": "packet_script_message",
-                "code_builder_source": "packet_code_builder_source",
-                "ticking_areas_load_status": "packet_ticking_areas_load_status",
-                "dimension_data": "packet_dimension_data",
-                "agent_action": "packet_agent_action",
-                "change_mob_property": "packet_change_mob_property",
-                "lesson_progress": "packet_lesson_progress",
-                "request_ability": "packet_request_ability",
-                "request_permissions": "packet_request_permissions",
-                "toast_request": "packet_toast_request",
-                "update_abilities": "packet_update_abilities",
-                "update_adventure_settings": "packet_update_adventure_settings",
-                "death_info": "packet_death_info",
-                "editor_network": "packet_editor_network",
-                "feature_registry": "packet_feature_registry",
-                "server_stats": "packet_server_stats",
-                "request_network_settings": "packet_request_network_settings",
-                "game_test_request": "packet_game_test_request",
-                "game_test_results": "packet_game_test_results",
-                "update_client_input_locks": "packet_update_client_input_locks",
-                "client_cheat_ability": "packet_client_cheat_ability",
-                "camera_presets": "packet_camera_presets",
-                "unlocked_recipes": "packet_unlocked_recipes",
-                "camera_instruction": "packet_camera_instruction",
-                "compressed_biome_definitions": "packet_compressed_biome_definitions",
-                "trim_data": "packet_trim_data",
-                "open_sign": "packet_open_sign",
-                "agent_animation": "packet_agent_animation",
-                "refresh_entitlements": "packet_refresh_entitlements",
-                "toggle_crafter_slot_request": "packet_toggle_crafter_slot_request",
-                "set_player_inventory_options": "packet_set_player_inventory_options",
-                "set_hud": "packet_set_hud",
-                "award_achievement": "packet_award_achievement",
-                "server_post_move": "packet_server_post_move",
-                "clientbound_close_form": "packet_clientbound_close_form",
-                "serverbound_loading_screen": "packet_serverbound_loading_screen",
-                "jigsaw_structure_data": "packet_jigsaw_structure_data",
-                "current_structure_feature": "packet_current_structure_feature",
-                "serverbound_diagnostics": "packet_serverbound_diagnostics",
-                "camera_aim_assist": "packet_camera_aim_assist",
-                "container_registry_cleanup": "packet_container_registry_cleanup",
-                "movement_effect": "packet_movement_effect",
-                "set_movement_authority": "packet_set_movement_authority",
-                "camera_aim_assist_presets": "packet_camera_aim_assist_presets",
+                "client_cache_status": "packet_client_cache_status",
                 "client_camera_aim_assist": "packet_client_camera_aim_assist",
+                "client_cheat_ability": "packet_client_cheat_ability",
                 "client_movement_prediction_sync": "packet_client_movement_prediction_sync",
-                "update_client_options": "packet_update_client_options",
-                "player_video_capture": "packet_player_video_capture",
-                "player_update_entity_overrides": "packet_player_update_entity_overrides",
-                "player_location": "packet_player_location",
+                "client_start_item_cooldown": "packet_client_start_item_cooldown",
+                "client_to_server_handshake": "packet_client_to_server_handshake",
+                "clientbound_attribute_layer_sync": "packet_clientbound_attribute_layer_sync",
+                "clientbound_close_form": "packet_clientbound_close_form",
                 "clientbound_controls_scheme": "packet_clientbound_controls_scheme",
-                "server_script_debug_drawer": "packet_server_script_debug_drawer",
-                "serverbound_pack_setting_change": "packet_serverbound_pack_setting_change",
-                "clientbound_data_store": "packet_clientbound_data_store",
-                "graphics_override_parameter": "packet_graphics_override_parameter",
-                "serverbound_data_store": "packet_serverbound_data_store",
-                "clientbound_data_driven_ui_show_screen": "packet_clientbound_data_driven_ui_show_screen",
                 "clientbound_data_driven_ui_close_screen": "packet_clientbound_data_driven_ui_close_screen",
                 "clientbound_data_driven_ui_reload": "packet_clientbound_data_driven_ui_reload",
+                "clientbound_data_driven_ui_show_screen": "packet_clientbound_data_driven_ui_show_screen",
+                "clientbound_data_store": "packet_clientbound_data_store",
+                "clientbound_map_item_data": "packet_clientbound_map_item_data",
                 "clientbound_texture_shift": "packet_clientbound_texture_shift",
-                "voxel_shapes": "packet_voxel_shapes",
-                "camera_spline": "packet_camera_spline",
-                "camera_aim_assist_actor_priority": "packet_camera_aim_assist_actor_priority",
-                "resource_packs_ready_for_validation": "packet_resource_packs_ready_for_validation",
+                "code_builder": "packet_code_builder",
+                "code_builder_source": "packet_code_builder_source",
+                "command_block_update": "packet_command_block_update",
+                "command_output": "packet_command_output",
+                "command_request": "packet_command_request",
+                "completed_using_item": "packet_completed_using_item",
+                "compressed_biome_definitions": "packet_compressed_biome_definitions",
+                "container_close": "packet_container_close",
+                "container_open": "packet_container_open",
+                "container_registry_cleanup": "packet_container_registry_cleanup",
+                "container_set_data": "packet_container_set_data",
+                "correct_player_move_prediction": "packet_correct_player_move_prediction",
+                "crafting_data": "packet_crafting_data",
+                "crafting_event": "packet_crafting_event",
+                "create_photo": "packet_create_photo",
+                "creative_content": "packet_creative_content",
+                "current_structure_feature": "packet_current_structure_feature",
+                "death_info": "packet_death_info",
+                "debug_info": "packet_debug_info",
+                "dimension_data": "packet_dimension_data",
+                "disconnect": "packet_disconnect",
+                "editor_network": "packet_editor_network",
+                "edu_uri_resource_packet": "packet_edu_uri_resource_packet",
+                "education_settings": "packet_education_settings",
+                "emote": "packet_emote",
+                "emote_list": "packet_emote_list",
+                "entity_event": "packet_entity_event",
+                "entity_pick_request": "packet_entity_pick_request",
+                "event": "packet_event",
+                "feature_registry": "packet_feature_registry",
+                "filter_text_packet": "packet_filter_text_packet",
+                "game_rules_changed": "packet_game_rules_changed",
+                "game_test_request": "packet_game_test_request",
+                "game_test_results": "packet_game_test_results",
+                "graphics_override_parameter": "packet_graphics_override_parameter",
+                "gui_data_pick_item": "packet_gui_data_pick_item",
+                "hurt_armor": "packet_hurt_armor",
+                "initiate_web_socket_connection": "packet_initiate_web_socket_connection",
+                "interact": "packet_interact",
+                "inventory_content": "packet_inventory_content",
+                "inventory_slot": "packet_inventory_slot",
+                "inventory_transaction": "packet_inventory_transaction",
+                "item_registry": "packet_item_registry",
+                "item_stack_request": "packet_item_stack_request",
+                "item_stack_response": "packet_item_stack_response",
+                "jigsaw_structure_data": "packet_jigsaw_structure_data",
+                "lab_table": "packet_lab_table",
+                "lectern_update": "packet_lectern_update",
+                "lesson_progress": "packet_lesson_progress",
+                "level_chunk": "packet_level_chunk",
+                "level_event": "packet_level_event",
+                "level_event_generic": "packet_level_event_generic",
+                "level_sound_event": "packet_level_sound_event",
+                "level_sound_event_old": "packet_level_sound_event_old",
+                "level_sound_event_v2": "packet_level_sound_event_v2",
                 "locator_bar": "packet_locator_bar",
+                "login": "packet_login",
+                "map_create_locked_copy": "packet_map_create_locked_copy",
+                "map_info_request": "packet_map_info_request",
+                "mob_armor_equipment": "packet_mob_armor_equipment",
+                "mob_effect": "packet_mob_effect",
+                "mob_equipment": "packet_mob_equipment",
+                "modal_form_request": "packet_modal_form_request",
+                "modal_form_response": "packet_modal_form_response",
+                "motion_prediction_hints": "packet_motion_prediction_hints",
+                "move_entity": "packet_move_entity",
+                "move_entity_delta": "packet_move_entity_delta",
+                "move_player": "packet_move_player",
+                "movement_effect": "packet_movement_effect",
+                "multiplayer_settings": "packet_multiplayer_settings",
+                "network_chunk_publisher_update": "packet_network_chunk_publisher_update",
+                "network_settings": "packet_network_settings",
+                "network_stack_latency": "packet_network_stack_latency",
+                "npc_dialogue": "packet_npc_dialogue",
+                "npc_request": "packet_npc_request",
+                "on_screen_texture_animation": "packet_on_screen_texture_animation",
+                "open_sign": "packet_open_sign",
+                "packet_violation_warning": "packet_packet_violation_warning",
                 "party_changed": "packet_party_changed",
-                "serverbound_data_driven_screen_closed": "packet_serverbound_data_driven_screen_closed",
-                "sync_world_clocks": "packet_sync_world_clocks",
-                "clientbound_attribute_layer_sync": "packet_clientbound_attribute_layer_sync",
+                "photo_info_request": "packet_photo_info_request",
+                "photo_transfer": "packet_photo_transfer",
+                "play_sound": "packet_play_sound",
+                "play_status": "packet_play_status",
+                "player_action": "packet_player_action",
+                "player_armor_damage": "packet_player_armor_damage",
+                "player_auth_input": "packet_player_auth_input",
+                "player_enchant_options": "packet_player_enchant_options",
+                "player_fog": "packet_player_fog",
+                "player_hotbar": "packet_player_hotbar",
+                "player_input": "packet_player_input",
+                "player_list": "packet_player_list",
+                "player_location": "packet_player_location",
+                "player_skin": "packet_player_skin",
+                "player_update_entity_overrides": "packet_player_update_entity_overrides",
+                "player_video_capture": "packet_player_video_capture",
+                "position_tracking_db_broadcast": "packet_position_tracking_db_broadcast",
+                "position_tracking_db_request": "packet_position_tracking_db_request",
+                "primitive_shapes": "packet_primitive_shapes",
+                "purchase_receipt": "packet_purchase_receipt",
+                "refresh_entitlements": "packet_refresh_entitlements",
+                "remove_entity": "packet_remove_entity",
+                "remove_objective": "packet_remove_objective",
+                "remove_volume_entity": "packet_remove_volume_entity",
+                "request_ability": "packet_request_ability",
+                "request_chunk_radius": "packet_request_chunk_radius",
+                "request_network_settings": "packet_request_network_settings",
+                "request_permissions": "packet_request_permissions",
+                "resource_pack_chunk_data": "packet_resource_pack_chunk_data",
+                "resource_pack_chunk_request": "packet_resource_pack_chunk_request",
+                "resource_pack_client_response": "packet_resource_pack_client_response",
+                "resource_pack_data_info": "packet_resource_pack_data_info",
+                "resource_pack_stack": "packet_resource_pack_stack",
+                "resource_packs_info": "packet_resource_packs_info",
+                "resource_packs_ready_for_validation": "packet_resource_packs_ready_for_validation",
+                "respawn": "packet_respawn",
+                "rider_jump": "packet_rider_jump",
+                "script_custom_event": "packet_script_custom_event",
+                "script_message": "packet_script_message",
+                "server_post_move": "packet_server_post_move",
+                "server_presence_info": "packet_server_presence_info",
+                "server_script_debug_drawer": "packet_server_script_debug_drawer",
+                "server_settings_request": "packet_server_settings_request",
+                "server_settings_response": "packet_server_settings_response",
+                "server_stats": "packet_server_stats",
                 "server_store_info": "packet_server_store_info",
-                "server_presence_info": "packet_server_presence_info"
+                "server_to_client_handshake": "packet_server_to_client_handshake",
+                "serverbound_data_driven_screen_closed": "packet_serverbound_data_driven_screen_closed",
+                "serverbound_data_store": "packet_serverbound_data_store",
+                "serverbound_diagnostics": "packet_serverbound_diagnostics",
+                "serverbound_loading_screen": "packet_serverbound_loading_screen",
+                "serverbound_pack_setting_change": "packet_serverbound_pack_setting_change",
+                "set_commands_enabled": "packet_set_commands_enabled",
+                "set_default_game_type": "packet_set_default_game_type",
+                "set_difficulty": "packet_set_difficulty",
+                "set_display_objective": "packet_set_display_objective",
+                "set_entity_data": "packet_set_entity_data",
+                "set_entity_link": "packet_set_entity_link",
+                "set_entity_motion": "packet_set_entity_motion",
+                "set_health": "packet_set_health",
+                "set_hud": "packet_set_hud",
+                "set_last_hurt_by": "packet_set_last_hurt_by",
+                "set_local_player_as_initialized": "packet_set_local_player_as_initialized",
+                "set_movement_authority": "packet_set_movement_authority",
+                "set_player_game_type": "packet_set_player_game_type",
+                "set_player_inventory_options": "packet_set_player_inventory_options",
+                "set_score": "packet_set_score",
+                "set_scoreboard_identity": "packet_set_scoreboard_identity",
+                "set_spawn_position": "packet_set_spawn_position",
+                "set_time": "packet_set_time",
+                "set_title": "packet_set_title",
+                "settings_command": "packet_settings_command",
+                "show_credits": "packet_show_credits",
+                "show_profile": "packet_show_profile",
+                "show_store_offer": "packet_show_store_offer",
+                "simple_event": "packet_simple_event",
+                "simulation_type": "packet_simulation_type",
+                "spawn_experience_orb": "packet_spawn_experience_orb",
+                "spawn_particle_effect": "packet_spawn_particle_effect",
+                "start_game": "packet_start_game",
+                "stop_sound": "packet_stop_sound",
+                "structure_block_update": "packet_structure_block_update",
+                "structure_template_data_export_request": "packet_structure_template_data_export_request",
+                "structure_template_data_export_response": "packet_structure_template_data_export_response",
+                "sub_client_login": "packet_sub_client_login",
+                "subchunk": "packet_subchunk",
+                "subchunk_request": "packet_subchunk_request",
+                "sync_entity_property": "packet_sync_entity_property",
+                "sync_world_clocks": "packet_sync_world_clocks",
+                "take_item_entity": "packet_take_item_entity",
+                "text": "packet_text",
+                "tick_sync": "packet_tick_sync",
+                "ticking_areas_load_status": "packet_ticking_areas_load_status",
+                "toast_request": "packet_toast_request",
+                "toggle_crafter_slot_request": "packet_toggle_crafter_slot_request",
+                "transfer": "packet_transfer",
+                "trim_data": "packet_trim_data",
+                "unlocked_recipes": "packet_unlocked_recipes",
+                "update_abilities": "packet_update_abilities",
+                "update_adventure_settings": "packet_update_adventure_settings",
+                "update_attributes": "packet_update_attributes",
+                "update_block": "packet_update_block",
+                "update_block_properties": "packet_update_block_properties",
+                "update_block_synced": "packet_update_block_synced",
+                "update_client_input_locks": "packet_update_client_input_locks",
+                "update_client_options": "packet_update_client_options",
+                "update_equipment": "packet_update_equipment",
+                "update_player_game_type": "packet_update_player_game_type",
+                "update_soft_enum": "packet_update_soft_enum",
+                "update_subchunk_blocks": "packet_update_subchunk_blocks",
+                "update_trade": "packet_update_trade",
+                "video_stream_connect": "packet_video_stream_connect",
+                "voxel_shapes": "packet_voxel_shapes"
               }
             }
           ]
@@ -7805,7 +7805,6 @@
           "type": [
             "mapper",
             {
-              "type": "i32",
               "mappings": {
                 "0": "login_success",
                 "1": "failed_client",
@@ -7817,7 +7816,8 @@
                 "7": "failed_server_full",
                 "8": "failed_editor_vanilla_mismatch",
                 "9": "failed_vanilla_editor_mismatch"
-              }
+              },
+              "type": "i32"
             }
           ]
         }
@@ -7853,9 +7853,6 @@
             "switch",
             {
               "compareTo": "hide_disconnect_reason",
-              "fields": {
-                "true": "void"
-              },
               "default": [
                 "container",
                 [
@@ -7868,7 +7865,10 @@
                     "type": "string"
                   }
                 ]
-              ]
+              ],
+              "fields": {
+                "true": "void"
+              }
             }
           ]
         }
@@ -7952,14 +7952,14 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "refused",
                 "2": "send_packs",
                 "3": "have_all_packs",
                 "4": "completed"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -7981,12 +7981,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "message_only",
                 "1": "authored",
                 "2": "parameters"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -7995,7 +7995,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "raw",
                 "1": "chat",
@@ -8009,7 +8008,8 @@
                 "9": "json_whisper",
                 "10": "json",
                 "11": "json_announcement"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -8020,32 +8020,6 @@
             {
               "compareTo": "type",
               "fields": {
-                "chat": [
-                  "container",
-                  [
-                    {
-                      "name": "source_name",
-                      "type": "string"
-                    },
-                    {
-                      "name": "message",
-                      "type": "string"
-                    }
-                  ]
-                ],
-                "whisper": [
-                  "container",
-                  [
-                    {
-                      "name": "source_name",
-                      "type": "string"
-                    },
-                    {
-                      "name": "message",
-                      "type": "string"
-                    }
-                  ]
-                ],
                 "announcement": [
                   "container",
                   [
@@ -8059,36 +8033,13 @@
                     }
                   ]
                 ],
-                "raw": [
+                "chat": [
                   "container",
                   [
                     {
-                      "name": "message",
+                      "name": "source_name",
                       "type": "string"
-                    }
-                  ]
-                ],
-                "tip": [
-                  "container",
-                  [
-                    {
-                      "name": "message",
-                      "type": "string"
-                    }
-                  ]
-                ],
-                "system": [
-                  "container",
-                  [
-                    {
-                      "name": "message",
-                      "type": "string"
-                    }
-                  ]
-                ],
-                "json_whisper": [
-                  "container",
-                  [
+                    },
                     {
                       "name": "message",
                       "type": "string"
@@ -8113,7 +8064,16 @@
                     }
                   ]
                 ],
-                "translation": [
+                "json_whisper": [
+                  "container",
+                  [
+                    {
+                      "name": "message",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "jukebox_popup": [
                   "container",
                   [
                     {
@@ -8151,7 +8111,34 @@
                     }
                   ]
                 ],
-                "jukebox_popup": [
+                "raw": [
+                  "container",
+                  [
+                    {
+                      "name": "message",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "system": [
+                  "container",
+                  [
+                    {
+                      "name": "message",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "tip": [
+                  "container",
+                  [
+                    {
+                      "name": "message",
+                      "type": "string"
+                    }
+                  ]
+                ],
+                "translation": [
                   "container",
                   [
                     {
@@ -8167,6 +8154,19 @@
                           "type": "string"
                         }
                       ]
+                    }
+                  ]
+                ],
+                "whisper": [
+                  "container",
+                  [
+                    {
+                      "name": "source_name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "message",
+                      "type": "string"
                     }
                   ]
                 ]
@@ -8249,12 +8249,12 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "overworld",
                 "1": "nether",
                 "2": "end"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -8287,13 +8287,13 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "not_editor",
                 "1": "project",
                 "2": "test_level",
                 "3": "realms_upload"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -8460,12 +8460,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "dropped",
                 "2": "disabled"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -8831,13 +8831,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "normal",
                 "1": "reset",
                 "2": "teleport",
                 "3": "rotation"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -8864,14 +8864,14 @@
                       "type": [
                         "mapper",
                         {
-                          "type": "li32",
                           "mappings": {
                             "0": "unknown",
                             "1": "projectile",
                             "2": "chorus_fruit",
                             "3": "command",
                             "4": "behavior"
-                          }
+                          },
+                          "type": "li32"
                         }
                       ]
                     },
@@ -8924,14 +8924,14 @@
     "UpdateBlockFlags": [
       "bitflags",
       {
-        "type": "varint",
         "flags": {
           "neighbors": 1,
           "network": 2,
           "no_graphic": 4,
-          "unused": 8,
-          "priority": 16
-        }
+          "priority": 16,
+          "unused": 8
+        },
+        "type": "varint"
       }
     ],
     "packet_add_painting": [
@@ -9009,7 +9009,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "1000": "sound_click",
                 "1001": "sound_click_fail",
@@ -9214,7 +9213,8 @@
                 "16463": "add_particle_spore_blossom_ambient",
                 "16464": "add_particle_wax",
                 "16465": "add_particle_electric_spark"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -9240,11 +9240,11 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "sound",
                 "1": "change_state"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -9266,7 +9266,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "jump",
                 "2": "hurt_animation",
@@ -9329,7 +9328,8 @@
                 "79": "wetness_stop",
                 "80": "kinetic_damage_dealt",
                 "81": "hurt_without_receiving_damage"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -9358,12 +9358,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "add",
                 "2": "update",
                 "3": "remove"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -9481,13 +9481,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "3": "leave_vehicle",
                 "4": "mouse_over_entity",
                 "5": "npc_open",
                 "6": "open_inventory"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -9661,11 +9661,11 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "player",
                 "1": "world"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -9691,7 +9691,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "swing_arm",
@@ -9699,7 +9698,8 @@
                 "3": "wake_up",
                 "4": "critical_hit",
                 "5": "magic_critical_hit"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -9913,12 +9913,12 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "inventory",
                 "1": "crafting",
                 "2": "workbench"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -9997,34 +9997,34 @@
     "AdventureFlags": [
       "bitflags",
       {
-        "type": "varint",
         "flags": {
-          "world_immutable": 1,
-          "no_pvp": 2,
-          "auto_jump": 32,
           "allow_flight": 64,
-          "no_clip": 128,
-          "world_builder": 256,
+          "auto_jump": 32,
           "flying": 512,
-          "muted": 1024
-        }
+          "muted": 1024,
+          "no_clip": 128,
+          "no_pvp": 2,
+          "world_builder": 256,
+          "world_immutable": 1
+        },
+        "type": "varint"
       }
     ],
     "ActionPermissions": [
       "bitflags",
       {
-        "type": "varint",
         "flags": {
-          "mine": 65537,
-          "doors_and_switches": 65538,
-          "open_containers": 65540,
-          "attack_players": 65544,
           "attack_mobs": 65552,
-          "operator": 65568,
-          "teleport": 65664,
+          "attack_players": 65544,
           "build": 65792,
-          "default": 66048
-        }
+          "default": 66048,
+          "doors_and_switches": 65538,
+          "mine": 65537,
+          "open_containers": 65540,
+          "operator": 65568,
+          "teleport": 65664
+        },
+        "type": "varint"
       }
     ],
     "packet_block_entity_data": [
@@ -10196,13 +10196,13 @@
           "type": [
             "mapper",
             {
-              "type": "lu16",
               "mappings": {
                 "0": "uninitialized_subtype",
                 "1": "enable_commands",
                 "2": "disable_commands",
                 "3": "unlock_world_template_settings"
-              }
+              },
+              "type": "lu16"
             }
           ]
         }
@@ -10220,7 +10220,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "achievement_awarded",
                 "1": "entity_interact",
@@ -10254,7 +10253,8 @@
                 "29": "sneak_close_to_sculk_sensor",
                 "30": "careful_restoration",
                 "31": "item_used"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -10284,13 +10284,13 @@
     "UpdateMapFlags": [
       "bitflags",
       {
-        "type": "varint",
         "flags": [
           "void",
           "texture",
           "decoration",
           "initialisation"
-        ]
+        ],
+        "type": "varint"
       }
     ],
     "packet_clientbound_map_item_data": [
@@ -10519,7 +10519,6 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "show_bar",
                 "1": "register_player",
@@ -10530,7 +10529,8 @@
                 "6": "update_properties",
                 "7": "texture",
                 "8": "query"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -10541,54 +10541,16 @@
             {
               "compareTo": "type",
               "fields": {
-                "show_bar": [
+                "query": [
                   "container",
                   [
                     {
-                      "name": "title",
-                      "type": "string"
-                    },
-                    {
-                      "name": "filtered_title",
-                      "type": "string"
-                    },
-                    {
-                      "name": "progress",
-                      "type": "lf32"
-                    },
-                    {
-                      "name": "screen_darkening",
-                      "type": "li16"
-                    },
-                    {
-                      "name": "color",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "overlay",
-                      "type": "varint"
+                      "name": "player_id",
+                      "type": "zigzag64"
                     }
                   ]
                 ],
                 "register_player": [
-                  "container",
-                  [
-                    {
-                      "name": "player_id",
-                      "type": "zigzag64"
-                    }
-                  ]
-                ],
-                "unregister_player": [
-                  "container",
-                  [
-                    {
-                      "name": "player_id",
-                      "type": "zigzag64"
-                    }
-                  ]
-                ],
-                "query": [
                   "container",
                   [
                     {
@@ -10619,9 +10581,21 @@
                     }
                   ]
                 ],
-                "update_properties": [
+                "show_bar": [
                   "container",
                   [
+                    {
+                      "name": "title",
+                      "type": "string"
+                    },
+                    {
+                      "name": "filtered_title",
+                      "type": "string"
+                    },
+                    {
+                      "name": "progress",
+                      "type": "lf32"
+                    },
                     {
                       "name": "screen_darkening",
                       "type": "li16"
@@ -10639,6 +10613,32 @@
                 "texture": [
                   "container",
                   [
+                    {
+                      "name": "color",
+                      "type": "varint"
+                    },
+                    {
+                      "name": "overlay",
+                      "type": "varint"
+                    }
+                  ]
+                ],
+                "unregister_player": [
+                  "container",
+                  [
+                    {
+                      "name": "player_id",
+                      "type": "zigzag64"
+                    }
+                  ]
+                ],
+                "update_properties": [
+                  "container",
+                  [
+                    {
+                      "name": "screen_darkening",
+                      "type": "li16"
+                    },
                     {
                       "name": "color",
                       "type": "varint"
@@ -10843,7 +10843,6 @@
                                         "type": [
                                           "mapper",
                                           {
-                                            "type": "lu16",
                                             "mappings": {
                                               "1": "int",
                                               "3": "float",
@@ -10864,7 +10863,8 @@
                                               "62": "json",
                                               "71": "block_states",
                                               "75": "command"
-                                            }
+                                            },
+                                            "type": "lu16"
                                           }
                                         ]
                                       },
@@ -10873,13 +10873,13 @@
                                         "type": [
                                           "mapper",
                                           {
-                                            "type": "lu16",
                                             "mappings": {
                                               "16": "valid",
                                               "48": "enum",
                                               "256": "suffixed",
                                               "1040": "soft_enum"
-                                            }
+                                            },
+                                            "type": "lu16"
                                           }
                                         ]
                                       },
@@ -10965,12 +10965,12 @@
                               "type": [
                                 "mapper",
                                 {
-                                  "type": "u8",
                                   "mappings": {
                                     "0": "cheats_enabled",
                                     "1": "operator_permissions",
                                     "2": "host_permissions"
-                                  }
+                                  },
+                                  "type": "u8"
                                 }
                               ]
                             }
@@ -10991,28 +10991,28 @@
       [
         {
           "name": "unused",
-          "size": 1,
-          "signed": false
+          "signed": false,
+          "size": 1
         },
         {
           "name": "collapse_enum",
-          "size": 1,
-          "signed": false
+          "signed": false,
+          "size": 1
         },
         {
           "name": "has_semantic_constraint",
-          "size": 1,
-          "signed": false
+          "signed": false,
+          "size": 1
         },
         {
           "name": "as_chained_command",
-          "size": 1,
-          "signed": false
+          "signed": false,
+          "size": 1
         },
         {
           "name": "unknown2",
-          "size": 4,
-          "signed": false
+          "signed": false,
+          "size": 4
         }
       ]
     ],
@@ -11051,6 +11051,15 @@
             {
               "compareTo": "is_block",
               "fields": {
+                "false": [
+                  "container",
+                  [
+                    {
+                      "name": "minecart_entity_runtime_id",
+                      "type": "varint64"
+                    }
+                  ]
+                ],
                 "true": [
                   "container",
                   [
@@ -11063,12 +11072,12 @@
                       "type": [
                         "mapper",
                         {
-                          "type": "varint",
                           "mappings": {
                             "0": "impulse",
                             "1": "repeat",
                             "2": "chain"
-                          }
+                          },
+                          "type": "varint"
                         }
                       ]
                     },
@@ -11079,15 +11088,6 @@
                     {
                       "name": "conditional",
                       "type": "bool"
-                    }
-                  ]
-                ],
-                "false": [
-                  "container",
-                  [
-                    {
-                      "name": "minecart_entity_runtime_id",
-                      "type": "varint64"
                     }
                   ]
                 ]
@@ -11292,7 +11292,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "addon",
                 "2": "cached",
@@ -11302,7 +11301,8 @@
                 "6": "resources",
                 "7": "skins",
                 "8": "world_template"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -11412,7 +11412,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "clear",
                 "1": "reset",
@@ -11423,7 +11422,8 @@
                 "6": "set_title_json",
                 "7": "set_subtitle_json",
                 "8": "action_bar_message_json"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -11527,12 +11527,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "marketplace",
                 "1": "dressing_room",
                 "2": "third_party_server_page"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -11623,14 +11623,14 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "replace_page",
                 "1": "add_page",
                 "2": "delete_page",
                 "3": "swap_pages",
                 "4": "sign"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -11641,23 +11641,6 @@
             {
               "compareTo": "type",
               "fields": {
-                "replace_page": [
-                  "container",
-                  [
-                    {
-                      "name": "page_number",
-                      "type": "zigzag32"
-                    },
-                    {
-                      "name": "text",
-                      "type": "string"
-                    },
-                    {
-                      "name": "photo_name",
-                      "type": "string"
-                    }
-                  ]
-                ],
                 "add_page": [
                   "container",
                   [
@@ -11684,16 +11667,20 @@
                     }
                   ]
                 ],
-                "swap_pages": [
+                "replace_page": [
                   "container",
                   [
                     {
-                      "name": "page1",
+                      "name": "page_number",
                       "type": "zigzag32"
                     },
                     {
-                      "name": "page2",
-                      "type": "zigzag32"
+                      "name": "text",
+                      "type": "string"
+                    },
+                    {
+                      "name": "photo_name",
+                      "type": "string"
                     }
                   ]
                 ],
@@ -11711,6 +11698,19 @@
                     {
                       "name": "xuid",
                       "type": "string"
+                    }
+                  ]
+                ],
+                "swap_pages": [
+                  "container",
+                  [
+                    {
+                      "name": "page1",
+                      "type": "zigzag32"
+                    },
+                    {
+                      "name": "page2",
+                      "type": "zigzag32"
                     }
                   ]
                 ]
@@ -11732,7 +11732,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "set_actions",
                 "1": "execute_action",
@@ -11741,7 +11740,8 @@
                 "4": "set_skin",
                 "5": "set_interaction_text",
                 "6": "execute_opening_commands"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -11754,7 +11754,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "set_actions",
                 "1": "execute_action",
@@ -11763,7 +11762,8 @@
                 "4": "set_skin",
                 "5": "set_interact_text",
                 "6": "execute_opening_commands"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -11861,11 +11861,11 @@
                       "type": [
                         "mapper",
                         {
-                          "type": "u8",
                           "mappings": {
                             "0": "closed",
                             "1": "busy"
-                          }
+                          },
+                          "type": "u8"
                         }
                       ]
                     }
@@ -11954,11 +11954,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "change",
                 "1": "remove"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -11998,12 +11998,12 @@
                                 "type": [
                                   "mapper",
                                   {
-                                    "type": "i8",
                                     "mappings": {
                                       "1": "player",
                                       "2": "entity",
                                       "3": "fake_player"
-                                    }
+                                    },
+                                    "type": "i8"
                                   }
                                 ]
                               },
@@ -12014,8 +12014,8 @@
                                   {
                                     "compareTo": "entry_type",
                                     "fields": {
-                                      "player": "zigzag64",
-                                      "entity": "zigzag64"
+                                      "entity": "zigzag64",
+                                      "player": "zigzag64"
                                     }
                                   }
                                 ]
@@ -12053,12 +12053,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "combine",
                 "1": "react",
                 "2": "reset"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -12100,12 +12100,12 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "entity",
                 "1": "create",
                 "2": "destroy"
-              }
+              },
+              "type": "varint"
             }
           ]
         }
@@ -12199,18 +12199,18 @@
     "DeltaMoveFlags": [
       "bitflags",
       {
-        "type": "lu16",
         "flags": {
-          "has_x": 1,
-          "has_y": 2,
-          "has_z": 4,
+          "force_move": 256,
           "has_rot_x": 8,
           "has_rot_y": 16,
           "has_rot_z": 32,
+          "has_x": 1,
+          "has_y": 2,
+          "has_z": 4,
           "on_ground": 64,
-          "teleport": 128,
-          "force_move": 256
-        }
+          "teleport": 128
+        },
+        "type": "lu16"
       }
     ],
     "packet_set_scoreboard_identity": [
@@ -12221,11 +12221,11 @@
           "type": [
             "mapper",
             {
-              "type": "i8",
               "mappings": {
                 "0": "register_identity",
                 "1": "clear_identity"
-              }
+              },
+              "type": "i8"
             }
           ]
         },
@@ -12248,10 +12248,10 @@
                       "switch",
                       {
                         "compareTo": "../action",
+                        "default": "void",
                         "fields": {
                           "register_identity": "zigzag64"
-                        },
-                        "default": "void"
+                        }
                       }
                     ]
                   }
@@ -12293,12 +12293,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "add",
                 "1": "remove",
                 "2": "update"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -12542,11 +12542,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "none",
                 "2": "close"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -12611,13 +12611,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "export_from_save",
                 "2": "export_from_load",
                 "3": "query_saved_structure",
                 "4": "import_from_save"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -12651,12 +12651,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "export",
                 "2": "query",
                 "3": "import"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -12856,11 +12856,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "server_side",
                 "2": "mute_chat"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -12874,12 +12874,12 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "enable_multiplayer",
                 "1": "disable_multiplayer",
                 "2": "refresh_join_code"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         }
@@ -12923,7 +12923,6 @@
           "type": [
             "mapper",
             {
-              "type": "li32",
               "mappings": {
                 "0": "equip_armor",
                 "1": "eat",
@@ -12942,7 +12941,8 @@
                 "14": "traded",
                 "15": "brushing_completed",
                 "16": "opened_vault"
-              }
+              },
+              "type": "li32"
             }
           ]
         }
@@ -12960,11 +12960,11 @@
           "type": [
             "mapper",
             {
-              "type": "lu16",
               "mappings": {
                 "0": "deflate",
                 "1": "snappy"
-              }
+              },
+              "type": "lu16"
             }
           ]
         },
@@ -13014,14 +13014,14 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "unknown",
                 "1": "mouse",
                 "2": "touch",
                 "3": "game_pad",
                 "4": "motion_controller"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -13030,7 +13030,6 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "normal",
                 "1": "teaser",
@@ -13042,7 +13041,8 @@
                 "7": "exit_level",
                 "8": "exit_level_living_room",
                 "9": "num_modes"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -13051,12 +13051,12 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "touch",
                 "1": "crosshair",
                 "2": "classic"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -13161,7 +13161,7 @@
                             {
                               "compareTo": "action",
                               "fields": {
-                                "start_break": [
+                                "abort_break": [
                                   "container",
                                   [
                                     {
@@ -13174,7 +13174,7 @@
                                     }
                                   ]
                                 ],
-                                "abort_break": [
+                                "continue_break": [
                                   "container",
                                   [
                                     {
@@ -13213,7 +13213,7 @@
                                     }
                                   ]
                                 ],
-                                "continue_break": [
+                                "start_break": [
                                   "container",
                                   [
                                     {
@@ -13255,7 +13255,6 @@
     "InputFlag": [
       "bitflags",
       {
-        "type": "varint128",
         "big": true,
         "flags": [
           "ascend",
@@ -13323,7 +13322,8 @@
           "sneak_released_raw",
           "sneak_pressed_raw",
           "sneak_current_raw"
-        ]
+        ],
+        "type": "varint128"
       }
     ],
     "packet_creative_content": [
@@ -13343,7 +13343,6 @@
                     "type": [
                       "mapper",
                       {
-                        "type": "li32",
                         "mappings": {
                           "0": "all",
                           "1": "construction",
@@ -13351,7 +13350,8 @@
                           "3": "equipment",
                           "4": "items",
                           "5": "item_command_only"
-                        }
+                        },
+                        "type": "li32"
                       }
                     ]
                   },
@@ -13458,14 +13458,14 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "helmet",
                 "1": "chestplate",
                 "2": "leggings",
                 "3": "boots",
                 "4": "body"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -13532,10 +13532,10 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "query"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -13553,12 +13553,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "update",
                 "1": "destory",
                 "2": "not_found"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -13593,10 +13593,10 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "malformed"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -13605,12 +13605,12 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "warning",
                 "1": "final_warning",
                 "2": "terminating"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -13700,11 +13700,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "add",
                 "1": "stop"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -13733,11 +13733,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "player",
                 "1": "vehicle"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -13878,13 +13878,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "game",
                 "1": "editor",
                 "2": "test",
                 "3": "invalid"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -13902,11 +13902,11 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "open",
                 "1": "close"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -14003,14 +14003,14 @@
     "HeightMapDataType": [
       "mapper",
       {
-        "type": "u8",
         "mappings": {
           "0": "no_data",
           "1": "has_data",
           "2": "too_high",
           "3": "too_low",
           "4": "all_copied"
-        }
+        },
+        "type": "u8"
       }
     ],
     "SubChunkEntryWithoutCaching": [
@@ -14037,7 +14037,6 @@
               "type": [
                 "mapper",
                 {
-                  "type": "u8",
                   "mappings": {
                     "0": "undefined",
                     "1": "success",
@@ -14046,7 +14045,8 @@
                     "4": "player_not_found",
                     "5": "y_index_out_of_bounds",
                     "6": "success_all_air"
-                  }
+                  },
+                  "type": "u8"
                 }
               ]
             },
@@ -14124,7 +14124,6 @@
               "type": [
                 "mapper",
                 {
-                  "type": "u8",
                   "mappings": {
                     "0": "undefined",
                     "1": "success",
@@ -14133,7 +14132,8 @@
                     "4": "player_not_found",
                     "5": "y_index_out_of_bounds",
                     "6": "success_all_air"
-                  }
+                  },
+                  "type": "u8"
                 }
               ]
             },
@@ -14143,10 +14143,10 @@
                 "switch",
                 {
                   "compareTo": "result",
+                  "default": "ByteArray",
                   "fields": {
                     "success_all_air": "void"
-                  },
-                  "default": "ByteArray"
+                  }
                 }
               ]
             },
@@ -14222,8 +14222,8 @@
             {
               "compareTo": "cache_enabled",
               "fields": {
-                "true": "SubChunkEntryWithCaching",
-                "false": "SubChunkEntryWithoutCaching"
+                "false": "SubChunkEntryWithoutCaching",
+                "true": "SubChunkEntryWithCaching"
               }
             }
           ]
@@ -14303,13 +14303,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "get",
                 "2": "set",
                 "3": "reset"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -14318,12 +14318,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "code_status",
                 "2": "instantiation"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -14332,7 +14332,6 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "none",
                 "1": "not_started",
@@ -14340,7 +14339,8 @@
                 "3": "paused",
                 "4": "error",
                 "5": "succeeded"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -14384,7 +14384,6 @@
                     "type": [
                       "mapper",
                       {
-                        "type": "zigzag32",
                         "mappings": {
                           "0": "legacy",
                           "1": "overworld",
@@ -14392,7 +14391,8 @@
                           "3": "nether",
                           "4": "end",
                           "5": "void"
-                        }
+                        },
+                        "type": "zigzag32"
                       }
                     ]
                   },
@@ -14419,7 +14419,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "none",
                 "1": "attack",
@@ -14440,7 +14439,8 @@
                 "16": "till",
                 "17": "transfer_item_to",
                 "18": "turn"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -14504,7 +14504,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "build",
                 "1": "mine",
@@ -14525,7 +14524,8 @@
                 "16": "world_builder",
                 "17": "no_clip",
                 "18": "ability_count"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -14534,11 +14534,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "1": "bool",
                 "2": "float"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -14572,17 +14572,17 @@
     "RequestPermissions": [
       "bitflags",
       {
-        "type": "lu16",
         "flags": {
-          "build": 1,
-          "mine": 2,
-          "doors_and_switches": 4,
-          "open_containers": 8,
-          "attack_players": 16,
           "attack_mobs": 32,
+          "attack_players": 16,
+          "build": 1,
+          "doors_and_switches": 4,
+          "mine": 2,
+          "open_containers": 8,
           "operator": 64,
           "teleport": 128
-        }
+        },
+        "type": "lu16"
       }
     ],
     "packet_toast_request": [
@@ -14747,14 +14747,14 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "0deg",
                 "1": "90deg",
                 "2": "180deg",
                 "3": "270deg",
                 "4": "360deg"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -14796,15 +14796,15 @@
     "InputLockFlags": [
       "bitflags",
       {
-        "type": "varint",
         "flags": {
-          "move": 2,
-          "jump": 4,
-          "sneak": 8,
-          "mount": 16,
           "dismount": 32,
-          "rotation": 64
-        }
+          "jump": 4,
+          "mount": 16,
+          "move": 2,
+          "rotation": 64,
+          "sneak": 8
+        },
+        "type": "varint"
       }
     ],
     "packet_update_client_input_locks": [
@@ -14866,14 +14866,14 @@
           "type": [
             "mapper",
             {
-              "type": "lu32",
               "mappings": {
                 "0": "empty",
                 "1": "initially_unlocked",
                 "2": "newly_unlocked",
                 "3": "remove_unlocked",
                 "4": "remove_all_unlocked"
-              }
+              },
+              "type": "lu32"
             }
           ]
         },
@@ -15168,11 +15168,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "arm_swing",
                 "1": "shrug"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -15211,7 +15211,6 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "none",
                 "1": "construction",
@@ -15220,7 +15219,8 @@
                 "4": "nature",
                 "5": "search",
                 "6": "survival"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -15229,13 +15229,13 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "none",
                 "1": "fullscreen",
                 "2": "crafting",
                 "3": "armor"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -15248,13 +15248,13 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "none",
                 "1": "inventory_only",
                 "2": "default",
                 "3": "recipe_book_only"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         },
@@ -15263,13 +15263,13 @@
           "type": [
             "mapper",
             {
-              "type": "zigzag32",
               "mappings": {
                 "0": "none",
                 "1": "inventory_only",
                 "2": "default",
                 "3": "recipe_book_only"
-              }
+              },
+              "type": "zigzag32"
             }
           ]
         }
@@ -15293,11 +15293,11 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "hide",
                 "1": "reset"
-              }
+              },
+              "type": "varint"
             }
           ]
         }
@@ -15306,7 +15306,6 @@
     "Element": [
       "mapper",
       {
-        "type": "varint",
         "mappings": {
           "0": "PaperDoll",
           "1": "Armour",
@@ -15321,7 +15320,8 @@
           "10": "VehicleHealth",
           "11": "EffectsBar",
           "12": "ItemTextPopup"
-        }
+        },
+        "type": "varint"
       }
     ],
     "packet_award_achievement": [
@@ -15471,11 +15471,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "angle",
                 "1": "distance"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -15484,11 +15484,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "set",
                 "1": "clear"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -15542,12 +15542,12 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "client",
                 "1": "server",
                 "2": "server_with_rewind"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -15781,11 +15781,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "set",
                 "1": "add_to_existing"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -15803,11 +15803,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "set_from_camera_preset",
                 "1": "clear"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -15900,13 +15900,13 @@
             [
               "mapper",
               {
-                "type": "u8",
                 "mappings": {
                   "0": "simple",
                   "1": "fancy",
                   "2": "advanced",
                   "3": "ray_traced"
-                }
+                },
+                "type": "u8"
               }
             ]
           ]
@@ -15928,11 +15928,11 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "stop",
                 "1": "start"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -15978,13 +15978,13 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "clear_all",
                 "1": "remove",
                 "2": "set_int",
                 "3": "set_float"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -15995,8 +15995,8 @@
             {
               "compareTo": "type",
               "fields": {
-                "set_int": "li32",
-                "set_float": "lf32"
+                "set_float": "lf32",
+                "set_int": "li32"
               }
             }
           ]
@@ -16011,11 +16011,11 @@
           "type": [
             "mapper",
             {
-              "type": "li32",
               "mappings": {
                 "0": "coordinates",
                 "1": "type_hide"
-              }
+              },
+              "type": "li32"
             }
           ]
         },
@@ -16045,14 +16045,14 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "locked_player_relative_strafe",
                 "1": "camera_relative",
                 "2": "camera_relative_strafe",
                 "3": "player_relative",
                 "4": "player_relative_strafe"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -16081,7 +16081,6 @@
                       [
                         "mapper",
                         {
-                          "type": "u8",
                           "mappings": {
                             "0": "line",
                             "1": "box",
@@ -16089,7 +16088,8 @@
                             "3": "circle",
                             "4": "text",
                             "5": "arrow"
-                          }
+                          },
+                          "type": "u8"
                         }
                       ]
                     ]
@@ -16199,12 +16199,12 @@
                 "type": [
                   "mapper",
                   {
-                    "type": "varint",
                     "mappings": {
                       "0": "float",
                       "1": "bool",
                       "2": "string"
-                    }
+                    },
+                    "type": "varint"
                   }
                 ]
               },
@@ -16215,8 +16215,8 @@
                   {
                     "compareTo": "type",
                     "fields": {
-                      "float": "lf32",
                       "bool": "bool",
+                      "float": "lf32",
                       "string": "string"
                     }
                   }
@@ -16303,12 +16303,12 @@
           "type": [
             "mapper",
             {
-              "type": "lu32",
               "mappings": {
                 "0": "double",
                 "1": "bool",
                 "2": "string"
-              }
+              },
+              "type": "lu32"
             }
           ]
         },
@@ -16319,8 +16319,8 @@
             {
               "compareTo": "data_type",
               "fields": {
-                "double": "lf64",
                 "bool": "bool",
+                "double": "lf64",
                 "string": "string"
               }
             }
@@ -16380,14 +16380,14 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "invalid",
                 "1": "initialize",
                 "2": "start",
                 "3": "set_enabled",
                 "4": "sync"
-              }
+              },
+              "type": "u8"
             }
           ]
         },
@@ -16532,14 +16532,14 @@
           "type": [
             "mapper",
             {
-              "type": "u8",
               "mappings": {
                 "0": "programmatic_close",
                 "1": "programmatic_close_all",
                 "2": "client_canceled",
                 "3": "user_busy",
                 "4": "invalid_form"
-              }
+              },
+              "type": "u8"
             }
           ]
         }
@@ -16553,13 +16553,13 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "sync_state",
                 "1": "initialize_registry",
                 "2": "add_time_marker",
                 "3": "remove_time_marker"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -16570,16 +16570,20 @@
             {
               "compareTo": "payload_type",
               "fields": {
-                "sync_state": [
+                "add_time_marker": [
                   "container",
                   [
                     {
-                      "name": "sync_states",
+                      "name": "add_clock_id",
+                      "type": "varint64"
+                    },
+                    {
+                      "name": "add_time_markers",
                       "type": [
                         "array",
                         {
                           "countType": "varint",
-                          "type": "SyncWorldClockStateData"
+                          "type": "TimeMarkerData"
                         }
                       ]
                     }
@@ -16595,25 +16599,6 @@
                         {
                           "countType": "varint",
                           "type": "WorldClockData"
-                        }
-                      ]
-                    }
-                  ]
-                ],
-                "add_time_marker": [
-                  "container",
-                  [
-                    {
-                      "name": "add_clock_id",
-                      "type": "varint64"
-                    },
-                    {
-                      "name": "add_time_markers",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": "TimeMarkerData"
                         }
                       ]
                     }
@@ -16637,6 +16622,21 @@
                       ]
                     }
                   ]
+                ],
+                "sync_state": [
+                  "container",
+                  [
+                    {
+                      "name": "sync_states",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "SyncWorldClockStateData"
+                        }
+                      ]
+                    }
+                  ]
                 ]
               }
             }
@@ -16652,13 +16652,13 @@
           "type": [
             "mapper",
             {
-              "type": "varint",
               "mappings": {
                 "0": "update_layers",
                 "1": "update_settings",
                 "2": "update_environment",
                 "3": "remove_environment"
-              }
+              },
+              "type": "varint"
             }
           ]
         },
@@ -16669,6 +16669,52 @@
             {
               "compareTo": "payload_type",
               "fields": {
+                "remove_environment": [
+                  "container",
+                  [
+                    {
+                      "name": "layer_name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "dimension_id",
+                      "type": "zigzag32"
+                    },
+                    {
+                      "name": "remove_attribute_names",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  ]
+                ],
+                "update_environment": [
+                  "container",
+                  [
+                    {
+                      "name": "layer_name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "dimension_id",
+                      "type": "zigzag32"
+                    },
+                    {
+                      "name": "environment_attributes",
+                      "type": [
+                        "array",
+                        {
+                          "countType": "varint",
+                          "type": "EnvironmentAttributeData"
+                        }
+                      ]
+                    }
+                  ]
+                ],
                 "update_layers": [
                   "container",
                   [
@@ -16698,52 +16744,6 @@
                     {
                       "name": "settings",
                       "type": "AttributeLayerSettings"
-                    }
-                  ]
-                ],
-                "update_environment": [
-                  "container",
-                  [
-                    {
-                      "name": "layer_name",
-                      "type": "string"
-                    },
-                    {
-                      "name": "dimension_id",
-                      "type": "zigzag32"
-                    },
-                    {
-                      "name": "environment_attributes",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": "EnvironmentAttributeData"
-                        }
-                      ]
-                    }
-                  ]
-                ],
-                "remove_environment": [
-                  "container",
-                  [
-                    {
-                      "name": "layer_name",
-                      "type": "string"
-                    },
-                    {
-                      "name": "dimension_id",
-                      "type": "zigzag32"
-                    },
-                    {
-                      "name": "remove_attribute_names",
-                      "type": [
-                        "array",
-                        {
-                          "countType": "varint",
-                          "type": "string"
-                        }
-                      ]
                     }
                   ]
                 ]

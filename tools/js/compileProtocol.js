@@ -59,14 +59,32 @@ function visitor (key, value) {
   return value
 }
 
+// Render object keys in sorted order so regenerated files are byte-stable
+// regardless of the source order (JSON object key order carries no meaning
+// for ProtoDef compilation). The top-level section order is preserved:
+// protodef-validator registers the global `types` namespace before the
+// per-state namespaces, so `types` must stay ahead of them no matter how the
+// source was assembled.
+function sortKeys (value, isTopLevel = false) {
+  if (Array.isArray(value)) return value.map(v => sortKeys(v))
+  if (value && typeof value === 'object') {
+    const keys = Object.keys(value)
+    if (!isTopLevel) keys.sort()
+    const out = {}
+    for (const key of keys) out[key] = sortKeys(value[key])
+    return out
+  }
+  return value
+}
+
 function convert (edition, ver, path) {
   process.chdir(path || join(__dirname, `../../data/${edition}/${ver}`))
   const [version, json] = genProtoSchema(edition === 'bedrock')
   fs.mkdirSync(`../${version}`, { recursive: true })
   if (edition === 'bedrock') {
-    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: json }, visitor, 2))
+    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: sortKeys(json, true) }, visitor, 2))
   } else if (edition === 'pc') {
-    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify(json, visitor, 2))
+    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify(sortKeys(json, true), visitor, 2))
   }
   return version
 }
@@ -83,8 +101,8 @@ function validate (edition, ver, path) {
   }
 
   const expected = edition === 'bedrock'
-    ? JSON.stringify({ types: json }, visitor, 2)
-    : JSON.stringify(json, visitor, 2)
+    ? JSON.stringify({ types: sortKeys(json, true) }, visitor, 2)
+    : JSON.stringify(sortKeys(json, true), visitor, 2)
 
   // If you crash here, no protocol.json was generated - run `npm run build`
   const actual = JSON.stringify(getJSON(`../${version}/protocol.json`), null, 2)
