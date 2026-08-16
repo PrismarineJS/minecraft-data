@@ -7,7 +7,43 @@ const path = require('path')
 const Ajv = require('ajv')
 const v = new Ajv({ verbose: true })
 
+// Ajv compiles uniqueItems to O(n^2) pairwise deep-equal, which dominates the
+// suite on the big data files (items, blockLoot, recipes). Replace it with a
+// linear Set membership check on the canonical (sorted-key) JSON form — for
+// JSON-parsed data this is exactly equivalent to deep equality.
+v.removeKeyword('uniqueItems')
+v.addKeyword('uniqueItems', {
+  type: 'array',
+  compile (schemaValue) {
+    if (!schemaValue) return () => true
+    return function validateUnique (data) {
+      if (!Array.isArray(data)) return true
+      const seen = new Set()
+      for (const item of data) {
+        const key = canonicalJson(item)
+        if (seen.has(key)) {
+          validateUnique.errors = [{ keyword: 'uniqueItems', message: 'must NOT have duplicate items', dataPath: '', schemaPath: '#/uniqueItems', params: { keyword: 'uniqueItems' } }]
+          return false
+        }
+        seen.add(key)
+      }
+      return true
+    }
+  }
+})
+
+function canonicalJson (value) {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value)
+  if (Array.isArray(value)) return '[' + value.map(canonicalJson).join(',') + ']'
+  return '{' + Object.keys(value).sort().map(k => JSON.stringify(k) + ':' + canonicalJson(value[k])).join(',') + '}'
+}
+
+// Compiling the ProtoDef schemas is expensive; share one Validator across all
+// versions instead of rebuilding it per test
 const Validator = require('protodef-validator')
+const protoValidator = new Validator()
+protoValidator.addType('entityMetadataItem', require('../../../schemas/protocol_types/entity_metadata_item.json'))
+protoValidator.addType('entityMetadataLoop', require('../../../schemas/protocol_types/entity_metadata_loop.json'))
 
 Error.stackTraceLimit = 0
 
@@ -31,12 +67,8 @@ require('./version_iterator')(function (p, versionString) {
           }
 
           if (dataName === 'protocol') {
-            const validator = new Validator()
-
             instance.types.LatinString = 'native' // TODO: Update protodef validator
-            validator.addType('entityMetadataItem', require('../../../schemas/protocol_types/entity_metadata_item.json'))
-            validator.addType('entityMetadataLoop', require('../../../schemas/protocol_types/entity_metadata_loop.json'))
-            validator.validateProtocol(instance)
+            protoValidator.validateProtocol(instance)
           } else {
             const schema = require('../../../schemas/' + dataName + '_schema.json')
             const valid = v.validate(schema, instance)
