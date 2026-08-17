@@ -1,56 +1,84 @@
 !version: 1.7
+!base: 0.30c
 
 ^types:
+   byte_array: !delete
+
    varint: native
+
    pstring: native
+
    u16: native
-   u8: native
+
    i64: native
+
    buffer: native
+
    i32: native
-   i8: native
+
    bool: native
-   i16: native
+
    f32: native
+
    f64: native
+
    UUID: native
+
    option: native
+
    entityMetadataLoop: native
+
    bitfield: native
+
    bitflags: native
+
    container: native
+
    switch: native
+
    void: native
+
    array: native
+
    restBuffer: native
+
    nbt: native
+
    compressedNbt: native
+
    ByteArray: ["buffer", { "countType": "varint" }]
+
    string: ["pstring", { "countType": "varint" }]
+
    vec3i16:
       x: i16
       y: i16
       z: i16
-   slot:   
+
+   slot:
       blockId: i16
       _: blockId ?
          if -1: void
-         default:         
+         default:
             itemCount: i8
             itemDamage: i16
             nbtData: compressedNbt
-   position_iii:   
+
+   position_iii:
       x: i32
       y: i32
       z: i32
-   position_isi:   
+
+   position_isi:
       x: i32
       y: i16
       z: i32
-   position_ibi:   
+
+   position_ibi:
       x: i32
       y: u8
       z: i32
+
    entityMetadataItem: $compareTo ?
       if 0: i8
       if 1: i16
@@ -58,14 +86,15 @@
       if 3: f32
       if 4: string
       if 5: slot
-      if 6:      
+      if 6:
          x: i32
          y: i32
          z: i32
-      if 7:      
+      if 7:
          pitch: f32
          yaw: f32
          roll: f32
+
    entityMetadata: [
       "entityMetadataLoop",
       {
@@ -106,19 +135,21 @@
    ]
 
 ^handshaking.toClient.types:
-   packet:   
+   packet:
       name: varint =>
       params: ["switch",{"compareTo":"name","fields":{}}]
 
 ^handshaking.toServer.types:
-   packet_set_protocol:   
+   packet_set_protocol:
       protocolVersion: varint
       serverHost: string
       serverPort: u16
       nextState: varint
-   packet_legacy_server_list_ping:   
+
+   packet_legacy_server_list_ping:
       payload: u8
-   packet:   
+
+   packet:
       name: varint =>
          0x00: set_protocol
          0xfe: legacy_server_list_ping
@@ -127,11 +158,13 @@
          if legacy_server_list_ping: packet_legacy_server_list_ping
 
 ^status.toClient.types:
-   packet_server_info:   
+   packet_server_info:
       response: string
-   packet_ping:   
+
+   packet_ping:
       time: i64
-   packet:   
+
+   packet:
       name: varint =>
          0x00: server_info
          0x01: ping
@@ -140,11 +173,13 @@
          if ping: packet_ping
 
 ^status.toServer.types:
-   packet_ping_start:   
+   packet_ping_start:
       # Empty
-   packet_ping:   
+
+   packet_ping:
       time: i64
-   packet:   
+
+   packet:
       name: varint =>
          0x00: ping_start
          0x01: ping
@@ -153,9 +188,10 @@
          if ping: packet_ping
 
 ^login.toClient.types:
-   packet_disconnect:   
+   packet_disconnect:
       reason: string
-   packet_encryption_begin:   
+
+   packet_encryption_begin:
       serverId: string
       publicKey: [
          "buffer",
@@ -169,10 +205,12 @@
             "countType": "i16"
          }
       ]
-   packet_success:   
+
+   packet_success:
       uuid: string
       username: string
-   packet:   
+
+   packet:
       name: varint =>
          0x00: disconnect
          0x01: encryption_begin
@@ -183,9 +221,10 @@
          if success: packet_success
 
 ^login.toServer.types:
-   packet_login_start:   
+   packet_login_start:
       username: string
-   packet_encryption_begin:   
+
+   packet_encryption_begin:
       sharedSecret: [
          "buffer",
          {
@@ -198,7 +237,8 @@
             "countType": "i16"
          }
       ]
-   packet:   
+
+   packet:
       name: varint =>
          0x00: login_start
          0x01: encryption_begin
@@ -207,51 +247,63 @@
          if encryption_begin: packet_encryption_begin
 
 ^play.toClient.types:
-   packet_keep_alive:   
+   packet_keep_alive:
       keepAliveId: i32
-   packet_login:   
+
+   packet_login:
       entityId: i32
       gameMode: u8
       dimension: i8
       difficulty: u8
       maxPlayers: u8
       levelType: string
-   packet_chat:   
+
+   packet_chat:
       message: string
-   packet_update_time:   
+
+   packet_update_time:
       age: i64
       time: i64
-   packet_entity_equipment:   
+
+   packet_entity_equipment:
       entityId: i32
       slot: i16
       item: slot
-   packet_spawn_position:   
+
+   packet_spawn_position:
       location: position_iii
-   packet_update_health:   
+
+   packet_update_health:
       health: f32
       food: i16
       foodSaturation: f32
-   packet_respawn:   
+
+   packet_respawn:
       dimension: i32
       difficulty: u8
       gamemode: u8
       levelType: string
-   packet_position:   
+
+   packet_position:
       x: f64
       y: f64
       z: f64
       yaw: f32
       pitch: f32
       onGround: bool
-   packet_held_item_slot:   
+
+   packet_held_item_slot:
       slot: i8
-   packet_bed:   
+
+   packet_bed:
       entityId: i32
       location: position_ibi
-   packet_animation:   
+
+   packet_animation:
       entityId: varint
       animation: u8
-   packet_named_entity_spawn:   
+
+   packet_named_entity_spawn:
       entityId: varint
       playerUUID: string
       playerName: string
@@ -266,10 +318,12 @@
       pitch: i8
       currentItem: i16
       metadata: entityMetadata
-   packet_collect:   
+
+   packet_collect:
       collectedEntityId: i32
       collectorEntityId: i32
-   packet_spawn_entity:   
+
+   packet_spawn_entity:
       entityId: varint
       type: i8
       x: i32
@@ -277,7 +331,7 @@
       z: i32
       pitch: i8
       yaw: i8
-      objectData:      
+      objectData:
          intField: i32
          velocityX: intField ?
             if 0: void
@@ -288,7 +342,8 @@
          velocityZ: intField ?
             if 0: void
             default: i16
-   packet_spawn_entity_living:   
+
+   packet_spawn_entity_living:
       entityId: varint
       type: u8
       x: i32
@@ -299,73 +354,90 @@
       headPitch: i8
       velocity: vec3i16
       metadata: entityMetadata
-   packet_spawn_entity_painting:   
+
+   packet_spawn_entity_painting:
       entityId: varint
       title: string
       location: position_iii
       direction: i32
-   packet_spawn_entity_experience_orb:   
+
+   packet_spawn_entity_experience_orb:
       entityId: varint
       x: i32
       y: i32
       z: i32
       count: i16
-   packet_entity_velocity:   
+
+   packet_entity_velocity:
       entityId: i32
       velocity: vec3i16
-   packet_entity_destroy:   
+
+   packet_entity_destroy:
       entityIds: i32[]i8
-   packet_entity:   
+
+   packet_entity:
       entityId: i32
-   packet_rel_entity_move:   
-      entityId: i32
-      dX: i8
-      dY: i8
-      dZ: i8
-   packet_entity_look:   
-      entityId: i32
-      yaw: i8
-      pitch: i8
-   packet_entity_move_look:   
+
+   packet_rel_entity_move:
       entityId: i32
       dX: i8
       dY: i8
       dZ: i8
+
+   packet_entity_look:
+      entityId: i32
       yaw: i8
       pitch: i8
-   packet_entity_teleport:   
+
+   packet_entity_move_look:
+      entityId: i32
+      dX: i8
+      dY: i8
+      dZ: i8
+      yaw: i8
+      pitch: i8
+
+   packet_entity_teleport:
       entityId: i32
       x: i32
       y: i32
       z: i32
       yaw: i8
       pitch: i8
-   packet_entity_head_rotation:   
+
+   packet_entity_head_rotation:
       entityId: i32
       headYaw: i8
-   packet_entity_status:   
+
+   packet_entity_status:
       entityId: i32
       entityStatus: i8
-   packet_attach_entity:   
+
+   packet_attach_entity:
       entityId: i32
       vehicleId: i32
       leash: bool
-   packet_entity_metadata:   
+
+   packet_entity_metadata:
       entityId: i32
       metadata: entityMetadata
-   packet_entity_effect:   
+
+   packet_entity_effect:
       entityId: i32
       effectId: i8
       amplifier: i8
       duration: i16
-   packet_remove_entity_effect:   
+
+   packet_remove_entity_effect:
       entityId: i32
       effectId: i8
-   packet_experience:   
+
+   packet_experience:
       experienceBar: f32
       level: i16
       totalExperience: i16
-   packet_update_attributes:   
+
+   packet_update_attributes:
       entityId: i32
       properties: []i32
          key: string
@@ -374,7 +446,8 @@
             uuid: UUID
             amount: f64
             operation: i8
-   packet_map_chunk:   
+
+   packet_map_chunk:
       x: i32
       z: i32
       groundUp: bool
@@ -386,7 +459,8 @@
             "countType": "i32"
          }
       ]
-   packet_multi_block_change:   
+
+   packet_multi_block_change:
       chunkX: i32
       chunkZ: i32
       recordCount: [
@@ -429,20 +503,24 @@
                }
             ]
          ]
-   packet_block_change:   
+
+   packet_block_change:
       location: position_ibi
       type: varint
       metadata: u8
-   packet_block_action:   
+
+   packet_block_action:
       location: position_isi
       byte1: u8
       byte2: u8
       blockId: varint
-   packet_block_break_animation:   
+
+   packet_block_break_animation:
       entityId: varint
       location: position_iii
       destroyStage: i8
-   packet_map_chunk_bulk:   
+
+   packet_map_chunk_bulk:
       chunkColumnCount: [
          "count",
          {
@@ -469,7 +547,8 @@
          z: i32
          bitMap: u16
          addBitMap: u16
-   packet_explosion:   
+
+   packet_explosion:
       x: f32
       y: f32
       z: f32
@@ -481,19 +560,22 @@
       playerMotionX: f32
       playerMotionY: f32
       playerMotionZ: f32
-   packet_world_event:   
+
+   packet_world_event:
       effectId: i32
       location: position_ibi
       data: i32
       global: bool
-   packet_named_sound_effect:   
+
+   packet_named_sound_effect:
       soundName: string
       x: i32
       y: i32
       z: i32
       volume: f32
       pitch: u8
-   packet_world_particles:   
+
+   packet_world_particles:
       particleName: string
       x: f32
       y: f32
@@ -503,16 +585,19 @@
       offsetZ: f32
       particleData: f32
       particles: i32
-   packet_game_state_change:   
+
+   packet_game_state_change:
       reason: u8
       gameMode: f32
-   packet_spawn_entity_weather:   
+
+   packet_spawn_entity_weather:
       entityId: varint
       type: i8
       x: i32
       y: i32
       z: i32
-   packet_open_window:   
+
+   packet_open_window:
       windowId: u8
       inventoryType: u8
       windowTitle: string
@@ -521,30 +606,37 @@
       entityId: inventoryType ?
          if 11: i32
          default: void
-   packet_close_window:   
+
+   packet_close_window:
       windowId: u8
-   packet_set_slot:   
+
+   packet_set_slot:
       windowId: i8
       slot: i16
       item: slot
-   packet_window_items:   
+
+   packet_window_items:
       windowId: u8
       items: slot[]i16
-   packet_craft_progress_bar:   
+
+   packet_craft_progress_bar:
       windowId: u8
       property: i16
       value: i16
-   packet_transaction:   
+
+   packet_transaction:
       windowId: u8
       action: i16
       accepted: bool
-   packet_update_sign:   
+
+   packet_update_sign:
       location: position_isi
       text1: string
       text2: string
       text3: string
       text4: string
-   packet_map:   
+
+   packet_map:
       itemDamage: varint
       data: [
          "buffer",
@@ -552,31 +644,39 @@
             "countType": "i16"
          }
       ]
-   packet_tile_entity_data:   
+
+   packet_tile_entity_data:
       location: position_isi
       action: u8
       nbtData: compressedNbt
-   packet_open_sign_entity:   
+
+   packet_open_sign_entity:
       location: position_iii
-   packet_statistics:   
+
+   packet_statistics:
       entries: []varint
          name: string
          value: varint
-   packet_player_info:   
+
+   packet_player_info:
       playerName: string
       online: bool
       ping: i16
-   packet_abilities:   
+
+   packet_abilities:
       flags: i8
       flyingSpeed: f32
       walkingSpeed: f32
-   packet_tab_complete:   
+
+   packet_tab_complete:
       matches: string[]varint
-   packet_scoreboard_objective:   
+
+   packet_scoreboard_objective:
       name: string
       displayText: string
       action: i8
-   packet_scoreboard_score:   
+
+   packet_scoreboard_score:
       itemName: string
       action: i8
       scoreName: action ?
@@ -585,10 +685,12 @@
       value: action ?
          if 1: void
          default: i32
-   packet_scoreboard_display_objective:   
+
+   packet_scoreboard_display_objective:
       position: i8
       name: string
-   packet_scoreboard_team:   
+
+   packet_scoreboard_team:
       team: string
       mode: i8
       name: mode ?
@@ -612,7 +714,8 @@
          if 3: string[]i16
          if 4: string[]i16
          default: void
-   packet_custom_payload:   
+
+   packet_custom_payload:
       channel: string
       data: [
          "buffer",
@@ -620,9 +723,11 @@
             "countType": "i16"
          }
       ]
-   packet_kick_disconnect:   
+
+   packet_kick_disconnect:
       reason: string
-   packet:   
+
+   packet:
       name: varint =>
          0x00: keep_alive
          0x01: login
@@ -757,11 +862,13 @@
          if kick_disconnect: packet_kick_disconnect
 
 ^play.toServer.types:
-   packet_keep_alive:   
+   packet_keep_alive:
       keepAliveId: i32
-   packet_chat:   
+
+   packet_chat:
       message: string
-   packet_use_entity:   
+
+   packet_use_entity:
       target: i32
       mouse: i8
       x: mouse ?
@@ -773,19 +880,23 @@
       z: mouse ?
          if 2: f32
          default: void
-   packet_flying:   
+
+   packet_flying:
       onGround: bool
-   packet_position:   
+
+   packet_position:
       x: f64
       stance: f64
       y: f64
       z: f64
       onGround: bool
-   packet_look:   
+
+   packet_look:
       yaw: f32
       pitch: f32
       onGround: bool
-   packet_position_look:   
+
+   packet_position_look:
       x: f64
       stance: f64
       y: f64
@@ -793,72 +904,89 @@
       yaw: f32
       pitch: f32
       onGround: bool
-   packet_block_dig:   
+
+   packet_block_dig:
       status: i8
       location: position_ibi
       face: i8
-   packet_block_place:   
+
+   packet_block_place:
       location: position_ibi
       direction: i8
       heldItem: slot
       cursorX: i8
       cursorY: i8
       cursorZ: i8
-   packet_held_item_slot:   
+
+   packet_held_item_slot:
       slotId: i16
-   packet_arm_animation:   
+
+   packet_arm_animation:
       entityId: i32
       animation: i8
-   packet_entity_action:   
+
+   packet_entity_action:
       entityId: i32
       actionId: i8
       jumpBoost: i32
-   packet_steer_vehicle:   
+
+   packet_steer_vehicle:
       sideways: f32
       forward: f32
       jump: bool
       unmount: bool
-   packet_close_window:   
+
+   packet_close_window:
       windowId: u8
-   packet_window_click:   
+
+   packet_window_click:
       windowId: i8
       slot: i16
       mouseButton: i8
       action: i16
       mode: i8
       item: slot
-   packet_transaction:   
+
+   packet_transaction:
       windowId: i8
       action: i16
       accepted: bool
-   packet_set_creative_slot:   
+
+   packet_set_creative_slot:
       slot: i16
       item: slot
-   packet_enchant_item:   
+
+   packet_enchant_item:
       windowId: i8
       enchantment: i8
-   packet_update_sign:   
+
+   packet_update_sign:
       location: position_isi
       text1: string
       text2: string
       text3: string
       text4: string
-   packet_abilities:   
+
+   packet_abilities:
       flags: i8
       flyingSpeed: f32
       walkingSpeed: f32
-   packet_tab_complete:   
+
+   packet_tab_complete:
       text: string
-   packet_settings:   
+
+   packet_settings:
       locale: string
       viewDistance: i8
       chatFlags: i8
       chatColors: bool
       difficulty: u8
       showCape: bool
-   packet_client_command:   
+
+   packet_client_command:
       payload: i8
-   packet_custom_payload:   
+
+   packet_custom_payload:
       channel: string
       data: [
          "buffer",
@@ -866,7 +994,8 @@
             "countType": "i16"
          }
       ]
-   packet:   
+
+   packet:
       name: varint =>
          0x00: keep_alive
          0x01: chat
@@ -917,3 +1046,7 @@
          if settings: packet_settings
          if client_command: packet_client_command
          if custom_payload: packet_custom_payload
+
+^toServer.types: !delete
+
+^toClient.types: !delete

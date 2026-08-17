@@ -5,15 +5,21 @@
 const fs = require('fs')
 const { join } = require('path')
 const { parse, compile } = require('protodef-yaml')
+const { resolveProtoDelta } = require('./protoDelta')
 
 function getJSON (path) {
   return JSON.parse(fs.readFileSync(path, 'utf-8'))
 }
 
 // Parse the YML files and turn to JSON
-function genProtoSchema (createPacketMap) {
+function genProtoSchema (createPacketMap, edition) {
+  // If proto.yml is a !base delta, resolve the chain into a full protocol
+  // file set first (no-op for full protos, which keep using the file on disk)
+  const delta = resolveProtoDelta(edition, process.cwd(), join(__dirname, '../../data'))
+  const protoInput = delta ? delta.files : './proto.yml'
+
   // Create the packet_map.yml from proto.yml
-  const parsed = parse('./proto.yml')
+  const parsed = parse(protoInput)
   const version = parsed['!version']
 
   if (createPacketMap) {
@@ -41,7 +47,12 @@ function genProtoSchema (createPacketMap) {
     fs.writeFileSync('./packet_map.yml', t)
   }
 
-  const json = compile('./proto.yml')
+  if (delta && fs.existsSync('./packet_map.yml')) {
+    // protodef-yaml only resolves !imports from disk for file inputs; feed the
+    // generated packet map into the resolved file set
+    delta.files['packet_map.yml'] = fs.readFileSync('./packet_map.yml', 'utf8')
+  }
+  const json = compile(protoInput)
   fs.rmSync('./packet_map.yml', { force: true }) // temp file
   return [version, json]
 }
@@ -59,14 +70,32 @@ function visitor (key, value) {
   return value
 }
 
+// Render object keys in sorted order so regenerated files are byte-stable
+// regardless of the source order (JSON object key order carries no meaning
+// for ProtoDef compilation). The top-level section order is preserved:
+// protodef-validator registers the global `types` namespace before the
+// per-state namespaces, so `types` must stay ahead of them no matter how the
+// source was assembled.
+function sortKeys (value, isTopLevel = false) {
+  if (Array.isArray(value)) return value.map(v => sortKeys(v))
+  if (value && typeof value === 'object') {
+    const keys = Object.keys(value)
+    if (!isTopLevel) keys.sort()
+    const out = {}
+    for (const key of keys) out[key] = sortKeys(value[key])
+    return out
+  }
+  return value
+}
+
 function convert (edition, ver, path) {
   process.chdir(path || join(__dirname, `../../data/${edition}/${ver}`))
-  const [version, json] = genProtoSchema(edition === 'bedrock')
+  const [version, json] = genProtoSchema(edition === 'bedrock', edition)
   fs.mkdirSync(`../${version}`, { recursive: true })
   if (edition === 'bedrock') {
-    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: json }, visitor, 2))
+    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify({ types: sortKeys(json, true) }, visitor, 2))
   } else if (edition === 'pc') {
-    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify(json, visitor, 2))
+    fs.writeFileSync(`../${version}/protocol.json`, JSON.stringify(sortKeys(json, true), visitor, 2))
   }
   return version
 }
@@ -74,7 +103,7 @@ function convert (edition, ver, path) {
 function validate (edition, ver, path) {
   process.chdir(path || join(__dirname, `../../data/${edition}/${ver}`))
   // console.log(process.cwd())
-  const [version, json] = genProtoSchema(edition === 'bedrock')
+  const [version, json] = genProtoSchema(edition === 'bedrock', edition)
 
   if (path.endsWith('latest')) {
     if (fs.existsSync(join(__dirname, `../../data/${edition}/${version}/proto.yml`))) {
@@ -83,8 +112,8 @@ function validate (edition, ver, path) {
   }
 
   const expected = edition === 'bedrock'
-    ? JSON.stringify({ types: json }, visitor, 2)
-    : JSON.stringify(json, visitor, 2)
+    ? JSON.stringify({ types: sortKeys(json, true) }, visitor, 2)
+    : JSON.stringify(sortKeys(json, true), visitor, 2)
 
   // If you crash here, no protocol.json was generated - run `npm run build`
   const actual = JSON.stringify(getJSON(`../${version}/protocol.json`), null, 2)

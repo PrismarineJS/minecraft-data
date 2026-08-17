@@ -154,3 +154,23 @@ string: ["pstring",{"countType":"varint"}]
 
 #### Compiling to JSON
 Once the protocol YAML files have been updated, run `npm run build` inside `tools/js` to generate protocol.json for each of the protocol YAML files.
+
+#### Delta protocols
+Instead of a full copy of the protocol, a version's `proto.yml` can be a **delta** on a previous version by starting with `!base: <version>` (resolved through `dataPaths.json`):
+
+```yml
+!version: 1.21.8
+!base: 1.21.6
+
+^types:
+   vec3i:            # added
+      x: varint
+      y: varint
+      z: varint
+   packet_x: ...     # redefined wholesale (replaces the base's definition)
+   OldType: !delete  # removed
+```
+
+Semantics, per section (`^types`, `^play.toClient.types`, ...): a type present in both is **replaced wholesale** by the delta's definition — there is no deep merge, because mapper values and packet IDs are positional and partial merges would be unsafe; a type only in the base is inherited; a type only in the delta is added. `TypeName: !delete` removes an inherited type, and `^section: !delete` removes a whole section. Versions whose protocol didn't change keep pointing at the previous version's data directory via `dataPaths.json`, as before.
+
+`npm run build` resolves `!base` chains automatically, so deltas compile exactly like full protocols. When updating a protocol, copy the changed/added packet definitions from the previous version's file into the new delta rather than copying the whole file.

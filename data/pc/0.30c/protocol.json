@@ -1,13 +1,61 @@
 {
   "types": {
-    "u8": "native",
-    "string": "native",
-    "i8": "native",
+    "byte_array": "native",
     "i16": "native",
-    "byte_array": "native"
+    "i8": "native",
+    "string": "native",
+    "u8": "native"
   },
   "toServer": {
     "types": {
+      "packet": [
+        "container",
+        [
+          {
+            "name": "name",
+            "type": [
+              "mapper",
+              {
+                "mappings": {
+                  "0x00": "player_identification",
+                  "0x05": "set_block",
+                  "0x08": "position",
+                  "0x0d": "message"
+                },
+                "type": "u8"
+              }
+            ]
+          },
+          {
+            "name": "params",
+            "type": [
+              "switch",
+              {
+                "compareTo": "name",
+                "fields": {
+                  "message": "packet_message",
+                  "player_identification": "packet_player_identification",
+                  "position": "packet_position",
+                  "set_block": "packet_set_block"
+                }
+              }
+            ]
+          }
+        ]
+      ],
+      "packet_message": [
+        "container",
+        [
+          {
+            "name": "unused",
+            "type": "u8"
+          },
+          {
+            "name": "message",
+            "type": "string"
+          }
+        ]
+      ],
       "packet_player_identification": [
         "container",
         [
@@ -26,31 +74,6 @@
           {
             "name": "unused",
             "type": "i8"
-          }
-        ]
-      ],
-      "packet_set_block": [
-        "container",
-        [
-          {
-            "name": "x",
-            "type": "i16"
-          },
-          {
-            "name": "y",
-            "type": "i16"
-          },
-          {
-            "name": "z",
-            "type": "i16"
-          },
-          {
-            "name": "mode",
-            "type": "u8"
-          },
-          {
-            "name": "block_type",
-            "type": "u8"
           }
         ]
       ],
@@ -83,19 +106,35 @@
           }
         ]
       ],
-      "packet_message": [
+      "packet_set_block": [
         "container",
         [
           {
-            "name": "unused",
+            "name": "x",
+            "type": "i16"
+          },
+          {
+            "name": "y",
+            "type": "i16"
+          },
+          {
+            "name": "z",
+            "type": "i16"
+          },
+          {
+            "name": "mode",
             "type": "u8"
           },
           {
-            "name": "message",
-            "type": "string"
+            "name": "block_type",
+            "type": "u8"
           }
         ]
-      ],
+      ]
+    }
+  },
+  "toClient": {
+    "types": {
       "packet": [
         "container",
         [
@@ -104,13 +143,24 @@
             "type": [
               "mapper",
               {
-                "type": "u8",
                 "mappings": {
-                  "0x00": "player_identification",
-                  "0x05": "set_block",
-                  "0x08": "position",
-                  "0x0d": "message"
-                }
+                  "0x00": "server_identification",
+                  "0x01": "ping",
+                  "0x02": "level_initialize",
+                  "0x03": "level_data_chunk",
+                  "0x04": "level_finalize",
+                  "0x06": "set_block",
+                  "0x07": "spawn_player",
+                  "0x08": "player_teleport",
+                  "0x09": "position_and_orientation_update",
+                  "0x0a": "position_update",
+                  "0x0b": "orientation_update",
+                  "0x0c": "despawn_player",
+                  "0x0d": "message",
+                  "0x0e": "disconnect_player",
+                  "0x0f": "update_user_type"
+                },
+                "type": "u8"
               }
             ]
           },
@@ -121,48 +171,44 @@
               {
                 "compareTo": "name",
                 "fields": {
-                  "player_identification": "packet_player_identification",
+                  "despawn_player": "packet_despawn_player",
+                  "disconnect_player": "packet_disconnect_player",
+                  "level_data_chunk": "packet_level_data_chunk",
+                  "level_finalize": "packet_level_finalize",
+                  "level_initialize": "packet_level_initialize",
+                  "message": "packet_message",
+                  "orientation_update": "packet_orientation_update",
+                  "ping": "packet_ping",
+                  "player_teleport": "packet_player_teleport",
+                  "position_and_orientation_update": "packet_position_and_orientation_update",
+                  "position_update": "packet_position_update",
+                  "server_identification": "packet_server_identification",
                   "set_block": "packet_set_block",
-                  "position": "packet_position",
-                  "message": "packet_message"
+                  "spawn_player": "packet_spawn_player",
+                  "update_user_type": "packet_update_user_type"
                 }
               }
             ]
           }
         ]
-      ]
-    }
-  },
-  "toClient": {
-    "types": {
-      "packet_server_identification": [
+      ],
+      "packet_despawn_player": [
         "container",
         [
           {
-            "name": "protocol_version",
-            "type": "u8"
-          },
-          {
-            "name": "server_name",
-            "type": "string"
-          },
-          {
-            "name": "server_motd",
-            "type": "string"
-          },
-          {
-            "name": "user_type",
+            "name": "player_id",
             "type": "i8"
           }
         ]
       ],
-      "packet_ping": [
+      "packet_disconnect_player": [
         "container",
-        []
-      ],
-      "packet_level_initialize": [
-        "container",
-        []
+        [
+          {
+            "name": "disconnect_reason",
+            "type": "string"
+          }
+        ]
       ],
       "packet_level_data_chunk": [
         "container",
@@ -194,28 +240,11 @@
           }
         ]
       ],
-      "packet_set_block": [
+      "packet_level_initialize": [
         "container",
-        [
-          {
-            "name": "x",
-            "type": "i16"
-          },
-          {
-            "name": "y",
-            "type": "i16"
-          },
-          {
-            "name": "z",
-            "type": "i16"
-          },
-          {
-            "name": "block_type",
-            "type": "u8"
-          }
-        ]
+        []
       ],
-      "packet_spawn_player": [
+      "packet_message": [
         "container",
         [
           {
@@ -223,20 +252,17 @@
             "type": "i8"
           },
           {
-            "name": "player_name",
+            "name": "message",
             "type": "string"
-          },
+          }
+        ]
+      ],
+      "packet_orientation_update": [
+        "container",
+        [
           {
-            "name": "x",
-            "type": "i16"
-          },
-          {
-            "name": "y",
-            "type": "i16"
-          },
-          {
-            "name": "z",
-            "type": "i16"
+            "name": "player_id",
+            "type": "i8"
           },
           {
             "name": "yaw",
@@ -247,6 +273,10 @@
             "type": "u8"
           }
         ]
+      ],
+      "packet_ping": [
+        "container",
+        []
       ],
       "packet_player_teleport": [
         "container",
@@ -327,12 +357,70 @@
           }
         ]
       ],
-      "packet_orientation_update": [
+      "packet_server_identification": [
+        "container",
+        [
+          {
+            "name": "protocol_version",
+            "type": "u8"
+          },
+          {
+            "name": "server_name",
+            "type": "string"
+          },
+          {
+            "name": "server_motd",
+            "type": "string"
+          },
+          {
+            "name": "user_type",
+            "type": "i8"
+          }
+        ]
+      ],
+      "packet_set_block": [
+        "container",
+        [
+          {
+            "name": "x",
+            "type": "i16"
+          },
+          {
+            "name": "y",
+            "type": "i16"
+          },
+          {
+            "name": "z",
+            "type": "i16"
+          },
+          {
+            "name": "block_type",
+            "type": "u8"
+          }
+        ]
+      ],
+      "packet_spawn_player": [
         "container",
         [
           {
             "name": "player_id",
             "type": "i8"
+          },
+          {
+            "name": "player_name",
+            "type": "string"
+          },
+          {
+            "name": "x",
+            "type": "i16"
+          },
+          {
+            "name": "y",
+            "type": "i16"
+          },
+          {
+            "name": "z",
+            "type": "i16"
           },
           {
             "name": "yaw",
@@ -344,100 +432,12 @@
           }
         ]
       ],
-      "packet_despawn_player": [
-        "container",
-        [
-          {
-            "name": "player_id",
-            "type": "i8"
-          }
-        ]
-      ],
-      "packet_message": [
-        "container",
-        [
-          {
-            "name": "player_id",
-            "type": "i8"
-          },
-          {
-            "name": "message",
-            "type": "string"
-          }
-        ]
-      ],
-      "packet_disconnect_player": [
-        "container",
-        [
-          {
-            "name": "disconnect_reason",
-            "type": "string"
-          }
-        ]
-      ],
       "packet_update_user_type": [
         "container",
         [
           {
             "name": "user_type",
             "type": "u8"
-          }
-        ]
-      ],
-      "packet": [
-        "container",
-        [
-          {
-            "name": "name",
-            "type": [
-              "mapper",
-              {
-                "type": "u8",
-                "mappings": {
-                  "0x00": "server_identification",
-                  "0x01": "ping",
-                  "0x02": "level_initialize",
-                  "0x03": "level_data_chunk",
-                  "0x04": "level_finalize",
-                  "0x06": "set_block",
-                  "0x07": "spawn_player",
-                  "0x08": "player_teleport",
-                  "0x09": "position_and_orientation_update",
-                  "0x0a": "position_update",
-                  "0x0b": "orientation_update",
-                  "0x0c": "despawn_player",
-                  "0x0d": "message",
-                  "0x0e": "disconnect_player",
-                  "0x0f": "update_user_type"
-                }
-              }
-            ]
-          },
-          {
-            "name": "params",
-            "type": [
-              "switch",
-              {
-                "compareTo": "name",
-                "fields": {
-                  "server_identification": "packet_server_identification",
-                  "ping": "packet_ping",
-                  "level_initialize": "packet_level_initialize",
-                  "level_data_chunk": "packet_level_data_chunk",
-                  "level_finalize": "packet_level_finalize",
-                  "set_block": "packet_set_block",
-                  "spawn_player": "packet_spawn_player",
-                  "player_teleport": "packet_player_teleport",
-                  "position_and_orientation_update": "packet_position_and_orientation_update",
-                  "position_update": "packet_position_update",
-                  "orientation_update": "packet_orientation_update",
-                  "despawn_player": "packet_despawn_player",
-                  "message": "packet_message",
-                  "disconnect_player": "packet_disconnect_player",
-                  "update_user_type": "packet_update_user_type"
-                }
-              }
-            ]
           }
         ]
       ]
