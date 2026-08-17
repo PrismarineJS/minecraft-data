@@ -11,7 +11,7 @@ const Validator = require('protodef-validator')
 
 Error.stackTraceLimit = 0
 
-const data = ['attributes', 'biomes', 'commands', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language', 'foods', 'particles', 'blockLoot', 'entityLoot', 'mapIcons', 'tints', 'blockMappings', 'sounds']
+const data = ['attributes', 'biomes', 'commands', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language', 'foods', 'particles', 'blockLoot', 'entityLoot', 'mapIcons', 'tints', 'blockMappings', 'sounds', 'blockStates']
 
 require('./version_iterator')(function (p, versionString) {
   describe('minecraft-data schemas ' + versionString, function () {
@@ -24,6 +24,8 @@ require('./version_iterator')(function (p, versionString) {
       }
       if (instance) {
         it(dataName + '.json is valid', function () {
+          // blockStates.json files are large (10k+ entries); give them more time
+          if (dataName === 'blockStates') this.timeout(180 * 1000)
           // Skip tints schema validation for PC 1.21.4, as it doesn't meet the
           // maxItems: 1 check for the constant tints.
           if (dataName === 'tints' && versionString === 'pc 1.21.4') {
