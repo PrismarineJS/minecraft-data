@@ -1,3 +1,10 @@
+## 3.114.0
+* [Add chatCommandsQueuedToMainThread feature for 1.19.0 (#1257)](https://github.com/PrismarineJS/minecraft-data/commit/d505c27483b4d7752ce7658d13d654fda591eae4) (thanks @u9g)
+* [Add 26.3-snapshot-10 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/105097328f99a4f45cb6dca0fbef97db0cbd1cfd) (thanks @github-actions[bot])
+* [Add 26.3-snapshot-9 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/eea5ff34cffe818cf090ff5d8a040e57c1227c49) (thanks @github-actions[bot])
+* [schemas: add blockStates_schema.json and validate bedrock blockStates data (#1245)](https://github.com/PrismarineJS/minecraft-data/commit/af434c66052a3411b95e3363fe8506d977809d45) (thanks @AnonymoDGH)
+* [bedrock(1.26.0-1.26.30): fix voxel_shapes VoxelShape.cells to be a single VoxelCells (#1233)](https://github.com/PrismarineJS/minecraft-data/commit/96f5dd24d8b44ed16437e9df239e9c6c6bf4027f) (thanks @AnonymoDGH)
+
 ## 3.113.2
 * [pc: Add sendsPlayerLoadedPacket feature flag for 1.21.4+ (#1224)](https://github.com/PrismarineJS/minecraft-data/commit/e7253ab2dc9ee4c21b2b445dfa9c74b268ec47fb) (thanks @aibengineering)
 * [Update dead wiki.vg links to minecraft.wiki (#1223)](https://github.com/PrismarineJS/minecraft-data/commit/42062dc822092b15ef79ca6bcff8bcfd2c6393d9) (thanks @narcis-dev)
