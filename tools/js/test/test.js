@@ -11,6 +11,13 @@ const Validator = require('protodef-validator')
 
 Error.stackTraceLimit = 0
 
+// The suite used to take ~3min, almost all of it in protodef-validator < 1.5.0 (quadratic
+// dataType validation) and Ajv's O(n^2) uniqueItems. Fail if it ever gets that slow again.
+after('the test suite stays fast', function () {
+  const ms = performance.now() // measured from process start
+  assert.ok(ms < 40 * 1000, `the test suite took ${Math.round(ms)}ms, expected < 40s`)
+})
+
 const data = ['attributes', 'biomes', 'commands', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language', 'foods', 'particles', 'blockLoot', 'entityLoot', 'mapIcons', 'tints', 'blockMappings', 'sounds', 'blockStates']
 
 require('./version_iterator')(function (p, versionString) {
