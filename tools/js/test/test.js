@@ -86,5 +86,11 @@ minecraftTypes.forEach(function (type) {
       }
       assert.equal(duplicateCount, 0, `${duplicateCount} duplicates found. Please remove them.`)
     })
+    it('features in features.json are sorted by name', () => {
+      const names = require('../../../data/' + type + '/common/features.json').map(f => f.name)
+      const sorted = [...names].sort()
+      const firstMismatch = names.findIndex((name, i) => name !== sorted[i])
+      assert.equal(firstMismatch, -1, `features.json is not sorted by name: "${names[firstMismatch]}" should come after "${sorted[firstMismatch]}". Sorting by name keeps concurrent PRs from conflicting at the end of the file.`)
+    })
   })
 })
