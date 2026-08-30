@@ -45,6 +45,14 @@ jobs:
       with:
         repository: PrismarineJS/bedrock-protocol
         path: bedrock-protocol
+    # Cache the downloaded+extracted Bedrock Dedicated Servers used by the tests
+    - name: Cache Bedrock dedicated servers
+      uses: actions/cache@v4
+      with:
+        path: bedrock-protocol/tools/bds-*
+        key: bds-servers-${{ hashFiles('node-mcdata/minecraft-data/data/bedrock/common/protocolVersions.json') }}
+        restore-keys: |
+          bds-servers-
     # I forget the correct install order, do both
     - name: Install bedrock-protocol
       run: |
@@ -57,3 +65,6 @@ jobs:
         curl -o node_modules/protodef/src/serializer.js https://raw.githubusercontent.com/extremeheat/node-protodef/refs/heads/dlog/src/serializer.js && curl -o node_modules/protodef/src/compiler.js https://raw.githubusercontent.com/extremeheat/node-protodef/refs/heads/dlog/src/compiler.js
         npm test
       working-directory: bedrock-protocol
+    # The extracted servers are enough for the tests; don't waste cache space on the zips
+    - name: Remove server zips before caching
+      run: rm -f bedrock-protocol/tools/bds-*/bds.zip
