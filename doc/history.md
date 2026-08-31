@@ -1,3 +1,11 @@
+## 3.115.0
+* [Add hasDataCommand and furnaceNbtUsesSnakeCase features (#1260)](https://github.com/PrismarineJS/minecraft-data/commit/50345c21048dd097a3d4f7ebbddb407586c28e00) (thanks @u9g)
+* [Add quickMoveClickSendsEmptyItem, hasItemCommand and replaceItemSlotIsPrefixed features (#1262)](https://github.com/PrismarineJS/minecraft-data/commit/94048f56c42dfe555db4479c2ffe4456bd95e9ab) (thanks @u9g)
+* [Sort features.json by name to avoid merge conflicts (#1264)](https://github.com/PrismarineJS/minecraft-data/commit/9e850c983197a494326677989dc7a16c6205970f) (thanks @u9g)
+* [test: fail if the suite takes over 40s (#1263)](https://github.com/PrismarineJS/minecraft-data/commit/3b06f183f9d161f6dbefb2b070c29488e3a5a324) (thanks @u9g)
+* [Add enchantmentsComponentIsFlat and fishingBiteDelayMaxTicks features (#1261)](https://github.com/PrismarineJS/minecraft-data/commit/516e5b07df5114173edaf382766776be39d19693) (thanks @u9g)
+* [Remove uniqueItems from blockStates schema (#1259)](https://github.com/PrismarineJS/minecraft-data/commit/fc3f7093feb8a691d8271db4c81a48d16061301e) (thanks @u9g)
+
 ## 3.114.0
 * [Add chatCommandsQueuedToMainThread feature for 1.19.0 (#1257)](https://github.com/PrismarineJS/minecraft-data/commit/d505c27483b4d7752ce7658d13d654fda591eae4) (thanks @u9g)
 * [Add 26.3-snapshot-10 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/105097328f99a4f45cb6dca0fbef97db0cbd1cfd) (thanks @github-actions[bot])
