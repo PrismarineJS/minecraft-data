@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.26.45
+!version: 1.26.30
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -19,8 +19,6 @@ byterot: native
 bitflags: native
 restBuffer: native
 encapsulated: native
-maybeIncompleteArray: native
-optionalOnRemaining: native
 nbt: native                                           # NBT
 lnbt: native
 nbtLoop: native
@@ -176,18 +174,14 @@ packet_resource_pack_stack:
 packet_resource_pack_client_response:
    !id: 0x08
    !bound: server
-   # As of 1.26.40 the status is an unsigned varint and no longer includes the 'none' entry. It is
-   # followed by the same status as a string, and the pack IDs are only written for 'send_packs'.
-   response_status: varint =>
-      0: refused
-      1: send_packs
-      2: have_all_packs
-      3: completed
-   response_status_name: string
+   response_status: u8 =>
+      0: none
+      1: refused
+      2: send_packs
+      3: have_all_packs
+      4: completed
    # All of the pack IDs.
-   resourcepackids: response_status ?
-      if send_packs: ResourcePackIds
-      default: void
+   resourcepackids: ResourcePackIds
 
 # Sent by the client to the server to send chat messages, and by the server to the client 
 # to forward or send messages, which may be chat, popups, tips etc.
@@ -318,8 +312,7 @@ packet_start_game:
    day_cycle_stop_time: zigzag32
    # Some Minecraft: Education Edition field that specifies what 'region' the world was from, 
    # with 0 being None, 1 being RestOfWorld, and 2 being China. The actual use of this field is unknown.
-   # As of 1.26.40 this is an unsigned varint.
-   edu_offer: varint
+   edu_offer: zigzag32
    # Specifies if the world has education edition features enabled, such as the blocks or entities
    # specific to education edition.
    edu_features_enabled: bool
@@ -347,9 +340,7 @@ packet_start_game:
    # Defines game rules currently active with their respective values. The value of these game
    #  rules may be either 'bool', 'Int32' or 'Float32'. Some game rules are server side only,
    #  and don't necessarily need to be sent to the client.
-   # As of 1.26.40 StartGame uses the same game rule encoding as the rest of the protocol (int values
-   # are little endian ints instead of varints).
-   gamerules: GameRuleI32[]varint
+   gamerules: GameRuleVarint[]varint
    experiments: Experiments
    experiments_previously_used: bool
    # Specifies if the world had the bonus map setting enabled when generating it.
@@ -464,8 +455,9 @@ packet_start_game:
    # and custom blocks, but it will result in extra bytes being written for every block in a sub chunk palette.
    block_network_ids_are_hashes: bool
    server_controlled_sound: bool
-   # IsLoggingChat, which indicated that the server owner was logging chat messages on the server machine
-   # (Education Edition only), was removed in 1.26.40.
+   # IsLoggingChat indicates that the server owner is logging chat messages
+   # on the server machine. Education Edition only.
+   is_chat_logging: bool
    # New fields 1.26.0
    has_server_join_info: bool
    server_join_info: has_server_join_info ?
@@ -509,7 +501,7 @@ packet_add_player:
    # HeldItem is the item that the player is holding. The item is shown to the viewer as soon as the player
    # itself shows up. Needless to say that this field is rather pointless, as additional packets still must
    # be sent for armour to show up.
-   held_item: ItemV4
+   held_item: Item
    # GameType is the game type of the player. If set to GameTypeSpectator, the player will not be shown to viewers.
    gamemode: GameMode
    # EntityMetadata is a map of entity metadata, which includes flags and data properties that alter in
@@ -536,7 +528,7 @@ packet_add_player:
    device_id: string
    # BuildPlatform is the build platform/device OS of the player that is about to be added, as it sent in
    # the Login packet when joining.
-   device_os: '["optionalOnRemaining", { "type": "DeviceOS" }]'
+   device_os: DeviceOS
 
 packet_add_entity:
    !id: 0x0d
@@ -593,7 +585,7 @@ packet_add_item_entity:
    !bound: client
    entity_id_self: zigzag64
    runtime_entity_id: varint64
-   item: ItemV4
+   item: Item
    position: vec3f
    velocity: vec3f
    metadata: MetadataDictionary
@@ -655,19 +647,19 @@ packet_move_player:
    # RiddenEntityRuntimeID is the runtime ID of the entity that the player might currently be riding. If not
    # riding, this should be left 0.
    ridden_runtime_id: varint
-   # As of 1.26.40 the teleport data is prefixed with a boolean instead of being inferred from the mode.
-   teleport?:
-      # TeleportCause is written only if Mode is MoveModeTeleport. It specifies the cause of the teleportation,
-      # which is one of the constants above.
-      cause: li32 =>
-         0: unknown
-         1: projectile
-         2: chorus_fruit
-         3: command
-         4: behavior
-      # TeleportSourceEntityType is the entity type that caused the teleportation, for example an ender pearl.
-      # TODO: is this still a integer and not a string?
-      source_entity_type: LegacyEntityType
+   teleport: mode ?
+      if teleport:
+         # TeleportCause is written only if Mode is MoveModeTeleport. It specifies the cause of the teleportation,
+         # which is one of the constants above.
+         cause: li32 =>
+            0: unknown
+            1: projectile
+            2: chorus_fruit
+            3: command
+            4: behavior
+         # TeleportSourceEntityType is the entity type that caused the teleportation, for example an ender pearl.
+         # TODO: is this still a integer and not a string?
+         source_entity_type: LegacyEntityType
    tick: varint64
 
 # Removed in 1.21.80
@@ -1348,17 +1340,7 @@ packet_container_set_data:
 packet_crafting_data:
    !id: 0x34
    !bound: client
-   # As of 1.26.40 recipes are no longer sent as one tagged array; each recipe kind has its own array and
-   # the recipe type is implied by which array the recipe appears in.
-   shaped_recipes: ShapedRecipe[]varint
-   shapeless_recipes: ShapelessRecipe[]varint
-   multi_recipes: MultiRecipe[]varint
-   # Shulker box recipes, which are shapeless.
-   shulker_box_recipes: ShapelessRecipe[]varint
-   shapeless_chemistry_recipes: ShapelessRecipe[]varint
-   shaped_chemistry_recipes: ShapedRecipe[]varint
-   smithing_transform_recipes: SmithingTransformRecipe[]varint
-   smithing_trim_recipes: SmithingTrimRecipe[]varint
+   recipes: Recipes
    # PotionContainerChangeRecipes is a list of all recipes to convert a potion from one type to another,
    # such as from a drinkable potion to a splash potion, or from a splash potion to a lingering potion.
    potion_type_recipes: PotionTypeRecipes
@@ -1388,9 +1370,9 @@ packet_crafting_event:
    recipe_id: uuid
    # Input is a list of items that the player put into the recipe so that it could create the Output items.
    # These items are consumed in the process.
-   input: ItemV4[]varint
+   input: Item[]varint
    # Output is a list of items that were obtained as a result of crafting the recipe.
-   result: ItemV4[]varint
+   result: Item[]varint
 
 # GUIDataPickItem is sent by the server to make the client 'select' a hot bar slot. It currently appears to
 # be broken however, and does not actually set the selected slot to the hot bar slot set in the packet.
@@ -1497,19 +1479,22 @@ packet_level_chunk:
    # is enabled, a list of blob hashes will be sent, or, if disabled, the sub chunk data.
    # On newer versions, if this is a negative value it indicates to use the Subchunk Polling mechanism
    sub_chunk_count: varint
-   # As of 1.26.40 the sub-chunk request mode is no longer encoded in SubChunkCount; instead the highest
-   # sub-chunk is sent as an optional. It is only present if the sub-chunk request mode is limited.
-   highest_subchunk_count?: zigzag32
+   # HighestSubChunk is the highest sub-chunk at the position that is not all air. It is only set if the
+   # RequestMode is set to protocol.SubChunkRequestModeLimited.
+   highest_subchunk_count: sub_chunk_count ?
+      if -2: lu16
    # CacheEnabled specifies if the client blob cache should be enabled. This system is based on hashes of
    # blobs which are consistent and saved by the client in combination with that blob, so that the server
    # does not have to send the same chunk multiple times. If the client does not yet have a blob with the hash sent,
    # it will send a ClientCacheBlobStatus packet containing the hashes is does not have the data of.
    cache_enabled: bool
-   # BlobHashes is a list of all blob hashes used in the chunk. It is composed of SubChunkCount + 1 hashes,
-   # with the first SubChunkCount hashes being those of the sub chunks and the last one that of the biome
-   # of the chunk.
-   # If CacheEnabled is set to false, BlobHashes is left empty. As of 1.26.40 the array is always written.
-   blobs: lu64[]varint
+   blobs: cache_enabled?
+      if true:
+         # BlobHashes is a list of all blob hashes used in the chunk. It is composed of SubChunkCount + 1 hashes,
+         # with the first SubChunkCount hashes being those of the sub chunks and the last one that of the biome
+         # of the chunk.
+         # If CacheEnabled is set to false, BlobHashes can be left empty.
+         hashes: lu64[]varint
    # RawPayload is a serialised string of chunk data. The data held depends on if CacheEnabled is set to
    # true. If set to false, the payload is composed of multiple sub-chunks, each of which carry a version
    # which indicates the way they are serialised, followed by biomes, border blocks and tile entities. If
@@ -1606,6 +1591,16 @@ packet_spawn_experience_orb:
    position: vec3f
    count: zigzag32
 
+UpdateMapFlags: [ "bitflags", {
+   "type": "varint",
+   "flags": [
+      "void",
+      "texture",
+      "decoration",
+      "initialisation"
+   ]
+}]
+
 # ClientBoundMapItemData is sent by the server to the client to update the data of a map shown to the client.
 # It is sent with a combination of flags that specify what data is updated.
 # The ClientBoundMapItemData packet may be used to update specific parts of the map only. It is not required
@@ -1616,6 +1611,9 @@ packet_clientbound_map_item_data:
    # MapID is the unique identifier that represents the map that is updated over network. It remains
    # consistent across sessions.
    map_id: zigzag64
+   # UpdateFlags is a combination of flags found above that indicate what parts of the map should be updated
+   # client-side.
+   update_flags: UpdateMapFlags
    # Dimension is the dimension of the map that should be updated, for example the overworld (0), the nether
    # (1) or the end (2).
    dimension: u8
@@ -1624,35 +1622,44 @@ packet_clientbound_map_item_data:
    locked: bool
    # Origin is the center position of the map being updated.
    origin: vec3i
-   # As of 1.26.40 the UpdateFlags bitfield is gone: every section below is written as its own optional.
+   # The following fields apply only for the MapUpdateFlagInitialisation.
    # MapsIncludedIn holds an array of map IDs that the map updated is included in. This has to do with the
    # scale of the map: Each map holds its own map ID and all map IDs of maps that include this map and have
    # a bigger scale. This means that a scale 0 map will have 5 map IDs in this slice, whereas a scale 4 map
    # will have only 1 (its own).
    # The actual use of this field remains unknown.
-   included_in?: zigzag64[]varint
-   # Scale is the scale of the map as it is shown in-game.
-   scale?: i8
+   included_in: update_flags.initialisation ?
+      if true: zigzag64[]varint
+   # Scale is the scale of the map as it is shown in-game. It is written when any of the MapUpdateFlags are
+   # set to the UpdateFlags field.
+   scale: update_flags.initialisation || update_flags.decoration || update_flags.texture ?
+      if true: u8
+   # The following fields apply only for the MapUpdateFlagDecoration.
    # TrackedObjects is a list of tracked objects on the map, which may either be entities or blocks. The
    # client makes sure these tracked objects are actually tracked. (position updated etc.)
-   tracked_objects?: TrackedObject[]varint
-   decorations?: MapDecoration[]varint
-   # Width is the width of the texture area that was updated. The width may be a subset of the total width
-   # of the map.
-   width?: zigzag32
-   # Height is the height of the texture area that was updated. The height may be a subset of the total
-   # height of the map
-   height?: zigzag32
-   # XOffset is the X offset in pixels at which the updated texture area starts. From this X, the updated
-   # texture will extend exactly Width pixels to the right.
-   x_offset?: zigzag32
-   # YOffset is the Y offset in pixels at which the updated texture area starts. From this Y, the updated
-   # texture will extend exactly Height pixels up.
-   y_offset?: zigzag32
-   # Pixels is a list of pixel colours for the new texture of the map. It is indexed as Pixels[y][x], with
-   # the length of the outer slice having to be exactly Height long and the inner slices exactly Width long.
-   # To access this array, use $width * y + x
-   pixels?: li32[]varint
+   tracked: update_flags.decoration ?
+      if true:
+         objects: TrackedObject[]varint
+         decorations: MapDecoration[]varint
+   # Updates to the map contents itself (texture)
+   texture: update_flags.texture ?
+      if true:
+         # Width is the width of the texture area that was updated. The width may be a subset of the total width
+         # of the map.
+         width: zigzag32
+         # Height is the height of the texture area that was updated. The height may be a subset of the total
+         # height of the map
+         height: zigzag32
+         # XOffset is the X offset in pixels at which the updated texture area starts. From this X, the updated
+         # texture will extend exactly Width pixels to the right.
+         x_offset: zigzag32
+         # YOffset is the Y offset in pixels at which the updated texture area starts. From this Y, the updated
+         # texture will extend exactly Height pixels up.
+         y_offset: zigzag32
+         # Pixels is a list of pixel colours for the new texture of the map. It is indexed as Pixels[y][x], with
+         # the length of the outer slice having to be exactly Height long and the inner slices exactly Width long.
+         # To access this array, use $width * y + x
+         pixels: varint[]varint
 
 
 packet_map_info_request:
@@ -2119,7 +2126,6 @@ packet_transfer:
    server_address: string
    port: lu16
    reload_world: bool
-   gatherings_configuration?: GatheringJoinInfo
 
 packet_play_sound:
    !id: 0x56
@@ -2128,7 +2134,6 @@ packet_play_sound:
    coordinates: BlockCoordinates
    volume: lf32
    pitch: lf32
-   loop_count: varint
    handle?: lu64
 
 packet_stop_sound:
@@ -2215,8 +2220,7 @@ packet_structure_block_update:
    # RedstoneSaveMode is the mode that should be used to save the structure when used with redstone. In
    # Java Edition, this is always stored in memory, but in Bedrock Edition it can be stored either to disk
    # or memory. See the constants above for the options.
-   # As of 1.26.40 this is a single byte instead of a zigzag varint.
-   redstone_save_mode: u8
+   redstone_save_mode: zigzag32
    # ShouldTrigger specifies if the structure block should be triggered immediately after this packet
    # reaches the server.
    should_trigger: bool
@@ -2258,6 +2262,7 @@ packet_player_skin:
    skin: Skin
    skin_name: string
    old_skin_name: string
+   is_verified: bool
 
 # SubClientLogin is sent when a sub-client joins the server while another client is already connected to it.
 # The packet is sent as a result of split-screen game play, and allows up to four players to play using the
@@ -2491,27 +2496,27 @@ packet_set_display_objective:
 packet_set_score:
    !id: 0x6c
    !bound: client
-   # As of 1.26.40 the packet-wide action byte is gone. Every entry carries its own type, written both as
-   # an unsigned varint and as a string, and the payload that follows depends on that type.
+   # ActionType is the type of the action to execute upon the scoreboard with the entries that the packet
+   # has. If ActionType is ScoreboardActionModify, all entries will be added to the scoreboard if not yet
+   # present, or modified if already present. If set to ScoreboardActionRemove, all scoreboard entries set
+   # will be removed from the scoreboard.
+   action: u8 =>
+      0: change
+      1: remove
    entries: []varint
-      entry_type: varint =>
-         0: remove
-         1: player
-         2: entity
-         3: fake_player
-      entry_type_name: string
       scoreboard_id: zigzag64
-      _: entry_type ?
-         if remove:
-            objective_name?: string
-         if fake_player:
-            objective_name: string
-            score: li32
-            custom_name: string
-         default:
-            objective_name: string
-            score: li32
-            entity_unique_id: zigzag64
+      objective_name: string
+      score: li32
+      _: ../action ?
+         if change:
+            entry_type: i8 =>
+               1: player
+               2: entity
+               3: fake_player
+            entity_unique_id: entry_type ?
+               if player or entity: zigzag64
+            custom_name: entry_type ?
+               if fake_player: string
 
 # LabTable is sent by the client to let the server know it started a chemical reaction in Education Edition,
 # and is sent by the server to other clients to show the effects.
@@ -2569,18 +2574,37 @@ packet_move_entity_delta:
    # EntityRuntimeID is the runtime ID of the entity that is being moved. The packet works provided a
    # non-player entity with this runtime ID is present.
    runtime_entity_id: varint64
-   # As of 1.26.40 the DeltaMoveFlags bitfield is gone; every component is a separate optional and the
-   # remaining flags are written as plain booleans at the end of the packet.
-   x?: lf32
-   y?: lf32
-   z?: lf32
-   rot_x?: u8 # TODO: * implement ByteFloat
-   rot_y?: u8
-   rot_z?: u8
-   on_ground: bool
-   force_move: bool
-   force_move_local_entity: bool
-   force_completion: bool
+   # Flags is a list of flags that specify what data is in the packet.
+   flags: DeltaMoveFlags
+   x: flags.has_x?
+      if true: lf32
+   y: flags.has_y?
+      if true: lf32
+   z: flags.has_z?
+      if true: lf32
+   rot_x: flags.has_rot_x?
+      if true: u8 # TODO: * implement ByteFloat
+   rot_y: flags.has_rot_y?
+      if true: u8
+   rot_z: flags.has_rot_z?
+      if true: u8
+
+DeltaMoveFlags: [ "bitflags",
+   {
+      "type": "lu16",
+      "flags": {
+         "has_x": 0x01,
+         "has_y": 0x02,
+         "has_z": 0x04,
+         "has_rot_x": 0x08,
+         "has_rot_y": 0x10,
+         "has_rot_z": 0x20,
+         "on_ground": 0x40,
+         "teleport": 0x80,
+         "force_move": 0x100
+      }
+   }
+]
 
 # SetScoreboardIdentity is sent by the server to change the identity type of one of the entries on a
 # scoreboard. This is used to change, for example, an entry pointing to a player, to a fake player when it
@@ -2599,7 +2623,9 @@ packet_set_scoreboard_identity:
    # a scoreboard. Depending on ActionType, their identity will either be registered or cleared.
    entries: []varint
       scoreboard_id: zigzag64
-      entity_unique_id?: zigzag64
+      entity_unique_id: ../action ?
+         if register_identity: zigzag64
+         default: void
 
 
 # SetLocalPlayerAsInitialised is sent by the client in response to a PlayStatus packet with the status set
@@ -2998,6 +3024,8 @@ packet_settings_command:
 packet_anvil_damage:
    !id: 0x8d
    !bound: server
+   # Damage is the damage that the client requests to be dealt to the anvil.
+   damage: u8
    # AnvilPosition is the position in the world that the anvil can be found at.
    position: BlockCoordinates
 
@@ -3071,9 +3099,9 @@ packet_player_auth_input:
    move_vector: vec2f
    # HeadYaw is the horizontal rotation of the head that the player reports it has.
    head_yaw: lf32
-   # InputData specifies the way the player moved last tick. As of 1.26.40 it is an optional list of
-   # InputData values instead of a bitfield.
-   input_data?: InputData[]varint
+   # InputData is a combination of bit flags that together specify the way the player moved last tick. It
+   # is a combination of the flags above.
+   input_data: InputFlag
    # InputMode specifies the way that the client inputs data to the screen. It is one of the constants that
    # may be found above.
    input_mode: varint =>
@@ -3110,32 +3138,28 @@ packet_player_auth_input:
    # Delta was the delta between the old and the new position. There isn't any practical use for this field
    # as it can be calculated by the server itself.
    delta: vec3f
-   # As of 1.26.40 none of the fields below are gated on the input flags any more. Each is preceded by a
-   # presence byte (always written as true) and is then written as its own optional.
-   transaction_presence: bool
-   transaction?:
-      legacy: TransactionLegacy
-      # The actions carry their own presence byte and optional, unlike the plain
-      # optional the InventoryTransaction packet wraps them in.
-      actions_presence: bool
-      actions?: TransactionActions
-      data: TransactionUseItem
-   item_stack_request_presence: bool
-   item_stack_request?: ItemStackRequest
-   block_action_presence: bool
-   block_action?: []varint
-      action: Action
-      # As of 1.26.40 the position and face are always written, whatever the action is.
-      # BlockPosition is the position of the target block, if the action with the ActionType set concerned a
-      # block. If that is not the case, the block position will be zero.
-      position: vec3i
-      # BlockFace is the face of the target block that was touched. If the action with the ActionType set
-      # concerned a block. If not, the face is always 0.
-      face: zigzag32
-   vehicle_rotation_presence: bool
-   vehicle_rotation?: vec2f
-   predicted_vehicle_presence: bool
-   predicted_vehicle?: zigzag64
+   transaction: input_data.item_interact ?
+      if true:
+         legacy: TransactionLegacyAuthInput
+         actions: TransactionActionsAuthInput
+         data: TransactionUseItem
+   item_stack_request: input_data.item_stack_request ?
+      if true: ItemStackRequest
+   _: input_data.client_predicted_vehicle ?
+      if true:
+         vehicle_rotation: vec2f
+         predicted_vehicle: zigzag64
+   block_action: input_data.block_action ?
+      if true: []zigzag32
+         action: Action
+         _: action?
+            if start_break or abort_break or crack_break or predict_break or continue_break:
+               # BlockPosition is the position of the target block, if the action with the ActionType set concerned a
+               # block. If that is not the case, the block position will be zero.
+               position: vec3i
+               # BlockFace is the face of the target block that was touched. If the action with the ActionType set
+               # concerned a block. If not, the face is always 0.
+               face: zigzag32
    # AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination of X/Z
    # values which are created using an analogue input.
    analogue_move_vector: vec2f
@@ -3146,75 +3170,76 @@ packet_player_auth_input:
    # speeds and isn't normalised for analogue inputs.
    raw_move_vector: vec2f
 
-# As of 1.26.40 the input flags are no longer a bitfield: they are sent as an optional list of the
-# ordinals below. The values are unchanged from the old bit positions.
-InputData: zigzag32 =>
-   0: ascend
-   1: descend
-   2: north_jump
-   3: jump_down
-   4: sprint_down
-   5: change_height
-   6: jumping
-   7: auto_jumping_in_water
-   8: sneaking
-   9: sneak_down
-   10: up
-   11: down
-   12: left
-   13: right
-   14: up_left
-   15: up_right
-   16: want_up
-   17: want_down
-   18: want_down_slow
-   19: want_up_slow
-   20: sprinting
-   21: ascend_block
-   22: descend_block
-   23: sneak_toggle_down
-   24: persist_sneak
-   25: start_sprinting
-   26: stop_sprinting
-   27: start_sneaking
-   28: stop_sneaking
-   29: start_swimming
-   30: stop_swimming
-   31: start_jumping
-   32: start_gliding
-   33: stop_gliding
-   34: item_interact
-   35: block_action
-   36: item_stack_request
-   37: handled_teleport
-   38: emoting
-   39: missed_swing
-   40: start_crawling
-   41: stop_crawling
-   42: start_flying
-   43: stop_flying
-   44: received_server_data
-   45: client_predicted_vehicle
-   46: paddling_left
-   47: paddling_right
-   48: block_breaking_delay_enabled
-   49: horizontal_collision
-   50: vertical_collision
-   51: down_left
-   52: down_right
-   53: start_using_item
-   54: camera_relative_movement_enabled
-   55: rot_controlled_by_move_direction
-   56: start_spin_attack
-   57: stop_spin_attack
-   58: hotbar_only_touch
-   59: jump_released_raw
-   60: jump_pressed_raw
-   61: jump_current_raw
-   62: sneak_released_raw
-   63: sneak_pressed_raw
-   64: sneak_current_raw
-   65: internal_update
+InputFlag: [ "bitflags", {
+   "type": "varint128", "big": true,
+   "flags": [
+      "ascend",
+      "descend",
+      "north_jump",
+      "jump_down",
+      "sprint_down",
+      "change_height",
+      "jumping",
+      "auto_jumping_in_water",
+      "sneaking",
+      "sneak_down",
+      "up",
+      "down",
+      "left",
+      "right",
+      "up_left",
+      "up_right",
+      "want_up",
+      "want_down",
+      "want_down_slow",
+      "want_up_slow",
+      "sprinting",
+      "ascend_block",
+      "descend_block",
+      "sneak_toggle_down",
+      "persist_sneak",
+      "start_sprinting",
+      "stop_sprinting",
+      "start_sneaking",
+      "stop_sneaking",
+      "start_swimming",
+      "stop_swimming",
+      "start_jumping",
+      "start_gliding",
+      "stop_gliding",
+      "item_interact",
+      "block_action",
+      "item_stack_request",
+      "handled_teleport",
+      "emoting",
+      "missed_swing",
+      "start_crawling",
+      "stop_crawling",
+      "start_flying",
+      "stop_flying",
+      "received_server_data",
+      "client_predicted_vehicle",
+      "paddling_left",
+      "paddling_right",
+      "block_breaking_delay_enabled",
+      "horizontal_collision",
+      "vertical_collision",
+      "down_left",
+      "down_right",
+      "start_using_item",
+      "camera_relative_movement_enabled",
+      "rot_controlled_by_move_direction",
+      "start_spin_attack",
+      "stop_spin_attack",
+      "hotbar_only_touch",
+      "jump_released_raw",
+      "jump_pressed_raw",
+      "jump_current_raw",
+      "sneak_released_raw",
+      "sneak_pressed_raw",
+      "sneak_current_raw"
+   ]
+}]
 
 # CreativeContent is a packet sent by the server to set the creative inventory's content for a player.
 # Introduced in 1.16, this packet replaces the previous method - sending an InventoryContent packet with
@@ -3227,8 +3252,7 @@ packet_creative_content:
    # The groups that are displayed within the creative inventory menu.
    groups: []varint
       # Where the group shows up in the creative inventory (e.g. Construction, Items, etc)
-      # As of 1.26.40 this is a single byte instead of a little endian int.
-      category: u8 =>
+      category: li32 =>
          - all
          - construction
          - nature
@@ -3629,9 +3653,7 @@ HeightMapDataType: u8 =>
    3: too_low
    4: all_copied
 
-# As of 1.26.40 there is a single entry layout: the payload, both heightmaps and the blob ID are all
-# optionals, so they no longer depend on the result or on whether the blob cache is enabled.
-SubChunkEntry: []varint
+SubChunkEntryWithoutCaching: []lu32
    dx: i8
    dy: i8
    dz: i8
@@ -3644,12 +3666,37 @@ SubChunkEntry: []varint
       5: y_index_out_of_bounds
       6: success_all_air
    # Payload has the terrain data, if the chunk isn't empty and caching is disabled
-   payload?: ByteArray
+   payload: ByteArray
    heightmap_type: HeightMapDataType
-   heightmap?: '["buffer", { "count": 256 }]'
+   heightmap: heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
    render_heightmap_type: HeightMapDataType
-   render_heightmap?: '["buffer", { "count": 256 }]'
-   blob_id?: lu64
+   render_heightmap: render_heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+
+SubChunkEntryWithCaching: []lu32
+   dx: i8
+   dy: i8
+   dz: i8
+   result: u8 =>
+      0: undefined
+      1: success
+      2: chunk_not_found
+      3: invalid_dimension
+      4: player_not_found
+      5: y_index_out_of_bounds
+      6: success_all_air
+   # Payload has the terrain data, if the chunk isn't empty and caching is disabled
+   payload: result ?
+      if success_all_air: void
+      default: ByteArray
+   heightmap_type: HeightMapDataType
+   heightmap: heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+   render_heightmap_type: HeightMapDataType
+   render_heightmap: render_heightmap_type ?
+      if has_data: '["buffer", { "count": 256 }]'
+   blob_id: lu64
 
 # SubChunk sends data about multiple sub-chunks around a center point.
 packet_subchunk:
@@ -3658,8 +3705,10 @@ packet_subchunk:
    cache_enabled: bool
    dimension: zigzag32
    # Origin point
-   origin: vec3li
-   entries: SubChunkEntry
+   origin: vec3i
+   entries: cache_enabled ?
+      if true: SubChunkEntryWithCaching
+      if false: SubChunkEntryWithoutCaching
 
 packet_subchunk_request:
    !id: 0xaf
@@ -3737,7 +3786,6 @@ packet_dimension_data:
          4: end
          5: void
       dimension_type: zigzag32
-      pack_id: uuid
 
 # AgentAction is an Education Edition packet sent from the server to the client to return a response to a
 # previously requested action.
@@ -4257,8 +4305,6 @@ packet_serverbound_diagnostics:
    memory_category_values: MemoryCategoryCounter[]varint
    entity_diagnostics: EntityDiagnosticTimingInfo[]varint
    system_diagnostics: SystemDiagnosticTimingInfo[]varint
-   # Added in 1.26.40.
-   system_categories: SystemCategory[]varint
    whisker_scopes: WhiskerScopeDataSummary[]varint
 
 # CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
@@ -4436,13 +4482,11 @@ packet_player_update_entity_overrides:
    # PropertyIndex is the index of the property to modify. The index is unique for each property of an entity.
    property_index: varint
    # Type is the type of action to perform with the property. It is one of the constants above.
-   # As of 1.26.40 it is sent twice: once as an unsigned varint and once as the legacy byte.
-   type: varint =>
+   type: u8 =>
       - clear_all
       - remove
       - set_int
       - set_float
-   legacy_type: u8
    value: type ?
       # IntValue is the new integer value of the property. It is only used when Type is set to
       # PlayerUpdateEntityOverridesTypeInt.
@@ -4454,14 +4498,11 @@ packet_player_update_entity_overrides:
 packet_player_location:
    !id: 0x146
    !bound: client
-   # As of 1.26.40 the target entity comes first and the type is an unsigned varint.
-   entity_unique_id: zigzag64
    # Type is the action that is being performed. It is one of the constants above.
-   type: varint =>
+   type: li32 =>
       - coordinates
       - type_hide
-   # Currently always zero.
-   unused: zigzag32
+   entity_unique_id: zigzag64
    position: type ?
       if coordinates: vec3f
 
@@ -4684,27 +4725,7 @@ packet_clientbound_update_sound_data:
    !id: 0x15c
    !bound: client
    server_sound_handle: ServerSoundHandle
-   # As of 1.26.40 the string type identifier is replaced by one optional per update kind. Each optional
-   # payload starts with an unsigned varint that is currently always zero.
-   stop?:
-      unused: varint
-   volume?:
-      unused: varint
-      volume: lf32
-   pitch?:
-      unused: varint
-      pitch: lf32
-   fade?:
-      unused: varint
-      target_volume: lf32
-      duration: lf32
-   seek_to?:
-      unused: varint
-      seconds: lf32
-   pause?:
-      unused: varint
-   resume?:
-      unused: varint
+   sound_event: string
 
 packet_send_party_destination_cookie:
    !id: 0x15d

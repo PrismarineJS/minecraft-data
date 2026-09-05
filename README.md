@@ -11,7 +11,7 @@ Supports
 * Minecraft PC version 0.30c (classic), 1.7.10, 1.8.8, 1.9 (15w40b, 1.9, 1.9.1-pre2, 1.9.2, 1.9.4),
 1.10 (16w20a, 1.10-pre1, 1.10, 1.10.1, 1.10.2), 1.11 (16w35a, 1.11, 1.11.2), 1.12 (17w15a, 17w18b, 1.12-pre4, 1.12, 1.12.1, 1.12.2), 1.13 (17w50a, 1.13, 1.13.1, 1.13.2-pre1, 1.13.2-pre2, 1.13.2), 1.14 (1.14, 1.14.1, 1.14.3, 1.14.4), 1.15 (1.15, 1.15.1, 1.15.2), 1.16 (20w13b, 20w14a, 1.16-rc1, 1.16, 1.16.1, 1.16.2, 1.16.3, 1.16.4, 1.16.5), 1.17, 1.17.1, 1.18 (1.18, 1.18.1, 1.18.2), 1.19 (1.19, 1.19.2, 1.19.3, 1.19.4), 1.20 (1.20, 1.20.1, 1.20.2, 1.20.3, 1.20.4, 1.20.5, 1.20.6), 1.21 (1.21, 1.21.1, 1.21.3), 1.21.8, 1.21.9, 1.21.10, 26.1
 <!--NEXT PC-->
-* Minecraft bedrock version 0.14, 0.15, 1.0, 1.16.201, 1.16.210, 1.16.220, 1.17.0, 1.17.10, 1.17.30, 1.17.40, 1.18.0, 1.18.11, 1.18.30, 1.19.1, 1.19.10, 1.19.20, 1.19.21, 1.19.30, 1.19.40, 1.19.50, 1.19.60, 1.19.62, 1.19.63, 1.19.70, 1.19.80, 1.20.0, 1.20.10, 1.20.30, 1.20.40, 1.20.50, 1.20.61, 1.20.71, 1.20.80, 1.21.0, 1.21.2, 1.21.20, 1.21.30, 1.21.42, 1.21.50, 1.21.60, 1.21.70, 1.21.80, 1.21.90, 1.21.93, 1.21.100, 1.21.111, 1.21.120, 1.21.124, 1.21.130, 1.26.0, 1.26.10, 1.26.20, 1.26.30
+* Minecraft bedrock version 0.14, 0.15, 1.0, 1.16.201, 1.16.210, 1.16.220, 1.17.0, 1.17.10, 1.17.30, 1.17.40, 1.18.0, 1.18.11, 1.18.30, 1.19.1, 1.19.10, 1.19.20, 1.19.21, 1.19.30, 1.19.40, 1.19.50, 1.19.60, 1.19.62, 1.19.63, 1.19.70, 1.19.80, 1.20.0, 1.20.10, 1.20.30, 1.20.40, 1.20.50, 1.20.61, 1.20.71, 1.20.80, 1.21.0, 1.21.2, 1.21.20, 1.21.30, 1.21.42, 1.21.50, 1.21.60, 1.21.70, 1.21.80, 1.21.90, 1.21.93, 1.21.100, 1.21.111, 1.21.120, 1.21.124, 1.21.130, 1.26.0, 1.26.10, 1.26.20, 1.26.30, 1.26.40, 1.26.45
 <!--NEXT BEDROCK-->
 
 ## Wrappers
@@ -104,13 +104,13 @@ Projects that provide data:
 | Project name | Language | Source | Data provided |
 | --- | --- | --- | --- |
 | [minecraft-wiki-extractor](https://github.com/PrismarineJS/minecraft-wiki-extractor) | Node.js | [minecraft wiki](https://minecraft.wiki) | blocks, items, entities, recipes |
-| [mcdevs-wiki-extractor](https://github.com/PrismarineJS/mcdevs-wiki-extractor) | Node.js | [wiki.vg](http://wiki.vg/Protocol) | a partial protocol, entities |
+| [mcdevs-wiki-extractor](https://github.com/PrismarineJS/mcdevs-wiki-extractor) | Node.js | [minecraft.wiki](https://minecraft.wiki/w/Java_Edition_protocol) | a partial protocol, entities |
 | [node-minecraft-extractor](https://github.com/PrismarineJS/node-minecraft-extractor) | Node.js | merge between wiki.vg and mcwiki | a complete entities file |
 | [minecraft-jar-extractor](https://github.com/PrismarineJS/minecraft-jar-extractor) | Node.js | minecraft server jar | a very partial but completely up to date protocol |
 | [minecraft-jar-extractor in python](https://github.com/pangeacake/minecraft-jar-extractor) | Python | minecraft server jar | about the same protocol information as minecraft-jar-extractor in node.js |
 | [burger](https://github.com/mcdevs/Burger) with [burger-extractor](https://github.com/PrismarineJS/burger-extractor) | Node.js | minecraft server jar | used to provide items, blocks, biomes and recipes |
 | [burger 1.16](https://github.com/Pokechu22/Burger/tree/1.16-dev)  | --//-- | --// -- | --//-- |
-| [command-generator](https://github.com/Miro-Andrin/mc-data-command-generator) | Python | [Minecraft data generator](https://wiki.vg/Data_Generators) | Data used for parsing all vanilla server commands. |
+| [command-generator](https://github.com/Miro-Andrin/mc-data-command-generator) | Python | [Minecraft data generator](https://minecraft.wiki/w/Tutorials/Running_the_data_generator) | Data used for parsing all vanilla server commands. |
 | [minecraft-data-generator](https://github.com/Archengius/minecraft-data-generator) | Java | minecraft client | biomes, block collision shapes, blocks, effects, enchantments, entities, foods, items, particles, tints. Required Fabric updated to the provided minecraft version. |
 
 
@@ -118,11 +118,11 @@ Pages interesting to manually update the data if necessary:
 
 | Page | Data |
 | ---- | ---- |
-| [wiki.vg Inventory page](http://wiki.vg/Inventory) | windows |
-| [wiki.vg](http://wiki.vg/Block_Actions) | instruments |
+| [minecraft.wiki Inventory page](https://minecraft.wiki/w/Java_Edition_protocol/Inventory) | windows |
+| [minecraft.wiki](https://minecraft.wiki/w/Java_Edition_protocol#Block_Action) | instruments |
 | [a mineflayer PR](https://github.com/PrismarineJS/mineflayer/pull/197) | biomes |
 | [mcwiki effects page](https://minecraft.wiki/w/Effect) | effects |
-| [wiki.vg protocol version numbers](http://wiki.vg/Protocol_version_numbers) | protocolVersions |
+| [minecraft.wiki protocol version numbers](https://minecraft.wiki/w/Protocol_version) | protocolVersions |
 
 ## Data quality
 

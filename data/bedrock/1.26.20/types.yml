@@ -129,22 +129,6 @@ ItemLegacy:
             if /ShieldItemID: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithBlockingTick" }]'
             default: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithoutBlockingTick" }]'
 
-ItemNew:
-   network_id: li16
-   count: lu16
-   metadata: varint
-   has_stack_id: bool
-   stack_id: has_stack_id ?
-      if true:
-         empty: varint
-         id: zigzag32
-      default: void
-   block_runtime_id: varint
-   extra: network_id ?
-      # The Shield Item ID is sent in the StartGame packet. It is usually 355 in vanilla.
-      if /ShieldItemID: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithBlockingTick" }]'
-      default: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithoutBlockingTick" }]'
-
 # An "ItemStack" here represents an Item instance. You can think about it like a pointer
 # to an item class. The data for the class gets updated with the data in the `item` field
 # As of 1.16.220, now functionally the same as `Item` just without an extra boolean when
@@ -171,6 +155,27 @@ Item:
             ## Really bad compiler hack to allow us to use a global variable
             if /ShieldItemID: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithBlockingTick" }]'
             default: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithoutBlockingTick" }]'
+
+ItemV4NetIdVariant:
+   type: varint =>
+      0: item_stack_net_id
+      1: item_stack_request_id
+      2: item_stack_legacy_request_id
+   id: zigzag32
+
+ItemV4:
+   network_id: li16
+   count: lu16
+   metadata: varint
+   has_stack_id: bool
+   stack_id: has_stack_id ?
+      if true: ItemV4NetIdVariant
+      default: void
+   block_runtime_id: varint
+   extra: network_id ?
+      # The Shield Item ID is sent in the StartGame packet. It is usually 355 in vanilla.
+      if /ShieldItemID: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithBlockingTick" }]'
+      default: '["encapsulated", { "lengthType": "varint", "type": "ItemExtraDataWithoutBlockingTick" }]'
 
 vec3i:
    x: zigzag32
@@ -2592,7 +2597,7 @@ VoxelCells:
    storage: u8[]varint
 
 VoxelShape:
-   cells: VoxelCells[]varint
+   cells: VoxelCells
    x_coordinates: lf32[]varint
    y_coordinates: lf32[]varint
    z_coordinates: lf32[]varint
@@ -2814,6 +2819,25 @@ BiomeChunkGeneration:
    mountain_parameters?: BiomeMountainParameters
    # SurfaceMaterialAdjustments is a list of surface material adjustments.
    surface_material_adjustments?: BiomeElementData[]varint
+   # OverworldRules is optional information to specify the biome's overworld rules, such as rivers and hills.
+   overworld_rules?: BiomeOverworldRules
+   # MultiNoiseRules is optional information to specify the biome's multi-noise rules.
+   multi_noise_rules?: BiomeMultiNoiseRules
+   # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
+   # weighted biomes.
+   legacy_rules?: BiomeConditionalTransformation[]varint
+   # ReplacementsData is a list of biome replacement data.
+   replacements_data?: BiomeReplacementData[]varint
+   has_village_type: bool
+   village_type: has_village_type ?
+      if true: u8
+   # As of 1.26.20 the surface descriptions moved out of this struct into a pair of surface builders at the
+   # end of it. SurfaceBuilder describes the top layer, SubSurfaceBuilder the layer underneath it.
+   surface_builder_data?: BiomeSurfaceBuilder
+   sub_surface_builder_data?: BiomeSurfaceBuilder
+
+# BiomeSurfaceBuilder describes how one layer of a biome's surface is generated.
+BiomeSurfaceBuilder:
    # SurfaceMaterials is a set of materials to use for the surface layers of the biome.
    surface_materials?: BiomeSurfaceMaterial
    # HasDefaultOverworldSurface is true if the biome has a default overworld surface.
@@ -2828,18 +2852,16 @@ BiomeChunkGeneration:
    mesa_surface?: BiomeMesaSurface
    # CappedSurface is optional information to specify the biome's capped surface, i.e. in the Nether.
    capped_surface?: BiomeCappedSurface
-   # OverworldRules is optional information to specify the biome's overworld rules, such as rivers and hills.
-   overworld_rules?: BiomeOverworldRules
-   # MultiNoiseRules is optional information to specify the biome's multi-noise rules.
-   multi_noise_rules?: BiomeMultiNoiseRules
-   # LegacyRules is a list of legacy rules for the biomes using an older format, which is just a list of
-   # weighted biomes.
-   legacy_rules?: BiomeConditionalTransformation[]varint
-   # ReplacementsData is a list of biome replacement data.
-   replacements_data?: BiomeReplacementData[]varint
-   has_village_type: bool
-   village_type: has_village_type ?
-      if true: u8
+   # NoiseGradientSurface drives the surface from a named noise function. Added in 1.26.20.
+   noise_gradient_surface?: BiomeNoiseGradientSurface
+
+# BiomeNoiseGradientSurface generates a surface by sampling a named noise function.
+BiomeNoiseGradientSurface:
+   non_replaceable_blocks: lu32[]varint
+   gradient_blocks: lu32[]varint
+   noise_seed: string
+   first_octave: lu32
+   amplitudes: lf32[]varint
 
 # BiomeClimate represents the climate of a biome, mainly for ambience but also defines certain behaviours.
 BiomeClimate:

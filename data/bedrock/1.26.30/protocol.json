@@ -520,81 +520,6 @@
         }
       ]
     ],
-    "ItemNew": [
-      "container",
-      [
-        {
-          "name": "network_id",
-          "type": "li16"
-        },
-        {
-          "name": "count",
-          "type": "lu16"
-        },
-        {
-          "name": "metadata",
-          "type": "varint"
-        },
-        {
-          "name": "has_stack_id",
-          "type": "bool"
-        },
-        {
-          "name": "stack_id",
-          "type": [
-            "switch",
-            {
-              "compareTo": "has_stack_id",
-              "fields": {
-                "true": [
-                  "container",
-                  [
-                    {
-                      "name": "empty",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "id",
-                      "type": "zigzag32"
-                    }
-                  ]
-                ]
-              },
-              "default": "void"
-            }
-          ]
-        },
-        {
-          "name": "block_runtime_id",
-          "type": "varint"
-        },
-        {
-          "name": "extra",
-          "type": [
-            "switch",
-            {
-              "compareTo": "network_id",
-              "fields": {
-                "/ShieldItemID": [
-                  "encapsulated",
-                  {
-                    "lengthType": "varint",
-                    "type": "ItemExtraDataWithBlockingTick"
-                  }
-                ]
-              },
-              "default": [
-                "encapsulated",
-                {
-                  "lengthType": "varint",
-                  "type": "ItemExtraDataWithoutBlockingTick"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    ],
     "Item": [
       "container",
       [
@@ -714,10 +639,20 @@
           "type": "varint"
         },
         {
-          "name": "net_id_variant",
+          "name": "has_stack_id",
+          "type": "bool"
+        },
+        {
+          "name": "stack_id",
           "type": [
-            "option",
-            "ItemV4NetIdVariant"
+            "switch",
+            {
+              "compareTo": "has_stack_id",
+              "fields": {
+                "true": "ItemV4NetIdVariant"
+              },
+              "default": "void"
+            }
           ]
         },
         {
@@ -725,8 +660,29 @@
           "type": "varint"
         },
         {
-          "name": "extra_data",
-          "type": "ByteArray"
+          "name": "extra",
+          "type": [
+            "switch",
+            {
+              "compareTo": "network_id",
+              "fields": {
+                "/ShieldItemID": [
+                  "encapsulated",
+                  {
+                    "lengthType": "varint",
+                    "type": "ItemExtraDataWithBlockingTick"
+                  }
+                ]
+              },
+              "default": [
+                "encapsulated",
+                {
+                  "lengthType": "varint",
+                  "type": "ItemExtraDataWithoutBlockingTick"
+                }
+              ]
+            }
+          ]
         }
       ]
     ],
@@ -1514,7 +1470,7 @@
         },
         {
           "name": "held_item",
-          "type": "Item"
+          "type": "ItemV4"
         },
         {
           "name": "player_pos",
@@ -1662,6 +1618,148 @@
                 ]
               }
             ]
+          ]
+        }
+      ]
+    ],
+    "TransactionActionsAuthInput": [
+      "array",
+      {
+        "countType": "varint",
+        "type": [
+          "container",
+          [
+            {
+              "name": "source_type",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "container",
+                    "1": "global",
+                    "2": "world_interaction",
+                    "3": "creative",
+                    "100": "craft_slot",
+                    "99999": "craft"
+                  }
+                }
+              ]
+            },
+            {
+              "anon": true,
+              "type": [
+                "switch",
+                {
+                  "compareTo": "source_type",
+                  "fields": {
+                    "container": [
+                      "container",
+                      [
+                        {
+                          "name": "inventory_id",
+                          "type": "WindowIDZigzag32"
+                        }
+                      ]
+                    ],
+                    "craft": [
+                      "container",
+                      [
+                        {
+                          "name": "action",
+                          "type": "varint"
+                        }
+                      ]
+                    ],
+                    "world_interaction": [
+                      "container",
+                      [
+                        {
+                          "name": "flags",
+                          "type": "varint"
+                        }
+                      ]
+                    ],
+                    "craft_slot": [
+                      "container",
+                      [
+                        {
+                          "name": "action",
+                          "type": "varint"
+                        }
+                      ]
+                    ]
+                  },
+                  "default": "void"
+                }
+              ]
+            },
+            {
+              "name": "slot",
+              "type": "varint"
+            },
+            {
+              "name": "old_item",
+              "type": "Item"
+            },
+            {
+              "name": "new_item",
+              "type": "Item"
+            }
+          ]
+        ]
+      }
+    ],
+    "TransactionLegacyAuthInput": [
+      "container",
+      [
+        {
+          "name": "legacy_request_id",
+          "type": "zigzag32"
+        },
+        {
+          "name": "legacy_transactions",
+          "type": [
+            "switch",
+            {
+              "compareTo": "legacy_request_id",
+              "fields": {
+                "0": "void"
+              },
+              "default": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": [
+                    "container",
+                    [
+                      {
+                        "name": "container_id",
+                        "type": "u8"
+                      },
+                      {
+                        "name": "changed_slots",
+                        "type": [
+                          "array",
+                          {
+                            "countType": "varint",
+                            "type": [
+                              "container",
+                              [
+                                {
+                                  "name": "slot_id",
+                                  "type": "u8"
+                                }
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]
@@ -5272,13 +5370,7 @@
       [
         {
           "name": "cells",
-          "type": [
-            "array",
-            {
-              "countType": "varint",
-              "type": "VoxelCells"
-            }
-          ]
+          "type": "VoxelCells"
         },
         {
           "name": "x_coordinates",
@@ -5713,43 +5805,6 @@
           ]
         },
         {
-          "name": "surface_materials",
-          "type": [
-            "option",
-            "BiomeSurfaceMaterial"
-          ]
-        },
-        {
-          "name": "has_default_overworld_surface",
-          "type": "bool"
-        },
-        {
-          "name": "has_swamp_surface",
-          "type": "bool"
-        },
-        {
-          "name": "has_frozen_ocean_surface",
-          "type": "bool"
-        },
-        {
-          "name": "has_end_surface",
-          "type": "bool"
-        },
-        {
-          "name": "mesa_surface",
-          "type": [
-            "option",
-            "BiomeMesaSurface"
-          ]
-        },
-        {
-          "name": "capped_surface",
-          "type": [
-            "option",
-            "BiomeCappedSurface"
-          ]
-        },
-        {
           "name": "overworld_rules",
           "type": [
             "option",
@@ -5804,6 +5859,137 @@
               }
             }
           ]
+        },
+        {
+          "name": "surface_builder_data",
+          "type": [
+            "option",
+            "BiomeSurfaceBuilder"
+          ]
+        },
+        {
+          "name": "sub_surface_builder_data",
+          "type": [
+            "option",
+            "BiomeSurfaceBuilder"
+          ]
+        }
+      ]
+    ],
+    "BiomeSurfaceBuilder": [
+      "container",
+      [
+        {
+          "name": "surface_materials",
+          "type": [
+            "option",
+            "BiomeSurfaceMaterial"
+          ]
+        },
+        {
+          "name": "has_default_overworld_surface",
+          "type": "bool"
+        },
+        {
+          "name": "has_swamp_surface",
+          "type": "bool"
+        },
+        {
+          "name": "has_frozen_ocean_surface",
+          "type": "bool"
+        },
+        {
+          "name": "has_end_surface",
+          "type": "bool"
+        },
+        {
+          "name": "mesa_surface",
+          "type": [
+            "option",
+            "BiomeMesaSurface"
+          ]
+        },
+        {
+          "name": "capped_surface",
+          "type": [
+            "option",
+            "BiomeCappedSurface"
+          ]
+        },
+        {
+          "name": "noise_gradient_surface",
+          "type": [
+            "option",
+            "BiomeNoiseGradientSurface"
+          ]
+        }
+      ]
+    ],
+    "BiomeNoiseGradientSurface": [
+      "container",
+      [
+        {
+          "name": "non_replaceable_blocks",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "lu32"
+            }
+          ]
+        },
+        {
+          "name": "gradient_blocks",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "BiomeNoiseBlockSpecifier"
+            }
+          ]
+        },
+        {
+          "name": "noise_seed",
+          "type": "string"
+        },
+        {
+          "name": "first_octave",
+          "type": "lu32"
+        },
+        {
+          "name": "amplitudes",
+          "type": [
+            "array",
+            {
+              "countType": "varint",
+              "type": "lf32"
+            }
+          ]
+        }
+      ]
+    ],
+    "BiomeNoiseBlockSpecifier": [
+      "container",
+      [
+        {
+          "name": "noise",
+          "type": "string"
+        },
+        {
+          "name": "threshold",
+          "type": "lf32"
+        },
+        {
+          "name": "min",
+          "type": "lf32"
+        },
+        {
+          "name": "max",
+          "type": "lf32"
+        },
+        {
+          "name": "block",
+          "type": "lu32"
         }
       ]
     ],
@@ -6964,6 +7150,14 @@
         {
           "name": "ease_type",
           "type": "li32"
+        },
+        {
+          "name": "local_transition_ticks",
+          "type": "lu32"
+        },
+        {
+          "name": "noise_transition",
+          "type": "bool"
         }
       ]
     ],
@@ -6973,6 +7167,13 @@
         {
           "name": "name",
           "type": "string"
+        },
+        {
+          "name": "noise_name",
+          "type": [
+            "option",
+            "string"
+          ]
         },
         {
           "name": "dimension_id",
@@ -9470,7 +9671,7 @@
         },
         {
           "name": "item",
-          "type": "ItemNew"
+          "type": "ItemV4"
         },
         {
           "name": "slot",
@@ -9886,12 +10087,12 @@
           "name": "storage_item",
           "type": [
             "option",
-            "ItemNew"
+            "ItemV4"
           ]
         },
         {
           "name": "item",
-          "type": "ItemNew"
+          "type": "ItemV4"
         }
       ]
     ],
@@ -13050,11 +13251,11 @@
                   [
                     {
                       "name": "legacy",
-                      "type": "TransactionLegacy"
+                      "type": "TransactionLegacyAuthInput"
                     },
                     {
                       "name": "actions",
-                      "type": "TransactionActions"
+                      "type": "TransactionActionsAuthInput"
                     },
                     {
                       "name": "data",

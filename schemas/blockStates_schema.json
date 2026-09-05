@@ -1,0 +1,37 @@
+{
+  "title": "blockStates",
+  "type": "array",
+  "items": {
+    "title": "blockState",
+    "type": "object",
+    "properties": {
+      "name": {
+        "description": "The block name (e.g. acacia_button)",
+        "type": "string",
+        "pattern": "\\S+"
+      },
+      "states": {
+        "description": "Map of state name to its type and value",
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "description": "The type of the state (byte, int, bool, string...)",
+              "type": "string"
+            },
+            "value": {}
+          },
+          "required": ["type", "value"],
+          "additionalProperties": false
+        }
+      },
+      "version": {
+        "description": "The block state version (present in newer versions)",
+        "type": "integer"
+      }
+    },
+    "required": ["name", "states"],
+    "additionalProperties": false
+  }
+}
