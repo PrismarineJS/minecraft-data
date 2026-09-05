@@ -1,7 +1,5 @@
 ## 3.116.0
 * [🎈 Add Minecraft bedrock 1.26.45 data (#1269)](https://github.com/PrismarineJS/minecraft-data/commit/a4cb096cd475984ea9e0d37fb8f447675bc577b5) (thanks @rom1504bot)
-* [Update bedrock-version-bump.yml](https://github.com/PrismarineJS/minecraft-data/commit/4ec8f94d89f047524df21ce840addeaf4f52f603) (thanks @extremeheat)
-* [Update Bedrock version update workflow (#1268)](https://github.com/PrismarineJS/minecraft-data/commit/fdb044ebca5f38b55b7c76077632450ef72232f1) (thanks @Copilot)
 * [Add 26.3-pre-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/abfaadb4c45e2968a98fc927d32f7c648962d8ad) (thanks @github-actions[bot])
 * [Add 26.3-pre-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/dd89a5f2f0054a6d504eef567f4891ab5033f1d1) (thanks @github-actions[bot])
 
