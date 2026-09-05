@@ -11,6 +11,11 @@ on:
         description: 'Protocol version number (e.g., 860)'
         required: true
         type: string
+      createPr:
+        description: 'Create a pull request with the changes'
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -51,6 +56,7 @@ jobs:
           npm test
 
       - name: Create Pull Request
+        if: ${{ github.event.inputs.createPr == 'true' }}
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.PAT_PASSWORD || secrets.GITHUB_TOKEN }}
