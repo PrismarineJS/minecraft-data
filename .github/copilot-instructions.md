@@ -46,7 +46,8 @@ Most data is generated with data generators. For mcpc, data is generated with [m
 
 Avoid updating data manually unless necessary, like when specific data is not automated yet (for tips on what is and not, see doc/add-data-new-version.md). Instead, update the data generators or add new ones as needed. Since you don't have capability to make changes outside this repo, please inform the user what changes need to be made and be as detailed as possible.
 
-Note we do not currently have any automation setup to generate bedrock edition data.
+Bedrock version updates are scaffolded by `.github/workflows/bedrock-version-bump.yml`, which is
+triggered by `bedrock-protocol` with the Minecraft and protocol versions.
 
 ## Github Workflows
 
@@ -60,6 +61,9 @@ helper-bot dispatches to minecraft-data-generator so that it can run data genera
 
 .github/workflows/handle-mcpc-generator.yml ->
 .github/helper-bot/handleMcpcGeneratedArtifacts.js
+
+`.github/workflows/bedrock-version-bump.yml` runs `npm run version bedrock`, rebuilds the
+protocol files, and opens a balloon-tagged scaffold PR for the supplied version.
 
 ## Notes
 Not all data is generated. Some data (like protocol schemas) is manually curated on both pc and bedrock.
