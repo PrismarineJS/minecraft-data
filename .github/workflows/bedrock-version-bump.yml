@@ -11,11 +11,10 @@ on:
         description: 'Protocol version number (e.g., 860)'
         required: true
         type: string
-      createPr:
-        description: 'Create a pull request with the changes'
-        required: false
-        type: boolean
-        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   bump-bedrock-version:
@@ -52,12 +51,11 @@ jobs:
           npm test
 
       - name: Create Pull Request
-        if: ${{ github.event.inputs.createPr == 'true' }}
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.PAT_PASSWORD || secrets.GITHUB_TOKEN }}
           commit-message: |
-            Add bedrock ${{ github.event.inputs.minecraftVersion }} protocol data
+            🎈 Add Minecraft bedrock ${{ github.event.inputs.minecraftVersion }} data
 
             Updates:
             - Protocol version → ${{ github.event.inputs.protocolVersion }}
@@ -67,7 +65,7 @@ jobs:
             - Regenerated protocol.json files
           branch: bedrock-bump-${{ github.event.inputs.minecraftVersion }}
           delete-branch: true
-          title: Add bedrock ${{ github.event.inputs.minecraftVersion }} data
+          title: 🎈 Add Minecraft bedrock ${{ github.event.inputs.minecraftVersion }} data
           body: |
             ## Bedrock Version Bump
 
