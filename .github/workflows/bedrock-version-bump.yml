@@ -3,7 +3,7 @@ name: Bedrock Version Bump
 on:
   workflow_dispatch:
     inputs:
-      minecraftVersion:
+      version:
         description: 'Bedrock Minecraft version (e.g., 1.21.124)'
         required: true
         type: string
@@ -11,15 +11,14 @@ on:
         description: 'Protocol version number (e.g., 860)'
         required: true
         type: string
+      issueUrl:
+        description: 'Relevant bedrock-protocol issue URL'
+        required: true
+        type: string
       createPr:
-        description: 'Create a pull request with the changes'
+        description: 'Whether to create a new PR if none exists'
         required: false
-        type: boolean
-        default: true
-
-permissions:
-  contents: write
-  pull-requests: write
+        default: 'false'
 
 jobs:
   bump-bedrock-version:
@@ -43,7 +42,10 @@ jobs:
       - name: Run version bump script
         run: |
           cd tools/js
-          npm run version bedrock ${{ github.event.inputs.minecraftVersion }} ${{ github.event.inputs.protocolVersion }}
+          npm run version bedrock "${VERSION}" "${PROTOCOL_VERSION}"
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+          PROTOCOL_VERSION: ${{ github.event.inputs.protocolVersion }}
 
       - name: Build protocol files
         run: |
@@ -55,33 +57,26 @@ jobs:
           cd tools/js
           npm test
 
+      - name: Set branch name
+        id: branch
+        run: echo "name=bedrock_$(printf '%s' "$VERSION" | tr -c '[:alnum:]' '_' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+
       - name: Create Pull Request
         if: ${{ github.event.inputs.createPr == 'true' }}
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.PAT_PASSWORD || secrets.GITHUB_TOKEN }}
-          commit-message: |
-            🎈 Add Minecraft bedrock ${{ github.event.inputs.minecraftVersion }} data
-
-            Updates:
-            - Protocol version → ${{ github.event.inputs.protocolVersion }}
-            - Minecraft version → ${{ github.event.inputs.minecraftVersion }}
-            - Moved previous proto.yml to versioned folder
-            - Updated protocolVersions.json, versions.json, and dataPaths.json
-            - Regenerated protocol.json files
-          branch: bedrock-bump-${{ github.event.inputs.minecraftVersion }}
-          delete-branch: true
-          title: 🎈 Add Minecraft bedrock ${{ github.event.inputs.minecraftVersion }} data
+          commit-message: 🎈 Add Minecraft bedrock ${{ github.event.inputs.version }} data
+          branch: ${{ steps.branch.outputs.name }}
+          title: 🎈 Add Minecraft bedrock ${{ github.event.inputs.version }} data
           body: |
-            This automated PR sets up the relevant boilerplate for Minecraft bedrock version ${{ github.event.inputs.minecraftVersion }}. Fixes https://github.com/PrismarineJS/bedrock-protocol.
+            This automated PR sets up the relevant boilerplate for Minecraft bedrock version ${{ github.event.inputs.version }}. Fixes ${{ github.event.inputs.issueUrl }}.
 
             Related:
-            - Issue: https://github.com/PrismarineJS/bedrock-protocol
+            - Issue: ${{ github.event.inputs.issueUrl }}
             - Protocol Version: ${{ github.event.inputs.protocolVersion }}
             <!--minecraft-data-generator-placeholder-->
 
-            * You can help contribute to this PR by opening a PR against this <code branch>bedrock-bump-${{ github.event.inputs.minecraftVersion }}</code> branch instead of <code>master</code>.
-          labels: |
-            bedrock
-            version-bump
-            automated
+            * You can help contribute to this PR by opening a PR against this <code branch>${{ steps.branch.outputs.name }}</code> branch instead of <code>master</code>.
