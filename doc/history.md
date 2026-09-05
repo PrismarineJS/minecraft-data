@@ -1,3 +1,8 @@
+## 3.116.0
+* [🎈 Add Minecraft bedrock 1.26.45 data (#1269)](https://github.com/PrismarineJS/minecraft-data/commit/a4cb096cd475984ea9e0d37fb8f447675bc577b5) (thanks @rom1504bot)
+* [Add 26.3-pre-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/abfaadb4c45e2968a98fc927d32f7c648962d8ad) (thanks @github-actions[bot])
+* [Add 26.3-pre-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/dd89a5f2f0054a6d504eef567f4891ab5033f1d1) (thanks @github-actions[bot])
+
 ## 3.115.0
 * [Add hasDataCommand and furnaceNbtUsesSnakeCase features (#1260)](https://github.com/PrismarineJS/minecraft-data/commit/50345c21048dd097a3d4f7ebbddb407586c28e00) (thanks @u9g)
 * [Add quickMoveClickSendsEmptyItem, hasItemCommand and replaceItemSlotIsPrefixed features (#1262)](https://github.com/PrismarineJS/minecraft-data/commit/94048f56c42dfe555db4479c2ffe4456bd95e9ab) (thanks @u9g)
