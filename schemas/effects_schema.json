@@ -2,7 +2,7 @@
   "title": "effects",
   "type": "array",
   "uniqueItems": true,
-  "items" : {
+  "items": {
     "title": "effect",
     "type": "object",
     "properties": {
@@ -11,21 +11,73 @@
         "type": "integer",
         "minimum": 0
       },
-      "displayName": {
-        "description": "The display name of an effect",
-        "type": "string"
-      },
       "name": {
         "description": "The name of an effect",
         "type": "string",
         "pattern": "\\S+"
       },
+      "displayName": {
+        "description": "The display name of an effect",
+        "type": "string"
+      },
+      "protocolName": {
+        "description": "The protocol/registry name of an effect",
+        "type": "string"
+      },
+      "modifiers": {
+        "description": "The modifiers of an effect",
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "description": "The UUID of a modifier",
+              "type": "string"
+            },
+            "modifier": {
+              "description": "The modifier value of a modifier",
+              "type": "number"
+            },
+            "operation": {
+              "description": "The operation of a modifier",
+              "enum": [
+                "ADDITION",
+                "MULTIPLY_BASE",
+                "MULTIPLY_TOTAL"
+              ]
+            }
+          },
+          "required": [
+            "uuid",
+            "modifier",
+            "operation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "color": {
+        "description": "The RGB color for an effect shown in game UI",
+        "type": "integer",
+        "minimum": 0
+      },
       "type": {
         "description": "Whether an effect is positive or negative",
-        "enum": [ "good","bad" ]
+        "enum": [
+          "good",
+          "bad",
+          "neutral"
+        ]
       }
     },
-    "required": ["id", "displayName", "type", "name"],
-    "additionalProperties":false
+    "required": [
+      "id",
+      "name",
+      "protocolName",
+      "displayName",
+      "modifiers",
+      "type",
+      "color"
+    ],
+    "additionalProperties": false
   }
 }
