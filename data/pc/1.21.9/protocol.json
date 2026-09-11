@@ -1350,14 +1350,26 @@
                 "pig/variant": "varint",
                 "cow/variant": "varint",
                 "chicken/variant": [
-                  "registryEntryHolder",
-                  {
-                    "baseName": "variantId",
-                    "otherwise": {
-                      "name": "variantData",
-                      "type": "string"
+                  "container",
+                  [
+                    {
+                      "name": "hasHolder",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "variant",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "hasHolder",
+                          "fields": {
+                            "true": "varint",
+                            "false": "string"
+                          }
+                        }
+                      ]
                     }
-                  }
+                  ]
                 ],
                 "frog/variant": "varint",
                 "horse/variant": "varint",
