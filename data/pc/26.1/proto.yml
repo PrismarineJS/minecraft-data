@@ -1,4 +1,4 @@
-!version: 26.2
+!version: 26.1
 !StartDocs: true
 
 ^types:
@@ -165,7 +165,7 @@
       - cow/sound_variant
       - chicken/variant
       - chicken/sound_variant
-      - zombie_nautilus/variant
+      - zomie_nautilus/variant
       - frog/variant
       - horse/variant
       - painting/variant
@@ -1035,12 +1035,18 @@
       data: type ?
          if block or block_marker or falling_dust or dust_pillar or block_crumble: varint
          if dust:
-            color: i32
+            red: f32
+            green: f32
+            blue: f32
             scale: f32
          if dust_color_transition:
-            fromColor: i32
-            toColor: i32
+            fromRed: f32
+            fromGreen: f32
+            fromBlue: f32
             scale: f32
+            toRed: f32
+            toGreen: f32
+            toBlue: f32
          if entity_effect: i32
          if item: Slot
          if sculk_charge: f32
@@ -1057,8 +1063,7 @@
             ticks: varint
          if trail:
             target: vec3f64
-            color: i32
-            duration: varint
+            color: u8
          if tinted_leaves: i32
          if firefly: void
          if dragon_breath:
@@ -1752,7 +1757,6 @@
          name: string
          value: string
          signature?: string
-      sessionId: UUID
    # MC: ClientboundLoginCompressionPacket
    packet_compress:
       threshold: varint
@@ -2386,7 +2390,6 @@
       enableRespawnScreen: bool
       doLimitedCrafting: bool
       worldState: SpawnInfo
-      onlineMode: bool
       enforcesSecureChat: bool
    # MC: CLientboundLowDiskSpaceWarningPacket
    packet_low_disk_space_warning:
