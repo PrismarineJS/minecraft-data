@@ -252,7 +252,7 @@
          if repair_cost: varint
          if creative_slot_lock: void
          if enchantment_glint_override: bool
-         if intangible_projectile: void
+         if intangible_projectile: anonymousNbt
          if blocks_attacks:
             blockDelaySeconds: f32
             disableCooldownScale: f32
@@ -291,7 +291,7 @@
             sound: ItemSoundHolder
             makes_particles: bool
             effects: ItemConsumeEffect[]varint
-         if use_remainder: Slot
+         if use_remainder: ItemStackTemplate
          if use_cooldown:
             seconds: f32
             cooldownGroup?: string
@@ -375,9 +375,9 @@
          if map_post_processing: varint
          if potion_duration_scale: f32
          if charged_projectiles:
-            projectiles: Slot[]varint
+            projectiles: ItemStackTemplate[]varint
          if bundle_contents:
-            contents: Slot[]varint
+            contents: ItemStackTemplate[]varint
          if potion_contents:
             # True if this potion has an ID in the potion registry--it has the default effects associated with the potion type.
             potionId?: varint
@@ -445,7 +445,7 @@
             # The ID of the items in the item registry.
             decorations: varint[]varint
          if container:
-            contents: Slot[]varint
+            contents: ["array", { "countType": "varint", "type": ["option", "ItemStackTemplate"] }]
          if block_state:
             properties: []varint
                name: string
@@ -685,6 +685,16 @@
             components: SlotComponent[]$addedComponentCount
             removeComponents: []$removedComponentCount
                type: SlotComponentType
+
+   # Intentionally id-first, unlike the count-first Slot above — vanilla has both codecs.
+   ItemStackTemplate:
+      itemId: varint
+      itemCount: varint
+      addedComponentCount: varint
+      removedComponentCount: varint
+      components: SlotComponent[]$addedComponentCount
+      removeComponents: []$removedComponentCount
+         type: SlotComponentType
 
    HashedSlot:
       itemId: varint
@@ -1042,7 +1052,7 @@
             toColor: i32
             scale: f32
          if entity_effect: i32
-         if item: Slot
+         if item: ItemStackTemplate
          if sculk_charge: f32
          if shriek: varint
          if vibration:
@@ -1971,7 +1981,7 @@
             source: SlotDisplay
             component: SlotComponentType
          if item: varint
-         if item_stack: Slot
+         if item_stack: ItemStackTemplate
          if tag: string
          if dyed_slot_demo:
             dye: SlotDisplay
@@ -2975,7 +2985,7 @@
             displayData?:
                title: anonymousNbt
                description: anonymousNbt
-               icon: Slot
+               icon: ItemStackTemplate
                frameType: varint
                flags: ["bitfield", [
                   { "name": "unused", "size": 29, "signed": false },
