@@ -80,7 +80,7 @@ function checkProtocolSwitches (protocol, versionString) {
   assert.deepEqual(issues, [], `${versionString} has switches with undefined mapper values:\n${issues.join('\n')}`)
 }
 
-const data = ['attributes', 'biomes', 'commands', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language', 'foods', 'particles', 'blockLoot', 'entityLoot', 'mapIcons', 'tints', 'blockMappings', 'sounds', 'blockStates']
+const data = ['attributes', 'biomes', 'commands', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'blockSelectionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language', 'foods', 'particles', 'blockLoot', 'entityLoot', 'mapIcons', 'tints', 'blockMappings', 'sounds', 'blockStates']
 
 require('./version_iterator')(function (p, versionString) {
   describe('minecraft-data schemas ' + versionString, function () {

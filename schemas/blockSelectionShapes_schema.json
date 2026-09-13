@@ -1,0 +1,75 @@
+{
+  "title": "blockSelectionShapes",
+  "description": "Java block selection geometry, separate from collision geometry. Modern states use the block state index; legacy states have explicit metadata and property tables.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["blocks", "shapes"],
+  "properties": {
+    "blocks": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "integer", "minimum": 0 },
+          { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } }
+        ]
+      }
+    },
+    "shapes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": { "type": "number" }
+        }
+      }
+    },
+    "offsets": {
+      "description": "Per-state position-dependent model offsets to apply to canonical boxes.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "maxHorizontal", "verticalMultiplier"],
+              "properties": {
+                "type": { "enum": ["model", "legacyModel"] },
+                "maxHorizontal": { "type": "number", "minimum": 0 },
+                "verticalMultiplier": { "type": "number", "minimum": 0 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "stateMetadata": {
+      "description": "Legacy native state index to stored metadata; several states can share metadata.",
+      "type": "object",
+      "additionalProperties": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0, "maximum": 15 } }
+    },
+    "stateProperties": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "blockIds": {
+      "description": "Legacy native block name to numeric id, independent of later name aliases.",
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    }
+  },
+  "dependencies": {
+    "stateMetadata": ["stateProperties", "blockIds"],
+    "stateProperties": ["stateMetadata", "blockIds"],
+    "blockIds": ["stateMetadata", "stateProperties"]
+  }
+}
