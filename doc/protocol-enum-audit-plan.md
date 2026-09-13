@@ -104,14 +104,15 @@ By `client1.13.2`, the renamed `CPacketEntityAction.java` has:
 ```
 
 The modern `ServerboundPlayerCommandPacket.java` keeps nine entries through
-1.21.5. By 1.16.4 the first two vanilla names are `PRESS_SHIFT_KEY` and
-`RELEASE_SHIFT_KEY`, without changing their indexes. In 1.21.6 they are
+1.21.5. The first two vanilla names change to `PRESS_SHIFT_KEY` and
+`RELEASE_SHIFT_KEY` in the 1.15 line, without changing their indexes. The
+1.15.2 mapped class confirms those names, while the extracted 1.14.4 class
+still uses `START_SNEAKING` and `STOP_SNEAKING`. In 1.21.6 the two entries are
 removed, shifting `STOP_SLEEPING` to index 0 and leaving a seven-entry enum.
 
 The exact introduction point for `START_RIDING_JUMP`, `STOP_RIDING_JUMP`, and
 `START_FALL_FLYING` must be derived from protocol history because the extracted
-repository jumps directly from 1.8.9 to 1.13.2. The available refs show the
-name-only transition to `PRESS_SHIFT_KEY`/`RELEASE_SHIFT_KEY` by 1.16.4.
+repository jumps directly from 1.8.9 to 1.13.2.
 
 ### Game event and difficulty
 
@@ -149,20 +150,23 @@ The extracted sources show these relevant ranges:
 
 | Source range | Enum order |
 | --- | --- |
-| 1.13.2 through 1.16.4 | `start_sneaking`, `stop_sneaking`, `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
-| 1.16.4 through 1.21.5 | `press_shift_key`, `release_shift_key`, `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
+| 1.9 through 1.14.4 | `start_sneaking`, `stop_sneaking`, `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
+| 1.15 through 1.21.5 | `press_shift_key`, `release_shift_key`, `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
 | 1.21.6 and later | `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
 
-The names for the first two entries changed by 1.16.4, but
+The names for the first two entries changed in 1.15, but
 their positions remained 0 and 1 until those entries were removed in 1.21.6.
+These two names are intentionally version-specific: pressing Shift is not
+described as the older `start_sneaking` action. The remaining mapper names use
+the vanilla action names consistently instead of the PR's aliases such as
+`leave_bed`, `start_horse_jump`, and `open_vehicle_inventory`.
 The old `entityActionUsesStringMapper` feature recorded that only
 1.21.6/latest exposed strings. It becomes obsolete once the earlier schemas
 also use mappers, independently of the seven-entry enum boundary.
 
-The older 1.7 and 1.8 schemas require their own historical mapping. The PR is
-wrong there as reported in review: in 1.7 `leave_bed` is 3 and
-`start_horse_jump` is 6; in 1.8 `open_vehicle_inventory` is 6 and there is no
-`stop_horse_jump` entry.
+The older 1.7 and 1.8 schemas require their own historical mapping. In 1.7
+`stop_sleeping` is 3 and `start_riding_jump` is 6; in 1.8 `open_inventory` is
+6 and there is no `stop_riding_jump` entry.
 
 ### 3. Game-event reasons need version scoping
 

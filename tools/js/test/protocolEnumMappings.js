@@ -30,13 +30,13 @@ describe('PC protocol enum mappings', () => {
     assert.deepStrictEqual(field('1.21.4', 'toServer', 'packet_entity_action', 'actionId'), {
       0: 'press_shift_key',
       1: 'release_shift_key',
-      2: 'leave_bed',
+      2: 'stop_sleeping',
       3: 'start_sprinting',
       4: 'stop_sprinting',
-      5: 'start_horse_jump',
-      6: 'stop_horse_jump',
-      7: 'open_vehicle_inventory',
-      8: 'start_elytra_flying'
+      5: 'start_riding_jump',
+      6: 'stop_riding_jump',
+      7: 'open_inventory',
+      8: 'start_fall_flying'
     })
   })
 
@@ -63,17 +63,26 @@ describe('PC protocol enum mappings', () => {
   })
 
   it('uses the historical 1.7 and 1.8 player-command indexes', () => {
-    assert.strictEqual(field('1.7', 'toServer', 'packet_entity_action', 'actionId')['3'], 'leave_bed')
-    assert.strictEqual(field('1.7', 'toServer', 'packet_entity_action', 'actionId')['6'], 'start_horse_jump')
+    assert.strictEqual(field('1.7', 'toServer', 'packet_entity_action', 'actionId')['3'], 'stop_sleeping')
+    assert.strictEqual(field('1.7', 'toServer', 'packet_entity_action', 'actionId')['6'], 'start_riding_jump')
     assert.deepStrictEqual(field('1.8', 'toServer', 'packet_entity_action', 'actionId'), {
-      0: 'press_shift_key',
-      1: 'release_shift_key',
-      2: 'leave_bed',
+      0: 'start_sneaking',
+      1: 'stop_sneaking',
+      2: 'stop_sleeping',
       3: 'start_sprinting',
       4: 'stop_sprinting',
-      5: 'start_horse_jump',
-      6: 'open_vehicle_inventory'
+      5: 'start_riding_jump',
+      6: 'open_inventory'
     })
+  })
+
+  it('tracks the vanilla sneak-to-shift action-name boundary', () => {
+    const before = field('1.14.4', 'toServer', 'packet_entity_action', 'actionId')
+    const after = field('1.15', 'toServer', 'packet_entity_action', 'actionId')
+    assert.strictEqual(before['0'], 'start_sneaking')
+    assert.strictEqual(before['1'], 'stop_sneaking')
+    assert.strictEqual(after['0'], 'press_shift_key')
+    assert.strictEqual(after['1'], 'release_shift_key')
   })
 
   it('scopes game-event reasons to their introduction versions', () => {
@@ -117,13 +126,13 @@ describe('PC protocol enum mappings', () => {
   it('uses the seven-entry player-command enum from 1.21.6', () => {
     const mappings = field('1.21.6', 'toServer', 'packet_entity_action', 'actionId')
     assert.deepStrictEqual(mappings, {
-      0: 'leave_bed',
+      0: 'stop_sleeping',
       1: 'start_sprinting',
       2: 'stop_sprinting',
-      3: 'start_horse_jump',
-      4: 'stop_horse_jump',
-      5: 'open_vehicle_inventory',
-      6: 'start_elytra_flying'
+      3: 'start_riding_jump',
+      4: 'stop_riding_jump',
+      5: 'open_inventory',
+      6: 'start_fall_flying'
     })
   })
 })
