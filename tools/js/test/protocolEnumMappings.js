@@ -28,8 +28,8 @@ describe('PC protocol enum mappings', () => {
       1: 'request_stats'
     })
     assert.deepStrictEqual(field('1.21.4', 'toServer', 'packet_entity_action', 'actionId'), {
-      0: 'press_shift_key',
-      1: 'release_shift_key',
+      0: 'start_sneaking',
+      1: 'stop_sneaking',
       2: 'stop_sleeping',
       3: 'start_sprinting',
       4: 'stop_sprinting',
@@ -76,13 +76,13 @@ describe('PC protocol enum mappings', () => {
     })
   })
 
-  it('tracks the vanilla sneak-to-shift action-name boundary', () => {
+  it('keeps stable names across the vanilla sneak-to-shift rename', () => {
     const before = field('1.14.4', 'toServer', 'packet_entity_action', 'actionId')
     const after = field('1.15', 'toServer', 'packet_entity_action', 'actionId')
     assert.strictEqual(before['0'], 'start_sneaking')
     assert.strictEqual(before['1'], 'stop_sneaking')
-    assert.strictEqual(after['0'], 'press_shift_key')
-    assert.strictEqual(after['1'], 'release_shift_key')
+    assert.strictEqual(after['0'], 'start_sneaking')
+    assert.strictEqual(after['1'], 'stop_sneaking')
   })
 
   it('scopes game-event reasons to their introduction versions', () => {

@@ -107,7 +107,9 @@ The modern `ServerboundPlayerCommandPacket.java` keeps nine entries through
 1.21.5. The first two vanilla names change to `PRESS_SHIFT_KEY` and
 `RELEASE_SHIFT_KEY` in the 1.15 line, without changing their indexes. The
 1.15.2 mapped class confirms those names, while the extracted 1.14.4 class
-still uses `START_SNEAKING` and `STOP_SNEAKING`. In 1.21.6 the two entries are
+still uses `START_SNEAKING` and `STOP_SNEAKING`. This Java identifier change
+does not create new protocol values, so minecraft-data retains the stable
+`start_sneaking` and `stop_sneaking` names. In 1.21.6 the two entries are
 removed, shifting `STOP_SLEEPING` to index 0 and leaving a seven-entry enum.
 
 The exact introduction point for `START_RIDING_JUMP`, `STOP_RIDING_JUMP`, and
@@ -146,20 +148,19 @@ The extracted-client refs confirm two values through `client1.21.11` and
 
 This packet is `ServerboundPlayerCommandPacket`.
 
-The extracted sources show these relevant ranges:
+The resulting stable minecraft-data mappings have these relevant ranges:
 
-| Source range | Enum order |
+| Versions | Stable enum order |
 | --- | --- |
-| 1.9 through 1.14.4 | `start_sneaking`, `stop_sneaking`, `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
-| 1.15 through 1.21.5 | `press_shift_key`, `release_shift_key`, `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
+| 1.9 through 1.21.5 | `start_sneaking`, `stop_sneaking`, `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
 | 1.21.6 and later | `stop_sleeping`, `start_sprinting`, `stop_sprinting`, `start_riding_jump`, `stop_riding_jump`, `open_inventory`, `start_fall_flying` |
 
-The names for the first two entries changed in 1.15, but
-their positions remained 0 and 1 until those entries were removed in 1.21.6.
-These two names are intentionally version-specific: pressing Shift is not
-described as the older `start_sneaking` action. The remaining mapper names use
-the vanilla action names consistently instead of the PR's aliases such as
-`leave_bed`, `start_horse_jump`, and `open_vehicle_inventory`.
+Vanilla's Java names for the first two entries changed in 1.15, but their
+protocol meaning and positions remained stable until removal in 1.21.6.
+Changing minecraft-data's names at that point would needlessly break the
+cross-version enum API. All mapper names therefore use stable, vanilla-derived
+action names instead of the PR's aliases such as `leave_bed`,
+`start_horse_jump`, and `open_vehicle_inventory`.
 The old `entityActionUsesStringMapper` feature recorded that only
 1.21.6/latest exposed strings. It becomes obsolete once the earlier schemas
 also use mappers, independently of the seven-entry enum boundary.
