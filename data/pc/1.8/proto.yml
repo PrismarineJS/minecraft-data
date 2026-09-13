@@ -470,11 +470,8 @@
          6: play_arrow_hit_sound
          7: rain_level_change
          8: thunder_level_change
-         9: puffer_fish_sting
+         # Event 9 is unused before the pufferfish mob was added in 1.13.
          10: guardian_elder_effect
-         11: immediate_respawn
-         12: limited_crafting
-         13: level_chunks_load_start
       gameMode: f32
    packet_spawn_entity_weather:   
       entityId: varint
@@ -930,14 +927,13 @@
    packet_entity_action:   
       entityId: varint
       actionId: varint =>
-         - press_shift_key
-         - release_shift_key
-         - leave_bed
-         - start_sprinting
-         - stop_sprinting
-         - start_horse_jump
-         - stop_horse_jump
-         - open_vehicle_inventory
+         0: press_shift_key
+         1: release_shift_key
+         2: leave_bed
+         3: start_sprinting
+         4: stop_sprinting
+         5: start_horse_jump
+         6: open_vehicle_inventory
       jumpBoost: varint
    packet_steer_vehicle:   
       sideways: f32
@@ -982,7 +978,10 @@
       chatColors: bool
       skinParts: u8
    packet_client_command:   
-      payload: varint
+      payload: varint =>
+         0: perform_respawn
+         1: request_stats
+         2: open_inventory_achievement
    packet_custom_payload:   
       channel: string
       data: restBuffer

@@ -463,11 +463,8 @@
          6: play_arrow_hit_sound
          7: rain_level_change
          8: thunder_level_change
-         9: puffer_fish_sting
+         # Event 9 is unused before the pufferfish mob was added in 1.13.
          10: guardian_elder_effect
-         11: immediate_respawn
-         12: limited_crafting
-         13: level_chunks_load_start
       gameMode: f32
    packet_keep_alive:   
       keepAliveId: i64
@@ -1008,7 +1005,9 @@
    packet_chat:   
       message: string
    packet_client_command:   
-      actionId: varint
+      actionId: varint =>
+         0: perform_respawn
+         1: request_stats
    packet_settings:   
       locale: string
       viewDistance: i8
@@ -1095,15 +1094,15 @@
    packet_entity_action:   
       entityId: varint
       actionId: varint =>
-         - press_shift_key
-         - release_shift_key
-         - leave_bed
-         - start_sprinting
-         - stop_sprinting
-         - start_horse_jump
-         - stop_horse_jump
-         - open_vehicle_inventory
-         - start_elytra_flying
+         0: press_shift_key
+         1: release_shift_key
+         2: leave_bed
+         3: start_sprinting
+         4: stop_sprinting
+         5: start_horse_jump
+         6: stop_horse_jump
+         7: open_vehicle_inventory
+         8: start_elytra_flying
       jumpBoost: varint
    packet_steer_vehicle:   
       sideways: f32

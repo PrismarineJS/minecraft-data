@@ -2863,15 +2863,8 @@
    # MC: ServerboundClientCommandPacket
    packet_client_command:
       actionId: varint =>
-         - press_shift_key
-         - release_shift_key
-         - leave_bed
-         - start_sprinting
-         - stop_sprinting
-         - start_horse_jump
-         - stop_horse_jump
-         - open_vehicle_inventory
-         - start_elytra_flying
+         0: perform_respawn
+         1: request_stats
    # MC: ServerboundClientTickEndPacket
    packet_tick_end:
       # Empty
@@ -3018,7 +3011,16 @@
    # MC: ServerboundPlayerCommandPacket
    packet_entity_action:
       entityId: varint
-      actionId: varint
+      actionId: varint =>
+         0: press_shift_key
+         1: release_shift_key
+         2: leave_bed
+         3: start_sprinting
+         4: stop_sprinting
+         5: start_horse_jump
+         6: stop_horse_jump
+         7: open_vehicle_inventory
+         8: start_elytra_flying
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
    # previously: packet_steer_vehicle

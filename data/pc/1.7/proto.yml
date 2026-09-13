@@ -514,11 +514,6 @@
          6: play_arrow_hit_sound
          7: rain_level_change
          8: thunder_level_change
-         9: puffer_fish_sting
-         10: guardian_elder_effect
-         11: immediate_respawn
-         12: limited_crafting
-         13: level_chunks_load_start
       gameMode: f32
    packet_spawn_entity_weather:   
       entityId: varint
@@ -825,15 +820,16 @@
       animation: i8
    packet_entity_action:   
       entityId: i32
+      # 1.7 action IDs are explicitly 1-based; 0 is unused.
       actionId: i8 =>
-         - press_shift_key
-         - release_shift_key
-         - leave_bed
-         - start_sprinting
-         - stop_sprinting
-         - start_horse_jump
-         - stop_horse_jump
-         - open_vehicle_inventory
+         1: press_shift_key
+         2: release_shift_key
+         3: leave_bed
+         4: start_sprinting
+         5: stop_sprinting
+         6: start_horse_jump
+         7: stop_horse_jump
+         8: open_vehicle_inventory
       jumpBoost: i32
    packet_steer_vehicle:   
       sideways: f32
@@ -879,7 +875,10 @@
       difficulty: u8
       showCape: bool
    packet_client_command:   
-      payload: i8
+      payload: i8 =>
+         0: perform_respawn
+         1: request_stats
+         2: open_inventory_achievement
    packet_custom_payload:   
       channel: string
       data: [
