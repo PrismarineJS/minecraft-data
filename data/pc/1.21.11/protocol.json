@@ -324,16 +324,7 @@
                         {
                           "compareTo": "hasHolder",
                           "fields": {
-                            "true": [
-                              "registryEntryHolder",
-                              {
-                                "baseName": "damageTypeId",
-                                "otherwise": {
-                                  "name": "data",
-                                  "type": "DamageTypeData"
-                                }
-                              }
-                            ],
+                            "true": "varint",
                             "false": "string"
                           }
                         }
@@ -1542,24 +1533,48 @@
                 "pig/variant": "varint",
                 "cow/variant": "varint",
                 "chicken/variant": [
-                  "registryEntryHolder",
-                  {
-                    "baseName": "variantId",
-                    "otherwise": {
-                      "name": "variantData",
-                      "type": "string"
+                  "container",
+                  [
+                    {
+                      "name": "hasHolder",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "variant",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "hasHolder",
+                          "fields": {
+                            "true": "varint",
+                            "false": "string"
+                          }
+                        }
+                      ]
                     }
-                  }
+                  ]
                 ],
                 "zombie_nautilus/variant": [
-                  "registryEntryHolder",
-                  {
-                    "baseName": "variantId",
-                    "otherwise": {
-                      "name": "variantData",
-                      "type": "string"
+                  "container",
+                  [
+                    {
+                      "name": "hasHolder",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "variant",
+                      "type": [
+                        "switch",
+                        {
+                          "compareTo": "hasHolder",
+                          "fields": {
+                            "true": "varint",
+                            "false": "string"
+                          }
+                        }
+                      ]
                     }
-                  }
+                  ]
                 ],
                 "frog/variant": "varint",
                 "horse/variant": "varint",
@@ -2056,64 +2071,6 @@
         {
           "name": "colorId",
           "type": "varint"
-        }
-      ]
-    ],
-    "DamageTypeData": [
-      "container",
-      [
-        {
-          "name": "msgId",
-          "type": "string"
-        },
-        {
-          "name": "scaling",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "never",
-                "1": "when_caused_by_living_non_player",
-                "2": "always"
-              }
-            }
-          ]
-        },
-        {
-          "name": "exhaustion",
-          "type": "f32"
-        },
-        {
-          "name": "effects",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "hurt",
-                "1": "thorns",
-                "2": "drowning",
-                "3": "burning",
-                "4": "poking",
-                "5": "freezing"
-              }
-            }
-          ]
-        },
-        {
-          "name": "deathMessageType",
-          "type": [
-            "mapper",
-            {
-              "type": "varint",
-              "mappings": {
-                "0": "default",
-                "1": "fall_variants",
-                "2": "intentional_game_design"
-              }
-            }
-          ]
         }
       ]
     ],
