@@ -613,7 +613,7 @@
                 "repair_cost": "varint",
                 "creative_slot_lock": "void",
                 "enchantment_glint_override": "bool",
-                "intangible_projectile": "void",
+                "intangible_projectile": "anonymousNbt",
                 "blocks_attacks": [
                   "container",
                   [
@@ -767,7 +767,7 @@
                     }
                   ]
                 ],
-                "use_remainder": "Slot",
+                "use_remainder": "ItemStackTemplate",
                 "use_cooldown": [
                   "container",
                   [
@@ -1099,7 +1099,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "Slot"
+                          "type": "ItemStackTemplate"
                         }
                       ]
                     }
@@ -1114,7 +1114,7 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "Slot"
+                          "type": "ItemStackTemplate"
                         }
                       ]
                     }
@@ -1469,7 +1469,10 @@
                         "array",
                         {
                           "countType": "varint",
-                          "type": "Slot"
+                          "type": [
+                            "option",
+                            "ItemStackTemplate"
+                          ]
                         }
                       ]
                     }
@@ -1533,55 +1536,7 @@
                     }
                   ]
                 ],
-                "sulfur_cube_content": [
-                  "container",
-                  [
-                    {
-                      "name": "itemId",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "itemCount",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "addedComponentCount",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "removedComponentCount",
-                      "type": "varint"
-                    },
-                    {
-                      "name": "components",
-                      "type": [
-                        "array",
-                        {
-                          "count": "addedComponentCount",
-                          "type": "SlotComponent"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "removeComponents",
-                      "type": [
-                        "array",
-                        {
-                          "count": "removedComponentCount",
-                          "type": [
-                            "container",
-                            [
-                              {
-                                "name": "type",
-                                "type": "SlotComponentType"
-                              }
-                            ]
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                ],
+                "sulfur_cube_content": "ItemStackTemplate",
                 "lock": "anonymousNbt",
                 "container_loot": "anonymousNbt",
                 "break_sound": "ItemSoundHolder",
@@ -2367,6 +2322,55 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    ],
+    "ItemStackTemplate": [
+      "container",
+      [
+        {
+          "name": "itemId",
+          "type": "varint"
+        },
+        {
+          "name": "itemCount",
+          "type": "varint"
+        },
+        {
+          "name": "addedComponentCount",
+          "type": "varint"
+        },
+        {
+          "name": "removedComponentCount",
+          "type": "varint"
+        },
+        {
+          "name": "components",
+          "type": [
+            "array",
+            {
+              "count": "addedComponentCount",
+              "type": "SlotComponent"
+            }
+          ]
+        },
+        {
+          "name": "removeComponents",
+          "type": [
+            "array",
+            {
+              "count": "removedComponentCount",
+              "type": [
+                "container",
+                [
+                  {
+                    "name": "type",
+                    "type": "SlotComponentType"
                   }
                 ]
               ]
@@ -3501,7 +3505,7 @@
                   ]
                 ],
                 "entity_effect": "i32",
-                "item": "Slot",
+                "item": "ItemStackTemplate",
                 "sculk_charge": "f32",
                 "shriek": "varint",
                 "vibration": [
@@ -5917,7 +5921,7 @@
                       ]
                     ],
                     "item": "varint",
-                    "item_stack": "Slot",
+                    "item_stack": "ItemStackTemplate",
                     "tag": "string",
                     "dyed_slot_demo": [
                       "container",
@@ -9689,7 +9693,7 @@
                                     },
                                     {
                                       "name": "icon",
-                                      "type": "Slot"
+                                      "type": "ItemStackTemplate"
                                     },
                                     {
                                       "name": "frameType",
