@@ -144,6 +144,7 @@
       - container
       - block_state
       - bees
+      - sulfur_cube_content
       - lock
       - container_loot
       - break_sound
@@ -252,7 +253,7 @@
          if repair_cost: varint
          if creative_slot_lock: void
          if enchantment_glint_override: bool
-         if intangible_projectile: anonymousNbt
+         if intangible_projectile: void
          if blocks_attacks:
             blockDelaySeconds: f32
             disableCooldownScale: f32
@@ -291,7 +292,7 @@
             sound: ItemSoundHolder
             makes_particles: bool
             effects: ItemConsumeEffect[]varint
-         if use_remainder: ItemStackTemplate
+         if use_remainder: Slot
          if use_cooldown:
             seconds: f32
             cooldownGroup?: string
@@ -375,9 +376,9 @@
          if map_post_processing: varint
          if potion_duration_scale: f32
          if charged_projectiles:
-            projectiles: ItemStackTemplate[]varint
+            projectiles: Slot[]varint
          if bundle_contents:
-            contents: ItemStackTemplate[]varint
+            contents: Slot[]varint
          if potion_contents:
             # True if this potion has an ID in the potion registry--it has the default effects associated with the potion type.
             potionId?: varint
@@ -445,7 +446,7 @@
             # The ID of the items in the item registry.
             decorations: varint[]varint
          if container:
-            contents: ["array", { "countType": "varint", "type": ["option", "ItemStackTemplate"] }]
+            contents: Slot[]varint
          if block_state:
             properties: []varint
                name: string
@@ -456,6 +457,14 @@
                nbtData: anonymousNbt
                ticksInHive: varint
                minTicksInHive: varint
+         if sulfur_cube_content:
+            itemId: varint
+            itemCount: varint
+            addedComponentCount: varint
+            removedComponentCount: varint
+            components: SlotComponent[]$addedComponentCount
+            removeComponents: []$removedComponentCount
+               type: SlotComponentType
          if lock: anonymousNbt
          if container_loot: anonymousNbt
          if break_sound: ItemSoundHolder
@@ -686,16 +695,6 @@
             removeComponents: []$removedComponentCount
                type: SlotComponentType
 
-   # Intentionally id-first, unlike the count-first Slot above — vanilla has both codecs.
-   ItemStackTemplate:
-      itemId: varint
-      itemCount: varint
-      addedComponentCount: varint
-      removedComponentCount: varint
-      components: SlotComponent[]$addedComponentCount
-      removeComponents: []$removedComponentCount
-         type: SlotComponentType
-
    HashedSlot:
       itemId: varint
       itemCount: varint
@@ -915,6 +914,13 @@
          - block
          - block_marker
          - bubble
+         - sulfur_bubbles
+         - noxious_gas
+         - noxious_gas_cloud
+         - geyser
+         - geyser_base
+         - geyser_poof
+         - geyser_plume
          - cloud
          - copper_fire_flame
          - crit
@@ -1019,8 +1025,8 @@
          - shriek
          - egg_crack
          - dust_plume
-         - trial_spawner_detected_player
-         - trial_spawner_detected_player_ominous
+         - trial_spawner_detection
+         - trial_spawner_detection_ominous
          - vault_connection
          - dust_pillar
          - ominous_spawning
@@ -1028,6 +1034,7 @@
          - trial_omen
          - block_crumble
          - firefly
+         - sulfur_cube_goo
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.
@@ -1052,7 +1059,7 @@
             toColor: i32
             scale: f32
          if entity_effect: i32
-         if item: ItemStackTemplate
+         if item: Slot
          if sculk_charge: f32
          if shriek: varint
          if vibration:
@@ -1077,6 +1084,11 @@
             color: i32
             power: f32
          if flash: i32
+         if geyser or geyser_plume:
+            waterBlocks: i32
+         if geyser_base or geyser_poof:
+            waterBlocks: i32
+            burstImpulseBase: f32
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -1982,7 +1994,7 @@
             source: SlotDisplay
             component: SlotComponentType
          if item: varint
-         if item_stack: ItemStackTemplate
+         if item_stack: Slot
          if tag: string
          if dyed_slot_demo:
             dye: SlotDisplay
@@ -2852,10 +2864,8 @@
       _: mode ?
          if add or change:
             name: anonymousNbt
-            flags: ["bitflags", { 
-               "type": "u8", 
-               "flags": ["friendly_fire", "see_friendly_invisible"] 
-            }]
+            prefix: anonymousNbt
+            suffix: anonymousNbt
             nameTagVisibility: varint =>
                - always
                - never
@@ -2866,9 +2876,11 @@
                - never
                - push_other_teams
                - push_own_team
-            formatting: varint
-            prefix: anonymousNbt
-            suffix: anonymousNbt
+            formatting?: varint
+            flags: ["bitflags", { 
+               "type": "u8", 
+               "flags": ["friendly_fire", "see_friendly_invisible"] 
+            }]
          default: void
       players: mode ?
          if add or join or leave: string[]varint
@@ -2962,12 +2974,8 @@
       x: f64
       y: f64
       z: f64
-      dx: f64
-      dy: f64
-      dz: f64
-      yaw: f32
-      pitch: f32
-      flags: PositionUpdateRelatives
+      yaw: i8
+      pitch: i8
       onGround: bool
    # MC: ClientboundTestInstanceBlockStatusPacket
    packet_test_instance_block_status:
@@ -2991,7 +2999,7 @@
             displayData?:
                title: anonymousNbt
                description: anonymousNbt
-               icon: ItemStackTemplate
+               icon: Slot
                frameType: varint
                flags: ["bitfield", [
                   { "name": "unused", "size": 29, "signed": false },
@@ -3752,9 +3760,9 @@
       text2: string
       text3: string
       text4: string
-   # MC: ServerboundSpectateEntityPacket
-   packet_spectate_entity:
-      entityId: varint
+   # MC: ServerboundSpectatorActionPacket
+   packet_spectator_action:
+      entityId?: varint
    # MC: ServerboundSwingPacket
    packet_arm_animation:
       hand: varint
@@ -3854,7 +3862,7 @@
       - update_structure_block
       - set_test_block
       - update_sign
-      - spectate_entity
+      - spectator_action
       - arm_animation
       - spectate
       - test_instance_block_action
@@ -3924,7 +3932,7 @@
          if update_structure_block: packet_update_structure_block
          if set_test_block: packet_set_test_block
          if update_sign: packet_update_sign
-         if spectate_entity: packet_spectate_entity
+         if spectator_action: packet_spectator_action
          if arm_animation: packet_arm_animation
          if spectate: packet_spectate
          if test_instance_block_action: packet_test_instance_block_action
