@@ -2118,11 +2118,7 @@
          default: void
    # MC: ClientboundChangeDifficultyPacket
    packet_difficulty:
-      difficulty: varint =>
-         0: peaceful
-         1: easy
-         2: normal
-         3: hard
+      difficulty: u8
       difficultyLocked: bool
    # MC: ClientboundChunkBatchFinishedPacket
    packet_chunk_batch_finished:
@@ -2284,21 +2280,8 @@
       chunkX: i32
    # MC: ClientboundGameEventPacket
    packet_game_state_change:
-      reason: u8 =>
-         0: no_respawn_block_available
-         1: start_raining
-         2: stop_raining
-         3: change_game_mode
-         4: win_game
-         5: demo_event
-         6: play_arrow_hit_sound
-         7: rain_level_change
-         8: thunder_level_change
-         9: puffer_fish_sting
-         10: guardian_elder_effect
-         11: immediate_respawn
-         12: limited_crafting
-         13: level_chunks_load_start
+      #TODO: Should be a mapper
+      reason: u8
       gameMode: f32
    # MC: ClientboundGameRuleValuesPacket
    packet_game_rule_values:
@@ -2334,13 +2317,7 @@
       x: i32
       z: i32
       heightmaps: []varint
-         type: varint =>
-            0: world_surface_wg
-            1: world_surface
-            2: ocean_floor_wg
-            3: ocean_floor
-            4: motion_blocking
-            5: motion_blocking_no_leaves
+         type: varint
          data: i64[]varint
       chunkData: ByteArray
       blockEntities: chunkBlockEntity[]varint
@@ -3423,11 +3400,7 @@
       selectedItemIndex: varint
    # MC: ServerboundChangeDifficultyPacket
    packet_set_difficulty:
-      newDifficulty: varint =>
-         0: peaceful
-         1: easy
-         2: normal
-         3: hard
+      newDifficulty: u8
    # MC: ServerboundChangeGameModePacket
    packet_change_gamemode:
       mode: varint =>
