@@ -2392,12 +2392,28 @@
          if 2: i8
          default: void
       nameTagVisibility: mode ?
-         if 0: varint
-         if 2: varint
+         if 0: varint =>
+            - always
+            - never
+            - hide_for_other_teams
+            - hide_for_own_team
+         if 2: varint =>
+            - always
+            - never
+            - hide_for_other_teams
+            - hide_for_own_team
          default: void
       collisionRule: mode ?
-         if 0: varint
-         if 2: varint
+         if 0: varint =>
+            - always
+            - never
+            - push_other_teams
+            - push_own_team
+         if 2: varint =>
+            - always
+            - never
+            - push_other_teams
+            - push_own_team
          default: void
       formatting: mode ?
          if 0: varint
