@@ -5317,6 +5317,10 @@
                   ]
                 }
               ]
+            },
+            {
+              "name": "sessionId",
+              "type": "UUID"
             }
           ]
         ],
@@ -5630,6 +5634,21 @@
             }
           ]
         ],
+        "packet_post_effects": [
+          "container",
+          [
+            {
+              "name": "postEffects",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        ],
         "packet": [
           "container",
           [
@@ -5650,16 +5669,17 @@
                     "0x07": "registry_data",
                     "0x08": "remove_resource_pack",
                     "0x09": "add_resource_pack",
-                    "0x0a": "store_cookie",
-                    "0x0b": "transfer",
-                    "0x0c": "feature_flags",
-                    "0x0d": "tags",
-                    "0x0e": "select_known_packs",
-                    "0x0f": "custom_report_details",
-                    "0x10": "server_links",
-                    "0x11": "clear_dialog",
-                    "0x12": "show_dialog",
-                    "0x13": "code_of_conduct"
+                    "0x0a": "post_effects",
+                    "0x0b": "store_cookie",
+                    "0x0c": "transfer",
+                    "0x0d": "feature_flags",
+                    "0x0e": "tags",
+                    "0x0f": "select_known_packs",
+                    "0x10": "custom_report_details",
+                    "0x11": "server_links",
+                    "0x12": "clear_dialog",
+                    "0x13": "show_dialog",
+                    "0x14": "code_of_conduct"
                   }
                 }
               ]
@@ -5681,6 +5701,7 @@
                     "registry_data": "packet_registry_data",
                     "remove_resource_pack": "packet_common_remove_resource_pack",
                     "add_resource_pack": "packet_common_add_resource_pack",
+                    "post_effects": "packet_post_effects",
                     "store_cookie": "packet_common_store_cookie",
                     "transfer": "packet_common_transfer",
                     "feature_flags": "packet_feature_flags",
