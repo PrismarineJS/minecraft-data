@@ -92,17 +92,20 @@ require('./version_iterator')(function (p, versionString) {
       if (fs.existsSync(pFile)) {
         instance = require(pFile)
       }
-      if (dataName === 'blocks' && instance && instance.length >= 2) {
-        it('blocks.json rejects duplicate IDs', function () {
-          const blocks = JSON.parse(JSON.stringify(instance.slice(0, 2)))
-          blocks[1].id = blocks[0].id
-          const schema = require('../../../schemas/blocks_schema.json')
-          assert.strictEqual(v.validate(schema, blocks), false)
-          assert.ok(v.errors.some(error => error.keyword === 'uniqueItemProperties'), JSON.stringify(v.errors, null, 2))
-        })
-      }
-
       if (instance) {
+        const schema = dataName === 'protocol' ? null : require('../../../schemas/' + dataName + '_schema.json')
+        for (const property of (schema && schema.uniqueItemProperties) || []) {
+          it(dataName + '.json rejects duplicate ' + property + ' values', function () {
+            const entries = JSON.parse(JSON.stringify(instance.slice(0, 2)))
+            assert.strictEqual(entries.length, 2, 'Uniqueness regression requires two entries')
+            assert.ok(v.validate(schema, entries), JSON.stringify(v.errors, null, 2))
+            entries[1][property] = entries[0][property]
+            assert.notDeepStrictEqual(entries[0], entries[1], 'Uniqueness regression must not duplicate an entire entry')
+            assert.strictEqual(v.validate(schema, entries), false)
+            assert.ok(v.errors.some(error => error.keyword === 'uniqueItemProperties'), JSON.stringify(v.errors, null, 2))
+          })
+        }
+
         it(dataName + '.json is valid', function () {
           // Skip tints schema validation for PC 1.21.4, as it doesn't meet the
           // maxItems: 1 check for the constant tints.
@@ -119,7 +122,6 @@ require('./version_iterator')(function (p, versionString) {
             validator.validateProtocol(instance)
             checkProtocolSwitches(instance, versionString)
           } else {
-            const schema = require('../../../schemas/' + dataName + '_schema.json')
             const valid = v.validate(schema, instance)
             assert.ok(valid, JSON.stringify(v.errors, null, 2))
           }
