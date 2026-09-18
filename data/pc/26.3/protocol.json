@@ -6906,28 +6906,80 @@
               "type": "varint"
             },
             {
-              "name": "x",
-              "type": "f64"
+              "name": "positionType",
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "linear",
+                    "1": "stepped"
+                  }
+                }
+              ]
             },
             {
-              "name": "y",
-              "type": "f64"
-            },
-            {
-              "name": "z",
-              "type": "f64"
-            },
-            {
-              "name": "dx",
-              "type": "f64"
-            },
-            {
-              "name": "dy",
-              "type": "f64"
-            },
-            {
-              "name": "dz",
-              "type": "f64"
+              "anon": true,
+              "type": [
+                "switch",
+                {
+                  "compareTo": "positionType",
+                  "fields": {
+                    "linear": [
+                      "container",
+                      [
+                        {
+                          "name": "x",
+                          "type": "f64"
+                        },
+                        {
+                          "name": "y",
+                          "type": "f64"
+                        },
+                        {
+                          "name": "z",
+                          "type": "f64"
+                        }
+                      ]
+                    ],
+                    "stepped": [
+                      "container",
+                      [
+                        {
+                          "name": "steps",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "x",
+                                    "type": "f64"
+                                  },
+                                  {
+                                    "name": "y",
+                                    "type": "f64"
+                                  },
+                                  {
+                                    "name": "z",
+                                    "type": "f64"
+                                  },
+                                  {
+                                    "name": "tickOffset",
+                                    "type": "varint"
+                                  }
+                                ]
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "yaw",
@@ -7740,20 +7792,8 @@
               "type": "varint"
             },
             {
-              "name": "dX",
-              "type": "i16"
-            },
-            {
-              "name": "dY",
-              "type": "i16"
-            },
-            {
-              "name": "dZ",
-              "type": "i16"
-            },
-            {
-              "name": "onGround",
-              "type": "bool"
+              "anon": true,
+              "type": "entityDelta"
             }
           ]
         ],
@@ -7765,16 +7805,8 @@
               "type": "varint"
             },
             {
-              "name": "dX",
-              "type": "i16"
-            },
-            {
-              "name": "dY",
-              "type": "i16"
-            },
-            {
-              "name": "dZ",
-              "type": "i16"
+              "anon": true,
+              "type": "entityDelta"
             },
             {
               "name": "yaw",
@@ -7783,10 +7815,6 @@
             {
               "name": "pitch",
               "type": "i8"
-            },
-            {
-              "name": "onGround",
-              "type": "bool"
             }
           ]
         ],
