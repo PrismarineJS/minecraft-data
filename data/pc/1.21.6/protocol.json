@@ -548,7 +548,7 @@
                 "repair_cost": "varint",
                 "creative_slot_lock": "void",
                 "enchantment_glint_override": "bool",
-                "intangible_projectile": "void",
+                "intangible_projectile": "anonymousNbt",
                 "blocks_attacks": [
                   "container",
                   [
@@ -7906,12 +7906,28 @@
               "type": "f64"
             },
             {
+              "name": "dx",
+              "type": "f64"
+            },
+            {
+              "name": "dy",
+              "type": "f64"
+            },
+            {
+              "name": "dz",
+              "type": "f64"
+            },
+            {
               "name": "yaw",
-              "type": "i8"
+              "type": "f32"
             },
             {
               "name": "pitch",
-              "type": "i8"
+              "type": "f32"
+            },
+            {
+              "name": "flags",
+              "type": "PositionUpdateRelatives"
             },
             {
               "name": "onGround",
@@ -9055,7 +9071,16 @@
           [
             {
               "name": "actionId",
-              "type": "varint"
+              "type": [
+                "mapper",
+                {
+                  "type": "varint",
+                  "mappings": {
+                    "0": "perform_respawn",
+                    "1": "request_stats"
+                  }
+                }
+              ]
             }
           ]
         ],
@@ -9566,13 +9591,13 @@
                 {
                   "type": "varint",
                   "mappings": {
-                    "0": "leave_bed",
+                    "0": "stop_sleeping",
                     "1": "start_sprinting",
                     "2": "stop_sprinting",
-                    "3": "start_horse_jump",
-                    "4": "stop_horse_jump",
-                    "5": "open_vehicle_inventory",
-                    "6": "start_elytra_flying"
+                    "3": "start_riding_jump",
+                    "4": "stop_riding_jump",
+                    "5": "open_inventory",
+                    "6": "start_fall_flying"
                   }
                 }
               ]

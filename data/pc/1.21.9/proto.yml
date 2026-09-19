@@ -228,7 +228,7 @@
          if repair_cost: varint
          if creative_slot_lock: void
          if enchantment_glint_override: bool
-         if intangible_projectile: void
+         if intangible_projectile: anonymousNbt
          if blocks_attacks:
             blockDelaySeconds: f32
             disableCooldownScale: f32
@@ -2810,8 +2810,12 @@
       x: f64
       y: f64
       z: f64
-      yaw: i8
-      pitch: i8
+      dx: f64
+      dy: f64
+      dz: f64
+      yaw: f32
+      pitch: f32
+      flags: PositionUpdateRelatives
       onGround: bool
    # MC: ClientboundTestInstanceBlockStatusPacket
    packet_test_instance_block_status:
@@ -3331,7 +3335,9 @@
       chunksPerTick: f32
    # MC: ServerboundClientCommandPacket
    packet_client_command:
-      actionId: varint
+      actionId: varint =>
+         0: perform_respawn
+         1: request_stats
    # MC: ServerboundClientTickEndPacket
    packet_tick_end:
       # Empty
@@ -3479,13 +3485,13 @@
    packet_entity_action:
       entityId: varint
       actionId: varint =>
-         - leave_bed
+         - stop_sleeping
          - start_sprinting
          - stop_sprinting
-         - start_horse_jump
-         - stop_horse_jump
-         - open_vehicle_inventory
-         - start_elytra_flying
+         - start_riding_jump
+         - stop_riding_jump
+         - open_inventory
+         - start_fall_flying
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
    # previously: packet_steer_vehicle
