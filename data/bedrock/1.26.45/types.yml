@@ -588,9 +588,6 @@ TransactionUseItem:
    # HotBarSlot is the hot bar slot that the player was holding while clicking the block. It should be used
    # to ensure that the hot bar slot and held item are correctly synchronised with the server.
    hotbar_slot: zigzag32
-   hand: u8 =>
-      0: main_hand
-      1: off_hand
    # HeldItem is the item that was held to interact with the block. The server should check if this item
    # is actually present in the HotBarSlot.
    held_item: ItemV4
@@ -623,7 +620,9 @@ TransactionActions: []varint
       3: creative
       100: craft_slot
       99999: craft
+   container_presence: bool
    window_id?: i8
+   flag_presence: bool
    flags?: varint
    slot: varint
    old_item: ItemV4
@@ -654,7 +653,7 @@ Transaction:
    # Old transaction system data
    legacy: TransactionLegacy
    # What type of transaction took place
-   transaction_type: varint =>
+   transaction_type?: varint =>
       # Sent for container UI operations depending on if ItemStackNetManager is enabled
       0: normal
       # Sent from server to client to reject a transaction
@@ -670,7 +669,7 @@ Transaction:
       # See ItemReleaseInventoryTransaction::ActionType for which it is.
       4: item_release
    # The list of inventory internal actions in this packet, e.g. inventory GUI actions
-   actions: TransactionActions
+   actions?: TransactionActions
    # Extra data if an intenal inventory transaction did not take place, e.g. use of an item 
    transaction_data: transaction_type?
       if normal or inventory_mismatch: void
@@ -1266,6 +1265,7 @@ ItemStackResponses: []varint
    request_id: zigzag32
    # As of 1.26.40 the container list no longer depends on the status: it is preceded by a presence byte
    # (always written as true) and is then written as an optional.
+   containers_presence: bool
    # ContainerInfo holds information on the containers that had their contents changed as a result of the
    # request. Absent when there are no containers to report.
    containers?: []varint
@@ -1285,6 +1285,7 @@ ItemStackResponses: []varint
          count: u8
          # StackNetworkID is the network ID of the new stack at a specific slot. As of 1.26.40 it is preceded
          # by a presence byte (always written as true) and is then written as an optional.
+         item_stack_id_presence: bool
          item_stack_id?: zigzag32
          # CustomName is the custom name of the item stack. It is used in relation to text filtering.
          custom_name: string
@@ -2506,8 +2507,6 @@ CameraPresets:
       - camera_relative_strafe
       - player_relative
       - player_relative_strafe
-   apply_inherited_starting_rotation: bool
-   starting_rotation?: vec2f
 
 
 # CameraRotationOption represents a rotation keyframe option for spline instructions.
@@ -2846,8 +2845,6 @@ DisconnectFailReason: zigzag32 =>
    - host_accepts_no_type_of_auth
    - not_authenticated_fast_fail
    - editor_not_allowed
-   - missing_structure_data
-   - unsupported_transport
 
 FullContainerName:
    container_id: ContainerSlotType
@@ -3409,8 +3406,6 @@ EntityDiagnosticTimingInfo:
    entity: string
    duration_nanos: lu64
    percent_of_total: u8
-   position: vec3f
-   dimension: string
 
 SystemDiagnosticTimingInfo:
    display_name: string
@@ -3484,12 +3479,3 @@ ShapeArrow:
 PartyInfo:
    party_id: string
    party_leader: bool
-
-# Added in 1.26.50: sub chunk height maps are sent as 16 rows of 16 heights, each row length-prefixed.
-HeightMap: '["array", { "count": 16, "type": ["array", { "countType": "varint", "type": "i8" }] }]'
-
-# Added in 1.26.50: the options a player selected in a furnace-like container UI.
-FurnaceOptions:
-   left_furnace_tab: zigzag32
-   filtering: bool
-   layout: zigzag32
