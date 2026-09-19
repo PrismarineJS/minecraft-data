@@ -117,6 +117,25 @@ require('./version_iterator')(function (p, versionString) {
         ])
       }
     })
+    it('cake returns its buckets', () => {
+      const recipes = getIfExist(path.join(p, 'recipes.json'))
+      const items = getIfExist(path.join(p, 'items.json'))
+      if (recipes && items) {
+        // pc 1.19 and later do not contain outShape, to be fixed...
+        const pcVersions = require('../../../data/pc/common/versions')
+        if (versionString.startsWith('pc ') && pcVersions.indexOf(versionString.slice(3)) >= pcVersions.indexOf('1.19')) return
+
+        const cake = items.find(x => x.name === 'cake')
+        const milkBucket = items.find(x => x.name === 'milk_bucket')
+        const bucket = items.find(x => x.name === 'bucket')
+
+        const recipe = recipes[cake.id]
+        if (!recipe || !recipe[0]) return
+
+        const idOf = cell => cell === null || typeof cell === 'number' ? cell : cell.id
+        assert.deepStrictEqual(recipe[0].outShape, recipe[0].inShape.map(row => row.map(cell => idOf(cell) === milkBucket.id ? bucket.id : null)))
+      }
+    })
     it('crafting benches has multiple recipes', () => {
       const recipes = getIfExist(path.join(p, 'recipes.json'))
       const items = getIfExist(path.join(p, 'items.json'))
