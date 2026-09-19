@@ -1,4 +1,4 @@
-!version: 26.3
+!version: 26.1
 !StartDocs: true
 
 ^types:
@@ -144,7 +144,6 @@
       - container
       - block_state
       - bees
-      - sulfur_cube_content
       - lock
       - container_loot
       - break_sound
@@ -457,7 +456,6 @@
                nbtData: anonymousNbt
                ticksInHive: varint
                minTicksInHive: varint
-         if sulfur_cube_content: ItemStackTemplate
          if lock: anonymousNbt
          if container_loot: anonymousNbt
          if break_sound: ItemSoundHolder
@@ -917,13 +915,6 @@
          - block
          - block_marker
          - bubble
-         - sulfur_bubbles
-         - noxious_gas
-         - noxious_gas_cloud
-         - geyser
-         - geyser_base
-         - geyser_poof
-         - geyser_plume
          - cloud
          - copper_fire_flame
          - crit
@@ -1028,8 +1019,8 @@
          - shriek
          - egg_crack
          - dust_plume
-         - trial_spawner_detection
-         - trial_spawner_detection_ominous
+         - trial_spawner_detected_player
+         - trial_spawner_detected_player_ominous
          - vault_connection
          - dust_pillar
          - ominous_spawning
@@ -1037,7 +1028,6 @@
          - trial_omen
          - block_crumble
          - firefly
-         - sulfur_cube_goo
       ## ## Tips for reviewing particle data (as of 1.20.5)
       ## Inside the registry code, each particle can have an associated "options" type and
       ## each options type can add additional data to be encoded.
@@ -1087,11 +1077,6 @@
             color: i32
             power: f32
          if flash: i32
-         if geyser or geyser_plume:
-            waterBlocks: i32
-         if geyser_base or geyser_poof:
-            waterBlocks: i32
-            burstImpulseBase: f32
    ingredient: Slot[]varint
    position: [
       "bitfield",
@@ -1777,7 +1762,6 @@
          name: string
          value: string
          signature?: string
-      sessionId: UUID
    # MC: ClientboundLoginCompressionPacket
    packet_compress:
       threshold: varint
@@ -2411,7 +2395,6 @@
       enableRespawnScreen: bool
       doLimitedCrafting: bool
       worldState: SpawnInfo
-      onlineMode: bool
       enforcesSecureChat: bool
    # MC: CLientboundLowDiskSpaceWarningPacket
    packet_low_disk_space_warning:
@@ -2867,8 +2850,10 @@
       _: mode ?
          if add or change:
             name: anonymousNbt
-            prefix: anonymousNbt
-            suffix: anonymousNbt
+            flags: ["bitflags", { 
+               "type": "u8", 
+               "flags": ["friendly_fire", "see_friendly_invisible"] 
+            }]
             nameTagVisibility: varint =>
                - always
                - never
@@ -2879,11 +2864,9 @@
                - never
                - push_other_teams
                - push_own_team
-            formatting?: varint
-            flags: ["bitflags", { 
-               "type": "u8", 
-               "flags": ["friendly_fire", "see_friendly_invisible"] 
-            }]
+            formatting: varint
+            prefix: anonymousNbt
+            suffix: anonymousNbt
          default: void
       players: mode ?
          if add or join or leave: string[]varint
@@ -3650,13 +3633,13 @@
    packet_entity_action:
       entityId: varint
       actionId: varint =>
-         - stop_sleeping
+         - leave_bed
          - start_sprinting
          - stop_sprinting
-         - start_riding_jump
-         - stop_riding_jump
-         - open_inventory
-         - start_fall_flying
+         - start_horse_jump
+         - stop_horse_jump
+         - open_vehicle_inventory
+         - start_elytra_flying
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
    # previously: packet_steer_vehicle
@@ -3767,10 +3750,9 @@
       text2: string
       text3: string
       text4: string
-   # MC: ServerboundSpectatorActionPacket
-   # entityId uses vanilla's OPTIONAL_VAR_INT sentinel encoding: raw varint, 0 = absent, n = entity id (n - 1).
-   packet_spectator_action:
-      entityId: optvarint
+   # MC: ServerboundSpectateEntityPacket
+   packet_spectate_entity:
+      entityId: varint
    # MC: ServerboundSwingPacket
    packet_arm_animation:
       hand: varint
@@ -3870,7 +3852,7 @@
       - update_structure_block
       - set_test_block
       - update_sign
-      - spectator_action
+      - spectate_entity
       - arm_animation
       - spectate
       - test_instance_block_action
@@ -3940,7 +3922,7 @@
          if update_structure_block: packet_update_structure_block
          if set_test_block: packet_set_test_block
          if update_sign: packet_update_sign
-         if spectator_action: packet_spectator_action
+         if spectate_entity: packet_spectate_entity
          if arm_animation: packet_arm_animation
          if spectate: packet_spectate
          if test_instance_block_action: packet_test_instance_block_action
