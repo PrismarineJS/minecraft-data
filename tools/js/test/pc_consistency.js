@@ -20,11 +20,25 @@ function load (version, kind) {
   return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null
 }
 
-// Failures that are known and have a fix in flight live in pc_consistency_known.json ("<version> | <check>": why).
-// A known failure is reported as pending; once it passes, the run says so and the entry can be dropped.
+// Failures that are known and have a fix in flight live in pc_consistency_known.json, keyed by "<version> | <check>",
+// each { reason, error }: `reason` is the tracking note, `error` is the EXACT assertion message that is tolerated. A known
+// failure is reported as pending only when the actual error still matches `error`; a different or additional failure of
+// the same check throws, so the exception cannot hide a new regression. Run with RECORD_KNOWN=1 to regenerate the file
+// from the current data (it keeps each reason and records the current error). Once a known failure passes, the run says so
+// and the entry can be dropped.
+const knownPath = path.join(__dirname, 'pc_consistency_known.json')
 const known = require('./pc_consistency_known.json')
+const recording = !!process.env.RECORD_KNOWN
+const recorded = {}
 const nowPassing = []
 after(function () {
+  if (recording) {
+    const sorted = {}
+    for (const k of Object.keys(recorded).sort()) sorted[k] = recorded[k]
+    fs.writeFileSync(knownPath, JSON.stringify(sorted, null, 2) + '\n')
+    console.log(`\n  RECORD_KNOWN: wrote ${Object.keys(sorted).length} known failures to pc_consistency_known.json`)
+    return
+  }
   if (nowPassing.length) console.log(`\n  pc_consistency_known.json: ${nowPassing.length} entr${nowPassing.length === 1 ? 'y' : 'ies'} now pass and can be removed:\n    ${nowPassing.join('\n    ')}`)
 })
 
@@ -37,8 +51,16 @@ for (const version of versions) {
   describe(`pc ${version} consistency`, function () {
     const check = (title, fn) => it(title, function () {
       const key = `${version} | ${title}`
-      try { fn() } catch (err) { if (known[key]) return this.skip(); throw err }
-      if (known[key]) nowPassing.push(key)
+      const entry = known[key]
+      try {
+        fn()
+      } catch (err) {
+        if (recording) { recorded[key] = { reason: (entry && entry.reason) || (typeof entry === 'string' ? entry : 'unclassified'), error: err.message }; return this.skip() }
+        // Skip only the exact recorded failure; a new or changed failure of the same check must still throw.
+        if (entry && entry.error === err.message) return this.skip()
+        throw err
+      }
+      if (!recording && entry) nowPassing.push(key)
     })
     const blocks = load(version, 'blocks')
     const items = load(version, 'items')
@@ -47,6 +69,9 @@ for (const version of versions) {
     const itemsByName = new Map(items.map(i => [i.name, i]))
     const blocksByName = new Map(blocks.map(b => [b.name, b]))
     const flattened = atLeast(version, '1.13')
+    // spawn_entity keeps a separate object id space (object type byte) through 1.13.2; the registry ids do not replace it
+    // until the 1.13.2 -> 1.14 transition. This is independent of block flattening (1.13).
+    const legacyEntityIds = !atLeast(version, '1.14')
     // before the flattening, block ids below 256 double as item ids
     const isItemId = (id) => itemsById.has(id) || (!flattened && blocks.some(b => b.id === id && id < 256))
 
@@ -55,9 +80,9 @@ for (const version of versions) {
         if (!Array.isArray(data)) continue
         const dupIds = []; const dupNames = []; const ids = new Set(); const names = new Set()
         for (const e of data) {
-          const idKey = kind === 'entities' && !flattened ? `${e.type}/${e.id}` : e.id // legacy mobs and objects have separate id spaces
+          const idKey = kind === 'entities' && legacyEntityIds ? `${e.type}/${e.id}` : e.id // legacy mobs and objects have separate id spaces (through 1.13.2)
           if (ids.has(idKey)) dupIds.push(`${e.name}#${e.id}`); ids.add(idKey)
-          if (kind === 'entities' && !flattened) continue // the legacy object table reuses class names (Arrow, FallingSand)
+          if (kind === 'entities' && legacyEntityIds) continue // the legacy object table reuses class names (Arrow, FallingSand)
           if (names.has(e.name)) dupNames.push(e.name); names.add(e.name)
         }
         assert.deepStrictEqual(dupIds, [], `${kind}: duplicate ids ${list(dupIds)}`)
@@ -70,6 +95,7 @@ for (const version of versions) {
         const data = load(version, kind)
         if (!Array.isArray(data) || !data.length) continue
         if (!flattened && kind !== 'sounds') continue // legacy numeric ids have deliberate gaps
+        if (kind === 'entities' && legacyEntityIds) continue // entities keep the legacy object id space (with gaps) through 1.13.2
         if (kind === 'effects' || kind === 'enchantments' || kind === 'biomes') {
           if (!atLeast(version, '1.20.3')) continue // registry-backed only after the 1.20.3 data-driven change
         }
