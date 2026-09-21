@@ -19,6 +19,7 @@
     "UUID": "native",
     "option": "native",
     "entityMetadataLoop": "native",
+    "entityDelta": "native",
     "topBitSetTerminatedArray": "native",
     "bitfield": "native",
     "bitflags": "native",
@@ -7269,6 +7270,19 @@
             }
           ]
         ],
+        "packet_add_transient_block": [
+          "container",
+          [
+            {
+              "name": "location",
+              "type": "position"
+            },
+            {
+              "name": "type",
+              "type": "varint"
+            }
+          ]
+        ],
         "packet_unload_chunk": [
           "container",
           [
@@ -8818,6 +8832,21 @@
             }
           ]
         ],
+        "packet_post_effects": [
+          "container",
+          [
+            {
+              "name": "postEffects",
+              "type": [
+                "array",
+                {
+                  "countType": "varint",
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        ],
         "packet_respawn": [
           "container",
           [
@@ -9699,6 +9728,27 @@
                   "default": "void"
                 }
               ]
+            }
+          ]
+        ],
+        "packet_swing_animation": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            },
+            {
+              "name": "hand",
+              "type": "varint"
+            },
+            {
+              "name": "animationType",
+              "type": "varint"
+            },
+            {
+              "name": "duration",
+              "type": "varint"
             }
           ]
         ],
@@ -10611,6 +10661,7 @@
                     "entity_status": "packet_entity_status",
                     "sync_entity_position": "packet_sync_entity_position",
                     "explosion": "packet_explosion",
+                    "add_transient_block": "packet_add_transient_block",
                     "unload_chunk": "packet_unload_chunk",
                     "game_state_change": "packet_game_state_change",
                     "game_rule_values": "packet_game_rule_values",
@@ -10656,6 +10707,7 @@
                     "reset_score": "packet_reset_score",
                     "remove_resource_pack": "packet_common_remove_resource_pack",
                     "add_resource_pack": "packet_common_add_resource_pack",
+                    "post_effects": "packet_post_effects",
                     "respawn": "packet_respawn",
                     "entity_head_rotation": "packet_entity_head_rotation",
                     "multi_block_change": "packet_multi_block_change",
@@ -10695,6 +10747,7 @@
                     "start_configuration": "packet_start_configuration",
                     "stop_sound": "packet_stop_sound",
                     "store_cookie": "packet_common_store_cookie",
+                    "swing_animation": "packet_swing_animation",
                     "system_chat": "packet_system_chat",
                     "playerlist_header": "packet_playerlist_header",
                     "nbt_query_response": "packet_nbt_query_response",
@@ -10714,60 +10767,8 @@
                     "server_links": "packet_common_server_links",
                     "tracked_waypoint": "packet_tracked_waypoint",
                     "clear_dialog": "packet_common_clear_dialog",
-                    "show_dialog": "packet_show_dialog",
-                    "add_transient_block": "packet_add_transient_block",
-                    "swing_animation": "packet_swing_animation",
-                    "post_effects": "packet_post_effects"
+                    "show_dialog": "packet_show_dialog"
                   }
-                }
-              ]
-            }
-          ]
-        ],
-        "packet_add_transient_block": [
-          "container",
-          [
-            {
-              "name": "location",
-              "type": "position"
-            },
-            {
-              "name": "type",
-              "type": "varint"
-            }
-          ]
-        ],
-        "packet_swing_animation": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": "varint"
-            },
-            {
-              "name": "hand",
-              "type": "varint"
-            },
-            {
-              "name": "animationType",
-              "type": "varint"
-            },
-            {
-              "name": "duration",
-              "type": "varint"
-            }
-          ]
-        ],
-        "packet_post_effects": [
-          "container",
-          [
-            {
-              "name": "postEffects",
-              "type": [
-                "array",
-                {
-                  "countType": "varint",
-                  "type": "string"
                 }
               ]
             }
@@ -10815,6 +10816,16 @@
             }
           ]
         ],
+        "packet_spectate_entity": [
+          "container",
+          [
+            {
+              "name": "entityId",
+              "type": "varint"
+            }
+          ]
+        ],
+        "packet_punch": "void",
         "packet_query_block_nbt": [
           "container",
           [
@@ -11917,12 +11928,15 @@
             }
           ]
         ],
-        "packet_spectate_entity": [
+        "packet_spectator_action": [
           "container",
           [
             {
               "name": "entityId",
-              "type": "varint"
+              "type": [
+                "option",
+                "varint"
+              ]
             }
           ]
         ],
@@ -12189,6 +12203,7 @@
                     "player_input": "packet_player_input",
                     "player_loaded": "packet_player_loaded",
                     "pong": "packet_pong",
+                    "punch": "packet_punch",
                     "recipe_book": "packet_recipe_book",
                     "displayed_recipe": "packet_displayed_recipe",
                     "name_item": "packet_name_item",
@@ -12205,30 +12220,14 @@
                     "update_structure_block": "packet_update_structure_block",
                     "set_test_block": "packet_set_test_block",
                     "update_sign": "packet_update_sign",
-                    "spectate_entity": "packet_spectate_entity",
                     "arm_animation": "packet_arm_animation",
                     "spectate": "packet_spectate",
                     "test_instance_block_action": "packet_test_instance_block_action",
                     "block_place": "packet_block_place",
                     "use_item": "packet_use_item",
-                    "custom_click_action": "packet_common_custom_click_action",
-                    "punch": "packet_punch",
-                    "spectator_action": "packet_spectator_action"
+                    "custom_click_action": "packet_common_custom_click_action"
                   }
                 }
-              ]
-            }
-          ]
-        ],
-        "packet_punch": "void",
-        "packet_spectator_action": [
-          "container",
-          [
-            {
-              "name": "entityId",
-              "type": [
-                "option",
-                "varint"
               ]
             }
           ]
