@@ -1,4 +1,4 @@
-!version: 26.3
+!version: 26.1
 !StartDocs: true
 
 ^types:
@@ -2493,9 +2493,7 @@
       pitch: f32
    # MC: ClientboundOpenBookPacket
    packet_open_book:
-      hand: varint =>
-         - main_hand
-         - off_hand
+      hand: varint
    # MC: ClientboundOpenScreenPacket
    packet_open_window:
       windowId: varint
@@ -3635,13 +3633,13 @@
    packet_entity_action:
       entityId: varint
       actionId: varint =>
-         - stop_sleeping
+         - leave_bed
          - start_sprinting
          - stop_sprinting
-         - start_riding_jump
-         - stop_riding_jump
-         - open_inventory
-         - start_fall_flying
+         - start_horse_jump
+         - stop_horse_jump
+         - open_vehicle_inventory
+         - start_elytra_flying
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
    # previously: packet_steer_vehicle
@@ -3757,9 +3755,7 @@
       entityId: varint
    # MC: ServerboundSwingPacket
    packet_arm_animation:
-      hand: varint =>
-         - main_hand
-         - off_hand
+      hand: varint
    # MC: ServerboundTeleportToEntityPacket
    packet_spectate:
       target: UUID
@@ -3776,9 +3772,7 @@
          errorMessage?: anonymousNbt
    # MC: ServerboundUseItemOnPacket
    packet_block_place:
-      hand: varint =>
-         - main_hand
-         - off_hand
+      hand: varint
       location: position
       direction: varint
       cursorX: f32
@@ -3789,9 +3783,7 @@
       sequence: varint
    # MC: ServerboundUseItemPacket
    packet_use_item:
-      hand: varint =>
-         - main_hand
-         - off_hand
+      hand: varint
       sequence: varint
       rotation: vec2f
 
