@@ -21,11 +21,13 @@ function load (version, kind) {
 }
 
 // Failures that are known and have a fix in flight live in pc_consistency_known.json, keyed by "<version> | <check>",
-// each { reason, error }: `reason` is the tracking note, `error` is the EXACT assertion message that is tolerated. A known
-// failure is reported as pending only when the actual error still matches `error`; a different or additional failure of
-// the same check throws, so the exception cannot hide a new regression. Run with RECORD_KNOWN=1 to regenerate the file
-// from the current data (it keeps each reason and records the current error). Once a known failure passes, the run says so
-// and the entry can be dropped.
+// each { reason, problems }: `reason` is the tracking note, `problems` is the EXACT, complete, sorted list of tolerated
+// problem strings for that check. A known failure is reported as pending only when the check's full problem set is
+// identical to `problems`; any added, removed or changed problem - including one in a later category of the same check -
+// makes the sets differ and the check fails, so the exception cannot hide a new regression. The fingerprint is the
+// complete problem list (from the assertion's `actual`), not a display message, so truncation can never mask a failure.
+// Run with RECORD_KNOWN=1 to regenerate the file from the current data (it keeps each reason and records the current
+// problem set). Once a known failure passes, the run says so and the entry can be dropped.
 const knownPath = path.join(__dirname, 'pc_consistency_known.json')
 const known = require('./pc_consistency_known.json')
 const recording = !!process.env.RECORD_KNOWN
@@ -55,9 +57,16 @@ for (const version of versions) {
       try {
         fn()
       } catch (err) {
-        if (recording) { recorded[key] = { reason: (entry && entry.reason) || (typeof entry === 'string' ? entry : 'unclassified'), error: err.message }; return this.skip() }
-        // Skip only the exact recorded failure; a new or changed failure of the same check must still throw.
-        if (entry && entry.error === err.message) return this.skip()
+        // Only our own consistency assertions can be a tolerated known failure: they compare the complete problem list
+        // against [], so err.actual is that full list. Anything else (a bug in the check, missing data, a real throw) is
+        // never swallowed - it surfaces as a failure.
+        if (!(err && err.code === 'ERR_ASSERTION' && Array.isArray(err.actual))) throw err
+        const problems = [...err.actual].sort()
+        if (recording) { recorded[key] = { reason: (entry && entry.reason) || (typeof entry === 'string' ? entry : 'unclassified'), problems }; return this.skip() }
+        // Tolerate ONLY the exact recorded set. An added/removed/changed problem - including in a later category of the
+        // same check - makes the sets differ, so a known exception can never hide a new regression.
+        const knownProblems = entry && Array.isArray(entry.problems) ? [...entry.problems].sort() : null
+        if (knownProblems && problems.length === knownProblems.length && problems.every((p, i) => p === knownProblems[i])) return this.skip()
         throw err
       }
       if (!recording && entry) nowPassing.push(key)
@@ -76,21 +85,24 @@ for (const version of versions) {
     const isItemId = (id) => itemsById.has(id) || (!flattened && blocks.some(b => b.id === id && id < 256))
 
     check('ids and names are unique', function () {
+      // Collect problems across every category before asserting, so a known duplicate in one category cannot hide a new
+      // duplicate in a later one.
+      const problems = []
       for (const [kind, data] of [['blocks', blocks], ['items', items], ['entities', load(version, 'entities')], ['biomes', load(version, 'biomes')], ['effects', load(version, 'effects')], ['enchantments', load(version, 'enchantments')], ['sounds', load(version, 'sounds')]]) {
         if (!Array.isArray(data)) continue
-        const dupIds = []; const dupNames = []; const ids = new Set(); const names = new Set()
+        const ids = new Set(); const names = new Set()
         for (const e of data) {
           const idKey = kind === 'entities' && legacyEntityIds ? `${e.type}/${e.id}` : e.id // legacy mobs and objects have separate id spaces (through 1.13.2)
-          if (ids.has(idKey)) dupIds.push(`${e.name}#${e.id}`); ids.add(idKey)
+          if (ids.has(idKey)) problems.push(`${kind}: duplicate id ${e.name}#${e.id}`); ids.add(idKey)
           if (kind === 'entities' && legacyEntityIds) continue // the legacy object table reuses class names (Arrow, FallingSand)
-          if (names.has(e.name)) dupNames.push(e.name); names.add(e.name)
+          if (names.has(e.name)) problems.push(`${kind}: duplicate name ${e.name}`); names.add(e.name)
         }
-        assert.deepStrictEqual(dupIds, [], `${kind}: duplicate ids ${list(dupIds)}`)
-        assert.deepStrictEqual(dupNames, [], `${kind}: duplicate names ${list(dupNames)}`)
       }
+      assert.deepStrictEqual(problems, [], list(problems))
     })
 
     check('registry ids start at 0 and are contiguous', function () {
+      const problems = []
       for (const kind of ['items', 'entities', 'sounds', 'effects', 'enchantments', 'biomes']) {
         const data = load(version, kind)
         if (!Array.isArray(data) || !data.length) continue
@@ -101,10 +113,10 @@ for (const version of versions) {
         }
         const ids = data.map(e => e.id).sort((a, b) => a - b)
         if (kind === 'items' && ids[0] === 1) ids.unshift(0) // air is not listed as an item in every version
-        if (ids[0] !== 0) assert.fail(`${kind}: first id is ${ids[0]} (${data.find(e => e.id === ids[0]).name}), registry ids start at 0`)
-        const gaps = ids.filter((id, i) => i > 0 && id !== ids[i - 1] + 1).map(id => `${ids[ids.indexOf(id) - 1]}->${id}`)
-        assert.deepStrictEqual(gaps, [], `${kind}: gaps in the id sequence ${list(gaps)}`)
+        if (ids[0] !== 0) problems.push(`${kind}: first id is ${ids[0]} (${data.find(e => e.id === ids[0]).name}), registry ids start at 0`)
+        for (const g of ids.filter((id, i) => i > 0 && id !== ids[i - 1] + 1).map(id => `${ids[ids.indexOf(id) - 1]}->${id}`)) problems.push(`${kind}: gap in the id sequence ${g}`)
       }
+      assert.deepStrictEqual(problems, [], list(problems))
     })
 
     check('block state ids are contiguous and default states are in range', function () {
@@ -137,7 +149,6 @@ for (const version of versions) {
       if (!materials) return
       const problems = []
       for (const [mat, table] of Object.entries(materials)) for (const id of Object.keys(table)) { const it = itemsById.get(Number(id)); if (!it) problems.push(`${mat}: item ${id} does not exist`); else if (!isTool(it.name)) problems.push(`${mat}: ${it.name} (${id}) is not a tool`) }
-      assert.deepStrictEqual(problems, [], list(problems, 6))
       for (const b of blocks) if (typeof b.material === 'string' && b.material !== 'default' && !(b.material in materials) && flattened) problems.push(`${b.name}: material ${b.material} not in materials.json`)
       assert.deepStrictEqual(problems, [], list(problems, 6))
     })
@@ -198,10 +209,10 @@ for (const version of versions) {
     check('collision shapes cover the blocks', function () {
       const shapes = load(version, 'blockCollisionShapes')
       if (!shapes || !shapes.blocks) return
-      const missing = blocks.filter(b => !(b.name in shapes.blocks)).map(b => b.name)
-      const extra = Object.keys(shapes.blocks).filter(n => !blocksByName.has(n))
-      assert.deepStrictEqual(missing, [], `blocks without a shape: ${list(missing)}`)
-      assert.deepStrictEqual(extra, [], `shapes for blocks that do not exist: ${list(extra)}`)
+      const problems = []
+      for (const b of blocks) if (!(b.name in shapes.blocks)) problems.push(`block without a shape: ${b.name}`)
+      for (const n of Object.keys(shapes.blocks)) if (!blocksByName.has(n)) problems.push(`shape for a block that does not exist: ${n}`)
+      assert.deepStrictEqual(problems, [], list(problems))
     })
   })
 }
