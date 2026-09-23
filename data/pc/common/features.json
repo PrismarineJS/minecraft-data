@@ -181,6 +181,14 @@
     ]
   },
   {
+    "name": "clientTickEndPacket",
+    "description": "Client must send an empty serverbound tick_end packet once per client tick. The server uses it to reset its per-tick received-movement-packet bookkeeping (receivedPositionThisTick/receivedMovementThisTick); without it, the second position-bearing move packet ever sent (no matter how much later) gets the client kicked with multiplayer.disconnect.invalid_player_movement. Found live-testing against a 26.3 server by decompiling ServerGamePacketListenerImpl.handleClientTickEnd.",
+    "versions": [
+      "1.21.3",
+      "latest"
+    ]
+  },
+  {
     "name": "clientUpdateBookIdWhenSign",
     "description": "when sending MC|BSign, item type should be written_book",
     "versions": [
@@ -853,6 +861,14 @@
     "versions": [
       "1.8",
       "1.12.2"
+    ]
+  },
+  {
+    "name": "playerActionHasChangeDestroyDirection",
+    "description": "ServerboundPlayerActionPacket's action enum gained CHANGE_DESTROY_DIRECTION at id 1, shifting abort/finish digging to 2/3 and release-use-item to 6 (drop item is 5) — so mineflayer must not send the pre-26.3 status ids",
+    "versions": [
+      "26.3",
+      "latest"
     ]
   },
   {
