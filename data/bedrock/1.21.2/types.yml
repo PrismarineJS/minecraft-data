@@ -745,7 +745,7 @@ Recipes: []varint
       8: smithing_transform
       9: smithing_trim
    recipe: type?
-      if shapeless or shulker_box or shapeless_chemistry:
+      if shapeless or shapeless_chemistry:
          recipe_id: LatinString
          input: RecipeIngredient[]varint
          output: ItemLegacy[]varint
@@ -753,6 +753,15 @@ Recipes: []varint
          block: string
          priority: zigzag32
          unlocking_requirement: RecipeUnlockingRequirement
+         network_id: varint
+      # the servers of this version send no unlocking requirement for a user data recipe
+      if shulker_box:
+         recipe_id: LatinString
+         input: RecipeIngredient[]varint
+         output: ItemLegacy[]varint
+         uuid: uuid
+         block: string
+         priority: zigzag32
          network_id: varint
       if shaped or shaped_chemistry:
          recipe_id: LatinString
