@@ -567,8 +567,8 @@ Transaction:
 ItemStack:
    # StackNetworkID is the network ID of the item stack. If the stack is empty, 0 is always written for this
    # field. If not, the field should be set to 1 if the server authoritative inventories are disabled in the
-   # StartGame packet, or to a unique stack ID if it is enabled.
-   stack_id: varint
+   # StartGame packet, or to a unique stack ID if it is enabled. A zigzag varint, as the game writes it.
+   stack_id: zigzag32
    # Stack is the actual item stack of the item instance.
    item: Item
 
@@ -932,7 +932,7 @@ ItemStackResponses: []varint
       1: error
    # RequestID is the unique ID of the request that this response is in reaction to. If rejected, the client
    # will undo the actions from the request with this ID.
-   request_id: varint
+   request_id: zigzag32
    _: status ?
       if ok:
          # ContainerInfo holds information on the containers that had their contents changed as a result of the
@@ -953,7 +953,7 @@ ItemStackResponses: []varint
                # sent to the client.
                count: u8
                # StackNetworkID is the network ID of the new stack at a specific slot.
-               item_stack_id: varint
+               item_stack_id: zigzag32
                # CustomName is the custom name of the item stack. It is used in relation to text filtering.
                custom_name: string
                # DurabilityCorrection is the current durability of the item stack. This durability will be shown
