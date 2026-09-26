@@ -879,11 +879,11 @@
                               }
                             ]
                           ],
-                          "creative": [
+                          "craft": [
                             "container",
                             [
                               {
-                                "name": "inventory_id",
+                                "name": "action",
                                 "type": "varint"
                               }
                             ]
@@ -893,15 +893,6 @@
                             [
                               {
                                 "name": "flags",
-                                "type": "varint"
-                              }
-                            ]
-                          ],
-                          "craft": [
-                            "container",
-                            [
-                              {
-                                "name": "action",
                                 "type": "varint"
                               }
                             ]
@@ -1266,7 +1257,7 @@
                         },
                         {
                           "name": "network_id",
-                          "type": "zigzag32"
+                          "type": "varint"
                         }
                       ]
                     ],
@@ -1311,7 +1302,7 @@
                         },
                         {
                           "name": "network_id",
-                          "type": "zigzag32"
+                          "type": "varint"
                         }
                       ]
                     ],
@@ -1356,7 +1347,7 @@
                         },
                         {
                           "name": "network_id",
-                          "type": "zigzag32"
+                          "type": "varint"
                         }
                       ]
                     ],
@@ -1415,7 +1406,7 @@
                         },
                         {
                           "name": "network_id",
-                          "type": "zigzag32"
+                          "type": "varint"
                         }
                       ]
                     ],
@@ -1474,7 +1465,7 @@
                         },
                         {
                           "name": "network_id",
-                          "type": "zigzag32"
+                          "type": "varint"
                         }
                       ]
                     ],
@@ -1525,7 +1516,7 @@
                         },
                         {
                           "name": "network_id",
-                          "type": "zigzag32"
+                          "type": "varint"
                         }
                       ]
                     ]
@@ -2024,11 +2015,11 @@
       "container",
       [
         {
-          "name": "container_id",
-          "type": "u8"
+          "name": "slot_type",
+          "type": "ContainerSlotType"
         },
         {
-          "name": "slot_id",
+          "name": "slot",
           "type": "u8"
         },
         {
@@ -2036,6 +2027,74 @@
           "type": "zigzag32"
         }
       ]
+    ],
+    "ContainerSlotType": [
+      "mapper",
+      {
+        "type": "u8",
+        "mappings": {
+          "0": "anvil_input",
+          "1": "anvil_material",
+          "2": "anvil_result",
+          "3": "smithing_table_input",
+          "4": "smithing_table_material",
+          "5": "smithing_table_result",
+          "6": "armor",
+          "7": "container",
+          "8": "beacon_payment",
+          "9": "brewing_input",
+          "10": "brewing_result",
+          "11": "brewing_fuel",
+          "12": "hotbar_and_inventory",
+          "13": "crafting_input",
+          "14": "crafting_output",
+          "15": "recipe_construction",
+          "16": "recipe_nature",
+          "17": "recipe_items",
+          "18": "recipe_search",
+          "19": "recipe_search_bar",
+          "20": "recipe_equipment",
+          "21": "enchanting_input",
+          "22": "enchanting_lapis",
+          "23": "furnace_fuel",
+          "24": "furnace_ingredient",
+          "25": "furnace_output",
+          "26": "horse_equip",
+          "27": "hotbar",
+          "28": "inventory",
+          "29": "shulker",
+          "30": "trade_ingredient1",
+          "31": "trade_ingredient2",
+          "32": "trade_result",
+          "33": "offhand",
+          "34": "compcreate_input",
+          "35": "compcreate_output",
+          "36": "elemconstruct_output",
+          "37": "matreduce_input",
+          "38": "matreduce_output",
+          "39": "labtable_input",
+          "40": "loom_input",
+          "41": "loom_dye",
+          "42": "loom_material",
+          "43": "loom_result",
+          "44": "blast_furnace_ingredient",
+          "45": "smoker_ingredient",
+          "46": "trade2_ingredient1",
+          "47": "trade2_ingredient2",
+          "48": "trade2_result",
+          "49": "grindstone_input",
+          "50": "grindstone_additional",
+          "51": "grindstone_result",
+          "52": "stonecutter_input",
+          "53": "stonecutter_result",
+          "54": "cartography_input",
+          "55": "cartography_additional",
+          "56": "cartography_result",
+          "57": "barrel",
+          "58": "cursor",
+          "59": "creative_output"
+        }
+      }
     ],
     "ItemStackRequests": [
       "array",
@@ -2217,10 +2276,6 @@
                                   {
                                     "name": "recipe_network_id",
                                     "type": "varint"
-                                  },
-                                  {
-                                    "name": "times_crafted",
-                                    "type": "u8"
                                   }
                                 ]
                               ],
@@ -2297,62 +2352,87 @@
           "container",
           [
             {
-              "name": "result",
-              "type": "u8"
+              "name": "status",
+              "type": [
+                "mapper",
+                {
+                  "type": "u8",
+                  "mappings": {
+                    "0": "ok",
+                    "1": "error"
+                  }
+                }
+              ]
             },
             {
               "name": "request_id",
-              "type": "varint"
+              "type": "zigzag32"
             },
             {
-              "name": "containers",
+              "anon": true,
               "type": [
-                "array",
+                "switch",
                 {
-                  "countType": "varint",
-                  "type": [
-                    "container",
-                    [
-                      {
-                        "name": "container_id",
-                        "type": "u8"
-                      },
-                      {
-                        "name": "slots",
-                        "type": [
-                          "array",
-                          {
-                            "countType": "varint",
-                            "type": [
-                              "container",
-                              [
-                                {
-                                  "name": "slot",
-                                  "type": "u8"
-                                },
-                                {
-                                  "name": "hotbar_slot",
-                                  "type": "u8"
-                                },
-                                {
-                                  "name": "count",
-                                  "type": "u8"
-                                },
-                                {
-                                  "name": "item_stack_id",
-                                  "type": "varint"
-                                },
-                                {
-                                  "name": "custom_name",
-                                  "type": "string"
-                                }
+                  "compareTo": "status",
+                  "fields": {
+                    "ok": [
+                      "container",
+                      [
+                        {
+                          "name": "containers",
+                          "type": [
+                            "array",
+                            {
+                              "countType": "varint",
+                              "type": [
+                                "container",
+                                [
+                                  {
+                                    "name": "slot_type",
+                                    "type": "ContainerSlotType"
+                                  },
+                                  {
+                                    "name": "slots",
+                                    "type": [
+                                      "array",
+                                      {
+                                        "countType": "varint",
+                                        "type": [
+                                          "container",
+                                          [
+                                            {
+                                              "name": "slot",
+                                              "type": "u8"
+                                            },
+                                            {
+                                              "name": "hotbar_slot",
+                                              "type": "u8"
+                                            },
+                                            {
+                                              "name": "count",
+                                              "type": "u8"
+                                            },
+                                            {
+                                              "name": "item_stack_id",
+                                              "type": "zigzag32"
+                                            },
+                                            {
+                                              "name": "custom_name",
+                                              "type": "string"
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
                               ]
-                            ]
-                          }
-                        ]
-                      }
+                            }
+                          ]
+                        }
+                      ]
                     ]
-                  ]
+                  }
                 }
               ]
             }
@@ -2517,7 +2597,7 @@
     "WindowType": [
       "mapper",
       {
-        "type": "u8",
+        "type": "i8",
         "mappings": {
           "0": "container",
           "1": "workbench",
@@ -2552,7 +2632,9 @@
           "30": "cartography",
           "31": "hud",
           "32": "jigsaw_editor",
-          "33": "smithing_table"
+          "33": "smithing_table",
+          "-9": "none",
+          "-1": "inventory"
         }
       }
     ],
