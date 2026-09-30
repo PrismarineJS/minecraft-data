@@ -504,7 +504,16 @@
       particleData: f32
       particles: i32
    packet_game_state_change:   
-      reason: u8
+      reason: u8 =>
+         0: no_respawn_block_available
+         1: start_raining
+         2: stop_raining
+         3: change_game_mode
+         4: win_game
+         5: demo_event
+         6: play_arrow_hit_sound
+         7: rain_level_change
+         8: thunder_level_change
       gameMode: f32
    packet_spawn_entity_weather:   
       entityId: varint
@@ -811,7 +820,16 @@
       animation: i8
    packet_entity_action:   
       entityId: i32
-      actionId: i8
+      # 1.7 action IDs are explicitly 1-based; 0 is unused.
+      actionId: i8 =>
+         1: start_sneaking
+         2: stop_sneaking
+         3: stop_sleeping
+         4: start_sprinting
+         5: stop_sprinting
+         6: start_riding_jump
+         7: stop_riding_jump
+         8: open_inventory
       jumpBoost: i32
    packet_steer_vehicle:   
       sideways: f32
@@ -857,7 +875,10 @@
       difficulty: u8
       showCape: bool
    packet_client_command:   
-      payload: i8
+      payload: i8 =>
+         0: perform_respawn
+         1: request_stats
+         2: open_inventory_achievement
    packet_custom_payload:   
       channel: string
       data: [
