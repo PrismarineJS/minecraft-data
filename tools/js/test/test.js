@@ -6,6 +6,7 @@ const path = require('path')
 
 const Ajv = require('ajv')
 const v = new Ajv({ verbose: true })
+require('ajv-keywords')(v, ['uniqueItemProperties'])
 
 const Validator = require('protodef-validator')
 
@@ -17,6 +18,68 @@ after('the test suite stays fast', function () {
   const ms = performance.now() // measured from process start
   assert.ok(ms < 40 * 1000, `the test suite took ${Math.round(ms)}ms, expected < 40s`)
 })
+
+function resolveType (type, types, seen = new Set()) {
+  if (typeof type === 'string' && types[type] && !seen.has(type)) {
+    seen.add(type)
+    return resolveType(types[type], types, seen)
+  }
+  return type
+}
+
+function checkProtocolSwitches (protocol, versionString) {
+  const issues = []
+
+  function visitType (type, scope, location, active = new Set()) {
+    if (!Array.isArray(type) || active.has(type)) return
+    active.add(type)
+    const [kind, options] = type
+    if (kind === 'container' && Array.isArray(options)) {
+      const fields = { ...scope }
+      for (const field of options) {
+        if (!field || typeof field !== 'object') continue
+        const fieldType = resolveType(field.type, protocol.types)
+        if (Array.isArray(fieldType) && fieldType[0] === 'mapper') {
+          fields[field.name] = new Set(Object.values(fieldType[1].mappings || {}))
+        }
+        visitType(fieldType, fields, location + '/' + (field.name || '?'), active)
+      }
+    } else if (kind === 'switch' && options) {
+      const mapper = scope[options.compareTo]
+      if (mapper) {
+        for (const value of Object.keys(options.fields || {})) {
+          if (!mapper.has(value)) issues.push(`${location}: ${options.compareTo} -> ${value}`)
+        }
+      } else if (options.compareTo) {
+        console.log(`${versionString}: unable to find ${options.compareTo} for switch at ${location}`)
+      }
+      for (const [value, fieldType] of Object.entries(options.fields || {})) {
+        visitType(fieldType, scope, location + '/' + value, active)
+      }
+      if (options.default) visitType(options.default, scope, location + '/default', active)
+    } else if (kind === 'array' || kind === 'option') {
+      visitType(options && options.type, scope, location + '/type', active)
+    } else if (kind === 'registryEntryHolder') {
+      visitType(options && options.otherwise && options.otherwise.type, scope, location + '/otherwise', active)
+    }
+    active.delete(type)
+  }
+
+  function visit (value, location) {
+    if (Array.isArray(value)) {
+      if (typeof value[0] === 'string' && ['container', 'switch', 'array', 'option', 'mapper', 'registryEntryHolder'].includes(value[0])) {
+        visitType(value, {}, location)
+      } else {
+        value.forEach((item, index) => visit(item, location + '/' + index))
+      }
+    } else if (value && typeof value === 'object') {
+      Object.entries(value).forEach(([key, item]) => visit(item, location + '/' + key))
+    }
+  }
+
+  visit(protocol, versionString)
+  assert.deepEqual(issues, [], `${versionString} has switches with undefined mapper values:\n${issues.join('\n')}`)
+}
 
 const data = ['attributes', 'biomes', 'commands', 'instruments', 'items', 'materials', 'blocks', 'blockCollisionShapes', 'recipes', 'windows', 'entities', 'protocol', 'version', 'effects', 'enchantments', 'language', 'foods', 'particles', 'blockLoot', 'entityLoot', 'mapIcons', 'tints', 'blockMappings', 'sounds', 'blockStates']
 
@@ -30,6 +93,19 @@ require('./version_iterator')(function (p, versionString) {
         instance = require(pFile)
       }
       if (instance) {
+        const schema = dataName === 'protocol' ? null : require('../../../schemas/' + dataName + '_schema.json')
+        for (const property of (schema && schema.uniqueItemProperties) || []) {
+          it(dataName + '.json rejects duplicate ' + property + ' values', function () {
+            const entries = JSON.parse(JSON.stringify(instance.slice(0, 2)))
+            assert.strictEqual(entries.length, 2, 'Uniqueness regression requires two entries')
+            assert.ok(v.validate(schema, entries), JSON.stringify(v.errors, null, 2))
+            entries[1][property] = entries[0][property]
+            assert.notDeepStrictEqual(entries[0], entries[1], 'Uniqueness regression must not duplicate an entire entry')
+            assert.strictEqual(v.validate(schema, entries), false)
+            assert.ok(v.errors.some(error => error.keyword === 'uniqueItemProperties'), JSON.stringify(v.errors, null, 2))
+          })
+        }
+
         it(dataName + '.json is valid', function () {
           // Skip tints schema validation for PC 1.21.4, as it doesn't meet the
           // maxItems: 1 check for the constant tints.
@@ -44,8 +120,8 @@ require('./version_iterator')(function (p, versionString) {
             validator.addType('entityMetadataItem', require('../../../schemas/protocol_types/entity_metadata_item.json'))
             validator.addType('entityMetadataLoop', require('../../../schemas/protocol_types/entity_metadata_loop.json'))
             validator.validateProtocol(instance)
+            checkProtocolSwitches(instance, versionString)
           } else {
-            const schema = require('../../../schemas/' + dataName + '_schema.json')
             const valid = v.validate(schema, instance)
             assert.ok(valid, JSON.stringify(v.errors, null, 2))
           }

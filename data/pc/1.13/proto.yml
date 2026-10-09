@@ -650,7 +650,11 @@
          if 5: u8
          default: void
    packet_difficulty:   
-      difficulty: u8
+      difficulty: u8 =>
+         0: peaceful
+         1: easy
+         2: normal
+         3: hard
    packet_tab_complete:   
       transactionId: varint
       start: varint
@@ -746,7 +750,18 @@
       chunkX: i32
       chunkZ: i32
    packet_game_state_change:   
-      reason: u8
+      reason: u8 =>
+         0: no_respawn_block_available
+         1: start_raining
+         2: stop_raining
+         3: change_game_mode
+         4: win_game
+         5: demo_event
+         6: play_arrow_hit_sound
+         7: rain_level_change
+         8: thunder_level_change
+         9: puffer_fish_sting
+         10: guardian_elder_effect
       gameMode: f32
    packet_keep_alive:   
       keepAliveId: i64
@@ -1399,7 +1414,9 @@
    packet_chat:   
       message: string
    packet_client_command:   
-      actionId: varint
+      actionId: varint =>
+         0: perform_respawn
+         1: request_stats
    packet_settings:   
       locale: string
       viewDistance: i8
@@ -1485,7 +1502,16 @@
       face: i8
    packet_entity_action:   
       entityId: varint
-      actionId: varint
+      actionId: varint =>
+         0: start_sneaking
+         1: stop_sneaking
+         2: stop_sleeping
+         3: start_sprinting
+         4: stop_sprinting
+         5: start_riding_jump
+         6: stop_riding_jump
+         7: open_inventory
+         8: start_fall_flying
       jumpBoost: varint
    packet_steer_vehicle:   
       sideways: f32
