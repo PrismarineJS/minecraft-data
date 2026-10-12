@@ -22,15 +22,23 @@ describe('extractSlotComponents.js command injection regression', function () {
     fs.rmSync(cwd, { recursive: true, force: true })
   })
 
-  it('accepts an ordinary dotted version label', function () {
+  it('accepts an ordinary dotted version label and extracts a fixture successfully', function () {
     const version = '1.21.4'
     const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'mcdata-extract-test-'))
-    // Pre-create the expected source dir so the script skips the git clone entirely.
-    fs.mkdirSync(path.join(cwd, `mcsrc-${version}`))
+    // Pre-create the expected source dir so the script skips the git clone entirely,
+    // with a minimal fixture so the parsing/printing path actually runs end-to-end.
+    const componentsDir = path.join(cwd, `mcsrc-${version}`, 'client', 'net', 'minecraft', 'core', 'component')
+    fs.mkdirSync(componentsDir, { recursive: true })
+    fs.writeFileSync(path.join(componentsDir, 'DataComponents.java'), [
+      'register("minecraft:custom_name", builder -> builder.persistent(Codecs.STRING));',
+      'register("minecraft:lore", builder -> builder.persistent(Lore.CODEC));'
+    ].join('\n'))
 
     const result = cp.spawnSync('node', [scriptPath, version], { cwd, encoding: 'utf8' })
 
     assert.doesNotMatch(result.stderr, /Invalid version/)
+    assert.strictEqual(result.status, 0)
+    assert.strictEqual(result.stdout, '- minecraft:custom_name\n- minecraft:lore\n')
 
     fs.rmSync(cwd, { recursive: true, force: true })
   })
