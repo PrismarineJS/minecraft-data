@@ -25,3 +25,38 @@ jobs:
       working-directory: tools/js
     - run: npm test
       working-directory: tools/js
+
+  bedrock:
+    uses: ./.github/workflows/bedrock-ci.yml
+
+  # Stable branch-protection check; every required matrix job must pass.
+  ci:
+    name: ci
+    if: ${{ always() }}
+    needs: ["build", "bedrock"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Require all mandatory jobs to succeed
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          EXPECTED_JOBS: '["build", "bedrock"]'
+          MATRIX_OUTPUTS: '[]'
+        shell: python
+        run: |
+          import json, os, sys
+          needs = json.loads(os.environ["NEEDS_JSON"])
+          expected = json.loads(os.environ["EXPECTED_JOBS"])
+          if not expected or set(needs) != set(expected):
+              sys.exit("Missing or unexpected required jobs")
+          failed = {name: job.get("result") for name, job in needs.items()
+                    if job.get("result") != "success"}
+          if failed:
+              sys.exit("Required jobs did not succeed: " + json.dumps(failed))
+          for job, output, field in json.loads(os.environ["MATRIX_OUTPUTS"]):
+              matrix = json.loads(needs[job]["outputs"][output])
+              entries = matrix[field] if field else matrix
+              if not isinstance(entries, list) or not entries:
+                  sys.exit("Empty or invalid required matrix: " + job)
+          print("All required jobs succeeded")

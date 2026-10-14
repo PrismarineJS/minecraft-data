@@ -285,5 +285,3 @@ describe('audit tags', function () {
     )
   })
 })
-
-module.exports = { auditTagDocument }
