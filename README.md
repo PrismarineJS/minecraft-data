@@ -138,6 +138,9 @@ test/test.js to check the json file are valid relative to these schemas.
 These schemas can also be used to understand better how the json files are
 formatted in order to use it.
 
+Schemas use the `uniqueItemProperties` extension to require unique values for specified properties in arrays.
+External Ajv validators must register it with `require('ajv-keywords')(ajv, ['uniqueItemProperties'])` to enforce this check.
+
 ## Contribute
 
 Please read https://github.com/PrismarineJS/prismarine-contribute
