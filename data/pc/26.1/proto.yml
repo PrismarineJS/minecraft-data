@@ -2493,7 +2493,9 @@
       pitch: f32
    # MC: ClientboundOpenBookPacket
    packet_open_book:
-      hand: varint
+      hand: varint =>
+         - main_hand
+         - off_hand
    # MC: ClientboundOpenScreenPacket
    packet_open_window:
       windowId: varint
@@ -3037,9 +3039,13 @@
             - generic.luck
             - generic.max_absorption
             - generic.max_health
+            - mining_efficiency
+            - movement_efficiency
             - generic.movement_speed
+            - oxygen_bonus
             - generic.safe_fall_distance
             - generic.scale
+            - sneaking_speed
             - zombie.spawn_reinforcements
             - generic.step_height
             - submerged_mining_speed
@@ -3633,13 +3639,13 @@
    packet_entity_action:
       entityId: varint
       actionId: varint =>
-         - leave_bed
+         - stop_sleeping
          - start_sprinting
          - stop_sprinting
-         - start_horse_jump
-         - stop_horse_jump
-         - open_vehicle_inventory
-         - start_elytra_flying
+         - start_riding_jump
+         - stop_riding_jump
+         - open_inventory
+         - start_fall_flying
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
    # previously: packet_steer_vehicle
@@ -3755,7 +3761,9 @@
       entityId: varint
    # MC: ServerboundSwingPacket
    packet_arm_animation:
-      hand: varint
+      hand: varint =>
+         - main_hand
+         - off_hand
    # MC: ServerboundTeleportToEntityPacket
    packet_spectate:
       target: UUID
@@ -3772,7 +3780,9 @@
          errorMessage?: anonymousNbt
    # MC: ServerboundUseItemOnPacket
    packet_block_place:
-      hand: varint
+      hand: varint =>
+         - main_hand
+         - off_hand
       location: position
       direction: varint
       cursorX: f32
@@ -3783,7 +3793,9 @@
       sequence: varint
    # MC: ServerboundUseItemPacket
    packet_use_item:
-      hand: varint
+      hand: varint =>
+         - main_hand
+         - off_hand
       sequence: varint
       rotation: vec2f
 
