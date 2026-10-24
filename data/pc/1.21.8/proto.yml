@@ -429,7 +429,11 @@
          if rabbit/variant: varint
          if pig/variant: varint
          if cow/variant: varint
-         if chicken/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "variantData", "type": "string" } }]
+         if chicken/variant:
+            hasHolder: bool
+            variant: hasHolder ?
+               if true: varint
+               if false: string
          if frog/variant: varint
          if horse/variant: varint
          if painting/variant: ["registryEntryHolder", { "baseName": "variantId", "otherwise": { "name": "data", "type": "EntityMetadataPaintingVariant" } }]
@@ -2622,9 +2626,13 @@
             - generic.luck
             - generic.max_absorption
             - generic.max_health
+            - mining_efficiency
+            - movement_efficiency
             - generic.movement_speed
+            - oxygen_bonus
             - generic.safe_fall_distance
             - generic.scale
+            - sneaking_speed
             - zombie.spawn_reinforcements
             - generic.step_height
             - submerged_mining_speed
@@ -3061,7 +3069,9 @@
       chunksPerTick: f32
    # MC: ServerboundClientCommandPacket
    packet_client_command:
-      actionId: varint
+      actionId: varint =>
+         0: perform_respawn
+         1: request_stats
    # MC: ServerboundClientTickEndPacket
    packet_tick_end:
       # Empty
@@ -3209,13 +3219,13 @@
    packet_entity_action:
       entityId: varint
       actionId: varint =>
-         - leave_bed
+         - stop_sleeping
          - start_sprinting
          - stop_sprinting
-         - start_horse_jump
-         - stop_horse_jump
-         - open_vehicle_inventory
-         - start_elytra_flying
+         - start_riding_jump
+         - stop_riding_jump
+         - open_inventory
+         - start_fall_flying
       jumpBoost: varint
    # MC: ServerboundPlayerInputPacket
    # previously: packet_steer_vehicle
