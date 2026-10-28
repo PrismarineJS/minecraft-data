@@ -91,7 +91,8 @@ for (const version of pcVersionsOrdered) {
 
 When updating, apply minimum required changes when possible.
 
-1. Do not rename fields or packets unless their value has changed, even if they may have 'officially' changed. If their values *have* significantly changed (varint -> i32 maybe insignificant from primitive standpoint, string to number is), it maybe a good idea to rename the field or packet.
-2. Do not rename existing enums or other data, even if they were renamed in the game. You may add or remove data as is needed as this does not unnecessarily affect existing code relying on old names.
-3. Always read the information in doc/protocol.md to understand our YAML format.
-4. Try to inline types as much as possible--this includes mappers and switch statements. Don't create extra types unless they are actually re-used in multiple places, or very large to warrant seperation.
+1. Don't rename packet names, packet fields or enum values unless their semantic value has changed even if they may have been officially renamed. 
+  * Additionally, if their value's types have changed in such a way that downstream code would be affected (for example varint -> i32 maybe insignificant as it's still an integer to handle in code, whereas string to number would require code handling changes), then it maybe a good idea to rename the field or packet.
+  * Use your judgement on what makes sense; not renaming a field when a type changes means a feature flag (features.json) may be needed so that downstream clients such as mineflayer can support both new and old versions.
+2. Always read the information in doc/protocol.md to understand our YAML format.
+3. Try to inline types as much as possible--this includes mappers and switch statements. Don't create extra types unless they are actually re-used in multiple places, or very large to warrant seperation.
