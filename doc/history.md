@@ -1,3 +1,22 @@
+## 3.118.0
+* [🎈 Add Minecraft bedrock 1.26.60 data (#1340)](https://github.com/PrismarineJS/minecraft-data/commit/9c97fe50a82feb2c0f2be1cff35ce19c891bfb35) (thanks @rom1504bot)
+* [Update copilot-instructions.md](https://github.com/PrismarineJS/minecraft-data/commit/7142e0b03a8554da389c56407a3c107595bccbc6) (thanks @extremeheat)
+* [Add 26.4-snapshot-6 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/4235c91366fe094e0c14abc8e3cfe841b8c0c0ff) (thanks @github-actions[bot])
+* [doc: partial rewrite of ARCHITECTURE.md (#1337)](https://github.com/PrismarineJS/minecraft-data/commit/5e063fa99cfe8ded065ec6788b66696b7e4ef143) (thanks @penggrin12)
+* [helper: apply generator data to the PR for the version being sent (#1338)](https://github.com/PrismarineJS/minecraft-data/commit/1df9432c07c81b47326e4fb1e06d3c8d723bf4aa) (thanks @u9g)
+* [Add 26.4-snapshot-5 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/2d4780323d3fd0b09a87bc75317f0f9c0df33818) (thanks @github-actions[bot])
+* [Add 26.4-snapshot-4 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/201ca802a1b2c968b02e7fa5b31dd74e8bff3d8b) (thanks @github-actions[bot])
+* [Add 26.4-snapshot-3 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/dd01127457231e7da629d645b3c6738068018eb0) (thanks @github-actions[bot])
+* [Add a stable required CI gate (#1336)](https://github.com/PrismarineJS/minecraft-data/commit/33a0f3e7323e124a81960a6d6c62df797d69cd85) (thanks @rom1504)
+* [pc/commands: refresh command trees for 1.20.5+ (#1332)](https://github.com/PrismarineJS/minecraft-data/commit/095709f3ad62b043069141dc127fc80ef6cd10fa) (thanks @milutinke)
+* [validate unique IDs across data schemas (#1297)](https://github.com/PrismarineJS/minecraft-data/commit/a38caa5d9c1170480e8c6a96686480e0068700b0) (thanks @VasilisDragon)
+* [pc: fix legacy data pointing at things that do not exist, 1.7 - 1.16.5 (#1319)](https://github.com/PrismarineJS/minecraft-data/commit/6b8fa82ecd933101be155dac89ad48c3cb144ec9) (thanks @Pix3lPirat3)
+* [Fix EitherHolder item data components (damage_type, chicken/variant, zombie_nautilus/variant) for 1.21.11 (#1195)](https://github.com/PrismarineJS/minecraft-data/commit/423e271eb85761c14dd0bd6ea48877f633f78c22) (thanks @atiweb)
+* [Fix ClientboundEntityUpdateAttributes key mapper: missing attributes shift every subsequent attribute's name (#1254)](https://github.com/PrismarineJS/minecraft-data/commit/23303d2350177f2084f94cd38e5d7c8e54dfc8d3) (thanks @reallyoldfogie)
+* [tools/js: test cross-file consistency of the pc data (#1320)](https://github.com/PrismarineJS/minecraft-data/commit/8f13204a834c8417bae5a8d0c1ad64c39083b390) (thanks @Pix3lPirat3)
+* [Add 26.4-snapshot-2 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/f5d7d74604d8c6153fd086bfe035e0630a5207cc) (thanks @github-actions[bot])
+* [Add 26.4-snapshot-1 to pc protocolVersions.json](https://github.com/PrismarineJS/minecraft-data/commit/8ffb321c74cffe779acf5c447d08c473c4c291d7) (thanks @github-actions[bot])
+
 ## 3.117.0
 * [bedrock: add 1.26.51 (protocol 2193) (#1321)](https://github.com/PrismarineJS/minecraft-data/commit/ab159df5d5ccc736024f18589ea55ea6c33fe218) (thanks @Pix3lPirat3)
 * [Regenerate pc 1.10, 1.11 and 1.12 recipes from the game (#1283)](https://github.com/PrismarineJS/minecraft-data/commit/f59168c3ce23158527ea7c3743ac16f18f96cf25) (thanks @u9g)
