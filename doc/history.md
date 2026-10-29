@@ -1,3 +1,7 @@
+## 3.119.0
+* [pc: language.json from each version's own client, 1.8 - 1.18.2 (#1318)](https://github.com/PrismarineJS/minecraft-data/commit/e50ed33c52c4c4e9cbdb1b976d019d6d5b5f36e1) (thanks @Pix3lPirat3)
+* [Bedrock data for 1.16.1201-1.26.60 (#1335)](https://github.com/PrismarineJS/minecraft-data/commit/b43925ca90babfd63745de4bbcd84feb35c1b40c) (thanks @mc-zuri)
+
 ## 3.118.0
 * [🎈 Add Minecraft bedrock 1.26.60 data (#1340)](https://github.com/PrismarineJS/minecraft-data/commit/9c97fe50a82feb2c0f2be1cff35ce19c891bfb35) (thanks @rom1504bot)
 * [Update copilot-instructions.md](https://github.com/PrismarineJS/minecraft-data/commit/7142e0b03a8554da389c56407a3c107595bccbc6) (thanks @extremeheat)
