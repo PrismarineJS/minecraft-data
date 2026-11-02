@@ -2,14 +2,13 @@ const fs = require('fs')
 const github = require('gh-helpers')()
 const { join } = require('path')
 const { extractPcEntityMetadata } = require('../../tools/js/extractPcEntityMetadata')
-const { exec, createInitialPR } = require('./utils')
+const { exec, createInitialPR, getVersionBranch } = require('./utils')
 
 const artifactsDir = join(__dirname, './artifacts')
 const root = join(__dirname, '..', '..')
 
 async function handle (ourPR, genPullNo, version, artifactURL, shouldPull) {
-  const branchNameVersion = version.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
-  const branch = ourPR.headBranch || `pc-${branchNameVersion}`
+  const branch = ourPR.headBranch
   if (shouldPull) exec('git', ['pull', 'origin'])
 
   // if external PR:
@@ -83,14 +82,23 @@ async function handle (ourPR, genPullNo, version, artifactURL, shouldPull) {
   exec('git', ['push', 'origin', branch])
 }
 
+// Several 🎈 PRs can be open at once (other pc versions, bedrock), so pick the one
+// opened from this version's branch rather than whichever the search returns first
+async function findVersionPR (branch) {
+  const candidates = await github.findPullRequests({ titleIncludes: '🎈', author: null })
+  for (const candidate of candidates) {
+    const details = await github.getPullRequest(candidate.number)
+    if (details.headBranch === branch && details.headRepo === details.targetRepo) return details
+  }
+}
+
 async function main (versions, genPullNo, artifactUrl, createPR) {
   const version = versions.at(-1)
-  const pr = await github.findPullRequest({ titleIncludes: '🎈', author: null })
-  console.log('Found PR', pr)
-  if (pr && pr.isOpen) {
-    const details = await github.getPullRequest(pr.id)
-    console.log('PR', details)
-    await handle(details, genPullNo, version, artifactUrl, true)
+  const branch = getVersionBranch('pc', version)
+  const pr = await findVersionPR(branch)
+  if (pr) {
+    console.log('PR', pr)
+    await handle(pr, genPullNo, version, artifactUrl, true)
   } else if (createPR) {
     const pr = await createInitialPR('pc', '(This issue was created for a minecraft-data-generator PR)', {
       version,
@@ -101,6 +109,7 @@ async function main (versions, genPullNo, artifactUrl, createPR) {
     console.log('PR', details)
     await handle(details, genPullNo, version, artifactUrl, false)
   } else {
+    console.error(`No open 🎈 PR from branch ${branch} for pc ${version}; nowhere to apply the generated data.`)
     process.exit(1)
   }
 }
@@ -109,5 +118,6 @@ main(
   JSON.parse(process.env.TRIGGER_MC_VERSIONS),
   process.env.TRIGGER_PR_NO,
   process.env.TRIGGER_ARTIFACT_URL,
-  process.env.CREATE_PR_IF_NONE
+  // workflow_dispatch inputs are strings, and the default 'false' is truthy
+  process.env.CREATE_PR_IF_NONE === 'true'
 )

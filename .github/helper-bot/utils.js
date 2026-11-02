@@ -12,13 +12,14 @@ function exec (file, args = [], options = {}) {
 
 const toolsJs = path.join(__dirname, '..', '..', 'tools', 'js')
 const sanitizeBranch = (branchName) => branchName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()
+// Branch that the 🎈 PR for a version is opened from, e.g. pc_26_2
+const getVersionBranch = (edition, version) => `${edition}_${sanitizeBranch(version)}`
 
 async function createInitialPR (edition, issueUrl, { version, protocolVersion }) {
   exec(pm, ['install'], { cwd: toolsJs })
   if (protocolVersion) exec(pm, ['run', 'version', edition, version, protocolVersion], { cwd: toolsJs })
   exec(pm, ['run', 'build'], { cwd: toolsJs })
-  const branchNameVersion = sanitizeBranch(version)
-  const branchName = `${edition}_${branchNameVersion}`
+  const branchName = getVersionBranch(edition, version)
   const title = `🎈 Add Minecraft ${edition} ${version} data`
   // First, delete any existing branch
   try {
@@ -47,4 +48,4 @@ Related:
   return pr
 }
 
-module.exports = { createInitialPR, exec }
+module.exports = { createInitialPR, exec, getVersionBranch }

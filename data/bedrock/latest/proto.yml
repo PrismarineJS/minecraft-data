@@ -1,7 +1,7 @@
 # Created from MiNET and gophertunnel docs
 # The version below is the latest version this protocol schema was updated for.
 # The output protocol.json will be in the folder for the version
-!version: 1.26.51
+!version: 1.26.60
 
 # Some ProtoDef aliases
 string: ["pstring",{"countType":"varint"}]            # String / array types
@@ -313,6 +313,9 @@ packet_start_game:
    created_in_editor: bool
    # Whether the world was exported from editor mode
    exported_from_editor: bool
+   editor_level_migration_version: u8 =>
+      0: legacy
+      1: editor_achievements
    # The time at which the day cycle was locked if the day cycle is disabled using the respective
    # game rule. The client will maIntain this time as Boolean as the day cycle is disabled.
    day_cycle_stop_time: zigzag32
@@ -531,6 +534,7 @@ packet_add_player:
    # way the player shows up when first spawned in terms of it shown as riding an entity. Setting these
    # links is important for new viewers to see the player is riding another entity.
    links: Links
+   passenger_of_block?: PassengerOfBlockData
    # DeviceID is the device ID set in one of the files found in the storage of the device of the player. It
    # may be changed freely, so it should not be relied on for anything.
    device_id: string
@@ -582,6 +586,7 @@ packet_add_entity:
    # way the entity shows up when first spawned in terms of it shown as riding an entity. Setting these
    # links is important for new viewers to see the entity is riding another entity.
    links: Links
+   passenger_of_block?: PassengerOfBlockData
 
 packet_remove_entity:
    !id: 0x0e
@@ -953,6 +958,7 @@ packet_level_event:
       16463: add_particle_spore_blossom_ambient   # 79
       16464: add_particle_wax   # 80
       16465: add_particle_electric_spark   # 81
+      16489: add_particle_ice_ball_break   # 105
    position: vec3f
    data: zigzag32
 
@@ -1223,6 +1229,9 @@ packet_animate:
    has_swing_source: bool
    swing_source: has_swing_source ?
       if true: string
+   hand: u8 =>
+      0: main_hand
+      1: off_hand
 
 packet_respawn:
    !id: 0x2d
@@ -1515,6 +1524,7 @@ packet_level_chunk:
    # which indicates the way they are serialised, followed by biomes, border blocks and tile entities. If
    # CacheEnabled is true, the payload consists out of the border blocks and tile entities only.
    payload: ByteArray
+   client_biome_update: bool
 
 packet_set_commands_enabled:
    !id: 0x3b
@@ -2930,8 +2940,7 @@ packet_education_settings:
    has_agent_capabilities: bool
    agent_capabilities: has_agent_capabilities ?
       if true:
-         has: bool
-         can_modify_blocks: bool
+         can_modify_blocks?: bool
    HasOverrideURI: bool
    OverrideURI: HasOverrideURI?
       if true: string
@@ -3735,6 +3744,8 @@ packet_dimension_data:
       dimension_type: zigzag32
       pack_id: uuid
       default_biome: string
+      cloud_height: varint
+      render_clouds: bool
 
 # AgentAction is an Education Edition packet sent from the server to the client to return a response to a
 # previously requested action.
@@ -4255,7 +4266,7 @@ packet_serverbound_diagnostics:
    entity_diagnostics: EntityDiagnosticTimingInfo[]varint
    system_diagnostics: SystemDiagnosticTimingInfo[]varint
    # Added in 1.26.40.
-   system_categories: SystemCategory[]varint
+   system_categories?: SystemCategory[]varint
    whisker_scopes: WhiskerScopeDataSummary[]varint
 
 # CameraAimAssist is sent by the server to the client to set up aim assist for the client's camera.
@@ -4683,27 +4694,24 @@ packet_clientbound_update_sound_data:
    !id: 0x15c
    !bound: client
    server_sound_handle: ServerSoundHandle
-   # As of 1.26.40 the string type identifier is replaced by one optional per update kind. Each optional
-   # payload starts with an unsigned varint that is currently always zero.
-   stop?:
-      unused: varint
-   volume?:
-      unused: varint
-      volume: lf32
-   pitch?:
-      unused: varint
-      pitch: lf32
-   fade?:
-      unused: varint
-      target_volume: lf32
-      duration: lf32
-   seek_to?:
-      unused: varint
-      seconds: lf32
-   pause?:
-      unused: varint
-   resume?:
-      unused: varint
+   type: u8 =>
+      0: stop
+      1: set_volume
+      2: set_pitch
+      3: fade
+      4: seek_to
+      5: pause
+      6: resume
+   _: type ?
+      if set_volume:
+         volume: lf32
+      if set_pitch:
+         pitch: lf32
+      if fade:
+         duration: lf32
+         target_volume: lf32
+      if seek_to:
+         seconds: lf32
 
 packet_send_party_destination_cookie:
    !id: 0x15d
@@ -4736,3 +4744,75 @@ packet_record_started:
    !bound: client
    position: BlockCoordinates
    handle: lu64
+
+packet_clientbound_matchmaking_state:
+   !id: 0x161
+   !bound: client
+   state: u8 =>
+      0: idle
+      1: matchmaking
+      2: match_found
+      3: canceled
+      4: player_left_party
+      5: player_left_server
+      6: server_shutdown
+      7: timed_out
+      8: requeue_as_party
+   destination_name: string
+   options?:
+      triggering_player_name?: string
+      triggered_by_local_player?: bool
+
+packet_serverbound_stonecutter_set_recipe:
+   !id: 0x162
+   !bound: server
+   container_id: u8
+   recipe_index: varint
+
+packet_clientbound_stonecutter_set_recipe:
+   !id: 0x163
+   !bound: client
+   player_unique_id: zigzag64
+   container_id: u8
+   recipe_index: varint
+
+packet_serverbound_matchmaking_cancel:
+   !id: 0x164
+   !bound: server
+
+packet_set_passenger_of_block:
+   !id: 0x165
+   !bound: both
+   entity_unique_id: zigzag64
+   data?: PassengerOfBlockData
+
+packet_serverbound_cursor_item_drag:
+   !id: 0x166
+   !bound: server
+   state: u8 =>
+      0: start
+      1: stop
+
+packet_clientbound_play_audio_content:
+   !id: 0x167
+   !bound: client
+   shared_metadata: string
+   playback_content: string
+   playback_type: string
+   name: string
+   coordinates: BlockCoordinates
+   volume: lf32
+   pitch: lf32
+   loop_count: varint
+   bypass_listener_range_check: bool
+   handle?: lu64
+   playback_position_seconds?: lf32
+
+packet_serverbound_register_audio_content:
+   !id: 0x168
+   !bound: server
+   registrations: []varint
+      audio_content_id: string
+      shared_metadata: string
+      server_content: string
+      playback_content: string
