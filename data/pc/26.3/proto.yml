@@ -3873,11 +3873,13 @@
    # MC: ServerboundSignUpdatePacket
    packet_update_sign:
       location: position
-      isFrontText: bool
       text1: string
       text2: string
       text3: string
       text4: string
+      # 26.3 moved isFrontText after the lines (the vanilla server stores a leading bool as line 1 and reads the
+      # last line's length as the side)
+      isFrontText: bool
    # MC: ServerboundSpectatorActionPacket
    packet_spectator_action:
       entityId?: varint
