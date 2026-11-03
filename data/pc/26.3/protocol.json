@@ -1100,6 +1100,43 @@
                     }
                   ]
                 ],
+                "block_transformer": "varint",
+                "compostable": [
+                  "container",
+                  [
+                    {
+                      "name": "layers",
+                      "type": "ContextProviderHolder"
+                    }
+                  ]
+                ],
+                "cooking_fuel": [
+                  "container",
+                  [
+                    {
+                      "name": "burnTime",
+                      "type": "ContextProviderHolder"
+                    },
+                    {
+                      "name": "speedMultiplier",
+                      "type": "ContextProviderHolder"
+                    }
+                  ]
+                ],
+                "brewing_fuel": [
+                  "container",
+                  [
+                    {
+                      "name": "uses",
+                      "type": "ContextProviderHolder"
+                    },
+                    {
+                      "name": "speedMultiplier",
+                      "type": "ContextProviderHolder"
+                    }
+                  ]
+                ],
+                "provides_pottery_pattern": "varint",
                 "stored_enchantments": [
                   "container",
                   [
@@ -1776,6 +1813,16 @@
         "otherwise": {
           "name": "data",
           "type": "ItemSoundEvent"
+        }
+      }
+    ],
+    "ContextProviderHolder": [
+      "registryEntryHolder",
+      {
+        "baseName": "id",
+        "otherwise": {
+          "name": "key",
+          "type": "string"
         }
       }
     ],
@@ -4557,8 +4604,13 @@
                             "52": "minecraft:loot_table",
                             "53": "minecraft:loot_predicate",
                             "54": "minecraft:loot_modifier",
-                            "55": "minecraft:dialog",
-                            "56": "minecraft:uuid"
+                            "55": "minecraft:context_float_provider",
+                            "56": "minecraft:context_int_provider",
+                            "57": "minecraft:slot_source",
+                            "58": "minecraft:dialog",
+                            "59": "minecraft:feature",
+                            "60": "minecraft:swing_animation",
+                            "61": "minecraft:uuid"
                           }
                         }
                       ]
@@ -4923,7 +4975,12 @@
                             "minecraft:template_rotation": "void",
                             "minecraft:heightmap": "void",
                             "minecraft:dialog": "void",
-                            "minecraft:uuid": "void"
+                            "minecraft:uuid": "void",
+                            "minecraft:context_float_provider": "void",
+                            "minecraft:context_int_provider": "void",
+                            "minecraft:slot_source": "void",
+                            "minecraft:feature": "void",
+                            "minecraft:swing_animation": "void"
                           }
                         }
                       ]
@@ -7267,6 +7324,10 @@
                   "type": "ExplosionParticleEntry"
                 }
               ]
+            },
+            {
+              "name": "playSound",
+              "type": "bool"
             }
           ]
         ],
@@ -12152,7 +12213,7 @@
                     "0x3c": "update_structure_block",
                     "0x3d": "set_test_block",
                     "0x3e": "update_sign",
-                    "0x3f": "arm_animation",
+                    "0x3f": "spectator_action",
                     "0x40": "spectate",
                     "0x41": "test_instance_block_action",
                     "0x42": "block_place",
@@ -12232,7 +12293,7 @@
                     "update_structure_block": "packet_update_structure_block",
                     "set_test_block": "packet_set_test_block",
                     "update_sign": "packet_update_sign",
-                    "arm_animation": "packet_arm_animation",
+                    "spectator_action": "packet_spectator_action",
                     "spectate": "packet_spectate",
                     "test_instance_block_action": "packet_test_instance_block_action",
                     "block_place": "packet_block_place",

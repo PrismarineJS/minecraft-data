@@ -388,6 +388,16 @@
          if additional_trade_cost: varint
          if villager_food:
             value: varint
+         if block_transformer: varint
+         if compostable:
+            layers: ContextProviderHolder
+         if cooking_fuel:
+            burnTime: ContextProviderHolder
+            speedMultiplier: ContextProviderHolder
+         if brewing_fuel:
+            uses: ContextProviderHolder
+            speedMultiplier: ContextProviderHolder
+         if provides_pottery_pattern: varint
          if stored_enchantments:
             enchantments: []varint
                id: varint
@@ -540,6 +550,12 @@
    ItemSoundHolder: ["registryEntryHolder", {
       "baseName": "soundId",
       "otherwise": { name: "data", type: "ItemSoundEvent" }
+   }]
+   # 26.3 context_int_provider / context_float_provider references (e.g. minecraft:cooking/time_boats):
+   # a registry holder whose "inline" (id 0) form is the provider's resource key. Seen on the wire from a vanilla 26.3 server.
+   ContextProviderHolder: ["registryEntryHolder", {
+      "baseName": "id",
+      "otherwise": { name: "key", type: "string" }
    }]
 
    ItemFireworkExplosion:
@@ -1468,7 +1484,12 @@
             - minecraft:loot_table # 1.20.5
             - minecraft:loot_predicate # 1.20.5
             - minecraft:loot_modifier # 1.20.5
+            - minecraft:context_float_provider # 26.3
+            - minecraft:context_int_provider # 26.3
+            - minecraft:slot_source # 26.3
             - minecraft:dialog # 1.21.6
+            - minecraft:feature # 26.3
+            - minecraft:swing_animation # 26.3
             - minecraft:uuid
             properties: parser ?
                if brigadier:bool: void
@@ -1660,6 +1681,11 @@
                if minecraft:heightmap: void
                if minecraft:dialog: void
                if minecraft:uuid: void
+               if minecraft:context_float_provider: void
+               if minecraft:context_int_provider: void
+               if minecraft:slot_source: void
+               if minecraft:feature: void
+               if minecraft:swing_animation: void
             suggestionType: ../flags/has_custom_suggestions ?
                if 1: string
                default: void
@@ -2354,6 +2380,7 @@
       explosionParticle: Particle
       sound: ItemSoundHolder
       blockParticles: ExplosionParticleEntry[]varint
+      playSound: bool
    packet_add_transient_block:
       location: position
       type: varint
@@ -3962,7 +3989,7 @@
       - update_structure_block
       - set_test_block
       - update_sign
-      - arm_animation
+      - spectator_action
       - spectate
       - test_instance_block_action
       - block_place
@@ -4032,7 +4059,7 @@
          if update_structure_block: packet_update_structure_block
          if set_test_block: packet_set_test_block
          if update_sign: packet_update_sign
-         if arm_animation: packet_arm_animation
+         if spectator_action: packet_spectator_action
          if spectate: packet_spectate
          if test_instance_block_action: packet_test_instance_block_action
          if block_place: packet_block_place
