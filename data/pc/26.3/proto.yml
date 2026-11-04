@@ -2960,11 +2960,10 @@
          - leave
       _: mode ?
          if add or change:
+            # 26.2+: reordered, and the color (formatting) became optional (absent = reset); same as the 26.2 file
             name: anonymousNbt
-            flags: ["bitflags", {
-               "type": "u8",
-               "flags": ["friendly_fire", "see_friendly_invisible"]
-            }]
+            prefix: anonymousNbt
+            suffix: anonymousNbt
             nameTagVisibility: varint =>
                - always
                - never
@@ -2975,9 +2974,11 @@
                - never
                - push_other_teams
                - push_own_team
-            formatting: varint
-            prefix: anonymousNbt
-            suffix: anonymousNbt
+            formatting?: varint
+            flags: ["bitflags", {
+               "type": "u8",
+               "flags": ["friendly_fire", "see_friendly_invisible"]
+            }]
          default: void
       players: mode ?
          if add or join or leave: string[]varint
