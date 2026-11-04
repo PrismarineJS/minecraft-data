@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tags",
+  "description": "Maps each namespaced registry to its namespaced tags and their resolved, namespaced members. Nested #tag references are flattened by the generator, so members are always concrete entries.",
+  "type": "object",
+  "properties": {
+    "minecraft:block": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Tags over the block registry (e.g. minecraft:mineable/pickaxe, minecraft:needs_iron_tool)."
+    },
+    "minecraft:item": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Tags over the item registry (e.g. minecraft:pickaxes, minecraft:logs)."
+    }
+  },
+  "required": ["minecraft:block", "minecraft:item"],
+  "patternProperties": {
+    "^[a-z0-9_.-]+:[a-z0-9/._-]+$": {
+      "$ref": "#/$defs/tagMap",
+      "description": "Any additional namespaced registry the generator emits, including path-shaped registries such as minecraft:worldgen/biome."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "tagMap": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Maps a namespaced tag name to its resolved, namespaced member names. Empty member lists are valid because vanilla ships empty tags.",
+      "patternProperties": {
+        "^[a-z0-9_.-]+:[a-z0-9/._-]+$": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_.-]+:[a-z0-9/._-]+$"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
