@@ -9,8 +9,21 @@ if (!version) {
   process.exit(1)
 }
 
+if (!/^[a-zA-Z0-9._-]+$/.test(version)) {
+  console.error('Invalid version: must contain only alphanumeric characters, dots, underscores, or hyphens')
+  process.exit(1)
+}
+
 if (!fs.existsSync(sourceDir)) {
-  cp.execSync(`git clone -b client${version} https://github.com/extremeheat/extracted_minecraft_data.git ${sourceDir} --depth 1`, { stdio: 'inherit' })
+  cp.execFileSync('git', [
+    'clone',
+    '-b',
+    `client${version}`,
+    'https://github.com/extremeheat/extracted_minecraft_data.git',
+    sourceDir,
+    '--depth',
+    '1'
+  ], { stdio: 'inherit' })
 }
 
 const componentsFile = fs.readFileSync(`./${sourceDir}/client/net/minecraft/core/component/DataComponents.java`, 'utf8')
